@@ -330,6 +330,7 @@
 		66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* MMPaperStackView.m */; };
 		66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* MMPaperView.m */; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
+		66E100F619EC4B67006E7C15 /* MMCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E100F519EC4B67006E7C15 /* MMCameraButton.m */; };
 		66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FD19D631EA000FCA96 /* settings-privacy.png */; };
 		66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */; };
 		66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240119D633E1000FCA96 /* ios8-settings-camera.png */; };
@@ -987,6 +988,8 @@
 		66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		66DF0B7C159BC30200C5C652 /* UIView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animations.h"; sourceTree = "<group>"; };
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
+		66E100F419EC4B67006E7C15 /* MMCameraButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraButton.h; sourceTree = "<group>"; };
+		66E100F519EC4B67006E7C15 /* MMCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraButton.m; sourceTree = "<group>"; };
 		66E223FD19D631EA000FCA96 /* settings-privacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy.png"; sourceTree = "<group>"; };
 		66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy@2x.png"; sourceTree = "<group>"; };
 		66E2240119D633E1000FCA96 /* ios8-settings-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-camera.png"; sourceTree = "<group>"; };
@@ -1986,6 +1989,7 @@
 				66EDE42419AE761500A5623B /* List View */,
 				66EDE42319AE75F500A5623B /* Tool Sidebar */,
 				66EDE42219AE75EF00A5623B /* Share Sidebar */,
+				66E100F319EC4B1A006E7C15 /* Import Sidebar */,
 				66BD6E951593E98D00D4544C /* MMTextButton.h */,
 				66BD6E961593E98D00D4544C /* MMTextButton.m */,
 			);
@@ -2305,6 +2309,17 @@
 			name = Gestures;
 			sourceTree = "<group>";
 		};
+		66E100F319EC4B1A006E7C15 /* Import Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
+				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
+				66E100F419EC4B67006E7C15 /* MMCameraButton.h */,
+				66E100F519EC4B67006E7C15 /* MMCameraButton.m */,
+			);
+			name = "Import Sidebar";
+			sourceTree = "<group>";
+		};
 		66E47E22187F278A000AFD18 /* Ruler */ = {
 			isa = PBXGroup;
 			children = (
@@ -2429,8 +2444,6 @@
 				66BEBFF919BD6AAA0032D30C /* MMProgressedImageViewButton.m */,
 				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
 				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
-				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
-				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 				661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */,
 				661885D018F9ABD70016A333 /* MMFlipCameraButton.m */,
 				667D98B8192FC22A00625879 /* MMPDFButton.h */,
@@ -2805,6 +2818,7 @@
 				666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
+				66E100F619EC4B67006E7C15 /* MMCameraButton.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,

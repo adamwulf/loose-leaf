@@ -19,6 +19,7 @@
 #import "MMPDFButton.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
+#import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation MMImageSidebarContainerView{
@@ -30,7 +31,7 @@
     
     NSArray* allListContentViews;
     
-    MMImageViewButton* cameraAlbumButton;
+    MMCameraButton* cameraAlbumButton;
     MMImageViewButton* iPhotoAlbumButton;
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
@@ -92,12 +93,10 @@
         // buttons
         
         // camera
-        cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
+        cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        cameraAlbumButton.darkBg = YES;
         cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         cameraAlbumButton.shadowInset = -1;
-        [cameraAlbumButton setImage:[UIImage imageNamed:@"clearcamera"]];
         [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:cameraAlbumButton];
 
