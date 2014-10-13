@@ -724,19 +724,16 @@ struct SidebarButton{
 }
 
 -(void) finishedLoading{
-    // noop
+    @throw  kAbstractMethodException;
 }
 
 -(void) loadStacksFromDisk{
-    NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
-    for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
-        [self addPaperToBottomOfStack:page];
-    }
-    for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
-        [self addPaperToBottomOfHiddenStack:page];
-    }
-    
-    if(![self hasPages]){
+
+    // check to see if we have any state to load at all, and if
+    // not then build our default content
+    if(![stackManager hasStateToLoad]){
+        // we don't have any pages, and we don't have any
+        // state to load
         self.userInteractionEnabled = NO;
         UIView* white = [[UIView alloc] initWithFrame:self.bounds];
         white.backgroundColor = [UIColor whiteColor];
@@ -750,27 +747,44 @@ struct SidebarButton{
             }];
         }];
         return;
+    }else{
+        NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
+        for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
+            [self addPaperToBottomOfStack:page];
+        }
+        for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
+            [self addPaperToBottomOfHiddenStack:page];
+        }
     }
     
-    // load the state for the top page in the visible stack
-    [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
-                                                     andScale:[MMPageCacheManager sharedInstance].drawableView.scale
-                                                   andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     
-    // only load the image previews for the pages that will be visible
-    // other page previews will load as the user turns the page,
-    // or as they scroll the list view
-    CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
-    for(MMEditablePaperView* page in visiblePages){
-        [page loadCachedPreview];
+    if([self hasPages]){
+        // load the state for the top page in the visible stack
+        [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
+                                                         withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                         andScale:[MMPageCacheManager sharedInstance].drawableView.scale
+                                                       andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
+        
+        
+        // only load the image previews for the pages that will be visible
+        // other page previews will load as the user turns the page,
+        // or as they scroll the list view
+        CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+        NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
+        for(MMEditablePaperView* page in visiblePages){
+            [page loadCachedPreview];
+        }
+        
+        [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+        [self didChangeTopPage];
+        [self finishedLoading];
+    }else{
+        // list is empty on purpose
+        [self immediatelyTransitionToListView];
     }
     
-    [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
-    [self didChangeTopPage];
-    [self finishedLoading];
+
 }
 
 -(BOOL) hasPages{
