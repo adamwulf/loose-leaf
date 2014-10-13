@@ -12,6 +12,7 @@
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
+#import "UIView+Animations.h"
 #import "UIColor+Shadow.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
@@ -66,9 +67,22 @@
         controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
         controller.delegate = self;
         UIView* presentationView = win.rootViewController.view;
-        if(![controller presentOpenInMenuFromRect:[button convertRect:button.bounds toView:presentationView] inView:presentationView animated:YES]){
+        CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
+        presentationRect = CGRectMake(400, 1020, 1, 1);
+        if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
             [self performAirDropAction];
         }
+        
+        [[NSThread mainThread] performBlock:^{
+            UIView* lastSubview = [win.subviews lastObject];
+            [lastSubview showDebugBorder];
+            lastSubview.autoresizingMask = UIViewAutoresizingNone;
+            CGPoint anchorPoint = [lastSubview convertPoint:button.center fromView:button.superview];
+            anchorPoint = CGPointMake(anchorPoint.x / lastSubview.bounds.size.width, anchorPoint.y / lastSubview.bounds.size.height);
+            [UIView setAnchorPoint:anchorPoint forView:lastSubview];
+//            [lastSubview setTransform:CGAffineTransformMakeRotation(M_PI / 2)];
+        } afterDelay:2];
+        
     });
 }
 
