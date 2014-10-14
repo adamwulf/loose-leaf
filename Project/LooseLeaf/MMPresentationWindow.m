@@ -22,6 +22,7 @@
         // Override point for customization after application launch.
         self.rootViewController = [[MMRotateViewController alloc] initWithWindow:self];
         self.alpha = 0;
+        shouldRespectKeyWindowRequest = YES;
     }
     return self;
 }

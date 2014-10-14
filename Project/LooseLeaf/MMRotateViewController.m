@@ -19,12 +19,11 @@
     return self;
 }
 
--(void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
+-(void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     window.shouldRespectKeyWindowRequest = NO;
-}
-
--(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-    window.shouldRespectKeyWindowRequest = YES;
+    [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        window.shouldRespectKeyWindowRequest = YES;
+    }];
 }
 
 -(void) viewDidLoad{
