@@ -44,9 +44,10 @@
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
         stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
-        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
+        stackView.center = self.view.center;
 
         // export icons will show here, below the sidebars but over the stacks
         cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
@@ -112,6 +113,10 @@
     return self;
 }
 
+-(void) viewWillAppear:(BOOL)animated{
+    
+}
+
 -(void) pageCacheManagerDidLoadPage{
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
@@ -146,6 +151,14 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return UIInterfaceOrientationPortrait == interfaceOrientation;
+}
+
+-(NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+-(BOOL) shouldAutorotate{
+    return NO;
 }
 
 

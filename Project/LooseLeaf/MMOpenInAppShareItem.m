@@ -15,6 +15,10 @@
 #import "UIView+Animations.h"
 #import "UIColor+Shadow.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "MMRotateViewController.h"
+#import "MMAppDelegate.h"
+#import "MMRotationManager.h"
+#import "MMPresentationWindow.h"
 
 @implementation MMOpenInAppShareItem{
     MMShareButton* button;
@@ -33,7 +37,7 @@
         button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
-        
+
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyyMMdd-HHmm"];
     }
@@ -62,27 +66,16 @@
         [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
         NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
 
-        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
         controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
         controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
         controller.delegate = self;
-        UIView* presentationView = win.rootViewController.view;
+        MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+        UIView* presentationView = presentationWindow.rootViewController.view;
         CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
-        presentationRect = CGRectMake(400, 1020, 1, 1);
+        [presentationWindow makeKeyAndVisible];
         if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
             [self performAirDropAction];
         }
-        
-        [[NSThread mainThread] performBlock:^{
-            UIView* lastSubview = [win.subviews lastObject];
-            [lastSubview showDebugBorder];
-            lastSubview.autoresizingMask = UIViewAutoresizingNone;
-            CGPoint anchorPoint = [lastSubview convertPoint:button.center fromView:button.superview];
-            anchorPoint = CGPointMake(anchorPoint.x / lastSubview.bounds.size.width, anchorPoint.y / lastSubview.bounds.size.height);
-            [UIView setAnchorPoint:anchorPoint forView:lastSubview];
-//            [lastSubview setTransform:CGAffineTransformMakeRotation(M_PI / 2)];
-        } afterDelay:2];
-        
     });
 }
 
@@ -109,7 +102,6 @@
                                                      UIActivityTypePostToFlickr,
                                                      UIActivityTypePostToVimeo,
                                                      UIActivityTypePostToTencentWeibo];
-    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
     
     
     void(^block)(NSString *, BOOL) = ^(NSString *activityType, BOOL completed){
@@ -142,12 +134,14 @@
         };
     }
     
-    [win.rootViewController presentViewController:activityViewController
-                                         animated:YES
-                                       completion:^{
-                                           // ...
-                                           NSLog(@"complete");
-                                       }];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow makeKeyAndVisible];
+    [presentationWindow.rootViewController presentViewController:activityViewController
+                                                        animated:YES
+                                                      completion:^{
+                                                          // ...
+                                                          NSLog(@"complete");
+                                                      }];
 }
 
 

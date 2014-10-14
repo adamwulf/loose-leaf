@@ -190,6 +190,11 @@
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
     [activeOptionsView updateInterfaceTo:orientation];
+    for(NSObject<MMShareItem>*shareItem in shareItems){
+        if([shareItem respondsToSelector:@selector(updateInterfaceTo:)]){
+            [shareItem updateInterfaceTo:orientation];
+        }
+    }
     [UIView animateWithDuration:.3 animations:^{
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
         for(MMBounceButton* button in buttonView.subviews){

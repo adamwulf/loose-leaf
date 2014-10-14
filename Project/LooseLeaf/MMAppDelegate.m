@@ -17,6 +17,7 @@
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
 #import "TestFlight.h"
+#import "MMPresentationWindow.h"
 
 
 @implementation MMAppDelegate{
@@ -27,6 +28,7 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize presentationWindow;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -46,6 +48,8 @@
         [TestFlight takeOff:kTestflightAppToken];
     } afterDelay:3];
     
+    presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+
     self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];

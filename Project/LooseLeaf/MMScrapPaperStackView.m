@@ -77,8 +77,18 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    if(frame.size.width > frame.size.height){
+        // force portrait build
+        CGFloat t = frame.size.width;
+        frame.size.width = frame.size.height;
+        frame.size.height = t;
+    }
+    NSLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    
     if ((self = [super initWithFrame:frame])) {
         
+        self.autoresizingMask = UIViewAutoresizingNone;
+
 //        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
 //                                                                  target:self
 //                                                                selector:@selector(timerDidFire:)
@@ -178,7 +188,6 @@
 //        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
-
     }
     return self;
 }
