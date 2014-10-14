@@ -21,6 +21,8 @@
 
 -(void) saveStacksToDisk;
 
+-(BOOL) hasStateToLoad;
+
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds;
 
 @end

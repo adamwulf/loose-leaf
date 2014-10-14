@@ -14,7 +14,11 @@
 
 +(MMTrashManager*) sharedInstance;
 
--(void) deleteScrap:(NSString*)scrap inPage:(MMScrappedPaperView*)page;
+-(dispatch_queue_t) trashManagerQueue;
+
++(BOOL) isTrashManagerQueue;
+
+-(void) deleteScrap:(NSString*)scrap inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState;
 
 -(void) deletePage:(MMPaperView*)page;
 

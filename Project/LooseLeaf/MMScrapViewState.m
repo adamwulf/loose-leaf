@@ -222,6 +222,17 @@ static dispatch_queue_t importExportScrapStateQueue;
     return drawableViewState.fullByteSize + backingImageHolder.fullByteSize;
 }
 
+-(void) setScrapsOnPaperState:(MMScrapCollectionState *)_scrapsOnPaperState{
+    scrapsOnPaperState = _scrapsOnPaperState;
+    // reset all path caches
+    scrapPath = nil;
+    scrapPropertiesPlistPath = nil;
+    inkImageFile = nil;
+    thumbImageFile = nil;
+    drawableViewStateFile = nil;
+    backgroundFile = nil;
+}
+
 #pragma mark - Backing Image
 
 -(MMScrapBackgroundView*) backgroundView{
@@ -677,6 +688,15 @@ static dispatch_queue_t importExportScrapStateQueue;
 -(void) didUnloadState:(JotViewStateProxy *)state{
 //    NSLog(@"(%@) unloaded scrap state", uuid);
     // noop
+}
+
+-(void) reloadBackgroundView{
+    NSLog(@"info plist: %@", self.scrapPropertiesPlistPath);
+    NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.scrapPropertiesPlistPath];
+    MMScrapBackgroundView* replacementBackgroundView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
+    // now load the background image from disk, if any
+    [replacementBackgroundView loadBackgroundFromDiskWithProperties:properties];
+    [self setBackgroundView:replacementBackgroundView];
 }
 
 #pragma mark - dealloc

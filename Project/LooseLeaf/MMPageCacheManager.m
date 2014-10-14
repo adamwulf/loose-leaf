@@ -97,8 +97,10 @@ static MMPageCacheManager* _instance = nil;
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
-    if(!page){
-        @throw [NSException exceptionWithName:@"will change to nil page" reason:@"unknown" userInfo:nil];
+    if(!page && [delegate countAllPages]){
+        // don't allow changing to nil page unless
+        // there are no pages to change to (count is zero)
+        @throw [NSException exceptionWithName:@"NilPageException" reason:@"will change to nil page" userInfo:nil];
     }
     if(page && !([recentlySuggestedPageUUID isEqualToString:page.uuid] ||
                  [recentlyConfirmedPageUUID isEqualToString:page.uuid])){
@@ -107,6 +109,14 @@ static MMPageCacheManager* _instance = nil;
     if(page && ![recentlySuggestedPageUUID isEqualToString:page.uuid]){
         recentlySuggestedPageUUID = page.uuid;
         debug_NSLog(@"will switch top page to %@", page.uuid);
+    }
+    if(!page){
+        recentlySuggestedPageUUID = nil;
+        recentlyConfirmedPageUUID = nil;
+        currentEditablePage = nil;
+        currentlyTopPage = nil;
+        [stateLoadedPages removeAllObjects];
+        [pagesWithLoadedCacheImages removeAllObjects];
     }
 }
 

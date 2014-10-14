@@ -62,7 +62,7 @@ static int totalBackgroundBytes;
 }
 
 -(void) updateBackingImageLocation{
-//    CheckMainThread;
+    CheckMainThread;
     self.backingContentView.center = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
@@ -126,7 +126,12 @@ static int totalBackgroundBytes;
 // returns an exact duplicate of this background, including all properties,
 // and assigns it to the input scrap state
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState{
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
+    // we need to swap the image out for another one, because the source image
+    // might be deleted from disk soon. so this image needs to load
+    // from its own assets
+    UIImage* replacementImage = [UIImage imageWithData:UIImagePNGRepresentation(self.backingImage)];
+//    UIImage* replacementImage = self.backingImage;
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:replacementImage
                                                                            forScrapState:otherScrapState];
     backgroundView.backgroundRotation = self.backgroundRotation;
     backgroundView.backgroundScale = self.backgroundScale;

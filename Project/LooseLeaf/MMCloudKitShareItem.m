@@ -17,6 +17,7 @@
 #import <CloudKit/CloudKit.h>
 #import <MessageUI/MessageUI.h>
 #import "MMCloudKitManager.h"
+#import "MMPresentationWindow.h"
 
 @interface MMCloudKitShareItem (Private) <MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
@@ -125,18 +126,17 @@
 #pragma mark - Invite
 
 -(void) didTapInviteButton{
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     if([MFMailComposeViewController canSendMail]) {
         [self inviteWithEmail];
     }else if([MFMessageComposeViewController canSendText]) {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
         MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
         if(composer){
             [composer setMessageComposeDelegate:self];
             [composer setBody:@"Let's share ideas and sketches with Loose Leaf for iPad! http://getlooseleaf.com"];
             [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
         }
     }else{
         [self inviteWithEmail];
@@ -147,7 +147,6 @@
 }
 
 -(void) inviteWithEmail{
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
     if(composer){
         [composer setMailComposeDelegate:self];
@@ -155,7 +154,8 @@
         [composer setMessageBody:@"I'm using Loose Leaf to sketch and brainstorm ideas. It makes it easy to import photos, cut and crop with scissors, and sketch and annotate. Download it now from http://getlooseleaf.com!" isHTML:NO];
         [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
         
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+        MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+        [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
     }
 }
 
@@ -176,8 +176,9 @@
     [[Mixpanel sharedInstance] track:kMPEventInvite properties:@{kMPEventInvitePropDestination : @"Email",
                                                                  kMPEventInvitePropResult : strResult}];
 
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    controller.delegate = nil;
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -196,8 +197,9 @@
     [[Mixpanel sharedInstance] track:kMPEventInvite properties:@{kMPEventInvitePropDestination : @"SMS",
                                                                  kMPEventInvitePropResult : strResult}];
     
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    controller.delegate = nil;
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

@@ -388,6 +388,11 @@
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
     
+    // track the segment test/reset count
+    // when splitting the stroke
+    [UIBezierPath resetSegmentTestCount];
+    [UIBezierPath resetSegmentCompareCount];
+    
     // track distance drawn
     CGFloat strokeDistance = 0;
     // track size of these added elements, so we can
@@ -561,6 +566,13 @@
         strokeElementsToCrop = nextStrokesToCrop;
     }
     
+    
+    if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
+//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+        [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
+        [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
+    }
+
     // anything that's left over at this point
     // is fair game for to add to the page itself
     return strokeElementsToCrop;
@@ -626,6 +638,11 @@
 
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
+    // track the segment test/compare count
+    // when splitting scraps with scissors
+    [UIBezierPath resetSegmentCompareCount];
+    [UIBezierPath resetSegmentTestCount];
+    
     // track path information for debugging
     NSString* debugFullText = @"";
 
@@ -836,6 +853,13 @@
 //        }
     }
     
+
+    if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
+//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+        [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
+        [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
+    }
+
     return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt
                                        andRemovedScraps:scrapsBeingRemoved
                               andRemovedScrapProperties:removedScrapProperties
@@ -1358,6 +1382,10 @@
     return [self.delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
 }
 
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - JotViewStateProxyDelegate
 
 /**
@@ -1404,13 +1432,6 @@
     return [[[self bundledPagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
 }
 
-
-#pragma mark - MFMailComposeViewControllerDelegate
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
-    UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-    [rootController dismissViewControllerAnimated:YES completion:nil];
-}
 
 #pragma mark - dealloc
 

@@ -15,6 +15,7 @@
 #import "UIView+Debug.h"
 #import "Constants.h"
 #import "MMPageCacheManager.h"
+#import "MMScrapsInBezelContainerView.h"
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -297,17 +298,6 @@
     }
 }
 
--(MMScrapView*) scrapForUUID:(NSString*)uuid{
-    @synchronized(allLoadedScraps){
-        for(MMScrapView*scrap in allLoadedScraps){
-            if([scrap.uuid isEqualToString:uuid]){
-                return scrap;
-            }
-        }
-    }
-    return nil;
-}
-
 -(MMScrapView*) mostRecentScrap{
     @synchronized(allLoadedScraps){
         return [allLoadedScraps lastObject];
@@ -346,6 +336,15 @@
 -(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid{
     NSString* scrapPath = [[self.delegate.bundledPagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
+}
+
+#pragma mark - Deleting Assets
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    // for scrapsOnPaperState, we need to ask
+    // the page to delete the scrap, as we don't
+    // own all of the assets for it
+    [self.delegate deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
 }
 
 @end

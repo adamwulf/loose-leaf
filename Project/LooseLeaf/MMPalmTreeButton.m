@@ -31,18 +31,18 @@
     
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
-    UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
-    UIColor* mostlyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.65];
     UIColor* darkerGrey = [UIColor colorWithRed: 0.2 green: 0.2 blue: 0.2 alpha: 0.25];
     UIColor* treeHighlight = [UIColor colorWithRed: 0.471 green: 0.471 blue: 0.471 alpha: 0.294];
+    
+    UIColor* orangeColor = [UIColor colorWithRed:224/255.0 green:174/255.0 blue:0/255.0 alpha:.85];
+    UIColor* yellowColor = [UIColor colorWithRed:224/255.0 green:221/255.0 blue:0/255.0 alpha:.85];
 
     //// Gradient Declarations
-    NSArray* faceGradientColors = [NSArray arrayWithObjects:
-                                   (id)mostlyWhite.CGColor,
-                                   (id)[UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.449].CGColor,
-                                   (id)barelyWhite.CGColor, nil];
-    CGFloat faceGradientLocations[] = {0, 0.71, 1};
-    CGGradientRef faceGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)faceGradientColors, faceGradientLocations);
+    NSArray* backgroundGradientColors = [NSArray arrayWithObjects:
+                                   (id)orangeColor.CGColor,
+                                   (id)yellowColor.CGColor, nil];
+    CGFloat backgroundGradientLocations[] = {0, 1};
+    CGGradientRef backgroundGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)backgroundGradientColors, backgroundGradientLocations);
     
     NSArray* treehighlightfillColors = [NSArray arrayWithObjects:
                                         (id)darkerGrey.CGColor,
@@ -61,7 +61,7 @@
     CGContextSaveGState(context);
     [ovalPath addClip];
     CGRect faceBounds = CGPathGetPathBoundingBox(ovalPath.CGPath);
-    CGContextDrawLinearGradient(context, faceGradient,
+    CGContextDrawLinearGradient(context, backgroundGradient,
                                 CGPointMake(CGRectGetMidX(faceBounds), CGRectGetMinY(faceBounds)),
                                 CGPointMake(CGRectGetMidX(faceBounds), CGRectGetMaxY(faceBounds)),
                                 0);

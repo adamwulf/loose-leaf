@@ -13,7 +13,10 @@
 #import "MMScrapContainerView.h"
 #import "MMImmutableScrapsInSidebarState.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMTrashManager.h"
 #import "Constants.h"
+
+#define kPageUUIDForBezelCollectionState @"Bezel"
 
 @implementation MMScrapsInSidebarState{
     // all of the loaded properties for all this state's scraps
@@ -63,7 +66,10 @@
                     // TODO: https://github.com/adamwulf/loose-leaf/issues/604
                     NSString* pageUUID = [scrapProperties objectForKey:@"pageUUID"];
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
-                    MMScrapsOnPaperState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
+                    MMScrapCollectionState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
+                    if([pageUUID isEqualToString:kPageUUIDForBezelCollectionState]){
+                        paperStateForScrap = self;
+                    }
                     
                     MMScrapView* scrapFromPaperState = [paperStateForScrap scrapForUUID:scrapUUID];
                     if(scrapFromPaperState){
@@ -240,6 +246,47 @@
     NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
     NSString* scrapPath = [[bezelStateDirectory stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
     return scrapPath;
+}
+
+#pragma mark - Scrap Stealing
+
+-(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapCollectionState{
+    
+    [super stealScrap:scrapUUID fromScrapCollectionState:formerScrapCollectionState];
+    
+    @synchronized(allLoadedScraps){
+        for(int i=0;i<[allPropertiesForScraps count];i++){
+            NSDictionary* aScrapProps = [allPropertiesForScraps objectAtIndex:i];
+            if([[aScrapProps objectForKey:@"uuid"] isEqualToString:scrapUUID]){
+                // edit this entry
+                NSMutableDictionary* replacementProps = [NSMutableDictionary dictionaryWithDictionary:aScrapProps];
+                [replacementProps setObject:kPageUUIDForBezelCollectionState forKey:@"pageUUID"];
+                [allPropertiesForScraps replaceObjectAtIndex:i withObject:replacementProps];
+                NSLog(@"swapped properties too");
+                break;
+            }
+        }
+    }
+}
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    NSLog(@"sidebar needs to delete assets for %@", scrapUUID);
+    
+    dispatch_async([[MMTrashManager sharedInstance] trashManagerQueue], ^{
+        NSString* directoryForScrap = [self directoryPathForScrapUUID:scrapUUID];
+        
+        if(![[NSFileManager defaultManager] fileExistsAtPath:directoryForScrap]){
+            NSLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
+        }else{
+            NSError* err = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:directoryForScrap error:&err];
+            if(err){
+                NSLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
+            }else{
+                NSLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
+            }
+        }
+    });
 }
 
 @end

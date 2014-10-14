@@ -55,9 +55,10 @@
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
         stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
-        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
+        stackView.center = self.view.center;
 
         // export icons will show here, below the sidebars but over the stacks
         cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
@@ -113,14 +114,18 @@
         
         memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
         
-        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
-        memoryProfileView.memoryManager = memoryManager;
-        memoryProfileView.hidden = YES;
-        
-        [stackView setMemoryView:memoryProfileView];
-        [self.view addSubview:memoryProfileView];
+//        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+//        memoryProfileView.memoryManager = memoryManager;
+//        memoryProfileView.hidden = YES;
+//        
+//        [stackView setMemoryView:memoryProfileView];
+//        [self.view addSubview:memoryProfileView];
     }
     return self;
+}
+
+-(void) viewWillAppear:(BOOL)animated{
+    
 }
 
 -(void) pageCacheManagerDidLoadPage{
@@ -157,6 +162,14 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return UIInterfaceOrientationPortrait == interfaceOrientation;
+}
+
+-(NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+-(BOOL) shouldAutorotate{
+    return NO;
 }
 
 

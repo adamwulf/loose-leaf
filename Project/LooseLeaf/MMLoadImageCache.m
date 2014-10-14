@@ -98,6 +98,7 @@ static int count = 0;
 }
 
 -(void) clearCacheForPath:(NSString*)path{
+    if(!path) return;
     @synchronized(self){
         UIImage* cachedImage = [loadedImages objectForKey:path];
         if(cachedImage){

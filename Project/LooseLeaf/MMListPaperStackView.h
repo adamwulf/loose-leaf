@@ -59,6 +59,8 @@
 
 // protected
 
+-(void) immediatelyTransitionToListView;
+
 -(void) beginUITransitionFromPageView;
 
 -(void) beginUITransitionFromListView;

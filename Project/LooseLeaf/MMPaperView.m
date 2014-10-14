@@ -42,6 +42,7 @@
         uuid = _uuid;
         originalUnscaledBounds = self.bounds;
         
+
         [self.layer setMasksToBounds:YES ];
         self.scale = 1;
 

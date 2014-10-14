@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapViewState;
+@class MMScrapViewState,MMScrapsInBezelContainerView;
 
 @protocol MMScrapViewStateDelegate <NSObject>
 

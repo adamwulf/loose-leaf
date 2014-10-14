@@ -61,6 +61,7 @@
 -(MMScrapBackgroundView*) backgroundView;
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
 -(CGPoint) currentCenterOfScrapBackground;
+-(void) reloadBackgroundView;
 
 -(UIView*) contentView;
 

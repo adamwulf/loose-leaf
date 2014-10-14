@@ -13,6 +13,7 @@
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
 #import "MMExportablePaperView.h"
+#import "NSMutableSet+Extras.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -624,10 +625,30 @@
        !bezelGesture.hasSeenSubstateBegin &&
        (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
         
-        // cancel panning a page, if any
-        if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
-            [[[visibleStackHolder peekSubview] panGesture] cancel];
-        }
+        // cancel panning all pages, if any
+        // this will make sure to cancel pages from back to front,
+        // so that the top held page will fall back onto the visible stack.
+        //
+        // otherwise, if the front page was released first, it + all
+        // pages to the next held page would be pushed immediately onto
+        // the hidden stack, and would end up held by the bezel. the user
+        // would see the top page suddenly 'disappear' and suddenly held
+        // by the bezel.
+        [[[setOfPagesBeingPanned allObjects] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            // put the top visible page last
+            if(obj1 == [visibleStackHolder peekSubview]){
+                return NSOrderedDescending;
+            }else if(obj2 == [visibleStackHolder peekSubview]){
+                return NSOrderedAscending;
+            }
+            return NSOrderedSame;
+        }] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            // now cancel all of those pages pan gestures
+            if([obj panGesture].subState != UIGestureRecognizerStatePossible){
+                [[obj panGesture] cancel];
+            }
+        }];
+        
         // make sure there's a page to bezel
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         // this flag is an ugly hack because i'm using substates in gestures.
@@ -1271,8 +1292,6 @@
         // as we're still holding the top page
         // ============================================================================
         if(![[visibleStackHolder peekSubview] isBeingPannedAndZoomed]){
-            //
-            // TODO: log this to analytics
             //
             // odd, no idea how this happened. but we
             // just released a non-top page and the top

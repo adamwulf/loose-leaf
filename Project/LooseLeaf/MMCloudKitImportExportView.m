@@ -304,6 +304,9 @@
     
     NSString* reason = @"Unknown";
     switch (errorCode) {
+        case kMPEventImportMissingZipErrorCode:
+            reason = @"Missing Zip";
+            break;
         case kMPEventImportInvalidZipErrorCode:
             reason = @"Invalid Zip";
             break;
