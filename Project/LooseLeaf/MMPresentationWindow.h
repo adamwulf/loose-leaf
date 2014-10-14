@@ -10,6 +10,8 @@
 
 @interface MMPresentationWindow : MMWindow
 
+@property (nonatomic, assign) BOOL shouldRespectKeyWindowRequest;
+
 -(void) killPresentationWindow;
 
 @end

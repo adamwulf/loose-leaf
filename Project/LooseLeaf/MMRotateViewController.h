@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMRotateViewController : UIViewController
+@class MMPresentationWindow;
+
+@interface MMRotateViewController : UIViewController{
+    MMPresentationWindow* window;
+}
+
+-(id) initWithWindow:(MMPresentationWindow*)_window;
 
 @end

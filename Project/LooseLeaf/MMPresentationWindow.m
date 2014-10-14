@@ -13,22 +13,37 @@
 
 @implementation MMPresentationWindow
 
+@synthesize shouldRespectKeyWindowRequest;
+
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-//        self.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
+        self.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0];
 //        [self showDebugBorder];
         // Override point for customization after application launch.
-        self.rootViewController = [[MMRotateViewController alloc] init];
+        self.rootViewController = [[MMRotateViewController alloc] initWithWindow:self];
+        self.alpha = 0;
     }
     return self;
 }
 
 -(void) makeKeyAndVisible{
-    NSLog(@"presentation window is key");
-    [super makeKeyAndVisible];
+    if(shouldRespectKeyWindowRequest){
+        NSLog(@"presentation window is key");
+        [super makeKeyAndVisible];
+        self.alpha = 1;
+    }else{
+        NSLog(@"presentation window ignored key window request");
+    }
+}
+
+-(void) resignKeyWindow{
+    NSLog(@"presentation window resigned");
+    self.alpha = 0;
 }
 
 -(void) didAddSubview:(UIView *)subview{
+    NSLog(@"adding subview: %@", subview);
+    NSLog(@" with subviews: %@", subview.subviews);
     [super didAddSubview:subview];
     if([self.subviews count] > 1){
         [self makeKeyAndVisible];
@@ -52,7 +67,6 @@
         if([UIApplication sharedApplication].keyWindow == self){
             NSLog(@"killing presentation window");
             MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
-            [self resignKeyWindow];
             [appDelegate.window makeKeyAndVisible];
         }
     }
