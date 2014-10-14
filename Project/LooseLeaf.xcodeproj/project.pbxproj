@@ -44,7 +44,6 @@
 		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; };
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
-		662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
@@ -461,8 +460,6 @@
 		662B7D1E19E7A55700C5529B /* MMStatTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStatTracker.m; sourceTree = "<group>"; };
 		662EFF2B199EBC140086C106 /* MMWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMWindow.h; sourceTree = "<group>"; };
 		662EFF2C199EBC140086C106 /* MMWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMWindow.m; sourceTree = "<group>"; };
-		662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAirDropShareItem.h; sourceTree = "<group>"; };
-		662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAirDropShareItem.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -2437,8 +2434,6 @@
 				6652452C1996CE3000C36609 /* MMImgurShareItem.m */,
 				6652457B1996ECF900C36609 /* MMOpenInAppShareItem.h */,
 				6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */,
-				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
-				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
 				667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */,
 				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
 				667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */,
@@ -2965,7 +2960,6 @@
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
-				662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */,
 				66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */,
 				66381F5D19CB96730014796F /* MMSinglePhotoCollectionViewCell.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,

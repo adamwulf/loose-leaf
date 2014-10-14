@@ -19,6 +19,11 @@
     return self;
 }
 
+-(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
+    [window makeKeyAndVisible];
+    [super presentViewController:viewControllerToPresent animated:flag completion:completion];
+}
+
 -(void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     window.shouldRespectKeyWindowRequest = NO;
     [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {

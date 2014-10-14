@@ -10,6 +10,7 @@
 #import "MMAppDelegate.h"
 #import "UIView+Debug.h"
 #import "MMRotateViewController.h"
+#import "NSThread+BlockAdditions.h"
 
 @implementation MMPresentationWindow
 

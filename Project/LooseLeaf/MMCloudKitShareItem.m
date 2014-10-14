@@ -126,11 +126,9 @@
 #pragma mark - Invite
 
 -(void) didTapInviteButton{
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     if([MFMailComposeViewController canSendMail]) {
         [self inviteWithEmail];
     }else if([MFMessageComposeViewController canSendText]) {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
         MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
         if(composer){
             [composer setMessageComposeDelegate:self];
@@ -149,7 +147,6 @@
 }
 
 -(void) inviteWithEmail{
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
     if(composer){
         [composer setMailComposeDelegate:self];
@@ -180,8 +177,8 @@
                                                                  kMPEventInvitePropResult : strResult}];
 
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    controller.delegate = nil;
     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 
@@ -201,8 +198,8 @@
                                                                  kMPEventInvitePropResult : strResult}];
     
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    controller.delegate = nil;
     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 @end

@@ -14,6 +14,7 @@
 
 @implementation MMEmailShareItem{
     MMImageViewButton* button;
+    MFMailComposeViewController* composer;
 }
 
 @synthesize delegate;
@@ -45,7 +46,7 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        composer = [[MFMailComposeViewController alloc] init];
         [composer setMailComposeDelegate:self];
         if([MFMailComposeViewController canSendMail]) {
             [composer setSubject:@"Quick sketch from Loose Leaf"];
@@ -59,6 +60,8 @@
             [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
                 NSLog(@"done");
             }];
+        }else{
+            composer = nil;
         }
         [delegate didShare:self];
     });
@@ -106,6 +109,7 @@
     
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
+    composer.delegate = nil;
 }
 
 #pragma mark - Dealloc
