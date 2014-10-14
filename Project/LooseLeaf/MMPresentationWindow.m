@@ -17,7 +17,7 @@
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        self.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0];
+        self.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
 //        [self showDebugBorder];
         // Override point for customization after application launch.
         self.rootViewController = [[MMRotateViewController alloc] initWithWindow:self];

@@ -7,6 +7,7 @@
 //
 
 #import "MMWindow.h"
+#import "MMAppDelegate.h"
 
 @interface MMPresentationWindow : MMWindow
 

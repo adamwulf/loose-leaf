@@ -26,12 +26,6 @@
     }];
 }
 
--(void) viewDidLoad{
-//    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(100, 100, 200, 40)];
-//    label.text = @"Rotate View";
-//    [self.view addSubview:label];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;

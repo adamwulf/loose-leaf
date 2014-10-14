@@ -49,6 +49,7 @@
     } afterDelay:3];
     
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [presentationWindow makeKeyAndVisible];
 
     self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
