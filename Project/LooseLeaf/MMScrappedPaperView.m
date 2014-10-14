@@ -1433,13 +1433,6 @@
 }
 
 
-#pragma mark - MFMailComposeViewControllerDelegate
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
-    UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-    [rootController dismissViewControllerAnimated:YES completion:nil];
-}
-
 #pragma mark - dealloc
 
 -(void) dealloc{

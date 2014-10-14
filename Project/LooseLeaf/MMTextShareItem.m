@@ -10,6 +10,7 @@
 #import "Mixpanel.h"
 #import "MMImageViewButton.h"
 #import "Constants.h"
+#import "MMPresentationWindow.h"
 
 @implementation MMTextShareItem{
     MMImageViewButton* button;
@@ -56,7 +57,8 @@
             NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
             [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
         }
         [delegate didShare:self];
     });
@@ -100,7 +102,8 @@
     [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SMS",
                                                                  kMPEventExportPropResult : strResult}];
     
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Dealloc

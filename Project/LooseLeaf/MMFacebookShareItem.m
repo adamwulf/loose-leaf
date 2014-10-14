@@ -14,6 +14,7 @@
 #import "NSThread+BlockAdditions.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
+#import "MMPresentationWindow.h"
 
 @implementation MMFacebookShareItem{
     MMProgressedImageViewButton* button;
@@ -54,6 +55,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
         if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
             [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
             [fbSheet addImage:self.delegate.imageToShare];
             [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
@@ -70,12 +72,10 @@
                 }
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Facebook",
                                                                              kMPEventExportPropResult : strResult}];
+                [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
             };
             
-            UIViewController* vc = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-            NSLog(@"asking %@ to present", vc);
-            NSLog(@"current presented controller: %@", vc.presentedViewController);
-            [vc presentViewController:fbSheet animated:YES completion:^{
+            [presentationWindow.rootViewController presentViewController:fbSheet animated:YES completion:^{
                 NSLog(@"complete showing");
             }];
             

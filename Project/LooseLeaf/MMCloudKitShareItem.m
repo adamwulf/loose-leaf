@@ -17,6 +17,7 @@
 #import <CloudKit/CloudKit.h>
 #import <MessageUI/MessageUI.h>
 #import "MMCloudKitManager.h"
+#import "MMPresentationWindow.h"
 
 @interface MMCloudKitShareItem (Private) <MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
@@ -136,7 +137,8 @@
             [composer setBody:@"Let's share ideas and sketches with Loose Leaf for iPad! http://getlooseleaf.com"];
             [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
         }
     }else{
         [self inviteWithEmail];
@@ -155,7 +157,8 @@
         [composer setMessageBody:@"I'm using Loose Leaf to sketch and brainstorm ideas. It makes it easy to import photos, cut and crop with scissors, and sketch and annotate. Download it now from http://getlooseleaf.com!" isHTML:NO];
         [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
         
-        [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+        MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+        [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
     }
 }
 
@@ -176,7 +179,8 @@
     [[Mixpanel sharedInstance] track:kMPEventInvite properties:@{kMPEventInvitePropDestination : @"Email",
                                                                  kMPEventInvitePropResult : strResult}];
 
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
@@ -196,7 +200,8 @@
     [[Mixpanel sharedInstance] track:kMPEventInvite properties:@{kMPEventInvitePropDestination : @"SMS",
                                                                  kMPEventInvitePropResult : strResult}];
     
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 

@@ -14,6 +14,7 @@
 #import "MMReachabilityManager.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
+#import "MMPresentationWindow.h"
 
 @implementation MMSinaWeiboShareItem{
     MMProgressedImageViewButton* button;
@@ -54,6 +55,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
         if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
             [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
             [fbSheet addImage:self.delegate.imageToShare];
             [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
@@ -70,9 +72,10 @@
                 }
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SinaWeibo",
                                                                              kMPEventExportPropResult : strResult}];
+                [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
             };
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:fbSheet animated:YES completion:nil];
+            [presentationWindow.rootViewController presentViewController:fbSheet animated:YES completion:nil];
             
             [delegate didShare:self];
         }else{
