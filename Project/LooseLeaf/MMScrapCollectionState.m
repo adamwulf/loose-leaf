@@ -32,6 +32,13 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 +(BOOL) isImportExportStateQueue{
     return dispatch_get_specific(kImportExportStateQueueIdentifier) != NULL;
 }
++(void) verifyImportExportStateQueue{
+    if(![MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Saving immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
+    }
+}
+
+
 
 -(id) init{
     if(self = [super init]){

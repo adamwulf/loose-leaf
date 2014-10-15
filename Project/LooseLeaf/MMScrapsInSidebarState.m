@@ -173,8 +173,8 @@
 }
 
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
+    if(!isLoading){
+        [MMScrapCollectionState verifyImportExportStateQueue];
     }
     if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;

@@ -416,8 +416,7 @@ static dispatch_queue_t importExportScrapStateQueue;
             [lock lock];
             
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
-            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-            [NSThread performBlockOnMainThread:^{
+            [NSThread performBlockOnMainThreadSync:^{
                 @synchronized(self){
                     if(!targetIsLoadedState){
                         NSLog(@"saved building JotView we didn't need");
@@ -426,11 +425,8 @@ static dispatch_queue_t importExportScrapStateQueue;
                         drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                     }
                 }
-                dispatch_semaphore_signal(sema1);
             }];
-
             // load state, if we have any.
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             BOOL goalIsLoaded = NO;
             @synchronized(self){
                 goalIsLoaded = targetIsLoadedState;

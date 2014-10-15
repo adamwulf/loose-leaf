@@ -76,7 +76,6 @@
                         @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
                     }
                 }
-                dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
 
                 NSArray* scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
@@ -84,9 +83,9 @@
 
                 NSMutableArray* scrapPropsWithState = [NSMutableArray array];
                 
-                // load all the states async
-                if([scrapProps count]){
-                    [NSThread performBlockOnMainThreadSync:^{
+                [NSThread performBlockOnMainThreadSync:^{
+                    // load all the states async
+                    if([scrapProps count]){
                         for(NSDictionary* scrapProperties in scrapProps){
                             NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
                             
@@ -108,17 +107,13 @@
                                 }
                             }
                         }
+                    }
+                    
+                    // maintain order of loaded scraps, so that they are added to the page
+                    // in the correct order as they load
+                    [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                        return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
                     }];
-                }
-
-                
-                // maintain order of loaded scraps, so that they are added to the page
-                // in the correct order as they load
-                [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                    return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
-                }];
-                
-                [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
                         @synchronized(self){
                             if(isUnloading){
@@ -171,10 +166,7 @@
 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                     }
                     [self.delegate didLoadAllScrapsFor:self];
-                    dispatch_semaphore_signal(sema1);
                 }];
-                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-//                dispatch_release(sema1); ARC handles this
             }
         };
 
@@ -212,8 +204,8 @@
 }
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsOnPaperState in wrong queue" userInfo:nil];
+    if(!isLoading){
+        [MMScrapCollectionState verifyImportExportStateQueue];
     }
     if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;
@@ -226,6 +218,29 @@
         }
     }
     return nil;
+}
+
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath{
+    if([self isStateLoaded]){
+        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
+    }
+    @autoreleasepool {
+        if([[NSFileManager defaultManager] fileExistsAtPath:scrapIDsPath]){
+            [self loadStateAsynchronously:NO atPath:scrapIDsPath andMakeEditable:YES];
+        }else{
+            [self loadStateAsynchronously:NO atPath:bundledScrapIDsPath andMakeEditable:YES];
+        }
+    }
+    dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
+    block();
+    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+        @autoreleasepool {
+            onComplete();
+            [self unload];
+        }
+        dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
+    });
+    dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
 }
 
 #pragma mark - Create Scraps

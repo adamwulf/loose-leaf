@@ -1228,28 +1228,14 @@
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
-    if([scrapsOnPaperState isStateLoaded]){
-        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
-    }
-    @autoreleasepool {
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
-        }else{
-            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
-        }
-    }
-    dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
-    block();
-    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-        @autoreleasepool {
-            MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
-            [immutableScrapState saveStateToDiskBlocking];
-            [self updateFullPageThumbnail:immutableScrapState];
-            [scrapsOnPaperState unload];
-        }
-        dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
-    });
-    dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
+    [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
+                                                       onBlockComplete:^{
+                                                           MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                           [immutableScrapState saveStateToDiskBlocking];
+                                                           [self updateFullPageThumbnail:immutableScrapState];
+                                                       }
+                                                           andLoadFrom:self.scrapIDsPath
+                                               withBundledScrapIDsPath:self.bundledScrapIDsPath];
 }
 
 -(BOOL) isStateLoaded{

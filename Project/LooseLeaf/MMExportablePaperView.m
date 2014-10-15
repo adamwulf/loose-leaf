@@ -391,28 +391,24 @@
             // now the scrap is off disk, so remove it from the page's state too
             // delete from the page's scrapsOnPaperState
             void(^removeFromScrapsOnPaperState)() = ^{
+                [MMScrapCollectionState verifyImportExportStateQueue];
                 scrapThatIsBeingDeleted = [self.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+                if(respectOthers){
+                    // we only need to save the page's state back to disk
+                    // if we respect that page's state at all. if we don't
+                    // (it's being deleted anyways), then we can skip it.
+                    //
+                    // now wait for the save + all blocks to complete
+                    // and ensure no pending saves
+                    [[self.scrapsOnPaperState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
+                }else{
+                    NSLog(@"disrespect to page state saves time");
+                }
             };
             if([self.scrapsOnPaperState isStateLoaded]){
                 removeFromScrapsOnPaperState();
             }else{
                 [self performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
-            }
-            if(respectOthers){
-                // we only need to save the page's state back to disk
-                // if we respect that page's state at all. if we don't
-                // (it's being deleted anyways), then we can skip it.
-                //
-                // now wait for the save + all blocks to complete
-                // and ensure no pending saves
-                dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
-                dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-                    [[self.scrapsOnPaperState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
-                    dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
-                });
-                dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
-            }else{
-                NSLog(@"disrespect to page state saves time");
             }
         }
         

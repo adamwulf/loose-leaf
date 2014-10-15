@@ -50,9 +50,7 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
-    if(![MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Saving immutable ScrapsOnPaperState in wrong queue" userInfo:nil];
-    }
+    [MMScrapCollectionState verifyImportExportStateQueue];
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         hadAnyEditsToSaveAtAll = YES;
