@@ -37,6 +37,7 @@
     
     // private vars
     NSString* scrapPropertiesPlistPath;
+    NSString* scrapBezierPath;
     NSString* inkImageFile;
     NSString* thumbImageFile;
     NSString* drawableViewStateFile;
@@ -115,7 +116,18 @@ static dispatch_queue_t importExportScrapStateQueue;
         if(!properties){
             properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledScrapPropertiesPlistPath];
         }
-        bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        if([properties objectForKey:@"bezierPath"]){
+            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        }else{
+            NSData* bezierData = [NSData dataWithContentsOfFile:[self scrapBezierPath]];
+            if(!bezierData){
+                bezierData = [NSData dataWithContentsOfFile:[self bundledScrapBezierPath]];
+            }
+            // bezier wasn't in the settings, so load it from
+            // its own bezier file
+            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:bezierData];
+        }
+        
         NSUInteger lsuh = [[properties objectForKey:@"lastSavedUndoHash"] unsignedIntegerValue];
         
         MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -151,9 +163,7 @@ static dispatch_queue_t importExportScrapStateQueue;
             
             //save initial bezier path to disk
             // not the most elegant solution, but it works and is fast enough for now
-            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-            [savedProperties writeToFile:self.scrapPropertiesPlistPath atomically:YES];
+            [[NSKeyedArchiver archivedDataWithRootObject:bezierPath] writeToFile:[self scrapBezierPath] atomically:YES];
         }
         if(!backingView){
             backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -259,19 +269,24 @@ static dispatch_queue_t importExportScrapStateQueue;
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
     
     // block to help save properties to a plist file
-    void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathForProperties, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
+    void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathToWriteToDisk, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
+
+        BOOL savedBezierOk = YES;
+        if(![[NSFileManager defaultManager] fileExistsAtPath:[self scrapBezierPath]]){
+            savedBezierOk = [[NSKeyedArchiver archivedDataWithRootObject:bezierPathToWriteToDisk] writeToFile:[self scrapBezierPath] atomically:YES];
+        }
+        
         // this will save the properties for the scrap
         // to disk, including the path and background information
         NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-        [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPathForProperties] forKey:@"bezierPath"];
         // add in properties from background
         [savedProperties setObject:[NSNumber numberWithUnsignedInteger:lsuh] forKey:@"lastSavedUndoHash"];
         NSDictionary* backgroundProps = [backgroundInfo saveBackgroundToDisk];
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
-        if(![savedProperties writeToFile:pathToSave atomically:YES]){
+        if(!savedBezierOk || ![savedProperties writeToFile:pathToSave atomically:YES]){
             if(!self.isForgetful){
-                NSLog(@"couldn't save properties! %p", self);
+                NSLog(@"couldn't save properties/bezier! %p", self);
             }
         }
     };
@@ -535,6 +550,13 @@ static dispatch_queue_t importExportScrapStateQueue;
     return scrapPropertiesPlistPath;
 }
 
+-(NSString*)scrapBezierPath{
+    if(!scrapBezierPath){
+        scrapBezierPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"bezier" stringByAppendingPathExtension:@"dat"]];
+    }
+    return scrapBezierPath;
+}
+
 -(NSString*)inkImageFile{
     if(!inkImageFile){
         inkImageFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
@@ -558,6 +580,10 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(NSString*) bundledScrapPropertiesPlistPath{
     return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+}
+
+-(NSString*)bundledScrapBezierPath{
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"bezier" stringByAppendingPathExtension:@"dat"]];
 }
 
 -(NSString*) bundledInkImageFile{
