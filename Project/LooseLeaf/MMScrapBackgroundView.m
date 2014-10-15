@@ -178,14 +178,15 @@ static int totalBackgroundBytes;
 -(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties{
     if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile] ||
        [[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
-        UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
-        if(!image){
+        NSData* imageData = [NSData dataWithContentsOfFile:self.backgroundJPGFile];
+        if(!imageData){
             NSLog(@"can't get background!");
-            image = [UIImage imageWithContentsOfFile:self.bundledBackgroundJPGFile];
-            if(!image){
+            imageData = [NSData dataWithContentsOfFile:self.bundledBackgroundJPGFile];
+            if(!imageData){
                 NSLog(@"can't get background!");
             }
         }
+        UIImage* image = [UIImage imageWithData:imageData];
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];
