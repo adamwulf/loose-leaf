@@ -147,6 +147,10 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
                         expectedUndoHash = 0;
                         lastSavedUndoHash = 0;
                     }
+                }else{
+                    @synchronized(self){
+                        isUnloading = NO;
+                    }
                 }
             }
         });
