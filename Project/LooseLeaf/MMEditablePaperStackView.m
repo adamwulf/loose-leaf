@@ -273,6 +273,8 @@ struct SidebarButton{
 #pragma mark - MMPencilAndPaletteViewDelegate
 
 -(void) penTapped:(UIButton*)_button{
+    [scissor cancelAllTouches];
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
@@ -284,6 +286,7 @@ struct SidebarButton{
 }
 
 -(void) didChangeColorTo:(UIColor*)color{
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     pen.color = color;
     if(!pencilTool.selected){
         [self penTapped:nil];
@@ -313,6 +316,8 @@ struct SidebarButton{
 }
 
 -(void) eraserTapped:(UIButton*)_button{
+    [scissor cancelAllTouches];
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = YES;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
@@ -320,6 +325,7 @@ struct SidebarButton{
 }
 
 -(void) scissorTapped:(UIButton*)_button{
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;

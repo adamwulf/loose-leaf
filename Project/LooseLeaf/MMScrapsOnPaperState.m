@@ -85,29 +85,32 @@
                 NSMutableArray* scrapPropsWithState = [NSMutableArray array];
                 
                 // load all the states async
-                for(NSDictionary* scrapProperties in scrapProps){
-                    NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
-                    
-                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
-
-                    NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                    if(scrap){
-//                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
-                        [props setObject:scrap forKey:@"scrap"];
-                        [scrapPropsWithState addObject:props];
-                    }else{
-                        __block MMScrapViewState* state = nil;
-                        [NSThread performBlockOnMainThreadSync:^{
-                            state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
-                        }];
-                        if(state){
-                            [props setObject:state forKey:@"state"];
-                            [scrapPropsWithState addObject:props];
-                        }else{
-                            // failed to load scrap
+                if([scrapProps count]){
+                    [NSThread performBlockOnMainThreadSync:^{
+                        for(NSDictionary* scrapProperties in scrapProps){
+                            NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
+                            
+                            MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
+                            
+                            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                            if(scrap){
+                                //                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
+                                [props setObject:scrap forKey:@"scrap"];
+                                [scrapPropsWithState addObject:props];
+                            }else{
+                                __block MMScrapViewState* state = nil;
+                                state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                                if(state){
+                                    [props setObject:state forKey:@"state"];
+                                    [scrapPropsWithState addObject:props];
+                                }else{
+                                    // failed to load scrap
+                                }
+                            }
                         }
-                    }
+                    }];
                 }
+
                 
                 // maintain order of loaded scraps, so that they are added to the page
                 // in the correct order as they load
