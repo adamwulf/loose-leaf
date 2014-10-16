@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIScreen+PortraitBounds.h"
 
 @implementation MMShadowManager
 
@@ -38,8 +39,8 @@ static MMShadowManager* _instance = nil;
 
 -(UIBezierPath*) generateUnitShadowPath{
     [MMShadowManager sharedInstance];
-    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
-    CGFloat height = [[UIScreen mainScreen] bounds].size.height;
+    CGFloat width = [[UIScreen mainScreen] portraitBounds].size.width;
+    CGFloat height = [[UIScreen mainScreen] portraitBounds].size.height;
     UIBezierPath* path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake((rand() % kShadowDepth) / width, (rand() % kShadowDepth) / height)];
     CGFloat loc = rand() % 100 / 100.0 / 20.0;
@@ -80,7 +81,7 @@ static MMShadowManager* _instance = nil;
         // latest tests show this finishes in .02s on an iPad 3
         [NSThread performBlockInBackground:^{
             @autoreleasepool {
-                CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+                CGSize screenSize = [[UIScreen mainScreen] portraitBounds].size;
                 CGFloat minWidth = floorf(screenSize.width * kMinPageZoom);
                 CGFloat maxWidth = screenSize.width * kMaxPageZoom;
                 CGFloat currWidth = minWidth;

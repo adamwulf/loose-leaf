@@ -15,10 +15,13 @@
 #define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
+#define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
+
+#define CheckThreadMatches(__THREAD_CHECK__) {if(!(__THREAD_CHECK__)){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
 
 #ifdef DEBUG
-#define debug_NSLog(__FORMAT__, ...)
-//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+//#define debug_NSLog(__FORMAT__, ...)
+#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif

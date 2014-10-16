@@ -34,6 +34,7 @@
 #import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
 #import "MMStatTracker.h"
+#import "MMTrashManager.h"
 
 
 @interface MMEditablePaperView (Private)
@@ -1197,16 +1198,20 @@
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
+    CheckMainThread;
 //    debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+//        [scrapsOnPaperState unload];
+//        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
 }
 
 -(void) unloadState{
+    CheckMainThread;
 //    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
@@ -1215,7 +1220,7 @@
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
-            [strongScrapState unload];
+            [strongScrapState unloadPaperState];
             strongScrapState = nil;
         }
     });
@@ -1228,35 +1233,26 @@
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
-    if([scrapsOnPaperState isStateLoaded]){
-        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
-    }
-    @autoreleasepool {
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
-        }else{
-            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
-        }
-    }
-    dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
-    block();
-    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-        @autoreleasepool {
-            MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
-            [immutableScrapState saveStateToDiskBlocking];
-            [self updateFullPageThumbnail:immutableScrapState];
-            [scrapsOnPaperState unload];
-        }
-        dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
-    });
-    dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
+    [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
+                                                       onBlockComplete:^{
+                                                           dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+                                                               MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                               [immutableScrapState saveStateToDiskBlocking];
+                                                               [NSThread performBlockOnMainThread:^{
+                                                                   [self updateFullPageThumbnail:immutableScrapState];
+                                                               }];
+                                                           });
+                                                       }
+                                                           andLoadFrom:self.scrapIDsPath
+                                               withBundledScrapIDsPath:self.bundledScrapIDsPath];
 }
 
 -(BOOL) isStateLoaded{
     return [super isStateLoaded];
 }
 -(BOOL) isStateLoading{
-    return [super isStateLoading] || [scrapsOnPaperState isStateLoading];
+    return [super isStateLoading] || [scrapsOnPaperState isCollectionStateLoading];
 }
 
 
@@ -1334,8 +1330,6 @@
             });
         }
     }
-    // make sure our scraps' thumbnails are loaded
-//    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
@@ -1371,7 +1365,7 @@
                     // we should only save if this has changed.
                     [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                     // free all scraps from memory too
-                    [strongScrapState unload];
+                    [strongScrapState unloadPaperState];
                 }
             });
         }

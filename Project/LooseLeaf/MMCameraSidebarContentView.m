@@ -174,4 +174,12 @@
     }
 }
 
+-(void) updatePhotoRotation:(BOOL)animated{
+    [super updatePhotoRotation:animated];
+    if(cachedCameraCell){
+        [cachedCameraCell updatePhotoRotation:animated];
+    }
+}
+
+
 @end

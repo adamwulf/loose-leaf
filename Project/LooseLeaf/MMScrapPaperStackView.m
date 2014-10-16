@@ -959,7 +959,6 @@ int skipAll = NO;
                     // it can undo the drop and it won't affect the page that
                     // the scrap came from
                     MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap toPage:pageToDropScrap];
-                    [pageToDropScrap.scrapsOnPaperState showScrap:clonedScrap];
                     // remove the scrap from the original page
                     [gesture.scrap removeFromSuperview];
 
@@ -1233,7 +1232,6 @@ int skipAll = NO;
             // so we need to clone it to the new page
             // and update their undo stacks
             MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
-            [page.scrapsOnPaperState showScrap:clonedScrap];
             [page addUndoItemForAddedScrap:clonedScrap];
             
             // now update the undo stack of the owning page
@@ -1360,7 +1358,6 @@ int skipAll = NO;
     // next, add the new scrap to the same page as the stretched scrap
     MMUndoablePaperView* page = [visibleStackHolder peekSubview];
     MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
-    [page.scrapsOnPaperState showScrap:clonedScrap];
     
     // move it to the new gesture location under it's scrap
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
@@ -1473,6 +1470,17 @@ int skipAll = NO;
     }
 }
 
+#pragma mark - PolygonToolDelegate
+
+// when scissors complete, i need to drop all held scraps
+-(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
+    // only cancel scrap gestures
+    [panAndPinchScrapGesture cancel];
+    [panAndPinchScrapGesture2 cancel];
+    [stretchScrapGesture cancel];
+    // now cut with scissors
+    [super finishShapeWithTouch:touch withTool:tool];
+}
 
 #pragma mark - MMPaperViewDelegate
 
@@ -1816,7 +1824,7 @@ int skipAll = NO;
     void(^block)() = ^{
         clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
         clonedScrap.scale = scrap.scale;
-        [scrapContainer addSubview:clonedScrap];
+        [page.scrapsOnPaperState showScrap:clonedScrap];
         
         // next match it's location exactly on top of the original scrap:
         [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];

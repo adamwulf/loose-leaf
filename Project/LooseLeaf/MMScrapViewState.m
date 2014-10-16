@@ -93,13 +93,19 @@
 // queue
 static dispatch_queue_t importExportScrapStateQueue;
 
+static const void *const kImportExportScrapStateQueueIdentifier = &kImportExportScrapStateQueueIdentifier;
+
 +(dispatch_queue_t) importExportScrapStateQueue{
     @synchronized([MMScrapViewState class]){
         if(!importExportScrapStateQueue){
             importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+            dispatch_queue_set_specific(importExportScrapStateQueue, kImportExportScrapStateQueueIdentifier, (void *)kImportExportScrapStateQueueIdentifier, NULL);
         }
         return importExportScrapStateQueue;
     }
+}
++(BOOL) isImportExportScrapStateQueue{
+    return dispatch_get_specific(kImportExportScrapStateQueueIdentifier) != NULL;
 }
 
 #pragma mark - Init
@@ -410,14 +416,15 @@ static dispatch_queue_t importExportScrapStateQueue;
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @synchronized(self){
-            targetIsLoadedState = YES;
+            if(!targetIsLoadedState){
+                return;
+            }
         }
         @autoreleasepool {
             [lock lock];
             
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
-            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-            [NSThread performBlockOnMainThread:^{
+            [NSThread performBlockOnMainThreadSync:^{
                 @synchronized(self){
                     if(!targetIsLoadedState){
                         NSLog(@"saved building JotView we didn't need");
@@ -426,11 +433,8 @@ static dispatch_queue_t importExportScrapStateQueue;
                         drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                     }
                 }
-                dispatch_semaphore_signal(sema1);
             }];
-
             // load state, if we have any.
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             BOOL goalIsLoaded = NO;
             @synchronized(self){
                 goalIsLoaded = targetIsLoadedState;
@@ -440,7 +444,7 @@ static dispatch_queue_t importExportScrapStateQueue;
             }else{
                 // load drawable view information here
                 drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-                [drawableViewState loadStateAsynchronously:async
+                [drawableViewState loadJotStateAsynchronously:async
                                                   withSize:drawableView.pagePtSize
                                                   andScale:drawableView.scale
                                                 andContext:[drawableView context]

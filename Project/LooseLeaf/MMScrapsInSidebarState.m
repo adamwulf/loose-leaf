@@ -46,6 +46,7 @@
 #pragma mark - Save and Load
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){
@@ -131,11 +132,11 @@
                         }
                     }
                     @synchronized(self){
+                        isLoaded = YES;
+                        isLoading = NO;
                         MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                         expectedUndoHash = [immutableState undoHash];
                         lastSavedUndoHash = [immutableState undoHash];
-                        isLoaded = YES;
-                        isLoading = NO;
                     }
                     [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
@@ -173,10 +174,10 @@
 }
 
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if(!isLoading && ![MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Creating immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
+    if(scrapIDsPath){
+        CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
     }
-    if([self isStateLoaded] || isLoading){
+    if([self isStateLoaded]){
         hasEditsToSave = NO;
         MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
         expectedUndoHash = [immutable undoHash];

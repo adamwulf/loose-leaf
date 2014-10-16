@@ -181,7 +181,7 @@
             if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
 //                NSLog(@"gesture is active %@", gesture);
             }
-            [(MMPanAndPinchGestureRecognizer*)gesture cancel];
+            [(MMCancelableGestureRecognizer*)gesture cancel];
         }
     }
 }

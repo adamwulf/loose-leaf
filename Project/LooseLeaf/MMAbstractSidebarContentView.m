@@ -48,7 +48,6 @@
         
         [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
         [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
-        [photoListScrollView registerClass:[MMEmptyCollectionViewCell class] forCellWithReuseIdentifier:@"MMEmptyCollectionViewCell"];
 
         currentAlbum = nil;
         
@@ -268,6 +267,7 @@
             updateVisibleRowsWithRotation();
         }];
     }
+    [emptyView updatePhotoRotation:animated];
 }
 
 -(NSString*) description{

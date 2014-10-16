@@ -33,11 +33,15 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
     return dispatch_get_specific(kImportExportStateQueueIdentifier) != NULL;
 }
 
+
+
 -(id) init{
     if(self = [super init]){
         expectedUndoHash = 0;
         lastSavedUndoHash = 0;
         allLoadedScraps = [NSMutableArray array];
+        // initialize our target state
+        targetLoadedState = MMScrapCollectionStateTargetUnloaded;
     }
     return self;
 }
@@ -86,11 +90,15 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 }
 
 -(BOOL) isStateLoaded{
-    return isLoaded;
+    @synchronized(self){
+        return isLoaded;
+    }
 }
 
--(BOOL) isStateLoading{
-    return isLoading;
+-(BOOL) isCollectionStateLoading{
+    @synchronized(self){
+        return isLoading;
+    }
 }
 
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
@@ -103,19 +111,22 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
     @throw kAbstractMethodException;
 }
 
--(void) unload{
+-(void) unloadPaperState{
+    CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
     if([self hasEditsToSave]){
-        NSLog(@"foobar %d", [self hasEditsToSave]);
         @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"Unloading ScrapCollectionState with edits pending save." userInfo:nil];
     }
     if([self isStateLoaded] || isLoading){
         @synchronized(self){
             isUnloading = YES;
+            targetLoadedState = MMScrapCollectionStateTargetUnloaded;
         }
         dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
-                if(isLoading){
-                    @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"unloading during loading" userInfo:nil];
+                @synchronized(self){
+                    if(targetLoadedState != MMScrapCollectionStateTargetUnloaded){
+                        NSLog(@"MMScrapCollectionState: target load state is not to unload. bailing on unload early");
+                    }
                 }
                 if([self isStateLoaded]){
                     @synchronized(allLoadedScraps){
