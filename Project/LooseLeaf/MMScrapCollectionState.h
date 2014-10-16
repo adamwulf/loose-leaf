@@ -11,6 +11,12 @@
 
 @class MMImmutableScrapCollectionState;
 
+typedef enum{
+    MMScrapCollectionStateTargetLoadedEditable,
+    MMScrapCollectionStateTargetLoadedNotEditable,
+    MMScrapCollectionStateTargetUnloaded
+} MMScrapCollectionStateStatus;
+
 @interface MMScrapCollectionState : NSObject{
     // loading state
     BOOL isLoaded;
@@ -27,6 +33,9 @@
     NSUInteger lastSavedUndoHash;
     // delegate
     __weak NSObject<MMScrapCollectionStateDelegate>* delegate;
+    //
+    // target load/unload status
+    MMScrapCollectionStateStatus targetLoadedState;
 }
 
 +(dispatch_queue_t) importExportStateQueue;
@@ -51,7 +60,7 @@
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 -(BOOL) isStateLoaded;
--(BOOL) isStateLoading;
+-(BOOL) isCollectionStateLoading;
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
 

@@ -69,16 +69,25 @@
         __block NSArray* scrapIDsOnPage;
         @synchronized(self){
             isLoading = YES;
+            if(makeEditable){
+                targetLoadedState = MMScrapCollectionStateTargetLoadedEditable;
+            }else if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                // only set to loaded+notEditable if our current target is unloaded
+                targetLoadedState = MMScrapCollectionStateTargetLoadedNotEditable;
+            }
         }
         
         NSMutableArray* scrapPropsWithState = [NSMutableArray array];
 
+        __block BOOL hasBailedOnLoadingBecauseOfMismatchedTargetState = NO;
+        
         void (^blockForImportExportStateQueue)() = ^(void) {
             @autoreleasepool {
                 @synchronized(self){
-                    if(isUnloading){
-                        // we're not allowed to load while already trying to unload
-                        @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                    if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                        NSLog(@"MMScrapsOnPaperState bailing early");
+                        hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
+                        return;
                     }
                 }
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
@@ -88,9 +97,25 @@
             }
         };
         void (^blockForMainThread)() = ^{
+            if(hasBailedOnLoadingBecauseOfMismatchedTargetState){
+                NSLog(@"MMScrapsOnPaperState main thread bailing early");
+                isLoaded = NO;
+                isLoading = NO;
+                return;
+            }
             // load all the states async
             if([scrapProps count]){
                 for(NSDictionary* scrapProperties in scrapProps){
+                    @synchronized(self){
+                        if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                            NSLog(@"MMScrapsOnPaperState main thread bailing early");
+                            hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
+                            isLoaded = NO;
+                            isLoading = NO;
+                            return;
+                        }
+                    }
+
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
                     
                     MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
@@ -119,18 +144,6 @@
                 return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
             }];
             for(NSDictionary* scrapProperties in scrapPropsWithState){
-                @synchronized(self){
-                    if(isUnloading){
-                        // we were asked to unload before we were even
-                        // done unloading. just bail here
-                        NSLog(@"ScrapsOnPaperState asked to unload before finished loading");
-                        @synchronized(self){
-                            isLoaded = NO;
-                            isLoading = NO;
-                        }
-                        return;
-                    }
-                }
                 MMScrapView* scrap = nil;
                 if([scrapProperties objectForKey:@"scrap"]){
                     scrap = [scrapProperties objectForKey:@"scrap"];
@@ -172,6 +185,19 @@
                 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
             }
             [self.delegate didLoadAllScrapsFor:self];
+            
+            // we were asked to unload halfway through loading,
+            // so in case that unload already finished while we
+            // were creating scraps, we should re-fire the unload
+            // call, just in case
+            @synchronized(self){
+                if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                    NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
+                    dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
+                        [self unloadPaperState];
+                    });
+                }
+            }
         };
         
         if(async){
@@ -201,11 +227,14 @@
             if([self isStateLoaded]){
                 for(MMScrapView* scrap in self.scrapsOnPaper){
                     [scrap loadScrapStateAsynchronously:async];
-                    @synchronized(self){
-                        if(isUnloading){
-                            @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
-                        }
-                    }
+                }
+            }
+            @synchronized(self){
+                if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                    NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
+                    dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
+                        [self unloadPaperState];
+                    });
                 }
             }
         };

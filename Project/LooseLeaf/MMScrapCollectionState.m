@@ -40,6 +40,8 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
         expectedUndoHash = 0;
         lastSavedUndoHash = 0;
         allLoadedScraps = [NSMutableArray array];
+        // initialize our target state
+        targetLoadedState = MMScrapCollectionStateTargetUnloaded;
     }
     return self;
 }
@@ -91,7 +93,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
     return isLoaded;
 }
 
--(BOOL) isStateLoading{
+-(BOOL) isCollectionStateLoading{
     return isLoading;
 }
 
@@ -106,18 +108,21 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 }
 
 -(void) unloadPaperState{
+    CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
     if([self hasEditsToSave]){
-        NSLog(@"foobar %d", [self hasEditsToSave]);
         @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"Unloading ScrapCollectionState with edits pending save." userInfo:nil];
     }
     if([self isStateLoaded] || isLoading){
         @synchronized(self){
             isUnloading = YES;
+            targetLoadedState = MMScrapCollectionStateTargetUnloaded;
         }
         dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
-                if(isLoading){
-                    @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"unloading during loading" userInfo:nil];
+                @synchronized(self){
+                    if(targetLoadedState != MMScrapCollectionStateTargetUnloaded){
+                        NSLog(@"MMScrapCollectionState: target load state is not to unload. bailing on unload early");
+                    }
                 }
                 if([self isStateLoaded]){
                     @synchronized(allLoadedScraps){

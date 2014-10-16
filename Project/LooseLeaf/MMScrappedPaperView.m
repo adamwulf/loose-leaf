@@ -1252,7 +1252,7 @@
     return [super isStateLoaded];
 }
 -(BOOL) isStateLoading{
-    return [super isStateLoading] || [scrapsOnPaperState isStateLoading];
+    return [super isStateLoading] || [scrapsOnPaperState isCollectionStateLoading];
 }
 
 
