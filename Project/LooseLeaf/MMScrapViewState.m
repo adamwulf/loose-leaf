@@ -444,7 +444,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
             }else{
                 // load drawable view information here
                 drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-                [drawableViewState loadStateAsynchronously:async
+                [drawableViewState loadJotStateAsynchronously:async
                                                   withSize:drawableView.pagePtSize
                                                   andScale:drawableView.scale
                                                 andContext:[drawableView context]
