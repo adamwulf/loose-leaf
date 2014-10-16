@@ -163,6 +163,7 @@
 		666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254B18F618B000C17295 /* MMEventSidebarContentView.m */; };
 		666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */; };
 		666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255818F89B1B00C17295 /* MMBorderedCamView.m */; };
+		666F2DCD19F065F60084C937 /* UIScreen+PortraitBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */; };
 		6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE119C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png */; };
@@ -663,6 +664,8 @@
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		666F09A2185E64B10074CE6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		666F2DCB19F065F60084C937 /* UIScreen+PortraitBounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+PortraitBounds.h"; sourceTree = "<group>"; };
+		666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+PortraitBounds.m"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iCloudSettingsLoggedIn.png; sourceTree = "<group>"; };
@@ -1186,6 +1189,8 @@
 				66066746193A7C1400C985E9 /* UIImage+Memory.m */,
 				66ACECDD19D4C122000EA792 /* NSArray+IndexSetAdditions.h */,
 				66ACECDE19D4C122000EA792 /* NSArray+IndexSetAdditions.m */,
+				666F2DCB19F065F60084C937 /* UIScreen+PortraitBounds.h */,
+				666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1381,15 +1386,6 @@
 				6634856819DB551B00B5CF2D /* MMTrashIcon.m */,
 			);
 			name = "Delete Sidebar";
-			sourceTree = "<group>";
-		};
-		66381F5619CB91F80014796F /* CameraSection */ = {
-			isa = PBXGroup;
-			children = (
-				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
-				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
-			);
-			name = CameraSection;
 			sourceTree = "<group>";
 		};
 		66381F5A19CB965D0014796F /* PhotosSection */ = {
@@ -1759,8 +1755,9 @@
 			isa = PBXGroup;
 			children = (
 				66381F5A19CB965D0014796F /* PhotosSection */,
-				66381F5619CB91F80014796F /* CameraSection */,
 				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
+				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
+				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,
 				666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */,
 				666E254718F613FA00C17295 /* MMFaceSidebarContentView.h */,
@@ -2845,6 +2842,7 @@
 				6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */,
 				6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
+				666F2DCD19F065F60084C937 /* UIScreen+PortraitBounds.m in Sources */,
 				667C635F199FE4BC00E93CD6 /* UIImage+MPAverageColor.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
 				66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */,

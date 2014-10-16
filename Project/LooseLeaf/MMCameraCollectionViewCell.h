@@ -14,4 +14,6 @@
 
 @property (nonatomic, weak) NSObject<MMSinglePhotoCollectionViewCellDelegate>* delegate;
 
+-(void) updatePhotoRotation:(BOOL)animated;
+
 @end
