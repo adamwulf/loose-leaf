@@ -92,6 +92,9 @@
                 }
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
                 
+                if([[NSFileManager defaultManager] fileExistsAtPath:scrapIDsPath] && !allScrapStateInfo){
+                    NSLog(@"corruped file at %@", scrapIDsPath);
+                }
                 scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
                 scrapProps = [allScrapStateInfo objectForKey:@"allScrapProperties"];
             }
@@ -108,7 +111,6 @@
                 for(NSDictionary* scrapProperties in scrapProps){
                     @synchronized(self){
                         if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                            NSLog(@"MMScrapsOnPaperState main thread bailing early");
                             hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
                             isLoaded = NO;
                             isLoading = NO;
@@ -133,6 +135,7 @@
                             [scrapPropsWithState addObject:props];
                         }else{
                             // failed to load scrap
+                            NSLog(@"failed to load %@ at %@", scrapUUID, scrapIDsPath);
                         }
                     }
                 }
