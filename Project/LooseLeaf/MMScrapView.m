@@ -604,10 +604,10 @@
     [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
-#pragma mark - dealloc
-
--(void) dealloc{
-    NSLog(@"dealloc scrap: %@", scrapState.uuid);
-}
+//#pragma mark - dealloc
+//
+//-(void) dealloc{
+//    NSLog(@"dealloc scrap: %@", scrapState.uuid);
+//}
 
 @end

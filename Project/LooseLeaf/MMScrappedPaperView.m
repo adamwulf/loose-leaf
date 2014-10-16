@@ -1230,9 +1230,13 @@
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
     [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
                                                        onBlockComplete:^{
-                                                           MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
-                                                           [immutableScrapState saveStateToDiskBlocking];
-                                                           [self updateFullPageThumbnail:immutableScrapState];
+                                                           dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+                                                               MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                               [immutableScrapState saveStateToDiskBlocking];
+                                                               [NSThread performBlockOnMainThread:^{
+                                                                   [self updateFullPageThumbnail:immutableScrapState];
+                                                               }];
+                                                           });
                                                        }
                                                            andLoadFrom:self.scrapIDsPath
                                                withBundledScrapIDsPath:self.bundledScrapIDsPath];

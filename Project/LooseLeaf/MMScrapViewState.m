@@ -93,13 +93,19 @@
 // queue
 static dispatch_queue_t importExportScrapStateQueue;
 
+static const void *const kImportExportScrapStateQueueIdentifier = &kImportExportScrapStateQueueIdentifier;
+
 +(dispatch_queue_t) importExportScrapStateQueue{
     @synchronized([MMScrapViewState class]){
         if(!importExportScrapStateQueue){
             importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+            dispatch_queue_set_specific(importExportScrapStateQueue, kImportExportScrapStateQueueIdentifier, (void *)kImportExportScrapStateQueueIdentifier, NULL);
         }
         return importExportScrapStateQueue;
     }
+}
++(BOOL) isImportExportScrapStateQueue{
+    return dispatch_get_specific(kImportExportScrapStateQueueIdentifier) != NULL;
 }
 
 #pragma mark - Init
@@ -410,7 +416,9 @@ static dispatch_queue_t importExportScrapStateQueue;
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @synchronized(self){
-            targetIsLoadedState = YES;
+            if(!targetIsLoadedState){
+                return;
+            }
         }
         @autoreleasepool {
             [lock lock];
