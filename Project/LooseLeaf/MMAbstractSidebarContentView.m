@@ -268,6 +268,7 @@
             updateVisibleRowsWithRotation();
         }];
     }
+    [emptyView updatePhotoRotation:animated];
 }
 
 -(NSString*) description{
