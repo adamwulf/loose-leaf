@@ -1197,18 +1197,20 @@
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
+    CheckMainThread;
 //    debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
-        [scrapsOnPaperState unload];
-        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+//        [scrapsOnPaperState unload];
+//        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
 }
 
 -(void) unloadState{
+    CheckMainThread;
 //    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;

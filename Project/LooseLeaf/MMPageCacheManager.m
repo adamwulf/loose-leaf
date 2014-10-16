@@ -50,6 +50,7 @@ static MMPageCacheManager* _instance = nil;
 #pragma mark - Public
 
 -(void) mayChangeTopPageTo:(MMPaperView*)page{
+    CheckMainThread;
     if([self.delegate isPageInVisibleStack:page]){
         MMPaperView* pageBelow = [self.delegate getPageBelow:page];
         if([pageBelow isKindOfClass:[MMEditablePaperView class]]){
@@ -97,6 +98,7 @@ static MMPageCacheManager* _instance = nil;
 }
 
 -(void) willChangeTopPageTo:(MMPaperView*)page{
+    CheckMainThread;
     if(!page && [delegate countAllPages]){
         // don't allow changing to nil page unless
         // there are no pages to change to (count is zero)
@@ -123,6 +125,7 @@ static MMPageCacheManager* _instance = nil;
 // returns YES if we changed the top cached page
 // returns NO otherwise
 -(BOOL) didChangeToTopPage:(MMPaperView*)topPage{
+    CheckMainThread;
     [self ensureTopPageIsLoaded:topPage];
     if(topPage && ![recentlyConfirmedPageUUID isEqualToString:topPage.uuid]){
         recentlyConfirmedPageUUID = topPage.uuid;
@@ -135,6 +138,7 @@ static MMPageCacheManager* _instance = nil;
 }
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
+    CheckMainThread;
     debug_NSLog(@"will NOT change top page to: %@", page.uuid);
 }
 
@@ -178,6 +182,7 @@ static MMPageCacheManager* _instance = nil;
 
 
 -(void) loadStateForPage:(MMPaperView*)page{
+    CheckMainThread;
     if(page){
         // add the page to the beginning
         @synchronized(stateLoadedPages){
@@ -208,6 +213,7 @@ static MMPageCacheManager* _instance = nil;
 }
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
+    CheckMainThread;
     if(!topPage || [topPage isKindOfClass:[MMEditablePaperView class]]){
         MMUndoablePaperView* editableTopPage = (MMUndoablePaperView*)topPage;
         
@@ -243,6 +249,7 @@ static MMPageCacheManager* _instance = nil;
 }
 
 -(void) pageWasDeleted:(MMPaperView*)page{
+    CheckMainThread;
     if(page){
         @synchronized(stateLoadedPages){
             [stateLoadedPages removeObject:page];

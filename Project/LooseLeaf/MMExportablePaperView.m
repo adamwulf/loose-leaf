@@ -406,7 +406,7 @@
                 }
             };
             if([self.scrapsOnPaperState isStateLoaded]){
-                removeFromScrapsOnPaperState();
+                dispatch_sync([MMScrapCollectionState importExportStateQueue], removeFromScrapsOnPaperState);
             }else{
                 [self performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
             }
