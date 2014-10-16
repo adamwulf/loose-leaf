@@ -31,7 +31,6 @@
 
 +(dispatch_queue_t) importExportStateQueue;
 +(BOOL) isImportExportStateQueue;
-+(void) verifyImportExportStateQueue;
 
 @property (nonatomic, readonly) NSObject<MMScrapCollectionStateDelegate>* delegate;
 @property (nonatomic, readonly) int fullByteSize;
@@ -56,7 +55,7 @@
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
 
--(void) unload;
+-(void) unloadPaperState;
 
 #pragma mark - Paths
 

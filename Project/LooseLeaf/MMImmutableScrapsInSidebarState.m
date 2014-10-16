@@ -10,6 +10,7 @@
 #import "MMScrapCollectionState+Private.h"
 #import "MMScrapView.h"
 #import "NSArray+Map.h"
+#import "Constants.h"
 
 @implementation MMImmutableScrapsInSidebarState{
     MMScrapCollectionState* ownerState;
@@ -41,7 +42,8 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
-    [MMScrapCollectionState verifyImportExportStateQueue];
+    CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
+
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", nil];

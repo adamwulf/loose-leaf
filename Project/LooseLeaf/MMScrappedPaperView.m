@@ -1220,7 +1220,7 @@
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
-            [strongScrapState unload];
+            [strongScrapState unloadPaperState];
             strongScrapState = nil;
         }
     });
@@ -1365,7 +1365,7 @@
                     // we should only save if this has changed.
                     [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                     // free all scraps from memory too
-                    [strongScrapState unload];
+                    [strongScrapState unloadPaperState];
                 }
             });
         }

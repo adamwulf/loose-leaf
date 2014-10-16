@@ -32,11 +32,6 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 +(BOOL) isImportExportStateQueue{
     return dispatch_get_specific(kImportExportStateQueueIdentifier) != NULL;
 }
-+(void) verifyImportExportStateQueue{
-    if(![MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Saving immutable ScrapsInSidebarState in wrong queue" userInfo:nil];
-    }
-}
 
 
 
@@ -110,7 +105,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
     @throw kAbstractMethodException;
 }
 
--(void) unload{
+-(void) unloadPaperState{
     if([self hasEditsToSave]){
         NSLog(@"foobar %d", [self hasEditsToSave]);
         @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"Unloading ScrapCollectionState with edits pending save." userInfo:nil];

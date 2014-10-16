@@ -46,6 +46,7 @@
 #pragma mark - Save and Load
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){
@@ -174,7 +175,7 @@
 
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if(!isLoading){
-        [MMScrapCollectionState verifyImportExportStateQueue];
+        CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
     }
     if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;

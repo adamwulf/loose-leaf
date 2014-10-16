@@ -223,16 +223,17 @@
     }
 }
 
--(void) unload{
+-(void) unloadPaperState{
+    CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
     if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
         NSLog(@"what");
     }
-    [super unload];
+    [super unloadPaperState];
 }
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
     if(!isLoading){
-        [MMScrapCollectionState verifyImportExportStateQueue];
+        CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
     }
     if([self isStateLoaded] || isLoading){
         hasEditsToSave = NO;
@@ -279,7 +280,7 @@
             // this will add the unload block to be the very next block to run
             // asynchrously from the currently empty importExportStateQueue queue
             dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-                [self unload];
+                [self unloadPaperState];
             });
         }
     });

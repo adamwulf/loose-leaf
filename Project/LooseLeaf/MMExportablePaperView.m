@@ -391,7 +391,7 @@
             // now the scrap is off disk, so remove it from the page's state too
             // delete from the page's scrapsOnPaperState
             void(^removeFromScrapsOnPaperState)() = ^{
-                [MMScrapCollectionState verifyImportExportStateQueue];
+                CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
                 scrapThatIsBeingDeleted = [self.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
                 if(respectOthers){
                     // we only need to save the page's state back to disk
