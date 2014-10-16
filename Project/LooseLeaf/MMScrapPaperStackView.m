@@ -1470,6 +1470,17 @@ int skipAll = NO;
     }
 }
 
+#pragma mark - PolygonToolDelegate
+
+// when scissors complete, i need to drop all held scraps
+-(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
+    // only cancel scrap gestures
+    [panAndPinchScrapGesture cancel];
+    [panAndPinchScrapGesture2 cancel];
+    [stretchScrapGesture cancel];
+    // now cut with scissors
+    [super finishShapeWithTouch:touch withTool:tool];
+}
 
 #pragma mark - MMPaperViewDelegate
 

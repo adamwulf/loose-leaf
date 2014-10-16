@@ -348,16 +348,16 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[UIApplication sharedApplication] keyWindow].gestureRecognizers];
         for (UIGestureRecognizer* gesture in allGesturesAndTopTwoPages) {
             if([gesture respondsToSelector:@selector(cancel)]){
-                debug_NSLog(@"trying to cancel: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                debug_NSLog(@"trying to cancel: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 [gesture performSelector:@selector(cancel)];
             }else{
-                debug_NSLog(@"couldn't cancel: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                debug_NSLog(@"couldn't cancel: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 if(gesture.enabled){
                     gesture.enabled = NO;
                     gesture.enabled = YES;
-                    debug_NSLog(@"manually cancelled: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                    debug_NSLog(@"manually cancelled: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 }else{
-                    debug_NSLog(@"was disabled: %@ %d", NSStringFromClass([gesture class]), gesture.state);
+                    debug_NSLog(@"was disabled: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 }
             }
         }
