@@ -9,6 +9,7 @@
 #import "MMCloudKeyButton.h"
 #import "MMRotatingKeyDemoLayer.h"
 #import "MMBrokenCloudLayer.h"
+#import "MMRotationManager.h"
 #import "MMCloudErrorIconLayer.h"
 
 @implementation MMCloudKeyButton{
@@ -95,16 +96,43 @@
 -(void)bounceLightly{
     CGFloat duration = 0.35;
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+        UIInterfaceOrientation orientation = [[MMRotationManager sharedInstance] lastBestOrientation];
         [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
-            self.transform = CGAffineTransformMakeScale(0.9, 0.9);
+            self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]), 0.9, 0.9);
         }];
         [UIView addKeyframeWithRelativeStartTime:.3 relativeDuration:.4 animations:^{
-            self.transform = CGAffineTransformMakeScale(1.1, 1.1);
+            self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]), 1.1, 1.1);
         }];
         [UIView addKeyframeWithRelativeStartTime:.7 relativeDuration:.35 animations:^{
-            self.transform = CGAffineTransformIdentity;
+            self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
         }];
     } completion:nil];
+}
+
+#pragma mark - Rotation
+
+-(CGFloat) idealRotationForOrientation:(UIInterfaceOrientation)orientation{
+    CGFloat visiblePhotoRotation = 0;
+    if(orientation == UIInterfaceOrientationLandscapeRight){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orientation == UIInterfaceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orientation == UIInterfaceOrientationLandscapeLeft){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    return visiblePhotoRotation;
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated{
+    if(animated){
+        [UIView animateWithDuration:.2 animations:^{
+            self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
+        }];
+    }else{
+        self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
+    }
 }
 
 @end
