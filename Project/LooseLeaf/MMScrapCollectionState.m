@@ -90,11 +90,15 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 }
 
 -(BOOL) isStateLoaded{
-    return isLoaded;
+    @synchronized(self){
+        return isLoaded;
+    }
 }
 
 -(BOOL) isCollectionStateLoading{
-    return isLoading;
+    @synchronized(self){
+        return isLoading;
+    }
 }
 
 -(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{

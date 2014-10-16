@@ -180,11 +180,11 @@
                 }
             }
             @synchronized(self){
+                isLoaded = YES;
+                isLoading = NO;
                 MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                 expectedUndoHash = [immutableState undoHash];
                 lastSavedUndoHash = [immutableState undoHash];
-                isLoaded = YES;
-                isLoading = NO;
                 //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
             }
             [self.delegate didLoadAllScrapsFor:self];
@@ -264,10 +264,10 @@
 }
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath{
-    if(!isLoading){
+    if(scrapIDsPath){
         CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
     }
-    if([self isStateLoaded] || isLoading){
+    if([self isStateLoaded]){
         hasEditsToSave = NO;
         @synchronized(allLoadedScraps){
             MMImmutableScrapsOnPaperState* immutable = [[MMImmutableScrapsOnPaperState alloc] initWithScrapIDsPath:scrapIDsPath
