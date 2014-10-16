@@ -34,6 +34,7 @@
 #import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
 #import "MMStatTracker.h"
+#import "MMTrashManager.h"
 
 
 @interface MMEditablePaperView (Private)
@@ -1232,7 +1233,7 @@
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
-    CheckAnyThreadExcept([MMScrapCollectionState isImportExportStateQueue]);
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
                                                        onBlockComplete:^{
                                                            dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {

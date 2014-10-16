@@ -16,6 +16,7 @@
 #import "Constants.h"
 #import "MMPageCacheManager.h"
 #import "MMScrapsInBezelContainerView.h"
+#import "MMTrashManager.h"
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -62,9 +63,7 @@
 #pragma mark - Save and Load
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
-    if(!async && [MMScrapViewState isImportExportScrapStateQueue]){
-        @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"Loading synchronous ScrapsOnPaperState from MMScrapViewState queue." userInfo:nil];
-    }
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         __block NSArray* scrapIDsOnPage;
@@ -249,7 +248,7 @@
 }
 
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath{
-    CheckAnyThreadExcept([MMScrapCollectionState isImportExportStateQueue]);
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if([self isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException"
                                        reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
