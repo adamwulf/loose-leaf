@@ -249,10 +249,21 @@
 }
 
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath{
+    if([MMScrapCollectionState isImportExportStateQueue]){
+        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"performBlockForUnloadedScrapStateSynchronously in wrong queue" userInfo:nil];
+    }
     if([self isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
     }
     @autoreleasepool {
+        //
+        // the following loadState: call will run a portion of
+        // its load synchronously on [MMScrapCollectionState importExportStateQueue]
+        // which means that the importExportStateQueue will be effectively empty.
+        //
+        // this method is not allowed to be called from the importExportStateQueue
+        // itself, so the load method below won't be run with pending blocks already
+        // on the queue.
         if([[NSFileManager defaultManager] fileExistsAtPath:scrapIDsPath]){
             [self loadStateAsynchronously:NO atPath:scrapIDsPath andMakeEditable:YES];
         }else{
@@ -261,8 +272,14 @@
     }
     block();
     dispatch_sync([MMScrapCollectionState importExportStateQueue], ^(void) {
+        // now we're being run as the only block on the importExportStateQueue
+        // and we know this b/c its being run synchronously from before where
+        // we knew the queue was empty.
         @autoreleasepool {
             onComplete();
+            //
+            // this will add the unload block to be the very next block to run
+            // asynchrously from the currently empty importExportStateQueue queue
             dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
                 [self unload];
             });
