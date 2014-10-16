@@ -1201,6 +1201,8 @@
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+        [scrapsOnPaperState unload];
+        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
