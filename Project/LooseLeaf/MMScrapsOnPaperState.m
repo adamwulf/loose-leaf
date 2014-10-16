@@ -249,11 +249,10 @@
 }
 
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath{
-    if([MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"performBlockForUnloadedScrapStateSynchronously in wrong queue" userInfo:nil];
-    }
+    CheckAnyThreadExcept([MMScrapCollectionState isImportExportStateQueue]);
     if([self isStateLoaded]){
-        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
+        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException"
+                                       reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
     }
     @autoreleasepool {
         //

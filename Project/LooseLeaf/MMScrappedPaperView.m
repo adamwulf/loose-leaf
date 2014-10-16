@@ -1232,6 +1232,7 @@
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
 -(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
+    CheckAnyThreadExcept([MMScrapCollectionState isImportExportStateQueue]);
     [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
                                                        onBlockComplete:^{
                                                            dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
@@ -1328,8 +1329,6 @@
             });
         }
     }
-    // make sure our scraps' thumbnails are loaded
-//    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
