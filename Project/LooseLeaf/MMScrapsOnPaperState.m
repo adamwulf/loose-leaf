@@ -353,6 +353,12 @@
 
 -(void) showScrap:(MMScrapView*)scrap{
     CheckMainThread;
+    if(!scrap.state.scrapsOnPaperState){
+        // if the scrap doesn't have a paperstate,
+        // then its loading while being deleted,
+        // so just fail silently
+        return;
+    }
     if(scrap.state.scrapsOnPaperState != self){
         @throw [NSException exceptionWithName:@"ScrapAddedToWrongPageException" reason:@"This scrap was added to a page that doesn't own it" userInfo:nil];
     }
