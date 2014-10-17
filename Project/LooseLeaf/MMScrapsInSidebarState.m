@@ -179,9 +179,11 @@
     }
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
-        expectedUndoHash = [immutable undoHash];
-        return immutable;
+        @synchronized(allLoadedScraps){
+            MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
+            expectedUndoHash = [immutable undoHash];
+            return immutable;
+        }
     }
     return nil;
 }
