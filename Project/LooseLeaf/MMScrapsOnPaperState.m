@@ -83,6 +83,9 @@
         
         void (^blockForImportExportStateQueue)() = ^(void) {
             @autoreleasepool {
+#ifdef DEBUG
+                [NSThread sleepForTimeInterval:5];
+#endif
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
                         NSLog(@"MMScrapsOnPaperState bailing early");
