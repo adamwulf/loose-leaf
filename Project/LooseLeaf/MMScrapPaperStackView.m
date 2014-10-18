@@ -441,6 +441,7 @@
 }
 
 -(void) photoWasTapped:(MMPhoto *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+    CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
@@ -484,63 +485,74 @@
     UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
-    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
-    [scrapContainer addSubview:scrap];
     
-    CGSize fullScaleScrapSize = scrapRect.size;
-    fullScaleScrapSize.width /= startingScale;
-    fullScaleScrapSize.height /= startingScale;
     
-    // zoom the background in an extra pixel
-    // so that the border of the image exceeds the
-    // path of the scrap. this'll give us a nice smooth
-    // edge from the mask of the CAShapeLayer
-    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
+    void(^blockToAddScrapToPage)() = ^{
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+        [scrapContainer addSubview:scrap];
+        
+        CGSize fullScaleScrapSize = scrapRect.size;
+        fullScaleScrapSize.width /= startingScale;
+        fullScaleScrapSize.height /= startingScale;
+        
+        // zoom the background in an extra pixel
+        // so that the border of the image exceeds the
+        // path of the scrap. this'll give us a nice smooth
+        // edge from the mask of the CAShapeLayer
+        CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
+        
+        // add the background, and scale it so it fills the scrap
+        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
+        backgroundView.backgroundScale = scaleUpOfImage;
+        [scrap setBackgroundView:backgroundView];
+        
+        // move the scrap so that it covers the image that was just tapped.
+        // then we'll animate it onto the page
+        scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
+        scrap.rotation = rotation;
+        
+        // hide the picker, this'll slide it out
+        // underneath our scrap
+        [importImageSidebar hide:YES onComplete:nil];
+        
+        // hide the photo in the row. this way the scrap
+        // becomes the photo, and it doesn't seem to duplicate
+        // as the image sidebar hides. the image in the sidebar
+        // will reset after the sidebar is done hiding
+        bufferedImage.alpha = 0;
+        
+        // bounce by 20px (10 on each side)
+        CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+        
+        [UIView animateWithDuration:.2
+                              delay:.1
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             scrap.center = [visibleStackHolder peekSubview].center;
+                             [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
+                         }
+                         completion:^(BOOL finished){
+                             [UIView animateWithDuration:.1
+                                                   delay:0
+                                                 options:UIViewAnimationOptionCurveEaseIn
+                                              animations:^{
+                                                  [scrap setScale:1];
+                                              }
+                                              completion:^(BOOL finished){
+                                                  bufferedImage.alpha = 1;
+                                                  [topPage.scrapsOnPaperState showScrap:scrap];
+                                                  [topPage addUndoItemForAddedScrap:scrap];
+                                                  [topPage saveToDisk:nil];
+                                              }];
+                         }];
+    };
     
-    // add the background, and scale it so it fills the scrap
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
-    backgroundView.backgroundScale = scaleUpOfImage;
-    [scrap setBackgroundView:backgroundView];
-
-    // move the scrap so that it covers the image that was just tapped.
-    // then we'll animate it onto the page
-    scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
-    scrap.rotation = rotation;
     
-    // hide the picker, this'll slide it out
-    // underneath our scrap
-    [importImageSidebar hide:YES onComplete:nil];
-    
-    // hide the photo in the row. this way the scrap
-    // becomes the photo, and it doesn't seem to duplicate
-    // as the image sidebar hides. the image in the sidebar
-    // will reset after the sidebar is done hiding
-    bufferedImage.alpha = 0;
-    
-    // bounce by 20px (10 on each side)
-    CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
-    
-    [UIView animateWithDuration:.2
-                          delay:.1
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
-                     }
-                     completion:^(BOOL finished){
-                         [UIView animateWithDuration:.1
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseIn
-                                          animations:^{
-                                              [scrap setScale:1];
-                                          }
-                                          completion:^(BOOL finished){
-                                              bufferedImage.alpha = 1;
-                                              [topPage.scrapsOnPaperState showScrap:scrap];
-                                              [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk:nil];
-                                          }];
-                     }];
+    if([topPage.scrapsOnPaperState isStateLoaded]){
+        blockToAddScrapToPage();
+    }else{
+        [topPage performBlockForUnloadedScrapStateSynchronously:blockToAddScrapToPage andImmediatelyUnloadState:NO];
+    }
 }
 
 #pragma mark - Gesture Helpers
@@ -1844,7 +1856,7 @@ int skipAll = NO;
     };
     
     if(needsStateLoading){
-        [page performBlockForUnloadedScrapStateSynchronously:block];
+        [page performBlockForUnloadedScrapStateSynchronously:block andImmediatelyUnloadState:(page != [visibleStackHolder peekSubview])];
     }else{
         block();
     }
