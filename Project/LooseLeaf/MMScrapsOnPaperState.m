@@ -64,9 +64,10 @@
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
     CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
-    if(![self isStateLoaded] && !isLoading){
+    if(![self isStateLoaded]){
         __block NSArray* scrapProps;
         __block NSArray* scrapIDsOnPage;
+        BOOL wasAlreadyLoading = isLoading;
         @synchronized(self){
             isLoading = YES;
             if(makeEditable){
@@ -82,10 +83,11 @@
         __block BOOL hasBailedOnLoadingBecauseOfMismatchedTargetState = NO;
         
         void (^blockForImportExportStateQueue)() = ^(void) {
+            CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue] || [MMScrapCollectionState isImportExportStateQueue]);
             @autoreleasepool {
-#ifdef DEBUG
-                [NSThread sleepForTimeInterval:5];
-#endif
+//#ifdef DEBUG
+//                [NSThread sleepForTimeInterval:5];
+//#endif
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
                         NSLog(@"MMScrapsOnPaperState bailing early");
@@ -103,6 +105,15 @@
             }
         };
         void (^blockForMainThread)() = ^{
+            if([self isStateLoaded]){
+                // it's possible that we were asked to load asynchronously
+                // which would add this block to the main thread, then asked
+                // again to load synchronously, which would run before
+                // this block would've had the chance. so always
+                // double check if we've already loaded before we thought
+                // we needed to.
+                return;
+            }
             if(hasBailedOnLoadingBecauseOfMismatchedTargetState){
                 NSLog(@"MMScrapsOnPaperState main thread bailing early");
                 isLoaded = NO;
@@ -206,7 +217,20 @@
             }
         };
         
-        if(async){
+        if(!async){
+            // this will load from the background thread synchronously
+            // and then will run the main thread synchronously.
+            // if already on the main thread, it won't block waiting
+            // on itself
+            blockForImportExportStateQueue();
+            [NSThread performBlockOnMainThreadSync:blockForMainThread];
+        }else if(wasAlreadyLoading){
+            // noop, it's already loading asynchornously
+            // so we don't need to do anything extra
+        }else if(async){
+            // we're not yet loading and we want to load
+            // asynchronously
+            //
             // this will load from disk on the background queue,
             // and then will add the block to the main thread
             // after that
@@ -214,19 +238,6 @@
             dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
                 [NSThread performBlockOnMainThread:blockForMainThread];
             });
-        }else{
-            // this will load from the background thread synchronously
-            // and then will run the main thread synchronously.
-            // if already on the main thread, it won't block waiting
-            // on itself
-            if([MMScrapCollectionState importExportStateQueue]){
-                // we're already on the correct thread, so just run it now
-                blockForImportExportStateQueue();
-            }else{
-                // we're on another thread, so add it to its queue
-                dispatch_sync([MMScrapCollectionState importExportStateQueue], blockForImportExportStateQueue);
-            }
-            [NSThread performBlockOnMainThreadSync:blockForMainThread];
         }
     }else if([self isStateLoaded] && makeEditable){
         void (^loadScrapsForAlreadyLoadedState)() = ^(void) {
@@ -247,13 +258,8 @@
         if(async){
             dispatch_async([MMScrapCollectionState importExportStateQueue], loadScrapsForAlreadyLoadedState);
         }else{
-            if([MMScrapCollectionState importExportStateQueue]){
-                // we're already on the correct thread, so just run it now
-                loadScrapsForAlreadyLoadedState();
-            }else{
-                // we're on another thread, so add it to its queue
-                dispatch_sync([MMScrapCollectionState importExportStateQueue], loadScrapsForAlreadyLoadedState);
-            }
+            // we're already on the correct thread, so just run it now
+            loadScrapsForAlreadyLoadedState();
         }
     }
 }
@@ -261,7 +267,7 @@
 -(void) unloadPaperState{
     CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
     if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
-        NSLog(@"what");
+        @throw [NSException exceptionWithName:@"UnloadScrapsOnPaperStateException" reason:@"Cannot unload scrapsOnPaperState of currently editable page" userInfo:nil];
     }
     [super unloadPaperState];
 }
@@ -283,7 +289,7 @@
     return nil;
 }
 
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath{
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload{
     CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if([self isStateLoaded]){
         @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException"
@@ -305,18 +311,20 @@
         }
     }
     block();
-    dispatch_sync([MMScrapCollectionState importExportStateQueue], ^(void) {
-        // now we're being run as the only block on the importExportStateQueue
-        // and we know this b/c its being run synchronously from before where
-        // we knew the queue was empty.
+    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+        // the importExportStateQueue might be being used by another scrapsOnPaperState
+        // to save itself to disk, so its not necessarily empty at this point. we
+        // must call the onComplete asynchronously.
         @autoreleasepool {
             onComplete();
-            //
-            // this will add the unload block to be the very next block to run
-            // asynchrously from the currently empty importExportStateQueue queue
-            dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-                [self unloadPaperState];
-            });
+            if(shouldImmediatelyUnload){
+                //
+                // this will add the unload block to be the very next block to run
+                // asynchrously from the currently empty importExportStateQueue queue
+                dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+                    [self unloadPaperState];
+                });
+            }
         }
     });
 }

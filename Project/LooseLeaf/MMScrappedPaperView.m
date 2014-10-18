@@ -1232,20 +1232,19 @@
 //
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload{
     CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
                                                        onBlockComplete:^{
-                                                           dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-                                                               MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
-                                                               [immutableScrapState saveStateToDiskBlocking];
-                                                               [NSThread performBlockOnMainThread:^{
-                                                                   [self updateFullPageThumbnail:immutableScrapState];
-                                                               }];
-                                                           });
+                                                           MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                           [immutableScrapState saveStateToDiskBlocking];
+                                                           [NSThread performBlockOnMainThread:^{
+                                                               [self updateFullPageThumbnail:immutableScrapState];
+                                                           }];
                                                        }
                                                            andLoadFrom:self.scrapIDsPath
-                                               withBundledScrapIDsPath:self.bundledScrapIDsPath];
+                                               withBundledScrapIDsPath:self.bundledScrapIDsPath
+                                             andImmediatelyUnloadState:shouldImmediatelyUnload];
 }
 
 -(BOOL) isStateLoaded{

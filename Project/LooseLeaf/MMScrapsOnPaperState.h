@@ -22,7 +22,7 @@
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath;
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload;
 
 #pragma mark - Add Scraps
 
