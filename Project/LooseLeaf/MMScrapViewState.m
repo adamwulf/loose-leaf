@@ -315,6 +315,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                             if(self.isForgetful){
                                 NSLog(@"forget: %@ skipping scrap state save2", self.uuid);
                                 doneSavingBlock(NO);
+                                [lock unlock];
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
@@ -400,7 +401,10 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         // state, then bail early
         // if we already have our state,
         // then bail early
-        if(isLoadingState || drawableViewState){
+        if((async && isLoadingState) || drawableViewState){
+            // if we're already loading async, and asked to load
+            // async again, then bail. or, if we're already
+            // loaded, then bail
 //            NSLog(@"(%@) already loaded", uuid);
             return;
         }
@@ -420,11 +424,20 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                 return;
             }
         }
+//#ifdef DEBUG
+//        NSLog(@"sleeping for %@", self.uuid);
+//        [NSThread sleepForTimeInterval:5];
+//        NSLog(@"woke up for %@", self.uuid);
+//#endif
         @autoreleasepool {
-            [lock lock];
-            
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
             [NSThread performBlockOnMainThreadSync:^{
+                if([self isScrapStateLoaded]){
+                    // scrap state was loaded synchronously while
+                    // this block was pending to finish a load
+                    NSLog(@"bailed on async load, it finished sync ahead of us");
+                    return;
+                }
                 @synchronized(self){
                     if(!targetIsLoadedState){
                         NSLog(@"saved building JotView we didn't need");
@@ -434,6 +447,17 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     }
                 }
             }];
+            [lock lock];
+            // can't lock before the call to main thread or any
+            // synchronous loads from the main thread could
+            // deadlock us
+            if([self isScrapStateLoaded]){
+                // scrap state was loaded synchronously while
+                // this block was pending to finish a load
+                NSLog(@"bailed on async load, it finished sync ahead of us");
+                [lock unlock];
+                return;
+            }
             // load state, if we have any.
             BOOL goalIsLoaded = NO;
             @synchronized(self){

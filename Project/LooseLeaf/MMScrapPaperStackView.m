@@ -1819,7 +1819,8 @@ int skipAll = NO;
     CheckMainThread;
     
     if(![scrap.state isScrapStateLoaded]){
-        @throw [NSException exceptionWithName:@"CloneUnloadedScrapException" reason:@"asking to clone a scrap who's state is not yet loaded" userInfo:nil];
+        // force loading the scrap immediately
+        [scrap.state loadScrapStateAsynchronously:NO];
     }
     if(![scrapContainer.subviews containsObject:scrap]){
         @throw [NSException exceptionWithName:@"CloneScrapException" reason:@"Page asked to clone scrap and doesn't own it" userInfo:nil];
