@@ -24,4 +24,29 @@
     return ret;
 }
 
+-(NSArray*) shuffledArray{
+    NSMutableArray *temp = [[NSMutableArray alloc] initWithArray:self];
+    for(NSUInteger i = [self count]; i > 1; i--) {
+        NSUInteger j = arc4random_uniform((unsigned int)i);
+        [temp exchangeObjectAtIndex:i-1 withObjectAtIndex:j];
+    }
+    return [NSArray arrayWithArray:temp];
+}
+
+-(NSSet*) asSet{
+    return [NSSet setWithArray:self];
+}
+
+@end
+
+
+@implementation NSMutableArray (Extras)
+
+-(void) shuffle{
+    for(NSUInteger i = [self count]; i > 1; i--) {
+        NSUInteger j = arc4random_uniform((unsigned int)i);
+        [self exchangeObjectAtIndex:i-1 withObjectAtIndex:j];
+    }
+}
+
 @end

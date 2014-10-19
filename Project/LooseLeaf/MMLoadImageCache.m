@@ -75,8 +75,12 @@ static int count = 0;
             if(cachedImage){
                 [loadedImages setObject:cachedImage forKey:path];
             }
-            [orderedKeys removeObject:path];
-            [orderedKeys insertObject:path atIndex:0];
+            if(path){
+                [orderedKeys removeObject:path];
+                [orderedKeys insertObject:path atIndex:0];
+            }else{
+                NSLog(@"how did we get nil path?");
+            }
             [self ensureCacheSize];
             
             loadedBytes += [cachedImage uncompressedByteSize];
@@ -94,6 +98,7 @@ static int count = 0;
 }
 
 -(void) clearCacheForPath:(NSString*)path{
+    if(!path) return;
     @synchronized(self){
         UIImage* cachedImage = [loadedImages objectForKey:path];
         if(cachedImage){

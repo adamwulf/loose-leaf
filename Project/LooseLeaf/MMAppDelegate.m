@@ -18,6 +18,7 @@
 #import "MMCloudKitManager.h"
 #import "TestFlight.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMPresentationWindow.h"
 
 
 @implementation MMAppDelegate{
@@ -28,49 +29,36 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize presentationWindow;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    // erase everything in the documents folder
-    
-    NSArray* contentsOfDocuments = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[NSFileManager documentsPath] error:nil];
-    [contentsOfDocuments enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSString* pathToRemove = [[NSFileManager documentsPath] stringByAppendingPathComponent:obj];
-        [[NSFileManager defaultManager] removeItemAtPath:pathToRemove error:nil];
-    }];
-    
-    NSString* bundledDocs = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
-    [[NSFileManager defaultManager] copyItemAtPath:[bundledDocs stringByAppendingPathComponent:@"Bezel"]
-                                            toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel"]
-                                             error:nil];
-    [[NSFileManager defaultManager] copyItemAtPath:[bundledDocs stringByAppendingPathComponent:@"BezelState"]
-                                            toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"BezelState"]
-                                             error:nil];
-    
-    
     debug_NSLog(@"DID FINISH LAUNCHING");
-    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
-    [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-    [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-    [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-    [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-    [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
     [[NSThread mainThread] performBlock:^{
+        [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+
+        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
         [TestFlight takeOff:kTestflightAppToken];
     } afterDelay:3];
     
+    presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [presentationWindow makeKeyAndVisible];
+
     self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
-//    [self.window.layer setSpeed:0.3f];
+//    [self.window.layer setSpeed:0.1f];
 
     // setup the timer that will help log session duration
     [self setupTimer];
@@ -170,11 +158,11 @@
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleActionWithIdentifier");
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleEventsForBackgroundURLSession");
 }
 
 - (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {

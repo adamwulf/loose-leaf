@@ -111,6 +111,7 @@
 }
 
 -(void) show{
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     [super show];
     UICollectionViewLayout* layout = [self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation];
     [self updateDataSource];
@@ -149,7 +150,6 @@
         return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
     }];
     [listOfFriendsView reloadData];
-    
 }
 
 #pragma mark - CloudKit UI
@@ -329,9 +329,11 @@ BOOL hasSent = NO;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     MMCloudKitFriendCollectionViewCell* cell = (MMCloudKitFriendCollectionViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
-    MMAvatarButton* avatarButton = [cell stealAvatarButton];
-    [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
-    [cell bounce];
+    if([cell isKindOfClass:[MMCloudKitFriendCollectionViewCell class]]){
+        MMAvatarButton* avatarButton = [cell stealAvatarButton];
+        [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
+        [cell bounce];
+    }
 }
 
 #pragma mark - Rotation
@@ -348,36 +350,69 @@ BOOL hasSent = NO;
     }
 }
 
+-(CGFloat) idealRotationForOrientation:(UIInterfaceOrientation)orientation{
+    CGFloat visiblePhotoRotation = 0;
+    if(orientation == UIInterfaceOrientationLandscapeRight){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orientation == UIInterfaceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orientation == UIInterfaceOrientationLandscapeLeft){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    return visiblePhotoRotation;
+}
+
+
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
-    [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+    if(self.alpha){
+        [self updateDataSource];
+        [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+        
+        [UIView animateWithDuration:.2 animations:^{
+            offlineView.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
+        }];
+    }else{
+        offlineView.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
+    }
+    [cloudKeyButton updateInterfaceTo:orientation animated:(self.alpha != 0)];
 }
 
 
 #pragma mark - Debug
 
 -(void) addExtraUsers{
-    NSArray* extra = @[@{@"firstName" : @"John",
-                         @"lastName" : @"Appleseed",
-                         @"initials" : @"JA"},
-                       @{@"firstName" : @"Kate",
-                         @"lastName" : @"Bell",
-                         @"initials" : @"KA"},
-                       @{@"firstName" : @"Anna",
-                         @"lastName" : @"Haro",
-                         @"initials" : @"AH"},
-                       @{@"firstName" : @"Daniel",
-                         @"lastName" : @"Higgins Jr.",
-                         @"initials" : @"DH"},
-                       @{@"firstName" : @"David",
-                         @"lastName" : @"Taylor",
-                         @"initials" : @"DT"},
-                       @{@"firstName" : @"Hank M.",
-                         @"lastName" : @"Zakroff",
-                         @"initials" : @"HZ"}];
-    
-        extra = [extra arrayByAddingObject:@{@"firstName" : @"Crystal",
-                                             @"lastName" : @"Hilliard",
-                                             @"initials" : @"CH"}];
+    NSArray* extra = @[@{@"firstName" : @"Tim",
+                         @"lastName" : @"Cook",
+                         @"initials" : @"TC"},
+                       @{@"firstName" : @"Angela",
+                         @"lastName" : @"Ahrendts",
+                         @"initials" : @"AA"},
+                       @{@"firstName" : @"Eddy",
+                         @"lastName" : @"Cue",
+                         @"initials" : @"EC"},
+                       @{@"firstName" : @"Craig",
+                         @"lastName" : @"Federighi",
+                         @"initials" : @"CF"},
+                       @{@"firstName" : @"Jony",
+                         @"lastName" : @"Ive",
+                         @"initials" : @"JI"},
+                       @{@"firstName" : @"Luca",
+                         @"lastName" : @"Maestri",
+                         @"initials" : @"LM"},
+                       @{@"firstName" : @"Dan",
+                         @"lastName" : @"Riccio",
+                         @"initials" : @"DR"},
+                       @{@"firstName" : @"Phil",
+                         @"lastName" : @"Schiller",
+                         @"initials" : @"PS"},
+                       @{@"firstName" : @"Bruce",
+                         @"lastName" : @"Sewell",
+                         @"initials" : @"BS"},
+                       @{@"firstName" : @"Jeff",
+                         @"lastName" : @"Williams",
+                         @"initials" : @"JW"}];
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;

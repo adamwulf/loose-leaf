@@ -10,6 +10,7 @@
 #import "Mixpanel.h"
 #import "MMReachabilityManager.h"
 #import "MMProgressedImageViewButton.h"
+#import "MMPresentationWindow.h"
 #import "Constants.h"
 
 @implementation MMPrintShareItem{
@@ -59,7 +60,11 @@
             UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
             printController.printingItem = self.delegate.imageToShare;
             
-            [printController presentFromRect:self.button.bounds inView:self.button animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            [presentationWindow makeKeyAndVisible];
+            UIView* presentationView = presentationWindow.rootViewController.view;
+            CGRect presentationRect = [presentationView convertRect:self.button.bounds fromView:self.button];
+            [printController presentFromRect:presentationRect inView:presentationView animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
                 if(completed){
                     [self.delegate didShare:self];
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];

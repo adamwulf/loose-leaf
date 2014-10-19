@@ -9,7 +9,7 @@
 #import "MMUndoRedoAddScrapItem.h"
 #import "MMUndoablePaperView.h"
 #import "MMPageUndoRedoManager.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
 
 @interface MMUndoRedoAddScrapItem (Private)
@@ -64,7 +64,7 @@
     // the scrap could only ever have been on the page and undone,
     // we don't need to check the bezel.
     // just delete the assets straight away
-    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState];
 }
 
 #pragma mark - Serialize

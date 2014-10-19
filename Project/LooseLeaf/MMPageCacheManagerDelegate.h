@@ -22,4 +22,6 @@
 
 -(BOOL) isShowingPageView;
 
+-(NSInteger) countAllPages;
+
 @end

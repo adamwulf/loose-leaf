@@ -8,6 +8,7 @@
 
 #import "MMUndoRedoBlockItem.h"
 #import "MMPageUndoRedoManager.h"
+#import "MMScrapsOnPaperState.h"
 
 @interface MMUndoRedoPageItem : MMUndoRedoBlockItem{
     @protected

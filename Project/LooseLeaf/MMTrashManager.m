@@ -10,6 +10,13 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMUndoablePaperView.h"
+#import "MMPageCacheManager.h"
+#import "MMExportablePaperView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+#import "MMScrapsInBezelContainerView.h"
+#import "MMScrapViewState+Trash.h"
+#import "MMExportablePaperView+Trash.h"
+
 
 @implementation MMTrashManager{
     dispatch_queue_t trashManagerQueue;
@@ -18,11 +25,17 @@
 
 #pragma mark - Dispatch Queue
 
+static const void *const kTrashQueueIdentifier = &kTrashQueueIdentifier;
+
 -(dispatch_queue_t) trashManagerQueue{
     if(!trashManagerQueue){
         trashManagerQueue = dispatch_queue_create("com.milestonemade.looseleaf.trashManagerQueue", DISPATCH_QUEUE_SERIAL);
+        dispatch_queue_set_specific(trashManagerQueue, kTrashQueueIdentifier, (void *)kTrashQueueIdentifier, NULL);
     }
     return trashManagerQueue;
+}
++(BOOL) isTrashManagerQueue{
+    return dispatch_get_specific(kTrashQueueIdentifier) != NULL;
 }
 
 #pragma mark - Singleton
@@ -46,87 +59,158 @@ static MMTrashManager* _instance = nil;
 }
 
 
-#pragma mark - Delete Methods
+#pragma mark - Public Methods
 
--(void) deleteScrap:(NSString*)scrapUUID inPage:(MMScrappedPaperView*)page{
-    
-    MMUndoablePaperView* undoablePage = nil;
-    if([page isKindOfClass:[MMUndoablePaperView class]]){
-        undoablePage = (MMUndoablePaperView*)page;
-    }
-    
-    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+-(void) deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState{
+    [self deleteScrap:scrapUUID inScrapCollectionState:scrapCollectionState shouldRespectOthers:YES];
+}
 
-    // first, we need to check if we're even eligible to
-    // delete the scrap or not.
-    //
-    // if the scrap is being held in the undo/redo manager
-    // then we need to keep the scraps assets on disk.
-    // otherwise we can delete them.
-    BOOL(^checkScrapExistsInUndoRedoManager)() = ^{
-        __block BOOL existsInUndoRedoManager = NO;
-        dispatch_async([page serialBackgroundQueue], ^{
-            BOOL needsLoad = ![undoablePage.undoRedoManager isLoaded];
-            if(needsLoad){
-                [undoablePage.undoRedoManager loadFrom:[undoablePage undoStatePath]];
-            }
-            existsInUndoRedoManager = [undoablePage.undoRedoManager containsItemForScrapUUID:scrapUUID];
-            if(needsLoad){
-                [undoablePage.undoRedoManager unloadState];
-            }
-            dispatch_semaphore_signal(sema1);
-        });
-        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-        return existsInUndoRedoManager;
-    };
-    
-    
-    // we've been told to delete a scrap from disk.
-    // so do this on our low priority background queue
+-(void) deletePage:(MMExportablePaperView*)page{
+    NSLog(@"asking to delete %@", page.uuid);
+    NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
+    page.delegate = nil;
+    [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
     dispatch_async([self trashManagerQueue], ^{
-
-        if(undoablePage && checkScrapExistsInUndoRedoManager()){
-            // the scrap exists in the page's undo manager,
-            // so don't bother deleting it
-            NSLog(@"TrashManager found scrap in page's undo state. keeping files.");
-            return;
+        //
+        // Step 1: ensure the page is in a stable saved state
+        //         with no pending threads active
+        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+        
+        if(page.hasEditsToSave){
+            NSLog(@"page should forget");
+            [page forgetAllPendingEdits];
+            if(page.hasEditsToSave){
+                NSLog(@"forget failed");
+            }else{
+                NSLog(@"forget success");
+            }
         }
         
-        // delete from the page's scrapsOnPaperState
-        void(^removeFromScrapsOnPaperState)() = ^{
-            [page.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
-            [[page.scrapsOnPaperState immutableStateForPath:page.scrapIDsPath] saveStateToDiskBlocking];
-        };
-        
-        // now the scrap is off disk, so remove it from the page's state too
-        if([page.scrapsOnPaperState isStateLoaded]){
-            removeFromScrapsOnPaperState();
-        }else{
-            [page performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState];
+        while(page.hasEditsToSave || page.isStateLoading || page.isCurrentlySaving){
+            if(page.hasEditsToSave){
+                NSLog(@"deleting a page with active edits");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(page.hasEditsToSave){
+                        [page saveToDisk:^(BOOL didSaveEdits) {
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                    }
+                });
+                dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+            }else if(page.isStateLoading){
+                NSLog(@"waiting for page to finish loading before deleting...");
+            }else if(page.isCurrentlySaving){
+                NSLog(@"waiting for page to finish saving before deleting...");
+            }
+            [NSThread sleepForTimeInterval:.3];
+            if([page hasEditsToSave]){
+                NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
+            }else if([page isStateLoading]){
+                NSLog(@"page state is still loading");
+            }
         }
-
-        // now that the scrap is out of the page's state, then
-        // we can delete it off disk too
+        // build some directories
         NSString* documentsPath = [NSFileManager documentsPath];
-        NSString* pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:page.uuid];
-        NSString* scrapPath = [[pagesPath stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:scrapUUID];
-        BOOL isDirectory = NO;
-        if([[NSFileManager defaultManager] fileExistsAtPath:scrapPath isDirectory:&isDirectory]){
-            if(isDirectory){
-                NSError* err = nil;
-                if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                    NSLog(@"deleted %@", scrapPath);
+        NSString* allPagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
+        NSString* thisPagesPath = [allPagesPath stringByAppendingPathComponent:page.uuid];
+        NSString* thisPagesScrapsPath = [thisPagesPath stringByAppendingPathComponent:@"Scraps"];
+
+        //
+        // Step 2: loop through all of the page's scraps and delete
+        //         all that are not in the bezel.
+        NSArray* thisPagesScrapsUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
+        for (NSString* scrapUUID in thisPagesScrapsUUIDs) {
+            @autoreleasepool {
+                // delete the scrap, and do NOT respect the undo manager.
+                // we can ignore the undo manager since we're just deleting
+                // the page anyways.
+                if(![pageOriginalDelegate.bezelContainerView containsScrapUUID:scrapUUID]){
+                    [self deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState shouldRespectOthers:NO];
+                }else{
+                    // synchronous, so that the files will be gone
+                    // from our page by the time this returns
+                    [pageOriginalDelegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:page.scrapsOnPaperState];
                 }
-                if(err){
-                    NSLog(@"error deleting %@: %@", scrapPath, err);
+            }
+        }
+        [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
+        
+        //
+        // deleting scraps above will add blocks to the trashManagerQueue
+        // for each scrap. So we need to add the rest of our logic
+        // to run /after/ those scraps (if any) have been processed.
+        dispatch_async([self trashManagerQueue], ^{
+            
+            NSLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
+            NSLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
+            
+            NSString* contentsOfBezel = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel/Scraps"];
+            
+            //
+            // Step 3: Transfer any remaining scraps to the bezel
+            NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
+            NSArray* scrapsInBezelUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:contentsOfBezel error:nil];
+            NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
+            NSLog(@"saved scraps in bezel: %@", scrapsInBezelUUIDs);
+            
+            if([thisPagesSavedScrapUUIDs count]){
+                NSLog(@"page wasn't able to delete all scraps.");
+            }
+            
+            // TODO: check the bezel to see if we should keep any scraps,
+            // and then give them to a safe place before deleting
+            // all the page assets
+//            id bcv = pageOriginalDelegate.bezelContainerView;
+            
+            //
+            // Step 4: Delete the rest of the page assets
+            BOOL isDirectory = NO;
+            if([[NSFileManager defaultManager] fileExistsAtPath:thisPagesPath isDirectory:&isDirectory] &&
+               ![thisPagesPath isEqualToString:allPagesPath] && thisPagesPath.length > allPagesPath.length){
+                if(isDirectory){
+                    NSError* err = nil;
+                    if([[NSFileManager defaultManager] removeItemAtPath:thisPagesPath error:&err]){
+                        NSLog(@"deleted page at %@", thisPagesPath);
+                    }
+                    if(err){
+                        NSLog(@"error deleting %@: %@", thisPagesPath, err);
+                    }
+                }else{
+                    NSLog(@"found path, but it isn't a directory %@", thisPagesPath);
                 }
             }else{
-//                NSLog(@"found path, but it isn't a directory");
+                NSLog(@"path to delete doesn't exist %@", thisPagesPath);
             }
-        }else{
-//            NSLog(@"path to delete doesn't exist %@", scrapPath);
-        }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
+            });
+        });
     });
 }
+
+
+
+#pragma mark - Helper Methods
+
+//
+// @param scrapUUID attempt to delete the assets of this scrap in the input page, but only
+//        if the scrap is unused in the bezel and the page's own undo manager (optionally)
+// @param page the page who's scrap should be deleted
+// @param respectOthers YES if we should keep scraps in the page's undoManager and update the page's scrapsOnPaperState,
+//                      NO if we should ignore any other object that might have a vested interested in this scrap.
+//                      (for instance, when deleting the page)
+-(void) deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState shouldRespectOthers:(BOOL)respectOthers{
+
+    if(!scrapCollectionState || !scrapUUID){
+        // sanity
+        NSLog(@"can't delete scrap %@ from collection %@", scrapUUID, scrapCollectionState);
+        return;
+    }
+
+    [scrapCollectionState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
+
+}
+
+
 
 @end

@@ -18,6 +18,7 @@
 @property (nonatomic, readonly) UIColor* backgroundColor;
 @property (nonatomic, readonly) UIColor* borderColor;
 @property (nonatomic) UIColor* shadowColor;
+@property (nonatomic) CGFloat shadowInset;
 
 -(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2;
 -(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;

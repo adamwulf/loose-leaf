@@ -185,6 +185,7 @@
 }
 
 -(void) animateAndAlignAllButtons{
+    CheckMainThread;
     // align all invisible buttons so they animate in respectably
     for(MMCloudKitImportCoordinator* import in [activeImports reverseObjectEnumerator]){
         if(!import.isReady || !import.avatarButton.alpha){
@@ -304,6 +305,9 @@
     
     NSString* reason = @"Unknown";
     switch (errorCode) {
+        case kMPEventImportMissingZipErrorCode:
+            reason = @"Missing Zip";
+            break;
         case kMPEventImportInvalidZipErrorCode:
             reason = @"Invalid Zip";
             break;
@@ -364,6 +368,10 @@
     
     if(coordinator.uuidOfIncomingPage){
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
+        page.delegate = stackView;
+        // this like will ensure the new page slides in with
+        // its preview properly loaded in time.
+        [page loadCachedPreviewAndDecompressImmediately:YES];
         if(page){
             [stackView importAndShowPage:page];
         }else{

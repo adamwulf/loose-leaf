@@ -12,34 +12,22 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMScrapContainerView.h"
 #import "MMImmutableScrapsInSidebarState.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+#import "MMTrashManager.h"
 #import "Constants.h"
 
+#define kPageUUIDForBezelCollectionState @"Bezel"
+
 @implementation MMScrapsInSidebarState{
-    BOOL isLoaded;
-    BOOL isLoading;
-    NSMutableArray* allScrapsInSidebar;
+    // all of the loaded properties for all this state's scraps
     NSMutableArray* allPropertiesForScraps;
-    BOOL hasEditsToSave;
 }
 
-@synthesize hasEditsToSave;
-@synthesize delegate;
-@synthesize allScrapsInSidebar;
-
-static dispatch_queue_t importExportStateQueue;
-
-+(dispatch_queue_t) importExportStateQueue{
-    if(!importExportStateQueue){
-        //        importExportStateQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0);
-        importExportStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.importExportStateQueue", DISPATCH_QUEUE_SERIAL);
-    }
-    return importExportStateQueue;
-}
+@dynamic delegate;
 
 -(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)_delegate{
     if(self = [super init]){
         delegate = _delegate;
-        allScrapsInSidebar = [NSMutableArray array];
         allPropertiesForScraps = [NSMutableArray array];
     }
     return self;
@@ -47,8 +35,8 @@ static dispatch_queue_t importExportStateQueue;
 
 -(int) fullByteSize{
     int totalBytes = 0;
-    @synchronized(allScrapsInSidebar){
-        for(MMScrapView* scrap in allScrapsInSidebar){
+    @synchronized(allLoadedScraps){
+        for(MMScrapView* scrap in allLoadedScraps){
             totalBytes += scrap.fullByteSize;
         }
     }
@@ -57,11 +45,8 @@ static dispatch_queue_t importExportStateQueue;
 
 #pragma mark - Save and Load
 
--(BOOL) isStateLoaded{
-    return isLoaded;
-}
-
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if(![self isStateLoaded] && !isLoading){
         __block NSArray* scrapProps;
         @synchronized(self){
@@ -82,7 +67,10 @@ static dispatch_queue_t importExportStateQueue;
                     // TODO: https://github.com/adamwulf/loose-leaf/issues/604
                     NSString* pageUUID = [scrapProperties objectForKey:@"pageUUID"];
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
-                    MMScrapsOnPaperState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
+                    MMScrapCollectionState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
+                    if([pageUUID isEqualToString:kPageUUIDForBezelCollectionState]){
+                        paperStateForScrap = self;
+                    }
                     
                     MMScrapView* scrapFromPaperState = [paperStateForScrap scrapForUUID:scrapUUID];
                     if(scrapFromPaperState){
@@ -93,41 +81,52 @@ static dispatch_queue_t importExportStateQueue;
                     }else{
                         // couldn't find already built scrap, so load a state and
                         // we'll build a scrap
-                        MMScrapViewState* state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
-                        if(state){
-                            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                            [props setObject:state forKey:@"state"];
-                            [scrapPropsWithState addObject:props];
+                        if(paperStateForScrap){
+                            __block MMScrapViewState* state = nil;
+                            [NSThread performBlockOnMainThreadSync:^{
+                                state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
+                            }];
+                            if(state){
+                                NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                                [props setObject:state forKey:@"state"];
+                                [scrapPropsWithState addObject:props];
+                            }else{
+                                NSLog(@"couldn't find state for %@", scrapUUID);
+                            }
                         }else{
-                            NSLog(@"couldn't find state for %@", scrapUUID);
+                            NSLog(@"couldn't find scrap's page state for %@ in page %@", scrapUUID, pageUUID);
                         }
                     }
                 }
                 
                 [NSThread performBlockOnMainThread:^{
                     for(NSDictionary* scrapProperties in scrapPropsWithState){
+                        @synchronized(self){
+                            if(isUnloading){
+                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                            }
+                        }
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
-//                            NSLog(@"sidebar reused scrap %@", scrap.uuid);
+//                            NSLog(@"reused scrap %@", scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState andPaperState:scrapState.scrapsOnPaperState];
-//                            NSLog(@"sidebar built scrap %@", scrap.uuid);
+                            scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
+//                            NSLog(@"built scrap %@", scrap.uuid);
+                            [scrap setPropertiesDictionary:scrapProperties];
                         }
                         if(scrap){
-                            [scrap setPropertiesDictionary:scrapProperties];
-                            @synchronized(allScrapsInSidebar){
-                                [allScrapsInSidebar addObject:scrap];
+                            @synchronized(allLoadedScraps){
+                                [allLoadedScraps addObject:scrap];
                                 [allPropertiesForScraps addObject:scrapProperties];
                             }
                             
-                            [self.delegate didLoadScrapInSidebar:scrap];
+                            [self.delegate didLoadScrapInContainer:scrap];
                             
                             if(makeEditable){
                                 [scrap loadScrapStateAsynchronously:async];
                             }
-                            [scrap setShouldShowShadow:NO];
                         }else{
                             NSLog(@"couldn't load scrap for %@", scrapProperties);
                         }
@@ -135,79 +134,78 @@ static dispatch_queue_t importExportStateQueue;
                     @synchronized(self){
                         isLoaded = YES;
                         isLoading = NO;
+                        MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
+                        expectedUndoHash = [immutableState undoHash];
+                        lastSavedUndoHash = [immutableState undoHash];
                     }
-                    [self.delegate didLoadAllScrapsInSidebar:self];
+                    [self.delegate didLoadAllScrapsFor:self];
                     dispatch_semaphore_signal(sema1);
                 }];
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-                //                dispatch_release(sema1); ARC handles this
             }
         };
         
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
     }else if([self isStateLoaded] && makeEditable){
         void (^block2)() = ^(void) {
             if([self isStateLoaded]){
-                @synchronized(allScrapsInSidebar){
-                    for(MMScrapView* scrap in allScrapsInSidebar){
+                @synchronized(allLoadedScraps){
+                    for(MMScrapView* scrap in allLoadedScraps){
                         [scrap loadScrapStateAsynchronously:async];
+                        @synchronized(self){
+                            if(isUnloading){
+                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                            }
+                        }
                     }
                 }
             }
         };
         if(async){
-            dispatch_async([MMScrapsOnPaperState importExportStateQueue], block2);
+            dispatch_async([MMScrapCollectionState importExportStateQueue], block2);
         }else{
             block2();
         }
     }
 }
 
--(void) unload{
-    if([self isStateLoaded] || isLoading){
-        dispatch_async([MMScrapsOnPaperState importExportStateQueue], ^(void) {
-            @autoreleasepool {
-                if([self isStateLoaded]){
-                    NSArray* scraps = nil;
-                    @synchronized(allScrapsInSidebar){
-                        scraps = [allScrapsInSidebar copy];
-                    }
-                    for(MMScrapView* scrap in scraps){
-                        [scrap unloadState];
-                    }
-                    @synchronized(allScrapsInSidebar){
-                        [allScrapsInSidebar removeAllObjects];
-                    }
-                    [NSThread performBlockOnMainThread:^{
-                        [scraps makeObjectsPerformSelector:@selector(removeFromSuperview)];
-                        [self.delegate didUnloadAllScrapsInSidebar:self];
-                    }];
-                    @synchronized(self){
-                        isLoaded = NO;
-                    }
-                }
-            }
-        });
-    }
-}
-
 -(MMImmutableScrapsInSidebarState*) immutableStateForPath:(NSString*)scrapIDsPath{
+    if(scrapIDsPath){
+        CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
+    }
     if([self isStateLoaded]){
         hasEditsToSave = NO;
-        return [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps];
+        @synchronized(allLoadedScraps){
+            MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
+            expectedUndoHash = [immutable undoHash];
+            return immutable;
+        }
     }
     return nil;
 }
 
+#pragma mark - Saving Helpers
+
+-(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash{
+    @synchronized(self){
+        lastSavedUndoHash = savedUndoHash;
+    }
+}
+
+
 #pragma mark - Manage Scraps
 
+-(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap{
+    // noop
+}
+
 -(MMScrapView*) scrapForUUID:(NSString*)uuid{
-    @synchronized(allScrapsInSidebar){
-        for(MMScrapView*scrap in allScrapsInSidebar){
+    @synchronized(allLoadedScraps){
+        for(MMScrapView*scrap in allLoadedScraps){
             if([scrap.uuid isEqualToString:uuid]){
                 return scrap;
             }
@@ -216,24 +214,82 @@ static dispatch_queue_t importExportStateQueue;
     return nil;
 }
 
-
 -(void) scrapIsAddedToSidebar:(MMScrapView *)scrap{
-    @synchronized(allScrapsInSidebar){
+    @synchronized(allLoadedScraps){
         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:[scrap propertiesDictionary]];
         [props setObject:[scrap owningPageUUID] forKey:@"pageUUID"];
         [allPropertiesForScraps insertObject:props atIndex:0];
-        [allScrapsInSidebar insertObject:scrap atIndex:0];
+        [allLoadedScraps insertObject:scrap atIndex:0];
+        hasEditsToSave = YES;
     }
 }
 
 -(void) scrapIsRemovedFromSidebar:(MMScrapView *)scrap{
-    @synchronized(allScrapsInSidebar){
-        NSUInteger index = [allScrapsInSidebar indexOfObject:scrap];
+    @synchronized(allLoadedScraps){
+        NSUInteger index = [allLoadedScraps indexOfObject:scrap];
         if(index != NSNotFound){
             [allPropertiesForScraps removeObjectAtIndex:index];
-            [allScrapsInSidebar removeObjectAtIndex:index];
+            [allLoadedScraps removeObjectAtIndex:index];
+            hasEditsToSave = YES;
         }
     }
+}
+
+#pragma mark - Paths
+
+-(NSString*) directoryPathForScrapUUID:(NSString*)uuid{
+    NSString* documentsPath = [NSFileManager documentsPath];
+    NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
+    NSString* scrapPath = [[bezelStateDirectory stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
+-(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    NSString* bezelStateDirectory = [documentsPath stringByAppendingPathComponent:@"Bezel"];
+    NSString* scrapPath = [[bezelStateDirectory stringByAppendingPathComponent:@"Scraps"] stringByAppendingPathComponent:uuid];
+    return scrapPath;
+}
+
+#pragma mark - Scrap Stealing
+
+-(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapCollectionState{
+    
+    [super stealScrap:scrapUUID fromScrapCollectionState:formerScrapCollectionState];
+    
+    @synchronized(allLoadedScraps){
+        for(int i=0;i<[allPropertiesForScraps count];i++){
+            NSDictionary* aScrapProps = [allPropertiesForScraps objectAtIndex:i];
+            if([[aScrapProps objectForKey:@"uuid"] isEqualToString:scrapUUID]){
+                // edit this entry
+                NSMutableDictionary* replacementProps = [NSMutableDictionary dictionaryWithDictionary:aScrapProps];
+                [replacementProps setObject:kPageUUIDForBezelCollectionState forKey:@"pageUUID"];
+                [allPropertiesForScraps replaceObjectAtIndex:i withObject:replacementProps];
+                NSLog(@"swapped properties too");
+                break;
+            }
+        }
+    }
+}
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    NSLog(@"sidebar needs to delete assets for %@", scrapUUID);
+    
+    dispatch_async([[MMTrashManager sharedInstance] trashManagerQueue], ^{
+        NSString* directoryForScrap = [self directoryPathForScrapUUID:scrapUUID];
+        
+        if(![[NSFileManager defaultManager] fileExistsAtPath:directoryForScrap]){
+            NSLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
+        }else{
+            NSError* err = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:directoryForScrap error:&err];
+            if(err){
+                NSLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
+            }else{
+                NSLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
+            }
+        }
+    });
 }
 
 @end

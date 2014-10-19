@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 
 @interface MMScrapSidebarContentView : UIView{
-    __weak MMScrapSidebarContainerView* delegate;
+    __weak MMScrapsInBezelContainerView* delegate;
 }
 
-@property (nonatomic, weak) MMScrapSidebarContainerView* delegate;
+@property (nonatomic, weak) MMScrapsInBezelContainerView* delegate;
 @property (nonatomic, assign) NSInteger columnCount;
 
 -(void) prepareContentView;

@@ -49,10 +49,7 @@
 }
 
 -(void) loadPreviewPhotos{
-    NSArray* pathsOfPreviewPhotos = [photos subarrayWithRange:NSMakeRange(0, MIN(5, self.numberOfPhotos))];
-    previewPhotos = [pathsOfPreviewPhotos mapObjectsUsingBlock:^id(MMPhotoOnDisk* obj, NSUInteger idx) {
-        return [obj aspectRatioThumbnail];
-    }];
+    previewPhotos = [photos subarrayWithRange:NSMakeRange(0, MIN(5, self.numberOfPhotos))];
 }
 
 -(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{

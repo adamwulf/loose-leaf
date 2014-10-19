@@ -97,4 +97,6 @@
 
 -(void) finishedLoading;
 
+-(BOOL) shouldPrioritizeSidebarButtonsForTaps;
+
 @end

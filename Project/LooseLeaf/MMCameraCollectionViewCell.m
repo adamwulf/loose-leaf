@@ -12,6 +12,7 @@
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
+#import "UIScreen+PortraitBounds.h"
 
 @implementation MMCameraCollectionViewCell{
     CGFloat rowHeight;
@@ -22,10 +23,11 @@
 @synthesize delegate;
 
 -(CGRect) cameraViewFr{
-    CGFloat ratio = [UIScreen mainScreen].bounds.size.width / [UIScreen mainScreen].bounds.size.height;
+    CGFloat ratio = [UIScreen mainScreen].portraitBounds.size.width / [UIScreen mainScreen].portraitBounds.size.height;
     CGRect cameraViewFr = CGRectZero;
     cameraViewFr.size.width = ratio * (rowHeight - kCameraMargin) * 2;
     cameraViewFr.size.height = (rowHeight - kCameraMargin) * 2;
+    NSLog(@"cameraViewFr: %f %f %f %f", cameraViewFr.origin.x, cameraViewFr.origin.y, cameraViewFr.size.width, cameraViewFr.size.height);
     return cameraViewFr;
 }
 
@@ -48,22 +50,9 @@
 
         [self addSubview:cameraRow];
         [self addSubview:flipButton];
+        [self updatePhotoRotation:NO];
     }
     return self;
-}
-
-#pragma mark - Rotation
-
--(CGFloat) sidebarButtonRotation{
-    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
-        return 0;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
-        return -M_PI_2;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
-        return M_PI_2;
-    }else{
-        return M_PI;
-    }
 }
 
 #pragma mark - Camera Button
@@ -85,6 +74,12 @@
 
 -(void) sessionStarted{
     // noop
+}
+
+#pragma mark - Rotation
+
+-(void) updatePhotoRotation:(BOOL)animated{
+    [flipButton updatePhotoRotation:animated];
 }
 
 @end

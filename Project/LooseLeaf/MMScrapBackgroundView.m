@@ -62,6 +62,7 @@ static int totalBackgroundBytes;
 }
 
 -(void) updateBackingImageLocation{
+    CheckMainThread;
     self.backingContentView.center = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
@@ -117,7 +118,7 @@ static int totalBackgroundBytes;
 }
 
 -(NSString*) bundledBackgroundJPGFile{
-    return [[MMScrapViewState bundledScrapDirectoryPathForUUID:scrapState.uuid andScrapsOnPaperState:scrapState.scrapsOnPaperState] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
+    return [[scrapState.scrapsOnPaperState bundledDirectoryPathForScrapUUID:scrapState.uuid] stringByAppendingPathComponent:[@"background" stringByAppendingPathExtension:@"jpg"]];
 }
 
 #pragma mark - Duplication and Stamping
@@ -125,7 +126,12 @@ static int totalBackgroundBytes;
 // returns an exact duplicate of this background, including all properties,
 // and assigns it to the input scrap state
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState{
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
+    // we need to swap the image out for another one, because the source image
+    // might be deleted from disk soon. so this image needs to load
+    // from its own assets
+    UIImage* replacementImage = [UIImage imageWithData:UIImagePNGRepresentation(self.backingImage)];
+//    UIImage* replacementImage = self.backingImage;
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:replacementImage
                                                                            forScrapState:otherScrapState];
     backgroundView.backgroundRotation = self.backgroundRotation;
     backgroundView.backgroundScale = self.backgroundScale;
@@ -172,16 +178,17 @@ static int totalBackgroundBytes;
 -(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties{
     if([[NSFileManager defaultManager] fileExistsAtPath:self.backgroundJPGFile] ||
        [[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
-        UIImage* image = [UIImage imageWithContentsOfFile:self.backgroundJPGFile];
-        if(!image){
-//            NSLog(@"can't get background! %@", self.backgroundJPGFile);
-            image = [UIImage imageWithContentsOfFile:self.bundledBackgroundJPGFile];
-            if(!image){
+        NSData* imageData = [NSData dataWithContentsOfFile:self.backgroundJPGFile];
+        if(!imageData){
+            NSLog(@"can't get background!");
+            imageData = [NSData dataWithContentsOfFile:self.bundledBackgroundJPGFile];
+            if(!imageData){
                 NSLog(@"can't get background!");
             }else{
 //                NSLog(@"nevermind, i found it in the bundle...");
             }
         }
+        UIImage* image = [UIImage imageWithData:imageData];
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];

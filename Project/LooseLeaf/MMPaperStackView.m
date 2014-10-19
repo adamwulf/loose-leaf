@@ -13,6 +13,7 @@
 #import "MMScrappedPaperView.h"
 #import "Mixpanel.h"
 #import "MMExportablePaperView.h"
+#import "NSMutableSet+Extras.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -129,6 +130,29 @@
     page.delegate = self;
     [page enableAllGestures];
     [visibleStackHolder addSubviewToBottomOfStack:page];
+}
+
+/**
+ * adds the page to the bottom of the stack
+ * and adds to the bottom of the subviews
+ */
+-(void) addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage{
+    page.isBrandNewPage = NO;
+    page.delegate = self;
+    [page enableAllGestures];
+    if([bezelStackHolder containsSubview:otherPage]){
+        [visibleStackHolder pushSubview:page];
+    }else if([visibleStackHolder containsSubview:otherPage]){
+        // this will convert the frame of the newly inserted page
+        [visibleStackHolder pushSubview:page];
+        // and this will position it at the correct index
+        [visibleStackHolder insertSubview:page belowSubview:otherPage];
+    }else if([hiddenStackHolder containsSubview:otherPage]){
+        // this will convert the frame of the newly inserted page
+        [hiddenStackHolder pushSubview:page];
+        // and this will position it at the correct index
+        [hiddenStackHolder insertSubview:page aboveSubview:otherPage];
+    }
 }
 
 /**
@@ -601,10 +625,30 @@
        !bezelGesture.hasSeenSubstateBegin &&
        (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
         
-        // cancel panning a page, if any
-        if([[visibleStackHolder peekSubview] panGesture].subState != UIGestureRecognizerStatePossible){
-            [[[visibleStackHolder peekSubview] panGesture] cancel];
-        }
+        // cancel panning all pages, if any
+        // this will make sure to cancel pages from back to front,
+        // so that the top held page will fall back onto the visible stack.
+        //
+        // otherwise, if the front page was released first, it + all
+        // pages to the next held page would be pushed immediately onto
+        // the hidden stack, and would end up held by the bezel. the user
+        // would see the top page suddenly 'disappear' and suddenly held
+        // by the bezel.
+        [[[setOfPagesBeingPanned allObjects] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            // put the top visible page last
+            if(obj1 == [visibleStackHolder peekSubview]){
+                return NSOrderedDescending;
+            }else if(obj2 == [visibleStackHolder peekSubview]){
+                return NSOrderedAscending;
+            }
+            return NSOrderedSame;
+        }] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            // now cancel all of those pages pan gestures
+            if([obj panGesture].subState != UIGestureRecognizerStatePossible){
+                [[obj panGesture] cancel];
+            }
+        }];
+        
         // make sure there's a page to bezel
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         // this flag is an ugly hack because i'm using substates in gestures.
@@ -618,7 +662,7 @@
         // began to changed, because i never know when the delegate has or hasn't
         // been notified about the substate
         bezelGesture.hasSeenSubstateBegin = YES;
-        [[visibleStackHolder peekSubview] saveToDisk];
+        [[visibleStackHolder peekSubview] saveToDisk:nil];
         //
         // ok, the user is beginning the drag two fingers from the
         // right hand bezel. we need to push a page from the hidden
@@ -1111,7 +1155,7 @@
             }];
             [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
                 [self updateIconAnimations];
-                [oldTopVisiblePage saveToDisk];
+                [oldTopVisiblePage saveToDisk:nil];
             }];
         }else{
             // we just picked up the top page close to the bezel,
@@ -1123,7 +1167,7 @@
             [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
                 page.frame = self.bounds;
                 [self didChangeTopPage];
-                [oldTopVisiblePage saveToDisk];
+                [oldTopVisiblePage saveToDisk:nil];
             }];
         }
         return;
@@ -1208,14 +1252,14 @@
                 [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished){
                     [self updateIconAnimations];
                     [self didChangeTopPage];
-                    [oldTopVisiblePage saveToDisk];
+                    [oldTopVisiblePage saveToDisk:nil];
                 }];
             }else{
                 [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
                 [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
                     [self updateIconAnimations];
                     [self didChangeTopPage];
-                    [oldTopVisiblePage saveToDisk];
+                    [oldTopVisiblePage saveToDisk:nil];
                 }];
             }
             //
@@ -1231,7 +1275,7 @@
                 [self updateIconAnimations];
                 if([page isKindOfClass:[MMEditablePaperView class]]){
                     MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-                    [editablePage saveToDisk];
+                    [editablePage saveToDisk:nil];
                 }
             }];
         }
@@ -1248,8 +1292,6 @@
         // as we're still holding the top page
         // ============================================================================
         if(![[visibleStackHolder peekSubview] isBeingPannedAndZoomed]){
-            //
-            // TODO: log this to analytics
             //
             // odd, no idea how this happened. but we
             // just released a non-top page and the top
@@ -1394,7 +1436,7 @@
     @throw kAbstractMethodException;
 }
 
--(MMScrapSidebarContainerView*) bezelContainerView{
+-(MMScrapsInBezelContainerView*) bezelContainerView{
     @throw kAbstractMethodException;
 }
 

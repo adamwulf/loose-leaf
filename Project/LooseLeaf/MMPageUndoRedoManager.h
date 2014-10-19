@@ -15,7 +15,7 @@
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) BOOL isLoaded;
 
--(id) initForPage:(MMUndoablePaperView*)page;
+-(id) initForDelegatePage:(MMUndoablePaperView*)page;
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item;
 

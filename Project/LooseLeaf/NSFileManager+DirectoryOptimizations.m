@@ -8,6 +8,8 @@
 
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
+#import <DrawKit-iOS/JRSwizzle.h>
+#import "NSMutableSet+Extras.h"
 
 @implementation NSFileManager (DirectoryOptimizations)
 
@@ -24,6 +26,7 @@ static NSMutableSet* pathCacheDictionary;
 // if so then returns immediatley.
 // otherwise checks existence and creates if needed
 +(void) ensureDirectoryExistsAtPath:(NSString*)path{
+    if(!path) return;
     [NSFileManager makePathCacheDictionary];
 
     BOOL contains = NO;
@@ -39,6 +42,16 @@ static NSMutableSet* pathCacheDictionary;
             [fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
         }
     }
+}
+
+-(BOOL) swizzle_removeItemAtPath:(NSString *)path error:(NSError *__autoreleasing *)error{
+    @synchronized(pathCacheDictionary){
+        [pathCacheDictionary removeObject:path];
+        [pathCacheDictionary filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return ![evaluatedObject hasPrefix:path];
+        }]];
+    }
+    return [self swizzle_removeItemAtPath:path error:error];
 }
 
 
@@ -102,6 +115,15 @@ static NSArray* userDocumentsPaths;
         return [attribs fileSize];
     }
     return 0;
+}
+
+
+
++(void)load{
+    NSError *error = nil;
+    [NSFileManager jr_swizzleMethod:@selector(removeItemAtPath:error:)
+                         withMethod:@selector(swizzle_removeItemAtPath:error:)
+                              error:&error];
 }
 
 @end

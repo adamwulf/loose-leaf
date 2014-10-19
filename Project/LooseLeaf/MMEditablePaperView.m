@@ -18,6 +18,7 @@
 #import "MMLoadImageCache.h"
 #import "UIView+Animations.h"
 #import "Mixpanel.h"
+#import "MMEditablePaperViewSubclass.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -94,8 +95,7 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    CGFloat _scale = frame.size.width / self.superview.frame.size.width;
-    drawableView.transform = CGAffineTransformMakeScale(_scale, _scale);
+    drawableView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
 #pragma mark - Public Methods
@@ -113,18 +113,22 @@ dispatch_queue_t importThumbnailQueue;
 -(void) undo{
     if([drawableView canUndo]){
         [drawableView undo];
-        [self saveToDisk];
+        [self saveToDisk:nil];
     }
 }
 
 -(void) redo{
     if([drawableView canRedo]){
         [drawableView redo];
-        [self saveToDisk];
+        [self saveToDisk:nil];
     }
 }
 
 -(void) updateThumbnailVisibility{
+    [self updateThumbnailVisibility:NO];
+}
+
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
     @throw kAbstractMethodException;
 }
 
@@ -173,8 +177,8 @@ dispatch_queue_t importThumbnailQueue;
 
 -(void) setDrawableView:(JotView *)_drawableView{
     CheckMainThread;
-    if(_drawableView && ![self hasStateLoaded]){
-        debug_NSLog(@"oh no");
+    if(_drawableView && ![self isStateLoaded]){
+        NSLog(@"oh no3");
     }
     if(drawableView != _drawableView){
         if(!_drawableView && drawableView){
@@ -184,7 +188,7 @@ dispatch_queue_t importThumbnailQueue;
         if(drawableView){
             [self generateDebugView:YES];
             [self setFrame:self.frame];
-            if([self.delegate isPageEditable:self] && [self hasStateLoaded]){
+            if([self.delegate isPageEditable:self] && [self isStateLoaded]){
                 // drawableView might be animating from
                 // it's old page, so remove that animation
                 // if any
@@ -204,7 +208,7 @@ dispatch_queue_t importThumbnailQueue;
             [self generateDebugView:NO];
             [self updateThumbnailVisibility];
         }
-    }else if(drawableView && [self hasStateLoaded]){
+    }else if(drawableView && [self isStateLoaded]){
         [self setEditable:YES];
         [self updateThumbnailVisibility];
     }
@@ -224,21 +228,24 @@ dispatch_queue_t importThumbnailQueue;
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager sharedInstance]];
+    [paperState loadJotStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager sharedInstance]];
 }
 -(void) unloadState{
     [paperState unload];
 }
 
--(BOOL) hasStateLoaded{
+-(BOOL) isStateLoaded{
     return [paperState isStateLoaded];
+}
+-(BOOL) isStateLoading{
+    return [paperState isStateLoading];
 }
 
 
 /**
  * subclass should override and call into saveToDisk:
  */
--(void) saveToDisk{
+-(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
     @throw kAbstractMethodException;
 }
 
@@ -246,7 +253,7 @@ dispatch_queue_t importThumbnailQueue;
  * write the thumbnail, backing texture, and entire undo
  * state to disk, and notify our delegate when done
  */
--(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
+-(void) saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete{
     
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
@@ -427,7 +434,7 @@ static int count = 0;
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
     [delegate didEndStrokeWithTouch:touch];
-    [self saveToDisk];
+    [self saveToDisk:nil];
 }
 
 -(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{

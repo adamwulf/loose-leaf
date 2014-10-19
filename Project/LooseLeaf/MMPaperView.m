@@ -36,8 +36,8 @@
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
-    self = [super initWithFrame:frame];
-    if (self) {
+    originalUnscaledBounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
+    if (self = [super initWithFrame:frame]) {
         // Initialization code
         uuid = _uuid;
         originalUnscaledBounds = self.bounds;
@@ -47,17 +47,23 @@
         // debug image to help show page zoom/pan etc better
         // than a blank page
         //
+#ifdef DEBUG
+#ifdef DEBUGLABELS
+#if DEBUGLABELS
 //        NSInteger photo = rand() % 6 + 1;
 //        UIImage* img = [UIImage imageNamed:[NSString stringWithFormat:@"img0%d.jpg", photo]];
         
-//        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
-//        label.text = uuid;
-//        [label sizeToFit];
-//        CGRect fr = label.frame;
-//        fr.origin.x += 100;
-//        fr.origin.y += 100;
-//        label.frame = fr;
-//        [self addSubview:label];
+        UILabel* label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.text = uuid;
+        [label sizeToFit];
+        CGRect fr = label.frame;
+        fr.origin.x += 100;
+        fr.origin.y += 100;
+        label.frame = fr;
+        [self addSubview:label];
+#endif
+#endif
+#endif
         //
         // end debug image
         //
@@ -122,7 +128,8 @@
     // now that we have adjusted our frame
     // let's set our scale to match exactly what our
     // actual frame scale is
-    self.scale = _frame.size.width / originalUnscaledBounds.size.width;
+    CGFloat newScale = _frame.size.width / originalUnscaledBounds.size.width;
+    self.scale = newScale;
 }
 
 
@@ -199,7 +206,7 @@
             if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
 //                NSLog(@"gesture is active %@", gesture);
             }
-            [(MMPanAndPinchGestureRecognizer*)gesture cancel];
+            [(MMCancelableGestureRecognizer*)gesture cancel];
         }
     }
 }
@@ -480,5 +487,10 @@
     return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass(self.class), @"class",
             self.uuid, @"uuid", nil];
 }
+
+-(void) dealloc{    
+    NSLog(@"page dealloc'd %@", self.uuid);
+}
+
 
 @end

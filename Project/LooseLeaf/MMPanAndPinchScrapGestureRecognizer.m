@@ -16,6 +16,8 @@
 #import "UIView+Animations.h"
 #import "UIGestureRecognizer+GestureDebug.h"
 #import "MMPageCacheManager.h"
+#import "MMAppDelegate.h"
+#import "MMLooseLeafViewController.h"
 
 #define  kMaxSimultaneousTouchesAllowedToTrack 20
 #define  kNumberOfDirectionChangesToDetermineShake 2
@@ -110,7 +112,12 @@ struct TouchInterval{
         scrap = _scrap;
         startingScrapProperties = [scrap propertiesDictionary];
         // update the starting page, if any
-        startingPageForScrap = scrap ? [[MMPageCacheManager sharedInstance] currentEditablePage] : nil;
+        //
+        // not the prettiest
+        if(scrap && scrap.state.scrapsOnPaperState.delegate && ![scrap.state.scrapsOnPaperState.delegate isKindOfClass:[MMUndoablePaperView class]]){
+            @throw [NSException exceptionWithName:@"InvalidDelegateException" reason:@"delegate for scrap must be a page" userInfo:nil];
+        }
+        startingPageForScrap = scrap ? ((MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate) : nil;
     }
 }
 
@@ -359,7 +366,7 @@ struct TouchInterval{
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self say:@"began" ISee:touches];
+//    [self say:@"began" ISee:touches];
     isShaking = NO;
     for(UITouch* touch in touches){
         [self calculateShakesForTouch:touch];
@@ -501,7 +508,7 @@ struct TouchInterval{
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self say:@"ended" ISee:touches];
+//    [self say:@"ended" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
@@ -625,7 +632,7 @@ struct TouchInterval{
 
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-    [self say:@"cancelled" ISee:touches];
+//    [self say:@"cancelled" ISee:touches];
     if(paused){
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];

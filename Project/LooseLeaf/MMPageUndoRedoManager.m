@@ -16,7 +16,7 @@
 #import "MMUndoRedoBezeledScrapItem.h"
 
 @implementation MMPageUndoRedoManager{
-    MMUndoablePaperView* page;
+    __weak MMUndoablePaperView* page;
     NSMutableArray* stackOfUndoableItems;
     NSMutableArray* stackOfUndoneItems;
     BOOL hasEditsToSave;
@@ -26,7 +26,7 @@
 @synthesize hasEditsToSave;
 @synthesize isLoaded;
 
--(id) initForPage:(MMUndoablePaperView*)_page{
+-(id) initForDelegatePage:(MMUndoablePaperView*)_page{
     if(self = [super init]){
         page = _page;
         stackOfUndoableItems = [NSMutableArray array];
@@ -109,7 +109,7 @@
     if(!isLoaded){
         @throw [NSException exceptionWithName:@"SavingUnloadedUndoManager" reason:@"Cannot save unloaded undo manager" userInfo:nil];
     }
-    if(!hasEditsToSave){
+    if(!self.hasEditsToSave){
 //        NSLog(@"no edits to save for undo state: %@", path);
         return;
     }

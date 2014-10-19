@@ -14,6 +14,7 @@
 #import "MMReachabilityManager.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
+#import "MMPresentationWindow.h"
 
 @implementation MMTwitterShareItem{
     MMProgressedImageViewButton* button;
@@ -57,6 +58,7 @@
             // TODO: fix twitter share when wifi enabled w/o any network
             // this hung with the modal "open" in the window, no events triggered when tryign to draw
             // even though the twitter dialog never showed. wifi was on but not connected.
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
             [tweetSheet setInitialText:@"Quick sketch drawn in Loose Leaf @getlooseleaf"];
             [tweetSheet addImage:self.delegate.imageToShare];
             tweetSheet.completionHandler = ^(SLComposeViewControllerResult result){
@@ -73,10 +75,10 @@
                 [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Twitter",
                                                                              kMPEventExportPropResult : strResult}];
                 
-                [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+                [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
             };
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:tweetSheet animated:YES completion:^{
+            [presentationWindow.rootViewController presentViewController:tweetSheet animated:YES completion:^{
                 NSLog(@"finished");
             }];
             

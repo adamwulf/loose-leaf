@@ -7,6 +7,9 @@
 //
 
 #import "MMPhotoAlbumListLayout.h"
+#import "CaptureSessionManager.h"
+#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPhotoManager.h"
 #import "Constants.h"
 
 @implementation MMPhotoAlbumListLayout{
@@ -36,13 +39,20 @@
 
 -(CGFloat) cameraRowHeight{
     if(self.hasSectionForCamera){
-        return [self photoRowHeight] * 2 + kCameraMargin;
+        if ([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) {
+            return [self photoRowHeight] * 2 + kCameraMargin;
+        }else{
+            return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
+        }
+    }else if(![MMPhotoManager hasPhotosPermission]){
+        return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
     }
     return 0;
 }
 
 -(CGSize)collectionViewContentSize{
-    if(!self.collectionView.numberOfSections){
+    NSInteger numSections = self.collectionView.numberOfSections;
+    if(!numSections){
         return CGSizeZero;
     }
     
@@ -64,6 +74,17 @@
         return ret;
     }
 
+    if(![MMPhotoManager hasPhotosPermission]){
+        // don't have photo permissions
+        ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
+        ret.center = CGPointMake(width/2, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
+        if(self.hasSectionForCamera){
+            ret.center = CGPointMake(ret.center.x, ret.center.y + [self cameraRowHeight]);
+        }
+        ret.transform = CGAffineTransformIdentity;
+        return ret;
+    }
+
     NSInteger indexOfPhoto = indexPath.row;
 
     NSInteger rowNumber = floorf(indexOfPhoto / 2.0);
@@ -74,7 +95,8 @@
     
     CGRect b = CGRectMake(0, 0, width/2, [self photoRowHeight]);
     ret.bounds = b;
-    ret.center = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
+    CGPoint c = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
+    ret.center = c;
     ret.transform = CGAffineTransformMakeRotation(rotation);
     
     return ret;

@@ -8,7 +8,7 @@
 
 #import "MMUndoRedoAddScrapFromBezelItem.h"
 #import "MMUndoablePaperView.h"
-#import "MMScrapSidebarContainerView.h"
+#import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
 
 @interface MMUndoRedoAddScrapFromBezelItem (Private)
@@ -56,11 +56,7 @@
     // to our page, but then sent it back to the bezel.
     // we should check if it's still in the bezel, and if not
     // then we're the last holder of this scrap and should delete it
-    if([page.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-    }else{
-        [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
-    }
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState];
 }
 
 #pragma mark - Serialize
