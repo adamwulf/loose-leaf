@@ -17,6 +17,7 @@
 #import "MMPageCacheManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
+#import <Crashlytics/Crashlytics.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -63,6 +64,12 @@
 #pragma mark - Save and Load
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+//    if(async){
+//        [[NSThread mainThread] performBlock:^{
+//            [[Crashlytics sharedInstance] crash];
+//        } afterDelay:5];
+//    }
+
     CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if(![self isStateLoaded]){
         __block NSArray* scrapProps;
