@@ -57,6 +57,7 @@
             NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
             [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
             
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
             MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
             [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
         }
@@ -112,6 +113,7 @@
     
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 #pragma mark - Dealloc
