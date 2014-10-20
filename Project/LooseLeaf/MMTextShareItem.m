@@ -24,7 +24,7 @@
         [button setImage:[UIImage imageNamed:@"text"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(updateButtonGreyscale)
+                                                 selector:@selector(didBecomeActive)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
@@ -69,6 +69,14 @@
 }
 
 #pragma mark - Notification
+
+-(void) didBecomeActive{
+    [self updateButtonGreyscale];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:2];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:4];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:6];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:10];
+}
 
 -(void) updateButtonGreyscale{
     if([MFMessageComposeViewController canSendText]) {
