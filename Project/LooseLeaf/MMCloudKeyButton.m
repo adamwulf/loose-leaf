@@ -11,6 +11,8 @@
 #import "MMBrokenCloudLayer.h"
 #import "MMRotationManager.h"
 #import "MMCloudErrorIconLayer.h"
+#import "UIView+Animations.h"
+#import "UIView+Debug.h"
 
 @implementation MMCloudKeyButton{
     MMRotatingKeyDemoLayer* needLoginView;
@@ -61,18 +63,20 @@
     opacityForBreak.toValue = @(1.0);
     opacityForBreak.duration = .3;
     
-    CABasicAnimation* opacityForGradient = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    opacityForGradient.fromValue = @(1.0);
-    opacityForGradient.toValue = @(0.0);
-    opacityForGradient.duration = .2;
-    
+    CGAffineTransform currTransform = self.transform;
+    self.transform = CGAffineTransformIdentity;
+
     [CATransaction begin];
-//    [CATransaction setCompletionBlock:^{
-//        [brokenCloud animatePiecesApart];
-//    }];
     [brokenCloud addAnimation:opacityForBreak forKey:@"opacity"];
-//    [needLoginView addAnimation:opacityForGradient forKey:@"opacity"];
+    
+    CGRect selfBounds = self.bounds;
+    CGPoint updatedAnchorPoint = [brokenCloud centerOfErrorCircle];
+    updatedAnchorPoint.x /= selfBounds.size.width;
+    updatedAnchorPoint.y /= selfBounds.size.height;
+    [UIView setAnchorPoint:updatedAnchorPoint forView:self];
     [CATransaction commit];
+    
+    self.transform = currTransform;
 }
 
 -(void) setupTimer{

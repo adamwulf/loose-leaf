@@ -1482,6 +1482,10 @@ int skipAll = NO;
     }
 }
 
+-(MMUndoablePaperView*) owningPageForScrap:(MMScrapView *)scrap{
+    return (MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate;
+}
+
 #pragma mark - PolygonToolDelegate
 
 // when scissors complete, i need to drop all held scraps

@@ -94,6 +94,7 @@
             emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
         }
         [self addSubview:emptyView];
+        [emptyView updatePhotoRotation:NO];
     }else if(emptyView){
         [emptyView removeFromSuperview];
         emptyView = nil;

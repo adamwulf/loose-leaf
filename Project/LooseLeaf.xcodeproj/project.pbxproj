@@ -3151,7 +3151,7 @@
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"DEBUGLABELS=1",
+					"DEBUGLABELS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

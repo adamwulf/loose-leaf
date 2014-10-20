@@ -185,6 +185,7 @@
 }
 
 -(void) animateAndAlignAllButtons{
+    CheckMainThread;
     // align all invisible buttons so they animate in respectably
     for(MMCloudKitImportCoordinator* import in [activeImports reverseObjectEnumerator]){
         if(!import.isReady || !import.avatarButton.alpha){

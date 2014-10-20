@@ -26,5 +26,29 @@
 		<key>uuid</key>
 		<string>0BE5AC85-010B-4CAB-B80E-05652B182316</string>
 	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>2E73BFF3-843D-417F-A8FA-71C6E9783D67</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>8E1CC74B-398F-45CB-B3D6-6D2C28E51239</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>80EEA5F7-9CB4-4587-BB53-B267BFA85BCC</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMScrappedPaperView</string>
+		<key>uuid</key>
+		<string>E45D102C-6CBD-48C4-9C38-1301ABA0E707</string>
+	</dict>
 </array>
 </plist>

@@ -7,6 +7,7 @@
 //
 
 #import "MMCameraButton.h"
+#import "AVHexColor.h"
 
 @implementation MMCameraButton
 
@@ -32,14 +33,14 @@
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-    UIColor* darkBlue = [UIColor colorWithRed: 0.279 green: 0.380 blue: 0.860 alpha: 0.75];
-    UIColor* lightBlue = [UIColor colorWithRed: 0.286 green: 0.588 blue: 0.929 alpha: 0.75];
+    UIColor* darkBlue = [AVHexColor colorWithHexString:@"0b70be"];
+    UIColor* lightBlue = [AVHexColor colorWithHexString:@"0E94FB"];
 
     //// Gradient Declarations
     NSArray* gradientColors = [NSArray arrayWithObjects:
                                (id)darkBlue.CGColor,
                                (id)lightBlue.CGColor, nil];
-    CGFloat gradientLocations[] = {0, 1};
+    CGFloat gradientLocations[] = {0, .7};
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)gradientColors, gradientLocations);
 
     CGRect frame = [self drawableFrame];
