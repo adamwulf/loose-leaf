@@ -408,7 +408,9 @@
             if([self.scrapsOnPaperState isStateLoaded]){
                 dispatch_sync([MMScrapCollectionState importExportStateQueue], removeFromScrapsOnPaperState);
             }else{
-                [self performBlockForUnloadedScrapStateSynchronously:removeFromScrapsOnPaperState andImmediatelyUnloadState:YES];
+                [self performBlockForUnloadedScrapStateSynchronously:^{
+                    dispatch_sync([MMScrapCollectionState importExportStateQueue], removeFromScrapsOnPaperState);
+                } andImmediatelyUnloadState:YES andSavePaperState:respectOthers];
             }
         }
         
