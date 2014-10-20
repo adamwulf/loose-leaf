@@ -54,7 +54,7 @@
 
 -(void) addUndoLevelAndContinueStroke;
 
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload;
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload andSavePaperState:(BOOL)shouldSavePaperState;
 
 -(NSString*) scrapIDsPath;
 

@@ -1232,15 +1232,17 @@
 //
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload{
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload andSavePaperState:(BOOL)shouldSavePaperState{
     CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
                                                        onBlockComplete:^{
-                                                           MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
-                                                           [immutableScrapState saveStateToDiskBlocking];
-                                                           [NSThread performBlockOnMainThread:^{
-                                                               [self updateFullPageThumbnail:immutableScrapState];
-                                                           }];
+                                                           if(shouldSavePaperState){
+                                                               MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                               [immutableScrapState saveStateToDiskBlocking];
+                                                               [NSThread performBlockOnMainThread:^{
+                                                                   [self updateFullPageThumbnail:immutableScrapState];
+                                                               }];
+                                                           }
                                                        }
                                                            andLoadFrom:self.scrapIDsPath
                                                withBundledScrapIDsPath:self.bundledScrapIDsPath

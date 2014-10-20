@@ -551,7 +551,7 @@
     if([topPage.scrapsOnPaperState isStateLoaded]){
         blockToAddScrapToPage();
     }else{
-        [topPage performBlockForUnloadedScrapStateSynchronously:blockToAddScrapToPage andImmediatelyUnloadState:NO];
+        [topPage performBlockForUnloadedScrapStateSynchronously:blockToAddScrapToPage andImmediatelyUnloadState:NO andSavePaperState:YES];
     }
 }
 
@@ -1861,7 +1861,7 @@ int skipAll = NO;
     };
     
     if(needsStateLoading){
-        [page performBlockForUnloadedScrapStateSynchronously:block andImmediatelyUnloadState:(page != [visibleStackHolder peekSubview])];
+        [page performBlockForUnloadedScrapStateSynchronously:block andImmediatelyUnloadState:(page != [visibleStackHolder peekSubview]) andSavePaperState:YES];
     }else{
         block();
     }
