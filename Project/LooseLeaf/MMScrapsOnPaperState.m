@@ -186,14 +186,16 @@
                         [allLoadedScraps addObject:scrap];
                     }
                     
+                    BOOL isShownOnPage = NO;
                     if([scrapIDsOnPage containsObject:scrap.uuid]){
                         [self.delegate didLoadScrapInContainer:scrap];
                         [self showScrap:scrap];
+                        isShownOnPage = YES;
                     }else{
                         [self.delegate didLoadScrapOutOfContainer:scrap];
                     }
                     
-                    if(makeEditable){
+                    if(isShownOnPage && makeEditable){
                         [scrap loadScrapStateAsynchronously:async];
                     }else{
                         [scrap unloadState];
