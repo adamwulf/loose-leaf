@@ -207,7 +207,7 @@ static MMPageCacheManager* _instance = nil;
         if([page isKindOfClass:[MMEditablePaperView class]]){
             // finally, tell that page to load its state
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
-            [editablePage loadStateAsynchronously:YES withSize:drawableView.pagePtSize andScale:drawableView.scale andContext:[JotView mainThreadContext]];
+            [editablePage loadStateAsynchronously:YES withSize:drawableView.pagePtSize andScale:drawableView.scale andContext:drawableView.context];
         }
     }
 }

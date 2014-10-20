@@ -471,7 +471,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                 [drawableViewState loadJotStateAsynchronously:async
                                                   withSize:drawableView.pagePtSize
                                                   andScale:drawableView.scale
-                                                andContext:[JotView mainThreadContext]
+                                                andContext:drawableView.context
                                           andBufferManager:[[JotBufferManager alloc] init]];
             }
             [lock unlock];

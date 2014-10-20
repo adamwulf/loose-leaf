@@ -770,7 +770,7 @@ struct SidebarButton{
         [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                          withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
                                                          andScale:[MMPageCacheManager sharedInstance].drawableView.scale
-                                                       andContext:[JotView mainThreadContext]];
+                                                       andContext:[MMPageCacheManager sharedInstance].drawableView.context];
         
         
         // only load the image previews for the pages that will be visible
