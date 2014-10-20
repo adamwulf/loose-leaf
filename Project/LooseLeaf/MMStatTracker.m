@@ -104,8 +104,12 @@ static NSMutableDictionary* trackers;
     // if the count is large enough, start
     // sending it to mixpanel
     if(currCount >= targetCount){
-        [[[Mixpanel sharedInstance] people] set:[statName stringByAppendingString:@" Avg"] to:@(movingAvg)];
-        [[[Mixpanel sharedInstance] people] set:[statName stringByAppendingString:@" StDev"] to:@(stDev)];
+        if(!isnan(movingAvg)){
+            [[[Mixpanel sharedInstance] people] set:[statName stringByAppendingString:@" Avg"] to:@(movingAvg)];
+        }
+        if(!isnan(stDev)){
+            [[[Mixpanel sharedInstance] people] set:[statName stringByAppendingString:@" StDev"] to:@(stDev)];
+        }
 //        NSLog(@"%@ => avg: %f  stdev: %f   dev:%f", statName, movingAvg, stDev, deviation);
     }
     
