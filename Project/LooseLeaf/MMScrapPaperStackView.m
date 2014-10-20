@@ -1399,12 +1399,12 @@ int skipAll = NO;
         // sanity checks.
         // we should never enter here
         if([panScrapGesture1.initialTouchVector isEqual:panScrapGesture2.initialTouchVector]){
-            debug_NSLog(@"what");
+            debug_NSLog(@"what10");
         }
         
         if(scrap.scale != clonedScrap.scale ||
            scrap.rotation != clonedScrap.rotation){
-            debug_NSLog(@"what");
+            debug_NSLog(@"what11");
         }
         
         debug_NSLog(@"success? %d %p,  %d %p", (int)[panScrapGesture1.validTouches count], panScrapGesture1.scrap,
