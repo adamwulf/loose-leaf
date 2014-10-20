@@ -7,6 +7,7 @@
 //
 
 #import "MMFaceButton.h"
+#import "AVHexColor.h"
 
 @implementation MMFaceButton
 
@@ -33,13 +34,14 @@
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
     UIColor* mostlyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.65];
-    UIColor* darkBlue = [UIColor colorWithRed: 55/255.0 green:203/255.0 blue:246/255.0 alpha: 0.75];
-    UIColor* lightBlue = [UIColor colorWithRed: 15/255.0 green:170/255.0 blue:215/255.0 alpha: 0.75];
+    UIColor* lightBlue = [AVHexColor colorWithHexString:@"0E94FB"];
+    UIColor* lighterBlue = [AVHexColor colorWithHexString:@"84C7fA"];
+    
     
     //// Gradient Declarations
     NSArray* blueGradientColors = [NSArray arrayWithObjects:
-                               (id)darkBlue.CGColor,
-                               (id)lightBlue.CGColor, nil];
+                               (id)lightBlue.CGColor,
+                               (id)lighterBlue.CGColor, nil];
     CGFloat blueGradientLocations[] = {0, 1};
     CGGradientRef blueGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)blueGradientColors, blueGradientLocations);
 
