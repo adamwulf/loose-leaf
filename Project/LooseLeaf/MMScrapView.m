@@ -591,7 +591,7 @@
     p3 = CGPointApplyAffineTransform(p3, flipTransform);
     p4 = CGPointApplyAffineTransform(p4, flipTransform);
     
-    // now tamp our texture onto the other scrap using these
+    // now stamp our texture onto the other scrap using these
     // texture coordinates
     [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
