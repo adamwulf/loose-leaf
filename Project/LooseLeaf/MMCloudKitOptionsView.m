@@ -382,6 +382,7 @@ BOOL hasSent = NO;
 
 #pragma mark - Debug
 
+#ifdef DEBUG
 -(void) addExtraUsers{
     NSArray* extra = @[@{@"firstName" : @"Tim",
                          @"lastName" : @"Cook",
@@ -417,6 +418,7 @@ BOOL hasSent = NO;
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
 }
+#endif
 
 #pragma mark - MMInviteUserButtonDelegate
 
