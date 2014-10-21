@@ -111,6 +111,7 @@
 }
 
 -(void) show{
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     [super show];
     UICollectionViewLayout* layout = [self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation];
     [self updateDataSource];
@@ -349,16 +350,39 @@ BOOL hasSent = NO;
     }
 }
 
+-(CGFloat) idealRotationForOrientation:(UIInterfaceOrientation)orientation{
+    CGFloat visiblePhotoRotation = 0;
+    if(orientation == UIInterfaceOrientationLandscapeRight){
+        visiblePhotoRotation = M_PI / 2;
+    }else if(orientation == UIInterfaceOrientationPortraitUpsideDown){
+        visiblePhotoRotation = M_PI;
+    }else if(orientation == UIInterfaceOrientationLandscapeLeft){
+        visiblePhotoRotation = -M_PI / 2;
+    }else{
+        visiblePhotoRotation = 0;
+    }
+    return visiblePhotoRotation;
+}
+
+
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
     if(self.alpha){
         [self updateDataSource];
         [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
+        
+        [UIView animateWithDuration:.2 animations:^{
+            offlineView.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
+        }];
+    }else{
+        offlineView.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
     }
+    [cloudKeyButton updateInterfaceTo:orientation animated:(self.alpha != 0)];
 }
 
 
 #pragma mark - Debug
 
+#ifdef DEBUG
 -(void) addExtraUsers{
     NSArray* extra = @[@{@"firstName" : @"Tim",
                          @"lastName" : @"Cook",
@@ -394,6 +418,7 @@ BOOL hasSent = NO;
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
 }
+#endif
 
 #pragma mark - MMInviteUserButtonDelegate
 

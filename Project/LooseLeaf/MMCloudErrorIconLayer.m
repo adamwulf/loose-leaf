@@ -53,6 +53,15 @@
     return self;
 }
 
+-(CGPoint) centerOfErrorCircle{
+    UIBezierPath* noSignPath = [self noSignForRect:self.bounds];
+    CGFloat scale = self.bounds.size.width / 200.0;
+    CGFloat yDiff = -scale * 35;
+    [noSignPath applyTransform:CGAffineTransformMakeTranslation(0, yDiff)];
+    CGRect pathBounds = noSignPath.bounds;
+    return CGPointMake(pathBounds.origin.x + pathBounds.size.width/2, pathBounds.origin.y + pathBounds.size.height/2);
+}
+
 -(UIBezierPath*) noSignForRect:(CGRect)frame{
     //// CircleArrows Drawing
     UIBezierPath* noSignPath = UIBezierPath.bezierPath;

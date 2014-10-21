@@ -44,9 +44,10 @@
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
         stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
-        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
+        stackView.center = self.view.center;
 
         // export icons will show here, below the sidebars but over the stacks
         cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
@@ -102,14 +103,18 @@
         
         memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
         
-        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
-        memoryProfileView.memoryManager = memoryManager;
-        memoryProfileView.hidden = YES;
-        
-        [stackView setMemoryView:memoryProfileView];
-        [self.view addSubview:memoryProfileView];
+//        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+//        memoryProfileView.memoryManager = memoryManager;
+//        memoryProfileView.hidden = YES;
+//        
+//        [stackView setMemoryView:memoryProfileView];
+//        [self.view addSubview:memoryProfileView];
     }
     return self;
+}
+
+-(void) viewWillAppear:(BOOL)animated{
+    
 }
 
 -(void) pageCacheManagerDidLoadPage{
@@ -148,11 +153,40 @@
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
 
+-(NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+-(BOOL) shouldAutorotate{
+    return NO;
+}
+
 
 #pragma mark - Crashlytics reporting
 
 -(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
+    
+    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
+    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
+    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
+    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
+    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
+    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
+    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
+    
+    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
+    }];
+    
+    @try{
+        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+    }@catch(id e){
+        // noop
+    }
+
 }
 
 #pragma mark - application state

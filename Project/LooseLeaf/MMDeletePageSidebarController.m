@@ -121,6 +121,17 @@ static CGFloat(^clampPercent)(CGFloat);
 }
 
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView{
+    if(percent > 1.0){
+        // start slowing down until we hit 1.7
+        CGFloat ease = .7 - (percent - 1);
+        if(ease < 0) ease = 0;
+        ease /= .7;
+        // ease is now 0 < ease < 1
+        // and starts at 1 and works it way to 0
+        percent = 1.0 + .7 * (1-ease*ease);
+    }
+    
+    
     CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width + 200 * percent, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
     deleteSidebarBackground.frame = fr;
     
@@ -158,8 +169,8 @@ static CGFloat(^clampPercent)(CGFloat);
     pageToDelete.center = center;
     
     [UIView animateWithDuration:.3 animations:^{
-        // move it offscreen
         pageToDelete.center = CGPointMake(-200 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
+    } completion:^(BOOL finished) {
         [pageToDelete removeFromSuperview];
     }];
 

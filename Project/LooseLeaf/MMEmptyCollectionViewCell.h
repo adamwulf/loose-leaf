@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMEmptyCollectionViewCell : UICollectionViewCell
+@interface MMEmptyCollectionViewCell : UIView
+
+-(void) updatePhotoRotation:(BOOL)animated;
 
 @end

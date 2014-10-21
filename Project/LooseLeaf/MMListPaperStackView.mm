@@ -132,9 +132,12 @@
 }
 
 -(void) moveAddButtonToBottom{
+    addPageButtonInListView.alpha = 0;
     [self insertSubview:addPageButtonInListView atIndex:0];
 }
 -(void) moveAddButtonToTop{
+    addPageButtonInListView.alpha = 1;
+    addPageButtonInListView.frame = [self frameForAddPageButton];
     [self addSubview:addPageButtonInListView];
 }
 
@@ -200,6 +203,14 @@
 
 
 #pragma mark - List View Enable / Disable Helper Methods
+
+-(void) immediatelyTransitionToListView{
+    if(isShowingPageView){
+        [self isBeginningToScaleReallySmall:nil];
+        [self finishUITransitionToListView];
+        hiddenStackHolder.frame = visibleStackHolder.frame;
+    }
+}
 
 /**
  * the user is beginning to transition between list/page view
@@ -462,11 +473,14 @@
  */
 -(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
     [super isBeginningToScaleReallySmall:page];
+    if(!page && [self countAllPages]){
+        @throw [NSException exceptionWithName:@"InvalidPageScaleException" reason:@"Beginning to scale small with nil page" userInfo:nil];
+    }
     //
     // the user is also panning other pages, we need to
     // cancel them because only the top page's gesture
     // is allowed at this small scale
-    if([[setOfPagesBeingPanned setByRemovingObject:page] count]){
+    if(page && [[setOfPagesBeingPanned setByRemovingObject:page] count]){
         //
         // we're panning the top most page, and it's scale
         // is less than the minimum allowed.
@@ -646,7 +660,6 @@
         [self finishUITransitionToListView];
         mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-        addPageButtonInListView.frame = [self frameForAddPageButton];
         [self moveAddButtonToTop];
     };
     
@@ -800,9 +813,9 @@
     if(!nextTopPage){
         NSLog(@"hrmph. out of pages...");
     }
-    [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
-    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
     [deleteSidebar deletePage:page];
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
+    [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
     [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
     [self saveStacksToDisk];
 }
@@ -1314,18 +1327,21 @@
         // two rows
         
         MMPaperView* aPage = [visibleStackHolder peekSubview];
-        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray arrayWithObject:aPage];
+        NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, screenWidth, screenHeight);
-        while((aPage = [visibleStackHolder getPageBelow:aPage])){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage];
-            // we have to expand the frame, because we want to count pages even if
-            // just their shadow is visible
-            frameOfPage = [MMShadowedView expandFrame:frameOfPage];
-            if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
-               frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
-                [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
-            }else{
-                break;
+        if(aPage){
+            [pagesThatWouldBeVisible addObject:aPage];
+            while((aPage = [visibleStackHolder getPageBelow:aPage])){
+                CGRect frameOfPage = [self frameForListViewForPage:aPage];
+                // we have to expand the frame, because we want to count pages even if
+                // just their shadow is visible
+                frameOfPage = [MMShadowedView expandFrame:frameOfPage];
+                if(frameOfPage.origin.y + frameOfPage.size.height > rectOfVisibleScroll.origin.y &&
+                   frameOfPage.origin.y < rectOfVisibleScroll.origin.y + rectOfVisibleScroll.size.height){
+                    [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
+                }else{
+                    break;
+                }
             }
         }
         
@@ -1747,6 +1763,10 @@
 
 -(BOOL) isShowingPageView{
     return isShowingPageView;
+}
+
+-(NSInteger) countAllPages{
+    return [visibleStackHolder.subviews count] + [bezelStackHolder.subviews count] + [hiddenStackHolder.subviews count];
 }
 
 #pragma mark - Check for Active Gestures

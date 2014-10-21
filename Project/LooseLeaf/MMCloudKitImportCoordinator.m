@@ -96,15 +96,19 @@
         [message fetchDetailsWithCompletionHandler:^(NSError *error) {
             if(!error){
                 if(!zipFileLocation){
-                    NSString* movedZipFileLocation = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingPathComponent:[NSString createStringUUID]];
+                    NSString* targetZipDirectory = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"];
+                    [NSFileManager ensureDirectoryExistsAtPath:targetZipDirectory];
+                    NSString* movedZipFileLocation = [targetZipDirectory stringByAppendingPathComponent:[NSString createStringUUID]];
                     NSError* err;
                     [[NSFileManager defaultManager] copyItemAtPath:message.messageData.path toPath:movedZipFileLocation error:&err];
+                    NSLog(@"target path: %@", movedZipFileLocation);
+                    NSLog(@"target folder exists? %d", [[NSFileManager defaultManager] fileExistsAtPath:targetZipDirectory]);
                     if(err){
-                        NSLog(@"haha what");
+                        NSLog(@"failed to copy zip: %@", err);
                     }else{
                         zipFileLocation = movedZipFileLocation;
+                        NSLog(@"fetched message details, have zip at: %@", zipFileLocation);
                     }
-                    NSLog(@"fetched message details, have zip at: %@", zipFileLocation);
 
                     // update our state with the new info
                     avatarButton.letter = message.initials;
@@ -250,14 +254,19 @@
                         NSLog(@"coordinator failed %@", message.messageRecordID);
                         NSLog(@"invalid zip file");
                         NSLog(@"zip at: %@", zipFileLocation);
+                        
+                        if([[NSFileManager defaultManager] fileExistsAtPath:zipFileLocation]){
+                            [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
 #ifdef DEBUG
-                        if(zipFileLocation){
-                            NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[zipFileLocation lastPathComponent]];
-                            [[NSFileManager defaultManager] moveItemAtPath:zipFileLocation toPath:savedPath error:nil];
-                            NSLog(@"saved to: %@", savedPath);
-                        }
+                            if(zipFileLocation){
+                                NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[zipFileLocation lastPathComponent]];
+                                [[NSFileManager defaultManager] moveItemAtPath:zipFileLocation toPath:savedPath error:nil];
+                                NSLog(@"saved to: %@", savedPath);
+                            }
 #endif
-                        [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
+                        }else{
+                            [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportMissingZipErrorCode];
+                        }
                     }
                 });
             }else{

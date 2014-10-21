@@ -22,4 +22,6 @@
 
 -(void) animateToBrokenCloud;
 
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
+
 @end

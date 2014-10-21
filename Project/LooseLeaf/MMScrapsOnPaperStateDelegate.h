@@ -21,4 +21,8 @@
 
 -(NSString*) bundledPagesPath;
 
+#pragma mark - Scrap Container for Sidebar
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
+
 @end

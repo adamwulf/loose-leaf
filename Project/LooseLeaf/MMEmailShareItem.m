@@ -10,9 +10,11 @@
 #import "MMImageViewButton.h"
 #import "Mixpanel.h"
 #import "Constants.h"
+#import "MMPresentationWindow.h"
 
 @implementation MMEmailShareItem{
     MMImageViewButton* button;
+    MFMailComposeViewController* composer;
 }
 
 @synthesize delegate;
@@ -44,7 +46,7 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        MFMailComposeViewController *composer = [[MFMailComposeViewController alloc] init];
+        composer = [[MFMailComposeViewController alloc] init];
         [composer setMailComposeDelegate:self];
         if([MFMailComposeViewController canSendMail]) {
             [composer setSubject:@"Quick sketch from Loose Leaf"];
@@ -54,9 +56,13 @@
             NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
             [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:^{
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
                 NSLog(@"done");
             }];
+        }else{
+            composer = nil;
         }
         [delegate didShare:self];
     });
@@ -102,7 +108,10 @@
     [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Email",
                                                                  kMPEventExportPropResult : strResult}];
     
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
+    composer.delegate = nil;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 #pragma mark - Dealloc

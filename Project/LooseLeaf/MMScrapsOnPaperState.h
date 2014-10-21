@@ -22,6 +22,8 @@
 
 -(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload;
+
 #pragma mark - Add Scraps
 
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
@@ -34,9 +36,6 @@
 -(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;
 -(void) hideScrap:(MMScrapView*)scrap;
 -(BOOL) isScrapVisible:(MMScrapView*)scrap;
-
-// returns the scrap for the specified uuid, or nil if there's no match
--(MMScrapView*) scrapForUUID:(NSString*)uuid;
 
 -(MMScrapView*) mostRecentScrap;
 

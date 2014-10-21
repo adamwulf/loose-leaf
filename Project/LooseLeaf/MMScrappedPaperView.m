@@ -34,6 +34,7 @@
 #import "MMScrapsInSidebarState.h"
 #import "UIView+Animations.h"
 #import "MMStatTracker.h"
+#import "MMTrashManager.h"
 
 
 @interface MMEditablePaperView (Private)
@@ -388,6 +389,11 @@
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
     NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
     
+    // track the segment test/reset count
+    // when splitting the stroke
+    [UIBezierPath resetSegmentTestCount];
+    [UIBezierPath resetSegmentCompareCount];
+    
     // track distance drawn
     CGFloat strokeDistance = 0;
     // track size of these added elements, so we can
@@ -561,6 +567,13 @@
         strokeElementsToCrop = nextStrokesToCrop;
     }
     
+    
+    if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
+//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+        [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
+        [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
+    }
+
     // anything that's left over at this point
     // is fair game for to add to the page itself
     return strokeElementsToCrop;
@@ -626,6 +639,11 @@
 
 
 -(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath{
+    // track the segment test/compare count
+    // when splitting scraps with scissors
+    [UIBezierPath resetSegmentCompareCount];
+    [UIBezierPath resetSegmentTestCount];
+    
     // track path information for debugging
     NSString* debugFullText = @"";
 
@@ -836,6 +854,13 @@
 //        }
     }
     
+
+    if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
+//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+        [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
+        [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
+    }
+
     return [[MMScissorResult alloc] initWithAddedScraps:scrapsBeingBuilt
                                        andRemovedScraps:scrapsBeingRemoved
                               andRemovedScrapProperties:removedScrapProperties
@@ -1173,16 +1198,20 @@
 }
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
+    CheckMainThread;
 //    debug_NSLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
+//        [scrapsOnPaperState unloadPaperState];
+//        [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
     }else{
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.bundledScrapIDsPath andMakeEditable:YES];
     }
 }
 
 -(void) unloadState{
+    CheckMainThread;
 //    debug_NSLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
@@ -1191,7 +1220,7 @@
             [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
-            [strongScrapState unload];
+            [strongScrapState unloadPaperState];
             strongScrapState = nil;
         }
     });
@@ -1203,36 +1232,28 @@
 //
 // this allows us to drop scraps onto pages that don't
 // have their scrapsOnPaperState loaded
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block{
-    if([scrapsOnPaperState isStateLoaded]){
-        @throw [NSException exceptionWithName:@"LoadedStateForUnloadedBlockException" reason:@"Cannot run block on unloaded state when state is already loaded" userInfo:nil];
-    }
-    @autoreleasepool {
-        if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
-            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.scrapIDsPath andMakeEditable:YES];
-        }else{
-            [scrapsOnPaperState loadStateAsynchronously:NO atPath:self.bundledScrapIDsPath andMakeEditable:YES];
-        }
-    }
-    dispatch_semaphore_t semaWaitingOnPaperStateSave = dispatch_semaphore_create(0);
-    block();
-    dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-        @autoreleasepool {
-            MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
-            [immutableScrapState saveStateToDiskBlocking];
-            [self updateFullPageThumbnail:immutableScrapState];
-            [scrapsOnPaperState unload];
-        }
-        dispatch_semaphore_signal(semaWaitingOnPaperStateSave);
-    });
-    dispatch_semaphore_wait(semaWaitingOnPaperStateSave, DISPATCH_TIME_FOREVER);
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload andSavePaperState:(BOOL)shouldSavePaperState{
+    CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
+    [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
+                                                       onBlockComplete:^{
+                                                           if(shouldSavePaperState){
+                                                               MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                               [immutableScrapState saveStateToDiskBlocking];
+                                                               [NSThread performBlockOnMainThread:^{
+                                                                   [self updateFullPageThumbnail:immutableScrapState];
+                                                               }];
+                                                           }
+                                                       }
+                                                           andLoadFrom:self.scrapIDsPath
+                                               withBundledScrapIDsPath:self.bundledScrapIDsPath
+                                             andImmediatelyUnloadState:shouldImmediatelyUnload];
 }
 
 -(BOOL) isStateLoaded{
     return [super isStateLoaded];
 }
 -(BOOL) isStateLoading{
-    return [super isStateLoading] || [scrapsOnPaperState isStateLoading];
+    return [super isStateLoading] || [scrapsOnPaperState isCollectionStateLoading];
 }
 
 
@@ -1310,8 +1331,6 @@
             });
         }
     }
-    // make sure our scraps' thumbnails are loaded
-//    [scrapState loadStateAsynchronously:YES andMakeEditable:NO];
 }
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
@@ -1321,7 +1340,7 @@
 -(void) unloadCachedPreview{
     @autoreleasepool {
         if(self == [[MMPageCacheManager sharedInstance] currentEditablePage]){
-            NSLog(@"what");
+            NSLog(@"what12");
         }
         @synchronized(self){
             isAskedToLoadThumbnail = NO;
@@ -1347,7 +1366,7 @@
                     // we should only save if this has changed.
                     [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                     // free all scraps from memory too
-                    [strongScrapState unload];
+                    [strongScrapState unloadPaperState];
                 }
             });
         }
@@ -1356,6 +1375,10 @@
 
 -(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID{
     return [self.delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
+}
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+    @throw kAbstractMethodException;
 }
 
 #pragma mark - JotViewStateProxyDelegate
@@ -1404,13 +1427,6 @@
     return [[[self bundledPagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
 }
 
-
-#pragma mark - MFMailComposeViewControllerDelegate
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error{
-    UIViewController* rootController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
-    [rootController dismissViewControllerAnimated:YES completion:nil];
-}
 
 #pragma mark - dealloc
 

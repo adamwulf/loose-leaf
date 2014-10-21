@@ -48,7 +48,6 @@
         
         [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
         [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
-        [photoListScrollView registerClass:[MMEmptyCollectionViewCell class] forCellWithReuseIdentifier:@"MMEmptyCollectionViewCell"];
 
         currentAlbum = nil;
         
@@ -90,11 +89,12 @@
 }
 
 -(void) updateEmptyErrorMessage{
-    if(![self numberOfRowsFor:albumListScrollView] && [MMPhotoManager hasPhotosPermission]){
+    if(isShowing && ![self numberOfRowsFor:albumListScrollView] && [MMPhotoManager hasPhotosPermission]){
         if(!emptyView){
             emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
         }
         [self addSubview:emptyView];
+        [emptyView updatePhotoRotation:NO];
     }else if(emptyView){
         [emptyView removeFromSuperview];
         emptyView = nil;
@@ -268,6 +268,7 @@
             updateVisibleRowsWithRotation();
         }];
     }
+    [emptyView updatePhotoRotation:animated];
 }
 
 -(NSString*) description{

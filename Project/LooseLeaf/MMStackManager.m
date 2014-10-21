@@ -71,6 +71,10 @@
     }];
 }
 
+-(BOOL) hasStateToLoad{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self visiblePlistPath]];
+}
+
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds{
     
     NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPath]];

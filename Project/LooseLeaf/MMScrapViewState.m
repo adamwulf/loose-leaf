@@ -37,6 +37,7 @@
     
     // private vars
     NSString* scrapPropertiesPlistPath;
+    NSString* scrapBezierPath;
     NSString* inkImageFile;
     NSString* thumbImageFile;
     NSString* drawableViewStateFile;
@@ -92,13 +93,19 @@
 // queue
 static dispatch_queue_t importExportScrapStateQueue;
 
+static const void *const kImportExportScrapStateQueueIdentifier = &kImportExportScrapStateQueueIdentifier;
+
 +(dispatch_queue_t) importExportScrapStateQueue{
     @synchronized([MMScrapViewState class]){
         if(!importExportScrapStateQueue){
             importExportScrapStateQueue = dispatch_queue_create("com.milestonemade.looseleaf.importExportScrapStateQueue", DISPATCH_QUEUE_SERIAL);
+            dispatch_queue_set_specific(importExportScrapStateQueue, kImportExportScrapStateQueueIdentifier, (void *)kImportExportScrapStateQueueIdentifier, NULL);
         }
         return importExportScrapStateQueue;
     }
+}
++(BOOL) isImportExportScrapStateQueue{
+    return dispatch_get_specific(kImportExportScrapStateQueueIdentifier) != NULL;
 }
 
 #pragma mark - Init
@@ -115,7 +122,18 @@ static dispatch_queue_t importExportScrapStateQueue;
         if(!properties){
             properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledScrapPropertiesPlistPath];
         }
-        bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        if([properties objectForKey:@"bezierPath"]){
+            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+        }else{
+            NSData* bezierData = [NSData dataWithContentsOfFile:[self scrapBezierPath]];
+            if(!bezierData){
+                bezierData = [NSData dataWithContentsOfFile:[self bundledScrapBezierPath]];
+            }
+            // bezier wasn't in the settings, so load it from
+            // its own bezier file
+            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:bezierData];
+        }
+        
         NSUInteger lsuh = [[properties objectForKey:@"lastSavedUndoHash"] unsignedIntegerValue];
         
         MMScrapBackgroundView* backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -151,9 +169,7 @@ static dispatch_queue_t importExportScrapStateQueue;
             
             //save initial bezier path to disk
             // not the most elegant solution, but it works and is fast enough for now
-            NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-            [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPath] forKey:@"bezierPath"];
-            [savedProperties writeToFile:self.scrapPropertiesPlistPath atomically:YES];
+            [[NSKeyedArchiver archivedDataWithRootObject:bezierPath] writeToFile:[self scrapBezierPath] atomically:YES];
         }
         if(!backingView){
             backingView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
@@ -222,6 +238,17 @@ static dispatch_queue_t importExportScrapStateQueue;
     return drawableViewState.fullByteSize + backingImageHolder.fullByteSize;
 }
 
+-(void) setScrapsOnPaperState:(MMScrapCollectionState *)_scrapsOnPaperState{
+    scrapsOnPaperState = _scrapsOnPaperState;
+    // reset all path caches
+    scrapPath = nil;
+    scrapPropertiesPlistPath = nil;
+    inkImageFile = nil;
+    thumbImageFile = nil;
+    drawableViewStateFile = nil;
+    backgroundFile = nil;
+}
+
 #pragma mark - Backing Image
 
 -(MMScrapBackgroundView*) backgroundView{
@@ -248,19 +275,24 @@ static dispatch_queue_t importExportScrapStateQueue;
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
     
     // block to help save properties to a plist file
-    void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathForProperties, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
+    void(^savePropertiesToDisk)(NSUInteger, UIBezierPath*, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave) = ^(NSUInteger lsuh, UIBezierPath* bezierPathToWriteToDisk, MMScrapBackgroundView* backgroundInfo, NSString* pathToSave){
+
+        BOOL savedBezierOk = YES;
+        if(![[NSFileManager defaultManager] fileExistsAtPath:[self scrapBezierPath]]){
+            savedBezierOk = [[NSKeyedArchiver archivedDataWithRootObject:bezierPathToWriteToDisk] writeToFile:[self scrapBezierPath] atomically:YES];
+        }
+        
         // this will save the properties for the scrap
         // to disk, including the path and background information
         NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
-        [savedProperties setObject:[NSKeyedArchiver archivedDataWithRootObject:bezierPathForProperties] forKey:@"bezierPath"];
         // add in properties from background
         [savedProperties setObject:[NSNumber numberWithUnsignedInteger:lsuh] forKey:@"lastSavedUndoHash"];
         NSDictionary* backgroundProps = [backgroundInfo saveBackgroundToDisk];
         [savedProperties addEntriesFromDictionary:backgroundProps];
         // save properties to disk
-        if(![savedProperties writeToFile:pathToSave atomically:YES]){
+        if(!savedBezierOk || ![savedProperties writeToFile:pathToSave atomically:YES]){
             if(!self.isForgetful){
-                NSLog(@"couldn't save properties! %p", self);
+                NSLog(@"couldn't save properties/bezier! %p", self);
             }
         }
     };
@@ -283,6 +315,7 @@ static dispatch_queue_t importExportScrapStateQueue;
                             if(self.isForgetful){
                                 NSLog(@"forget: %@ skipping scrap state save2", self.uuid);
                                 doneSavingBlock(NO);
+                                [lock unlock];
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
@@ -368,12 +401,19 @@ static dispatch_queue_t importExportScrapStateQueue;
         // state, then bail early
         // if we already have our state,
         // then bail early
-        if(isLoadingState || drawableViewState){
+        if((async && isLoadingState) || drawableViewState){
+            // if we're already loading async, and asked to load
+            // async again, then bail. or, if we're already
+            // loaded, then bail
 //            NSLog(@"(%@) already loaded", uuid);
             return;
         }
         if(targetIsLoadedState){
-            NSLog(@"duplicate load");
+            // this is allowed. it will load either
+            // async or sync, and the second finishing
+            // load will skip itself after seeing
+            // an already loaded state
+//            NSLog(@"duplicate load");
         }
         
         targetIsLoadedState = YES;
@@ -384,40 +424,60 @@ static dispatch_queue_t importExportScrapStateQueue;
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
         @synchronized(self){
-            targetIsLoadedState = YES;
+            if(!targetIsLoadedState){
+                return;
+            }
         }
+//#ifdef DEBUG
+//        NSLog(@"sleeping for %@", self.uuid);
+//        [NSThread sleepForTimeInterval:5];
+//        NSLog(@"woke up for %@", self.uuid);
+//#endif
         @autoreleasepool {
-            [lock lock];
-            
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
-            dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-            [NSThread performBlockOnMainThread:^{
+            // load state, if we have any.
+            __block BOOL goalIsLoaded = NO;
+            [NSThread performBlockOnMainThreadSync:^{
                 @synchronized(self){
-                    if(!targetIsLoadedState){
+                    goalIsLoaded = targetIsLoadedState;
+                }
+                if([self isScrapStateLoaded]){
+                    // scrap state was loaded synchronously while
+                    // this block was pending to finish a load
+//                    NSLog(@"bailed on async load, it finished sync ahead of us");
+                    return;
+                }
+                @synchronized(self){
+                    if(!goalIsLoaded){
+                        // we don't need to load after all, so don't build
+                        // any drawable view
                         NSLog(@"saved building JotView we didn't need");
                     }else{
                         // add our drawable view to our contents
                         drawableView = [[JotView alloc] initWithFrame:drawableBounds];
                     }
                 }
-                dispatch_semaphore_signal(sema1);
             }];
-
-            // load state, if we have any.
-            dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-            BOOL goalIsLoaded = NO;
-            @synchronized(self){
-                goalIsLoaded = targetIsLoadedState;
+            [lock lock];
+            // can't lock before the call to main thread or any
+            // synchronous loads from the main thread could
+            // deadlock us
+            if([self isScrapStateLoaded]){
+                // scrap state was loaded synchronously while
+                // this block was pending to finish a load
+//                NSLog(@"bailed on async load, it finished sync ahead of us");
+                [lock unlock];
+                return;
             }
             if(!goalIsLoaded){
                 NSLog(@"saved building JotViewStateProxy we didn't need");
             }else{
                 // load drawable view information here
                 drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-                [drawableViewState loadStateAsynchronously:async
+                [drawableViewState loadJotStateAsynchronously:async
                                                   withSize:drawableView.pagePtSize
                                                   andScale:drawableView.scale
-                                                andContext:[drawableView context]
+                                                andContext:drawableView.context
                                           andBufferManager:[[JotBufferManager alloc] init]];
             }
             [lock unlock];
@@ -524,6 +584,13 @@ static dispatch_queue_t importExportScrapStateQueue;
     return scrapPropertiesPlistPath;
 }
 
+-(NSString*)scrapBezierPath{
+    if(!scrapBezierPath){
+        scrapBezierPath = [self.pathForScrapAssets stringByAppendingPathComponent:[@"bezier" stringByAppendingPathExtension:@"dat"]];
+    }
+    return scrapBezierPath;
+}
+
 -(NSString*)inkImageFile{
     if(!inkImageFile){
         inkImageFile = [self.pathForScrapAssets stringByAppendingPathComponent:[@"ink" stringByAppendingPathExtension:@"png"]];
@@ -547,6 +614,10 @@ static dispatch_queue_t importExportScrapStateQueue;
 
 -(NSString*) bundledScrapPropertiesPlistPath{
     return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+}
+
+-(NSString*)bundledScrapBezierPath{
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"bezier" stringByAppendingPathExtension:@"dat"]];
 }
 
 -(NSString*) bundledInkImageFile{
@@ -677,6 +748,15 @@ static dispatch_queue_t importExportScrapStateQueue;
 -(void) didUnloadState:(JotViewStateProxy *)state{
 //    NSLog(@"(%@) unloaded scrap state", uuid);
     // noop
+}
+
+-(void) reloadBackgroundView{
+    NSLog(@"info plist: %@", self.scrapPropertiesPlistPath);
+    NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.scrapPropertiesPlistPath];
+    MMScrapBackgroundView* replacementBackgroundView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
+    // now load the background image from disk, if any
+    [replacementBackgroundView loadBackgroundFromDiskWithProperties:properties];
+    [self setBackgroundView:replacementBackgroundView];
 }
 
 #pragma mark - dealloc

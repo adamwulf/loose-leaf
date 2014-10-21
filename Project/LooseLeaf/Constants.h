@@ -9,17 +9,19 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
-
 #ifdef DEBUG
 #define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
 #else
 #define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
+#define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
+
+#define CheckThreadMatches(__THREAD_CHECK__) {if(!(__THREAD_CHECK__)){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
 
 #ifdef DEBUG
-#define debug_NSLog(__FORMAT__, ...)
-//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+//#define debug_NSLog(__FORMAT__, ...)
+#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif
@@ -99,8 +101,10 @@ _Pragma("clang diagnostic pop") \
 
 
 // MixPanel People Properties
-#define kMPStatScissorSegments @"Stat: Avg Scissor Segment Count"
-#define kMPStatScrapPathSegments @"Stat: Avg Scrap Segment Count"
+#define kMPStatScissorSegments @"Stat: Scissor Segment Count"
+#define kMPStatScrapPathSegments @"Stat: Scrap Segment Count"
+#define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
+#define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
@@ -136,6 +140,7 @@ _Pragma("clang diagnostic pop") \
 
 // MixPanel Error Events
 #define kMPEventMemoryWarning @"Memory Warning"
+#define kMPEventCrash @"Crash Report"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
@@ -158,6 +163,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropScrapCount @"File Extension"
 #define kMPEventImportPropVisibleScrapCount @"File Type"
 #define kMPEventImportInvalidZipErrorCode -1
+#define kMPEventImportMissingZipErrorCode -2
 
 // MixPanel Error Tracking
 #define kMPPathIterationException @"PathIterationException"

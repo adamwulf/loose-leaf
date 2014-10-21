@@ -26,6 +26,7 @@ static NSMutableSet* pathCacheDictionary;
 // if so then returns immediatley.
 // otherwise checks existence and creates if needed
 +(void) ensureDirectoryExistsAtPath:(NSString*)path{
+    if(!path) return;
     [NSFileManager makePathCacheDictionary];
 
     BOOL contains = NO;

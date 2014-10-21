@@ -11,6 +11,12 @@
 
 @class MMImmutableScrapCollectionState;
 
+typedef enum{
+    MMScrapCollectionStateTargetLoadedEditable,
+    MMScrapCollectionStateTargetLoadedNotEditable,
+    MMScrapCollectionStateTargetUnloaded
+} MMScrapCollectionStateStatus;
+
 @interface MMScrapCollectionState : NSObject{
     // loading state
     BOOL isLoaded;
@@ -27,6 +33,9 @@
     NSUInteger lastSavedUndoHash;
     // delegate
     __weak NSObject<MMScrapCollectionStateDelegate>* delegate;
+    //
+    // target load/unload status
+    MMScrapCollectionStateStatus targetLoadedState;
 }
 
 +(dispatch_queue_t) importExportStateQueue;
@@ -43,21 +52,32 @@
 
 -(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
 
+// returns the scrap for the specified uuid, or nil if there's no match
+-(MMScrapView*) scrapForUUID:(NSString*)uuid;
+
 #pragma mark - Save and Load
 
 -(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
 
 -(BOOL) isStateLoaded;
--(BOOL) isStateLoading;
+-(BOOL) isCollectionStateLoading;
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
 
--(void) unload;
+-(void) unloadPaperState;
 
 #pragma mark - Paths
 
 -(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
 
 -(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
+
+#pragma mark - Scrap Stealing
+
+-(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapOwner;
+
+#pragma mark - Deleting Assets
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
 
 @end

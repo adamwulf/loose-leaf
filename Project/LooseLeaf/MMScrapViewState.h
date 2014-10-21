@@ -23,6 +23,8 @@
     __weak MMScrapCollectionState* scrapsOnPaperState;
 }
 
++(BOOL) isImportExportScrapStateQueue;
+
 @property (weak) NSObject<MMScrapViewStateDelegate>* delegate;
 @property (readonly) UIBezierPath* bezierPath;
 @property (readonly) CGSize originalSize;
@@ -61,6 +63,7 @@
 -(MMScrapBackgroundView*) backgroundView;
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
 -(CGPoint) currentCenterOfScrapBackground;
+-(void) reloadBackgroundView;
 
 -(UIView*) contentView;
 

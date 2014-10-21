@@ -72,7 +72,7 @@
     // delete it.
     // if it's still in the bezel, then leave it there and don't delete
     // any assets
-    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState];
 }
 
 -(void) finalizeRedoableState{

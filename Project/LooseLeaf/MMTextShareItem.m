@@ -10,6 +10,7 @@
 #import "Mixpanel.h"
 #import "MMImageViewButton.h"
 #import "Constants.h"
+#import "MMPresentationWindow.h"
 
 @implementation MMTextShareItem{
     MMImageViewButton* button;
@@ -23,7 +24,7 @@
         [button setImage:[UIImage imageNamed:@"text"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(updateButtonGreyscale)
+                                                 selector:@selector(didBecomeActive)
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
@@ -56,7 +57,9 @@
             NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
             [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
             
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:composer animated:YES completion:nil];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
         }
         [delegate didShare:self];
     });
@@ -67,6 +70,14 @@
 }
 
 #pragma mark - Notification
+
+-(void) didBecomeActive{
+    [self updateButtonGreyscale];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:2];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:4];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:6];
+    [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:10];
+}
 
 -(void) updateButtonGreyscale{
     if([MFMessageComposeViewController canSendText]) {
@@ -100,7 +111,9 @@
     [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SMS",
                                                                  kMPEventExportPropResult : strResult}];
     
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] dismissViewControllerAnimated:YES completion:nil];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 #pragma mark - Dealloc

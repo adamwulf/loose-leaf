@@ -16,6 +16,8 @@
 #import "UIView+Animations.h"
 #import "UIGestureRecognizer+GestureDebug.h"
 #import "MMPageCacheManager.h"
+#import "MMAppDelegate.h"
+#import "MMLooseLeafViewController.h"
 
 #define  kMaxSimultaneousTouchesAllowedToTrack 20
 #define  kNumberOfDirectionChangesToDetermineShake 2
@@ -110,7 +112,12 @@ struct TouchInterval{
         scrap = _scrap;
         startingScrapProperties = [scrap propertiesDictionary];
         // update the starting page, if any
-        startingPageForScrap = scrap ? [[MMPageCacheManager sharedInstance] currentEditablePage] : nil;
+        //
+        // not the prettiest
+        if(scrap && scrap.state.scrapsOnPaperState.delegate && ![scrap.state.scrapsOnPaperState.delegate isKindOfClass:[MMUndoablePaperView class]]){
+            @throw [NSException exceptionWithName:@"InvalidDelegateException" reason:@"delegate for scrap must be a page" userInfo:nil];
+        }
+        startingPageForScrap = scrap ? ((MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate) : nil;
     }
 }
 
@@ -835,7 +842,7 @@ struct TouchInterval{
 -(BOOL) begin{
 //    NSLog(@"pan scrap gesture %p began", self);
     if(!paused){
-        NSLog(@"what");
+        NSLog(@"what8");
     }
     paused = NO;
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){

@@ -10,6 +10,7 @@
 #import "MMScrapCollectionState+Private.h"
 #import "MMScrapView.h"
 #import "NSArray+Map.h"
+#import "Constants.h"
 
 @implementation MMImmutableScrapsOnPaperState{
     MMScrapCollectionState* ownerState;
@@ -50,9 +51,7 @@
 }
 
 -(BOOL) saveStateToDiskBlocking{
-    if(![MMScrapCollectionState isImportExportStateQueue]){
-        @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:@"Saving immutable ScrapsOnPaperState in wrong queue" userInfo:nil];
-    }
+    CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         hadAnyEditsToSaveAtAll = YES;

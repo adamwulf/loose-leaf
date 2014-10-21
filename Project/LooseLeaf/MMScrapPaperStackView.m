@@ -59,10 +59,6 @@
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
     
-    // cloudkit import sidebar
-    MMTextButton* cloudKitImportButton;
-    MMSlidingSidebarContainerView* cloudKitImportSidebar;
-
     NSTimer* debugTimer;
     NSTimer* drawTimer;
     UIImageView* debugImgView;
@@ -81,8 +77,18 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
+    if(frame.size.width > frame.size.height){
+        // force portrait build
+        CGFloat t = frame.size.width;
+        frame.size.width = frame.size.height;
+        frame.size.height = t;
+    }
+    NSLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    
     if ((self = [super initWithFrame:frame])) {
         
+        self.autoresizingMask = UIViewAutoresizingNone;
+
 //        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
 //                                                                  target:self
 //                                                                selector:@selector(timerDidFire:)
@@ -154,26 +160,19 @@
         
         
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-
-        sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
-        sharePageSidebar.delegate = self;
-        [sharePageSidebar hide:NO onComplete:nil];
-        sharePageSidebar.shareDelegate = self;
-        [self addSubview:sharePageSidebar];
-        
-        cloudKitImportButton = [[MMTextButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)
-                                                           andFont:[UIFont systemFontOfSize:16]
-                                                         andLetter:@"CK"
-                                                        andXOffset:0
-                                                        andYOffset:0];
-        cloudKitImportButton.alpha = 0;
-        cloudKitImportSidebar = [[MMSlidingSidebarContainerView alloc] initWithFrame:self.bounds forButton:cloudKitImportButton animateFromLeft:NO];
-        [cloudKitImportSidebar hide:NO onComplete:nil];
-        [self addSubview:sharePageSidebar];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
         
+        
+        [[NSThread mainThread] performBlock:^{
+            // going to delay building this UI so we can startup faster
+            sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
+            sharePageSidebar.delegate = self;
+            [sharePageSidebar hide:NO onComplete:nil];
+            sharePageSidebar.shareDelegate = self;
+            [self insertSubview:sharePageSidebar belowSubview:scrapContainer];
+        } afterDelay:1];
         
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
@@ -189,7 +188,6 @@
 //        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
-
     }
     return self;
 }
@@ -443,6 +441,7 @@
 }
 
 -(void) photoWasTapped:(MMPhoto *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+    CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
@@ -486,63 +485,74 @@
     UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
-    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
-    [scrapContainer addSubview:scrap];
     
-    CGSize fullScaleScrapSize = scrapRect.size;
-    fullScaleScrapSize.width /= startingScale;
-    fullScaleScrapSize.height /= startingScale;
     
-    // zoom the background in an extra pixel
-    // so that the border of the image exceeds the
-    // path of the scrap. this'll give us a nice smooth
-    // edge from the mask of the CAShapeLayer
-    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
+    void(^blockToAddScrapToPage)() = ^{
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+        [scrapContainer addSubview:scrap];
+        
+        CGSize fullScaleScrapSize = scrapRect.size;
+        fullScaleScrapSize.width /= startingScale;
+        fullScaleScrapSize.height /= startingScale;
+        
+        // zoom the background in an extra pixel
+        // so that the border of the image exceeds the
+        // path of the scrap. this'll give us a nice smooth
+        // edge from the mask of the CAShapeLayer
+        CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
+        
+        // add the background, and scale it so it fills the scrap
+        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
+        backgroundView.backgroundScale = scaleUpOfImage;
+        [scrap setBackgroundView:backgroundView];
+        
+        // move the scrap so that it covers the image that was just tapped.
+        // then we'll animate it onto the page
+        scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
+        scrap.rotation = rotation;
+        
+        // hide the picker, this'll slide it out
+        // underneath our scrap
+        [importImageSidebar hide:YES onComplete:nil];
+        
+        // hide the photo in the row. this way the scrap
+        // becomes the photo, and it doesn't seem to duplicate
+        // as the image sidebar hides. the image in the sidebar
+        // will reset after the sidebar is done hiding
+        bufferedImage.alpha = 0;
+        
+        // bounce by 20px (10 on each side)
+        CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+        
+        [UIView animateWithDuration:.2
+                              delay:.1
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             scrap.center = [visibleStackHolder peekSubview].center;
+                             [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
+                         }
+                         completion:^(BOOL finished){
+                             [UIView animateWithDuration:.1
+                                                   delay:0
+                                                 options:UIViewAnimationOptionCurveEaseIn
+                                              animations:^{
+                                                  [scrap setScale:1];
+                                              }
+                                              completion:^(BOOL finished){
+                                                  bufferedImage.alpha = 1;
+                                                  [topPage.scrapsOnPaperState showScrap:scrap];
+                                                  [topPage addUndoItemForAddedScrap:scrap];
+                                                  [topPage saveToDisk:nil];
+                                              }];
+                         }];
+    };
     
-    // add the background, and scale it so it fills the scrap
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
-    backgroundView.backgroundScale = scaleUpOfImage;
-    [scrap setBackgroundView:backgroundView];
-
-    // move the scrap so that it covers the image that was just tapped.
-    // then we'll animate it onto the page
-    scrap.center = [self convertPoint:CGPointMake(bufferedImage.bounds.size.width/2, bufferedImage.bounds.size.height/2) fromView:bufferedImage];
-    scrap.rotation = rotation;
     
-    // hide the picker, this'll slide it out
-    // underneath our scrap
-    [importImageSidebar hide:YES onComplete:nil];
-    
-    // hide the photo in the row. this way the scrap
-    // becomes the photo, and it doesn't seem to duplicate
-    // as the image sidebar hides. the image in the sidebar
-    // will reset after the sidebar is done hiding
-    bufferedImage.alpha = 0;
-    
-    // bounce by 20px (10 on each side)
-    CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
-    
-    [UIView animateWithDuration:.2
-                          delay:.1
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
-                     }
-                     completion:^(BOOL finished){
-                         [UIView animateWithDuration:.1
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseIn
-                                          animations:^{
-                                              [scrap setScale:1];
-                                          }
-                                          completion:^(BOOL finished){
-                                              bufferedImage.alpha = 1;
-                                              [topPage.scrapsOnPaperState showScrap:scrap];
-                                              [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk:nil];
-                                          }];
-                     }];
+    if([topPage.scrapsOnPaperState isStateLoaded]){
+        blockToAddScrapToPage();
+    }else{
+        [topPage performBlockForUnloadedScrapStateSynchronously:blockToAddScrapToPage andImmediatelyUnloadState:NO andSavePaperState:YES];
+    }
 }
 
 #pragma mark - Gesture Helpers
@@ -961,7 +971,6 @@ int skipAll = NO;
                     // it can undo the drop and it won't affect the page that
                     // the scrap came from
                     MMScrapView* clonedScrap = [self cloneScrap:gesture.scrap toPage:pageToDropScrap];
-                    [pageToDropScrap.scrapsOnPaperState showScrap:clonedScrap];
                     // remove the scrap from the original page
                     [gesture.scrap removeFromSuperview];
 
@@ -1235,7 +1244,6 @@ int skipAll = NO;
             // so we need to clone it to the new page
             // and update their undo stacks
             MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
-            [page.scrapsOnPaperState showScrap:clonedScrap];
             [page addUndoItemForAddedScrap:clonedScrap];
             
             // now update the undo stack of the owning page
@@ -1362,7 +1370,6 @@ int skipAll = NO;
     // next, add the new scrap to the same page as the stretched scrap
     MMUndoablePaperView* page = [visibleStackHolder peekSubview];
     MMScrapView* clonedScrap = [self cloneScrap:scrap toPage:page];
-    [page.scrapsOnPaperState showScrap:clonedScrap];
     
     // move it to the new gesture location under it's scrap
     CGPoint p1 = [[touches2 objectAtIndex:0] locationInView:self];
@@ -1392,12 +1399,12 @@ int skipAll = NO;
         // sanity checks.
         // we should never enter here
         if([panScrapGesture1.initialTouchVector isEqual:panScrapGesture2.initialTouchVector]){
-            debug_NSLog(@"what");
+            debug_NSLog(@"what10");
         }
         
         if(scrap.scale != clonedScrap.scale ||
            scrap.rotation != clonedScrap.rotation){
-            debug_NSLog(@"what");
+            debug_NSLog(@"what11");
         }
         
         debug_NSLog(@"success? %d %p,  %d %p", (int)[panScrapGesture1.validTouches count], panScrapGesture1.scrap,
@@ -1475,6 +1482,21 @@ int skipAll = NO;
     }
 }
 
+-(MMUndoablePaperView*) owningPageForScrap:(MMScrapView *)scrap{
+    return (MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate;
+}
+
+#pragma mark - PolygonToolDelegate
+
+// when scissors complete, i need to drop all held scraps
+-(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
+    // only cancel scrap gestures
+    [panAndPinchScrapGesture cancel];
+    [panAndPinchScrapGesture2 cancel];
+    [stretchScrapGesture cancel];
+    // now cut with scissors
+    [super finishShapeWithTouch:touch withTool:tool];
+}
 
 #pragma mark - MMPaperViewDelegate
 
@@ -1657,8 +1679,7 @@ int skipAll = NO;
             // scrap. if its undo stack doesn't hold any
             // reference, then we should trigger deleting
             // it's old assets
-            MMScrappedPaperView* owningPageForOriginalScrap = [self pageForUUID:originalScrap.owningPageUUID];
-            [[MMTrashManager sharedInstance] deleteScrap:originalScrap.uuid inPage:owningPageForOriginalScrap];
+            [[MMTrashManager sharedInstance] deleteScrap:originalScrap.uuid inScrapCollectionState:originalScrap.state.scrapsOnPaperState];
         }
         // ok, done, just set it
         if(index == NSNotFound){
@@ -1802,7 +1823,8 @@ int skipAll = NO;
     CheckMainThread;
     
     if(![scrap.state isScrapStateLoaded]){
-        @throw [NSException exceptionWithName:@"CloneUnloadedScrapException" reason:@"asking to clone a scrap who's state is not yet loaded" userInfo:nil];
+        // force loading the scrap immediately
+        [scrap.state loadScrapStateAsynchronously:NO];
     }
     if(![scrapContainer.subviews containsObject:scrap]){
         @throw [NSException exceptionWithName:@"CloneScrapException" reason:@"Page asked to clone scrap and doesn't own it" userInfo:nil];
@@ -1819,7 +1841,7 @@ int skipAll = NO;
     void(^block)() = ^{
         clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
         clonedScrap.scale = scrap.scale;
-        [scrapContainer addSubview:clonedScrap];
+        [page.scrapsOnPaperState showScrap:clonedScrap];
         
         // next match it's location exactly on top of the original scrap:
         [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
@@ -1839,7 +1861,7 @@ int skipAll = NO;
     };
     
     if(needsStateLoading){
-        [page performBlockForUnloadedScrapStateSynchronously:block];
+        [page performBlockForUnloadedScrapStateSynchronously:block andImmediatelyUnloadState:(page != [visibleStackHolder peekSubview]) andSavePaperState:YES];
     }else{
         block();
     }

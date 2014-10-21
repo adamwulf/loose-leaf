@@ -61,7 +61,7 @@
     //
     // if so, then we shouldn't delete it from disk. otherwise
     // we should delete it from disk.
-    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inPage:page];
+    [[MMTrashManager sharedInstance] deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState];
 }
 
 -(void) finalizeRedoableState{

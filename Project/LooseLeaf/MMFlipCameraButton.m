@@ -7,6 +7,7 @@
 //
 
 #import "MMFlipCameraButton.h"
+#import "MMRotationManager.h"
 
 @implementation MMFlipCameraButton
 
@@ -167,6 +168,56 @@
     [super drawRect:rect];
 }
 
+#pragma mark - Rotation
+
+-(CGFloat) sidebarButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
+-(void) updatePhotoRotation:(BOOL)animated{
+    if(animated){
+        [UIView animateWithDuration:.2 animations:^{
+            self.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        }];
+    }else{
+        self.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+    }
+    self.rotation = [self sidebarButtonRotation];
+}
+
+-(CATransform3D) step1Rotation{
+    if(self.rotation == 0 || self.rotation == (CGFloat) M_PI){
+        return CATransform3DMakeRotation(0, 0, 1, 0);
+    }else{
+        return CATransform3DMakeRotation(0, 0, 1, 0);
+    }
+}
+
+-(CATransform3D) step2Rotation{
+    if(self.rotation == 0 || self.rotation == (CGFloat) M_PI){
+        return CATransform3DMakeRotation(1*M_PI, 0, 1, 0);
+    }else{
+        return CATransform3DMakeRotation(1*M_PI, 1, 0, 0);
+    }
+}
+
+
+-(CATransform3D) step3Rotation{
+    if(self.rotation == 0 || self.rotation == (CGFloat) M_PI){
+        return CATransform3DMakeRotation(2*M_PI, 0, 1, 0);
+    }else{
+        return CATransform3DMakeRotation(2*M_PI, 1, 0, 0);
+    }
+}
+
 
 
 #pragma mark - Flip Bounce
@@ -185,14 +236,14 @@
     
     CATransform3D transform3d = CATransform3DMakeAffineTransform(transform);
     
-    CATransform3D stepOneTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(0, 0, 1, 0));
+    CATransform3D stepOneTransform = CATransform3DConcat(transform3d, [self step1Rotation]);
     stepOneTransform.m34 = 1.0/400.0;
     
-    CATransform3D stepTwoTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(1*M_PI, 0, 1, 0));
+    CATransform3D stepTwoTransform = CATransform3DConcat(transform3d, [self step2Rotation]);
     stepTwoTransform = CATransform3DConcat(stepTwoTransform, CATransform3DMakeScale(1.2, 1.2, 1.0));
     stepTwoTransform.m34 = 1.0/400.0;
     
-    CATransform3D stepThreeTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(2*M_PI, 0, 1, 0));
+    CATransform3D stepThreeTransform = CATransform3DConcat(transform3d, [self step3Rotation]);
     stepThreeTransform.m34 = 1.0/400.0;
     
 //    CATransform3D stepFourTransform = CATransform3DConcat(transform3d, CATransform3DMakeRotation(3*M_PI, 0, 1, 0));

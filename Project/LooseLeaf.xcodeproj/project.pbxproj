@@ -44,7 +44,6 @@
 		662A21D7191D671A00AD9E31 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 662A21BB191D671A00AD9E31 /* Mixpanel.m */; };
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
-		662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
@@ -164,6 +163,7 @@
 		666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254B18F618B000C17295 /* MMEventSidebarContentView.m */; };
 		666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */; };
 		666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255818F89B1B00C17295 /* MMBorderedCamView.m */; };
+		666F2DCD19F065F60084C937 /* UIScreen+PortraitBounds.m in Sources */ = {isa = PBXBuildFile; fileRef = 666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
 		6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */; };
 		6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE119C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png */; };
@@ -330,6 +330,9 @@
 		66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBC11581C85B00B4918C /* MMPaperStackView.m */; };
 		66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DCFBCC1582BAED00B4918C /* MMPaperView.m */; };
 		66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DF0B7D159BC30200C5C652 /* UIView+Animations.m */; };
+		66E100F619EC4B67006E7C15 /* MMCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E100F519EC4B67006E7C15 /* MMCameraButton.m */; };
+		66E1010319ECB5DE006E7C15 /* MMRotateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E1010219ECB5DE006E7C15 /* MMRotateViewController.m */; };
+		66E1010619ECDD6C006E7C15 /* MMPresentationWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E1010519ECDD6C006E7C15 /* MMPresentationWindow.m */; };
 		66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FD19D631EA000FCA96 /* settings-privacy.png */; };
 		66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */; };
 		66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240119D633E1000FCA96 /* ios8-settings-camera.png */; };
@@ -458,8 +461,6 @@
 		662B7D1E19E7A55700C5529B /* MMStatTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStatTracker.m; sourceTree = "<group>"; };
 		662EFF2B199EBC140086C106 /* MMWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMWindow.h; sourceTree = "<group>"; };
 		662EFF2C199EBC140086C106 /* MMWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMWindow.m; sourceTree = "<group>"; };
-		662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAirDropShareItem.h; sourceTree = "<group>"; };
-		662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAirDropShareItem.m; sourceTree = "<group>"; };
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -663,6 +664,8 @@
 		666F099A185E62A80074CE6B /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
 		666F09A2185E64B10074CE6B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		666F2DCB19F065F60084C937 /* UIScreen+PortraitBounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+PortraitBounds.h"; sourceTree = "<group>"; };
+		666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+PortraitBounds.m"; sourceTree = "<group>"; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
 		6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iCloudSettingsLoggedIn.png; sourceTree = "<group>"; };
@@ -987,6 +990,12 @@
 		66DCFBDE1582BF3E00B4918C /* MMPanAndPinchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchGestureRecognizer.m; sourceTree = "<group>"; };
 		66DF0B7C159BC30200C5C652 /* UIView+Animations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Animations.h"; sourceTree = "<group>"; };
 		66DF0B7D159BC30200C5C652 /* UIView+Animations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Animations.m"; sourceTree = "<group>"; };
+		66E100F419EC4B67006E7C15 /* MMCameraButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraButton.h; sourceTree = "<group>"; };
+		66E100F519EC4B67006E7C15 /* MMCameraButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraButton.m; sourceTree = "<group>"; };
+		66E1010119ECB5DE006E7C15 /* MMRotateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotateViewController.h; sourceTree = "<group>"; };
+		66E1010219ECB5DE006E7C15 /* MMRotateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotateViewController.m; sourceTree = "<group>"; };
+		66E1010419ECDD6C006E7C15 /* MMPresentationWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPresentationWindow.h; sourceTree = "<group>"; };
+		66E1010519ECDD6C006E7C15 /* MMPresentationWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPresentationWindow.m; sourceTree = "<group>"; };
 		66E223FD19D631EA000FCA96 /* settings-privacy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy.png"; sourceTree = "<group>"; };
 		66E223FF19D631EF000FCA96 /* settings-privacy@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-privacy@2x.png"; sourceTree = "<group>"; };
 		66E2240119D633E1000FCA96 /* ios8-settings-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-camera.png"; sourceTree = "<group>"; };
@@ -1180,6 +1189,8 @@
 				66066746193A7C1400C985E9 /* UIImage+Memory.m */,
 				66ACECDD19D4C122000EA792 /* NSArray+IndexSetAdditions.h */,
 				66ACECDE19D4C122000EA792 /* NSArray+IndexSetAdditions.m */,
+				666F2DCB19F065F60084C937 /* UIScreen+PortraitBounds.h */,
+				666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1375,15 +1386,6 @@
 				6634856819DB551B00B5CF2D /* MMTrashIcon.m */,
 			);
 			name = "Delete Sidebar";
-			sourceTree = "<group>";
-		};
-		66381F5619CB91F80014796F /* CameraSection */ = {
-			isa = PBXGroup;
-			children = (
-				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
-				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
-			);
-			name = CameraSection;
 			sourceTree = "<group>";
 		};
 		66381F5A19CB965D0014796F /* PhotosSection */ = {
@@ -1753,8 +1755,9 @@
 			isa = PBXGroup;
 			children = (
 				66381F5A19CB965D0014796F /* PhotosSection */,
-				66381F5619CB91F80014796F /* CameraSection */,
 				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
+				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
+				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,
 				666E254418F60F3E00C17295 /* MMAlbumSidebarContentView.m */,
 				666E254718F613FA00C17295 /* MMFaceSidebarContentView.h */,
@@ -1801,6 +1804,7 @@
 		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
 			isa = PBXGroup;
 			children = (
+				66E1010019ECB5CD006E7C15 /* Presentation Window */,
 				6634855D19DA2E4200B5CF2D /* Delete Sidebar */,
 				66DCFB991581BCEF00B4918C /* MMAppDelegate.h */,
 				66DCFB9A1581BCEF00B4918C /* MMAppDelegate.m */,
@@ -1986,6 +1990,7 @@
 				66EDE42419AE761500A5623B /* List View */,
 				66EDE42319AE75F500A5623B /* Tool Sidebar */,
 				66EDE42219AE75EF00A5623B /* Share Sidebar */,
+				66E100F319EC4B1A006E7C15 /* Import Sidebar */,
 				66BD6E951593E98D00D4544C /* MMTextButton.h */,
 				66BD6E961593E98D00D4544C /* MMTextButton.m */,
 			);
@@ -2305,6 +2310,30 @@
 			name = Gestures;
 			sourceTree = "<group>";
 		};
+		66E100F319EC4B1A006E7C15 /* Import Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
+				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
+				66E100F419EC4B67006E7C15 /* MMCameraButton.h */,
+				66E100F519EC4B67006E7C15 /* MMCameraButton.m */,
+				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
+				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
+			);
+			name = "Import Sidebar";
+			sourceTree = "<group>";
+		};
+		66E1010019ECB5CD006E7C15 /* Presentation Window */ = {
+			isa = PBXGroup;
+			children = (
+				66E1010119ECB5DE006E7C15 /* MMRotateViewController.h */,
+				66E1010219ECB5DE006E7C15 /* MMRotateViewController.m */,
+				66E1010419ECDD6C006E7C15 /* MMPresentationWindow.h */,
+				66E1010519ECDD6C006E7C15 /* MMPresentationWindow.m */,
+			);
+			name = "Presentation Window";
+			sourceTree = "<group>";
+		};
 		66E47E22187F278A000AFD18 /* Ruler */ = {
 			isa = PBXGroup;
 			children = (
@@ -2402,8 +2431,6 @@
 				6652452C1996CE3000C36609 /* MMImgurShareItem.m */,
 				6652457B1996ECF900C36609 /* MMOpenInAppShareItem.h */,
 				6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */,
-				662EFF2E199ECC760086C106 /* MMAirDropShareItem.h */,
-				662EFF2F199ECC760086C106 /* MMAirDropShareItem.m */,
 				667C6362199FED6E00E93CD6 /* MMPrintShareItem.h */,
 				667C6363199FED6E00E93CD6 /* MMPrintShareItem.m */,
 				667C636B199FF3D500E93CD6 /* MMCopyShareItem.h */,
@@ -2427,10 +2454,6 @@
 				6650DD1618F4849800ADF591 /* MMImageViewButton.m */,
 				66BEBFF819BD6AAA0032D30C /* MMProgressedImageViewButton.h */,
 				66BEBFF919BD6AAA0032D30C /* MMProgressedImageViewButton.m */,
-				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
-				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
-				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
-				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 				661885CF18F9ABD70016A333 /* MMFlipCameraButton.h */,
 				661885D018F9ABD70016A333 /* MMFlipCameraButton.m */,
 				667D98B8192FC22A00625879 /* MMPDFButton.h */,
@@ -2805,6 +2828,7 @@
 				666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */,
 				664516B9159030FC0012FACA /* Constants.m in Sources */,
 				66A3A6BB1791F18900D8FE1D /* UIDevice+PPI.m in Sources */,
+				66E100F619EC4B67006E7C15 /* MMCameraButton.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
@@ -2818,6 +2842,7 @@
 				6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */,
 				6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
+				666F2DCD19F065F60084C937 /* UIScreen+PortraitBounds.m in Sources */,
 				667C635F199FE4BC00E93CD6 /* UIImage+MPAverageColor.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
 				66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */,
@@ -2918,6 +2943,7 @@
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				66F968B119C3940400C1F696 /* MMCloudKitNoAccountHelpView.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
+				66E1010319ECB5DE006E7C15 /* MMRotateViewController.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
@@ -2932,7 +2958,6 @@
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
-				662EFF30199ECC760086C106 /* MMAirDropShareItem.m in Sources */,
 				66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */,
 				66381F5D19CB96730014796F /* MMSinglePhotoCollectionViewCell.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
@@ -2989,6 +3014,7 @@
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				660116EF19ABB1720065C1B4 /* MMCloudKitAccountMissingState.m in Sources */,
+				66E1010619ECDD6C006E7C15 /* MMPresentationWindow.m in Sources */,
 				660116F819ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
 				667C6364199FED6E00E93CD6 /* MMPrintShareItem.m in Sources */,
@@ -3122,6 +3148,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUGLABELS=1",
+				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (

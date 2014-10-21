@@ -148,17 +148,22 @@
         // this view
         [self setShouldShowShadow:NO];
         
-        
-//        CALayer* cornerTag = [CALayer layer];
-//        cornerTag.bounds = CGRectMake(10, 10, 10, 10);
-//        cornerTag.backgroundColor = [UIColor redColor].CGColor;
-//        [self.layer addSublayer:cornerTag];
-//
-//
-//        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
-//        debugLabel.backgroundColor = [UIColor whiteColor];
-//        debugLabel.text = self.uuid;
-//        [self addSubview:debugLabel];
+#ifdef DEBUG
+#ifdef DEBUGLABELS
+#if DEBUGLABELS
+        CALayer* cornerTag = [CALayer layer];
+        cornerTag.bounds = CGRectMake(10, 10, 10, 10);
+        cornerTag.backgroundColor = [UIColor redColor].CGColor;
+        [self.layer addSublayer:cornerTag];
+
+
+        debugLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 20)];
+        debugLabel.backgroundColor = [UIColor whiteColor];
+        debugLabel.text = self.uuid;
+        [self addSubview:debugLabel];
+#endif
+#endif
+#endif
     }
     return self;
 }
@@ -586,7 +591,7 @@
     p3 = CGPointApplyAffineTransform(p3, flipTransform);
     p4 = CGPointApplyAffineTransform(p4, flipTransform);
     
-    // now tamp our texture onto the other scrap using these
+    // now stamp our texture onto the other scrap using these
     // texture coordinates
     [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
@@ -599,11 +604,10 @@
     [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
 }
 
-
-#pragma mark - dealloc
-
--(void) dealloc{
-    NSLog(@"dealloc scrap: %@", scrapState.uuid);
-}
+//#pragma mark - dealloc
+//
+//-(void) dealloc{
+//    NSLog(@"dealloc scrap: %@", scrapState.uuid);
+//}
 
 @end

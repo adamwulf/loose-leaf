@@ -273,6 +273,8 @@ struct SidebarButton{
 #pragma mark - MMPencilAndPaletteViewDelegate
 
 -(void) penTapped:(UIButton*)_button{
+    [scissor cancelAllTouches];
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
@@ -284,6 +286,7 @@ struct SidebarButton{
 }
 
 -(void) didChangeColorTo:(UIColor*)color{
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     pen.color = color;
     if(!pencilTool.selected){
         [self penTapped:nil];
@@ -313,6 +316,8 @@ struct SidebarButton{
 }
 
 -(void) eraserTapped:(UIButton*)_button{
+    [scissor cancelAllTouches];
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = YES;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
@@ -320,6 +325,7 @@ struct SidebarButton{
 }
 
 -(void) scissorTapped:(UIButton*)_button{
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
@@ -550,7 +556,10 @@ struct SidebarButton{
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [pageToSave setEditable:YES];
+        if(pageToSave.drawableView){
+            // only re-allow editing if it still has the editable view
+            [pageToSave setEditable:YES];
+        }
         [pageToSave updateThumbnailVisibility];
 //        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
@@ -724,19 +733,16 @@ struct SidebarButton{
 }
 
 -(void) finishedLoading{
-    // noop
+    @throw  kAbstractMethodException;
 }
 
 -(void) loadStacksFromDisk{
-    NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
-    for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
-        [self addPaperToBottomOfStack:page];
-    }
-    for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
-        [self addPaperToBottomOfHiddenStack:page];
-    }
-    
-    if(![self hasPages]){
+
+    // check to see if we have any state to load at all, and if
+    // not then build our default content
+    if(![stackManager hasStateToLoad]){
+        // we don't have any pages, and we don't have any
+        // state to load
         self.userInteractionEnabled = NO;
         UIView* white = [[UIView alloc] initWithFrame:self.bounds];
         white.backgroundColor = [UIColor whiteColor];
@@ -750,27 +756,44 @@ struct SidebarButton{
             }];
         }];
         return;
+    }else{
+        NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
+        for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
+            [self addPaperToBottomOfStack:page];
+        }
+        for(MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]){
+            [self addPaperToBottomOfHiddenStack:page];
+        }
     }
     
-    // load the state for the top page in the visible stack
-    [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                     withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
-                                                     andScale:[MMPageCacheManager sharedInstance].drawableView.scale
-                                                   andContext:[[MMPageCacheManager sharedInstance].drawableView context]];
     
     
-    // only load the image previews for the pages that will be visible
-    // other page previews will load as the user turns the page,
-    // or as they scroll the list view
-    CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-    NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
-    for(MMEditablePaperView* page in visiblePages){
-        [page loadCachedPreview];
+    if([self hasPages]){
+        // load the state for the top page in the visible stack
+        [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
+                                                         withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                         andScale:[MMPageCacheManager sharedInstance].drawableView.scale
+                                                       andContext:[MMPageCacheManager sharedInstance].drawableView.context];
+        
+        
+        // only load the image previews for the pages that will be visible
+        // other page previews will load as the user turns the page,
+        // or as they scroll the list view
+        CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+        NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
+        for(MMEditablePaperView* page in visiblePages){
+            [page loadCachedPreview];
+        }
+        
+        [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
+        [self didChangeTopPage];
+        [self finishedLoading];
+    }else{
+        // list is empty on purpose
+        [self immediatelyTransitionToListView];
     }
     
-    [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
-    [self didChangeTopPage];
-    [self finishedLoading];
+
 }
 
 -(BOOL) hasPages{
