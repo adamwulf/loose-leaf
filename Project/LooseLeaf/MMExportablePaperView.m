@@ -21,11 +21,31 @@
     BOOL isCurrentlySaving;
     BOOL waitingForExport;
     BOOL waitingForSave;
+    BOOL waitingForUnload;
     NSDictionary* cloudKitSenderInfo;
 }
 
 @synthesize cloudKitSenderInfo;
 @synthesize isCurrentlySaving;
+
+#pragma mark - Retry Saving, Exporting, and Unloading
+
+-(void) retrySaveOrExport{
+    if(waitingForSave){
+        __block __strong MMExportablePaperView* strongSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf saveToDisk:nil];
+            strongSelf = nil;
+        });
+    }else if(waitingForExport){
+        [self exportAsynchronouslyToZipFile];
+    }else if(waitingForUnload){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self unloadState];
+        });
+    }
+}
+
 
 #pragma mark - Saving
 
@@ -56,21 +76,16 @@
     }];
 }
 
--(void) retrySaveOrExport{
-    if(waitingForSave){
-        __block __strong MMExportablePaperView* strongSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [strongSelf saveToDisk:nil];
-            strongSelf = nil;
-        });
-    }else if(waitingForExport){
-        [self exportAsynchronouslyToZipFile];
-    }
-}
-
 #pragma mark - Load and Unload
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
+    @synchronized(self){
+        if(waitingForUnload){
+            // if we're waiting for an unload, but have since
+            // been asked to load, then cancel waiting
+            waitingForUnload = NO;
+        }
+    }
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     
     if(cloudKitSenderInfo){
@@ -90,6 +105,14 @@
 }
 
 -(void) unloadState{
+    @synchronized(self){
+        if(isCurrentlyExporting || isCurrentlySaving){
+            waitingForUnload = YES;
+            return;
+        }
+        NSLog(@"MMExportablePaperView: saved unloading during save/export");
+        waitingForUnload = NO;
+    }
     [super unloadState];
     
     dispatch_block_t block = ^{

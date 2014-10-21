@@ -409,7 +409,11 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
             return;
         }
         if(targetIsLoadedState){
-            NSLog(@"duplicate load");
+            // this is allowed. it will load either
+            // async or sync, and the second finishing
+            // load will skip itself after seeing
+            // an already loaded state
+//            NSLog(@"duplicate load");
         }
         
         targetIsLoadedState = YES;
@@ -431,15 +435,22 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 //#endif
         @autoreleasepool {
 //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
+            // load state, if we have any.
+            __block BOOL goalIsLoaded = NO;
             [NSThread performBlockOnMainThreadSync:^{
+                @synchronized(self){
+                    goalIsLoaded = targetIsLoadedState;
+                }
                 if([self isScrapStateLoaded]){
                     // scrap state was loaded synchronously while
                     // this block was pending to finish a load
-                    NSLog(@"bailed on async load, it finished sync ahead of us");
+//                    NSLog(@"bailed on async load, it finished sync ahead of us");
                     return;
                 }
                 @synchronized(self){
-                    if(!targetIsLoadedState){
+                    if(!goalIsLoaded){
+                        // we don't need to load after all, so don't build
+                        // any drawable view
                         NSLog(@"saved building JotView we didn't need");
                     }else{
                         // add our drawable view to our contents
@@ -454,14 +465,9 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
             if([self isScrapStateLoaded]){
                 // scrap state was loaded synchronously while
                 // this block was pending to finish a load
-                NSLog(@"bailed on async load, it finished sync ahead of us");
+//                NSLog(@"bailed on async load, it finished sync ahead of us");
                 [lock unlock];
                 return;
-            }
-            // load state, if we have any.
-            BOOL goalIsLoaded = NO;
-            @synchronized(self){
-                goalIsLoaded = targetIsLoadedState;
             }
             if(!goalIsLoaded){
                 NSLog(@"saved building JotViewStateProxy we didn't need");

@@ -556,7 +556,10 @@ struct SidebarButton{
     // ok, we've zoomed into this page now
     if([page isKindOfClass:[MMEditablePaperView class]]){
         MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
-        [pageToSave setEditable:YES];
+        if(pageToSave.drawableView){
+            // only re-allow editing if it still has the editable view
+            [pageToSave setEditable:YES];
+        }
         [pageToSave updateThumbnailVisibility];
 //        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
     }
