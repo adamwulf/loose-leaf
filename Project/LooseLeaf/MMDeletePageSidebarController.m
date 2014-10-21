@@ -169,8 +169,8 @@ static CGFloat(^clampPercent)(CGFloat);
     pageToDelete.center = center;
     
     [UIView animateWithDuration:.3 animations:^{
-        // move it offscreen
         pageToDelete.center = CGPointMake(-200 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
+    } completion:^(BOOL finished) {
         [pageToDelete removeFromSuperview];
     }];
 

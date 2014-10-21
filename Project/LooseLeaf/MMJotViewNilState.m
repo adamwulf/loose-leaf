@@ -43,9 +43,9 @@ static MMJotViewNilState* _instance = nil;
     return nil;
 }
 
--(JotGLTextureBackedFrameBuffer*) backgroundFramebuffer{
-    return nil;
-}
+//-(JotGLTextureBackedFrameBuffer*) backgroundFramebuffer{
+//    return nil;
+//}
 
 -(JotStroke*) currentStroke{
     return nil;

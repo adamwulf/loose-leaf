@@ -842,7 +842,7 @@ struct TouchInterval{
 -(BOOL) begin{
 //    NSLog(@"pan scrap gesture %p began", self);
     if(!paused){
-        NSLog(@"what");
+        NSLog(@"what8");
     }
     paused = NO;
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){

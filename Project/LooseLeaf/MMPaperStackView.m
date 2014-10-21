@@ -1552,7 +1552,7 @@
  */
 -(void) popStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
     if(page == nil){
-        NSLog(@"what");
+        NSLog(@"what9");
         @throw [NSException exceptionWithName:@"popping to nil page" reason:@"unknown" userInfo:nil];
     }
     if([visibleStackHolder.subviews containsObject:page] || page == nil){
