@@ -28,9 +28,9 @@
 - (id)init{
     if(self = [super init]){
 #ifdef DEBUG
-//        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
-//        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
 #endif
         
         
