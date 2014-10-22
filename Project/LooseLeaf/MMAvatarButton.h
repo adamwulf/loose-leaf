@@ -14,6 +14,7 @@
 @property (nonatomic, assign) BOOL targetSuccess;
 @property (nonatomic, assign) CGFloat targetProgress;
 @property (nonatomic) NSString* letter;
+@property (nonatomic, readonly) UIColor* fontColor;
 
 - (id)initWithFrame:(CGRect)frame forLetter:(NSString*)letter andOffset:(CGPoint)offset;
 

@@ -16,6 +16,7 @@
 #import "Mixpanel.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMReachabilityManager.h"
+#import "MMCloudAvatarButton.h"
 
 @implementation MMCloudKitTutorialImportCoordinator{
     MMAvatarButton* avatarButton;
@@ -45,7 +46,7 @@
 
 -(id) initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
-        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:@"CK"];
+        avatarButton = [[MMCloudAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:@"CK"];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         importExportView = _exportView;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
@@ -74,9 +75,9 @@
             isReady = YES;
             NSLog(@"beginning already ready message %@", message.messageRecordID);
             [importExportView importCoordinatorIsReady:self];
-        } afterDelay:2];
+        } afterDelay:1];
     }else{
-        [self performSelector:@selector(begin) withObject:nil afterDelay:4];
+        [self performSelector:@selector(begin) withObject:nil afterDelay:1];
     }
 }
 
@@ -104,7 +105,7 @@
 - (id)initWithCoder:(NSCoder *)decoder{
     if(self = [super init]){
         isReady = [[decoder decodeObjectForKey:@"isReady"] boolValue];
-        avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:@"CK"];
+        avatarButton = [[MMCloudAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:@"CK"];
         [avatarButton addTarget:self action:@selector(avatarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;

@@ -215,6 +215,7 @@
 		667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667EF0C819A54F2500B1A38D /* icloud-share@2x.png */; };
 		667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */; };
 		668D19D619F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */; };
+		668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
@@ -748,6 +749,8 @@
 		667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitButton.m; sourceTree = "<group>"; };
 		668D19D419F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitTutorialImportCoordinator.h; sourceTree = "<group>"; };
 		668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitTutorialImportCoordinator.m; sourceTree = "<group>"; };
+		668D19D719F781EB00A65DCF /* MMCloudAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudAvatarButton.h; sourceTree = "<group>"; };
+		668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudAvatarButton.m; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -2473,6 +2476,8 @@
 				667D98B9192FC22A00625879 /* MMPDFButton.m */,
 				667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */,
 				667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */,
+				668D19D719F781EB00A65DCF /* MMCloudAvatarButton.h */,
+				668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */,
 			);
 			name = "Share Sidebar";
 			sourceTree = "<group>";
@@ -2867,6 +2872,7 @@
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
 				66BD6E701593A8CC00D4544C /* MMPlusButton.m in Sources */,
 				667C635D199FE4BC00E93CD6 /* NSData+MPBase64.m in Sources */,
+				668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
 				66ACECE819D4D571000EA792 /* MMPhotoOnDisk.m in Sources */,
