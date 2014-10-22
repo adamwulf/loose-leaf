@@ -149,9 +149,6 @@
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
                     }else{
-                        if(scrap){
-                            NSLog(@"gotcha!");
-                        }
                         __block MMScrapViewState* state = nil;
                         state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
                         if(state){
