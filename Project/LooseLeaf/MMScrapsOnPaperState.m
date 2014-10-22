@@ -144,7 +144,7 @@
                     MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
                     
                     NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                    if(scrap){
+                    if(scrap && scrap.state.scrapsOnPaperState == self){
                         //                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
@@ -275,9 +275,6 @@
 
 -(void) unloadPaperState{
     CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
-    if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
-        @throw [NSException exceptionWithName:@"UnloadScrapsOnPaperStateException" reason:@"Cannot unload scrapsOnPaperState of currently editable page" userInfo:nil];
-    }
     [super unloadPaperState];
 }
 
