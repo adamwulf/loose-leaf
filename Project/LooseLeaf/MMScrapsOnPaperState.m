@@ -144,11 +144,14 @@
                     MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
                     
                     NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                    if(scrap){
+                    if(scrap && scrap.state.scrapsOnPaperState == self){
                         //                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
                         [props setObject:scrap forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
                     }else{
+                        if(scrap){
+                            NSLog(@"gotcha!");
+                        }
                         __block MMScrapViewState* state = nil;
                         state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
                         if(state){

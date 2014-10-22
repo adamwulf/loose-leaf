@@ -27,7 +27,6 @@
     CGRect cameraViewFr = CGRectZero;
     cameraViewFr.size.width = ratio * (rowHeight - kCameraMargin) * 2;
     cameraViewFr.size.height = (rowHeight - kCameraMargin) * 2;
-    NSLog(@"cameraViewFr: %f %f %f %f", cameraViewFr.origin.x, cameraViewFr.origin.y, cameraViewFr.size.width, cameraViewFr.size.height);
     return cameraViewFr;
 }
 
