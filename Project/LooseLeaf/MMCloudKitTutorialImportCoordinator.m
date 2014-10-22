@@ -35,6 +35,10 @@
     BOOL isWaitingOnNetwork;
 }
 
++(BOOL) shouldShowTutorialImport{
+    return ![[NSUserDefaults standardUserDefaults] objectForKey:kMPHasSeenCKTutorial];
+}
+
 @synthesize avatarButton;
 @synthesize isReady;
 @synthesize importExportView;
@@ -77,6 +81,8 @@
 -(void) avatarButtonTapped:(MMAvatarButton*)button{
     [[[Mixpanel sharedInstance] people] set:@{kMPHasSeenCKTutorial : @(YES)}];
     [importExportView importWasTapped:self];
+    // track that we've seen the tutorial so that it doesn't re-show next time
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasSeenCKTutorial];
 }
 
 #pragma mark - NSCoding

@@ -85,24 +85,27 @@
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
         NSLog(@"loaded %d pages from disk for import", (int) [imported count]);
-        
+
+        BOOL alreadyHaveActiveTutorialImport = NO;
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
             // need to set the import/export view after loading
             coordinator.importExportView = self;
             [coordinator begin];
+            
+            if([coordinator isKindOfClass:[MMCloudKitTutorialImportCoordinator class]]){
+                alreadyHaveActiveTutorialImport = YES;
+            }
+        }
+        // add the cloudkit tutorial page import if we still need it
+        if(!alreadyHaveActiveTutorialImport && ![MMCloudKitTutorialImportCoordinator shouldShowTutorialImport]){
+            MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
+            @synchronized(activeImports){
+                [activeImports addObject:coordinator];
+                [self saveToDiskOffMainThread];
+            }
+            [coordinator begin];
         }
     }
-    
-    
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"hasEverSeenCKTutorial"]){
-        MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
-        @synchronized(activeImports){
-            [activeImports addObject:coordinator];
-            [self saveToDiskOffMainThread];
-        }
-        [coordinator begin];
-    }
-
 }
 
 #pragma mark - Sharing

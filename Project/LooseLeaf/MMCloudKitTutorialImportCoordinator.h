@@ -10,4 +10,6 @@
 
 @interface MMCloudKitTutorialImportCoordinator : MMCloudKitImportCoordinator
 
++(BOOL) shouldShowTutorialImport;
+
 @end
