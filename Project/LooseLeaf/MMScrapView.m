@@ -552,6 +552,10 @@
  */
 -(void) stampContentsFrom:(JotView*)otherDrawableView{
     // step 1: generate a gl texture of my entire contents
+    CGSize stampSize = otherDrawableView.pagePtSize;
+    stampSize.width *= otherDrawableView.scale;
+    stampSize.height *= otherDrawableView.scale;
+    
     JotGLTexture* otherTexture = [otherDrawableView generateTexture];
     
     // opengl coordinates
@@ -593,15 +597,16 @@
     
     // now stamp our texture onto the other scrap using these
     // texture coordinates
-    [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+    [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4 withTextureSize:stampSize];
+    [[JotTextureCache sharedManager] returnTextureForReuse:otherTexture];
 }
 
 /**
  * this method allows us to stamp an arbitrary texture onto the scrap, using the input
  * texture coordinates
  */
--(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
-    [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4];
+-(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 withTextureSize:(CGSize)textureSize{
+    [scrapState importTexture:texture atP1:p1 andP2:p2 andP3:p3 andP4:p4 withTextureSize:textureSize];
 }
 
 //#pragma mark - dealloc
