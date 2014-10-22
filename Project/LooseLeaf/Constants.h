@@ -112,7 +112,6 @@ _Pragma("clang diagnostic pop") \
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
 #define kMPHasAddedPage @"Has Ever Added Page"
-#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
@@ -126,6 +125,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfOpenInExports @"Number of Open In Exports"
 #define kMPNumberOfSocialExports @"Number of Social Media Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
+#define kMPHasZoomedToPage @"Has Zoomed Into Page"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
@@ -133,6 +133,10 @@ _Pragma("clang diagnostic pop") \
 #define kMPDistanceErased @"Distance Erased (m)"
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
+
+// cloudkit tutorial
+#define kMPCloudKitTutorialUUID @"2E73BFF3-843D-417F-A8FA-71C6E9783D67"
+#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"

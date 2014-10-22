@@ -14,6 +14,7 @@
 #import "MMScrapPaperStackView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMCloudKitTutorialImportCoordinator.h"
+#import "MMEditablePaperView.h"
 #import "Constants.h"
 #import "Mixpanel.h"
 
@@ -97,13 +98,29 @@
             }
         }
         // add the cloudkit tutorial page import if we still need it
-        if(!alreadyHaveActiveTutorialImport && ![MMCloudKitTutorialImportCoordinator shouldShowTutorialImport]){
+        if(!alreadyHaveActiveTutorialImport && [MMCloudKitTutorialImportCoordinator shouldShowTutorialImport]){
+            debug_NSLog(@"hasn't seen CloudKit Tutorial page yet, creating import");
             MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
-            @synchronized(activeImports){
-                [activeImports addObject:coordinator];
-                [self saveToDiskOffMainThread];
+            
+            NSString* locationOfImportedPage = [MMEditablePaperView pagesPathForUUID:coordinator.uuidOfIncomingPage];
+            NSString* bundledLocationOfImportedPage = [MMEditablePaperView bundledPagesPathForUUID:coordinator.uuidOfIncomingPage];
+            if([[NSFileManager defaultManager] fileExistsAtPath:locationOfImportedPage] ||
+               [[NSFileManager defaultManager] fileExistsAtPath:bundledLocationOfImportedPage]){
+                // make sure to only create import when the page
+                // also exists on disk. this is an extra safe
+                // sanity check. maybe somebody's imported the page,
+                // but reset their user defaults, so the data isn't
+                // on disk any more
+                @synchronized(activeImports){
+                    [activeImports addObject:coordinator];
+                    [self saveToDiskOffMainThread];
+                }
+                [coordinator begin];
+            }else{
+                debug_NSLog(@"importable tutorial page doens't exist for uuid: %@", coordinator.uuidOfIncomingPage);
             }
-            [coordinator begin];
+        }else{
+            debug_NSLog(@"has already seen CloudKit Tutorial page");
         }
     }
 }

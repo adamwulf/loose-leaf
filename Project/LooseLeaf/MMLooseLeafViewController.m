@@ -27,6 +27,13 @@
 
 - (id)init{
     if(self = [super init]){
+#ifdef DEBUG
+        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+#endif
+        
+        
         [[Crashlytics sharedInstance] setDelegate:self];
 
         [[NSNotificationCenter defaultCenter] addObserver:self

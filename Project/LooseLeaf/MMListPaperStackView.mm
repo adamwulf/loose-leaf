@@ -320,6 +320,7 @@
     [longPressGesture setEnabled:YES];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasZoomedToList];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasZoomedToList : @(YES)}];
     // set the top visible page to thumbnail view only
     [self didChangeTopPageTo:nil];
@@ -330,6 +331,9 @@
  * transition into page view from the transition state
  */
 -(void) finishUITransitionToPageView{
+    if([[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList]){
+        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasZoomedToPage];
+    }
     @synchronized(self){
         isShowingPageView = YES;
     }

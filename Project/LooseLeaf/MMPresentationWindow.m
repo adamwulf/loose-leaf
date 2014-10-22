@@ -11,6 +11,7 @@
 #import "UIView+Debug.h"
 #import "MMRotateViewController.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 @implementation MMPresentationWindow
 
@@ -30,22 +31,20 @@
 
 -(void) makeKeyAndVisible{
     if(shouldRespectKeyWindowRequest){
-        NSLog(@"presentation window is key");
+        debug_NSLog(@"presentation window is key");
         [super makeKeyAndVisible];
         self.alpha = 1;
     }else{
-        NSLog(@"presentation window ignored key window request");
+        debug_NSLog(@"presentation window ignored key window request");
     }
 }
 
 -(void) resignKeyWindow{
-    NSLog(@"presentation window resigned");
+    debug_NSLog(@"presentation window resigned");
     self.alpha = 0;
 }
 
 -(void) didAddSubview:(UIView *)subview{
-    NSLog(@"adding subview: %@", subview);
-    NSLog(@" with subviews: %@", subview.subviews);
     [super didAddSubview:subview];
     if([self.subviews count] > 1){
         [self makeKeyAndVisible];
@@ -67,7 +66,7 @@
 -(void) killPresentationWindow{
     if([self.subviews count] == 1){
         if([UIApplication sharedApplication].keyWindow == self){
-            NSLog(@"killing presentation window");
+            debug_NSLog(@"killing presentation window");
             MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
             [appDelegate.window makeKeyAndVisible];
         }
@@ -75,7 +74,7 @@
 }
 
 -(void) dealloc{
-    NSLog(@"dealloc window");
+    debug_NSLog(@"dealloc presentation window");
 }
 
 @end

@@ -65,24 +65,33 @@
 }
 
 -(void) begin{
-    [[NSThread mainThread] performBlock:^{
-        isReady = YES;
-        NSLog(@"beginning already ready message %@", message.messageRecordID);
-        [importExportView importCoordinatorIsReady:self];
-    } afterDelay:4];
+    debug_NSLog(@"beginning tutorial import: list: %@  page: %@", [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList],
+                [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToPage]);
+    if([[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList] &&
+       [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToPage]){
+        // they've got to list view + page view
+        [[NSThread mainThread] performBlock:^{
+            isReady = YES;
+            NSLog(@"beginning already ready message %@", message.messageRecordID);
+            [importExportView importCoordinatorIsReady:self];
+        } afterDelay:2];
+    }else{
+        [self performSelector:@selector(begin) withObject:nil afterDelay:4];
+    }
 }
 
 -(NSString*) uuidOfIncomingPage{
-    return @"2E73BFF3-843D-417F-A8FA-71C6E9783D67";
+    return kMPCloudKitTutorialUUID;
 }
 
 #pragma mark - Touch Event
 
 -(void) avatarButtonTapped:(MMAvatarButton*)button{
+    // track that we've seen the tutorial to mixpanel
     [[[Mixpanel sharedInstance] people] set:@{kMPHasSeenCKTutorial : @(YES)}];
-    [importExportView importWasTapped:self];
-    // track that we've seen the tutorial so that it doesn't re-show next time
+    // also track that we've seen the tutorial locally so that it doesn't re-show next time
     [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasSeenCKTutorial];
+    [importExportView importWasTapped:self];
 }
 
 #pragma mark - NSCoding
