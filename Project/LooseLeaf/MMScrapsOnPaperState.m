@@ -275,9 +275,6 @@
 
 -(void) unloadPaperState{
     CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
-    if(self.delegate == [[MMPageCacheManager sharedInstance] currentEditablePage]){
-        @throw [NSException exceptionWithName:@"UnloadScrapsOnPaperStateException" reason:@"Cannot unload scrapsOnPaperState of currently editable page" userInfo:nil];
-    }
     [super unloadPaperState];
 }
 

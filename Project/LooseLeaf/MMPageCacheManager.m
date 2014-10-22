@@ -170,6 +170,9 @@ static MMPageCacheManager* _instance = nil;
 -(void) didUnloadStateForPage:(MMEditablePaperView*) page{
     if(page == currentlyTopPage || page == currentEditablePage){
         //        NSLog(@"didUnloadStateForPage: %@", page.uuid);
+        if(page == currentEditablePage){
+            currentEditablePage = nil;
+        }
         if(page.scale > kMinPageZoom){
             [self ensureTopPageIsLoaded:currentlyTopPage];
         }
