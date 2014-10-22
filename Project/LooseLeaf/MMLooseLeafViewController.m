@@ -172,9 +172,12 @@
 #pragma mark - Crashlytics reporting
 
 -(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
+    debug_NSLog(@"Did Track Crash from Exception");
+    debug_NSLog(@"==============================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+    [crashProperties setObject:@"Exception" forKey:@"Cause"];
     if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
     if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
     if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];

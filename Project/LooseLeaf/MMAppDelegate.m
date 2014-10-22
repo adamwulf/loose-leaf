@@ -18,6 +18,9 @@
 #import "MMCloudKitManager.h"
 #import "TestFlight.h"
 #import "MMPresentationWindow.h"
+#import "UIDevice+PPI.h"
+#import "UIApplication+Version.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 
 @implementation MMAppDelegate{
@@ -76,6 +79,13 @@
             [self checkForNotificationToHandleWithNotificationInfo:dictionary];
         }
     }
+    
+    NSDate* dateOfCrash = [self dateOfDeathIfAny];
+    if(dateOfCrash){
+        // we shouldn't have a kAppLaunchStatus if we shut down correctly,
+        // log as a possible memory crash or user force-close
+        [self trackDidCrashFromMemoryForDate:dateOfCrash];
+    }
 
     return YES;
 }
@@ -98,6 +108,7 @@
     [durationTimer invalidate];
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
+    [self removeDateOfLaunch];
     debug_NSLog(@"DID ENTER BACKGROUND");
 }
 
@@ -120,6 +131,7 @@
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
     [[MMRotationManager sharedInstance] didBecomeActive];
+    [self saveDateOfLaunch];
     debug_NSLog(@"DID BECOME ACTIVE");
     debug_NSLog(@"***************************************************************************");
     debug_NSLog(@"***************************************************************************");
@@ -131,6 +143,7 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
+    [self removeDateOfLaunch];
     debug_NSLog(@"WILL TERMINATE");
 }
 
@@ -231,5 +244,50 @@
     return uuid;
 }
 
+#pragma mark - Track Memory Crash
+
+-(void) trackDidCrashFromMemoryForDate:(NSDate*)dateOfCrash{
+    debug_NSLog(@"Did Track Crash from Memory");
+    debug_NSLog(@"===========================");
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfMemoryCrashes by:@(1)];
+    
+    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+    [crashProperties setObject:@"Memory" forKey:@"Cause"];
+    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+    if(dateOfCrash) [crashProperties setObject:dateOfCrash forKey:@"crashedOnDate"];
+    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+    
+    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
+    }];
+    
+    @try{
+        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+    }@catch(id e){
+        // noop
+    }
+}
+
+
+#pragma mark - App Lifecycle Tracking
+
+-(NSDate*) dateOfDeathIfAny{
+    NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
+    NSDate* date = [NSKeyedUnarchiver unarchiveObjectWithFile:pathOfLifecycleTrackingFile];
+    return date;
+}
+
+-(void) saveDateOfLaunch{
+    NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
+    [NSKeyedArchiver archiveRootObject:[NSDate date] toFile:pathOfLifecycleTrackingFile];
+}
+
+-(void) removeDateOfLaunch{
+    NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
+    [[NSFileManager defaultManager] removeItemAtPath:pathOfLifecycleTrackingFile error:nil];
+}
 
 @end

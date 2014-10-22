@@ -216,6 +216,7 @@
 		667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */; };
 		668D19D619F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */; };
 		668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */; };
+		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
@@ -751,6 +752,8 @@
 		668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitTutorialImportCoordinator.m; sourceTree = "<group>"; };
 		668D19D719F781EB00A65DCF /* MMCloudAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudAvatarButton.h; sourceTree = "<group>"; };
 		668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudAvatarButton.m; sourceTree = "<group>"; };
+		668D19DA19F8572700A65DCF /* UIApplication+Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Version.h"; sourceTree = "<group>"; };
+		668D19DB19F8572700A65DCF /* UIApplication+Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Version.m"; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -1197,6 +1200,8 @@
 				66ACECDE19D4C122000EA792 /* NSArray+IndexSetAdditions.m */,
 				666F2DCB19F065F60084C937 /* UIScreen+PortraitBounds.h */,
 				666F2DCC19F065F60084C937 /* UIScreen+PortraitBounds.m */,
+				668D19DA19F8572700A65DCF /* UIApplication+Version.h */,
+				668D19DB19F8572700A65DCF /* UIApplication+Version.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -3000,6 +3005,7 @@
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
+				668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */,
 				66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,

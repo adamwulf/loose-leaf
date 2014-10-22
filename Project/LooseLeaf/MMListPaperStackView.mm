@@ -822,6 +822,8 @@
     [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
     [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
     [self saveStacksToDisk];
+    
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasDeletedPage : @(YES)}];
 }
 
 -(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
