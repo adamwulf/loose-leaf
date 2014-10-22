@@ -112,6 +112,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
 #define kMPHasAddedPage @"Has Ever Added Page"
+#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"

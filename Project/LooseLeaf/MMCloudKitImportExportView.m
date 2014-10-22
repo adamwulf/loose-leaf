@@ -13,6 +13,7 @@
 #import "MMCloudKitImportCoordinator.h"
 #import "MMScrapPaperStackView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMCloudKitTutorialImportCoordinator.h"
 #import "Constants.h"
 #import "Mixpanel.h"
 
@@ -91,6 +92,17 @@
             [coordinator begin];
         }
     }
+    
+    
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"hasEverSeenCKTutorial"]){
+        MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
+        @synchronized(activeImports){
+            [activeImports addObject:coordinator];
+            [self saveToDiskOffMainThread];
+        }
+        [coordinator begin];
+    }
+
 }
 
 #pragma mark - Sharing
