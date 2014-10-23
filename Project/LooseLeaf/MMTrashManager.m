@@ -174,6 +174,7 @@ static MMTrashManager* _instance = nil;
 //                NSLog(@"path to delete doesn't exist %@", thisPagesPath);
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                [page setDrawableView:nil];
                 [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
             });
         });

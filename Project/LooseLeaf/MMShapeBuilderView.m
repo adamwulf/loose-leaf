@@ -30,6 +30,24 @@
     CGFloat phase;
 }
 
+
+static MMShapeBuilderView* staticShapeBuilder = nil;
+
++(MMShapeBuilderView*) staticShapeBuilderViewWithFrame:(CGRect)frame andScale:(CGFloat)scale{
+    CGRect scaledFrame = CGRectMake(0, 0, frame.size.width*scale, frame.size.height*scale);
+    if(!staticShapeBuilder){
+        staticShapeBuilder = [[MMShapeBuilderView alloc] initWithFrame:frame];
+        staticShapeBuilder.transform = CGAffineTransformMakeScale(scale, scale);
+        staticShapeBuilder.contentMode = UIViewContentModeScaleAspectFill;
+        staticShapeBuilder.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        staticShapeBuilder.clipsToBounds = YES;
+        staticShapeBuilder.opaque = NO;
+        staticShapeBuilder.backgroundColor = [UIColor clearColor];
+    }
+    staticShapeBuilder.frame = scaledFrame;
+    return staticShapeBuilder;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

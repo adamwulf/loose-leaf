@@ -8,6 +8,9 @@
 
 #import "UIView+Debug.h"
 #import <QuartzCore/QuartzCore.h>
+#import <DrawKit-iOS/JRSwizzle.h>
+#import <JotUI/JotUI.h>
+
 
 @implementation UIView (Debug)
 
@@ -18,6 +21,18 @@
 
 -(int) fullByteSize{
     return self.bounds.size.width * self.contentScaleFactor * self.bounds.size.height * self.contentScaleFactor * 4;
+}
+
+-(void) swizzle_removeFromSuperview{
+    CheckMainThread;
+    [self swizzle_removeFromSuperview];
+}
+
++(void)load{
+    NSError *error = nil;
+	[UIView jr_swizzleMethod:@selector(removeFromSuperview)
+                        withMethod:@selector(swizzle_removeFromSuperview)
+                             error:&error];
 }
 
 @end
