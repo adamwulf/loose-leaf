@@ -441,7 +441,9 @@
                 [otherArray addObject:scrap];
             }else{
                 removedScrap = scrap;
-                [removedScrap removeFromSuperview];
+                [NSThread performBlockOnMainThreadSync:^{
+                    [removedScrap removeFromSuperview];
+                }];
 //                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
