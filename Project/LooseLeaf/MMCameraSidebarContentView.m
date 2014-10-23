@@ -66,7 +66,9 @@
     if([CaptureSessionManager hasCamera] && ![CaptureSessionManager hasCameraPermission]){
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self doneLoadingPhotoAlbums];
+                @autoreleasepool {
+                    [self doneLoadingPhotoAlbums];
+                }
             });
         }];
     }
@@ -100,7 +102,9 @@
     if(self.isShowing && photoListScrollView.alpha){
         [photoListScrollView reloadData];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [photoListScrollView setContentOffset:lastCameraRollOffset animated:NO];
+            @autoreleasepool {
+                [photoListScrollView setContentOffset:lastCameraRollOffset animated:NO];
+            }
         });
     }
 }

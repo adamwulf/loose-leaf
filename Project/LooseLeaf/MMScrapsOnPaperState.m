@@ -112,125 +112,129 @@
             }
         };
         void (^blockForMainThread)() = ^{
-            if(self.isForgetful){
-                return;
-            }
-            if([self isStateLoaded]){
-                // it's possible that we were asked to load asynchronously
-                // which would add this block to the main thread, then asked
-                // again to load synchronously, which would run before
-                // this block would've had the chance. so always
-                // double check if we've already loaded before we thought
-                // we needed to.
-                return;
-            }
-            if(hasBailedOnLoadingBecauseOfMismatchedTargetState){
-                NSLog(@"MMScrapsOnPaperState main thread bailing early");
-                isLoaded = NO;
-                isLoading = NO;
-                return;
-            }
-            // load all the states async
-            if([scrapProps count]){
-                for(NSDictionary* scrapProperties in scrapProps){
-                    if(self.isForgetful){
-                        return;
-                    }
-                    @synchronized(self){
-                        if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                            hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
-                            isLoaded = NO;
-                            isLoading = NO;
-                            return;
-                        }
-                    }
-
-                    NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
-                    
-                    MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
-                    
-                    NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
-                    if(scrap && scrap.state.scrapsOnPaperState == self){
-                        //                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
-                        [props setObject:scrap forKey:@"scrap"];
-                        [scrapPropsWithState addObject:props];
-                    }else{
-                        __block MMScrapViewState* state = nil;
-                        state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
-                        if(state){
-                            [props setObject:state forKey:@"state"];
-                            [scrapPropsWithState addObject:props];
-                        }else{
-                            // failed to load scrap
-                            NSLog(@"failed to load %@ at %@", scrapUUID, scrapIDsPath);
-                        }
-                    }
-                }
-            }
-            
-            // maintain order of loaded scraps, so that they are added to the page
-            // in the correct order as they load
-            [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
-            }];
-            for(NSDictionary* scrapProperties in scrapPropsWithState){
+            @autoreleasepool {
                 if(self.isForgetful){
                     return;
                 }
-                MMScrapView* scrap = nil;
-                if([scrapProperties objectForKey:@"scrap"]){
-                    scrap = [scrapProperties objectForKey:@"scrap"];
-                    //                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
-                }else{
-                    MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
-                    scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
-                    //                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
-                    // only set properties if we built the scrap,
-                    // otherwise it's in the sidebar and we don't
-                    // own it right now
-                    [scrap setPropertiesDictionary:scrapProperties];
+                if([self isStateLoaded]){
+                    // it's possible that we were asked to load asynchronously
+                    // which would add this block to the main thread, then asked
+                    // again to load synchronously, which would run before
+                    // this block would've had the chance. so always
+                    // double check if we've already loaded before we thought
+                    // we needed to.
+                    return;
                 }
-                if(scrap){
-                    @synchronized(allLoadedScraps){
-                        [allLoadedScraps addObject:scrap];
-                    }
-                    
-                    BOOL isShownOnPage = NO;
-                    if([scrapIDsOnPage containsObject:scrap.uuid]){
-                        [self.delegate didLoadScrapInContainer:scrap];
-                        [self showScrap:scrap];
-                        isShownOnPage = YES;
-                    }else{
-                        [self.delegate didLoadScrapOutOfContainer:scrap];
-                    }
-                    
-                    if(isShownOnPage && makeEditable){
-                        [scrap loadScrapStateAsynchronously:async];
-                    }else{
-                        [scrap unloadState];
+                if(hasBailedOnLoadingBecauseOfMismatchedTargetState){
+                    NSLog(@"MMScrapsOnPaperState main thread bailing early");
+                    isLoaded = NO;
+                    isLoading = NO;
+                    return;
+                }
+                // load all the states async
+                if([scrapProps count]){
+                    for(NSDictionary* scrapProperties in scrapProps){
+                        if(self.isForgetful){
+                            return;
+                        }
+                        @synchronized(self){
+                            if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                                hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
+                                isLoaded = NO;
+                                isLoading = NO;
+                                return;
+                            }
+                        }
+                        
+                        NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
+                        
+                        MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
+                        
+                        NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                        if(scrap && scrap.state.scrapsOnPaperState == self){
+                            //                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
+                            [props setObject:scrap forKey:@"scrap"];
+                            [scrapPropsWithState addObject:props];
+                        }else{
+                            __block MMScrapViewState* state = nil;
+                            state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:self];
+                            if(state){
+                                [props setObject:state forKey:@"state"];
+                                [scrapPropsWithState addObject:props];
+                            }else{
+                                // failed to load scrap
+                                NSLog(@"failed to load %@ at %@", scrapUUID, scrapIDsPath);
+                            }
+                        }
                     }
                 }
-            }
-            @synchronized(self){
-                isLoaded = YES;
-                isLoading = NO;
-                MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
-                expectedUndoHash = [immutableState undoHash];
-                lastSavedUndoHash = [immutableState undoHash];
-                //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
-            }
-            [self.delegate didLoadAllScrapsFor:self];
-            
-            // we were asked to unload halfway through loading,
-            // so in case that unload already finished while we
-            // were creating scraps, we should re-fire the unload
-            // call, just in case
-            @synchronized(self){
-                if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                    NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
-                    dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
-                        [self unloadPaperState];
-                    });
+                
+                // maintain order of loaded scraps, so that they are added to the page
+                // in the correct order as they load
+                [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
+                }];
+                for(NSDictionary* scrapProperties in scrapPropsWithState){
+                    if(self.isForgetful){
+                        return;
+                    }
+                    MMScrapView* scrap = nil;
+                    if([scrapProperties objectForKey:@"scrap"]){
+                        scrap = [scrapProperties objectForKey:@"scrap"];
+                        //                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
+                    }else{
+                        MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
+                        scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
+                        //                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
+                        // only set properties if we built the scrap,
+                        // otherwise it's in the sidebar and we don't
+                        // own it right now
+                        [scrap setPropertiesDictionary:scrapProperties];
+                    }
+                    if(scrap){
+                        @synchronized(allLoadedScraps){
+                            [allLoadedScraps addObject:scrap];
+                        }
+                        
+                        BOOL isShownOnPage = NO;
+                        if([scrapIDsOnPage containsObject:scrap.uuid]){
+                            [self.delegate didLoadScrapInContainer:scrap];
+                            [self showScrap:scrap];
+                            isShownOnPage = YES;
+                        }else{
+                            [self.delegate didLoadScrapOutOfContainer:scrap];
+                        }
+                        
+                        if(isShownOnPage && makeEditable){
+                            [scrap loadScrapStateAsynchronously:async];
+                        }else{
+                            [scrap unloadState];
+                        }
+                    }
+                }
+                @synchronized(self){
+                    isLoaded = YES;
+                    isLoading = NO;
+                    MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
+                    expectedUndoHash = [immutableState undoHash];
+                    lastSavedUndoHash = [immutableState undoHash];
+                    //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
+                }
+                [self.delegate didLoadAllScrapsFor:self];
+                
+                // we were asked to unload halfway through loading,
+                // so in case that unload already finished while we
+                // were creating scraps, we should re-fire the unload
+                // call, just in case
+                @synchronized(self){
+                    if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                        NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
+                        dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
+                            @autoreleasepool {
+                                [self unloadPaperState];
+                            }
+                        });
+                    }
                 }
             }
         };
@@ -259,17 +263,21 @@
         }
     }else if([self isStateLoaded] && makeEditable){
         void (^loadScrapsForAlreadyLoadedState)() = ^(void) {
-            if([self isStateLoaded]){
-                for(MMScrapView* scrap in self.scrapsOnPaper){
-                    [scrap loadScrapStateAsynchronously:async];
+            @autoreleasepool {
+                if([self isStateLoaded]){
+                    for(MMScrapView* scrap in self.scrapsOnPaper){
+                        [scrap loadScrapStateAsynchronously:async];
+                    }
                 }
-            }
-            @synchronized(self){
-                if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                    NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
-                    dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
-                        [self unloadPaperState];
-                    });
+                @synchronized(self){
+                    if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
+                        NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
+                        dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
+                            @autoreleasepool {
+                                [self unloadPaperState];
+                            }
+                        });
+                    }
                 }
             }
         };
@@ -337,7 +345,9 @@
                 // this will add the unload block to be the very next block to run
                 // asynchrously from the currently empty importExportStateQueue queue
                 dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-                    [self unloadPaperState];
+                    @autoreleasepool {
+                        [self unloadPaperState];
+                    }
                 });
             }
         }

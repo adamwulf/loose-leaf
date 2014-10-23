@@ -58,7 +58,9 @@
     // popover has been dismissed. close out the window
     if([self.subviews count] - 1 == 1){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self killPresentationWindow];
+            @autoreleasepool {
+                [self killPresentationWindow];
+            }
         });
     }
 }
