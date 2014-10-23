@@ -9,7 +9,6 @@
 #import "MMExportablePaperView+Trash.h"
 #import "MMScrapViewState+Trash.h"
 #import "MMPageUndoRedoManager+Trash.h"
-#import "MMScrapCollectionState+Trash.h"
 
 @implementation MMExportablePaperView (Trash)
 

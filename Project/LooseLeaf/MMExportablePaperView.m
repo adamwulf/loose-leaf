@@ -357,7 +357,7 @@
     //
     // first check the bezel to see if the scrap exists outside the page
     if([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
+//        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
         return;
     }
     
@@ -399,7 +399,7 @@
             if(checkScrapExistsInUndoRedoManager()){
                 // the scrap exists in the page's undo manager,
                 // so don't bother deleting it
-                NSLog(@"TrashManager found scrap in page's undo state. keeping files.");
+//                NSLog(@"TrashManager found scrap in page's undo state. keeping files.");
                 return;
             }
         }
@@ -425,7 +425,7 @@
                     // and ensure no pending saves
                     [[self.scrapsOnPaperState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                 }else{
-                    NSLog(@"disrespect to page state saves time");
+//                    NSLog(@"disrespect to page state saves time");
                 }
             };
             if([self.scrapsOnPaperState isStateLoaded]){
@@ -476,13 +476,13 @@
                 });
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
-                NSLog(@"waiting for scrap to finish loading before deleting...");
+//                NSLog(@"waiting for scrap to finish loading before deleting...");
             }
             [NSThread sleepForTimeInterval:1];
             if(scrapThatIsBeingDeleted.state.hasEditsToSave){
-                NSLog(@"scrap was saved, still has edits? %d", scrapThatIsBeingDeleted.state.hasEditsToSave);
+//                NSLog(@"scrap was saved, still has edits? %d", scrapThatIsBeingDeleted.state.hasEditsToSave);
             }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
-                NSLog(@"scrap state is still loading");
+//                NSLog(@"scrap state is still loading");
             }
         }
         
@@ -496,16 +496,16 @@
             if(isDirectory){
                 NSError* err = nil;
                 if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                    NSLog(@"deleted scrap at %@ (scrapThatIsBeingDeleted is %p)", scrapPath, scrapThatIsBeingDeleted);
+                    NSLog(@"deleted scrap %@", scrapUUID);
                 }
                 if(err){
-                    NSLog(@"error deleting %@: %@", scrapPath, err);
+//                    NSLog(@"error deleting %@: %@", scrapPath, err);
                 }
             }else{
-                NSLog(@"found path, but it isn't a directory: %@", scrapPath);
+//                NSLog(@"found path, but it isn't a directory: %@", scrapPath);
             }
         }else{
-            NSLog(@"path to delete doesn't exist %@", scrapPath);
+//            NSLog(@"path to delete doesn't exist %@", scrapPath);
         }
     });
 }

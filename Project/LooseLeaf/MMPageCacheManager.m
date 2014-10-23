@@ -260,12 +260,13 @@ static MMPageCacheManager* _instance = nil;
     }
 }
 
--(void) forgetAboutPage:(MMPaperView*)page{
+-(void) forgetAboutPage:(MMEditablePaperView*)page{
     @synchronized(stateLoadedPages){
         if([stateLoadedPages containsObject:page]){
             [stateLoadedPages removeObject:page];
         }
         if([pagesWithLoadedCacheImages containsObject:page]){
+            [page unloadCachedPreview];
             [pagesWithLoadedCacheImages removeObject:page];
         }
         if(currentEditablePage == page){

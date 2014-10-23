@@ -1428,10 +1428,12 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
+    CheckMainThread;
     if(!scrappedImgViewImage.isDecompressed){
         [scrappedImgViewImage cancel];
-        scrappedImgViewImage = nil;
     }
+    [self setThumbnailTo:nil];
+    scrappedImgViewImage = nil;
     [cachedImgView removeFromSuperview];
     cachedImgView = nil;
 }
