@@ -65,11 +65,13 @@
 
 -(void) saveToDiskOffMainThread{
     dispatch_block_t saveBlock = ^{
-        NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
-        [NSFileManager ensureDirectoryExistsAtPath:outputPath];
-        @synchronized(activeImports){
-            [[NSKeyedArchiver archivedDataWithRootObject:activeImports] writeToFile:[outputPath stringByAppendingPathComponent:@"imports.data"] atomically:YES];
-            NSLog(@"saved imports to disk");
+        @autoreleasepool {
+            NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
+            [NSFileManager ensureDirectoryExistsAtPath:outputPath];
+            @synchronized(activeImports){
+                [[NSKeyedArchiver archivedDataWithRootObject:activeImports] writeToFile:[outputPath stringByAppendingPathComponent:@"imports.data"] atomically:YES];
+                NSLog(@"saved imports to disk");
+            }
         }
     };
     

@@ -133,7 +133,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setEditable:(BOOL)isEditable{
-    if(isEditable && (!drawableView || drawableView.hidden)){
+    if(isEditable && !drawableView){
         debug_NSLog(@"setting editable w/o canvas");
     }
     if(isEditable){
@@ -178,6 +178,7 @@ dispatch_queue_t importThumbnailQueue;
     if(_drawableView && ![self isStateLoaded]){
         NSLog(@"oh no3");
     }
+    NSLog(@"page %@ set drawable view to %p", self.uuid, _drawableView);
     if(drawableView != _drawableView){
         if(!_drawableView && drawableView){
             [drawableView removeFromSuperview];

@@ -11,7 +11,7 @@
 
 @class MMLooseLeafViewController, MMPresentationWindow;
 
-@interface MMAppDelegate : UIResponder <UIApplicationDelegate>
+@interface MMAppDelegate : UIResponder <UIApplicationDelegate,CrashlyticsDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

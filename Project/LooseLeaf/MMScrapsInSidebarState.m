@@ -152,13 +152,15 @@
         }
     }else if([self isStateLoaded] && makeEditable){
         void (^block2)() = ^(void) {
-            if([self isStateLoaded]){
-                @synchronized(allLoadedScraps){
-                    for(MMScrapView* scrap in allLoadedScraps){
-                        [scrap loadScrapStateAsynchronously:async];
-                        @synchronized(self){
-                            if(isUnloading){
-                                @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+            @autoreleasepool {
+                if([self isStateLoaded]){
+                    @synchronized(allLoadedScraps){
+                        for(MMScrapView* scrap in allLoadedScraps){
+                            [scrap loadScrapStateAsynchronously:async];
+                            @synchronized(self){
+                                if(isUnloading){
+                                    @throw [NSException exceptionWithName:@"StateInconsistentException" reason:@"loading during unloading" userInfo:nil];
+                                }
                             }
                         }
                     }
@@ -276,17 +278,19 @@
     NSLog(@"sidebar needs to delete assets for %@", scrapUUID);
     
     dispatch_async([[MMTrashManager sharedInstance] trashManagerQueue], ^{
-        NSString* directoryForScrap = [self directoryPathForScrapUUID:scrapUUID];
-        
-        if(![[NSFileManager defaultManager] fileExistsAtPath:directoryForScrap]){
-            NSLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
-        }else{
-            NSError* err = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:directoryForScrap error:&err];
-            if(err){
-                NSLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
+        @autoreleasepool {
+            NSString* directoryForScrap = [self directoryPathForScrapUUID:scrapUUID];
+            
+            if(![[NSFileManager defaultManager] fileExistsAtPath:directoryForScrap]){
+                NSLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
             }else{
-                NSLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
+                NSError* err = nil;
+                [[NSFileManager defaultManager] removeItemAtPath:directoryForScrap error:&err];
+                if(err){
+                    NSLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
+                }else{
+                    NSLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
+                }
             }
         }
     });

@@ -27,6 +27,7 @@
     CFAbsoluteTime sessionStartStamp;
     NSTimer* durationTimer;
     CFAbsoluteTime resignedActiveAtStamp;
+    BOOL didRecieveReportFromCrashlytics;
 }
 
 @synthesize window = _window;
@@ -40,9 +41,10 @@
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
-    [[NSThread mainThread] performBlock:^{
-        [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    [[Crashlytics sharedInstance] setDelegate:self];
 
+    [[NSThread mainThread] performBlock:^{
         [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
         [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
         [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
@@ -81,12 +83,14 @@
     }
     
     NSDate* dateOfCrash = [self dateOfDeathIfAny];
-    if(dateOfCrash){
-        // we shouldn't have a kAppLaunchStatus if we shut down correctly,
-        // log as a possible memory crash or user force-close
-        [self trackDidCrashFromMemoryForDate:dateOfCrash];
-    }
-
+    [[NSThread mainThread] performBlock:^{
+        if(dateOfCrash && !didRecieveReportFromCrashlytics){
+            // we shouldn't have a kAppLaunchStatus if we shut down correctly,
+            // log as a possible memory crash or user force-close
+            [self trackDidCrashFromMemoryForDate:dateOfCrash];
+        }
+    } afterDelay:5];
+    
     return YES;
 }
 
@@ -288,6 +292,37 @@
 -(void) removeDateOfLaunch{
     NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
     [[NSFileManager defaultManager] removeItemAtPath:pathOfLifecycleTrackingFile error:nil];
+}
+
+#pragma mark - Crashlytics reporting
+
+-(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
+    didRecieveReportFromCrashlytics = YES;
+    
+    debug_NSLog(@"Did Track Crash from Exception");
+    debug_NSLog(@"==============================");
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
+    
+    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+    [crashProperties setObject:@"Exception" forKey:@"Cause"];
+    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
+    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
+    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
+    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
+    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
+    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
+    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
+    
+    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
+    }];
+    
+    @try{
+        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+    }@catch(id e){
+        // noop
+    }
 }
 
 @end

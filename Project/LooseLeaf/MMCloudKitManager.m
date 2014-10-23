@@ -78,10 +78,12 @@ static NSString* cloudKitFilesPath;
         currentState = [[MMCloudKitBaseState alloc] init];
         
         dispatch_async([MMCloudKitManager messageQueue], ^{
-            incomingMessageState = [NSMutableDictionary dictionaryWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
-            if(!incomingMessageState){
-                incomingMessageState = [NSMutableDictionary dictionary];
-                [incomingMessageState setObject:@[] forKey:kMessagesSinceLastFetchKey];
+            @autoreleasepool {
+                incomingMessageState = [NSMutableDictionary dictionaryWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
+                if(!incomingMessageState){
+                    incomingMessageState = [NSMutableDictionary dictionary];
+                    [incomingMessageState setObject:@[] forKey:kMessagesSinceLastFetchKey];
+                }
             }
         });
         
@@ -136,8 +138,10 @@ static NSString* cloudKitFilesPath;
             // clear out any messages that we're tracking
             // since our last fetch-all-notifications
             dispatch_async([MMCloudKitManager messageQueue], ^{
-                @synchronized(incomingMessageState){
-                    [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+                @autoreleasepool {
+                    @synchronized(incomingMessageState){
+                        [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+                    }
                 }
             });
         }else{
@@ -155,13 +159,15 @@ static NSString* cloudKitFilesPath;
     // this message yet. if we have, then we should just
     // bail out here.
     dispatch_async([MMCloudKitManager messageQueue], ^{
-        @synchronized(incomingMessageState){
-            NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-            hadAlreadyProcessedThisMessage = [messagesSinceLastFetch containsObject:unprocessedMessage];
-            if(!hadAlreadyProcessedThisMessage){
-                // if we haven't processed it yet, then go ahead
-                // and mark it as processed
-                [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
+        @autoreleasepool {
+            @synchronized(incomingMessageState){
+                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+                hadAlreadyProcessedThisMessage = [messagesSinceLastFetch containsObject:unprocessedMessage];
+                if(!hadAlreadyProcessedThisMessage){
+                    // if we haven't processed it yet, then go ahead
+                    // and mark it as processed
+                    [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
+                }
             }
         }
         dispatch_semaphore_signal(sema1);

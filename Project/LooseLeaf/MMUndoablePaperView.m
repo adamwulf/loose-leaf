@@ -48,7 +48,9 @@
     [super didLoadAllScrapsFor:scrapState];
 
     dispatch_block_t block = ^{
-        [undoRedoManager loadFrom:[self undoStatePath]];
+        @autoreleasepool {
+            [undoRedoManager loadFrom:[self undoStatePath]];
+        }
     };
     
     dispatch_async([self serialBackgroundQueue], block);
@@ -81,9 +83,11 @@
         // if its loaded
         // track if all of our scraps have saved
         dispatch_async([self serialBackgroundQueue], ^(void) {
-            // also write undostack to disk
-            if(undoRedoManager.isLoaded){
-                [undoRedoManager saveTo:[self undoStatePath]];
+            @autoreleasepool {
+                // also write undostack to disk
+                if(undoRedoManager.isLoaded){
+                    [undoRedoManager saveTo:[self undoStatePath]];
+                }
             }
             dispatch_semaphore_signal(sema2);
         });

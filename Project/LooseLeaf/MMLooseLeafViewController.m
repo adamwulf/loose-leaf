@@ -38,8 +38,6 @@
             [TestFlight takeOff:kTestflightAppToken];
         }];
 
-        [[Crashlytics sharedInstance] setDelegate:self];
-
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
@@ -172,36 +170,6 @@
     return NO;
 }
 
-
-#pragma mark - Crashlytics reporting
-
--(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
-    debug_NSLog(@"Did Track Crash from Exception");
-    debug_NSLog(@"==============================");
-    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
-    
-    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
-    [crashProperties setObject:@"Exception" forKey:@"Cause"];
-    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
-    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
-    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
-    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
-    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
-    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
-    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
-    
-    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
-    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
-    }];
-    
-    @try{
-        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
-    }@catch(id e){
-        // noop
-    }
-
-}
 
 #pragma mark - application state
 

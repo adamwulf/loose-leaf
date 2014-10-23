@@ -59,22 +59,24 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSDate *now = [[NSDate alloc] init];
-        NSString *theDate = [dateFormatter stringFromDate:now];
-        NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
-        UIImage* imageToShare = self.delegate.imageToShare;
-        [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
-        NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
-
-        controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
-        controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
-        controller.delegate = self;
-        MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-        UIView* presentationView = presentationWindow.rootViewController.view;
-        CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
-        [presentationWindow makeKeyAndVisible];
-        if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
-            [self performAirDropAction];
+        @autoreleasepool {
+            NSDate *now = [[NSDate alloc] init];
+            NSString *theDate = [dateFormatter stringFromDate:now];
+            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
+            UIImage* imageToShare = self.delegate.imageToShare;
+            [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
+            NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
+            
+            controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+            controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
+            controller.delegate = self;
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            UIView* presentationView = presentationWindow.rootViewController.view;
+            CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
+            [presentationWindow makeKeyAndVisible];
+            if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
+                [self performAirDropAction];
+            }
         }
     });
 }

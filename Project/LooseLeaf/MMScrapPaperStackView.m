@@ -1788,8 +1788,10 @@ int skipAll = NO;
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     dispatch_async(dispatch_get_main_queue(), ^{
-        [sharePageSidebar updateInterfaceTo:orientation];
-        [importImageSidebar updateInterfaceTo:orientation];
+        @autoreleasepool {
+            [sharePageSidebar updateInterfaceTo:orientation];
+            [importImageSidebar updateInterfaceTo:orientation];
+        }
     });
 }
 

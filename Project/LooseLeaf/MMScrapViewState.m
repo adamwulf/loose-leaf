@@ -302,12 +302,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-            if(self.isForgetful){
-                NSLog(@"forget: %@ skipping scrap state save1", self.uuid);
-                doneSavingBlock(NO);
-                return;
-            }
             @autoreleasepool {
+                if(self.isForgetful){
+                    NSLog(@"forget: %@ skipping scrap state save1", self.uuid);
+                    doneSavingBlock(NO);
+                    return;
+                }
                 [lock lock];
 //                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
@@ -425,64 +425,66 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 //    NSLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
-        @synchronized(self){
-            if(!targetIsLoadedState){
-                return;
-            }
-        }
-//#ifdef DEBUG
-//        NSLog(@"sleeping for %@", self.uuid);
-//        [NSThread sleepForTimeInterval:5];
-//        NSLog(@"woke up for %@", self.uuid);
-//#endif
         @autoreleasepool {
-//            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
-            // load state, if we have any.
-            __block BOOL goalIsLoaded = NO;
-            [NSThread performBlockOnMainThreadSync:^{
-                @synchronized(self){
-                    goalIsLoaded = targetIsLoadedState;
+            @synchronized(self){
+                if(!targetIsLoadedState){
+                    return;
                 }
+            }
+            //#ifdef DEBUG
+            //        NSLog(@"sleeping for %@", self.uuid);
+            //        [NSThread sleepForTimeInterval:5];
+            //        NSLog(@"woke up for %@", self.uuid);
+            //#endif
+            @autoreleasepool {
+                //            NSLog(@"(%@) loading2: %d %d", uuid, targetIsLoadedState, isLoadingState);
+                // load state, if we have any.
+                __block BOOL goalIsLoaded = NO;
+                [NSThread performBlockOnMainThreadSync:^{
+                    @synchronized(self){
+                        goalIsLoaded = targetIsLoadedState;
+                    }
+                    if([self isScrapStateLoaded]){
+                        // scrap state was loaded synchronously while
+                        // this block was pending to finish a load
+                        //                    NSLog(@"bailed on async load, it finished sync ahead of us");
+                        return;
+                    }
+                    @synchronized(self){
+                        if(!goalIsLoaded){
+                            // we don't need to load after all, so don't build
+                            // any drawable view
+                            NSLog(@"saved building JotView we didn't need");
+                        }else{
+                            // add our drawable view to our contents
+                            drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                        }
+                    }
+                }];
+                [lock lock];
+                // can't lock before the call to main thread or any
+                // synchronous loads from the main thread could
+                // deadlock us
                 if([self isScrapStateLoaded]){
                     // scrap state was loaded synchronously while
                     // this block was pending to finish a load
-//                    NSLog(@"bailed on async load, it finished sync ahead of us");
+                    //                NSLog(@"bailed on async load, it finished sync ahead of us");
+                    [lock unlock];
                     return;
                 }
-                @synchronized(self){
-                    if(!goalIsLoaded){
-                        // we don't need to load after all, so don't build
-                        // any drawable view
-                        NSLog(@"saved building JotView we didn't need");
-                    }else{
-                        // add our drawable view to our contents
-                        drawableView = [[JotView alloc] initWithFrame:drawableBounds];
-                    }
+                if(!goalIsLoaded){
+                    NSLog(@"saved building JotViewStateProxy we didn't need");
+                }else{
+                    // load drawable view information here
+                    drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
+                    [drawableViewState loadJotStateAsynchronously:async
+                                                         withSize:drawableView.pagePtSize
+                                                         andScale:drawableView.scale
+                                                       andContext:drawableView.context
+                                                 andBufferManager:[[JotBufferManager alloc] init]];
                 }
-            }];
-            [lock lock];
-            // can't lock before the call to main thread or any
-            // synchronous loads from the main thread could
-            // deadlock us
-            if([self isScrapStateLoaded]){
-                // scrap state was loaded synchronously while
-                // this block was pending to finish a load
-//                NSLog(@"bailed on async load, it finished sync ahead of us");
                 [lock unlock];
-                return;
             }
-            if(!goalIsLoaded){
-                NSLog(@"saved building JotViewStateProxy we didn't need");
-            }else{
-                // load drawable view information here
-                drawableViewState = [[JotViewStateProxy alloc] initWithDelegate:self];
-                [drawableViewState loadJotStateAsynchronously:async
-                                                  withSize:drawableView.pagePtSize
-                                                  andScale:drawableView.scale
-                                                andContext:drawableView.context
-                                          andBufferManager:[[JotBufferManager alloc] init]];
-            }
-            [lock unlock];
         }
     };
 
