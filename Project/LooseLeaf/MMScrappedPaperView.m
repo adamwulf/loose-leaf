@@ -1429,6 +1429,8 @@
 
 -(void) dealloc{
     CheckMainThread;
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.scrappedThumbnailPath];
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledScrappedThumbnailPath];
     if(!scrappedImgViewImage.isDecompressed){
         [scrappedImgViewImage cancel];
     }
