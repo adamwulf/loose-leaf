@@ -185,7 +185,7 @@ _Pragma("clang diagnostic pop") \
 
 // cache sizes
 #define kMMLoadImageCacheSize 10
-#define kMMPageCacheManagerSize 3
+#define kMMPageCacheManagerSize 1
 
 #ifdef __cplusplus
 extern "C" {
