@@ -239,8 +239,10 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) setScrapsOnPaperState:(MMScrapCollectionState *)_scrapsOnPaperState{
-    scrapsOnPaperState = _scrapsOnPaperState;
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledThumbImageFile];
     // reset all path caches
+    scrapsOnPaperState = _scrapsOnPaperState;
     scrapPath = nil;
     scrapPropertiesPlistPath = nil;
     inkImageFile = nil;

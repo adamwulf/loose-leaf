@@ -195,6 +195,7 @@ static MMPageCacheManager* _instance = nil;
                     // current editable is saved, so now we need to unload it
                     // so we can load in the newly editable page
                     [currentEditablePage unloadState];
+                    currentEditablePage = nil;
                     NSLog(@"MMPageCacheManager: unloaded current editable page in prep for new editable: currently %d loaded pages", (int) [stateLoadedPages count]);
                 }else if(![replacementEditablePage isStateLoaded]){
                     // now we need to load the state for the page
@@ -260,12 +261,13 @@ static MMPageCacheManager* _instance = nil;
     }
 }
 
--(void) forgetAboutPage:(MMPaperView*)page{
+-(void) forgetAboutPage:(MMEditablePaperView*)page{
     @synchronized(stateLoadedPages){
         if([stateLoadedPages containsObject:page]){
             [stateLoadedPages removeObject:page];
         }
         if([pagesWithLoadedCacheImages containsObject:page]){
+            [page unloadCachedPreview];
             [pagesWithLoadedCacheImages removeObject:page];
         }
         if(currentEditablePage == page){

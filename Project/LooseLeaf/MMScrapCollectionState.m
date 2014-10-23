@@ -17,6 +17,7 @@
 
 @synthesize allLoadedScraps;
 @synthesize lastSavedUndoHash;
+@synthesize isForgetful;
 
 static dispatch_queue_t importExportStateQueue;
 
@@ -51,7 +52,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 #pragma mark - Properties
 
 -(BOOL) hasEditsToSave{
-    return isLoaded && (hasEditsToSave || expectedUndoHash != lastSavedUndoHash);
+    return !isForgetful && isLoaded && (hasEditsToSave || expectedUndoHash != lastSavedUndoHash);
 }
 
 -(NSUInteger) lastSavedUndoHash{

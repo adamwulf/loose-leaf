@@ -70,25 +70,16 @@ static MMTrashManager* _instance = nil;
     NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;
     [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
+    [page forgetAllPendingEdits];
     dispatch_async([self trashManagerQueue], ^{
         //
         // Step 1: ensure the page is in a stable saved state
         //         with no pending threads active
         dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-        
-        if(page.hasEditsToSave){
-            NSLog(@"page should forget");
-            [page forgetAllPendingEdits];
-            if(page.hasEditsToSave){
-                NSLog(@"forget failed");
-            }else{
-                NSLog(@"forget success");
-            }
-        }
-        
+                
         while(page.hasEditsToSave || page.isStateLoading || page.isCurrentlySaving){
             if(page.hasEditsToSave){
-                NSLog(@"deleting a page with active edits");
+//                NSLog(@"deleting a page with active edits");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if(page.hasEditsToSave){
                         [page saveToDisk:^(BOOL didSaveEdits) {
@@ -98,15 +89,15 @@ static MMTrashManager* _instance = nil;
                 });
                 dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             }else if(page.isStateLoading){
-                NSLog(@"waiting for page to finish loading before deleting...");
+//                NSLog(@"waiting for page to finish loading before deleting...");
             }else if(page.isCurrentlySaving){
-                NSLog(@"waiting for page to finish saving before deleting...");
+//                NSLog(@"waiting for page to finish saving before deleting...");
             }
             [NSThread sleepForTimeInterval:.3];
             if([page hasEditsToSave]){
-                NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
+//                NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
             }else if([page isStateLoading]){
-                NSLog(@"page state is still loading");
+//                NSLog(@"page state is still loading");
             }
         }
         // build some directories
@@ -141,20 +132,20 @@ static MMTrashManager* _instance = nil;
         // to run /after/ those scraps (if any) have been processed.
         dispatch_async([self trashManagerQueue], ^{
             
-            NSLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
-            NSLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
+//            NSLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
+//            NSLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
             
-            NSString* contentsOfBezel = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel/Scraps"];
+//            NSString* contentsOfBezel = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel/Scraps"];
             
             //
             // Step 3: Transfer any remaining scraps to the bezel
             NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
-            NSArray* scrapsInBezelUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:contentsOfBezel error:nil];
-            NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
-            NSLog(@"saved scraps in bezel: %@", scrapsInBezelUUIDs);
+//            NSArray* scrapsInBezelUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:contentsOfBezel error:nil];
+//            NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
+//            NSLog(@"saved scraps in bezel: %@", scrapsInBezelUUIDs);
             
             if([thisPagesSavedScrapUUIDs count]){
-                NSLog(@"page wasn't able to delete all scraps.");
+//                NSLog(@"page wasn't able to delete all scraps.");
             }
             
             // TODO: check the bezel to see if we should keep any scraps,
@@ -170,18 +161,20 @@ static MMTrashManager* _instance = nil;
                 if(isDirectory){
                     NSError* err = nil;
                     if([[NSFileManager defaultManager] removeItemAtPath:thisPagesPath error:&err]){
-                        NSLog(@"deleted page at %@", thisPagesPath);
+//                        NSLog(@"deleted page at %@", thisPagesPath);
+                        NSLog(@"deleted page %@", page.uuid);
                     }
                     if(err){
-                        NSLog(@"error deleting %@: %@", thisPagesPath, err);
+//                        NSLog(@"error deleting %@: %@", thisPagesPath, err);
                     }
                 }else{
-                    NSLog(@"found path, but it isn't a directory %@", thisPagesPath);
+//                    NSLog(@"found path, but it isn't a directory %@", thisPagesPath);
                 }
             }else{
-                NSLog(@"path to delete doesn't exist %@", thisPagesPath);
+//                NSLog(@"path to delete doesn't exist %@", thisPagesPath);
             }
             dispatch_async(dispatch_get_main_queue(), ^{
+                [page setDrawableView:nil];
                 [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
             });
         });

@@ -64,12 +64,9 @@
 #pragma mark - Save and Load
 
 -(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
-//    if(async){
-//        [[NSThread mainThread] performBlock:^{
-//            [[Crashlytics sharedInstance] crash];
-//        } afterDelay:5];
-//    }
-
+    if(self.isForgetful){
+        return;
+    }
     CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue]);
     if(![self isStateLoaded]){
         __block NSArray* scrapProps;
@@ -92,6 +89,9 @@
         void (^blockForImportExportStateQueue)() = ^(void) {
             CheckThreadMatches([NSThread isMainThread] || [MMTrashManager isTrashManagerQueue] || [MMScrapCollectionState isImportExportStateQueue]);
             @autoreleasepool {
+                if(self.isForgetful){
+                    return;
+                }
 //#ifdef DEBUG
 //                [NSThread sleepForTimeInterval:5];
 //#endif
@@ -112,6 +112,9 @@
             }
         };
         void (^blockForMainThread)() = ^{
+            if(self.isForgetful){
+                return;
+            }
             if([self isStateLoaded]){
                 // it's possible that we were asked to load asynchronously
                 // which would add this block to the main thread, then asked
@@ -130,6 +133,9 @@
             // load all the states async
             if([scrapProps count]){
                 for(NSDictionary* scrapProperties in scrapProps){
+                    if(self.isForgetful){
+                        return;
+                    }
                     @synchronized(self){
                         if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
                             hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
@@ -168,6 +174,9 @@
                 return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
             }];
             for(NSDictionary* scrapProperties in scrapPropsWithState){
+                if(self.isForgetful){
+                    return;
+                }
                 MMScrapView* scrap = nil;
                 if([scrapProperties objectForKey:@"scrap"]){
                     scrap = [scrapProperties objectForKey:@"scrap"];
@@ -432,8 +441,10 @@
                 [otherArray addObject:scrap];
             }else{
                 removedScrap = scrap;
-                [removedScrap removeFromSuperview];
-                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
+                [NSThread performBlockOnMainThreadSync:^{
+                    [removedScrap removeFromSuperview];
+                }];
+//                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;

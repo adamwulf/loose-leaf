@@ -150,23 +150,19 @@ dispatch_queue_t importThumbnailQueue;
 
     
 -(void) generateDebugView:(BOOL)create{
+    CheckMainThread;
     if(create){
+        NSLog(@"MMEditablePaperView: CREATE shape view for %@", self.uuid);
         CGFloat scale = [[UIScreen mainScreen] scale];
         CGRect boundsForShapeBuilder = self.contentView.bounds;
         boundsForShapeBuilder = CGRectApplyAffineTransform(boundsForShapeBuilder, CGAffineTransformMakeScale(1/scale, 1/scale));
-        shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:boundsForShapeBuilder];
-        shapeBuilderView.transform = CGAffineTransformMakeScale(scale, scale);
-        //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
-        //        polygonDebugView.layer.borderWidth = 10;
-        shapeBuilderView.frame = self.contentView.bounds;
-        shapeBuilderView.contentMode = UIViewContentModeScaleAspectFill;
-        shapeBuilderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        shapeBuilderView.clipsToBounds = YES;
-        shapeBuilderView.opaque = NO;
-        shapeBuilderView.backgroundColor = [UIColor clearColor];
+        shapeBuilderView = [MMShapeBuilderView staticShapeBuilderViewWithFrame:boundsForShapeBuilder andScale:scale];
         [self.contentView addSubview:shapeBuilderView];
     }else{
-        [shapeBuilderView removeFromSuperview];
+        NSLog(@"MMEditablePaperView: DESTROY shape view for %@", self.uuid);
+        if(shapeBuilderView.superview == self.contentView){
+            [shapeBuilderView removeFromSuperview];
+        }
         shapeBuilderView = nil;
     }
 }

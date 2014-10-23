@@ -1428,10 +1428,14 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
+    CheckMainThread;
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.scrappedThumbnailPath];
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledScrappedThumbnailPath];
     if(!scrappedImgViewImage.isDecompressed){
         [scrappedImgViewImage cancel];
-        scrappedImgViewImage = nil;
     }
+    [self setThumbnailTo:nil];
+    scrappedImgViewImage = nil;
     [cachedImgView removeFromSuperview];
     cachedImgView = nil;
 }
