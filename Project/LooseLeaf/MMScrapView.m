@@ -595,6 +595,19 @@
     p3 = CGPointApplyAffineTransform(p3, flipTransform);
     p4 = CGPointApplyAffineTransform(p4, flipTransform);
     
+    // now normalize from the drawable view size
+    // vs its texture backing size
+    CGFloat widthRatio = (stampSize.width / otherTexture.pixelSize.width);
+    CGFloat heightRatio = (stampSize.height / otherTexture.pixelSize.height);
+    p1.x *= widthRatio;
+    p1.y *= heightRatio;
+    p2.x *= widthRatio;
+    p2.y *= heightRatio;
+    p3.x *= widthRatio;
+    p3.y *= heightRatio;
+    p4.x *= widthRatio;
+    p4.y *= heightRatio;
+    
     // now stamp our texture onto the other scrap using these
     // texture coordinates
     [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4 withTextureSize:stampSize];
