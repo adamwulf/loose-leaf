@@ -99,7 +99,6 @@ _Pragma("clang diagnostic pop") \
 #define kMPShareStatusTencentWeibo @"Share Status: Tencent Weibo"
 #define kMPShareStatusSinaWeibo @"Share Status: Sina Weibo"
 
-
 // MixPanel People Properties
 #define kMPStatScissorSegments @"Stat: Scissor Segment Count"
 #define kMPStatScrapPathSegments @"Stat: Scrap Segment Count"
@@ -126,8 +125,10 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfSocialExports @"Number of Social Media Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPHasZoomedToPage @"Has Zoomed Into Page"
+#define kMPHasDeletedPage @"Has Deleted Page"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPNumberOfMemoryCrashes @"Number of Mem Crashes"
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
@@ -184,7 +185,7 @@ _Pragma("clang diagnostic pop") \
 
 // cache sizes
 #define kMMLoadImageCacheSize 10
-#define kMMPageCacheManagerSize 3
+#define kMMPageCacheManagerSize 1
 
 #ifdef __cplusplus
 extern "C" {

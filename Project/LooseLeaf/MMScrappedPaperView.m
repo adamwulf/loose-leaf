@@ -1339,9 +1339,6 @@
 
 -(void) unloadCachedPreview{
     @autoreleasepool {
-        if(self == [[MMPageCacheManager sharedInstance] currentEditablePage]){
-            NSLog(@"what12");
-        }
         @synchronized(self){
             isAskedToLoadThumbnail = NO;
         }

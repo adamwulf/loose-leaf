@@ -657,12 +657,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
  * this method allows us to stamp an arbitrary texture onto our drawable view, using the input
  * texture coordinates. the size of the stamp is always assumed to be our entire view.
  */
--(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4{
+-(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 withTextureSize:(CGSize)textureSize{
     CGSize roundedDrawableBounds = self.drawableBounds.size;
     roundedDrawableBounds.width = ceilf(roundedDrawableBounds.width);
     roundedDrawableBounds.height = ceilf(roundedDrawableBounds.height);
     [drawableView drawBackingTexture:texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 clippingPath:self.bezierPath
-                     andClippingSize:roundedDrawableBounds];
+                     andClippingSize:roundedDrawableBounds withTextureSize:textureSize];
     [drawableView forceAddEmptyStroke];
 }
 

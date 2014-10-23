@@ -766,9 +766,9 @@ struct SidebarButton{
         }
     }
     
-    
     if([self hasPages]){
         // load the state for the top page in the visible stack
+        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
         [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                          withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
                                                          andScale:[MMPageCacheManager sharedInstance].drawableView.scale
