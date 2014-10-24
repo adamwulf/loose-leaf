@@ -761,6 +761,9 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     // now load the background image from disk, if any
     [replacementBackgroundView loadBackgroundFromDiskWithProperties:properties];
     [self setBackgroundView:replacementBackgroundView];
+    
+    UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+    [self setActiveThumbnailImage:thumb];
 }
 
 #pragma mark - dealloc
