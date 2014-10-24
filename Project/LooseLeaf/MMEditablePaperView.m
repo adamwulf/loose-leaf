@@ -150,14 +150,14 @@ dispatch_queue_t importThumbnailQueue;
 -(void) generateDebugView:(BOOL)create{
     CheckMainThread;
     if(create){
-        NSLog(@"MMEditablePaperView: CREATE shape view for %@", self.uuid);
+//        NSLog(@"MMEditablePaperView: CREATE shape view for %@", self.uuid);
         CGFloat scale = [[UIScreen mainScreen] scale];
         CGRect boundsForShapeBuilder = self.contentView.bounds;
         boundsForShapeBuilder = CGRectApplyAffineTransform(boundsForShapeBuilder, CGAffineTransformMakeScale(1/scale, 1/scale));
         shapeBuilderView = [MMShapeBuilderView staticShapeBuilderViewWithFrame:boundsForShapeBuilder andScale:scale];
         [self.contentView addSubview:shapeBuilderView];
     }else{
-        NSLog(@"MMEditablePaperView: DESTROY shape view for %@", self.uuid);
+//        NSLog(@"MMEditablePaperView: DESTROY shape view for %@", self.uuid);
         if(shapeBuilderView.superview == self.contentView){
             [shapeBuilderView removeFromSuperview];
         }
@@ -176,7 +176,7 @@ dispatch_queue_t importThumbnailQueue;
     if(_drawableView && ![self isStateLoaded]){
         NSLog(@"oh no3");
     }
-    NSLog(@"page %@ set drawable view to %p", self.uuid, _drawableView);
+//    NSLog(@"page %@ set drawable view to %p", self.uuid, _drawableView);
     if(drawableView != _drawableView){
         if(!_drawableView && drawableView){
             [drawableView removeFromSuperview];
