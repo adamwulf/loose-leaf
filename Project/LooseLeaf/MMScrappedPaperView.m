@@ -389,7 +389,7 @@
 // adds an undo level to the drawable views and maintains
 // any alive strokes
 -(void) addUndoLevelAndContinueStroke{
-    NSLog(@"adding undo level");
+//    NSLog(@"adding undo level");
     [self.drawableView addUndoLevelAndContinueStroke];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap.state.drawableView addUndoLevelAndContinueStroke];
@@ -636,7 +636,7 @@
     // the drawn polygon and reset.
     if(shapeBuilderView){
         [shapeBuilderView clear];
-        NSLog(@"cancelling scissors");
+//        NSLog(@"cancelling scissors");
     }
 }
 

@@ -360,7 +360,7 @@
 #pragma mark - Delete
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-    NSLog(@"page %@ asked to delete scrap %@ with respect? %d", self.uuid, scrapUUID, respectOthers);
+//    NSLog(@"page %@ asked to delete scrap %@ with respect? %d", self.uuid, scrapUUID, respectOthers);
     
     //
     // Step 1: check the bezel

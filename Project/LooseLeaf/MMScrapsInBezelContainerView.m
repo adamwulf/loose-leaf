@@ -315,8 +315,12 @@
         scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-        [self insertSubview:scrap atIndex:0];
-        
+        [self addSubview:scrap];
+        NSLog(@"looking at1 %p", scrap);
+
+        // set the bubble to nil its scrap so it'll be known dead
+        // if we need to realign buttons during this animation
+        bubble.scrap = nil;
         [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
         
         [bubbleForScrap removeObjectForKey:scrap.uuid];
@@ -342,6 +346,7 @@
 }
 
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
+    CheckMainThread;
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
     [scrap loadScrapStateAsynchronously:YES];
     
@@ -382,7 +387,7 @@
         bubble.alpha = 0;
         for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                if(otherBubble != bubble){
+                if(otherBubble.scrap && otherBubble != bubble){
                     int index = (int) [sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     if([sidebarScrapState.allLoadedScraps count] <= kMaxScrapsInBezel){

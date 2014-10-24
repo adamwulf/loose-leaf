@@ -1636,15 +1636,18 @@ int skipAll = NO;
 }
 
 -(void) willAddScrapToBezelSidebar:(MMScrapView *)scrap{
+    CheckMainThread;
     isAnimatingScrapToOrFromSidebar = YES;
 }
 
 -(void) didAddScrapToBezelSidebar:(MMScrapView *)scrap{
+    CheckMainThread;
     [bezelScrapContainer saveScrapContainerToDisk];
     isAnimatingScrapToOrFromSidebar = NO;
 }
 
 -(void) willAddScrapBackToPage:(MMScrapView *)scrap{
+    CheckMainThread;
     isAnimatingScrapToOrFromSidebar = YES;
 }
 
@@ -1669,10 +1672,13 @@ int skipAll = NO;
         // we have their state loading
         MMScrapView* scrapToAddToPage = originalScrap;
         if(originalScrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
-            MMScrapView* oldScrap = originalScrap;
-            [scrapContainer addSubview:oldScrap];
+            NSLog(@"looking at2 %p", originalScrap);
+            NSLog(@"cloned from %p to %p", originalScrap.state.scrapsOnPaperState, page.scrapsOnPaperState);
+            NSLog(@"loaded: %d", originalScrap.state.isScrapStateLoaded);
+            NSLog(@"superview: %p", originalScrap.superview);
+            [scrapContainer addSubview:originalScrap];
             scrapToAddToPage = [self cloneScrap:originalScrap toPage:page];
-            [oldScrap removeFromSuperview];
+            [originalScrap removeFromSuperview];
             
             // check the original page of the scrap
             // and see if it has any reference to this
@@ -1844,6 +1850,10 @@ int skipAll = NO;
         clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
         clonedScrap.scale = scrap.scale;
         [page.scrapsOnPaperState showScrap:clonedScrap];
+        
+        NSLog(@"======");
+        NSLog(@"clonedScrap at %f %f", clonedScrap.center.x, clonedScrap.center.y);
+        NSLog(@"originalScrap at %f %f", scrap.center.x, scrap.center.y);
         
         // next match it's location exactly on top of the original scrap:
         [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
