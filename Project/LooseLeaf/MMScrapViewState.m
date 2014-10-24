@@ -300,6 +300,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     };
     
     
+    NSLog(@"asking to save scrap: %@", self.uuid);
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             @autoreleasepool {
@@ -309,7 +310,10 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     return;
                 }
                 [lock lock];
-//                NSLog(@"(%@) saving with background: %d %d", uuid, (int)drawableView, backingViewHasChanged);
+                [JotViewStateProxy shouldPrintHasEdits:YES];
+                NSLog(@"(%@) checking edits", uuid);
+                NSLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
+                [JotViewStateProxy shouldPrintHasEdits:NO];
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
@@ -321,14 +325,16 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-//                                NSLog(@"(%@) saving background: %d", uuid, backingViewHasChanged);
+                                NSLog(@"(%@) saving edits2: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
 
                                 if([drawableViewState hasEditsToSave]){
-//                                    NSLog(@"(%@) saving strokes: %d", uuid, backingViewHasChanged);
+                                    NSLog(@"(%@) saving strokes: %d", uuid, [drawableViewState hasEditsToSave]);
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                                        NSLog(@"saved scrap %@ ink to %@", self.uuid, self.inkImageFile);
+                                        NSLog(@"saved scrap %@ thumb to %@", self.uuid, self.thumbImageFile);
                                         if(self.isForgetful){
                                             NSLog(@"forget: %@ scrap state skipping update after jotview save", self.uuid);
                                         }else if(state){
@@ -343,11 +349,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                             lastSavedUndoHash = state.undoHash;
                                             savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
 
-//                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
+                                            NSLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
                                         }
                                         dispatch_semaphore_signal(sema1);
                                     }];
                                 }else if(backingImageHolder.backingViewHasChanged){
+                                    NSLog(@"(%@) no stroke edits, only saving background view: %d", uuid, [drawableViewState hasEditsToSave]);
                                     // if we dont' have any pen edits in the drawableViewState,
                                     // but we do have background changes to save
                                     lastSavedUndoHash = drawableViewState.undoHash;
@@ -355,18 +362,18 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                     dispatch_semaphore_signal(sema1);
                                 }else{
                                     // nothing new to save
-//                                    NSLog(@"(%@) skipped saving strokes: %d", uuid, backingViewHasChanged);
+                                    NSLog(@"(%@) nothing new to save: %d %d", uuid, drawableViewState.hasEditsToSave, backingImageHolder.backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
                                 // nothing new to save
-//                                if(!drawableView && ![drawableViewState hasEditsToSave]){
-//                                    NSLog(@"(%@) no drawable view or edits", uuid);
-//                                }else if(!drawableView){
-//                                    NSLog(@"(%@) no drawable view", uuid);
-//                                }else if(![drawableViewState hasEditsToSave]){
-//                                    NSLog(@"(%@) no edits to save in state", uuid);
-//                                }
+                                if(!drawableView && ![drawableViewState hasEditsToSave]){
+                                    NSLog(@"(%@) no drawable view or edits", uuid);
+                                }else if(!drawableView){
+                                    NSLog(@"(%@) no drawable view", uuid);
+                                }else if(![drawableViewState hasEditsToSave]){
+                                    NSLog(@"(%@) no edits to save in state", uuid);
+                                }
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
                                 // that we're done
@@ -376,7 +383,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
 //                    dispatch_release(sema1); ARC handles this
-//                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
+                    NSLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
                     if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
                     // sometimes, this method is called in very quick succession.
@@ -384,7 +391,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     // finish all of the export and drawableViewState will be nil
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
-//                    NSLog(@"(%@) no edits to save in state2", uuid);
+                    NSLog(@"(%@) no edits to save in state2", uuid);
                     if(doneSavingBlock) doneSavingBlock(NO);
                 }
                 [lock unlock];
@@ -392,7 +399,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         });
     }else{
         if(doneSavingBlock) doneSavingBlock(NO);
-//        NSLog(@"(%@) no edits to save in state3", uuid);
+        NSLog(@"(%@) no edits to save in state3", uuid);
     }
 }
 
@@ -702,7 +709,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 -(void) didLoadState:(JotViewStateProxy *)state{
     @synchronized(self){
         if(!targetIsLoadedState){
-            NSLog(@"loaded state we didn't need");
+//            NSLog(@"loaded state we didn't need");
             if(drawableViewState){
                 [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
             }

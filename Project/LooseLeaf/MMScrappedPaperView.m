@@ -266,7 +266,7 @@
         // that we'll use when exporting. so we're going to create a smaller
         // scrap that would fit within that area, and then scale it up to
         // fit back where the user actually cut it.
-        NSLog(@"scale scrap to %f fit in %f maxdim texture",scaleUpForScrap, maxScrapHeight);
+//        NSLog(@"scale scrap to %f fit in %f maxdim texture",scaleUpForScrap, maxScrapHeight);
     }
 
     // now add the scrap, and rotate it to counter-act

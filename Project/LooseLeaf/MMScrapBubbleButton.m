@@ -79,7 +79,7 @@
     
     scrap = _scrap;
     if(!_scrap){
-        debug_NSLog(@"killing scrap bubble, setting to nil scrap");
+//        debug_NSLog(@"killing scrap bubble, setting to nil scrap");
         return;
     }
     rotationAdjustment = self.rotation;
