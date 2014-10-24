@@ -360,6 +360,7 @@
 #pragma mark - Delete
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
+//    NSLog(@"page %@ asked to delete scrap %@ with respect? %d", self.uuid, scrapUUID, respectOthers);
     
     //
     // Step 1: check the bezel
@@ -397,6 +398,29 @@
     };
     
     
+    // next, we need to check if the scrap is still on the
+    // actual page. it may have been moved to bezel =>
+    // then back again, which could trigger a request
+    // to delete after some additional edits
+    BOOL(^checkScrapExistsOnItsPage)() = ^{
+        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+        __block BOOL existsOnItsPage = NO;
+        dispatch_async([self serialBackgroundQueue], ^{
+            @autoreleasepool {
+                if([self isStateLoaded]){
+                    NSLog(@"only check this if our state is loaded");
+                    existsOnItsPage = [[self.scrapsOnPaper filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                        return [[evaluatedObject uuid] isEqualToString:scrapUUID];
+                    }]] count] > 0;
+                }
+            }
+            dispatch_semaphore_signal(sema1);
+        });
+        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+        return existsOnItsPage;
+    };
+    
+    
     // we've been told to delete a scrap from disk.
     // so do this on our low priority background queue
     dispatch_async([[MMTrashManager sharedInstance] trashManagerQueue], ^{
@@ -412,6 +436,12 @@
                     // the scrap exists in the page's undo manager,
                     // so don't bother deleting it
                     //                NSLog(@"TrashManager found scrap in page's undo state. keeping files.");
+                    return;
+                }
+                // now double check if its on the page
+                if(checkScrapExistsOnItsPage()){
+                    // yep, its still on the page, just nothing in the
+                    // undo manager specifically about this scrap
                     return;
                 }
             }

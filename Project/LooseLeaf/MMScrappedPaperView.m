@@ -212,6 +212,7 @@
     CGFloat initialSize = pathBounds.size.width * pathBounds.size.height;
     CGFloat lastBestSize = initialSize;
     CGFloat lastBestRotation = 0;
+    CGRect lastBestBounds = pathBounds;
     
     // now copy the path, and we'll rotate this to
     // find the best rotation that'll give us the
@@ -235,7 +236,16 @@
         if(rotatedPxSize < lastBestSize){
             lastBestRotation = currentStepRotation;
             lastBestSize = rotatedPxSize;
+            lastBestBounds = rotatedPathBounds;
         }
+    }
+    
+    if(lastBestBounds.size.width > lastBestBounds.size.height){
+        // scraps will always use textures the size of the portrait
+        // screen when they export, so we need to ensure that
+        // the scrap is always taller than it is wide. otherwise,
+        // the scrap's width might be wider than our screen texture
+        lastBestRotation -= M_PI / 2;
     }
     
 //    debug_NSLog(@"memory savings of: %f", (1 - lastBestSize / initialSize));
@@ -379,7 +389,7 @@
 // adds an undo level to the drawable views and maintains
 // any alive strokes
 -(void) addUndoLevelAndContinueStroke{
-    NSLog(@"adding undo level");
+//    NSLog(@"adding undo level");
     [self.drawableView addUndoLevelAndContinueStroke];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap.state.drawableView addUndoLevelAndContinueStroke];
@@ -626,7 +636,7 @@
     // the drawn polygon and reset.
     if(shapeBuilderView){
         [shapeBuilderView clear];
-        NSLog(@"cancelling scissors");
+//        NSLog(@"cancelling scissors");
     }
 }
 

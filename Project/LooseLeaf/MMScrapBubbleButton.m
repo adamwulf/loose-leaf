@@ -76,10 +76,12 @@
 }
 
 -(void) setScrap:(MMScrapView *)_scrap{
-    if(!_scrap){
-        debug_NSLog(@"what: setting nil scrap");
-    }
+    
     scrap = _scrap;
+    if(!_scrap){
+        debug_NSLog(@"killing scrap bubble, setting to nil scrap");
+        return;
+    }
     rotationAdjustment = self.rotation;
     
     // force transform update
