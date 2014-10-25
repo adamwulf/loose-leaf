@@ -253,10 +253,29 @@
     if(lastBestRotation){
         [path rotateAndAlignCenter:lastBestRotation];
     }
+    
+    CGFloat maxScrapHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat scaleUpForScrap = scale;
+    if(path.bounds.size.height > maxScrapHeight){
+        CGFloat scaleDownForPath = maxScrapHeight / path.bounds.size.height;
+        scaleUpForScrap = 1 / scaleDownForPath;
+        [path scaleAndPreserveCenter:scaleDownForPath];
+
+        // if the user cuts a very long scrap diagonally on the page, then
+        // it's 1.0 scale size will be taller than the screen-sized texture
+        // that we'll use when exporting. so we're going to create a smaller
+        // scrap that would fit within that area, and then scale it up to
+        // fit back where the user actually cut it.
+//        NSLog(@"scale scrap to %f fit in %f maxdim texture",scaleUpForScrap, maxScrapHeight);
+    }
 
     // now add the scrap, and rotate it to counter-act
     // the rotation we added to the path itself
-    return [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
+    MMScrapView* addedScrap = [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
+    if(scaleUpForScrap != 1.0){
+        [addedScrap setScale:scaleUpForScrap];
+    }
+    return addedScrap;
 }
 
 

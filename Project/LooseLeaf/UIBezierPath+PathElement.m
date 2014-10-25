@@ -14,6 +14,19 @@
 @implementation UIBezierPath (PathElement)
 
 
+-(void) scaleAndPreserveCenter:(CGFloat)scale{
+    // ok, we have a rotation that'll give us a smaller square pixels
+    // for the scrap's backing texture. make sure to rotate the
+    // scrap around its center.
+    CGPoint pathCenter = self.center;
+    // first, translate to the center,
+    CGAffineTransform scaleAroundCenterTransform = CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y);
+    // then scale,
+    scaleAroundCenterTransform = CGAffineTransformConcat(scaleAroundCenterTransform, CGAffineTransformMakeScale(scale, scale));
+    // then translate back to its position
+    scaleAroundCenterTransform = CGAffineTransformConcat(scaleAroundCenterTransform, CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y));
+    [self applyTransform:scaleAroundCenterTransform];
+}
 
 
 -(void) rotateAndAlignCenter:(CGFloat)rotation{
