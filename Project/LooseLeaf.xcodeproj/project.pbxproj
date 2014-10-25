@@ -683,7 +683,6 @@
 		667AA41D19E33342006549EE /* MMPolaroidsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPolaroidsView.h; sourceTree = "<group>"; };
 		667AA41E19E33342006549EE /* MMPolaroidsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPolaroidsView.m; sourceTree = "<group>"; };
 		667AC03D18CE32D700AE6AF1 /* MMStretchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMStretchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
-		667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7@2x.png"; sourceTree = SOURCE_ROOT; };
 		667AE6A019E5C81B0063DD51 /* MMScrapViewState+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapViewState+Trash.h"; sourceTree = "<group>"; };
 		667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MMScrapViewState+Trash.m"; sourceTree = "<group>"; };
 		667AE6A619E5D02A0063DD51 /* MMExportablePaperView+Trash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMExportablePaperView+Trash.h"; sourceTree = "<group>"; };
@@ -746,6 +745,7 @@
 		667EF0C819A54F2500B1A38D /* icloud-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icloud-share@2x.png"; sourceTree = "<group>"; };
 		667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitButton.h; sourceTree = "<group>"; };
 		667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitButton.m; sourceTree = "<group>"; };
+		667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7@2x.png"; sourceTree = SOURCE_ROOT; };
 		668D19D419F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitTutorialImportCoordinator.h; sourceTree = "<group>"; };
 		668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitTutorialImportCoordinator.m; sourceTree = "<group>"; };
 		668D19D719F781EB00A65DCF /* MMCloudAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudAvatarButton.h; sourceTree = "<group>"; };
@@ -2269,7 +2269,6 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				667F8AF217B0222300A0C7F8 /* Loose-Leaf-Icon7.png */,
 				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
 				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
 				665245321996D9E700C36609 /* AFNetworking */,
@@ -2773,7 +2772,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "GIT_RELEASE_VERSION=`git describe --tags`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $GIT_RELEASE_VERSION\"";
+			shellScript = "GIT_RELEASE_VERSION=`git describe --long`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $GIT_RELEASE_VERSION\"";
 		};
 		66C0C9D217838C91009491B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2786,7 +2785,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
+			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\n# GIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\nGIT_RELEASE_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
