@@ -13,6 +13,8 @@
 #import "MMCloudKitImportCoordinator.h"
 #import "MMScrapPaperStackView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMCloudKitTutorialImportCoordinator.h"
+#import "MMEditablePaperView.h"
 #import "Constants.h"
 #import "Mixpanel.h"
 
@@ -63,11 +65,13 @@
 
 -(void) saveToDiskOffMainThread{
     dispatch_block_t saveBlock = ^{
-        NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
-        [NSFileManager ensureDirectoryExistsAtPath:outputPath];
-        @synchronized(activeImports){
-            [[NSKeyedArchiver archivedDataWithRootObject:activeImports] writeToFile:[outputPath stringByAppendingPathComponent:@"imports.data"] atomically:YES];
-            NSLog(@"saved imports to disk");
+        @autoreleasepool {
+            NSString* outputPath = [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"ImportsAndExports"];
+            [NSFileManager ensureDirectoryExistsAtPath:outputPath];
+            @synchronized(activeImports){
+                [[NSKeyedArchiver archivedDataWithRootObject:activeImports] writeToFile:[outputPath stringByAppendingPathComponent:@"imports.data"] atomically:YES];
+                NSLog(@"saved imports to disk");
+            }
         }
     };
     
@@ -84,11 +88,44 @@
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
         NSLog(@"loaded %d pages from disk for import", (int) [imported count]);
-        
+
+        BOOL alreadyHaveActiveTutorialImport = NO;
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
             // need to set the import/export view after loading
             coordinator.importExportView = self;
             [coordinator begin];
+            
+            if([coordinator isKindOfClass:[MMCloudKitTutorialImportCoordinator class]]){
+                alreadyHaveActiveTutorialImport = YES;
+            }
+        }
+        
+        if([MMCloudKitManager isCloudKitAvailable]){
+            // add the cloudkit tutorial page import if we still need it
+            if(!alreadyHaveActiveTutorialImport && [MMCloudKitTutorialImportCoordinator shouldShowTutorialImport]){
+                debug_NSLog(@"hasn't seen CloudKit Tutorial page yet, creating import");
+                MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
+                
+                NSString* locationOfImportedPage = [MMEditablePaperView pagesPathForUUID:coordinator.uuidOfIncomingPage];
+                NSString* bundledLocationOfImportedPage = [MMEditablePaperView bundledPagesPathForUUID:coordinator.uuidOfIncomingPage];
+                if([[NSFileManager defaultManager] fileExistsAtPath:locationOfImportedPage] ||
+                   [[NSFileManager defaultManager] fileExistsAtPath:bundledLocationOfImportedPage]){
+                    // make sure to only create import when the page
+                    // also exists on disk. this is an extra safe
+                    // sanity check. maybe somebody's imported the page,
+                    // but reset their user defaults, so the data isn't
+                    // on disk any more
+                    @synchronized(activeImports){
+                        [activeImports addObject:coordinator];
+                        [self saveToDiskOffMainThread];
+                    }
+                    [coordinator begin];
+                }else{
+                    debug_NSLog(@"importable tutorial page doens't exist for uuid: %@", coordinator.uuidOfIncomingPage);
+                }
+            }else{
+                debug_NSLog(@"has already seen CloudKit Tutorial page");
+            }
         }
     }
 }
@@ -185,6 +222,7 @@
 }
 
 -(void) animateAndAlignAllButtons{
+    CheckMainThread;
     // align all invisible buttons so they animate in respectably
     for(MMCloudKitImportCoordinator* import in [activeImports reverseObjectEnumerator]){
         if(!import.isReady || !import.avatarButton.alpha){
@@ -304,6 +342,9 @@
     
     NSString* reason = @"Unknown";
     switch (errorCode) {
+        case kMPEventImportMissingZipErrorCode:
+            reason = @"Missing Zip";
+            break;
         case kMPEventImportInvalidZipErrorCode:
             reason = @"Invalid Zip";
             break;
@@ -364,6 +405,10 @@
     
     if(coordinator.uuidOfIncomingPage){
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
+        page.delegate = stackView;
+        // this like will ensure the new page slides in with
+        // its preview properly loaded in time.
+        [page loadCachedPreviewAndDecompressImmediately:YES];
         if(page){
             [stackView importAndShowPage:page];
         }else{

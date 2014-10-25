@@ -9,7 +9,9 @@
 #import "MMScrappedPaperView.h"
 #import "MMPageUndoRedoManager.h"
 
-@interface MMUndoablePaperView : MMScrappedPaperView
+@interface MMUndoablePaperView : MMScrappedPaperView{
+    MMPageUndoRedoManager* undoRedoManager;
+}
 
 @property (nonatomic, readonly) MMPageUndoRedoManager* undoRedoManager;
 @property (readonly) NSString* undoStatePath;
@@ -24,6 +26,6 @@
 
 -(void) addUndoItemForMostRecentAddedScrapFromBezelFromScrap:(MMScrapView*)scrapFromBezel;
 
--(MMScrapSidebarContainerView*) bezelContainerView;
+-(MMScrapsInBezelContainerView*) bezelContainerView;
 
 @end

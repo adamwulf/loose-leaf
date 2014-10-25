@@ -12,4 +12,6 @@
 
 -(id) initWithFrame:(CGRect)frame;
 
+-(CGPoint) centerOfErrorCircle;
+
 @end

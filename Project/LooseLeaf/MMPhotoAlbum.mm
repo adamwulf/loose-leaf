@@ -27,6 +27,7 @@ dispatch_queue_t fetchThumbnailQueue;
     NSArray* previewPhotos;
     BOOL previewPhotosAreLoaded;
     BOOL reversed;
+    short numberOfPreviewPhotos;
 }
 
 @synthesize assetURL;
@@ -35,6 +36,7 @@ dispatch_queue_t fetchThumbnailQueue;
 @synthesize type;
 @synthesize numberOfPhotos;
 @synthesize reversed;
+@synthesize numberOfPreviewPhotos;
 
 +(dispatch_queue_t) fetchThumbnailQueue{
     if(!fetchThumbnailQueue){
@@ -53,6 +55,7 @@ dispatch_queue_t fetchThumbnailQueue;
         type = group.type;
         numberOfPhotos = group.numberOfAssets;
         previewPhotosAreLoaded = NO;
+        numberOfPreviewPhotos = 5;
     }
     return self;
 }
@@ -102,10 +105,11 @@ BOOL isEnumerating = NO;
         NSMutableArray* updatedPreviewPhotos = [NSMutableArray array];
         @synchronized(self){
             isEnumerating = YES;
-            [group enumerateAssetsWithOptions:reversed ? NULL : NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+            [group enumerateAssetsWithOptions:reversed ? NULL : NSEnumerationReverse usingBlock:^(ALAsset *result, NSUInteger indexOnDisk, BOOL *stop) {
                 if(result){
-                    [updatedPreviewPhotos addObject:[UIImage imageWithCGImage:result.aspectRatioThumbnail]];
-                    if([updatedPreviewPhotos count] >= 5){
+                    [updatedPreviewPhotos addObject:[[MMPhoto alloc] initWithALAsset:result]];
+                    [[updatedPreviewPhotos lastObject] aspectRatioThumbnail]; // force the thumbnail to load.
+                    if([updatedPreviewPhotos count] >= numberOfPreviewPhotos){
                         stop[0] = YES;
                     }
                 }else{
@@ -120,27 +124,49 @@ BOOL isEnumerating = NO;
 }
 
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSetInView usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
     @try{
         try{
+            NSIndexSet* indexSetOnDisk = indexSetInView;
             if(reversed){
                 // reverse what we fetch from the real album ordering
-                indexSet = [indexSet mapIndexesUsingBlock:^NSUInteger(NSUInteger idx) {
+                indexSetOnDisk = [indexSetInView mapIndexesUsingBlock:^NSUInteger(NSUInteger idx) {
                     return self.numberOfPhotos - idx - 1;
                 }];
             }
-            ALAssetsGroupEnumerationResultsBlock indexManagerBlock = ^(ALAsset *result, NSUInteger index, BOOL *stop){
-                if(reversed){
-                    // remap the index to what the user asked for.
-                    // this way the user's index values map to
-                    // new values here
-                    index = self.numberOfPhotos - index - 1;
+            ALAssetsGroupEnumerationResultsBlock indexManagerBlock = ^(ALAsset *result, NSUInteger indexOnDisk, BOOL *stop){
+                // remap the index to what the user asked for.
+                // this way the user's index values map to
+                // new values here
+                NSUInteger indexInView = reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                NSUInteger idxInPreviews = !reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                if(idxInPreviews < [previewPhotos count]){
+                    enumerationBlock(result ? [previewPhotos objectAtIndex:idxInPreviews] : nil, indexInView, stop);
+                }else{
+                    enumerationBlock(result ? [[MMPhoto alloc] initWithALAsset:result] : nil, indexInView, stop);
                 }
-                enumerationBlock(result ? [[MMPhoto alloc] initWithALAsset:result] : nil, index, stop);
             };
             @synchronized(self){
 //                NSInteger count = group.numberOfAssets;
-                [group enumerateAssetsAtIndexes:indexSet options:NSEnumerationReverse usingBlock:indexManagerBlock];
+                
+                __block BOOL stop = NO;
+                NSMutableIndexSet* indexesToLoad = [NSMutableIndexSet indexSet];
+                [indexSetOnDisk enumerateIndexesUsingBlock:^(NSUInteger indexOnDisk, BOOL *_s) {
+                    NSUInteger idxInView = reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                    NSUInteger idxInPreviews = !reversed ? (self.numberOfPhotos - indexOnDisk - 1) : indexOnDisk;
+                    if(idxInPreviews < [previewPhotos count]){
+                        enumerationBlock([previewPhotos objectAtIndex:idxInPreviews], idxInView, &stop);
+                        if(stop){
+                            _s[0] = YES;
+                        }
+                    }else{
+                        [indexesToLoad addIndex:indexOnDisk];
+                    }
+                }];
+                
+                if(!stop && indexesToLoad){
+                    [group enumerateAssetsAtIndexes:indexesToLoad options:NSEnumerationReverse usingBlock:indexManagerBlock];
+                }
             }
         }catch(...){
             NSLog(@"caught++");

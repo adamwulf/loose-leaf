@@ -61,14 +61,14 @@
 
 -(void) loadedPreviewPhotos{
     for(int i=0;i<5;i++){
-        UIImage* img = nil;
+        MMPhoto* img = nil;
         int indexOfPhoto = 4-i;
         if(indexOfPhoto<[album.previewPhotos count]){
             img = [album.previewPhotos objectAtIndex:indexOfPhoto];
         }
         MMBufferedImageView* v = [bufferedImageViews objectAtIndex:i];
         if(img){
-            [v setImage:img];
+            [v setImage:img.aspectRatioThumbnail];
             v.hidden = NO;
         }else{
             v.hidden = YES;

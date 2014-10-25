@@ -11,6 +11,8 @@
 #import "MMDecompressImagePromiseDelegate.h"
 #import "MMScissorResult.h"
 #import "MMScrapContainerView.h"
+#import "MMScrapsOnPaperState.h"
+#import "MMScrapViewOwnershipDelegate.h"
 #import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
@@ -18,13 +20,14 @@
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MFMailComposeViewControllerDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
+@interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
+    MMScrapsOnPaperState* scrapsOnPaperState;
     UIImageView* cachedImgView;
 }
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
-@property (readonly) MMScrapContainerView* scrapContainerView;
 @property (readonly) UIImageView* cachedImgView;
+@property (nonatomic, weak) NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate>* delegate;
 
 -(dispatch_queue_t) serialBackgroundQueue;
 
@@ -32,8 +35,6 @@
 -(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
-
--(void) saveToDisk;
 
 #pragma mark - Scissors
 
@@ -53,12 +54,16 @@
 
 -(void) addUndoLevelAndContinueStroke;
 
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block;
-
--(void) updateThumbnailVisibility;
+-(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload andSavePaperState:(BOOL)shouldSavePaperState;
 
 -(NSString*) scrapIDsPath;
 
+-(NSArray*) scrapsOnPaper;
+
 -(CGSize) thumbnailSize;
+
+#pragma mark - protected
+
+-(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
 @end

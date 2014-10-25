@@ -19,35 +19,45 @@
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
 #import "TestFlight.h"
+#import "MMPresentationWindow.h"
+#import "UIDevice+PPI.h"
+#import "UIApplication+Version.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
     NSTimer* durationTimer;
     CFAbsoluteTime resignedActiveAtStamp;
+    BOOL didRecieveReportFromCrashlytics;
 }
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
+@synthesize presentationWindow;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
     debug_NSLog(@"DID FINISH LAUNCHING");
-    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
     
-    [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-    [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-    [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-    [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-    [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
+    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    [[Crashlytics sharedInstance] setDelegate:self];
+
     [[NSThread mainThread] performBlock:^{
+        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
+        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
+        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
         [TestFlight takeOff:kTestflightAppToken];
     } afterDelay:3];
     
+    presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [presentationWindow makeKeyAndVisible];
+
     self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
@@ -57,7 +67,7 @@
 //    [self.window.layer setSpeed:.5f];
     MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:blueDots];
-//    [self.window.layer setSpeed:0.3f];
+//    [self.window.layer setSpeed:0.1f];
 
     // fire timer each minute
     [self setupTimer];
@@ -76,7 +86,16 @@
             [self checkForNotificationToHandleWithNotificationInfo:dictionary];
         }
     }
-
+    
+    NSDate* dateOfCrash = [self dateOfDeathIfAny];
+    [[NSThread mainThread] performBlock:^{
+        if(dateOfCrash && !didRecieveReportFromCrashlytics){
+            // we shouldn't have a kAppLaunchStatus if we shut down correctly,
+            // log as a possible memory crash or user force-close
+            [self trackDidCrashFromMemoryForDate:dateOfCrash];
+        }
+    } afterDelay:5];
+    
     return YES;
 }
 
@@ -98,6 +117,7 @@
     [durationTimer invalidate];
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
+    [self removeDateOfLaunch];
     debug_NSLog(@"DID ENTER BACKGROUND");
 }
 
@@ -120,6 +140,7 @@
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
     };
     [[MMRotationManager sharedInstance] didBecomeActive];
+    [self saveDateOfLaunch];
     debug_NSLog(@"DID BECOME ACTIVE");
     debug_NSLog(@"***************************************************************************");
     debug_NSLog(@"***************************************************************************");
@@ -131,6 +152,7 @@
     [self logActiveAppDuration];
     [durationTimer invalidate];
     durationTimer = nil;
+    [self removeDateOfLaunch];
     debug_NSLog(@"WILL TERMINATE");
 }
 
@@ -157,11 +179,11 @@
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleActionWithIdentifier");
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
-    NSLog(@"what");
+    NSLog(@"handleEventsForBackgroundURLSession");
 }
 
 - (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
@@ -231,5 +253,81 @@
     return uuid;
 }
 
+#pragma mark - Track Memory Crash
+
+-(void) trackDidCrashFromMemoryForDate:(NSDate*)dateOfCrash{
+    debug_NSLog(@"Did Track Crash from Memory");
+    debug_NSLog(@"===========================");
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfMemoryCrashes by:@(1)];
+    
+    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+    [crashProperties setObject:@"Memory" forKey:@"Cause"];
+    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+    if(dateOfCrash) [crashProperties setObject:dateOfCrash forKey:@"crashedOnDate"];
+    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+    
+    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
+    }];
+    
+    @try{
+        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+    }@catch(id e){
+        // noop
+    }
+}
+
+
+#pragma mark - App Lifecycle Tracking
+
+-(NSDate*) dateOfDeathIfAny{
+    NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
+    NSDate* date = [NSKeyedUnarchiver unarchiveObjectWithFile:pathOfLifecycleTrackingFile];
+    return date;
+}
+
+-(void) saveDateOfLaunch{
+    NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
+    [NSKeyedArchiver archiveRootObject:[NSDate date] toFile:pathOfLifecycleTrackingFile];
+}
+
+-(void) removeDateOfLaunch{
+    NSString* pathOfLifecycleTrackingFile = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"launchDate.data"];
+    [[NSFileManager defaultManager] removeItemAtPath:pathOfLifecycleTrackingFile error:nil];
+}
+
+#pragma mark - Crashlytics reporting
+
+-(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
+    didRecieveReportFromCrashlytics = YES;
+    
+    debug_NSLog(@"Did Track Crash from Exception");
+    debug_NSLog(@"==============================");
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
+    
+    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+    [crashProperties setObject:@"Exception" forKey:@"Cause"];
+    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
+    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
+    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
+    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
+    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
+    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
+    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
+    
+    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
+    }];
+    
+    @try{
+        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+    }@catch(id e){
+        // noop
+    }
+}
 
 @end

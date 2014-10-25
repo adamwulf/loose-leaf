@@ -9,17 +9,19 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
-
 #ifdef DEBUG
 #define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
 #else
 #define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
+#define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
+
+#define CheckThreadMatches(__THREAD_CHECK__) {if(!(__THREAD_CHECK__)){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
 
 #ifdef DEBUG
-#define debug_NSLog(__FORMAT__, ...)
-//#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+//#define debug_NSLog(__FORMAT__, ...)
+#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
 #define debug_NSLog(__FORMAT__, ...)
 #endif
@@ -97,8 +99,11 @@ _Pragma("clang diagnostic pop") \
 #define kMPShareStatusTencentWeibo @"Share Status: Tencent Weibo"
 #define kMPShareStatusSinaWeibo @"Share Status: Sina Weibo"
 
-
 // MixPanel People Properties
+#define kMPStatScissorSegments @"Stat: Scissor Segment Count"
+#define kMPStatScrapPathSegments @"Stat: Scrap Segment Count"
+#define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
+#define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
@@ -119,13 +124,20 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfOpenInExports @"Number of Open In Exports"
 #define kMPNumberOfSocialExports @"Number of Social Media Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
+#define kMPHasZoomedToPage @"Has Zoomed Into Page"
+#define kMPHasDeletedPage @"Has Deleted Page"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
+#define kMPNumberOfMemoryCrashes @"Number of Mem Crashes"
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
 #define kMPDistanceDrawn @"Distance Drawn (m)"
 #define kMPDistanceErased @"Distance Erased (m)"
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
+
+// cloudkit tutorial
+#define kMPCloudKitTutorialUUID @"2E73BFF3-843D-417F-A8FA-71C6E9783D67"
+#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
@@ -134,6 +146,7 @@ _Pragma("clang diagnostic pop") \
 
 // MixPanel Error Events
 #define kMPEventMemoryWarning @"Memory Warning"
+#define kMPEventCrash @"Crash Report"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
@@ -156,6 +169,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventImportPropScrapCount @"File Extension"
 #define kMPEventImportPropVisibleScrapCount @"File Type"
 #define kMPEventImportInvalidZipErrorCode -1
+#define kMPEventImportMissingZipErrorCode -2
 
 // MixPanel Error Tracking
 #define kMPPathIterationException @"PathIterationException"
@@ -164,11 +178,14 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 
+// page cache manager
+#define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
+
 #define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
 
 // cache sizes
 #define kMMLoadImageCacheSize 10
-#define kMMPageCacheManagerSize 3
+#define kMMPageCacheManagerSize 1
 
 #ifdef __cplusplus
 extern "C" {

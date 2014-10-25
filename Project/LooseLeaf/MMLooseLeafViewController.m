@@ -15,14 +15,32 @@
 #import "Mixpanel.h"
 #import "MMMemoryManager.h"
 #import "MMTouchVelocityGestureRecognizer.h"
+#import "MMDeletePageSidebarController.h"
+#import "MMPhotoManager.h"
+#import "MMCloudKitImportExportView.h"
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
+    MMDeletePageSidebarController* deleteSidebar;
+    MMCloudKitImportExportView* cloudKitExportView;
 }
 
 - (id)init{
     if(self = [super init]){
-        [[Crashlytics sharedInstance] setDelegate:self];
+#ifdef DEBUG
+#ifdef DEBUGUSERDEFAULTS
+#if DEBUGUSERDEFAULTS
+        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+#endif
+#endif
+#endif
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(pageCacheManagerDidLoadPage)
+                                                     name:kPageCacheManagerHasLoadedAnyPage
+                                                   object:[MMPageCacheManager sharedInstance]];
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
@@ -30,10 +48,27 @@
     
         self.view.opaque = YES;
         
-        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.frame];
-        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self.view addSubview:stackView];
+        deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
+        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
+//        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        stackView.deleteSidebar = deleteSidebar;
+        [self.view addSubview:stackView];
+        stackView.center = self.view.center;
+
+        // export icons will show here, below the sidebars but over the stacks
+        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
+        stackView.cloudKitExportView = cloudKitExportView;
+        cloudKitExportView.stackView = stackView;
+        [self.view addSubview:cloudKitExportView];
+        // an extra view to help with animations
+        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.view.bounds];
+        cloudKitExportView.animationHelperView = exportAnimationHelperView;
+        [self.view addSubview:exportAnimationHelperView];
+        
+        [self.view addSubview:deleteSidebar.deleteSidebarForeground];
+
         [stackView loadStacksFromDisk];
         
         [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:stackView];
@@ -76,14 +111,23 @@
         
         memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
         
-        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
-        memoryProfileView.memoryManager = memoryManager;
-        memoryProfileView.hidden = YES;
-        
-        [stackView setMemoryView:memoryProfileView];
-        [self.view addSubview:memoryProfileView];
+//        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+//        memoryProfileView.memoryManager = memoryManager;
+//        memoryProfileView.hidden = YES;
+//        
+//        [stackView setMemoryView:memoryProfileView];
+//        [self.view addSubview:memoryProfileView];
     }
     return self;
+}
+
+-(void) viewWillAppear:(BOOL)animated{
+    
+}
+
+-(void) pageCacheManagerDidLoadPage{
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
@@ -117,12 +161,14 @@
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
 
-
-#pragma mark - Crashlytics reporting
-
--(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
-    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
+-(NSUInteger) supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskPortrait;
 }
+
+-(BOOL) shouldAutorotate{
+    return NO;
+}
+
 
 #pragma mark - application state
 
@@ -142,6 +188,5 @@
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 //    NSLog(@"presenting view controller");
 }
-
 
 @end

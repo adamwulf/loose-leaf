@@ -7,16 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMScrapsInSidebarState.h"
+#import "MMScrapCollectionState.h"
+#import "MMImmutableScrapCollectionState.h"
 
-@interface MMImmutableScrapsInSidebarState : MMScrapsInSidebarState
+@interface MMImmutableScrapsInSidebarState : MMImmutableScrapCollectionState
 
-@property (nonatomic, readonly) NSArray* allScrapProperties;
-
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties;
-
-// returns YES if any changes actually saved,
-// NO otherwise
--(BOOL) saveStateToDiskBlocking;
+-(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties andOwnerState:(MMScrapCollectionState*)ownerState;
 
 @end

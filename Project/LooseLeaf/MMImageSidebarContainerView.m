@@ -19,6 +19,7 @@
 #import "MMPDFButton.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
+#import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation MMImageSidebarContainerView{
@@ -30,11 +31,11 @@
     
     NSArray* allListContentViews;
     
-    MMImageViewButton* cameraAlbumButton;
+    MMCameraButton* cameraAlbumButton;
     MMImageViewButton* iPhotoAlbumButton;
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
-    MMPDFButton* pdfInboxButton;
+//    MMPDFButton* pdfInboxButton;
 }
 
 @dynamic delegate;
@@ -47,9 +48,11 @@
 
         [MMPhotoManager sharedInstance].delegate = self;
 
-        CGRect buttonBounds = contentBounds;
+        CGRect buttonBounds = CGRectZero;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
+        buttonBounds.size.width = kWidthOfSidebarButton * 4;
+        buttonBounds.origin.x = (contentBounds.size.width - buttonBounds.size.width)/2 + 10;
         
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
         contentBounds.size.height -= buttonBounds.size.height;
@@ -90,10 +93,10 @@
         // buttons
         
         // camera
-        cameraAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
+        cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        cameraAlbumButton.darkBg = YES;
-        [cameraAlbumButton setImage:[UIImage imageNamed:@"clearcamera"]];
+        cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        cameraAlbumButton.shadowInset = -1;
         [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:cameraAlbumButton];
 
@@ -102,31 +105,41 @@
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        iPhotoAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        iPhotoAlbumButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoAlbumButton];
         
         // faces button
         iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        iPhotoFacesButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoFacesButton];
         
         // event button
         iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                     kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        iPhotoEventsButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoEventsButton];
         
-        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [sidebarContentView addSubview:pdfInboxButton];
+//        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+//                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+//        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+//        pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+//        pdfInboxButton.shadowInset = -1;
+//        [sidebarContentView addSubview:pdfInboxButton];
+        
+        [self highlightButton:cameraAlbumButton];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
     return self;
 }
 
 -(void) show:(BOOL)animated{
     [super show:animated];
-    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     if(!cameraListContentView.hidden){
         [cameraListContentView show:animated];
     }
@@ -142,6 +155,7 @@
     if(!pdfListContentView.hidden){
         [pdfListContentView show:animated];
     }
+    [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
 
 -(void) hide:(BOOL)animated onComplete:(void (^)(BOOL))onComplete{
@@ -152,14 +166,6 @@
         [eventListContentView hide:animated];
         [pdfListContentView hide:animated];
         
-        if(finished){
-            [cameraListContentView killMemory];
-            [albumListContentView killMemory];
-            [faceListContentView killMemory];
-            [eventListContentView killMemory];
-            [pdfListContentView killMemory];
-        }
-
         if(onComplete){
             onComplete(finished);
         }
@@ -187,24 +193,38 @@
     }
 }
 
--(void) cameraButtonTapped:(UIButton*)button{
+-(void) highlightButton:(MMSidebarButton*)button{
+//    pdfInboxButton.selected = NO;
+    iPhotoAlbumButton.selected = NO;
+    iPhotoEventsButton.selected = NO;
+    iPhotoFacesButton.selected = NO;
+    cameraAlbumButton.selected = NO;
+    button.selected = YES;
+}
+
+-(void) cameraButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:cameraListContentView];
+    [self highlightButton:button];
 }
 
--(void) albumButtonTapped:(UIButton*)button{
+-(void) albumButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:albumListContentView];
+    [self highlightButton:button];
 }
 
--(void) faceButtonTapped:(UIButton*)button{
+-(void) faceButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:faceListContentView];
+    [self highlightButton:button];
 }
 
--(void) eventButtonTapped:(UIButton*)button{
+-(void) eventButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:eventListContentView];
+    [self highlightButton:button];
 }
 
--(void) pdfButtonTapped:(UIButton*)button{
+-(void) pdfButtonTapped:(MMSidebarButton*)button{
     [self switchToListView:pdfListContentView];
+    [self highlightButton:button];
 }
 
 #pragma mark - MMPhotoManagerDelegate
@@ -247,38 +267,61 @@
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    [self updateInterfaceTo:orientation animated:YES];
+}
+
+-(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated{
     if(![self isVisible]) return;
     if(!cameraListContentView.hidden){
-        [cameraListContentView updatePhotoRotation:YES];
+        [cameraListContentView updatePhotoRotation:animated];
     }else if(!albumListContentView.hidden){
-        [albumListContentView updatePhotoRotation:YES];
+        [albumListContentView updatePhotoRotation:animated];
     }else if(!faceListContentView.hidden){
-        [faceListContentView updatePhotoRotation:YES];
+        [faceListContentView updatePhotoRotation:animated];
     }else if(!eventListContentView.hidden){
-        [eventListContentView updatePhotoRotation:YES];
+        [eventListContentView updatePhotoRotation:animated];
     }else if(!pdfListContentView.hidden){
-        [pdfListContentView updatePhotoRotation:YES];
+        [pdfListContentView updatePhotoRotation:animated];
     }
     
+    void(^animations)() = ^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        cameraAlbumButton.rotation = [self sidebarButtonRotation];
+        cameraAlbumButton.transform = rotationTransform;
+        
+        iPhotoAlbumButton.rotation = [self sidebarButtonRotation];
+        iPhotoAlbumButton.transform = rotationTransform;
+        
+        iPhotoFacesButton.rotation = [self sidebarButtonRotation];
+        iPhotoFacesButton.transform = rotationTransform;
+        
+        iPhotoEventsButton.rotation = [self sidebarButtonRotation];
+        iPhotoEventsButton.transform = rotationTransform;
+        
+//        pdfInboxButton.rotation = [self sidebarButtonRotation];
+//        pdfInboxButton.transform = rotationTransform;
+    };
+    
     [[NSThread mainThread] performBlock:^{
-        [UIView animateWithDuration:.3 animations:^{
-            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-            cameraAlbumButton.rotation = [self sidebarButtonRotation];
-            cameraAlbumButton.transform = rotationTransform;
-
-            iPhotoAlbumButton.rotation = [self sidebarButtonRotation];
-            iPhotoAlbumButton.transform = rotationTransform;
-
-            iPhotoFacesButton.rotation = [self sidebarButtonRotation];
-            iPhotoFacesButton.transform = rotationTransform;
-
-            iPhotoEventsButton.rotation = [self sidebarButtonRotation];
-            iPhotoEventsButton.transform = rotationTransform;
-
-            pdfInboxButton.rotation = [self sidebarButtonRotation];
-            pdfInboxButton.transform = rotationTransform;
-        }];
+        if(animated){
+            [UIView animateWithDuration:.3 animations:animations];
+        }else{
+            animations();
+        }
     }];
+}
+
+
+#pragma mark - Memory
+
+-(void) killMemory{
+    if(![self isVisible]){
+        [cameraListContentView killMemory];
+        [albumListContentView killMemory];
+        [faceListContentView killMemory];
+        [eventListContentView killMemory];
+        [pdfListContentView killMemory];
+    }
 }
 
 

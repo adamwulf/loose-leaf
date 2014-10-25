@@ -15,6 +15,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
 #import "Mixpanel.h"
+#import "UIScreen+PortraitBounds.h"
 
 #define kPercentCompleteAtStart  .15
 #define kPercentCompleteOfZip    .20
@@ -80,7 +81,7 @@
     if(!zipIsComplete){
         zipIsComplete = YES;
         
-        CGSize screenSize = [UIScreen mainScreen].bounds.size;
+        CGSize screenSize = [UIScreen mainScreen].portraitBounds.size;
         CGFloat scale = [UIScreen mainScreen].scale;
         CGFloat assetSize = [[NSFileManager defaultManager] sizeForItemAtPath:pathToZipFile];
         NSString* readableSize = [[NSFileManager defaultManager] humanReadableSizeForItemAtPath:pathToZipFile];

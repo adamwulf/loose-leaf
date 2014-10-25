@@ -17,6 +17,7 @@
 
 @end
 
+#define kMinTolerance 0.0000001
 
 @implementation TCViewController{
     TCShapeController* shapeController;
@@ -90,12 +91,16 @@
 
 -(void) resetData{
     shapeController = [[TCShapeController alloc] init];
+    [self rebuildShape:nil];
 }
 
 - (IBAction) rebuildShape:(id)sender
 {
     continuityLabel.text = [NSString stringWithFormat:@"%4.2f",[continuitySlider value]];
-    toleranceLabel.text = [NSString stringWithFormat:@"%4.6f",[toleranceSlider value]*0.0001];
+//    float val = toleranceSlider.value;
+//    float tol = kMinTolerance;
+//    val = val * kMinTolerance;
+    toleranceLabel.text = [NSString stringWithFormat:@"%4.7f",[toleranceSlider value]*kMinTolerance];
     
     [vectorView.shapeList removeLastObject];
     [self getFigurePainted];
@@ -182,7 +187,7 @@
 
 - (SYShape*) getFigurePainted
 {
-    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*0.0001 andContinuity:[continuitySlider value] forceOpen:(shapeVsScissorChooser.selectedSegmentIndex != 0)];
+    SYShape* possibleShape = [shapeController getFigurePaintedWithTolerance:[toleranceSlider value]*kMinTolerance andContinuity:[continuitySlider value] forceOpen:(shapeVsScissorChooser.selectedSegmentIndex != 0)];
     if(possibleShape){
 //        @throw [NSException exceptionWithName:@"Test Target Exception" reason:@"testing crashlytics" userInfo:nil];
         [filledShapeView clear];
@@ -270,13 +275,13 @@
     // --------------------------------------------------------------------------
     
     // DEBUG DRAW
-    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+    SYShape *keyPointShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*kMinTolerance];
     for (NSValue *pointValue in [output objectForKey:@"listPoints"])
         [keyPointShape addPoint:[pointValue CGPointValue]];
     [vectorView addDebugShape:keyPointShape];
     
     // DEBUG DRAW
-    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*0.0001];
+    SYShape *reducePointKeyArrayShape = [[SYShape alloc]initWithBezierTolerance:[toleranceSlider value]*kMinTolerance];
     for (NSValue *pointValue in [output objectForKey:@"reducePointKeyArray"])
         [reducePointKeyArrayShape addKeyPoint:[pointValue CGPointValue]];
     [vectorView addDebugShape:reducePointKeyArrayShape];

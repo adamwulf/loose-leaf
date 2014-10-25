@@ -18,4 +18,6 @@
 
 +(NSInteger) majorVersion;
 
++(NSString*) buildVersion;
+
 @end

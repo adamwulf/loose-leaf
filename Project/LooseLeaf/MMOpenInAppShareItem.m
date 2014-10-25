@@ -12,8 +12,13 @@
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
+#import "UIView+Animations.h"
 #import "UIColor+Shadow.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "MMRotateViewController.h"
+#import "MMAppDelegate.h"
+#import "MMRotationManager.h"
+#import "MMPresentationWindow.h"
 
 @implementation MMOpenInAppShareItem{
     MMShareButton* button;
@@ -32,7 +37,7 @@
         button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
-        
+
         dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyyMMdd-HHmm"];
     }
@@ -54,20 +59,24 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSDate *now = [[NSDate alloc] init];
-        NSString *theDate = [dateFormatter stringFromDate:now];
-        NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
-        UIImage* imageToShare = self.delegate.imageToShare;
-        [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
-        NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
-
-        UIWindow* win = [[UIApplication sharedApplication] keyWindow];
-        controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
-        controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
-        controller.delegate = self;
-        UIView* presentationView = win.rootViewController.view;
-        if(![controller presentOpenInMenuFromRect:[button convertRect:button.bounds toView:presentationView] inView:presentationView animated:YES]){
-            [self performAirDropAction];
+        @autoreleasepool {
+            NSDate *now = [[NSDate alloc] init];
+            NSString *theDate = [dateFormatter stringFromDate:now];
+            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
+            UIImage* imageToShare = self.delegate.imageToShare;
+            [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
+            NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
+            
+            controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+            controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
+            controller.delegate = self;
+            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+            UIView* presentationView = presentationWindow.rootViewController.view;
+            CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
+            [presentationWindow makeKeyAndVisible];
+            if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
+                [self performAirDropAction];
+            }
         }
     });
 }
@@ -95,7 +104,6 @@
                                                      UIActivityTypePostToFlickr,
                                                      UIActivityTypePostToVimeo,
                                                      UIActivityTypePostToTencentWeibo];
-    UIWindow* win = [[UIApplication sharedApplication] keyWindow];
     
     
     void(^block)(NSString *, BOOL) = ^(NSString *activityType, BOOL completed){
@@ -128,12 +136,14 @@
         };
     }
     
-    [win.rootViewController presentViewController:activityViewController
-                                         animated:YES
-                                       completion:^{
-                                           // ...
-                                           NSLog(@"complete");
-                                       }];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [presentationWindow makeKeyAndVisible];
+    [presentationWindow.rootViewController presentViewController:activityViewController
+                                                        animated:YES
+                                                      completion:^{
+                                                          // ...
+                                                          NSLog(@"complete");
+                                                      }];
 }
 
 

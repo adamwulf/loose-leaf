@@ -7,42 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMScrapCollectionStateDelegate.h"
 
-@class MMScrapView, MMScrapsOnPaperState, MMScrapContainerView,MMScrapSidebarContainerView,MMScrappedPaperView;
+@class MMScrapView, MMScrappedPaperView;
 
-@protocol MMScrapsOnPaperStateDelegate <NSObject>
+@protocol MMScrapsOnPaperStateDelegate <MMScrapCollectionStateDelegate>
 
 -(MMScrappedPaperView*) page;
 
--(NSString*) uuid;
-
--(MMScrapView*) scrapForUUIDIfAlreadyExists:(NSString*)scrapUUID;
-
--(MMScrapContainerView*) scrapContainerView;
-
 -(BOOL) isEditable;
-
--(NSArray*) scrapsOnPaper;
-
-/**
- * triggered when a scrap is laoded from disk that is
- * actively showing on the page
- */
--(void) didLoadScrapOnPage:(MMScrapView*)scrap;
-
-/**
- * triggered when a scrap is laoded from disk that is
- * NOT actively showing on the page, and is only
- * available inside the page's undo/redo stacks
- */
--(void) didLoadScrapOffPage:(MMScrapView*)scrap;
-
--(void) didLoadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
-
--(void) didUnloadAllScrapsFor:(MMScrapsOnPaperState*)scrapState;
 
 -(NSString*) pagesPath;
 
 -(NSString*) bundledPagesPath;
+
+#pragma mark - Scrap Container for Sidebar
+
+-(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
 
 @end

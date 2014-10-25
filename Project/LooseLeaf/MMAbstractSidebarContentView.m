@@ -24,6 +24,9 @@
 @implementation MMAbstractSidebarContentView{
     NSMutableDictionary* currentRowForAlbum;
     MMEmptyCollectionViewCell* emptyView;
+    
+    CGPoint lastAlbumScrollOffset;
+    CGPoint lastPhotoScrollOffset;
 }
 
 @synthesize delegate;
@@ -45,7 +48,6 @@
         
         [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
         [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
-        [photoListScrollView registerClass:[MMEmptyCollectionViewCell class] forCellWithReuseIdentifier:@"MMEmptyCollectionViewCell"];
 
         currentAlbum = nil;
         
@@ -86,46 +88,61 @@
     return ceilf(self.bounds.size.width / 2);
 }
 
--(void) reset:(BOOL)animated{
-    albumListScrollView.alpha = 1;
-    photoListScrollView.alpha = 0;
-    
-    if(!currentAlbum.numberOfPhotos){
-        emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
+-(void) updateEmptyErrorMessage{
+    if(isShowing && ![self numberOfRowsFor:albumListScrollView] && [MMPhotoManager hasPhotosPermission]){
+        if(!emptyView){
+            emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
+        }
         [self addSubview:emptyView];
-    }
-}
-
--(void) show:(BOOL)animated{
-    [[MMPhotoManager sharedInstance] initializeAlbumCache];
-    [self updatePhotoRotation:NO];
-    isShowing = YES;
-}
-
--(void) hide:(BOOL)animated{
-    isShowing = NO;
-    if(emptyView){
+        [emptyView updatePhotoRotation:NO];
+    }else if(emptyView){
         [emptyView removeFromSuperview];
         emptyView = nil;
     }
-    [[NSThread mainThread] performBlock:^{
-        [photoListScrollView reloadData];
-    } afterDelay:.1];
+}
+
+-(void) reset:(BOOL)animated{
+    albumListScrollView.alpha = 1;
+    photoListScrollView.alpha = 0;
+    [self updateEmptyErrorMessage];
+}
+
+-(void) show:(BOOL)animated{
+    [self updateEmptyErrorMessage];
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
+    [self updatePhotoRotation:NO];
+    isShowing = YES;
+    albumListScrollView.contentOffset = lastAlbumScrollOffset;
+}
+
+-(void) hide:(BOOL)animated{
+    lastAlbumScrollOffset = albumListScrollView.contentOffset;
+    lastPhotoScrollOffset = photoListScrollView.contentOffset;
+    isShowing = NO;
 }
 
 -(void) killMemory{
     [albumListScrollView killMemory];
+    if(![self isShowing]){
+        // only clear the cache if its been a while (?)
+        [photoListScrollView reloadData];
+        [self updateEmptyErrorMessage];
+        lastPhotoScrollOffset = CGPointZero;
+        lastAlbumScrollOffset = CGPointZero;
+    }
 }
 
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums{
+    [self updateEmptyErrorMessage];
     [albumListScrollView refreshVisibleRows];
     [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];
     }];
     if(photoListScrollView.alpha){
         [photoListScrollView reloadData];
+        photoListScrollView.contentOffset = lastPhotoScrollOffset;
     }
 }
 
@@ -240,15 +257,18 @@
     
     if(animated){
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView reloadData];
             [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:YES];
             [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{
+            [photoListScrollView reloadData];
             [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:NO];
             updateVisibleRowsWithRotation();
         }];
     }
+    [emptyView updatePhotoRotation:animated];
 }
 
 -(NSString*) description{

@@ -12,6 +12,9 @@
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 
+#define kShapeTolerance 0.01
+#define kShapeContinuity 0.0
+
 @implementation MMShapeBuilderView{
     
     // the array of touches used to build
@@ -25,6 +28,24 @@
     // start, so that it looks like it's
     // following your finger
     CGFloat phase;
+}
+
+
+static MMShapeBuilderView* staticShapeBuilder = nil;
+
++(MMShapeBuilderView*) staticShapeBuilderViewWithFrame:(CGRect)frame andScale:(CGFloat)scale{
+    CGRect scaledFrame = CGRectMake(0, 0, frame.size.width*scale, frame.size.height*scale);
+    if(!staticShapeBuilder){
+        staticShapeBuilder = [[MMShapeBuilderView alloc] initWithFrame:frame];
+        staticShapeBuilder.transform = CGAffineTransformMakeScale(scale, scale);
+        staticShapeBuilder.contentMode = UIViewContentModeScaleAspectFill;
+        staticShapeBuilder.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        staticShapeBuilder.clipsToBounds = YES;
+        staticShapeBuilder.opaque = NO;
+        staticShapeBuilder.backgroundColor = [UIColor clearColor];
+    }
+    staticShapeBuilder.frame = scaledFrame;
+    return staticShapeBuilder;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -217,7 +238,7 @@
         } copy]];
         // the shape controller knows about all the points in this subpath,
         // so see if it can recognize a shape
-        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:0.0000001 andContinuity:0 forceOpen:NO];
+        SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:kShapeTolerance andContinuity:kShapeContinuity forceOpen:NO];
         if(shape){
             // return all successful shapes
             UIBezierPath* shapePath = [shape bezierPath];

@@ -27,6 +27,8 @@
 
 +(MMPageCacheManager*) sharedInstance;
 
+-(void) pageWasDeleted:(MMPaperView*)page;
+
 -(void) mayChangeTopPageTo:(MMPaperView*)page;
 -(void) willChangeTopPageTo:(MMPaperView*)page;
 -(BOOL) didChangeToTopPage:(MMPaperView*)page;
@@ -37,6 +39,8 @@
 -(void) didUnloadStateForPage:(MMEditablePaperView*) page;
 
 -(void) didSavePage:(MMPaperView*)page;
+
+-(void) forgetAboutPage:(MMPaperView*)page;
 
 -(void) updateVisiblePageImageCache;
 

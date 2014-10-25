@@ -42,13 +42,13 @@
     [self swizzle_reset];
 }
 
--(void) say:(NSString*)prefix ISee:(NSSet*)touches{
-    NSString* str = @"";
-    for (UITouch*t in touches) {
-        str = [str stringByAppendingFormat:@" %p", t];
-    }
-//    debug_NSLog(@"%p %@ %@", self, prefix, str);
-}
+//-(void) say:(NSString*)prefix ISee:(NSSet*)touches{
+//    NSString* str = @"";
+//    for (UITouch*t in touches) {
+//        str = [str stringByAppendingFormat:@" %p", t];
+//    }
+////    debug_NSLog(@"%p %@ %@", self, prefix, str);
+//}
 
 
 //

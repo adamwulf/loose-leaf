@@ -22,6 +22,7 @@
 
 @implementation MMCameraSidebarContentView{
     MMCameraCollectionViewCell * cachedCameraCell;
+    CGPoint lastCameraRollOffset;
 }
 
 - (id)initWithFrame:(CGRect)frame{
@@ -57,9 +58,21 @@
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
-    
+
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     [self doneLoadingPhotoAlbums];
+    [self updatePhotoRotation:NO];
+    
+    if([CaptureSessionManager hasCamera] && ![CaptureSessionManager hasCameraPermission]){
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                @autoreleasepool {
+                    [self doneLoadingPhotoAlbums];
+                }
+            });
+        }];
+    }
+
 }
 
 -(void) hide:(BOOL)animated{
@@ -68,19 +81,19 @@
     albumListScrollView.alpha = 0;
     photoListScrollView.alpha = 1;
     
-//    [cameraRow removeFromSuperview];
-//    cameraRow.delegate = nil;
-//    cameraRow = nil;
-
-    [[NSThread mainThread] performBlock:^{
-        [photoListScrollView reloadData];
-        if(!isShowing){
-            cachedCameraCell = nil;
-        }
-    } afterDelay:.1];
+    lastCameraRollOffset = photoListScrollView.contentOffset;
 }
 
+-(void) killMemory{
+    [super killMemory];
+    if(!isShowing){
+        cachedCameraCell = nil;
+    }
+}
 
+-(void) updateEmptyErrorMessage{
+    // noop
+}
 
 #pragma mark - MMPhotoManagerDelegate
 
@@ -88,6 +101,11 @@
     currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
     if(self.isShowing && photoListScrollView.alpha){
         [photoListScrollView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                [photoListScrollView setContentOffset:lastCameraRollOffset animated:NO];
+            }
+        });
     }
 }
 
@@ -125,7 +143,8 @@
        ![MMPhotoManager hasPhotosPermission]){
         return 1;
     }
-    return isShowing ? 2 : 0;
+    NSInteger ret = isShowing ? 2 : 0;
+    return ret;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -158,5 +177,13 @@
         return cell;
     }
 }
+
+-(void) updatePhotoRotation:(BOOL)animated{
+    [super updatePhotoRotation:animated];
+    if(cachedCameraCell){
+        [cachedCameraCell updatePhotoRotation:animated];
+    }
+}
+
 
 @end

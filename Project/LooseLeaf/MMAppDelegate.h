@@ -9,11 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <Crashlytics/Crashlytics.h>
 
-@class MMLooseLeafViewController;
+@class MMLooseLeafViewController, MMPresentationWindow;
 
-@interface MMAppDelegate : UIResponder <UIApplicationDelegate>
+@interface MMAppDelegate : UIResponder <UIApplicationDelegate,CrashlyticsDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+
+@property (nonatomic, readonly) MMPresentationWindow *presentationWindow;
 
 @property (strong, nonatomic) MMLooseLeafViewController *viewController;
 

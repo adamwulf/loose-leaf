@@ -26,9 +26,10 @@
 @property (nonatomic, readonly) NSString* owningPageUUID;
 @property (nonatomic, readonly) MMScrapViewState* state;
 
--(id) initWithScrapViewState:(MMScrapViewState*)scrapState andPaperState:(MMScrapsOnPaperState*)paperState;
--(id) initWithBezierPath:(UIBezierPath*)path andPaperState:(MMScrapsOnPaperState*)paperState;
--(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapsOnPaperState*)paperState;
+
+-(id) initWithScrapViewState:(MMScrapViewState*)scrapState;
+
+-(id) initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)scale andRotation:(CGFloat)rotation andPaperState:(MMScrapCollectionState*)paperState;
 
 -(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 
@@ -62,7 +63,7 @@
 -(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds;
 
 
--(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
+-(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 withTextureSize:(CGSize)textureSize;
 
 
 -(MMScrapBackgroundView*) backgroundView;

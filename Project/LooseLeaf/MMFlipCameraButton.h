@@ -10,4 +10,6 @@
 
 @interface MMFlipCameraButton : MMDarkSidebarButton
 
+-(void) updatePhotoRotation:(BOOL)animated;
+
 @end

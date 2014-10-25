@@ -19,7 +19,6 @@
 #import "MMImgurShareItem.h"
 #import "MMPrintShareItem.h"
 #import "MMOpenInAppShareItem.h"
-#import "MMAirDropShareItem.h"
 #import "MMCopyShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShareOptionsView.h"
@@ -67,7 +66,6 @@
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
         [shareItems addObject:[[MMPrintShareItem alloc] init]];
         [shareItems addObject:[[MMCopyShareItem alloc] init]];
-        [shareItems addObject:[[MMAirDropShareItem alloc] init]];
         [shareItems addObject:[[MMOpenInAppShareItem alloc] init]];
 
         [self updateShareOptions];
@@ -221,22 +219,24 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        if([shareItem respondsToSelector:@selector(optionsView)]){
-            activeOptionsView = [shareItem optionsView];
-            [activeOptionsView reset];
-            CGRect frForOptions = buttonView.frame;
-            frForOptions.origin.y = buttonView.bounds.size.height;
-            frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
-            activeOptionsView.frame = frForOptions;
-            if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
-                shareItem.isShowingOptionsView = YES;
+        @autoreleasepool {
+            if([shareItem respondsToSelector:@selector(optionsView)]){
+                activeOptionsView = [shareItem optionsView];
+                [activeOptionsView reset];
+                CGRect frForOptions = buttonView.frame;
+                frForOptions.origin.y = buttonView.bounds.size.height;
+                frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
+                activeOptionsView.frame = frForOptions;
+                if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
+                    shareItem.isShowingOptionsView = YES;
+                }
+                [sharingContentView addSubview:activeOptionsView];
+            }else{
+                activeOptionsView = nil;
             }
-            [sharingContentView addSubview:activeOptionsView];
-        }else{
-            activeOptionsView = nil;
+            
+            [shareDelegate mayShare:shareItem];
         }
-        
-        [shareDelegate mayShare:shareItem];
     });
 }
 

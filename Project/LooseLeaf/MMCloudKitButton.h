@@ -10,4 +10,6 @@
 
 @interface MMCloudKitButton : MMImageViewButton
 
++(UIBezierPath*) cloudPathForFrame:(CGRect)frame;
+
 @end

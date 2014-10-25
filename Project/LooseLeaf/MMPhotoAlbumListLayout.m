@@ -51,7 +51,8 @@
 }
 
 -(CGSize)collectionViewContentSize{
-    if(!self.collectionView.numberOfSections){
+    NSInteger numSections = self.collectionView.numberOfSections;
+    if(!numSections){
         return CGSizeZero;
     }
     

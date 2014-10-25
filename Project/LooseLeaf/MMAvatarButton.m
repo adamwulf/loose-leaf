@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIFont+UIBezierCurve.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMAvatarButton{
     NSString* letter;
@@ -157,6 +158,7 @@
 
 
 -(void) animateOffScreenWithCompletion:(void (^)(BOOL finished))completion{
+    CheckMainThread;
     CGPoint offscreen = CGPointMake(self.center.x, self.center.y - self.bounds.size.height / 2);
     [UIView animateWithDuration:.3 animations:^{
         self.alpha = 0;
@@ -168,6 +170,7 @@
 }
 
 -(void) animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion{
+    CheckMainThread;
     CGPoint onscreen = self.center;
     self.center = offscreen;
 

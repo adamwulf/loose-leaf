@@ -10,6 +10,7 @@
 #import "Mixpanel.h"
 #import "MMReachabilityManager.h"
 #import "MMProgressedImageViewButton.h"
+#import "MMPresentationWindow.h"
 #import "Constants.h"
 
 @implementation MMPrintShareItem{
@@ -55,21 +56,26 @@
         // so we need to add our next steps /after that/
         // so we need to dispatch async too
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
-            printController.printingItem = self.delegate.imageToShare;
-            
-            [printController presentFromRect:self.button.bounds inView:self.button animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
-                if(completed){
-                    [self.delegate didShare:self];
-                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                }
-                NSString* strResult = completed ? @"Success" : @"Cancelled";
-                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Print",
-                                                                             kMPEventExportPropResult : strResult}];
-                button.selected = NO;
-                [button setNeedsDisplay];
-            }];
+            @autoreleasepool {
+                UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
+                printController.printingItem = self.delegate.imageToShare;
+                
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                [presentationWindow makeKeyAndVisible];
+                UIView* presentationView = presentationWindow.rootViewController.view;
+                CGRect presentationRect = [presentationView convertRect:self.button.bounds fromView:self.button];
+                [printController presentFromRect:presentationRect inView:presentationView animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
+                    if(completed){
+                        [self.delegate didShare:self];
+                        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                    }
+                    NSString* strResult = completed ? @"Success" : @"Cancelled";
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Print",
+                                                                                 kMPEventExportPropResult : strResult}];
+                    button.selected = NO;
+                    [button setNeedsDisplay];
+                }];
+            }
         });
     }else{
         [button animateToPercent:1.0 success:NO completion:nil];
