@@ -555,6 +555,7 @@
     CGSize stampSize = otherDrawableView.pagePtSize;
     stampSize.width *= otherDrawableView.scale;
     stampSize.height *= otherDrawableView.scale;
+    [JotGLContext pushCurrentContext:otherDrawableView.context];
     
     JotGLTexture* otherTexture = [otherDrawableView generateTexture];
     
@@ -608,9 +609,13 @@
     p4.x *= widthRatio;
     p4.y *= heightRatio;
     
+    [otherDrawableView.context flush];
+    [JotGLContext popCurrentContext];
+
     // now stamp our texture onto the other scrap using these
     // texture coordinates
     [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4 withTextureSize:stampSize];
+    
     [[JotTextureCache sharedManager] returnTextureForReuse:otherTexture];
 }
 
