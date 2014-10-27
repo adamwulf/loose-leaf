@@ -305,38 +305,38 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             @autoreleasepool {
                 if(self.isForgetful){
-                    DebugLog(@"forget: %@ skipping scrap state save1", self.uuid);
+//                    DebugLog(@"forget: %@ skipping scrap state save1", self.uuid);
                     doneSavingBlock(NO);
                     return;
                 }
                 [lock lock];
                 [JotViewStateProxy shouldPrintHasEdits:YES];
-                DebugLog(@"(%@) checking edits", uuid);
-                DebugLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
+//                DebugLog(@"(%@) checking edits", uuid);
+//                DebugLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
                 [JotViewStateProxy shouldPrintHasEdits:NO];
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
                             if(self.isForgetful){
-                                DebugLog(@"forget: %@ skipping scrap state save2", self.uuid);
+//                                DebugLog(@"forget: %@ skipping scrap state save2", self.uuid);
                                 doneSavingBlock(NO);
                                 [lock unlock];
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-                                DebugLog(@"(%@) saving edits2: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
+//                                DebugLog(@"(%@) saving edits2: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
 
                                 if([drawableViewState hasEditsToSave]){
-                                    DebugLog(@"(%@) saving strokes: %d", uuid, [drawableViewState hasEditsToSave]);
+//                                    DebugLog(@"(%@) saving strokes: %d", uuid, [drawableViewState hasEditsToSave]);
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
                                     [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
-                                        DebugLog(@"saved scrap %@ ink to %@", self.uuid, self.inkImageFile);
-                                        DebugLog(@"saved scrap %@ thumb to %@", self.uuid, self.thumbImageFile);
+//                                        DebugLog(@"saved scrap %@ ink to %@", self.uuid, self.inkImageFile);
+//                                        DebugLog(@"saved scrap %@ thumb to %@", self.uuid, self.thumbImageFile);
                                         if(self.isForgetful){
-                                            DebugLog(@"forget: %@ scrap state skipping update after jotview save", self.uuid);
+//                                            DebugLog(@"forget: %@ scrap state skipping update after jotview save", self.uuid);
                                         }else if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
                                             [self setActiveThumbnailImage:thumb];
@@ -349,12 +349,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                             lastSavedUndoHash = state.undoHash;
                                             savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
 
-                                            DebugLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
+//                                            DebugLog(@"(%@) scrap saved at: %d with thumb: %d", uuid, (int)state.undoHash, (int)thumb);
                                         }
                                         dispatch_semaphore_signal(sema1);
                                     }];
                                 }else if(backingImageHolder.backingViewHasChanged){
-                                    DebugLog(@"(%@) no stroke edits, only saving background view: %d", uuid, [drawableViewState hasEditsToSave]);
+//                                    DebugLog(@"(%@) no stroke edits, only saving background view: %d", uuid, [drawableViewState hasEditsToSave]);
                                     // if we dont' have any pen edits in the drawableViewState,
                                     // but we do have background changes to save
                                     lastSavedUndoHash = drawableViewState.undoHash;
@@ -362,17 +362,17 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                     dispatch_semaphore_signal(sema1);
                                 }else{
                                     // nothing new to save
-                                    DebugLog(@"(%@) nothing new to save: %d %d", uuid, drawableViewState.hasEditsToSave, backingImageHolder.backingViewHasChanged);
+//                                    DebugLog(@"(%@) nothing new to save: %d %d", uuid, drawableViewState.hasEditsToSave, backingImageHolder.backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
                                 // nothing new to save
                                 if(!drawableView && ![drawableViewState hasEditsToSave]){
-                                    DebugLog(@"(%@) no drawable view or edits", uuid);
+//                                    DebugLog(@"(%@) no drawable view or edits", uuid);
                                 }else if(!drawableView){
-                                    DebugLog(@"(%@) no drawable view", uuid);
+//                                    DebugLog(@"(%@) no drawable view", uuid);
                                 }else if(![drawableViewState hasEditsToSave]){
-                                    DebugLog(@"(%@) no edits to save in state", uuid);
+//                                    DebugLog(@"(%@) no edits to save in state", uuid);
                                 }
                                 // was asked to save, but we were asked to save
                                 // multiple times extremely quickly, so just signal
@@ -383,7 +383,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
 //                    dispatch_release(sema1); ARC handles this
-                    DebugLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
+//                    DebugLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
                     if(doneSavingBlock) doneSavingBlock(YES);
                 }else{
                     // sometimes, this method is called in very quick succession.
@@ -391,7 +391,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     // finish all of the export and drawableViewState will be nil
                     // next time it runs. so we double check our save state to determine
                     // if in fact we still need to save or not
-                    DebugLog(@"(%@) no edits to save in state2", uuid);
+//                    DebugLog(@"(%@) no edits to save in state2", uuid);
                     if(doneSavingBlock) doneSavingBlock(NO);
                 }
                 [lock unlock];
@@ -399,7 +399,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         });
     }else{
         if(doneSavingBlock) doneSavingBlock(NO);
-        DebugLog(@"(%@) no edits to save in state3", uuid);
+//        DebugLog(@"(%@) no edits to save in state3", uuid);
     }
 }
 
