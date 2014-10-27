@@ -609,7 +609,6 @@
     p4.x *= widthRatio;
     p4.y *= heightRatio;
     
-    [otherDrawableView.context flush];
     [JotGLContext popCurrentContext];
 
     // now stamp our texture onto the other scrap using these
