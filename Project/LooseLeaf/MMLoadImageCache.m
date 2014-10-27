@@ -79,7 +79,7 @@ static int count = 0;
                 [orderedKeys removeObject:path];
                 [orderedKeys insertObject:path atIndex:0];
             }else{
-                NSLog(@"how did we get nil path?");
+                DebugLog(@"how did we get nil path?");
             }
             [self ensureCacheSize];
             

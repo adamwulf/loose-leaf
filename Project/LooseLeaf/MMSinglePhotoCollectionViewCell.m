@@ -60,7 +60,7 @@
         }];
     }
     @catch (NSException *exception) {
-        NSLog(@"gotcha");
+        DebugLog(@"gotcha");
     }
 }
 

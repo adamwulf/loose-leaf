@@ -105,11 +105,11 @@
     
     // chose the angle with the most change
     //    angleAvg = ABS(angleHRotation) > ABS(angleVRotation) ? angleHRotation : angleVRotation;
-    //    NSLog(@"angle rotation: %f  and %f  avg: %f", angleHRotation, angleVRotation, angle);
-    //    NSLog(@"ah:  %f  av: %f", angleHRotation, angleVRotation);
-    //    NSLog(@"cos: %f  and %f", cosf(angleHRotation), cosf(angleVRotation));
-    //    NSLog(@"sin: %f  and %f", sinf(angleHRotation), sinf(angleVRotation));
-    //    NSLog(@"%f + %f = %f     cos: %f  sin: %f", angleHRotation, angleVRotation, angleAvg, cosf(angleAvg), sinf(angleAvg));
+    //    DebugLog(@"angle rotation: %f  and %f  avg: %f", angleHRotation, angleVRotation, angle);
+    //    DebugLog(@"ah:  %f  av: %f", angleHRotation, angleVRotation);
+    //    DebugLog(@"cos: %f  and %f", cosf(angleHRotation), cosf(angleVRotation));
+    //    DebugLog(@"sin: %f  and %f", sinf(angleHRotation), sinf(angleVRotation));
+    //    DebugLog(@"%f + %f = %f     cos: %f  sin: %f", angleHRotation, angleVRotation, angleAvg, cosf(angleAvg), sinf(angleAvg));
     
     
     
@@ -252,7 +252,7 @@
 -(CGPoint) mixPoints:(CGPoint)p1 with:(CGPoint)p2 for:(CGFloat)a1{
     CGPoint retP = CGPointMake(p1.x * cosf(a1) + p2.x * (1-cosf(a1)),
                                p1.y * cosf(a1) + p2.y * (1-cosf(a1)));
-    //    NSLog(@"mixed %f with %f using %f and %f got %f", p1.x, p2.x, cosf(a1), (1-cosf(a1)), retP.x);
+    //    DebugLog(@"mixed %f with %f using %f and %f got %f", p1.x, p2.x, cosf(a1), (1-cosf(a1)), retP.x);
     return retP;
 }
 

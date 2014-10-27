@@ -21,6 +21,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSArray+Extras.h"
 #import <ZipArchive/ZipArchive.h>
+#import "Constants.h"
 
 #define kMessagesSinceLastFetchKey @"messagesSinceLastFetch"
 
@@ -207,7 +208,7 @@ static NSString* cloudKitFilesPath;
 }
 
 -(void) changeToStateBasedOnError:(NSError*)err{
-    NSLog(@"changeToStateBasedOnError");
+    DebugLog(@"changeToStateBasedOnError");
     switch (err.code) {
         case SPRSimpleCloudMessengerErrorNetwork:
         case SPRSimpleCloudMessengerErrorServiceUnavailable:
@@ -240,7 +241,7 @@ static NSString* cloudKitFilesPath;
 }
 
 -(void) applicationWillEnterForeground{
-    NSLog(@"applicationWillEnterForeground - cloudkit manager");
+    DebugLog(@"applicationWillEnterForeground - cloudkit manager");
     [MMCloudKitBaseState clearCache];
     [self changeToState:[[MMCloudKitBaseState alloc] initWithCachedFriendList:currentState.friendList]];
 }

@@ -182,10 +182,10 @@ const int COLINEAR = 0;
     if(gesture.state == UIGestureRecognizerStateBegan){
         firstQ = [gesture getQuad];
         startTransform = draggable.layer.transform;
-        NSLog(@"begin angle: %f", angle); // 0.020000
+        DebugLog(@"begin angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateCancelled){
         draggable.layer.transform = startTransform;
-        NSLog(@"cancelled angle: %f", angle); // 0.020000
+        DebugLog(@"cancelled angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateChanged){
         Quadrilateral secondQ = [gesture getQuad];
 
@@ -221,15 +221,15 @@ const int COLINEAR = 0;
         CGFloat scaley = sqrtf((transformForScale.m21 * transformForScale.m21 ) +
                                (transformForScale.m22 * transformForScale.m22) +
                                (transformForScale.m23 * transformForScale.m23));
-        NSLog(@"scales: %f %f and rotation: %f", scalex, scaley, angle);
+        DebugLog(@"scales: %f %f and rotation: %f", scalex, scaley, angle);
         
         draggable.layer.transform = CATransform3DConcat(startTransform, skewTransform);
     }else if(gesture.state == UIGestureRecognizerStateEnded){
         draggable.layer.transform = startTransform;
-        NSLog(@"ended angle: %f", angle); // 0.020000
+        DebugLog(@"ended angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStateFailed){
         draggable.layer.transform = startTransform;
-        NSLog(@"failed angle: %f", angle); // 0.020000
+        DebugLog(@"failed angle: %f", angle); // 0.020000
     }else if(gesture.state == UIGestureRecognizerStatePossible){
         draggable.layer.transform = startTransform;
     }

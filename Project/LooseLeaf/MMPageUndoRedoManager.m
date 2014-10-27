@@ -39,7 +39,7 @@
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
     @synchronized(self){
-//        NSLog(@"adding undo item %@", item);
+//        DebugLog(@"adding undo item %@", item);
         BOOL needsLoad = !isLoaded;
         if(needsLoad){
             [self loadFrom:page.undoStatePath];
@@ -57,7 +57,7 @@
         if(needsLoad){
             [self saveTo:page.undoStatePath];
             [self unloadState];
-//            NSLog(@"done saving unloaded undo manager");
+//            DebugLog(@"done saving unloaded undo manager");
         }
     }
 }
@@ -94,16 +94,16 @@
 
 -(void) printDescription{
 //    return;
-//    NSLog(@"***************************");
-//    NSLog(@"stackOfUndoneItems:");
+//    DebugLog(@"***************************");
+//    DebugLog(@"stackOfUndoneItems:");
 //    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoneItems){
-//        NSLog(@"%@", obj);
+//        DebugLog(@"%@", obj);
 //    }
-//    NSLog(@"stackOfUndoableItems:");
+//    DebugLog(@"stackOfUndoableItems:");
 //    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoableItems){
-//        NSLog(@"%@", obj);
+//        DebugLog(@"%@", obj);
 //    }
-//    NSLog(@"***************************");
+//    DebugLog(@"***************************");
 }
 
 -(void) saveTo:(NSString*)path{
@@ -111,7 +111,7 @@
         @throw [NSException exceptionWithName:@"SavingUnloadedUndoManager" reason:@"Cannot save unloaded undo manager" userInfo:nil];
     }
     if(!self.hasEditsToSave){
-//        NSLog(@"no edits to save for undo state: %@", path);
+//        DebugLog(@"no edits to save for undo state: %@", path);
         return;
     }
     NSArray* saveableStackOfUndoneItems;

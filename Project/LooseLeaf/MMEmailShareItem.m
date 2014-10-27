@@ -60,7 +60,7 @@
                 [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                 [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
-                    NSLog(@"done");
+                    DebugLog(@"done");
                 }];
             }else{
                 composer = nil;

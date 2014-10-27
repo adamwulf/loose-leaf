@@ -48,10 +48,10 @@
     if(ownerState.lastSavedUndoHash != self.undoHash){
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", nil];
         if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
-    //        NSLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
-    //        NSLog(@"saved to: %@", scrapIDsPath);
+    //        DebugLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
+    //        DebugLog(@"saved to: %@", scrapIDsPath);
         }else{
-            NSLog(@"couldn't save");
+            DebugLog(@"couldn't save");
         }
         [ownerState wasSavedAtUndoHash:self.undoHash];
     }

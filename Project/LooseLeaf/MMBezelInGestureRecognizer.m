@@ -64,13 +64,13 @@
 -(void) setSubState:(UIGestureRecognizerState)_subState{
     subState = _subState;
 //    if(subState == UIGestureRecognizerStateBegan){
-//        debug_NSLog(@"%@ substate began", [self description]);
+//        DebugLog(@"%@ substate began", [self description]);
 //    }else if(subState == UIGestureRecognizerStateCancelled){
-//        debug_NSLog(@"%@ substate cancelled", [self description]);
+//        DebugLog(@"%@ substate cancelled", [self description]);
 //    }else if(subState == UIGestureRecognizerStateEnded){
-//        debug_NSLog(@"%@ substate ended", [self description]);
+//        DebugLog(@"%@ substate ended", [self description]);
 //    }else if(subState == UIGestureRecognizerStateFailed){
-//        debug_NSLog(@"%@ substate failed", [self description]);
+//        DebugLog(@"%@ substate failed", [self description]);
 //    }
 }
 
@@ -84,7 +84,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
 
-//    debug_NSLog(@"%@: %i touches began", [self description], [touches count]);
+//    DebugLog(@"%@: %i touches began", [self description], [touches count]);
 
     BOOL foundValidTouch = NO;
     for(UITouch* touch in touches){
@@ -145,7 +145,7 @@
         [dateOfLastBezelEnding release];
         dateOfLastBezelEnding = nil;
     }else if([validTouches count] >= 2 && foundValidTouch && ![self isAllowedToBezelHelper]){
-        debug_NSLog(@"%@ would begin, but isn't allowed", [self description]);
+        DebugLog(@"%@ would begin, but isn't allowed", [self description]);
         [ignoredTouches addObjectsInSet:validTouches];
         [validTouches removeAllObjects];
     }
@@ -197,7 +197,7 @@
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
 
-//    debug_NSLog(@"%@: %i touches ended", [self description], [touches count]);
+//    DebugLog(@"%@: %i touches ended", [self description], [touches count]);
 
     [self processSubStateForNextIteration];
     [ignoredTouches removeObjectsInSet:touches];

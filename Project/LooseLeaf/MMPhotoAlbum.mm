@@ -169,11 +169,11 @@ BOOL isEnumerating = NO;
                 }
             }
         }catch(...){
-            NSLog(@"caught++");
+            DebugLog(@"caught++");
         }
     }@catch(NSException* exception){
         if([exception.name isEqualToString:NSRangeException]){
-            NSLog(@"caught: %@ %@", exception.name, exception);
+            DebugLog(@"caught: %@ %@", exception.name, exception);
             // noop
             //
             // the album is likely changing, and will update
@@ -181,18 +181,18 @@ BOOL isEnumerating = NO;
             // https://github.com/adamwulf/loose-leaf/issues/529
             enumerationBlock(nil, 0, nil);
         }else{
-            NSLog(@"uncaught: %@ %@", exception.name, exception);
+            DebugLog(@"uncaught: %@ %@", exception.name, exception);
             @throw exception;
         }
     }@catch(...){
-        NSLog(@"caught unkown");
+        DebugLog(@"caught unkown");
     }
 }
 
 -(void) dealloc{
     @synchronized(self){
         if(isEnumerating){
-            debug_NSLog(@"what: dealloc during enumeration");
+            DebugLog(@"what: dealloc during enumeration");
         }
     }
 }

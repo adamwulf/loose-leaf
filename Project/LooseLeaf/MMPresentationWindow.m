@@ -31,16 +31,16 @@
 
 -(void) makeKeyAndVisible{
     if(shouldRespectKeyWindowRequest){
-        debug_NSLog(@"presentation window is key");
+        DebugLog(@"presentation window is key");
         [super makeKeyAndVisible];
         self.alpha = 1;
     }else{
-        debug_NSLog(@"presentation window ignored key window request");
+        DebugLog(@"presentation window ignored key window request");
     }
 }
 
 -(void) resignKeyWindow{
-    debug_NSLog(@"presentation window resigned");
+    DebugLog(@"presentation window resigned");
     self.alpha = 0;
 }
 
@@ -68,7 +68,7 @@
 -(void) killPresentationWindow{
     if([self.subviews count] == 1){
         if([UIApplication sharedApplication].keyWindow == self){
-            debug_NSLog(@"killing presentation window");
+            DebugLog(@"killing presentation window");
             MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
             [appDelegate.window makeKeyAndVisible];
         }
@@ -76,7 +76,7 @@
 }
 
 -(void) dealloc{
-    debug_NSLog(@"dealloc presentation window");
+    DebugLog(@"dealloc presentation window");
 }
 
 @end

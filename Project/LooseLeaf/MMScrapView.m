@@ -283,7 +283,7 @@
 
 -(void) setRotation:(CGFloat)_rotation{
     if(ABS(_rotation - rotation) > .3 && rotation != 0){
-        debug_NSLog(@"what: large rotation change");
+        DebugLog(@"what: large rotation change");
     }
     [self setScale:self.scale andRotation:_rotation];
 }
@@ -506,7 +506,7 @@
 #pragma mark - Saving
 
 -(void) saveScrapToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
-//    NSLog(@"asking scrap %@ to save", scrapState.uuid);
+//    DebugLog(@"asking scrap %@ to save", scrapState.uuid);
     [scrapState saveScrapStateToDisk:doneSavingBlock];
 }
 
@@ -514,12 +514,12 @@
 #pragma mark - State
 
 -(void) loadScrapStateAsynchronously:(BOOL)async{
-//    NSLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
+//    DebugLog(@"asking scrap %@ to load async %d", scrapState.uuid, async);
     [scrapState loadScrapStateAsynchronously:async];
 }
 
 -(void) unloadState{
-//    NSLog(@"asking scrap %@ to unload", scrapState.uuid);
+//    DebugLog(@"asking scrap %@ to unload", scrapState.uuid);
     [scrapState unloadState];
 }
 
@@ -629,7 +629,7 @@
 //#pragma mark - dealloc
 //
 //-(void) dealloc{
-//    NSLog(@"dealloc scrap: %@", scrapState.uuid);
+//    DebugLog(@"dealloc scrap: %@", scrapState.uuid);
 //}
 
 @end

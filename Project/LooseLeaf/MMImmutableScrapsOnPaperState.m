@@ -55,7 +55,7 @@
     __block BOOL hadAnyEditsToSaveAtAll = NO;
     if(ownerState.lastSavedUndoHash != self.undoHash){
         hadAnyEditsToSaveAtAll = YES;
-//        NSLog(@"scrapsOnPaperState needs saving last: %lu !=  now:%lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+//        DebugLog(@"scrapsOnPaperState needs saving last: %lu !=  now:%lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
         NSMutableArray* allScrapProperties = [NSMutableArray array];
         if([allScrapsForPage count]){
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -79,17 +79,17 @@
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
         }
         
-//        NSLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
+//        DebugLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
         if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
-//            NSLog(@"saved to %@", scrapIDsPath);
+//            DebugLog(@"saved to %@", scrapIDsPath);
         }else{
-            NSLog(@"failed saved to %@", scrapIDsPath);
+            DebugLog(@"failed saved to %@", scrapIDsPath);
         }
         [ownerState wasSavedAtUndoHash:self.undoHash];
     }else{
         // we've already saved an immutable state with this hash
-//        NSLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
+//        DebugLog(@"scrapsOnPaperState doesn't need saving %lu == %lu", (unsigned long) ownerState.lastSavedUndoHash, (unsigned long) self.undoHash);
     }
 
     return hadAnyEditsToSaveAtAll;

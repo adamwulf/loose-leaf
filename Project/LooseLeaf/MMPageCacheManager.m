@@ -118,7 +118,7 @@ static MMPageCacheManager* _instance = nil;
         recentlyConfirmedPageUUID = topPage.uuid;
         [self ensureTopPageIsLoaded:topPage];
         [self updateVisiblePageImageCache];
-        debug_NSLog(@"did change top page to %@", topPage.uuid);
+        DebugLog(@"did change top page to %@", topPage.uuid);
         return YES;
     }
     return NO;
@@ -126,7 +126,7 @@ static MMPageCacheManager* _instance = nil;
 
 -(void) willNotChangeTopPageTo:(MMPaperView*)page{
     CheckMainThread;
-//    debug_NSLog(@"will NOT change top page to: %@", page.uuid);
+//    DebugLog(@"will NOT change top page to: %@", page.uuid);
 }
 
 
@@ -143,9 +143,9 @@ static MMPageCacheManager* _instance = nil;
     @synchronized(stateLoadedPages){
         [stateLoadedPages addObject:page];
     }
-//    NSLog(@"MMPageCacheManager did load state for %@", page.uuid);
+//    DebugLog(@"MMPageCacheManager did load state for %@", page.uuid);
     if(page == currentlyTopPage || page == currentEditablePage){
-        //        NSLog(@"didLoadStateForPage: %@", page.uuid);
+        //        DebugLog(@"didLoadStateForPage: %@", page.uuid);
         if(page.scale > kMinPageZoom){
             [self ensureTopPageIsLoaded:currentlyTopPage];
         }
@@ -164,9 +164,9 @@ static MMPageCacheManager* _instance = nil;
     @synchronized(stateLoadedPages){
         [stateLoadedPages removeObject:currentEditablePage];
     }
-//    NSLog(@"MMPageCacheManager did UNLOAD state for %@", page.uuid);
+//    DebugLog(@"MMPageCacheManager did UNLOAD state for %@", page.uuid);
     if(page == currentlyTopPage || page == currentEditablePage){
-        //        NSLog(@"didUnloadStateForPage: %@", page.uuid);
+        //        DebugLog(@"didUnloadStateForPage: %@", page.uuid);
         if(page == currentEditablePage && page != currentlyTopPage){
             [currentEditablePage setDrawableView:nil];
             [currentEditablePage setEditable:NO];
@@ -188,33 +188,33 @@ static MMPageCacheManager* _instance = nil;
     CheckMainThread;
     if(!topPage || [topPage isKindOfClass:[MMEditablePaperView class]]){
         MMUndoablePaperView* replacementEditablePage = (MMUndoablePaperView*)topPage;
-//        NSLog(@"MMPageCacheManager was told %@ is top page", topPage.uuid);
+//        DebugLog(@"MMPageCacheManager was told %@ is top page", topPage.uuid);
         @synchronized(stateLoadedPages){
             if(currentlyTopPage != currentEditablePage &&
                currentlyTopPage != replacementEditablePage){
                 // we tried to load a different top page
                 // but switched to another too fast. unload it
                 [currentlyTopPage unloadState];
-//                NSLog(@"MMPageCacheManager flipped to different top page while editable was still unloading %@ vs %@", currentlyTopPage.uuid, topPage.uuid);
+//                DebugLog(@"MMPageCacheManager flipped to different top page while editable was still unloading %@ vs %@", currentlyTopPage.uuid, topPage.uuid);
             }
             currentlyTopPage = replacementEditablePage;
             if(currentEditablePage != replacementEditablePage){
                 if([currentEditablePage hasEditsToSave]){
                     // if the currently editable page has edits, then save it
                     [currentEditablePage saveToDisk:nil];
-//                    NSLog(@"MMPageCacheManager saving %@ to make room for %@", currentEditablePage.uuid, topPage.uuid);
+//                    DebugLog(@"MMPageCacheManager saving %@ to make room for %@", currentEditablePage.uuid, topPage.uuid);
                 }else if([currentEditablePage isStateLoaded]){
                     // current editable is saved, so now we need to unload it
                     // so we can load in the newly editable page
                     [currentEditablePage unloadState];
-//                    NSLog(@"MMPageCacheManager unloading %@ to make room for %@", currentEditablePage.uuid, topPage.uuid);
+//                    DebugLog(@"MMPageCacheManager unloading %@ to make room for %@", currentEditablePage.uuid, topPage.uuid);
                 }else if(![replacementEditablePage isStateLoaded]){
                     // now we need to load the state for the page
                     // that will become editable
-//                    NSLog(@"MMPageCacheManager loading new top page %@", topPage.uuid);
+//                    DebugLog(@"MMPageCacheManager loading new top page %@", topPage.uuid);
                     [replacementEditablePage loadStateAsynchronously:YES withSize:drawableView.pagePtSize andScale:drawableView.scale andContext:drawableView.context];
                 }else{
-//                    NSLog(@"MMPageCacheManager new current editable %@", topPage.uuid);
+//                    DebugLog(@"MMPageCacheManager new current editable %@", topPage.uuid);
                     // now the old editable page is unloaded,
                     // and the new editable page is loaded,
                     // so give the drawable view to the new page
@@ -225,7 +225,7 @@ static MMPageCacheManager* _instance = nil;
                     [currentEditablePage setDrawableView:drawableView];
                 }
             }else{
-//                NSLog(@"MMPageCacheManager same editable top page %@", topPage.uuid);
+//                DebugLog(@"MMPageCacheManager same editable top page %@", topPage.uuid);
                 // just double check that we're in editable state
                 [currentEditablePage setDrawableView:drawableView];
             }
@@ -236,7 +236,7 @@ static MMPageCacheManager* _instance = nil;
 -(void) pageWasDeleted:(MMPaperView*)page{
     CheckMainThread;
     if(page){
-//        NSLog(@"MMPageCacheManager page was deleted %@", page.uuid);
+//        DebugLog(@"MMPageCacheManager page was deleted %@", page.uuid);
         @synchronized(stateLoadedPages){
             [stateLoadedPages removeObject:page];
         }

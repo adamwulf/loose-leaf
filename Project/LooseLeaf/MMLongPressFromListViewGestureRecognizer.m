@@ -38,7 +38,7 @@
 #pragma mark - Touch Methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    //    debug_NSLog(@"touchesBegan");
+    //    DebugLog(@"touchesBegan");
     NSMutableSet* mset = [NSMutableSet set];
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
         UITouch* touch = obj;
@@ -114,7 +114,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

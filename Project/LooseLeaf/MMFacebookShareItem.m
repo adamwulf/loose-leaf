@@ -77,7 +77,7 @@
                 };
                 
                 [presentationWindow.rootViewController presentViewController:fbSheet animated:YES completion:^{
-                    NSLog(@"complete showing");
+                    DebugLog(@"complete showing");
                 }];
                 
                 [delegate didShare:self];
