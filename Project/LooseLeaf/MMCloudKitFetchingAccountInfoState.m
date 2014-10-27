@@ -12,6 +12,7 @@
 #import "MMCloudKitOfflineState.h"
 #import "MMCloudKitFetchFriendsState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
+#import "Constants.h"
 
 @implementation MMCloudKitFetchingAccountInfoState{
     BOOL isCheckingStatus;
@@ -58,7 +59,7 @@
                 if(cachedUserInfo && [cachedUserInfo isKindOfClass:[NSDictionary class]]){
                     // sanity check with the class comparison
                     if([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]){
-//                        NSLog(@"using cached account information");
+//                        DebugLog(@"using cached account information");
                         @synchronized(self){
                             isCheckingStatus = NO;
                         }
@@ -112,7 +113,7 @@
             }
         }else{
             if(![NSKeyedArchiver archiveRootObject:[discoveredInfo asDictionary] toFile:userInfoPlistPath]){
-                NSLog(@"couldn't archive CloudKit account data");
+                DebugLog(@"couldn't archive CloudKit account data");
             }
             [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
             if(shouldUpdateState){

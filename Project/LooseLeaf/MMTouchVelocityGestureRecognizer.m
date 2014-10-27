@@ -66,12 +66,12 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 #pragma mark - Notify When Touches Die
 
 -(void) pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
-//    debug_NSLog(@"%@ asked to be notified of touch lifecycle", obj);
+//    DebugLog(@"%@ asked to be notified of touch lifecycle", obj);
     [notifyTheseWhenTouchDies addObject:obj];
 }
 
 -(void) stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj{
-//    debug_NSLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
+//    DebugLog(@"%@ asked to NOT be notified of touch lifecycle", obj);
     [notifyTheseWhenTouchDies removeObject:obj];
 }
 
@@ -230,7 +230,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         }
     }
     if(firstFreeSlot == -1){
-        debug_NSLog(@"what3");
+        DebugLog(@"what3");
     }
     durationCache[firstFreeSlot].hash = touchHash;
     durationCache[firstFreeSlot].instantaneousNormalizedVelocity = 0;
@@ -298,7 +298,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;
@@ -320,15 +320,15 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 //        [self killTimer];
 //        debugTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerDidFire:) userInfo:nil repeats:NO];
 //        [[NSThread mainThread] performBlock:^{
-//            debug_NSLog(@"***************************************************************************");
-//            debug_NSLog(@"***************************************************************************");
+//            DebugLog(@"***************************************************************************");
+//            DebugLog(@"***************************************************************************");
 //        } afterDelay:.01];
 //    }
 }
 
 -(void) timerDidFire:(NSTimer*)timer{
-    debug_NSLog(@"Velocity Update");
-    debug_NSLog(@"gestures: %@", [stackView activeGestureSummary]);
+    DebugLog(@"Velocity Update");
+    DebugLog(@"gestures: %@", [stackView activeGestureSummary]);
     
     [[NSThread mainThread] performBlock:^{
         [stackView cancelAllGestures];
@@ -341,31 +341,31 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         [[stackView.visibleStackHolder getPageBelow:topHiddenPage] cancelAllGestures];
         
         if([stackView.bezelStackHolder.subviews count]){
-            debug_NSLog(@"uh oh! view in bezel!");
+            DebugLog(@"uh oh! view in bezel!");
         }
         
         NSArray* allGesturesAndTopTwoPages = [NSArray arrayWithArray:[[MMPageCacheManager sharedInstance] drawableView].gestureRecognizers];
         allGesturesAndTopTwoPages = [allGesturesAndTopTwoPages arrayByAddingObjectsFromArray:[[UIApplication sharedApplication] keyWindow].gestureRecognizers];
         for (UIGestureRecognizer* gesture in allGesturesAndTopTwoPages) {
             if([gesture respondsToSelector:@selector(cancel)]){
-                debug_NSLog(@"trying to cancel: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
+                DebugLog(@"trying to cancel: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 [gesture performSelector:@selector(cancel)];
             }else{
-                debug_NSLog(@"couldn't cancel: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
+                DebugLog(@"couldn't cancel: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 if(gesture.enabled){
                     gesture.enabled = NO;
                     gesture.enabled = YES;
-                    debug_NSLog(@"manually cancelled: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
+                    DebugLog(@"manually cancelled: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 }else{
-                    debug_NSLog(@"was disabled: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
+                    DebugLog(@"was disabled: %@ %d", NSStringFromClass([gesture class]),(int) gesture.state);
                 }
             }
         }
         
         
-        debug_NSLog(@"cancelled gestures");
+        DebugLog(@"cancelled gestures");
         [[NSThread mainThread] performBlock:^{
-            debug_NSLog(@"gestures: %@", [stackView activeGestureSummary]);
+            DebugLog(@"gestures: %@", [stackView activeGestureSummary]);
         } afterDelay:1];
     } afterDelay:1];
 }

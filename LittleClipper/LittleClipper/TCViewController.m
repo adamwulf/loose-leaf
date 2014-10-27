@@ -237,10 +237,10 @@
                     
                     NSArray* foundShapes = [shapePath uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
                     
-//                    NSLog(@"Cutting Shape: %@", shapePath);
-//                    NSLog(@"With Scissor: %@", scissorPath);
+//                    DebugLog(@"Cutting Shape: %@", shapePath);
+//                    DebugLog(@"With Scissor: %@", scissorPath);
 //                    
-//                    NSLog(@"found %d shapes", [foundShapes count]);
+//                    DebugLog(@"found %d shapes", [foundShapes count]);
                     
                     BOOL allAreClosed = YES;
                     for(DKUIBezierPathShape* cutShapePath in foundShapes){

@@ -63,7 +63,7 @@
 #pragma mark - MMCamViewDelegate
 
 -(void) didTakePicture:(UIImage*)img{
-    NSLog(@"took picture!");
+    DebugLog(@"took picture!");
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 

@@ -110,7 +110,7 @@ static NSMutableDictionary* trackers;
         if(!isnan(stDev)){
             [[[Mixpanel sharedInstance] people] set:[statName stringByAppendingString:@" StDev"] to:@(stDev)];
         }
-//        NSLog(@"%@ => avg: %f  stdev: %f   dev:%f", statName, movingAvg, stDev, deviation);
+//        DebugLog(@"%@ => avg: %f  stdev: %f   dev:%f", statName, movingAvg, stDev, deviation);
     }
     
 }

@@ -21,13 +21,13 @@
         uuid = [(NSString*) self.view performSelector:@selector(uuid)];
     }
     if(state == UIGestureRecognizerStateBegan){
-        debug_NSLog(@"%@ began", [self description]);
+        DebugLog(@"%@ began", [self description]);
     }else if(state == UIGestureRecognizerStateCancelled){
-        debug_NSLog(@"%@ cancelled", [self description]);
+        DebugLog(@"%@ cancelled", [self description]);
     }else if(state == UIGestureRecognizerStateEnded){
-        debug_NSLog(@"%@ ended", [self description]);
+        DebugLog(@"%@ ended", [self description]);
     }else if(state == UIGestureRecognizerStateFailed){
-        debug_NSLog(@"%@ failed", [self description]);
+        DebugLog(@"%@ failed", [self description]);
     }
 
     [self swizzle_setState:state];
@@ -38,7 +38,7 @@
 }
 
 -(void) swizzle_reset{
-    debug_NSLog(@"reset %@", [self description]);
+    DebugLog(@"reset %@", [self description]);
     [self swizzle_reset];
 }
 
@@ -47,7 +47,7 @@
 //    for (UITouch*t in touches) {
 //        str = [str stringByAppendingFormat:@" %p", t];
 //    }
-////    debug_NSLog(@"%p %@ %@", self, prefix, str);
+////    DebugLog(@"%p %@ %@", self, prefix, str);
 //}
 
 

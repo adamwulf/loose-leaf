@@ -66,7 +66,7 @@ static MMTrashManager* _instance = nil;
 }
 
 -(void) deletePage:(MMExportablePaperView*)page{
-    NSLog(@"asking to delete %@", page.uuid);
+    DebugLog(@"asking to delete %@", page.uuid);
     NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;
     [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
@@ -80,7 +80,7 @@ static MMTrashManager* _instance = nil;
             
             while(page.hasEditsToSave || page.isStateLoading || page.isCurrentlySaving){
                 if(page.hasEditsToSave){
-                    //                NSLog(@"deleting a page with active edits");
+                    //                DebugLog(@"deleting a page with active edits");
                     dispatch_async(dispatch_get_main_queue(), ^{
                         @autoreleasepool {
                             if(page.hasEditsToSave){
@@ -92,15 +92,15 @@ static MMTrashManager* _instance = nil;
                     });
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                 }else if(page.isStateLoading){
-                    //                NSLog(@"waiting for page to finish loading before deleting...");
+                    //                DebugLog(@"waiting for page to finish loading before deleting...");
                 }else if(page.isCurrentlySaving){
-                    //                NSLog(@"waiting for page to finish saving before deleting...");
+                    //                DebugLog(@"waiting for page to finish saving before deleting...");
                 }
                 [NSThread sleepForTimeInterval:.3];
                 if([page hasEditsToSave]){
-                    //                NSLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
+                    //                DebugLog(@"page was saved, still has edits? %d", page.hasEditsToSave);
                 }else if([page isStateLoading]){
-                    //                NSLog(@"page state is still loading");
+                    //                DebugLog(@"page state is still loading");
                 }
             }
             // build some directories
@@ -136,8 +136,8 @@ static MMTrashManager* _instance = nil;
             dispatch_async([self trashManagerQueue], ^{
                 @autoreleasepool {
                     
-                    //            NSLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
-                    //            NSLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
+                    //            DebugLog(@"page still has %d scraps", (int)[page.scrapsOnPaper count]);
+                    //            DebugLog(@"page state still has %d scraps", (int)[page.scrapsOnPaperState countOfAllLoadedScraps]);
                     
                     //            NSString* contentsOfBezel = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"Bezel/Scraps"];
                     
@@ -145,11 +145,11 @@ static MMTrashManager* _instance = nil;
                     // Step 3: Transfer any remaining scraps to the bezel
                     NSArray* thisPagesSavedScrapUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:thisPagesScrapsPath error:nil];
                     //            NSArray* scrapsInBezelUUIDs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:contentsOfBezel error:nil];
-                    //            NSLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
-                    //            NSLog(@"saved scraps in bezel: %@", scrapsInBezelUUIDs);
+                    //            DebugLog(@"saved scraps for page %@ : %@", page.uuid, thisPagesSavedScrapUUIDs);
+                    //            DebugLog(@"saved scraps in bezel: %@", scrapsInBezelUUIDs);
                     
                     if([thisPagesSavedScrapUUIDs count]){
-                        //                NSLog(@"page wasn't able to delete all scraps.");
+                        //                DebugLog(@"page wasn't able to delete all scraps.");
                     }
                     
                     // TODO: check the bezel to see if we should keep any scraps,
@@ -165,17 +165,17 @@ static MMTrashManager* _instance = nil;
                         if(isDirectory){
                             NSError* err = nil;
                             if([[NSFileManager defaultManager] removeItemAtPath:thisPagesPath error:&err]){
-                                //                        NSLog(@"deleted page at %@", thisPagesPath);
-                                NSLog(@"deleted page %@", page.uuid);
+                                //                        DebugLog(@"deleted page at %@", thisPagesPath);
+                                DebugLog(@"deleted page %@", page.uuid);
                             }
                             if(err){
-                                //                        NSLog(@"error deleting %@: %@", thisPagesPath, err);
+                                //                        DebugLog(@"error deleting %@: %@", thisPagesPath, err);
                             }
                         }else{
-                            //                    NSLog(@"found path, but it isn't a directory %@", thisPagesPath);
+                            //                    DebugLog(@"found path, but it isn't a directory %@", thisPagesPath);
                         }
                     }else{
-                        //                NSLog(@"path to delete doesn't exist %@", thisPagesPath);
+                        //                DebugLog(@"path to delete doesn't exist %@", thisPagesPath);
                     }
                     dispatch_async(dispatch_get_main_queue(), ^{
                         @autoreleasepool {
@@ -204,7 +204,7 @@ static MMTrashManager* _instance = nil;
 
     if(!scrapCollectionState || !scrapUUID){
         // sanity
-        NSLog(@"can't delete scrap %@ from collection %@", scrapUUID, scrapCollectionState);
+        DebugLog(@"can't delete scrap %@ from collection %@", scrapUUID, scrapCollectionState);
         return;
     }
 

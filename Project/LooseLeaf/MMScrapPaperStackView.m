@@ -83,7 +83,7 @@
         frame.size.width = frame.size.height;
         frame.size.height = t;
     }
-    NSLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+    DebugLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
     
     if ((self = [super initWithFrame:frame])) {
         
@@ -214,7 +214,7 @@
 #pragma mark - MMInboxManagerDelegate
 
 -(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    NSLog(@"too bad! can't import file from %@", url);
+    DebugLog(@"too bad! can't import file from %@", url);
     // log this to mixpanel
     [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : [url fileExtension],
                                                                             kMPEventImportPropFileType : [url universalTypeID],
@@ -227,7 +227,7 @@
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
-//        NSLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
+//        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
@@ -319,7 +319,7 @@
 #pragma mark - MMImageSidebarContainerViewDelegate
 
 -(void) disableAllGesturesForPageView{
-    NSLog(@"disableAllGesturesForPageView");
+    DebugLog(@"disableAllGesturesForPageView");
     [panAndPinchScrapGesture setEnabled:NO];
     [panAndPinchScrapGesture2 setEnabled:NO];
     [stretchScrapGesture setEnabled:NO];
@@ -327,7 +327,7 @@
 }
 
 -(void) enableAllGesturesForPageView{
-    NSLog(@"enableAllGesturesForPageView");
+    DebugLog(@"enableAllGesturesForPageView");
     [panAndPinchScrapGesture setEnabled:YES];
     [panAndPinchScrapGesture2 setEnabled:YES];
     [stretchScrapGesture setEnabled:YES];
@@ -630,7 +630,7 @@ int skipAll = NO;
         skipOnce = YES;
     }
     
-    debug_NSLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
+    DebugLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
 }
 
 
@@ -707,7 +707,7 @@ int skipAll = NO;
 
 
 -(void) timerDidFire:(NSTimer*)timer{
-    debug_NSLog(@"%@", [self activeGestureSummary]);
+    DebugLog(@"%@", [self activeGestureSummary]);
 }
 
 -(void) drawLine{
@@ -768,14 +768,14 @@ int skipAll = NO;
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture];
-//            NSLog(@"forceScrapToScrapContainerDuringGesture");
+//            DebugLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
     if(panAndPinchScrapGesture2.scrap && panAndPinchScrapGesture2.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture2];
-//            NSLog(@"forceScrapToScrapContainerDuringGesture");
+//            DebugLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
 }
@@ -992,7 +992,7 @@ int skipAll = NO;
                 // the original page's scrap state might be unloaded mid-gesture,
                 // so we need to unload this scrap to match.
                 if(![gesture.startingPageForScrap.scrapsOnPaperState isStateLoaded]){
-//                    NSLog(@"dropping scrap from unloaded starting page!");
+//                    DebugLog(@"dropping scrap from unloaded starting page!");
                     [gesture.scrap unloadState];
                 }
                 
@@ -1157,7 +1157,7 @@ int skipAll = NO;
 }
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
-//    NSLog(@"beginStretchForScrap");
+//    DebugLog(@"beginStretchForScrap");
 //    [panAndPinchScrapGesture say:@"beginning start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
 //    [panAndPinchScrapGesture2 say:@"beginning start" ISee:[NSSet setWithArray:panAndPinchScrapGesture2.validTouches]];
 //    [stretchScrapGesture say:@"beginning start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
@@ -1222,7 +1222,7 @@ int skipAll = NO;
         [self sendStretchedScrap:scrap toPanGesture:panAndPinchScrapGesture withTouches:validStretchTouches withAnchor:np];
         [panAndPinchScrapGesture2 begin];
     }else{
-        // NSLog(@"original properties was %@ or %@", stretchScrapGesture.startingPageForScrap, stretchScrapGesture.startingScrapProperties);
+        // DebugLog(@"original properties was %@ or %@", stretchScrapGesture.startingPageForScrap, stretchScrapGesture.startingScrapProperties);
 
         // neither has a scrap, and i don't have enough touches to give it away
         [panAndPinchScrapGesture2 relinquishOwnershipOfTouches:[validStretchTouches asSet]];
@@ -1320,7 +1320,7 @@ int skipAll = NO;
 ////    for (UITouch* t in gesture.ignoredTouches) {
 ////        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
 ////    }
-////    debug_NSLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
+////    DebugLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
 //}
 
 
@@ -1395,19 +1395,19 @@ int skipAll = NO;
 
     
     if(!panScrapGesture1.scrap || !panScrapGesture2.scrap){
-        debug_NSLog(@"what: ending scrap gesture w/o holding scrap");
+        DebugLog(@"what: ending scrap gesture w/o holding scrap");
         // sanity checks.
         // we should never enter here
         if([panScrapGesture1.initialTouchVector isEqual:panScrapGesture2.initialTouchVector]){
-            debug_NSLog(@"what10");
+            DebugLog(@"what10");
         }
         
         if(scrap.scale != clonedScrap.scale ||
            scrap.rotation != clonedScrap.rotation){
-            debug_NSLog(@"what11");
+            DebugLog(@"what11");
         }
         
-        debug_NSLog(@"success? %d %p,  %d %p", (int)[panScrapGesture1.validTouches count], panScrapGesture1.scrap,
+        DebugLog(@"success? %d %p,  %d %p", (int)[panScrapGesture1.validTouches count], panScrapGesture1.scrap,
               (int)[panScrapGesture2.validTouches count], panScrapGesture2.scrap);
 
 //        if([panScrapGesture1.validTouches count] < 2){
@@ -1672,10 +1672,10 @@ int skipAll = NO;
         // we have their state loading
         MMScrapView* scrapToAddToPage = originalScrap;
         if(originalScrap.state.scrapsOnPaperState != page.scrapsOnPaperState){
-            NSLog(@"looking at2 %p", originalScrap);
-            NSLog(@"cloned from %p to %p", originalScrap.state.scrapsOnPaperState, page.scrapsOnPaperState);
-            NSLog(@"loaded: %d", originalScrap.state.isScrapStateLoaded);
-            NSLog(@"superview: %p", originalScrap.superview);
+            DebugLog(@"looking at2 %p", originalScrap);
+            DebugLog(@"cloned from %p to %p", originalScrap.state.scrapsOnPaperState, page.scrapsOnPaperState);
+            DebugLog(@"loaded: %d", originalScrap.state.isScrapStateLoaded);
+            DebugLog(@"superview: %p", originalScrap.superview);
             [scrapContainer addSubview:originalScrap];
             scrapToAddToPage = [self cloneScrap:originalScrap toPage:page];
             [originalScrap removeFromSuperview];
@@ -1806,7 +1806,7 @@ int skipAll = NO;
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
-//    NSLog(@"did save page: %@", page.uuid);
+//    DebugLog(@"did save page: %@", page.uuid);
     [super didSavePage:page];
     if(wantsExport == page){
         wantsExport = nil;
@@ -1852,14 +1852,14 @@ int skipAll = NO;
         clonedScrap.scale = scrap.scale;
         [page.scrapsOnPaperState showScrap:clonedScrap];
         
-        NSLog(@"======");
+        DebugLog(@"======");
         
         // next match it's location exactly on top of the original scrap:
         [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
         clonedScrap.center = scrap.center;
         
-        NSLog(@"cloned scrap %@ has center %f %f", clonedScrap.state.uuid, clonedScrap.center.x, clonedScrap.center.y);
-        NSLog(@"cloned scrap %@ has center %f %f", scrap.state.uuid, scrap.center.x, scrap.center.y);
+        DebugLog(@"cloned scrap %@ has center %f %f", clonedScrap.state.uuid, clonedScrap.center.x, clonedScrap.center.y);
+        DebugLog(@"cloned scrap %@ has center %f %f", scrap.state.uuid, scrap.center.x, scrap.center.y);
         
         // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
         // but it's in the wrong place.
@@ -1871,7 +1871,7 @@ int skipAll = NO;
         // set the scrap anchor to its center
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
         
-//        NSLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
+//        DebugLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
     };
     
     if(needsStateLoading){
@@ -1930,11 +1930,11 @@ int skipAll = NO;
 }
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
-//    NSLog(@"may share %@", NSStringFromClass([shareItem class]));
+//    DebugLog(@"may share %@", NSStringFromClass([shareItem class]));
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
-//    NSLog(@"did share %@", NSStringFromClass([shareItem class]));
+//    DebugLog(@"did share %@", NSStringFromClass([shareItem class]));
     [sharePageSidebar hide:YES onComplete:nil];
 }
 
@@ -1962,7 +1962,7 @@ int skipAll = NO;
         [[NSThread mainThread] performBlock:^{
             [self forceScrapToScrapContainerDuringGesture];
             if([setOfPagesBeingPanned count]){
-                NSLog(@"adding new page, but pages are being panned.");
+                DebugLog(@"adding new page, but pages are being panned.");
                 for(MMPaperView* page in [setOfPagesBeingPanned copy]){
                     [page cancelAllGestures];
                 }

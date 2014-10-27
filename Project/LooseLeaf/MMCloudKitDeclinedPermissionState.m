@@ -12,6 +12,7 @@
 #import "MMCloudKitManager.h"
 #import "MMCloudKitFetchingAccountInfoState.h"
 #import "MMCloudKitFetchFriendsState.h"
+#import "Constants.h"
 
 @implementation MMCloudKitDeclinedPermissionState
 
@@ -28,7 +29,7 @@
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange{
-    NSLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
+    DebugLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 

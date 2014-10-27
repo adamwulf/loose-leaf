@@ -34,7 +34,7 @@
     if(self = [super initWithUndoBlock:^{
         MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
         if(!scrap){
-            NSLog(@"failed to load scrap!");
+            DebugLog(@"failed to load scrap!");
         }else{
             [weakSelf.page.scrapsOnPaperState showScrap:scrap];
             [scrap setPropertiesDictionary:weakSelf.propertiesWhenRemoved];

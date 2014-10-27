@@ -7,6 +7,7 @@
 //
 
 #import "MMBlockOperation.h"
+#import "Constants.h"
 
 @implementation MMBlockOperation
 
@@ -26,7 +27,7 @@
     if(![self isCancelled]){
         _block();
     }else{
-        NSLog(@"skipped");
+        DebugLog(@"skipped");
     }
 }
 

@@ -70,7 +70,7 @@
             [NSFileManager ensureDirectoryExistsAtPath:outputPath];
             @synchronized(activeImports){
                 [[NSKeyedArchiver archivedDataWithRootObject:activeImports] writeToFile:[outputPath stringByAppendingPathComponent:@"imports.data"] atomically:YES];
-                NSLog(@"saved imports to disk");
+                DebugLog(@"saved imports to disk");
             }
         }
     };
@@ -87,7 +87,7 @@
     @synchronized(activeImports){
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
-        NSLog(@"loaded %d pages from disk for import", (int) [imported count]);
+        DebugLog(@"loaded %d pages from disk for import", (int) [imported count]);
 
         BOOL alreadyHaveActiveTutorialImport = NO;
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
@@ -103,7 +103,7 @@
         if([MMCloudKitManager isCloudKitAvailable]){
             // add the cloudkit tutorial page import if we still need it
             if(!alreadyHaveActiveTutorialImport && [MMCloudKitTutorialImportCoordinator shouldShowTutorialImport]){
-                debug_NSLog(@"hasn't seen CloudKit Tutorial page yet, creating import");
+                DebugLog(@"hasn't seen CloudKit Tutorial page yet, creating import");
                 MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
                 
                 NSString* locationOfImportedPage = [MMEditablePaperView pagesPathForUUID:coordinator.uuidOfIncomingPage];
@@ -121,10 +121,10 @@
                     }
                     [coordinator begin];
                 }else{
-                    debug_NSLog(@"importable tutorial page doens't exist for uuid: %@", coordinator.uuidOfIncomingPage);
+                    DebugLog(@"importable tutorial page doens't exist for uuid: %@", coordinator.uuidOfIncomingPage);
                 }
             }else{
-                debug_NSLog(@"has already seen CloudKit Tutorial page");
+                DebugLog(@"has already seen CloudKit Tutorial page");
             }
         }
     }
@@ -314,7 +314,7 @@
                 // the next time the app starts up, it'll re-fetch
                 // the same message, potentially creating a 2nd import
                 // if one had already been created and saved.
-                NSLog(@"founding matching import already in progress for message %@", message.messageRecordID);
+                DebugLog(@"founding matching import already in progress for message %@", message.messageRecordID);
                 return;
             }
         }
@@ -412,10 +412,10 @@
         if(page){
             [stackView importAndShowPage:page];
         }else{
-            NSLog(@"couldn't build page for %@", coordinator.uuidOfIncomingPage);
+            DebugLog(@"couldn't build page for %@", coordinator.uuidOfIncomingPage);
         }
     }else{
-        NSLog(@"don't have UUID for coordinator %@", coordinator);
+        DebugLog(@"don't have UUID for coordinator %@", coordinator);
     }
     
     @synchronized(activeImports){

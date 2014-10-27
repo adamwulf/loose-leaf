@@ -217,20 +217,20 @@
 
 -(void) debugPrintUndoStatus{
 //    return;
-//    NSLog(@"**********************************************************************");
-//    NSLog(@"Undo status");
-//    NSLog(@" page %@", self.uuid);
-//    NSLog(@"   currentStroke: %p", self.drawableView.state.currentStroke);
-//    NSLog(@"   undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
-//    NSLog(@"   undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
-//    NSLog(@"scraps:");
+//    DebugLog(@"**********************************************************************");
+//    DebugLog(@"Undo status");
+//    DebugLog(@" page %@", self.uuid);
+//    DebugLog(@"   currentStroke: %p", self.drawableView.state.currentStroke);
+//    DebugLog(@"   undoable stack: %i", (int)[self.drawableView.state.stackOfStrokes count]);
+//    DebugLog(@"   undone stack:   %i", (int)[self.drawableView.state.stackOfUndoneStrokes count]);
+//    DebugLog(@"scraps:");
 //    for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
-//        NSLog(@" scrap %@", scrap.uuid);
-//        NSLog(@"   currentStroke: %p", scrap.state.drawableView.state.currentStroke);
-//        NSLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
-//        NSLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
+//        DebugLog(@" scrap %@", scrap.uuid);
+//        DebugLog(@"   currentStroke: %p", scrap.state.drawableView.state.currentStroke);
+//        DebugLog(@"   undoable stack: %i", (int)[scrap.state.drawableView.state.stackOfStrokes count]);
+//        DebugLog(@"   undone stack:   %i", (int)[scrap.state.drawableView.state.stackOfUndoneStrokes count]);
 //    }
-//    NSLog(@"**********************************************************************");
+//    DebugLog(@"**********************************************************************");
 }
 
 -(BOOL) hasEditsToSave{

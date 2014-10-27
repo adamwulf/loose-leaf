@@ -461,7 +461,7 @@
         // the cancelled state will be caught in MMPaperStackView, so
         // the frame is not adjusted after we animate the page to
         // it's resting place
-//        NSLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
+//        DebugLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
         if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
             [[visibleStackHolder peekSubview] cancelAllGestures];
             return fromFrame;
@@ -538,7 +538,7 @@
     [super finishedScalingReallySmall:page];
     //
     // clean up gesture state
-//    NSLog(@"removing1 %p", page);
+//    DebugLog(@"removing1 %p", page);
     [setOfPagesBeingPanned removeObject:page];
 
     CGFloat duration = 0.3;
@@ -815,7 +815,7 @@
         nextTopPage = [hiddenStackHolder peekSubview];
     }
     if(!nextTopPage){
-        NSLog(@"hrmph. out of pages...");
+        DebugLog(@"hrmph. out of pages...");
     }
     [deleteSidebar deletePage:page];
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
@@ -885,13 +885,13 @@
         [self updatePageFrameForGestureHelper:gesture];
     }
     if(gesture.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled pinch");
+        DebugLog(@"cancelled pinch");
         // we cancelled, so just send the page back to its default
         // space in the list
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
         if(gesture.pinchedPage){
-            NSLog(@"animating to list view");
+            DebugLog(@"animating to list view");
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
             [UIView animateWithDuration:.15
                                   delay:0

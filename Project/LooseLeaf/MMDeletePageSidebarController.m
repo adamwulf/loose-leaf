@@ -162,7 +162,7 @@ static CGFloat(^clampPercent)(CGFloat);
 }
 
 -(void) deletePage:(MMPaperView*)pageToDelete{
-    NSLog(@"deleting page... %p", pageToDelete);
+    DebugLog(@"deleting page... %p", pageToDelete);
     
     CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
     [deleteSidebarForeground addSubview:pageToDelete];

@@ -822,7 +822,7 @@ static NSDate* lastRender;
     [self setNeedsDisplay];
     NSTimeInterval lastRenderStamp = [lastRender timeIntervalSinceNow];
     if(lastRenderStamp < -.03){
-//        NSLog(@"dropped frames %f", lastRenderStamp);
+//        DebugLog(@"dropped frames %f", lastRenderStamp);
         [jotView slowDownFPS];
     }else{
         [jotView speedUpFPS];

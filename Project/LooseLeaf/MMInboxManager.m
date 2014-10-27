@@ -11,6 +11,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "NSURL+UTI.h"
 #import "MMPDF.h"
+#import "Constants.h"
 
 @implementation MMInboxManager
 
@@ -52,7 +53,7 @@ static dispatch_queue_t fileSystemQueue;
             return;
         }
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
-        NSLog(@"PDF!");
+        DebugLog(@"PDF!");
         MMPDF* pdf = [[MMPDF alloc] initWithURL:itemURL];
         [self.delegate didProcessIncomingPDF:pdf fromURL:itemURL fromApp:sourceApplication];
         
@@ -74,7 +75,7 @@ static dispatch_queue_t fileSystemQueue;
             NSError *error = nil;
             [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
             if (error) {
-                NSLog(@"ERROR: Inbox file could not be deleted");
+                DebugLog(@"ERROR: Inbox file could not be deleted");
             }
         }
     });
@@ -88,23 +89,23 @@ static dispatch_queue_t fileSystemQueue;
         CFBooleanRef b = (__bridge CFBooleanRef)([NSNumber numberWithBool:YES]);
         NSDictionary * sourceDict = [NSDictionary dictionaryWithObjectsAndKeys:(id)kUTTypeAppleICNS, kCGImageSourceTypeIdentifierHint,
                                      b, kCGImageSourceShouldAllowFloat, nil];
-//        NSLog(@"url of image: %@", url);
+//        DebugLog(@"url of image: %@", url);
 //        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, (__bridge CFDictionaryRef)(sourceDict));
         
 //        NSString* type = (__bridge NSString *)(CGImageSourceGetType (imageSource));
-//        NSLog(@"input type: %p %@", imageSource, type);
+//        DebugLog(@"input type: %p %@", imageSource, type);
         
 //        CGImageSourceStatus status = CGImageSourceGetStatus (imageSource);
-//        NSLog(@"status: %d", status);
+//        DebugLog(@"status: %d", status);
         
 //        size_t foo = CGImageSourceGetCount (imageSource);
-//        NSLog(@"size: %zu", foo);
+//        DebugLog(@"size: %zu", foo);
         
         [NSDictionary dictionaryWithDictionary:sourceDict];
         
     }
     
-//    NSLog(@"url of image: %@", url);
+//    DebugLog(@"url of image: %@", url);
     CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, nil);
     
     CGSize fullScale;
@@ -115,12 +116,12 @@ static dispatch_queue_t fileSystemQueue;
         NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
         fullScale.width = [width floatValue];
         fullScale.height = [height floatValue];
-//        NSLog(@"Image dimensions: %@ x %@ px", width, height);
+//        DebugLog(@"Image dimensions: %@ x %@ px", width, height);
         CFRelease(imageProperties);
         maxDim = MIN(MAX(fullScale.width, fullScale.height), maxDim);
     }
     
-//    NSLog(@"found max dimension: %d", maxDim);
+//    DebugLog(@"found max dimension: %d", maxDim);
     
     NSDictionary* d = @{(id)kCGImageSourceShouldAllowFloat: (id)kCFBooleanTrue,
                         (id)kCGImageSourceCreateThumbnailWithTransform: (id)kCFBooleanTrue,

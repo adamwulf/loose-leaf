@@ -15,6 +15,7 @@
 #import "MMCloudKitFetchingAccountInfoState.h"
 #import "MMCloudKitWaitingForLoginState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
+#import "Constants.h"
 
 //
 // this is the first state of the state machine,
@@ -66,7 +67,7 @@
         
         NSDictionary* status = [NSDictionary dictionaryWithContentsOfFile:[MMCloudKitBaseState statusPlistPath]];
         if(status){
-//            NSLog(@"using cached account and permission status %@", status);
+//            DebugLog(@"using cached account and permission status %@", status);
             SCKMAccountStatus accountStatus = (SCKMAccountStatus) [[status objectForKey:@"accountStatus"] integerValue];
             SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus) [[status objectForKey:@"permissionStatus"] integerValue];
             [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
@@ -147,14 +148,14 @@
 #pragma mark - Notifications
 
 -(void) cloudKitInfoDidChange{
-    NSLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
+    DebugLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
     @synchronized(self){
         [self runState];
     }
 }
 
 -(void) reachabilityDidChange{
-    NSLog(@"%@ reachabilityDidChange", NSStringFromClass([self class]));
+    DebugLog(@"%@ reachabilityDidChange", NSStringFromClass([self class]));
     @synchronized(self){
         [self runState];
     }

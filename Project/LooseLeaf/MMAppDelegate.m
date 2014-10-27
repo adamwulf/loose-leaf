@@ -36,7 +36,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    debug_NSLog(@"DID FINISH LAUNCHING");
+    DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
@@ -98,7 +98,7 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    debug_NSLog(@"WILL RESIGN ACTIVE");
+    DebugLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
     [[MMRotationManager sharedInstance] willResignActive];
 }
@@ -113,13 +113,13 @@
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
-    debug_NSLog(@"DID ENTER BACKGROUND");
+    DebugLog(@"DID ENTER BACKGROUND");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    debug_NSLog(@"WILL ENTER FOREGROUND");
+    DebugLog(@"WILL ENTER FOREGROUND");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -136,9 +136,9 @@
     };
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
-    debug_NSLog(@"DID BECOME ACTIVE");
-    debug_NSLog(@"***************************************************************************");
-    debug_NSLog(@"***************************************************************************");
+    DebugLog(@"DID BECOME ACTIVE");
+    DebugLog(@"***************************************************************************");
+    DebugLog(@"***************************************************************************");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -148,7 +148,7 @@
     [durationTimer invalidate];
     durationTimer = nil;
     [self removeDateOfLaunch];
-    debug_NSLog(@"WILL TERMINATE");
+    DebugLog(@"WILL TERMINATE");
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -160,7 +160,7 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
-    NSLog(@"==== recieved notification!");
+    DebugLog(@"==== recieved notification!");
     // Do something if the app was in background. Could handle foreground notifications differently
     if (application.applicationState == UIApplicationStateActive) {
         // notification came through while app was open
@@ -174,11 +174,11 @@
 }
 
 -(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    NSLog(@"handleActionWithIdentifier");
+    DebugLog(@"handleActionWithIdentifier");
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
-    NSLog(@"handleEventsForBackgroundURLSession");
+    DebugLog(@"handleEventsForBackgroundURLSession");
 }
 
 - (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
@@ -195,11 +195,11 @@
 }
 
 -(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    NSLog(@"did fail register for remote notifications");
+    DebugLog(@"did fail register for remote notifications");
 }
 
 - (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier{
-    NSLog(@"extension? %@", extensionPointIdentifier);
+    DebugLog(@"extension? %@", extensionPointIdentifier);
     return YES;
 }
 
@@ -251,8 +251,8 @@
 #pragma mark - Track Memory Crash
 
 -(void) trackDidCrashFromMemoryForDate:(NSDate*)dateOfCrash{
-    debug_NSLog(@"Did Track Crash from Memory");
-    debug_NSLog(@"===========================");
+    DebugLog(@"Did Track Crash from Memory");
+    DebugLog(@"===========================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfMemoryCrashes by:@(1)];
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
@@ -299,8 +299,8 @@
 -(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
     didRecieveReportFromCrashlytics = YES;
     
-    debug_NSLog(@"Did Track Crash from Exception");
-    debug_NSLog(@"==============================");
+    DebugLog(@"Did Track Crash from Exception");
+    DebugLog(@"==============================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];

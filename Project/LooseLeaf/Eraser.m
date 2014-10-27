@@ -60,7 +60,7 @@
 
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
-//    debug_NSLog(@"ERASER velocity: %f", velocity);
+//    DebugLog(@"ERASER velocity: %f", velocity);
 }
 
 @end

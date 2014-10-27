@@ -89,7 +89,7 @@
 
 -(void) setScale:(CGFloat)_scale{
     if(_scale == 0){
-        debug_NSLog(@"what: scale for page is 0");
+        DebugLog(@"what: scale for page is 0");
     }
     scale = _scale;
 }
@@ -97,7 +97,7 @@
 
 -(void) setFrame:(CGRect)_frame{
     if(!_frame.size.width){
-        debug_NSLog(@"what: zero width");
+        DebugLog(@"what: zero width");
     }
     [super setFrame:_frame];
     // now that we have adjusted our frame
@@ -117,7 +117,7 @@
 }
 
 -(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
-    debug_NSLog(@"tap! %d", (int) tapGesture.state);
+    DebugLog(@"tap! %d", (int) tapGesture.state);
 }
 
 
@@ -179,7 +179,7 @@
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if([gesture respondsToSelector:@selector(cancel)]){
             if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-//                NSLog(@"gesture is active %@", gesture);
+//                DebugLog(@"gesture is active %@", gesture);
             }
             [(MMCancelableGestureRecognizer*)gesture cancel];
         }
@@ -191,13 +191,13 @@
 -(void) disableAllGestures{
     for(UIGestureRecognizer* gesture in self.gestureRecognizers){
         if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-//            NSLog(@"gesture is active %@ %d", gesture, gesture.state);
+//            DebugLog(@"gesture is active %@ %d", gesture, gesture.state);
         }
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
 //    if([self.uuid hasPrefix:@"41B98"]){
-//        debug_NSLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+//        DebugLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
 //    }
 }
 /**
@@ -209,7 +209,7 @@
     }
     textLabel.text = @"enabled";
 //    if([self.uuid hasPrefix:@"41B98"]){
-//        debug_NSLog(@"enabled: %@", self.uuid);
+//        DebugLog(@"enabled: %@", self.uuid);
 //    }
 }
 
@@ -258,9 +258,9 @@
     // procede with the pan gesture
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
     
-//    debug_NSLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
+//    DebugLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
     
-//    NSLog(@"panAndScale cancelled: %d   ended: %d   began: %d   failed: %d", panGesture.state == UIGestureRecognizerStateCancelled,
+//    DebugLog(@"panAndScale cancelled: %d   ended: %d   began: %d   failed: %d", panGesture.state == UIGestureRecognizerStateCancelled,
 //          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
 //          panGesture.state == UIGestureRecognizerStateFailed);
     
@@ -285,7 +285,7 @@
                     if(panGesture.state == UIGestureRecognizerStateCancelled){
                         // when cancelling, the page should go back to its
                         // original frame
-//                        debug_NSLog(@"cancelled pan, should push it back onto visible stack");
+//                        DebugLog(@"cancelled pan, should push it back onto visible stack");
                         [self.delegate finishedPanningAndScalingPage:self
                                                            intoBezel:MMBezelDirectionNone
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture
@@ -329,7 +329,7 @@
     }
     
     if([_panGesture.validTouches count] < 2){
-//        NSLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
+//        DebugLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
         return;
     }
 
@@ -464,7 +464,7 @@
 }
 
 -(void) dealloc{    
-    NSLog(@"page dealloc'd %@", self.uuid);
+    DebugLog(@"page dealloc'd %@", self.uuid);
 }
 
 

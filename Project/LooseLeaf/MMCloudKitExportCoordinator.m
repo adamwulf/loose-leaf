@@ -51,9 +51,9 @@
     [page exportAsynchronouslyToZipFile];
     [avatarButton animateToPercent:kPercentCompleteAtStart success:YES completion:^(BOOL success) {
         if(success){
-            NSLog(@"CloudKit success");
+            DebugLog(@"CloudKit success");
         }else{
-            NSLog(@"CloudKit failure");
+            DebugLog(@"CloudKit failure");
         }
         [[NSThread mainThread] performBlock:^{
             [exportView exportIsCompleting:self];
