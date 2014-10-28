@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MMScrapsInBezelContainerView.h"
 
-@interface MMScrapSidebarContentView : UIView{
+@interface MMScrapSidebarContentView : UIView<UIScrollViewDelegate>{
     __weak MMScrapsInBezelContainerView* delegate;
 }
 
@@ -19,5 +19,7 @@
 -(void) prepareContentView;
 
 -(void) flashScrollIndicators;
+
+-(void) viewDidHide;
 
 @end

@@ -259,6 +259,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 -(void) unloadCachedScrapPreview{
     [NSThread performBlockOnMainThread:^{
         [self setActiveThumbnailImage:nil];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledThumbImageFile];
     }];
 }
 

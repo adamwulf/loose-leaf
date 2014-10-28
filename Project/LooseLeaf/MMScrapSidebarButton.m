@@ -13,6 +13,7 @@
 }
 
 @synthesize scrap;
+@synthesize rowNumber;
 
 - (id)initWithFrame:(CGRect)frame
 {
