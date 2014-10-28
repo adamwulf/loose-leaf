@@ -389,7 +389,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
                                     // instant on the thread will be synced to the content in this drawable view
-                                    [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
+                                    [drawableView exportImageTo:self.inkImageFile andThumbnailTo:self.thumbImageFile andStateTo:self.drawableViewStateFile withThumbnailScale:.3
+                                                     onComplete:^(UIImage* ink, UIImage* thumb, JotViewImmutableState* state){
 //                                        DebugLog(@"saved scrap %@ ink to %@", self.uuid, self.inkImageFile);
 //                                        DebugLog(@"saved scrap %@ thumb to %@", self.uuid, self.thumbImageFile);
                                         if(self.isForgetful){
