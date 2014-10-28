@@ -231,6 +231,10 @@ struct SidebarButton{
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) setMemoryView:(MMMemoryProfileView*)_memoryView{
     memoryView = _memoryView;
 }

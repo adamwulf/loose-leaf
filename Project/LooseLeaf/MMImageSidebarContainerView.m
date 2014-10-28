@@ -45,9 +45,9 @@
     if (self) {
         
         CGRect contentBounds = [sidebarContentView contentBounds];
-
+        
         [MMPhotoManager sharedInstance].delegate = self;
-
+        
         CGRect buttonBounds = CGRectZero;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
@@ -64,7 +64,7 @@
         cameraListContentView = [[MMCameraSidebarContentView alloc] initWithFrame:contentBounds];
         cameraListContentView.delegate = self;
         [sidebarContentView addSubview:cameraListContentView];
-
+        
         albumListContentView = [[MMAlbumSidebarContentView alloc] initWithFrame:contentBounds];
         albumListContentView.delegate = self;
         [sidebarContentView addSubview:albumListContentView];
@@ -94,15 +94,15 @@
         
         // camera
         cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
-                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+                                                                             kWidthOfSidebarButton, kWidthOfSidebarButton)];
         cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         cameraAlbumButton.shadowInset = -1;
         [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [sidebarContentView addSubview:cameraAlbumButton];
-
+        
         // albums
         iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -111,7 +111,7 @@
         
         // faces button
         iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                               kWidthOfSidebarButton, kWidthOfSidebarButton)];
+                                                                           kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoFacesButton.shadowInset = -1;
@@ -119,24 +119,30 @@
         
         // event button
         iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
-                                                                    kWidthOfSidebarButton, kWidthOfSidebarButton)];
+                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoEventsButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoEventsButton];
         
-//        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
-//                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-//        pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-//        pdfInboxButton.shadowInset = -1;
-//        [sidebarContentView addSubview:pdfInboxButton];
+        //        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+        //                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        //        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        //        pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        //        pdfInboxButton.shadowInset = -1;
+        //        [sidebarContentView addSubview:pdfInboxButton];
         
         [self highlightButton:cameraAlbumButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
-}
+    }
     return self;
 }
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
 
 -(void) show:(BOOL)animated{
     [super show:animated];

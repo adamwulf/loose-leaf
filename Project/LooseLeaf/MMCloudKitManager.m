@@ -93,6 +93,10 @@ static NSString* cloudKitFilesPath;
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(NSString*) cachePath{
     if(!cachePath){
         NSString* documentsPath = [NSFileManager documentsPath];
@@ -208,7 +212,7 @@ static NSString* cloudKitFilesPath;
 }
 
 -(void) changeToStateBasedOnError:(NSError*)err{
-    DebugLog(@"changeToStateBasedOnError");
+    DebugLog(@"changeToStateBasedOnError: %@", err);
     switch (err.code) {
         case SPRSimpleCloudMessengerErrorNetwork:
         case SPRSimpleCloudMessengerErrorServiceUnavailable:
