@@ -209,6 +209,11 @@
                             [scrap loadScrapStateAsynchronously:async];
                         }else{
                             [scrap unloadState];
+                            if(isShownOnPage){
+                                [scrap.state loadCachedScrapPreview];
+                            }else{
+                                [scrap.state unloadCachedScrapPreview];
+                            }
                         }
                     }
                 }

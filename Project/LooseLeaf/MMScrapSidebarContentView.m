@@ -57,8 +57,8 @@
 
 
 
-// TODO: add caching / optimize
 -(void) prepareContentView{
+    CheckMainThread;
     // very basic for now. just remove all old scraps
     for (UIView* subview in [[scrollView subviews] copy]) {
         if([subview isKindOfClass:[MMScrapSidebarButton class]]){

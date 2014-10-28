@@ -43,6 +43,9 @@
 
 -(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
 
+-(void) loadCachedScrapPreview;
+-(void) unloadCachedScrapPreview;
+
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;

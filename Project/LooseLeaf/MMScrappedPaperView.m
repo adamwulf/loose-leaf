@@ -455,6 +455,7 @@
     }
     
     if(shouldAddUndoLevel){
+        NSLog(@"should add undo level!");
         // if we land in here, then that means that either our
         // drawable view, or one of our scraps, would exceed the max
         // byte size for a stroke. so we should add an undo level
