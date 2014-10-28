@@ -300,7 +300,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     };
     
     
-    DebugLog(@"asking to save scrap: %@", self.uuid);
+//    DebugLog(@"asking to save scrap: %@", self.uuid);
     if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             @autoreleasepool {

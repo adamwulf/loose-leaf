@@ -64,7 +64,6 @@
                 
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
-                    // TODO: https://github.com/adamwulf/loose-leaf/issues/604
                     NSString* pageUUID = [scrapProperties objectForKey:@"pageUUID"];
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
                     MMScrapCollectionState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
