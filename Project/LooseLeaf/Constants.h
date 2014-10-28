@@ -15,6 +15,8 @@
 #define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
+#define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+
 #define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
 
 #define CheckThreadMatches(__THREAD_CHECK__) {if(!(__THREAD_CHECK__)){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}

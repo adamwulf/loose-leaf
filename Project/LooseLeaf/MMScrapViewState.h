@@ -11,8 +11,9 @@
 #import "MMScrapBackgroundView.h"
 #import "MMScrapViewStateDelegate.h"
 #import "MMScrapCollectionState.h"
+#import "MMDecompressImagePromiseDelegate.h"
 
-@interface MMScrapViewState : NSObject<JotViewStateProxyDelegate>{
+@interface MMScrapViewState : NSObject<JotViewStateProxyDelegate,MMDecompressImagePromiseDelegate>{
     // unloadable state
     // this state can be loaded and unloaded
     // to conserve memeory as needed

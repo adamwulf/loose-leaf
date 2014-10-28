@@ -16,6 +16,7 @@
 #import "Constants.h"
 #import "UIView+Debug.h"
 #import "MMScrapViewState+Trash.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 @implementation MMScrapViewState{
     // scrap ID and UI
@@ -67,6 +68,9 @@
     // the undoHash that our drawable view was
     // last saved at
     NSUInteger lastSavedUndoHash;
+    
+    BOOL targetIsLoadedThumbnail;
+    MMDecompressImagePromise* decompressionPromise;
 }
 
 #pragma mark - Properties
@@ -185,6 +189,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         // a UIImageView that holds a cached image of the contents and
         // the editable JotView
         contentView = [[UIView alloc] initWithFrame:drawableBounds];
+        contentView.opaque = YES;
         [contentView setClipsToBounds:YES];
         [contentView setBackgroundColor:[UIColor clearColor]];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -194,8 +199,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         thumbnailView = [[UIImageView alloc] initWithFrame:contentView.bounds];
         thumbnailView.contentMode = UIViewContentModeScaleAspectFit;
         thumbnailView.clipsToBounds = YES;
-        thumbnailView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        thumbnailView.frame = contentView.bounds;
 
         backingImageHolder = backingView;
         backingView.frame = contentView.bounds;
@@ -237,31 +240,72 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 #pragma mark - Preview
 
 -(void) loadCachedScrapPreview{
+    CheckMainThread;
+    @synchronized(activeThumbnailImage){
+        if(activeThumbnailImage){
+            // already loading
+            return;
+        }
+        targetIsLoadedThumbnail = YES;
+    }
     if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
         // load if we can
-        [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
+        UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+        [self setActiveThumbnailImage:cachedImage];
     }else{
         // don't load from disk on the main thread.
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             [lock lock];
             @autoreleasepool {
-                UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
-                if(!thumb){
-                    thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+                @synchronized(activeThumbnailImage){
+                    if(targetIsLoadedThumbnail){
+                        UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+                        if(!thumb){
+                            thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+                        }
+                        decompressionPromise = [[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self];
+                    }
                 }
-                [self setActiveThumbnailImage:thumb];
             }
             [lock unlock];
         });
     }
 }
 
+-(void) didDecompressImage:(MMDecompressImagePromise*)promise{
+    CheckMainThread;
+    @synchronized(activeThumbnailImage){
+        if(targetIsLoadedThumbnail){
+            [self setActiveThumbnailImage:promise.image];
+        }else{
+            [self setActiveThumbnailImage:nil];
+        }
+    }
+    decompressionPromise = nil;
+}
+
 -(void) unloadCachedScrapPreview{
-    [NSThread performBlockOnMainThread:^{
-        [self setActiveThumbnailImage:nil];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledThumbImageFile];
-    }];
+    CheckMainThread;
+    @synchronized(activeThumbnailImage){
+        if(!targetIsLoadedThumbnail){
+            // already unloaded
+            return;
+        }
+        targetIsLoadedThumbnail = NO;
+        if(decompressionPromise){
+            [decompressionPromise cancel];
+            decompressionPromise = nil;
+        }
+    }
+    [self setActiveThumbnailImage:nil];
+    dispatch_async(dispatch_get_background_queue(), ^{
+        @synchronized(activeThumbnailImage){
+            if(!targetIsLoadedThumbnail){
+                [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
+                [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledThumbImageFile];
+            }
+        }
+    });
 }
 
 #pragma mark - Backing Image
@@ -580,10 +624,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) setActiveThumbnailImage:(UIImage*)img{
-    activeThumbnailImage = img;
-    [NSThread performBlockOnMainThread:^{
-        thumbnailView.image = activeThumbnailImage;
-    }];
+    if(activeThumbnailImage != img){
+        activeThumbnailImage = img;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            thumbnailView.image = activeThumbnailImage;
+        });
+    }
 }
 
 

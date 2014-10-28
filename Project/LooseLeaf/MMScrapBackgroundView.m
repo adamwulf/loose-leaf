@@ -68,7 +68,6 @@ static int totalBackgroundBytes;
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
     self.backingViewHasChanged = YES;
-    [self setNeedsDisplay];
 }
 
 #pragma mark - Properties
