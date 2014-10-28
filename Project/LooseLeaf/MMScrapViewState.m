@@ -213,23 +213,23 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         [contentView addSubview:clippedBackgroundView];
         [contentView addSubview:thumbnailView];
 
-//        if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
-//            // load if we can
-//            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
-//        }else{
-//            // don't load from disk on the main thread.
-//            dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-//                [lock lock];
-//                @autoreleasepool {
-//                    UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
-//                    if(!thumb){
-//                        thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
-//                    }
-//                    [self setActiveThumbnailImage:thumb];
-//                }
-//                [lock unlock];
-//            });
-//        }
+        if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
+            // load if we can
+            [self setActiveThumbnailImage:[[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile]];
+        }else{
+            // don't load from disk on the main thread.
+            dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                [lock lock];
+                @autoreleasepool {
+                    UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+                    if(!thumb){
+                        thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+                    }
+                    [self setActiveThumbnailImage:thumb];
+                }
+                [lock unlock];
+            });
+        }
     }
     return self;
 }
