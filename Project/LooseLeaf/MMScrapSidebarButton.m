@@ -55,7 +55,6 @@
     scrap.scale = scrap.scale;
     
     UIView* transformView = [[UIView alloc] initWithFrame:scrap.bounds];
-    transformView.clipsToBounds = YES;
     transformView.opaque = YES;
     
     [transformView addSubview:scrap];
