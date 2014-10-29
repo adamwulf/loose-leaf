@@ -930,6 +930,7 @@
 
 -(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize{
     @autoreleasepool {
+        NSLog(@"updating thumb");
         CGContextSaveGState(context);
         
         CGPoint center = scrap.center;
@@ -985,7 +986,10 @@
         //
         // draw the scrap's strokes
         if(scrap.state.activeThumbnailImage){
+            NSLog(@"wrote thumbnail for %@", scrap.uuid);
             [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+        }else{
+            NSLog(@"no thumbnail for %@", scrap.uuid);
         }
         
         // restore the state, no more clip
