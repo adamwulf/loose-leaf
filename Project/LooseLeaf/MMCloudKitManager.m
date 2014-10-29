@@ -213,6 +213,7 @@ static NSString* cloudKitFilesPath;
 
 -(void) changeToStateBasedOnError:(NSError*)err{
     DebugLog(@"changeToStateBasedOnError: %@", err);
+    [MMCloudKitBaseState clearCache];
     switch (err.code) {
         case SPRSimpleCloudMessengerErrorNetwork:
         case SPRSimpleCloudMessengerErrorServiceUnavailable:
