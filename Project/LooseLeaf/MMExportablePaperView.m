@@ -366,10 +366,13 @@
     // Step 1: check the bezel
     //
     // first check the bezel to see if the scrap exists outside the page
-    if([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-//        DebugLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-        return;
-    }
+    BOOL(^checkScrapExistsInBezel)() = ^{
+        if([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
+            DebugLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
+            return YES;
+        }
+        return NO;
+    };
     
     // first, we need to check if we're even eligible to
     // delete the scrap or not.
@@ -444,6 +447,22 @@
                     // undo manager specifically about this scrap
                     return;
                 }
+            }
+            
+            if(checkScrapExistsInBezel()){
+                // scrap exists in the bezel, but not
+                // in the actual page. so we should move
+                // its assets into the bezel so that
+                // its not loaded with the page
+                DebugLog(@"scrap in bezel only, should move assets into bezel ownership");
+                // synchronous, so that the files will be gone
+                // from our page by the time this returns
+                [self.delegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:self.scrapsOnPaperState];
+                [self.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self saveToDisk:nil];
+                });
+                return;
             }
             
             __block MMScrapView* scrapThatIsBeingDeleted = nil;

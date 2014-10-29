@@ -209,6 +209,11 @@
                             [scrap loadScrapStateAsynchronously:async];
                         }else{
                             [scrap unloadState];
+                            if(isShownOnPage){
+                                [scrap.state loadCachedScrapPreview];
+                            }else{
+                                [scrap.state unloadCachedScrapPreview];
+                            }
                         }
                     }
                 }
@@ -443,24 +448,26 @@
 #pragma mark - Saving Helpers
 
 -(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID{
+    MMScrapView* removedScrap = nil;
     @synchronized(allLoadedScraps){
-        MMScrapView* removedScrap = nil;
         NSMutableArray* otherArray = [NSMutableArray array];
         for(MMScrapView* scrap in allLoadedScraps){
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
                 removedScrap = scrap;
-                [NSThread performBlockOnMainThreadSync:^{
-                    [removedScrap removeFromSuperview];
-                }];
 //                DebugLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;
         hasEditsToSave = YES;
-        return removedScrap;
     }
+    if(removedScrap){
+        [NSThread performBlockOnMainThreadSync:^{
+            [removedScrap removeFromSuperview];
+        }];
+    }
+    return removedScrap;
 }
 
 #pragma mark - Paths

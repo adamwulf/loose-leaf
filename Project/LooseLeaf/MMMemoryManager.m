@@ -88,6 +88,10 @@
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) tick{
     // top level process information
     struct task_basic_info info;

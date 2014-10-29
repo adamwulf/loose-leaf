@@ -92,9 +92,6 @@
             if(error){
                 [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
             }else{
-                NSDictionary* status = @{@"accountStatus" : @(accountStatus),
-                                         @"permissionStatus" : @(permissionStatus)};
-                [status writeToFile:[MMCloudKitBaseState statusPlistPath] atomically:YES];
                 [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
             }
         }];
@@ -102,6 +99,7 @@
 }
 
 -(void) switchStateBasedOnAccountStatus:(SCKMAccountStatus)accountStatus andPermissionStatus:(SCKMApplicationPermissionStatus)permissionStatus{
+    [MMCloudKitBaseState clearCache];
     switch (accountStatus) {
         case SCKMAccountStatusCouldNotDetermine:
             // accountStatus is unknown, so reload it
@@ -130,7 +128,12 @@
                 case SCKMApplicationPermissionStatusGranted:
                     // icloud is available for this user, so we need to
                     // fetch their account info if we don't already have it.
-                    [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] initWithCachedFriendList:self.friendList]];
+                    {
+                        NSDictionary* status = @{@"accountStatus" : @(accountStatus),
+                                                 @"permissionStatus" : @(permissionStatus)};
+                        [status writeToFile:[MMCloudKitBaseState statusPlistPath] atomically:YES];
+                        [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] initWithCachedFriendList:self.friendList]];
+                    }
                     break;
             }
             break;

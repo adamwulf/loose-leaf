@@ -1303,14 +1303,26 @@
             //
             // just realign and log
             
-            NSString* reasonAndDebugInfo = [self activeGestureSummary];
-            reasonAndDebugInfo = [NSString stringWithFormat:@"released non-top page while top page was not held\n%@", reasonAndDebugInfo];
+//            NSString* reasonAndDebugInfo = [self activeGestureSummary];
+//            reasonAndDebugInfo = [NSString stringWithFormat:@"released non-top page while top page was not held\n%@", reasonAndDebugInfo];
+//            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:reasonAndDebugInfo userInfo:nil];
             
-            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:reasonAndDebugInfo userInfo:nil];
+            
+            NSString* errorToLogToMixpanel = @"released non-top page while top page was not held";
+            [[Mixpanel sharedInstance] track:kMPEventGestureBug properties:@{@"Gesture Description" : errorToLogToMixpanel}];
+
             //
             // as a backup, i think realignPagesInVisibleStackExcept:nil: would have "worked"... but hard to test
             // so better to kill the app and debug properly.
-//            [self realignPagesInVisibleStackExcept:nil animated:YES];
+            //
+            // TODO: https://github.com/adamwulf/loose-leaf/issues/896
+            //
+            // since i can't consistently repro, i'm cancelling all gestures and then
+            // realigning pages. we'll also track in mixpanel so i can see how often
+            // this shows up in the wild.
+            [self cancelAllGestures];
+            [[[self visibleStackHolder] peekSubview] cancelAllGestures];
+            [self realignPagesInVisibleStackExcept:nil animated:YES];
         }
         return;
     }

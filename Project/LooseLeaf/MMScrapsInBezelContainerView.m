@@ -548,4 +548,15 @@ static NSString* bezelStatePath;
     return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
 }
 
+
+-(void) sidebarCloseButtonWasTapped{
+    if([self isVisible]){
+        [self hide:YES onComplete:^(BOOL finished){
+            [contentView viewDidHide];
+        }];
+        [self.delegate sidebarCloseButtonWasTapped];
+    }
+}
+
+
 @end

@@ -50,6 +50,10 @@ static MMRotationManager* _instance = nil;
     return _instance;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) startAccelNotifications{
     
     [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
