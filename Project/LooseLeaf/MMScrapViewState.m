@@ -240,7 +240,10 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 #pragma mark - Preview
 
 -(void) loadCachedScrapPreview{
-    CheckMainThread;
+    [self loadCachedScrapPreviewAsynchronously:YES];
+}
+
+-(void) loadCachedScrapPreviewAsynchronously:(BOOL)async{
     @synchronized(activeThumbnailImage){
         if(activeThumbnailImage){
             // already loading
@@ -248,7 +251,13 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         }
         targetIsLoadedThumbnail = YES;
     }
-    if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
+    if(!async){
+        UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+        if(!cachedImage){
+            cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+        }
+        [self setActiveThumbnailImage:cachedImage];
+    }else if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
         // load if we can
         UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
         [self setActiveThumbnailImage:cachedImage];
@@ -285,7 +294,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
-    CheckMainThread;
     @synchronized(activeThumbnailImage){
         if(!targetIsLoadedThumbnail){
             // already unloaded
@@ -490,6 +498,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 //    DebugLog(@"(%@) loading1: %d %d", uuid, targetIsLoadedState, isLoadingState);
     void (^loadBlock)() = ^(void) {
+        [self loadCachedScrapPreviewAsynchronously:NO];
         @autoreleasepool {
             @synchronized(self){
                 if(!targetIsLoadedState){
@@ -568,6 +577,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         @autoreleasepool {
             [lock lock];
             @synchronized(self){
+                [self unloadCachedScrapPreview];
                 if(drawableViewState && [drawableViewState isStateLoaded] && [drawableViewState hasEditsToSave]){
 //                    DebugLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
