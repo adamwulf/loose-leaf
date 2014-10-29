@@ -179,8 +179,8 @@
         CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
     }
     if([self isStateLoaded]){
-        hasEditsToSave = NO;
         @synchronized(allLoadedScraps){
+            hasEditsToSave = NO;
             MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
             expectedUndoHash = [immutable undoHash];
             return immutable;
@@ -267,6 +267,7 @@
                 [replacementProps setObject:kPageUUIDForBezelCollectionState forKey:@"pageUUID"];
                 [allPropertiesForScraps replaceObjectAtIndex:i withObject:replacementProps];
                 DebugLog(@"swapped properties too");
+                hasEditsToSave = YES;
                 break;
             }
         }
