@@ -255,20 +255,20 @@
     DebugLog(@"===========================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfMemoryCrashes by:@(1)];
     
-    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
-    [crashProperties setObject:@"Memory" forKey:@"Cause"];
-    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
-    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
-    if(dateOfCrash) [crashProperties setObject:dateOfCrash forKey:@"crashedOnDate"];
-    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
-    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
-    
-    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
-    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
-    }];
-    
     @try{
+        NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+        [crashProperties setObject:@"Memory" forKey:@"Cause"];
+        if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+        if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+        if(dateOfCrash) [crashProperties setObject:dateOfCrash forKey:@"crashedOnDate"];
+        if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+        if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+        
+        NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+        [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
+        }];
+    
         [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
     }@catch(id e){
         // noop
