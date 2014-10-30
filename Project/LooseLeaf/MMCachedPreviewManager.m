@@ -37,25 +37,23 @@
     NSOperationQueue* queue;
 }
 
-static MMCachedPreviewManager* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         arrayOfImageViews = [NSMutableArray array];
         queue = [[NSOperationQueue alloc] init];
         queue.maxConcurrentOperationCount = 1;
         toDealloc = [NSMutableArray array];
     }
-    return _instance;
+    return self;
 }
 
-+(MMCachedPreviewManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMCachedPreviewManager alloc]init];
-    }
-    return _instance;
++ (MMCachedPreviewManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMCachedPreviewManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMCachedPreviewManager class] alloc] init];
+    });
+    return manager;
 }
 
 

@@ -18,6 +18,8 @@
 @property (nonatomic, weak) NSObject<MMCloudKitManagerDelegate>* delegate;
 @property (nonatomic, readonly) MMCloudKitBaseState* currentState;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 + (MMCloudKitManager *) sharedManager;
 
 +(NSString*) cloudKitFilesPath;

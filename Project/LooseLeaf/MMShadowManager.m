@@ -14,24 +14,21 @@
 
 @implementation MMShadowManager
 
-
-static MMShadowManager* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         shadowPathCache = [[NSMutableDictionary alloc] init];
         unitShadowPath = [self generateUnitShadowPath];
     }
-    return _instance;
+    return self;
 }
 
-+(MMShadowManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMShadowManager alloc]init];
-    }
-    return _instance;
++ (MMShadowManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMShadowManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMShadowManager class] alloc] init];
+    });
+    return manager;
 }
 
 

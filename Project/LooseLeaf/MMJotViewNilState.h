@@ -10,6 +10,8 @@
 
 @interface MMJotViewNilState : JotViewStateProxy
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMJotViewNilState*) sharedInstance;
 
 @end

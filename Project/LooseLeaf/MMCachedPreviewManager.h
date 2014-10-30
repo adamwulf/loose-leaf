@@ -10,6 +10,8 @@
 
 @interface MMCachedPreviewManager : NSObject
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMCachedPreviewManager*) sharedInstance;
 
 -(UIImageView*) requestCachedImageViewForView:(UIView*)aView;

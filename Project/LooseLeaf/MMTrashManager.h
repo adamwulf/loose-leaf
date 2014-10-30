@@ -12,6 +12,8 @@
 
 @interface MMTrashManager : NSObject
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMTrashManager*) sharedInstance;
 
 -(dispatch_queue_t) trashManagerQueue;

@@ -40,23 +40,22 @@ static const void *const kTrashQueueIdentifier = &kTrashQueueIdentifier;
 
 #pragma mark - Singleton
 
-static MMTrashManager* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         fileManager = [[NSFileManager alloc] init];
     }
-    return _instance;
+    return self;
 }
 
-+(MMTrashManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMTrashManager alloc]init];
-    }
-    return _instance;
++ (MMTrashManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMTrashManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMTrashManager class] alloc] init];
+    });
+    return manager;
 }
+
 
 
 #pragma mark - Public Methods

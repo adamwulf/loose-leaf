@@ -24,18 +24,14 @@
 @synthesize currentRawRotationReading;
 @synthesize lastBestOrientation;
 
-static MMRotationManager* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         // we need to ignore rotation
         startupTime = [NSDate date];
         currentTrust = 0.0;
         goalTrust = 0.0;
         lastBestOrientation = UIInterfaceOrientationPortrait;
-        [[NSNotificationCenter defaultCenter] addObserver:_instance selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:)   name:UIDeviceOrientationDidChangeNotification object:nil];
         isFirstReading = YES;
         @synchronized(self){
             currentRotationReading = [MMVector vectorWithAngle:-M_PI / 2];
@@ -47,7 +43,16 @@ static MMRotationManager* _instance = nil;
         [motionManager setAccelerometerUpdateInterval:0.03];
         [self startAccelNotifications];
     }
-    return _instance;
+    return self;
+}
+
++ (MMRotationManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMRotationManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMRotationManager class] alloc] init];
+    });
+    return manager;
 }
 
 -(void) dealloc{
@@ -129,13 +134,6 @@ static MMRotationManager* _instance = nil;
     @synchronized(self){
         return currentRotationReading;
     }
-}
-
-+(MMRotationManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMRotationManager alloc]init];
-    }
-    return _instance;
 }
 
 -(UIDeviceOrientation) currentDeviceOrientation{

@@ -13,6 +13,8 @@
 
 @property (nonatomic, weak) NSObject<MMInboxManagerDelegate>* delegate;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMInboxManager*) sharedInstance;
 
 -(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;

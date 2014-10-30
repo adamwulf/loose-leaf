@@ -19,25 +19,23 @@
     int loadedBytes;
 }
 
-static MMLoadImageCache* _instance = nil;
-
 -(id) init{
     @synchronized([MMLoadImageCache class]){
-        if(_instance) return _instance;
         if((self = [super init])){
             loadedImages = [NSMutableDictionary dictionary];
             orderedKeys = [NSMutableArray array];
-            _instance = self;
         }
     }
-    return _instance;
+    return self;
 }
 
-+(MMLoadImageCache*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMLoadImageCache alloc]init];
-    }
-    return _instance;
++ (MMLoadImageCache *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMLoadImageCache *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMLoadImageCache class] alloc] init];
+    });
+    return manager;
 }
 
 -(int) memoryOfLoadedImages{

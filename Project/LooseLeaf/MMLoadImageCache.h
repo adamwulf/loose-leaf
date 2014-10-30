@@ -11,6 +11,8 @@
 
 @interface MMLoadImageCache : NSObject
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMLoadImageCache*) sharedInstance;
 
 -(UIImage*) imageAtPath:(NSString*)path;

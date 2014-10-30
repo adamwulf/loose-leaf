@@ -26,18 +26,23 @@
 
 @synthesize delegate;
 
-static MMPhotoManager* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(libraryChanged:)
                                                      name:ALAssetsLibraryChangedNotification
                                                    object:[self assetsLibrary]];
         shouldBypassAuthRequirement = NO;
     }
-    return _instance;
+    return self;
+}
+
++ (MMPhotoManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMPhotoManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMPhotoManager class] alloc] init];
+    });
+    return manager;
 }
 
 -(NSArray*) loadDefaultPhotoAlbums{
@@ -51,13 +56,6 @@ static MMPhotoManager* _instance = nil;
         allDefaultAlbums = [allDefaultAlbums arrayByAddingObject:[[MMDefaultPhotoAlbum alloc] initWithPhotosInDirectory:pathToAlbum]];
     }
     return allDefaultAlbums;
-}
-
-+(MMPhotoManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMPhotoManager alloc]init];
-    }
-    return _instance;
 }
 
 +(BOOL) hasPhotosPermission{

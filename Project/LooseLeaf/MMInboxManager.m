@@ -17,13 +17,13 @@
 
 @synthesize delegate;
 
-static MMInboxManager* _instance = nil;
-
-+(MMInboxManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMInboxManager alloc]init];
-    }
-    return _instance;
++ (MMInboxManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMInboxManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMInboxManager class] alloc] init];
+    });
+    return manager;
 }
 
 #pragma mark - Dispatch Queue

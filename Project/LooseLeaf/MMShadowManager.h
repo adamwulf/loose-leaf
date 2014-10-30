@@ -14,6 +14,8 @@
     UIBezierPath* unitShadowPath;
 }
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMShadowManager*) sharedInstance;
 
 -(void) beginGeneratingShadows;

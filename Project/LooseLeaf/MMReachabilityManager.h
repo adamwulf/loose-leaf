@@ -10,6 +10,8 @@
 
 @interface MMReachabilityManager : Reachability
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(Reachability*) sharedManager;
 
 +(Reachability*) sharedLocalNetwork;

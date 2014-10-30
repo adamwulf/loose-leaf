@@ -60,14 +60,13 @@ static NSString* cloudKitFilesPath;
     static dispatch_once_t onceToken;
     static MMCloudKitManager *manager;
     dispatch_once(&onceToken, ^{
-        manager = [[MMCloudKitManager alloc] init];
+        manager = [[[MMCloudKitManager class] alloc] init];
     });
     return manager;
 }
 
 - (id)init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         needsBootstrap = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cloudKitInfoDidChange) name:NSUbiquityIdentityDidChangeNotification object:nil];

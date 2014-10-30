@@ -25,6 +25,8 @@
 @property (nonatomic, strong) JotView* drawableView;
 @property (nonatomic, readonly) MMUndoablePaperView* currentEditablePage;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMPageCacheManager*) sharedInstance;
 
 -(void) pageWasDeleted:(MMPaperView*)page;

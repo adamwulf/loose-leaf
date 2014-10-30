@@ -17,6 +17,8 @@
     NSOperationQueue* opQueue;
 }
 
+- (instancetype)init NS_UNAVAILABLE;
+
 -(id) initWithVisibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
 
 -(void) saveStacksToDisk;

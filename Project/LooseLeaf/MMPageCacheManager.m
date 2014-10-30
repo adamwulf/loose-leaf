@@ -27,24 +27,22 @@
 @synthesize drawableView;
 @synthesize currentEditablePage;
 
-static MMPageCacheManager* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
-        _instance = self;
         stateLoadedPages = [NSMutableArray array];
         pagesWithLoadedCacheImages = [NSMutableOrderedSet orderedSet];
         hasEverLoadedAPageState = NO;
     }
-    return _instance;
+    return self;
 }
 
-+(MMPageCacheManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMPageCacheManager alloc] init];
-    }
-    return _instance;
++ (MMPageCacheManager *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMPageCacheManager *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMPageCacheManager class] alloc] init];
+    });
+    return manager;
 }
 
 #pragma mark - Public

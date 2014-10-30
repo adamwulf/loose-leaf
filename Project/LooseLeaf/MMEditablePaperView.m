@@ -225,7 +225,7 @@ dispatch_queue_t importThumbnailQueue;
         [self didLoadState:paperState];
         return;
     }
-    [paperState loadJotStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager sharedInstance]];
+    [paperState loadJotStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context andBufferManager:[JotBufferManager primaryInstance]];
 }
 -(void) unloadState{
     [paperState unload];

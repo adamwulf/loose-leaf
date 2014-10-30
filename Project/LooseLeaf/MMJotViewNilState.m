@@ -10,21 +10,20 @@
 
 @implementation MMJotViewNilState
 
-static MMJotViewNilState* _instance = nil;
-
 -(id) init{
-    if(_instance) return _instance;
     if((self = [super init])){
         // noop
     }
-    return _instance;
+    return self;
 }
 
-+(MMJotViewNilState*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMJotViewNilState alloc] init];
-    }
-    return _instance;
++ (MMJotViewNilState *) sharedInstance {
+    static dispatch_once_t onceToken;
+    static MMJotViewNilState *manager;
+    dispatch_once(&onceToken, ^{
+        manager = [[[MMJotViewNilState class] alloc] init];
+    });
+    return manager;
 }
 
 
@@ -80,7 +79,7 @@ static MMJotViewNilState* _instance = nil;
 }
 
 -(JotBufferManager*) bufferManager{
-    return [JotBufferManager sharedInstance];
+    return [JotBufferManager primaryInstance];
 }
 
 -(void) tick{

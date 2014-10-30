@@ -25,6 +25,8 @@
 @property (readonly) MMPhotoAlbum* cameraRoll;
 @property (readonly) ALAssetsLibrary* assetsLibrary;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMPhotoManager*) sharedInstance;
 
 +(BOOL) hasPhotosPermission;

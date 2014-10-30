@@ -31,6 +31,8 @@
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 @property (nonatomic, readonly) UIInterfaceOrientation lastBestOrientation;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 +(MMRotationManager*) sharedInstance;
 
 -(UIDeviceOrientation) currentDeviceOrientation;
