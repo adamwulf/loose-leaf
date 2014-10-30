@@ -18,8 +18,6 @@
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
 
-#define kMaxScrapsInBezel 6
-
 @interface MMSidebarButtonTapGestureRecognizer : UITapGestureRecognizer
 
 @end
@@ -181,7 +179,8 @@
             // allow adding to 6 in the sidebar, otherwise
             // we need to pull them all into 1 button w/
             // a menu
-            
+            [scrap.state loadCachedScrapPreview];
+
             [self.bubbleDelegate willAddScrapToBezelSidebar:scrap];
             
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -235,6 +234,7 @@
                     if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                         bubble.alpha = 0;
                         bubble.center = countButton.center;
+                        [bubble.scrap.state unloadCachedScrapPreview];
                     }
                 }
                 scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
@@ -263,6 +263,7 @@
         }
     }else{
         if([sidebarScrapState.allLoadedScraps count] <= kMaxScrapsInBezel){
+            [scrap.state loadCachedScrapPreview];
             bubble.alpha = 1;
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
@@ -280,6 +281,7 @@
                 if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                     bubble.alpha = 0;
                     bubble.center = countButton.center;
+                    [bubble.scrap.state unloadCachedScrapPreview];
                 }
             }
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
@@ -393,6 +395,7 @@
                     if([sidebarScrapState.allLoadedScraps count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it
                         otherBubble.alpha = 1;
+                        [otherBubble.scrap.state loadCachedScrapPreview];
                     }
                 }
             }

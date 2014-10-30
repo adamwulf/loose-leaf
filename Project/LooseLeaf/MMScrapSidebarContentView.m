@@ -9,7 +9,7 @@
 #import "MMScrapSidebarContentView.h"
 #import "MMScrapView.h"
 #import "MMScrapSidebarButton.h"
-
+#import "Constants.h"
 
 #define kColumnSideMargin 10.0
 #define kColumnTopMargin 10.0
@@ -67,7 +67,9 @@ typedef struct RowOfScrapsInSidebar{
 -(void) viewDidHide{
     for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
         if([subview isKindOfClass:[MMScrapSidebarButton class]]){
-            [subview.scrap.state unloadCachedScrapPreview];
+            if([[self.delegate scrapsInSidebar] count] > kMaxScrapsInBezel){
+                [subview.scrap.state unloadCachedScrapPreview];
+            }
             [subview removeFromSuperview];
         }
     }
@@ -192,7 +194,6 @@ typedef struct RowOfScrapsInSidebar{
         }
     }
     
-    
     while(row < countOfStoredRowData && rowData[row].topY < scrollView.contentOffset.y + scrollView.bounds.size.height){
         // add views while we have some and while they're visible
         // determine the index and scrap objects
@@ -228,7 +229,6 @@ typedef struct RowOfScrapsInSidebar{
         }
         row++;
     }
-    
 }
 
 

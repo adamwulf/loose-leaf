@@ -78,7 +78,6 @@ static int totalBackgroundBytes;
         totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
         totalBackgroundBytes += [img uncompressedByteSize];
     }
-    DebugLog(@"setting background for %@ to %p", scrapState.uuid, img);
     backingContentView.image = img;
     CGRect r = backingContentView.bounds;
     r.size = CGSizeMake(img.size.width, img.size.height);

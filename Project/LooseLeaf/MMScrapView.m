@@ -525,7 +525,6 @@
 
 -(void) didMoveToSuperview{
     [scrapState.scrapsOnPaperState scrapVisibilityWasUpdated:self];
-    DebugLog(@"%@ moved to %@", self.uuid, self.superview);
 }
 
 #pragma mark - Properties
