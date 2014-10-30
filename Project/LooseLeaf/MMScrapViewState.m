@@ -243,6 +243,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) loadCachedScrapPreviewAsynchronously:(BOOL)async{
+    NSLog(@"asking to load preview %@", self.uuid);
     @synchronized(thumbnailView){
         if(activeThumbnailImage){
             // already loading
@@ -296,6 +297,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
+    NSLog(@"asking to unload preview %@", self.uuid);
     @synchronized(thumbnailView){
         if(!targetIsLoadedThumbnail){
             // already unloaded
@@ -575,11 +577,11 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     @synchronized(self){
         targetIsLoadedState = NO;
     }
+    [self unloadCachedScrapPreview];
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
             @synchronized(self){
-                [self unloadCachedScrapPreview];
                 if(drawableViewState && [drawableViewState isStateLoaded] && [drawableViewState hasEditsToSave]){
 //                    DebugLog(@"(%@) unload failed, will retry", uuid);
                     // we want to unload, but we're not saved.
