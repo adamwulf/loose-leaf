@@ -136,6 +136,7 @@
 
 -(void) exportAsynchronouslyToZipFile{
     @synchronized(self){
+        [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[self pagesPath]];
         if(isCurrentlySaving || isCurrentlyExporting){
             waitingForExport = YES;
             return;

@@ -256,6 +256,9 @@
 
 -(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapCollectionState{
     
+    // make sure we've written all files to that directory
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[formerScrapCollectionState directoryPathForScrapUUID:scrapUUID]];
+
     [super stealScrap:scrapUUID fromScrapCollectionState:formerScrapCollectionState];
     
     @synchronized(allLoadedScraps){

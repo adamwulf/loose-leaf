@@ -21,6 +21,7 @@
 #import "UIDevice+PPI.h"
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import <JotUI/JotUI.h>
 
 
 @implementation MMAppDelegate{
@@ -113,6 +114,7 @@
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
+    [[JotDiskAssetManager sharedManager] blockUntilAllWritesHaveFinished];
     DebugLog(@"DID ENTER BACKGROUND");
 }
 
