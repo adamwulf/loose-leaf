@@ -19,6 +19,8 @@
 
 -(void) didFetchMessage:(SPRMessage*)message;
 
+-(void) didResetBadgeCountTo:(NSUInteger)badgeNumber;
+
 @end
 
 

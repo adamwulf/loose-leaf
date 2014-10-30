@@ -2603,6 +2603,9 @@
 					66DCFB851581BCEF00B4918C = {
 						DevelopmentTeam = MU27A4SCKC;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.GameCenter = {
 								enabled = 0;
 							};

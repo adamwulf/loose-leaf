@@ -161,35 +161,30 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
-    DebugLog(@"==== recieved notification!");
-    // Do something if the app was in background. Could handle foreground notifications differently
-    if (application.applicationState == UIApplicationStateActive) {
-        // notification came through while app was open
-        [self checkForNotificationToHandleWithNotificationInfo:info];
-    }else{
-        // notification came through while app was in background.
-        // tapping on a notification to launch the app will also
-        // land here.
-        [self checkForNotificationToHandleWithNotificationInfo:info];
-    }
+-(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
 }
 
--(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    DebugLog(@"handleActionWithIdentifier");
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler{
+    DebugLog(@"==== recieved notification!");
+    // Do something if the app was in background. Could handle foreground notifications differently
+    BOOL hadChanges = [self checkForNotificationToHandleWithNotificationInfo:info];
+    if(handler) handler(hadChanges ? UIBackgroundFetchResultNewData : UIBackgroundFetchResultNoData);
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
     DebugLog(@"handleEventsForBackgroundURLSession");
 }
 
-- (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
+- (BOOL) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
     CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
     if([notification isKindOfClass:[CKQueryNotification class]]){
         if(notification.notificationType == CKNotificationTypeQuery){
             [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+            return YES;
         }
     }
+    return NO;
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{

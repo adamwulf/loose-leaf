@@ -35,6 +35,9 @@
     // this button appears when the number of
     // waiting imports is more than
     MMAvatarButton* countButton;
+    
+    // track if we're currently loading from disk
+    BOOL isLoading;
 }
 
 @synthesize stackView;
@@ -54,6 +57,7 @@
         [countButton setNeedsDisplay];
         [self addSubview:countButton];
         
+        isLoading = YES;
         [self loadFromDisk];
     }
     return self;
@@ -127,6 +131,10 @@
                 DebugLog(@"has already seen CloudKit Tutorial page");
             }
         }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            isLoading = NO;
+        });
     }
 }
 
@@ -304,6 +312,10 @@
     // noop
 }
 
+-(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
+    [self verifyBadgeCount];
+}
+
 -(void) didFetchMessage:(SPRMessage *)message{
     @synchronized(activeImports){
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
@@ -367,6 +379,16 @@
 
 }
 
+-(void) verifyBadgeCount{
+    NSArray* readyImports = [activeImports filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject isReady];
+    }]];
+
+    if([UIApplication sharedApplication].applicationIconBadgeNumber != [readyImports count]){
+        [[MMCloudKitManager sharedManager] resetBadgeCountTo:[readyImports count]];
+    }
+}
+
 -(void) importCoordinatorIsReady:(MMCloudKitImportCoordinator*)coordinator{
     // other coordinators in the list may still be waiting for
     // their zip file to process, so make sure that coordinators
@@ -374,6 +396,9 @@
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
         [activeImports addObject:coordinator];
+        if(!isLoading){
+            [self verifyBadgeCount];
+        }
         [self saveToDiskOffMainThread];
     }
     [self animateImportAvatarButtonToTopOfPage:coordinator.avatarButton onComplete:nil];
@@ -420,6 +445,7 @@
     
     @synchronized(activeImports){
         [activeImports removeObject:coordinator];
+        [self verifyBadgeCount];
         [self saveToDiskOffMainThread];
     }
     [coordinator.avatarButton animateOffScreenWithCompletion:nil];

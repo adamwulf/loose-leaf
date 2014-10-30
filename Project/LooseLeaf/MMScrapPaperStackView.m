@@ -1953,6 +1953,10 @@ int skipAll = NO;
     [cloudKitExportView didFetchMessage:message];
 }
 
+-(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
+    [cloudKitExportView didResetBadgeCountTo:badgeNumber];
+}
+
 #pragma mark - Import
 
 -(BOOL) importAndShowPage:(MMExportablePaperView*)page{
