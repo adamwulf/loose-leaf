@@ -42,7 +42,7 @@
 }
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
-    return [[UIImage imageWithContentsOfFile:pathToPhoto] resizedImage:[self sizeForMaxDim:maxDim] interpolationQuality:kCGInterpolationMedium];
+    return [[JotDiskAssetManager imageWithContentsOfFile:pathToPhoto] resizedImage:[self sizeForMaxDim:maxDim] interpolationQuality:kCGInterpolationMedium];
 }
 
 -(NSURL*) fullResolutionURL{
@@ -51,7 +51,7 @@
 
 -(CGSize) fullResolutionSize{
     if(CGSizeEqualToSize(defaultSize, CGSizeZero)){
-        defaultSize = [UIImage imageWithContentsOfFile:pathToPhoto].size;
+        defaultSize = [JotDiskAssetManager imageWithContentsOfFile:pathToPhoto].size;
     }
     return defaultSize;
 }

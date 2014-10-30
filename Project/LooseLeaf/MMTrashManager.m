@@ -67,6 +67,7 @@ static MMTrashManager* _instance = nil;
 
 -(void) deletePage:(MMExportablePaperView*)page{
     DebugLog(@"asking to delete %@", page.uuid);
+
     NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;
     [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
@@ -108,6 +109,9 @@ static MMTrashManager* _instance = nil;
             NSString* allPagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
             NSString* thisPagesPath = [allPagesPath stringByAppendingPathComponent:page.uuid];
             NSString* thisPagesScrapsPath = [thisPagesPath stringByAppendingPathComponent:@"Scraps"];
+
+            [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:thisPagesPath];
+
             
             //
             // Step 2: loop through all of the page's scraps and delete
@@ -208,6 +212,7 @@ static MMTrashManager* _instance = nil;
         return;
     }
 
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[scrapCollectionState directoryPathForScrapUUID:scrapUUID]];
     [scrapCollectionState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
 
 }

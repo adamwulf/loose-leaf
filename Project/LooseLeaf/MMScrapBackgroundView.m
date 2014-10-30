@@ -73,6 +73,7 @@ static int totalBackgroundBytes;
 #pragma mark - Properties
 
 -(void) setBackingImage:(UIImage*)img{
+    CheckMainThread;
     @synchronized([MMScrapBackgroundView class]){
         totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
         totalBackgroundBytes += [img uncompressedByteSize];

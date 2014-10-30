@@ -32,6 +32,7 @@
 @implementation MMScrapsOnPaperState{
     // the container to hold the scraps
     MMScrapContainerView* scrapContainerView;
+    NSMutableArray* scrapsPendingRemoval;
 }
 
 @dynamic delegate;
@@ -47,6 +48,7 @@
         // stays in place
         scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
         scrapContainerView.layer.position = CGPointMake(0,0);
+        scrapsPendingRemoval = [NSMutableArray array];
     }
     return self;
 }
@@ -383,7 +385,9 @@
     // spend unnecessary resources copying a potentially
     // long array.
     @synchronized(scrapContainerView){
-        return scrapContainerView.subviews;
+        NSMutableArray* scrapsOnPaper = [NSMutableArray arrayWithArray:scrapContainerView.subviews];
+        [scrapsOnPaper removeObjectsInArray:scrapsPendingRemoval];
+        return scrapsOnPaper;
     }
 }
 
@@ -463,8 +467,16 @@
         hasEditsToSave = YES;
     }
     if(removedScrap){
-        [NSThread performBlockOnMainThreadSync:^{
-            [removedScrap removeFromSuperview];
+        @synchronized(scrapsPendingRemoval){
+            [scrapsPendingRemoval addObject:removedScrap];
+        }
+        [NSThread performBlockOnMainThread:^{
+            if(removedScrap.superview == scrapContainerView){
+                [removedScrap removeFromSuperview];
+            }
+            @synchronized(scrapsPendingRemoval){
+                [scrapsPendingRemoval removeObject:removedScrap];
+            }
         }];
     }
     return removedScrap;

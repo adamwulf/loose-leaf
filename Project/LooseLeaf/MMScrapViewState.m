@@ -49,7 +49,7 @@
     CGRect drawableBounds;
     
     // thumbnail
-    UIImage* activeThumbnailImage;
+    MMDecompressImagePromise* activeThumbnailImage;
     
     // clipped background view
     UIView* clippedBackgroundView;
@@ -70,7 +70,6 @@
     NSUInteger lastSavedUndoHash;
     
     BOOL targetIsLoadedThumbnail;
-    MMDecompressImagePromise* decompressionPromise;
 }
 
 #pragma mark - Properties
@@ -244,7 +243,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) loadCachedScrapPreviewAsynchronously:(BOOL)async{
-    @synchronized(activeThumbnailImage){
+    @synchronized(thumbnailView){
         if(activeThumbnailImage){
             // already loading
             return;
@@ -256,23 +255,23 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         if(!cachedImage){
             cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
         }
-        [self setActiveThumbnailImage:cachedImage];
+        [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForDecompressedImage:cachedImage andDelegate:self]];
     }else if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
         // load if we can
         UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
-        [self setActiveThumbnailImage:cachedImage];
+        [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForDecompressedImage:cachedImage andDelegate:self]];
     }else{
         // don't load from disk on the main thread.
         dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
             [lock lock];
             @autoreleasepool {
-                @synchronized(activeThumbnailImage){
+                @synchronized(thumbnailView){
                     if(targetIsLoadedThumbnail){
                         UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
                         if(!thumb){
                             thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
                         }
-                        decompressionPromise = [[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self];
+                        [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self]];
                     }
                 }
             }
@@ -283,31 +282,34 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
     CheckMainThread;
-    @synchronized(activeThumbnailImage){
-        if(targetIsLoadedThumbnail){
-            [self setActiveThumbnailImage:promise.image];
-        }else{
-            [self setActiveThumbnailImage:nil];
+    if(promise == activeThumbnailImage){
+        @synchronized(thumbnailView){
+            if(targetIsLoadedThumbnail){
+                [self setActiveThumbnailImage:promise];
+            }else{
+                [self setActiveThumbnailImage:nil];
+            }
         }
+    }else{
+        // we don't care if its not the current promise
     }
-    decompressionPromise = nil;
 }
 
 -(void) unloadCachedScrapPreview{
-    @synchronized(activeThumbnailImage){
+    @synchronized(thumbnailView){
         if(!targetIsLoadedThumbnail){
             // already unloaded
             return;
         }
         targetIsLoadedThumbnail = NO;
-        if(decompressionPromise){
-            [decompressionPromise cancel];
-            decompressionPromise = nil;
+        if(activeThumbnailImage){
+            [activeThumbnailImage cancel];
+            activeThumbnailImage = nil;
         }
     }
     [self setActiveThumbnailImage:nil];
     dispatch_async(dispatch_get_background_queue(), ^{
-        @synchronized(activeThumbnailImage){
+        @synchronized(thumbnailView){
             if(!targetIsLoadedThumbnail){
                 [[MMLoadImageCache sharedInstance] clearCacheForPath:self.thumbImageFile];
                 [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledThumbImageFile];
@@ -405,7 +407,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 //                                            DebugLog(@"forget: %@ scrap state skipping update after jotview save", self.uuid);
                                         }else if(state){
                                             [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:thumb];
-                                            [self setActiveThumbnailImage:thumb];
+                                            [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForDecompressedImage:thumb andDelegate:self]];
                                             [drawableViewState wasSavedAtImmutableState:state];
                                             
                                             // save path
@@ -631,15 +633,19 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 // returns the loaded thumbnail image,
 // if any
 -(UIImage*) activeThumbnailImage{
-    return activeThumbnailImage;
+    return activeThumbnailImage.image;
 }
 
--(void) setActiveThumbnailImage:(UIImage*)img{
-    if(activeThumbnailImage != img){
+-(void) setActiveThumbnailImage:(MMDecompressImagePromise*)img{
+    if(activeThumbnailImage != img || activeThumbnailImage.image != thumbnailView.image){
         activeThumbnailImage = img;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            thumbnailView.image = activeThumbnailImage;
-        });
+        if(!activeThumbnailImage || activeThumbnailImage.isDecompressed){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(!activeThumbnailImage || activeThumbnailImage.isDecompressed){
+                    thumbnailView.image = activeThumbnailImage.image;
+                }
+            });
+        }
     }
 }
 
@@ -832,7 +838,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) reloadBackgroundView{
-    DebugLog(@"info plist: %@", self.scrapPropertiesPlistPath);
     NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.scrapPropertiesPlistPath];
     MMScrapBackgroundView* replacementBackgroundView = [[MMScrapBackgroundView alloc] initWithImage:nil forScrapState:self];
     // now load the background image from disk, if any
@@ -840,7 +845,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     [self setBackgroundView:replacementBackgroundView];
     
     UIImage* thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
-    [self setActiveThumbnailImage:thumb];
+    [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForDecompressedImage:thumb andDelegate:self]];
 }
 
 #pragma mark - dealloc

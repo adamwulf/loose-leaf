@@ -32,6 +32,7 @@
     NSMutableDictionary* incomingMessageState;
     
     BOOL needsBootstrap;
+    CKModifyBadgeOperation * lastBadgeOp;
 }
 
 @synthesize delegate;
@@ -129,12 +130,12 @@ static NSString* cloudKitFilesPath;
         needsBootstrap = NO;
         [currentState runState];
     }
-    [self resetBadgeCountTo:0];
 }
 
 -(void) fetchAllNewMessages{
     [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesAndMarkAsReadWithCompletionHandler:^(NSArray *messages, NSError *error) {
         if(!error){
+            DebugLog(@"CloudKit fetched all new messages: %d", (int) [messages count]);
             for(SPRMessage* message in messages){
                 [self processIncomingMessage:message];
             }
@@ -249,6 +250,7 @@ static NSString* cloudKitFilesPath;
     DebugLog(@"applicationWillEnterForeground - cloudkit manager");
     [MMCloudKitBaseState clearCache];
     [self changeToState:[[MMCloudKitBaseState alloc] initWithCachedFriendList:currentState.friendList]];
+    [self fetchAllNewMessages];
 }
 
 -(void) reachabilityDidChange{
@@ -264,20 +266,24 @@ static NSString* cloudKitFilesPath;
     }];
     [self.currentState cloudKitDidRecievePush];
     [self fetchAllNewMessages];
-    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
 }
 
 -(void) resetBadgeCountTo:(NSUInteger)number{
-    CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
-    oper.modifyBadgeCompletionBlock = ^(NSError* err){
-        if(!err){
-            UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-            if (notificationSettings.types & UIUserNotificationTypeBadge){
-                [UIApplication sharedApplication].applicationIconBadgeNumber = number;
+    if(!lastBadgeOp){
+        CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
+        oper.modifyBadgeCompletionBlock = ^(NSError* err){
+            lastBadgeOp = nil;
+            if(!err){
+                UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+                if (notificationSettings.types & UIUserNotificationTypeBadge){
+                    [UIApplication sharedApplication].applicationIconBadgeNumber = number;
+                    DebugLog(@"reset badge count to: %d", (int) number);
+                    [self.delegate didResetBadgeCountTo:number];
+                }
             }
-        }
-    };
-    [[CKContainer defaultContainer] addOperation:oper];
+        };
+        [[CKContainer defaultContainer] addOperation:oper];
+    }
 }
 
 #pragma mark - Description

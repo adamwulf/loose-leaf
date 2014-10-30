@@ -136,6 +136,7 @@
 
 -(void) exportAsynchronouslyToZipFile{
     @synchronized(self){
+        [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[self pagesPath]];
         if(isCurrentlySaving || isCurrentlyExporting){
             waitingForExport = YES;
             return;
@@ -457,8 +458,8 @@
                 DebugLog(@"scrap in bezel only, should move assets into bezel ownership");
                 // synchronous, so that the files will be gone
                 // from our page by the time this returns
-                [self.delegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:self.scrapsOnPaperState];
                 [self.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+                [self.delegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:self.scrapsOnPaperState];
                 NSObject<MMPaperViewDelegate>* pageOriginalDelegate = self.delegate;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
