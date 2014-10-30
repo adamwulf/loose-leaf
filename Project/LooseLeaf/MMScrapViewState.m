@@ -243,6 +243,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) loadCachedScrapPreviewAsynchronously:(BOOL)async{
+    DebugLog(@"asking to load cached preview for %@", self.uuid);
     @synchronized(activeThumbnailImage){
         if(activeThumbnailImage){
             // already loading
@@ -282,6 +283,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 -(void) didDecompressImage:(MMDecompressImagePromise*)promise{
     CheckMainThread;
+    DebugLog(@"did decompress image for %@", self.uuid);
     if(promise == activeThumbnailImage){
         @synchronized(activeThumbnailImage){
             if(targetIsLoadedThumbnail){
@@ -296,6 +298,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
+    DebugLog(@"unlading cached preview for %@", self.uuid);
     @synchronized(activeThumbnailImage){
         if(!targetIsLoadedThumbnail){
             // already unloaded
@@ -325,10 +328,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 -(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView{
     if(backingImageHolder){
+        DebugLog(@"removed backingImageHolder for %@", self.uuid);
         [backingImageHolder removeFromSuperview];
     }
     backingImageHolder = backgroundView;
     if(backingImageHolder){
+        DebugLog(@"updated backingImageHolder for %@ to %p", self.uuid, backingImageHolder);
         backingImageHolder.frame = contentView.bounds;
         [clippedBackgroundView addSubview:backingImageHolder];
     }
@@ -642,6 +647,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         if(activeThumbnailImage.isDecompressed){
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(activeThumbnailImage.isDecompressed){
+                    DebugLog(@"setting thumb for %@ to %p", self.uuid, activeThumbnailImage.image);
                     thumbnailView.image = activeThumbnailImage.image;
                 }
             });
