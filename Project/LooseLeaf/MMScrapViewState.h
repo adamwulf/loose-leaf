@@ -50,6 +50,7 @@
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
+-(void) unloadStateButKeepThumbnailIfAny;
 
 -(BOOL) isScrapStateLoaded;
 -(BOOL) isScrapStateLoading;
