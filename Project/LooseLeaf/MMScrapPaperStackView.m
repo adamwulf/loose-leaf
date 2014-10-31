@@ -868,6 +868,7 @@ int skipAll = NO;
         if(gesture.isShaking && [pageToDropScrap.scrapsOnPaper count] && ![fromLeftBezelGesture isActivelyBezeling] && ![fromRightBezelGesture isActivelyBezeling]){
             // if the gesture is shaking, then pull the scrap to the top if
             // it's not already. otherwise send it to the back
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasShakeToReorder : @(YES)}];
             if([pageToDropScrap isEqual:[[MMPageCacheManager sharedInstance] currentEditablePage]] &&
                ![pageToDropScrap.scrapsOnPaperState isScrapVisible:scrap]){
                 // this happens when the user picks up a scrap
@@ -1039,6 +1040,8 @@ int skipAll = NO;
         [gesture giveUpScrap];
         
         if(shouldBezel){
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasBezelledScrap : @(YES)}];
+
             [startingPageForScrap addUndoItemForBezeledScrap:scrap withProperties:startingScrapProperties];
             // if we've bezelled the scrap,
             // add it to the bezel container
