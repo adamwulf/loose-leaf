@@ -573,11 +573,21 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     }
 }
 
+-(void) unloadStateButKeepThumbnailIfAny{
+    [self unloadStateIncludingPreview:NO];
+}
+
 -(void) unloadState{
+    [self unloadStateIncludingPreview:YES];
+}
+
+-(void) unloadStateIncludingPreview:(BOOL)unloadPreviewToo{
     @synchronized(self){
         targetIsLoadedState = NO;
     }
-    [self unloadCachedScrapPreview];
+    if(unloadPreviewToo){
+        [self unloadCachedScrapPreview];
+    }
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];

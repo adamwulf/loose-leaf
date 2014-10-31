@@ -59,6 +59,7 @@
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
+-(void) unloadStateButKeepThumbnailIfAny;
 
 -(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds;
 

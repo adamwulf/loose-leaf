@@ -210,8 +210,10 @@
                         if(isShownOnPage && makeEditable){
                             [scrap loadScrapStateAsynchronously:async];
                         }else{
-                            [scrap unloadState];
-                            if(isShownOnPage){
+                            [scrap unloadStateButKeepThumbnailIfAny];
+                            if([self.delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrap.uuid]){
+                                // noop, let the bezel handle its own thumbnails
+                            }else if(isShownOnPage){
                                 [scrap.state loadCachedScrapPreview];
                             }else{
                                 [scrap.state unloadCachedScrapPreview];

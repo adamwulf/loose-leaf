@@ -523,6 +523,10 @@
     [scrapState unloadState];
 }
 
+-(void) unloadStateButKeepThumbnailIfAny{
+    [scrapState unloadStateButKeepThumbnailIfAny];
+}
+
 -(void) didMoveToSuperview{
     [scrapState.scrapsOnPaperState scrapVisibilityWasUpdated:self];
 }
