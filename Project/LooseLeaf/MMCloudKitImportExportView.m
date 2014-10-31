@@ -132,6 +132,8 @@
             }
         }
         
+        [self verifyBadgeCount];
+
         dispatch_async(dispatch_get_main_queue(), ^{
             isLoading = NO;
         });
