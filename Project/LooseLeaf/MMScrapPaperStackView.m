@@ -1853,7 +1853,12 @@ int skipAll = NO;
         CheckMainThread;
         clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
         clonedScrap.scale = scrap.scale;
-        [page.scrapsOnPaperState showScrap:clonedScrap];
+        
+        @synchronized(scrapContainer){
+            // make sure scraps are in the same coordinate space
+            [scrapContainer addSubview:clonedScrap];
+        }
+        
         
         DebugLog(@"======");
         
@@ -1874,6 +1879,8 @@ int skipAll = NO;
         // set the scrap anchor to its center
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
         
+        [page.scrapsOnPaperState showScrap:clonedScrap];
+
 //        DebugLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
     };
     
