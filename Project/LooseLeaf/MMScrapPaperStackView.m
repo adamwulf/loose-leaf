@@ -1851,6 +1851,7 @@ int skipAll = NO;
     
     void(^block)() = ^{
         CheckMainThread;
+        
         clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
         clonedScrap.scale = scrap.scale;
         
@@ -1860,14 +1861,14 @@ int skipAll = NO;
         }
         
         
-        DebugLog(@"======");
+//        DebugLog(@"======");
         
         // next match it's location exactly on top of the original scrap:
         [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
         clonedScrap.center = scrap.center;
         
-        DebugLog(@"cloned scrap %@ has center %f %f", clonedScrap.state.uuid, clonedScrap.center.x, clonedScrap.center.y);
-        DebugLog(@"cloned scrap %@ has center %f %f", scrap.state.uuid, scrap.center.x, scrap.center.y);
+//        DebugLog(@"cloned scrap %@ has center %f %f", clonedScrap.state.uuid, clonedScrap.center.x, clonedScrap.center.y);
+//        DebugLog(@"cloned scrap %@ has center %f %f", scrap.state.uuid, scrap.center.x, scrap.center.y);
         
         // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
         // but it's in the wrong place.
@@ -1885,8 +1886,10 @@ int skipAll = NO;
     };
     
     if(needsStateLoading){
+        DebugLog(@"needs loading");
         [page performBlockForUnloadedScrapStateSynchronously:block andImmediatelyUnloadState:(page != [visibleStackHolder peekSubview]) andSavePaperState:YES];
     }else{
+        DebugLog(@"doesn't need loading");
         block();
     }
     

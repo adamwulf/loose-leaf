@@ -238,12 +238,21 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 #pragma mark - Preview
 
+-(UIImage*) oneOffLoadedThumbnailImage{
+    UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
+    if(!cachedImage){
+        cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+    }
+    return cachedImage;
+}
+
 -(void) loadCachedScrapPreview{
+    DebugLog(@"loading thumb for %@", self.uuid);
     [self loadCachedScrapPreviewAsynchronously:YES];
 }
 
 -(void) loadCachedScrapPreviewAsynchronously:(BOOL)async{
-    NSLog(@"asking to load preview %@", self.uuid);
+//    DebugLog(@"asking to load preview %@", self.uuid);
     @synchronized(thumbnailView){
         if(activeThumbnailImage){
             // already loading
@@ -297,7 +306,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
-    NSLog(@"asking to unload preview %@", self.uuid);
+    DebugLog(@"unload thumb for %@", self.uuid);
     @synchronized(thumbnailView){
         if(!targetIsLoadedThumbnail){
             // already unloaded
@@ -645,19 +654,27 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 // returns the loaded thumbnail image,
 // if any
 -(UIImage*) activeThumbnailImage{
-    return activeThumbnailImage.image;
+    @synchronized(self){
+        return activeThumbnailImage.image;
+    }
 }
 
 -(void) setActiveThumbnailImage:(MMDecompressImagePromise*)img{
-    if(activeThumbnailImage != img || activeThumbnailImage.image != thumbnailView.image){
-        activeThumbnailImage = img;
-        if(!activeThumbnailImage || activeThumbnailImage.isDecompressed){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if(!activeThumbnailImage || activeThumbnailImage.isDecompressed){
-                    thumbnailView.image = activeThumbnailImage.image;
-                }
-            });
+    BOOL needsDispatch = NO;
+    @synchronized(self){
+        if(activeThumbnailImage != img || activeThumbnailImage.image != thumbnailView.image){
+            activeThumbnailImage = img;
+            if(!activeThumbnailImage || activeThumbnailImage.isDecompressed){
+                needsDispatch = YES;
+            }
         }
+    }
+    if(needsDispatch){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(!activeThumbnailImage || activeThumbnailImage.isDecompressed){
+                thumbnailView.image = activeThumbnailImage.image;
+            }
+        });
     }
 }
 

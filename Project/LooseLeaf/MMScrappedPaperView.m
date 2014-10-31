@@ -455,7 +455,7 @@
     }
     
     if(shouldAddUndoLevel){
-        NSLog(@"should add undo level!");
+        DebugLog(@"should add undo level!");
         // if we land in here, then that means that either our
         // drawable view, or one of our scraps, would exceed the max
         // byte size for a stroke. so we should add an undo level
@@ -960,6 +960,18 @@
         [[UIColor whiteColor] setFill];
         [path fill];
         
+        
+        UIImage* thumbnail = nil;
+        @synchronized(scrap.state){
+            thumbnail = scrap.state.activeThumbnailImage;
+            if(!thumbnail){
+                thumbnail = [scrap.state oneOffLoadedThumbnailImage];
+                DebugLog(@"loaded thumbnail: %p", thumbnail);
+            }else{
+                DebugLog(@"had thumbnail: %p", thumbnail);
+            }
+        }
+        
         // background
         //
         // draw the scrap's background, if it has an image background
@@ -984,10 +996,10 @@
         // ink
         //
         // draw the scrap's strokes
-        if(scrap.state.activeThumbnailImage){
-            [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+        if(thumbnail){
+            [thumbnail drawInRect:scrap.bounds];
         }
-        
+
         // restore the state, no more clip
         CGContextRestoreGState(context);
         
@@ -1013,6 +1025,7 @@
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
+        NSLog(@"updating thumb for: %@", self.uuid);
         UIImage* thumb = [self synchronouslyLoadInkPreview];
         CGSize thumbSize = [self thumbnailSize];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
@@ -1029,6 +1042,7 @@
         [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
         
         for(MMScrapView* scrap in immutableScrapState.scraps){
+            NSLog(@"drawing scrap: %@", scrap.uuid);
             [self drawScrap:scrap intoContext:context withSize:thumbSize];
         }
         

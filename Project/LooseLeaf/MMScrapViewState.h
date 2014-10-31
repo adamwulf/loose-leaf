@@ -46,6 +46,7 @@
 
 -(void) loadCachedScrapPreview;
 -(void) unloadCachedScrapPreview;
+-(UIImage*) oneOffLoadedThumbnailImage;
 
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 
