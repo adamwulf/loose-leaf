@@ -243,7 +243,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) loadCachedScrapPreviewAsynchronously:(BOOL)async{
-    NSLog(@"asking to load preview %@", self.uuid);
+//    DebugLog(@"asking to load preview %@", self.uuid);
     @synchronized(thumbnailView){
         if(activeThumbnailImage){
             // already loading
@@ -297,7 +297,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
-    NSLog(@"asking to unload preview %@", self.uuid);
+//    DebugLog(@"asking to unload preview %@", self.uuid);
     @synchronized(thumbnailView){
         if(!targetIsLoadedThumbnail){
             // already unloaded

@@ -455,7 +455,7 @@
     }
     
     if(shouldAddUndoLevel){
-        NSLog(@"should add undo level!");
+        DebugLog(@"should add undo level!");
         // if we land in here, then that means that either our
         // drawable view, or one of our scraps, would exceed the max
         // byte size for a stroke. so we should add an undo level
@@ -960,6 +960,11 @@
         [[UIColor whiteColor] setFill];
         [path fill];
         
+        BOOL neededThumbnailLoad = !scrap.state.activeThumbnailImage;
+        if(neededThumbnailLoad){
+            [scrap.state loadCachedScrapPreview];
+        }
+        
         // background
         //
         // draw the scrap's background, if it has an image background
@@ -987,7 +992,11 @@
         if(scrap.state.activeThumbnailImage){
             [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
         }
-        
+
+        if(neededThumbnailLoad){
+            [scrap.state unloadCachedScrapPreview];
+        }
+
         // restore the state, no more clip
         CGContextRestoreGState(context);
         

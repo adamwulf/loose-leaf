@@ -14,7 +14,7 @@
 #import "MMTrashManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
-
+#import "Mixpanel.h"
 
 @implementation MMExportablePaperView{
     BOOL isCurrentlyExporting;
@@ -35,7 +35,14 @@
         __block __strong MMExportablePaperView* strongSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             @autoreleasepool {
-                [strongSelf saveToDisk:nil];
+                [strongSelf saveToDisk:^(BOOL didSaveEdits){
+                    if([self hasEditsToSave]){
+                        // save failed, try again
+                        [[Mixpanel sharedInstance] track:kMPSaveFailedNeedsRetry];
+                        waitingForSave = YES;
+                        [strongSelf retrySaveOrExport];
+                    }
+                }];
                 strongSelf = nil;
             }
         });

@@ -153,6 +153,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
 #define kMPEventGestureBug @"Gesture Bug"
+#define kMPSaveFailedNeedsRetry @"Save Failed Will Retry"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
