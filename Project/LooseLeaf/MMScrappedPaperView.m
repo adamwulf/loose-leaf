@@ -960,9 +960,16 @@
         [[UIColor whiteColor] setFill];
         [path fill];
         
-        BOOL neededThumbnailLoad = !scrap.state.activeThumbnailImage;
-        if(neededThumbnailLoad){
-            [scrap.state loadCachedScrapPreview];
+        
+        UIImage* thumbnail = nil;
+        @synchronized(scrap.state){
+            thumbnail = scrap.state.activeThumbnailImage;
+            if(!thumbnail){
+                thumbnail = [scrap.state oneOffLoadedThumbnailImage];
+                DebugLog(@"loaded thumbnail: %p", thumbnail);
+            }else{
+                DebugLog(@"had thumbnail: %p", thumbnail);
+            }
         }
         
         // background
@@ -989,12 +996,8 @@
         // ink
         //
         // draw the scrap's strokes
-        if(scrap.state.activeThumbnailImage){
-            [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
-        }
-
-        if(neededThumbnailLoad){
-            [scrap.state unloadCachedScrapPreview];
+        if(thumbnail){
+            [thumbnail drawInRect:scrap.bounds];
         }
 
         // restore the state, no more clip
@@ -1022,6 +1025,7 @@
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
+        NSLog(@"updating thumb for: %@", self.uuid);
         UIImage* thumb = [self synchronouslyLoadInkPreview];
         CGSize thumbSize = [self thumbnailSize];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
@@ -1038,6 +1042,7 @@
         [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
         
         for(MMScrapView* scrap in immutableScrapState.scraps){
+            NSLog(@"drawing scrap: %@", scrap.uuid);
             [self drawScrap:scrap intoContext:context withSize:thumbSize];
         }
         
