@@ -129,6 +129,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPHasZoomedToPage @"Has Zoomed Into Page"
 #define kMPHasDeletedPage @"Has Deleted Page"
+#define kMPHasShakeToReorder @"Has Shaken Scrap"
+#define kMPHasBezelledScrap @"Has Bezelled Scrap"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPNumberOfMemoryCrashes @"Number of Mem Crashes"
