@@ -69,8 +69,8 @@
     [self setupTimer];
     
     NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-    NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
     if(url){
+        NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
         [self importFileFrom:url fromApp:sourceApplication];
     }
 
