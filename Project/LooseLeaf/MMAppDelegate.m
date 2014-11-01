@@ -23,6 +23,7 @@
 #import "UIDevice+PPI.h"
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import <JotUI/JotUI.h>
 
 
 @implementation MMAppDelegate{
@@ -38,7 +39,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    debug_NSLog(@"DID FINISH LAUNCHING");
+    DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
@@ -103,7 +104,7 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-    debug_NSLog(@"WILL RESIGN ACTIVE");
+    DebugLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
     [[MMRotationManager sharedInstance] willResignActive];
 }
@@ -118,13 +119,14 @@
     durationTimer = nil;
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
-    debug_NSLog(@"DID ENTER BACKGROUND");
+    [[JotDiskAssetManager sharedManager] blockUntilAllWritesHaveFinished];
+    DebugLog(@"DID ENTER BACKGROUND");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    debug_NSLog(@"WILL ENTER FOREGROUND");
+    DebugLog(@"WILL ENTER FOREGROUND");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -141,9 +143,9 @@
     };
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
-    debug_NSLog(@"DID BECOME ACTIVE");
-    debug_NSLog(@"***************************************************************************");
-    debug_NSLog(@"***************************************************************************");
+    DebugLog(@"DID BECOME ACTIVE");
+    DebugLog(@"***************************************************************************");
+    DebugLog(@"***************************************************************************");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -153,7 +155,7 @@
     [durationTimer invalidate];
     durationTimer = nil;
     [self removeDateOfLaunch];
-    debug_NSLog(@"WILL TERMINATE");
+    DebugLog(@"WILL TERMINATE");
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -164,35 +166,30 @@
     return YES;
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info {
-    NSLog(@"==== recieved notification!");
-    // Do something if the app was in background. Could handle foreground notifications differently
-    if (application.applicationState == UIApplicationStateActive) {
-        // notification came through while app was open
-        [self checkForNotificationToHandleWithNotificationInfo:info];
-    }else{
-        // notification came through while app was in background.
-        // tapping on a notification to launch the app will also
-        // land here.
-        [self checkForNotificationToHandleWithNotificationInfo:info];
-    }
+-(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
 }
 
--(void) application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forRemoteNotification:(NSDictionary *)userInfo completionHandler:(void (^)())completionHandler{
-    NSLog(@"handleActionWithIdentifier");
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler{
+    DebugLog(@"==== recieved notification!");
+    // Do something if the app was in background. Could handle foreground notifications differently
+    BOOL hadChanges = [self checkForNotificationToHandleWithNotificationInfo:info];
+    if(handler) handler(hadChanges ? UIBackgroundFetchResultNewData : UIBackgroundFetchResultNoData);
 }
 
 -(void) application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler{
-    NSLog(@"handleEventsForBackgroundURLSession");
+    DebugLog(@"handleEventsForBackgroundURLSession");
 }
 
-- (void) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
+- (BOOL) checkForNotificationToHandleWithNotificationInfo:(NSDictionary *)userInfo {
     CKQueryNotification *notification = [CKQueryNotification notificationFromRemoteNotificationDictionary:userInfo];
     if([notification isKindOfClass:[CKQueryNotification class]]){
         if(notification.notificationType == CKNotificationTypeQuery){
             [[MMCloudKitManager sharedManager] handleIncomingMessageNotification:notification];
+            return YES;
         }
     }
+    return NO;
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
@@ -200,11 +197,11 @@
 }
 
 -(void) application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
-    NSLog(@"did fail register for remote notifications");
+    DebugLog(@"did fail register for remote notifications");
 }
 
 - (BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier{
-    NSLog(@"extension? %@", extensionPointIdentifier);
+    DebugLog(@"extension? %@", extensionPointIdentifier);
     return YES;
 }
 
@@ -256,24 +253,24 @@
 #pragma mark - Track Memory Crash
 
 -(void) trackDidCrashFromMemoryForDate:(NSDate*)dateOfCrash{
-    debug_NSLog(@"Did Track Crash from Memory");
-    debug_NSLog(@"===========================");
+    DebugLog(@"Did Track Crash from Memory");
+    DebugLog(@"===========================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfMemoryCrashes by:@(1)];
     
-    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
-    [crashProperties setObject:@"Memory" forKey:@"Cause"];
-    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
-    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
-    if(dateOfCrash) [crashProperties setObject:dateOfCrash forKey:@"crashedOnDate"];
-    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
-    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
-    
-    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
-    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
-    }];
-    
     @try{
+        NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
+        [crashProperties setObject:@"Memory" forKey:@"Cause"];
+        if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+        if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+        if(dateOfCrash) [crashProperties setObject:dateOfCrash forKey:@"crashedOnDate"];
+        if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+        if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+        
+        NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
+        [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
+        }];
+    
         [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
     }@catch(id e){
         // noop
@@ -304,8 +301,8 @@
 -(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
     didRecieveReportFromCrashlytics = YES;
     
-    debug_NSLog(@"Did Track Crash from Exception");
-    debug_NSLog(@"==============================");
+    DebugLog(@"Did Track Crash from Exception");
+    DebugLog(@"==============================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];

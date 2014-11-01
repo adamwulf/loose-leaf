@@ -81,6 +81,9 @@
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
+                                                      kMPHasSeenCKTutorial : @(NO),
+                                                      kMPHasShakeToReorder : @(NO),
+                                                      kMPHasBezelledScrap : @(NO),
                                                       kMPNumberOfPenUses : @(0),
                                                       kMPNumberOfEraserUses : @(0),
                                                       kMPNumberOfScissorUses : @(0),
@@ -121,6 +124,10 @@
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) viewWillAppear:(BOOL)animated{
     
 }
@@ -147,9 +154,9 @@
             [self printKeys:obj atlevel:level+1];
         }else{
             if([obj isKindOfClass:[NSArray class]]){
-                debug_NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
+                DebugLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
             }else{
-                debug_NSLog(@"%@ %@ - %@", space, key, [obj class]);
+                DebugLog(@"%@ %@ - %@", space, key, [obj class]);
             }
         }
     }
@@ -173,7 +180,7 @@
 #pragma mark - application state
 
 -(void) willResignActive{
-    debug_NSLog(@"telling stack to cancel all gestures");
+    DebugLog(@"telling stack to cancel all gestures");
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
@@ -181,12 +188,12 @@
 
 -(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
     [super dismissViewControllerAnimated:flag completion:completion];
-//    NSLog(@"dismissing view controller");
+//    DebugLog(@"dismissing view controller");
 }
 
 -(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
-//    NSLog(@"presenting view controller");
+//    DebugLog(@"presenting view controller");
 }
 
 @end

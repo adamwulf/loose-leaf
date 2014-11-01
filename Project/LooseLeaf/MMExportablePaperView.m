@@ -14,7 +14,7 @@
 #import "MMTrashManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
-
+#import "Mixpanel.h"
 
 @implementation MMExportablePaperView{
     BOOL isCurrentlyExporting;
@@ -35,7 +35,14 @@
         __block __strong MMExportablePaperView* strongSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             @autoreleasepool {
-                [strongSelf saveToDisk:nil];
+                [strongSelf saveToDisk:^(BOOL didSaveEdits){
+                    if([self hasEditsToSave]){
+                        // save failed, try again
+                        [[Mixpanel sharedInstance] track:kMPSaveFailedNeedsRetry];
+                        waitingForSave = YES;
+                        [strongSelf retrySaveOrExport];
+                    }
+                }];
                 strongSelf = nil;
             }
         });
@@ -116,7 +123,7 @@
             waitingForUnload = YES;
             return;
         }
-        NSLog(@"MMExportablePaperView: saved unloading during save/export");
+        DebugLog(@"MMExportablePaperView: saved unloading during save/export");
         waitingForUnload = NO;
     }
     [super unloadState];
@@ -136,6 +143,7 @@
 
 -(void) exportAsynchronouslyToZipFile{
     @synchronized(self){
+        [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[self pagesPath]];
         if(isCurrentlySaving || isCurrentlyExporting){
             waitingForExport = YES;
             return;
@@ -151,7 +159,7 @@
             isCurrentlyExporting = NO;
             waitingForExport = YES;
         }
-        NSLog(@"saved exporing while save is still needed");
+        DebugLog(@"saved exporing while save is still needed");
         [self saveToDisk:nil];
         return;
     }
@@ -193,8 +201,8 @@
         NSMutableArray* bundledContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:[self bundledPagesPath] filesOnly:YES].mutableCopy;
 
         [bundledContents removeObjectsInArray:directoryContents];
-        NSLog(@"generating zip file for path %@", pathOfPageFiles);
-        NSLog(@"contents of path %d vs %d", (int) [directoryContents count], (int) [bundledContents count]);
+        DebugLog(@"generating zip file for path %@", pathOfPageFiles);
+        DebugLog(@"contents of path %d vs %d", (int) [directoryContents count], (int) [bundledContents count]);
         
         
         // find all scrap ids that are on the page vs just in our undo history
@@ -257,7 +265,7 @@
                 if([zip addFileToZip:fullPathOfFile
                          toPathInZip:aFileInPage]){
                 }else{
-                    NSLog(@"error for path: %@", aFileInPage);
+                    DebugLog(@"error for path: %@", aFileInPage);
                 }
                 CGFloat percentSoFar = ((CGFloat)filesSoFar / ([directoryContents count] + [bundledContents count]));
                 [self.delegate isExportingPage:self withPercentage:percentSoFar toZipLocation:fullPathToZip];
@@ -271,7 +279,7 @@
                 if([zip addFileToZip:fullPathOfFile
                          toPathInZip:aFileInPage]){
                 }else{
-                    NSLog(@"error for path: %@", aFileInPage);
+                    DebugLog(@"error for path: %@", aFileInPage);
                 }
                 CGFloat percentSoFar = ((CGFloat)filesSoFar / ([directoryContents count] + [bundledContents count]));
                 [self.delegate isExportingPage:self withPercentage:percentSoFar toZipLocation:fullPathToZip];
@@ -290,14 +298,14 @@
             // file wasn't created
             return nil;
         }else{
-            NSLog(@"success? file generated at %@", fullPathToTempZip);
+            DebugLog(@"success? file generated at %@", fullPathToTempZip);
             NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPathToTempZip error:nil];
             if (attribs) {
-                NSLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
+                DebugLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
             }
             
             
-            NSLog(@"validating zip file");
+            DebugLog(@"validating zip file");
             zip = [[ZipArchive alloc] init];
             [zip unzipOpenFile:fullPathToTempZip];
             NSArray* contents = [zip contentsOfZipFile];
@@ -306,27 +314,27 @@
             NSInteger expectedContentsCount = [directoryContents count] + [bundledContents count];
             if(expectedContentsCount == 0) expectedContentsCount = 1;
             if([contents count] > 0 && [contents count] == expectedContentsCount){
-                NSLog(@"valid zip file, contents: %d", (int) [contents count]);
+                DebugLog(@"valid zip file, contents: %d", (int) [contents count]);
                 [[NSFileManager defaultManager] moveItemAtPath:fullPathToTempZip toPath:fullPathToZip error:nil];
             }else{
-                NSLog(@"invalid zip file: %@ vs %@", contents, directoryContents);
+                DebugLog(@"invalid zip file: %@ vs %@", contents, directoryContents);
                 [[NSFileManager defaultManager] removeItemAtPath:fullPathToTempZip error:nil];
                 return nil;
             }
         }
     }else{
-        NSLog(@"success? file already exists at %@", fullPathToZip);
+        DebugLog(@"success? file already exists at %@", fullPathToZip);
         NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPathToZip error:nil];
         if (attribs) {
-            NSLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
+            DebugLog(@"zip file is %@", [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile]);
         }
-        NSLog(@"validating...");
+        DebugLog(@"validating...");
         ZipArchive* zip = [[ZipArchive alloc] init];
         if([zip unzipOpenFile:fullPathToZip]){
-            NSLog(@"valid");
+            DebugLog(@"valid");
             [zip closeZipFile];
         }else{
-            NSLog(@"invalid");
+            DebugLog(@"invalid");
             [[NSFileManager defaultManager] removeItemAtPath:fullPathToZip error:nil];
             return nil;
         }
@@ -336,11 +344,11 @@
     
     /*
     
-    NSLog(@"contents of zip: %@", contents);
+    DebugLog(@"contents of zip: %@", contents);
     
     
     
-    NSLog(@"unzipping file");
+    DebugLog(@"unzipping file");
     
     NSString* unzipTargetDirectory = [NSTemporaryDirectory() stringByAppendingPathComponent:@"safeDir"];
     
@@ -351,7 +359,7 @@
     
     
     directoryContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:unzipTargetDirectory filesOnly:YES];
-    NSLog(@"unzipped: %@", directoryContents);
+    DebugLog(@"unzipped: %@", directoryContents);
     */
     
     return fullPathToZip;
@@ -360,16 +368,19 @@
 #pragma mark - Delete
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-//    NSLog(@"page %@ asked to delete scrap %@ with respect? %d", self.uuid, scrapUUID, respectOthers);
+//    DebugLog(@"page %@ asked to delete scrap %@ with respect? %d", self.uuid, scrapUUID, respectOthers);
     
     //
     // Step 1: check the bezel
     //
     // first check the bezel to see if the scrap exists outside the page
-    if([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
-//        NSLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
-        return;
-    }
+    BOOL(^checkScrapExistsInBezel)() = ^{
+        if([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]){
+            DebugLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
+            return YES;
+        }
+        return NO;
+    };
     
     // first, we need to check if we're even eligible to
     // delete the scrap or not.
@@ -408,7 +419,7 @@
         dispatch_async([self serialBackgroundQueue], ^{
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    NSLog(@"only check this if our state is loaded");
+                    DebugLog(@"only check this if our state is loaded");
                     existsOnItsPage = [[self.scrapsOnPaper filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                         return [[evaluatedObject uuid] isEqualToString:scrapUUID];
                     }]] count] > 0;
@@ -435,7 +446,7 @@
                 if(checkScrapExistsInUndoRedoManager()){
                     // the scrap exists in the page's undo manager,
                     // so don't bother deleting it
-                    //                NSLog(@"TrashManager found scrap in page's undo state. keeping files.");
+                    //                DebugLog(@"TrashManager found scrap in page's undo state. keeping files.");
                     return;
                 }
                 // now double check if its on the page
@@ -444,6 +455,24 @@
                     // undo manager specifically about this scrap
                     return;
                 }
+            }
+            
+            if(checkScrapExistsInBezel()){
+                // scrap exists in the bezel, but not
+                // in the actual page. so we should move
+                // its assets into the bezel so that
+                // its not loaded with the page
+                DebugLog(@"scrap in bezel only, should move assets into bezel ownership");
+                // synchronous, so that the files will be gone
+                // from our page by the time this returns
+                [self.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
+                [self.delegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:self.scrapsOnPaperState];
+                NSObject<MMPaperViewDelegate>* pageOriginalDelegate = self.delegate;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
+                    [self saveToDisk:nil];
+                });
+                return;
             }
             
             __block MMScrapView* scrapThatIsBeingDeleted = nil;
@@ -468,7 +497,7 @@
                             // and ensure no pending saves
                             [[self.scrapsOnPaperState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                         }else{
-                            //                    NSLog(@"disrespect to page state saves time");
+                            //                    DebugLog(@"disrespect to page state saves time");
                         }
                     }
                 };
@@ -522,13 +551,13 @@
                     });
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                 }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
-                    //                NSLog(@"waiting for scrap to finish loading before deleting...");
+                    //                DebugLog(@"waiting for scrap to finish loading before deleting...");
                 }
                 [NSThread sleepForTimeInterval:1];
                 if(scrapThatIsBeingDeleted.state.hasEditsToSave){
-                    //                NSLog(@"scrap was saved, still has edits? %d", scrapThatIsBeingDeleted.state.hasEditsToSave);
+                    //                DebugLog(@"scrap was saved, still has edits? %d", scrapThatIsBeingDeleted.state.hasEditsToSave);
                 }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
-                    //                NSLog(@"scrap state is still loading");
+                    //                DebugLog(@"scrap state is still loading");
                 }
             }
             
@@ -542,16 +571,16 @@
                 if(isDirectory){
                     NSError* err = nil;
                     if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                        NSLog(@"deleted scrap %@", scrapUUID);
+                        DebugLog(@"deleted scrap %@", scrapUUID);
                     }
                     if(err){
-                        //                    NSLog(@"error deleting %@: %@", scrapPath, err);
+                        //                    DebugLog(@"error deleting %@: %@", scrapPath, err);
                     }
                 }else{
-                    //                NSLog(@"found path, but it isn't a directory: %@", scrapPath);
+                    //                DebugLog(@"found path, but it isn't a directory: %@", scrapPath);
                 }
             }else{
-                //            NSLog(@"path to delete doesn't exist %@", scrapPath);
+                //            DebugLog(@"path to delete doesn't exist %@", scrapPath);
             }
         }
     });

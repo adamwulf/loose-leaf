@@ -231,6 +231,10 @@ struct SidebarButton{
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) setMemoryView:(MMMemoryProfileView*)_memoryView{
     memoryView = _memoryView;
 }
@@ -378,7 +382,7 @@ struct SidebarButton{
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
-    debug_NSLog(@"temp button");
+    DebugLog(@"temp button");
 }
 
 -(void) setButtonsVisible:(BOOL)visible{
@@ -532,10 +536,10 @@ struct SidebarButton{
     if([page isKindOfClass:[MMEditablePaperView class]]){
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:NO];
-//        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
+//        DebugLog(@"page %@ isn't editable", pageToSave.uuid);
         [[visibleStackHolder peekSubview] saveToDisk:nil];
     }else{
-        debug_NSLog(@"would save, but can't b/c its readonly page");
+        DebugLog(@"would save, but can't b/c its readonly page");
     }
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
@@ -561,7 +565,7 @@ struct SidebarButton{
             [pageToSave setEditable:YES];
         }
         [pageToSave updateThumbnailVisibility];
-//        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
+//        DebugLog(@"page %@ is editable", pageToSave.uuid);
     }
     [rulerView setHidden:NO];
 }
@@ -585,12 +589,12 @@ struct SidebarButton{
         if([page isKindOfClass:[MMEditablePaperView class]]){
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
             if([editablePage hasEditsToSave]){
-//                debug_NSLog(@"page still has edits to save...");
+//                DebugLog(@"page still has edits to save...");
             }else{
-//                debug_NSLog(@"page is done saving...");
+//                DebugLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setEditable:NO];
                 [(MMEditablePaperView*)page updateThumbnailVisibility];
-//                debug_NSLog(@"thumb for %@ is visible", page.uuid);
+//                DebugLog(@"thumb for %@ is visible", page.uuid);
             }
         }
     }else{
@@ -653,7 +657,7 @@ struct SidebarButton{
             [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }else{
             if([fromLeftBezelGesture isActivelyBezeling]){
-                NSLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
+                DebugLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
             }
             [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }
@@ -804,7 +808,7 @@ struct SidebarButton{
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0){
-//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
+//        DebugLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
         return NO;
     }
     if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
@@ -939,7 +943,7 @@ struct SidebarButton{
             settingsButton.selected = NO;
             break;
     }
-//    debug_NSLog(@"jot status: %@", text);
+//    DebugLog(@"jot status: %@", text);
 }
 
 

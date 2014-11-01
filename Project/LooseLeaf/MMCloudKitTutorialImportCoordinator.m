@@ -54,6 +54,10 @@
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) setImportExportView:(MMCloudKitImportExportView *)_importExportView{
     if(importExportView){
         @throw [NSException exceptionWithName:@"DuplicateSetExportViewForImportCoordinator" reason:@"Cannot set export view for coordinator that already has one" userInfo:nil];
@@ -66,14 +70,14 @@
 }
 
 -(void) begin{
-    debug_NSLog(@"beginning tutorial import: list: %@  page: %@", [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList],
-                [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToPage]);
+//    DebugLog(@"beginning tutorial import: list: %@  page: %@", [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList],
+//                [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToPage]);
     if([[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList] &&
        [[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToPage]){
         // they've got to list view + page view
         [[NSThread mainThread] performBlock:^{
             isReady = YES;
-            NSLog(@"beginning already ready message %@", message.messageRecordID);
+//            DebugLog(@"beginning already ready message %@", message.messageRecordID);
             [importExportView importCoordinatorIsReady:self];
         } afterDelay:1];
     }else{

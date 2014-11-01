@@ -64,7 +64,6 @@
                 
                 // load all the states async
                 for(NSDictionary* scrapProperties in scrapProps){
-                    // TODO: https://github.com/adamwulf/loose-leaf/issues/604
                     NSString* pageUUID = [scrapProperties objectForKey:@"pageUUID"];
                     NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
                     MMScrapCollectionState* paperStateForScrap = [self.delegate paperStateForPageUUID:pageUUID];
@@ -74,7 +73,7 @@
                     
                     MMScrapView* scrapFromPaperState = [paperStateForScrap scrapForUUID:scrapUUID];
                     if(scrapFromPaperState){
-//                        NSLog(@"sidebar found scrap from page %@", scrapFromPaperState.uuid);
+//                        DebugLog(@"sidebar found scrap from page %@", scrapFromPaperState.uuid);
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                         [props setObject:scrapFromPaperState forKey:@"scrap"];
                         [scrapPropsWithState addObject:props];
@@ -91,10 +90,10 @@
                                 [props setObject:state forKey:@"state"];
                                 [scrapPropsWithState addObject:props];
                             }else{
-                                NSLog(@"couldn't find state for %@", scrapUUID);
+                                DebugLog(@"couldn't find state for %@", scrapUUID);
                             }
                         }else{
-                            NSLog(@"couldn't find scrap's page state for %@ in page %@", scrapUUID, pageUUID);
+                            DebugLog(@"couldn't find scrap's page state for %@ in page %@", scrapUUID, pageUUID);
                         }
                     }
                 }
@@ -109,11 +108,11 @@
                         MMScrapView* scrap = nil;
                         if([scrapProperties objectForKey:@"scrap"]){
                             scrap = [scrapProperties objectForKey:@"scrap"];
-//                            NSLog(@"reused scrap %@", scrap.uuid);
+//                            DebugLog(@"reused scrap %@", scrap.uuid);
                         }else{
                             MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
                             scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
-//                            NSLog(@"built scrap %@", scrap.uuid);
+//                            DebugLog(@"built scrap %@", scrap.uuid);
                             [scrap setPropertiesDictionary:scrapProperties];
                         }
                         if(scrap){
@@ -128,7 +127,7 @@
                                 [scrap loadScrapStateAsynchronously:async];
                             }
                         }else{
-                            NSLog(@"couldn't load scrap for %@", scrapProperties);
+                            DebugLog(@"couldn't load scrap for %@", scrapProperties);
                         }
                     }
                     @synchronized(self){
@@ -180,8 +179,8 @@
         CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
     }
     if([self isStateLoaded]){
-        hasEditsToSave = NO;
         @synchronized(allLoadedScraps){
+            hasEditsToSave = NO;
             MMImmutableScrapsInSidebarState* immutable = [[MMImmutableScrapsInSidebarState alloc] initWithScrapIDsPath:scrapIDsPath andAllScrapProperties:allPropertiesForScraps andOwnerState:self];
             expectedUndoHash = [immutable undoHash];
             return immutable;
@@ -257,6 +256,9 @@
 
 -(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapCollectionState{
     
+    // make sure we've written all files to that directory
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[formerScrapCollectionState directoryPathForScrapUUID:scrapUUID]];
+
     [super stealScrap:scrapUUID fromScrapCollectionState:formerScrapCollectionState];
     
     @synchronized(allLoadedScraps){
@@ -267,7 +269,8 @@
                 NSMutableDictionary* replacementProps = [NSMutableDictionary dictionaryWithDictionary:aScrapProps];
                 [replacementProps setObject:kPageUUIDForBezelCollectionState forKey:@"pageUUID"];
                 [allPropertiesForScraps replaceObjectAtIndex:i withObject:replacementProps];
-                NSLog(@"swapped properties too");
+                DebugLog(@"swapped properties too");
+                hasEditsToSave = YES;
                 break;
             }
         }
@@ -275,21 +278,21 @@
 }
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-    NSLog(@"sidebar needs to delete assets for %@", scrapUUID);
+    DebugLog(@"sidebar needs to delete assets for %@", scrapUUID);
     
     dispatch_async([[MMTrashManager sharedInstance] trashManagerQueue], ^{
         @autoreleasepool {
             NSString* directoryForScrap = [self directoryPathForScrapUUID:scrapUUID];
             
             if(![[NSFileManager defaultManager] fileExistsAtPath:directoryForScrap]){
-                NSLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
+                DebugLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
             }else{
                 NSError* err = nil;
                 [[NSFileManager defaultManager] removeItemAtPath:directoryForScrap error:&err];
                 if(err){
-                    NSLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
+                    DebugLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
                 }else{
-                    NSLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
+                    DebugLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
                 }
             }
         }

@@ -203,14 +203,14 @@ struct TouchInterval{
     [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
     
     if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-//        NSLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
-//        NSLog(@"demoting valid touches");
+//        DebugLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//        DebugLog(@"demoting valid touches");
         [possibleTouches addObjectsInSet:[validTouches set]];
         [validTouches removeAllObjects];
         self.scrap = nil;
     }
     if([validTouches count] == 0 && self.scrap){
-//        NSLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//        DebugLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
         self.scrap = nil;
     }
     
@@ -344,8 +344,8 @@ struct TouchInterval{
         if([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)){
             // two+ possible touches match this scrap
             self.scrap = _scrap;
-            NSLog(@"panning scrap: %@", _scrap.state.uuid);
-            NSLog(@"panned scrap is loaded/ing %d %d", _scrap.state.isScrapStateLoaded, _scrap.state.isScrapStateLoading);
+            DebugLog(@"panning scrap: %@", _scrap.state.uuid);
+            DebugLog(@"panned scrap is loaded/ing %d %d", _scrap.state.isScrapStateLoaded, _scrap.state.isScrapStateLoading);
             [validTouches addObjectsInSet:touchesInScrap];
             [possibleTouches removeObjectsInSet:touchesInScrap];
             [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
@@ -413,7 +413,7 @@ struct TouchInterval{
         }
     }
     
-//    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -456,8 +456,8 @@ struct TouchInterval{
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             CGFloat diff = [initialTouchVector angleBetween:currentVector];
-//            NSLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
-//            NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
+//            DebugLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
+//            DebugLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
             rotation += diff;
             initialTouchVector = currentVector;
             CGPoint locInView = [self locationInView:self.view];
@@ -520,7 +520,7 @@ struct TouchInterval{
             self.state = UIGestureRecognizerStateEnded;
         }
         if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-//            NSLog(@"what");
+//            DebugLog(@"what");
             self.scrap = nil;
         }
         return;
@@ -625,7 +625,7 @@ struct TouchInterval{
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [self prepareGestureToBeginFresh];
     }
-//    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
     for(UITouch* touch in touches){
         [self clearCacheForTouch:touch];
     }
@@ -644,7 +644,7 @@ struct TouchInterval{
             self.state = UIGestureRecognizerStateEnded;
         }
         if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-//            NSLog(@"what");
+//            DebugLog(@"what");
             self.scrap = nil;
         }
         return;
@@ -666,7 +666,7 @@ struct TouchInterval{
        (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
         self.state = UIGestureRecognizerStateCancelled;
     }
-//    NSLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 
     for(UITouch* touch in touches){
         [self clearCacheForTouch:touch];
@@ -723,8 +723,8 @@ struct TouchInterval{
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
     initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
     rotation = 0;
-//    NSLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
-//    NSLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
+//    DebugLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
+//    DebugLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
     gestureLocationAtStart = [self locationInView:self.view];
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
@@ -842,9 +842,9 @@ struct TouchInterval{
 }
 
 -(BOOL) begin{
-//    NSLog(@"pan scrap gesture %p began", self);
+//    DebugLog(@"pan scrap gesture %p began", self);
     if(!paused){
-        NSLog(@"what8");
+        DebugLog(@"what8");
     }
     paused = NO;
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
@@ -882,7 +882,7 @@ struct TouchInterval{
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

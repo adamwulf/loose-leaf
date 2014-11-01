@@ -80,7 +80,7 @@
                 };
                 
                 [presentationWindow.rootViewController presentViewController:tweetSheet animated:YES completion:^{
-                    NSLog(@"finished");
+                    DebugLog(@"finished");
                 }];
                 
                 [delegate didShare:self];

@@ -45,7 +45,7 @@
 }
 
 -(void) notification:(id)note{
-    NSLog(@"notification: %@", note);
+    DebugLog(@"notification: %@", note);
 }
 
 -(MMSidebarButton*) button{
@@ -107,7 +107,7 @@
     
     
     void(^block)(NSString *, BOOL) = ^(NSString *activityType, BOOL completed){
-        NSLog(@"shared: %@ %d", activityType, completed);
+        DebugLog(@"shared: %@ %d", activityType, completed);
         if(completed){
             [self.delegate didShare:self];
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
@@ -142,7 +142,7 @@
                                                         animated:YES
                                                       completion:^{
                                                           // ...
-                                                          NSLog(@"complete");
+                                                          DebugLog(@"complete");
                                                       }];
 }
 

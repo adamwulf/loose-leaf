@@ -15,15 +15,17 @@
 #define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
+#define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+
 #define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
 
 #define CheckThreadMatches(__THREAD_CHECK__) {if(!(__THREAD_CHECK__)){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
 
 #ifdef DEBUG
-//#define debug_NSLog(__FORMAT__, ...)
-#define debug_NSLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+//#define DebugLog(__FORMAT__, ...)
+#define DebugLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
 #else
-#define debug_NSLog(__FORMAT__, ...)
+#define DebugLog(__FORMAT__, ...)
 #endif
 
 #define SuppressPerformSelectorLeakWarning(Stuff) \
@@ -67,6 +69,7 @@ _Pragma("clang diagnostic pop") \
 #define kMaxPageResolution 1.5
 
 // Page View
+#define kMaxScrapsInBezel 6
 #define kGutterWidthToDragPages 500
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
@@ -126,6 +129,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPHasZoomedToPage @"Has Zoomed Into Page"
 #define kMPHasDeletedPage @"Has Deleted Page"
+#define kMPHasShakeToReorder @"Has Shaken Scrap"
+#define kMPHasBezelledScrap @"Has Bezelled Scrap"
 #define kMPNumberOfLaunches @"Number Of Launches"
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPNumberOfMemoryCrashes @"Number of Mem Crashes"
@@ -147,6 +152,8 @@ _Pragma("clang diagnostic pop") \
 // MixPanel Error Events
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
+#define kMPEventGestureBug @"Gesture Bug"
+#define kMPSaveFailedNeedsRetry @"Save Failed Will Retry"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"

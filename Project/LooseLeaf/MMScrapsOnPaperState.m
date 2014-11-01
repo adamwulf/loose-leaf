@@ -32,6 +32,7 @@
 @implementation MMScrapsOnPaperState{
     // the container to hold the scraps
     MMScrapContainerView* scrapContainerView;
+    NSMutableArray* scrapsPendingRemoval;
 }
 
 @dynamic delegate;
@@ -47,6 +48,7 @@
         // stays in place
         scrapContainerView.layer.anchorPoint = CGPointMake(0,0);
         scrapContainerView.layer.position = CGPointMake(0,0);
+        scrapsPendingRemoval = [NSMutableArray array];
     }
     return self;
 }
@@ -97,7 +99,7 @@
 //#endif
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                        NSLog(@"MMScrapsOnPaperState bailing early");
+                        DebugLog(@"MMScrapsOnPaperState bailing early");
                         hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
                         return;
                     }
@@ -105,7 +107,7 @@
                 NSDictionary* allScrapStateInfo = [NSDictionary dictionaryWithContentsOfFile:scrapIDsPath];
                 
                 if([[NSFileManager defaultManager] fileExistsAtPath:scrapIDsPath] && !allScrapStateInfo){
-                    NSLog(@"corruped file at %@", scrapIDsPath);
+                    DebugLog(@"corruped file at %@", scrapIDsPath);
                 }
                 scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
                 scrapProps = [allScrapStateInfo objectForKey:@"allScrapProperties"];
@@ -126,7 +128,7 @@
                     return;
                 }
                 if(hasBailedOnLoadingBecauseOfMismatchedTargetState){
-                    NSLog(@"MMScrapsOnPaperState main thread bailing early");
+                    DebugLog(@"MMScrapsOnPaperState main thread bailing early");
                     isLoaded = NO;
                     isLoading = NO;
                     return;
@@ -152,7 +154,7 @@
                         
                         NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                         if(scrap && scrap.state.scrapsOnPaperState == self){
-                            //                        NSLog(@"page found scrap on sidebar %@", scrapUUID);
+                            //                        DebugLog(@"page found scrap on sidebar %@", scrapUUID);
                             [props setObject:scrap forKey:@"scrap"];
                             [scrapPropsWithState addObject:props];
                         }else{
@@ -163,7 +165,7 @@
                                 [scrapPropsWithState addObject:props];
                             }else{
                                 // failed to load scrap
-                                NSLog(@"failed to load %@ at %@", scrapUUID, scrapIDsPath);
+                                DebugLog(@"failed to load %@ at %@", scrapUUID, scrapIDsPath);
                             }
                         }
                     }
@@ -181,11 +183,11 @@
                     MMScrapView* scrap = nil;
                     if([scrapProperties objectForKey:@"scrap"]){
                         scrap = [scrapProperties objectForKey:@"scrap"];
-                        //                            NSLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
+                        //                            DebugLog(@"page %@ reused scrap %@", delegate.uuid, scrap.uuid);
                     }else{
                         MMScrapViewState* scrapState = [scrapProperties objectForKey:@"state"];
                         scrap = [[MMScrapView alloc] initWithScrapViewState:scrapState];
-                        //                            NSLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
+                        //                            DebugLog(@"page %@ built scrap %@", delegate.uuid, scrap.uuid);
                         // only set properties if we built the scrap,
                         // otherwise it's in the sidebar and we don't
                         // own it right now
@@ -208,7 +210,14 @@
                         if(isShownOnPage && makeEditable){
                             [scrap loadScrapStateAsynchronously:async];
                         }else{
-                            [scrap unloadState];
+                            [scrap unloadStateButKeepThumbnailIfAny];
+                            if([self.delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrap.uuid]){
+                                // noop, let the bezel handle its own thumbnails
+                            }else if(isShownOnPage){
+                                [scrap.state loadCachedScrapPreview];
+                            }else{
+                                [scrap.state unloadCachedScrapPreview];
+                            }
                         }
                     }
                 }
@@ -218,7 +227,7 @@
                     MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                     expectedUndoHash = [immutableState undoHash];
                     lastSavedUndoHash = [immutableState undoHash];
-                    //                        NSLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
+                    //                        DebugLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                 }
                 [self.delegate didLoadAllScrapsFor:self];
                 
@@ -228,7 +237,7 @@
                 // call, just in case
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                        NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
+                        DebugLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
                         dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
                             @autoreleasepool {
                                 [self unloadPaperState];
@@ -271,7 +280,7 @@
                 }
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
-                        NSLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
+                        DebugLog(@"MMScrapsOnPaperState: loaded a scrapsOnPaperState, but was asked to unload it after all");
                         dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
                             @autoreleasepool {
                                 [self unloadPaperState];
@@ -378,7 +387,9 @@
     // spend unnecessary resources copying a potentially
     // long array.
     @synchronized(scrapContainerView){
-        return scrapContainerView.subviews;
+        NSMutableArray* scrapsOnPaper = [NSMutableArray arrayWithArray:scrapContainerView.subviews];
+        [scrapsOnPaper removeObjectsInArray:scrapsPendingRemoval];
+        return scrapsOnPaper;
     }
 }
 
@@ -443,24 +454,34 @@
 #pragma mark - Saving Helpers
 
 -(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID{
+    MMScrapView* removedScrap = nil;
     @synchronized(allLoadedScraps){
-        MMScrapView* removedScrap = nil;
         NSMutableArray* otherArray = [NSMutableArray array];
         for(MMScrapView* scrap in allLoadedScraps){
             if(![scrap.uuid isEqualToString:scrapUUID]){
                 [otherArray addObject:scrap];
             }else{
                 removedScrap = scrap;
-                [NSThread performBlockOnMainThreadSync:^{
-                    [removedScrap removeFromSuperview];
-                }];
-//                NSLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
+//                DebugLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;
         hasEditsToSave = YES;
-        return removedScrap;
     }
+    if(removedScrap){
+        @synchronized(scrapsPendingRemoval){
+            [scrapsPendingRemoval addObject:removedScrap];
+        }
+        [NSThread performBlockOnMainThread:^{
+            if(removedScrap.superview == scrapContainerView){
+                [removedScrap removeFromSuperview];
+            }
+            @synchronized(scrapsPendingRemoval){
+                [scrapsPendingRemoval removeObject:removedScrap];
+            }
+        }];
+    }
+    return removedScrap;
 }
 
 #pragma mark - Paths

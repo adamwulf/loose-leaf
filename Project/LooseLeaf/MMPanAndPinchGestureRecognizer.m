@@ -99,13 +99,13 @@
 -(void) setSubState:(UIGestureRecognizerState)_subState{
     subState = _subState;
 //    if(subState == UIGestureRecognizerStateBegan){
-//        debug_NSLog(@"%@ substate began", [self description]);
+//        DebugLog(@"%@ substate began", [self description]);
 //    }else if(subState == UIGestureRecognizerStateCancelled){
-//        debug_NSLog(@"%@ substate cancelled", [self description]);
+//        DebugLog(@"%@ substate cancelled", [self description]);
 //    }else if(subState == UIGestureRecognizerStateEnded){
-//        debug_NSLog(@"%@ substate ended", [self description]);
+//        DebugLog(@"%@ substate ended", [self description]);
 //    }else if(subState == UIGestureRecognizerStateFailed){
-//        debug_NSLog(@"%@ substate failed", [self description]);
+//        DebugLog(@"%@ substate failed", [self description]);
 //    }
 }
 
@@ -126,7 +126,7 @@
 #pragma mark - MMTouchLifeCycleDelegate
 
 -(void) touchesDidDie:(NSSet *)touches{
-//    debug_NSLog(@"%@ told that %i touches have died", self, [touches count]);
+//    DebugLog(@"%@ told that %i touches have died", self, [touches count]);
     [self touchesEnded:touches withEvent:nil];
     if(![possibleTouches count] && ![validTouches count] && ![ignoredTouches count]){
         // don't ask for touch info anymore.
@@ -143,7 +143,7 @@
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
     if(gesture != self){
         [[MMTouchVelocityGestureRecognizer sharedInstance] pleaseNotifyMeWhenTouchesDie:self];
-//        debug_NSLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
+//        DebugLog(@"%@ was told that %@ owns %i touches", [self description], [gesture description], [touches count]);
         __block BOOL touchesWereStolen = NO;
         [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
             if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
@@ -180,11 +180,11 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
     
-//    debug_NSLog(@"%@: %i touches began", [self description], [touches count]);
+//    DebugLog(@"%@: %i touches began", [self description], [touches count]);
     
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
     [validTouchesCurrentlyBeginning removeObjectsInSet:ignoredTouches];
-//    debug_NSLog(@"input: %d  ignored: %d  possiblyValid: %d", [touches count], [ignoredTouches count], [validTouchesCurrentlyBeginning count]);
+//    DebugLog(@"input: %d  ignored: %d  possiblyValid: %d", [touches count], [ignoredTouches count], [validTouchesCurrentlyBeginning count]);
 
     [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
     if([possibleTouches count] && subState == UIGestureRecognizerStatePossible){
@@ -224,7 +224,7 @@
         // we're actually moving the page
         self.state = UIGestureRecognizerStateBegan;
     }
-//    debug_NSLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+//    DebugLog(@"pan page valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -307,7 +307,7 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     [self processSubStateForNextIteration];
 
-//    debug_NSLog(@"%@: %i touches ended", [self description], [touches count]);
+//    DebugLog(@"%@: %i touches ended", [self description], [touches count]);
     
     // pan and pinch and bezel
     BOOL cancelledFromBezel = NO;
@@ -389,7 +389,7 @@
 }
 
 -(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-//    debug_NSLog(@"%@: 1 touches ignored", [self description]);
+//    DebugLog(@"%@: 1 touches ignored", [self description]);
 
     [ignoredTouches addObject:touch];
     [possibleTouches removeObject:touch];
@@ -458,7 +458,7 @@
     if(![scrapDelegate isAllowedToPan]){
         // we're not allowed to pan, so ignore all touches
         if([possibleTouches count]){
-//            debug_NSLog(@"%@ might begin, but isn't allowed", [self description]);
+//            DebugLog(@"%@ might begin, but isn't allowed", [self description]);
         }
         [ignoredTouches addObjectsInSet:[possibleTouches set]];
         [possibleTouches removeAllObjects];
@@ -482,7 +482,7 @@
         if([possibleTouches count] >= kMinimumNumberOfTouches){
             NSArray* firstTwoPossibleTouches = [[possibleTouches array] subarrayWithRange:NSMakeRange(0, 2)];
             NSSet* claimedTouches = [NSSet setWithArray:firstTwoPossibleTouches];
-            //            debug_NSLog(@"pan page claiming %d touches", [claimedTouches count]);
+            //            DebugLog(@"pan page claiming %d touches", [claimedTouches count]);
             [scrapDelegate ownershipOfTouches:claimedTouches isGesture:self];
             [validTouches addObjectsInSet:claimedTouches];
             [possibleTouches removeObjectsInSet:claimedTouches];

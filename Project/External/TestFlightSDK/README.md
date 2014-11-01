@@ -137,16 +137,16 @@ Once users have submitted feedback from inside of the application you can view i
 
 Remote Logging allows you to see the logs your app prints out remotely, on TestFlight's website. You can see logs for **beta sessions**.
 
-To use it, simply replace all of your `NSLog` calls with `TFLog` calls. An easy way to do this without rewriting all your `NSLog` calls is to add the following macro to your `.pch` file.
+To use it, simply replace all of your `DebugLog` calls with `TFLog` calls. An easy way to do this without rewriting all your `DebugLog` calls is to add the following macro to your `.pch` file.
 
     #import "TestFlight.h"
-    #define NSLog TFLog
+    #define DebugLog TFLog
 
-Not only will `TFLog` log remotely to TestFlight, it will also log to the console (viewable in a device's logs) and STDERR (shown while debugging) just like NSLog does, providing a complete replacement.
+Not only will `TFLog` log remotely to TestFlight, it will also log to the console (viewable in a device's logs) and STDERR (shown while debugging) just like DebugLog does, providing a complete replacement.
 
 For even better information in your remote logs, such as file name and line number, you can use this macro instead:
 
-    #define NSLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+    #define DebugLog(__FORMAT__, ...) TFLog((@"%s [Line %d] " __FORMAT__), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 Which will produce output that looks like
 
@@ -189,14 +189,14 @@ An uncaught exception means that your application is in an unknown state and the
        My Apps Custom uncaught exception catcher, we do special stuff here, and TestFlight takes care of the rest
       */
       void HandleExceptions(NSException *exception) {
-        NSLog(@"This is where we save the application data during a exception");
+        DebugLog(@"This is where we save the application data during a exception");
         // Save application data on crash
       }
       /*
        My Apps Custom signal catcher, we do special stuff here, and TestFlight takes care of the rest
       */
       void SignalHandler(int sig) {
-        NSLog(@"This is where we save the application data during a signal");
+        DebugLog(@"This is where we save the application data during a signal");
         // Save application data on crash
       }
 

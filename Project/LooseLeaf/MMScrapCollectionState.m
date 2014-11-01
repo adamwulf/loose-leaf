@@ -126,7 +126,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
             @autoreleasepool {
                 @synchronized(self){
                     if(targetLoadedState != MMScrapCollectionStateTargetUnloaded){
-                        NSLog(@"MMScrapCollectionState: target load state is not to unload. bailing on unload early");
+                        DebugLog(@"MMScrapCollectionState: target load state is not to unload. bailing on unload early");
                     }
                 }
                 if([self isStateLoaded]){
@@ -137,7 +137,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
                                 // if this is true, then the scrap is being held
                                 // by the sidebar, so we shouldn't manage its
                                 // state
-//                                NSLog(@"skipping unloading: %@", scrap.uuid);
+//                                DebugLog(@"skipping unloading: %@", scrap.uuid);
                             }else{
                                 [scrap unloadState];
                                 [unloadedVisibleScraps addObject:scrap];
@@ -184,7 +184,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
 
 -(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapCollectionState{
     
-    NSLog(@"bezel is stealing a scrap %@", scrapUUID);
+    DebugLog(@"bezel is stealing a scrap %@", scrapUUID);
     MMScrapView* scrapToOwn = nil;
     @synchronized(allLoadedScraps){
         for(MMScrapView* loadedScrap in allLoadedScraps){
@@ -224,9 +224,9 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
         NSMutableArray* bundledContents = [[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:bundledDirectoryOfScrap filesOnly:YES].mutableCopy;
         [bundledContents removeObjectsInArray:directoryContents];
         
-        NSLog(@"Need to copy these assets to the bezel:");
-        NSLog(@"  from bundled dir: %@", bundledContents);
-        NSLog(@"  from page's dir: %@", directoryContents);
+        DebugLog(@"Need to copy these assets to the bezel:");
+        DebugLog(@"  from bundled dir: %@", bundledContents);
+        DebugLog(@"  from page's dir: %@", directoryContents);
         
         
         NSString* scrapLocationInBezel = [self directoryPathForScrapUUID:scrapUUID];
@@ -238,9 +238,9 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
                                                     toPath:[scrapLocationInBezel stringByAppendingPathComponent:path]
                                                      error:&err];
             if(!err){
-                NSLog(@"moved %@ into %@", path, scrapLocationInBezel);
+                DebugLog(@"moved %@ into %@", path, scrapLocationInBezel);
             }else{
-                NSLog(@"error copying scrap %@", err);
+                DebugLog(@"error copying scrap %@", err);
             }
             
         };
@@ -256,9 +256,9 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
         NSError* err = nil;
         [[NSFileManager defaultManager] removeItemAtPath:directoryOfScrap error:&err];
         if(!err){
-            NSLog(@"deleted: %@", directoryOfScrap);
+            DebugLog(@"deleted: %@", directoryOfScrap);
         }else{
-            NSLog(@"error deleting directory %@ scrap %@", directoryOfScrap, err);
+            DebugLog(@"error deleting directory %@ scrap %@", directoryOfScrap, err);
         }
 
 
@@ -268,7 +268,7 @@ static const void *const kImportExportStateQueueIdentifier = &kImportExportState
             [scrapToOwn.state reloadBackgroundView];
         }];
         
-        NSLog(@"done moving scrap files.");
+        DebugLog(@"done moving scrap files.");
     });
 }
 

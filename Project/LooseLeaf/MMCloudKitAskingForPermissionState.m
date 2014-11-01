@@ -76,6 +76,7 @@
                         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitWaitingForLoginState alloc] init]];
                         break;
                     case SCKMApplicationPermissionStatusGranted:
+                        [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
                         // icloud is available for this user, so we need to
                         // fetch their account info if we don't already have it.
                         if(recordID && userInfo){

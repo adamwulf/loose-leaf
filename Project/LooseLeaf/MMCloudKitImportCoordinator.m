@@ -45,7 +45,7 @@
 
 -(id) initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
-        NSLog(@"creating new import for %@", importMessage.messageRecordID);
+        DebugLog(@"creating new import for %@", importMessage.messageRecordID);
         message = importMessage;
         importExportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
@@ -53,6 +53,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
     }
     return self;
+}
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void) setImportExportView:(MMCloudKitImportExportView *)_importExportView{
@@ -65,7 +69,7 @@
 -(void) reachabilityDidChange{
     if(isWaitingOnNetwork){
         if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
-            NSLog(@"Import: network is back online, restarting download");
+            DebugLog(@"Import: network is back online, restarting download");
             // we're allowed to startup our download again
             isWaitingOnNetwork = NO;
             [self begin];
@@ -75,7 +79,7 @@
 
 -(void) begin{
     if(self.isReady){
-        NSLog(@"beginning already ready message %@", message.messageRecordID);
+        DebugLog(@"beginning already ready message %@", message.messageRecordID);
         dispatch_async(dispatch_get_main_queue(), ^{
             @autoreleasepool {
                 [importExportView importCoordinatorIsReady:self];
@@ -84,7 +88,7 @@
         return;
     }
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
-        NSLog(@"Import: network is offline, waiting for internet");
+        DebugLog(@"Import: network is offline, waiting for internet");
         isWaitingOnNetwork = YES;
         return;
     }
@@ -95,7 +99,7 @@
             // Step 1:
             // fetch the message details so that we have the sender
             // and message information, including the attached zip file
-            NSLog(@"fetching message details %@", message.messageRecordID);
+            DebugLog(@"fetching message details %@", message.messageRecordID);
             [message fetchDetailsWithCompletionHandler:^(NSError *error) {
                 if(!error){
                     if(!zipFileLocation){
@@ -104,19 +108,19 @@
                         NSString* movedZipFileLocation = [targetZipDirectory stringByAppendingPathComponent:[NSString createStringUUID]];
                         NSError* err;
                         [[NSFileManager defaultManager] copyItemAtPath:message.messageData.path toPath:movedZipFileLocation error:&err];
-                        NSLog(@"target path: %@", movedZipFileLocation);
-                        NSLog(@"target folder exists? %d", [[NSFileManager defaultManager] fileExistsAtPath:targetZipDirectory]);
+                        DebugLog(@"target path: %@", movedZipFileLocation);
+                        DebugLog(@"target folder exists? %d", [[NSFileManager defaultManager] fileExistsAtPath:targetZipDirectory]);
                         if(err){
-                            NSLog(@"failed to copy zip: %@", err);
+                            DebugLog(@"failed to copy zip: %@", err);
                         }else{
                             zipFileLocation = movedZipFileLocation;
-                            NSLog(@"fetched message details, have zip at: %@", zipFileLocation);
+                            DebugLog(@"fetched message details, have zip at: %@", zipFileLocation);
                         }
                         
                         // update our state with the new info
                         avatarButton.letter = message.initials;
                     }else{
-                        NSLog(@"already had cached details for %@", message.messageRecordID);
+                        DebugLog(@"already had cached details for %@", message.messageRecordID);
                     }
                     [importExportView importCoordinatorHasAssetsAndIsProcessing:self];
                     
@@ -176,7 +180,7 @@
                                                                                     toPath:updatedPathOfScrap
                                                                                      error:&err];
                                             if(err){
-                                                NSLog(@"couldn't move %@ to %@", oldPathOfScrap, updatedPathOfScrap);
+                                                DebugLog(@"couldn't move %@ to %@", oldPathOfScrap, updatedPathOfScrap);
                                             }
                                         }
                                         
@@ -214,7 +218,7 @@
                                     // add in the sender info
                                     NSString* senderInfoPlist = [[tempPathOfIncomingPage stringByAppendingPathComponent:@"sender"] stringByAppendingPathExtension:@"plist"];
                                     if(![NSKeyedArchiver archiveRootObject:message.senderInfo toFile:senderInfoPlist]){
-                                        NSLog(@"couldn't archive sender CloudKit account data");
+                                        DebugLog(@"couldn't archive sender CloudKit account data");
                                     }
                                     
                                     // move the page into position
@@ -229,10 +233,10 @@
                                     }else{
                                         uuidOfIncomingPage = nil;
                                         targetPageLocation = nil;
-                                        NSLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
+                                        DebugLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
                                     }
                                 }else{
-                                    NSLog(@"coordinator failed to unzip %@ with file %@", message.messageRecordID, zipFileLocation);
+                                    DebugLog(@"coordinator failed to unzip %@ with file %@", message.messageRecordID, zipFileLocation);
                                     [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
                                     return;
                                 }
@@ -243,12 +247,12 @@
                                 [[NSFileManager defaultManager] removeItemAtPath:zipFileLocation error:&err];
                                 if(err){
                                     // log general error?
-                                    NSLog(@"failed removing zip");
+                                    DebugLog(@"failed removing zip");
                                 }
                                 
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     @autoreleasepool {
-                                        NSLog(@"coordinator is ready %@", message.messageRecordID);
+                                        DebugLog(@"coordinator is ready %@", message.messageRecordID);
                                         //
                                         // Step 3:
                                         // notify our view that we're ready to be shown to the user
@@ -257,9 +261,9 @@
                                     }
                                 });
                             }else{
-                                NSLog(@"coordinator failed %@", message.messageRecordID);
-                                NSLog(@"invalid zip file");
-                                NSLog(@"zip at: %@", zipFileLocation);
+                                DebugLog(@"coordinator failed %@", message.messageRecordID);
+                                DebugLog(@"invalid zip file");
+                                DebugLog(@"zip at: %@", zipFileLocation);
                                 
                                 if([[NSFileManager defaultManager] fileExistsAtPath:zipFileLocation]){
                                     [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
@@ -267,7 +271,7 @@
                                     if(zipFileLocation){
                                         NSString* savedPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:[zipFileLocation lastPathComponent]];
                                         [[NSFileManager defaultManager] moveItemAtPath:zipFileLocation toPath:savedPath error:nil];
-                                        NSLog(@"saved to: %@", savedPath);
+                                        DebugLog(@"saved to: %@", savedPath);
                                     }
 #endif
                                 }else{
@@ -283,8 +287,8 @@
                         case SPRSimpleCloudMessengerErrorServiceUnavailable:
                         case SPRSimpleCloudMessengerErrorRateLimit:
                         case SPRSimpleCloudMessengerErrorCancelled:
-                            NSLog(@"coordinator failed temporarily - couldn't fetch data %@ %@", message.messageRecordID, error);
-                            NSLog(@"retrying in 5s");
+                            DebugLog(@"coordinator failed temporarily - couldn't fetch data %@ %@", message.messageRecordID, error);
+                            DebugLog(@"retrying in 5s");
                             [self performSelector:@selector(begin) withObject:nil afterDelay:5];
                             break;
                             
@@ -292,7 +296,7 @@
                         case SPRSimpleCloudMessengerErroriCloudAccountChanged:
                         case SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions:
                         default:
-                            NSLog(@"coordinator failed permanently - couldn't fetch data %@ %@", message.messageRecordID, error);
+                            DebugLog(@"coordinator failed permanently - couldn't fetch data %@ %@", message.messageRecordID, error);
                             [importExportView importCoordinatorFailedPermanently:self withCode:error.code];
                             break;
                     }

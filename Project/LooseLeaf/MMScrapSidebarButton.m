@@ -13,12 +13,15 @@
 }
 
 @synthesize scrap;
+@synthesize rowNumber;
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.opaque = YES;
+        self.clipsToBounds = YES;
     }
     return self;
 }
@@ -52,6 +55,7 @@
     scrap.scale = scrap.scale;
     
     UIView* transformView = [[UIView alloc] initWithFrame:scrap.bounds];
+    transformView.opaque = YES;
     
     [transformView addSubview:scrap];
     scrap.center = transformView.center;
@@ -62,8 +66,6 @@
     transformView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 
     [self addSubview:transformView];
-    
-    [self setNeedsDisplay];
 }
 
 

@@ -73,7 +73,7 @@
         // so we need to add our next steps /after that/
         // so we need to dispatch async too
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"should update cloudkit options view");
+            DebugLog(@"should update cloudkit options view %@", [MMCloudKitManager sharedManager].currentState);
         });
     }
 }

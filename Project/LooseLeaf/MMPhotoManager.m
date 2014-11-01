@@ -43,7 +43,7 @@ static MMPhotoManager* _instance = nil;
 -(NSArray*) loadDefaultPhotoAlbums{
     NSString* directoryOfAlbums = [[NSBundle mainBundle] pathForResource:@"BundledPhotos" ofType:nil];
     NSArray* defaultAlbumList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryOfAlbums error:nil];
-    NSLog(@"defaultAlbumList: %@", defaultAlbumList);
+    DebugLog(@"defaultAlbumList: %@", defaultAlbumList);
     
     NSArray* allDefaultAlbums = @[];
     for(NSString* albumName in defaultAlbumList){
@@ -65,7 +65,7 @@ static MMPhotoManager* _instance = nil;
 }
 
 - (void) dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ALAssetsLibraryChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Properties
@@ -121,7 +121,7 @@ static MMPhotoManager* _instance = nil;
 
 -(void) libraryChanged:(NSNotification*)note{
     NSDictionary* info = [note userInfo];
-    NSLog(@"library changed: %@", info);
+    DebugLog(@"library changed: %@", info);
     NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
     NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
     NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
@@ -339,7 +339,7 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 -(void) showErrorAboutUserNeedingToGivePermission{
     // TODO: https://github.com/adamwulf/loose-leaf/issues/671
-    debug_NSLog(@"user needs to grant permission to photo library");
+    DebugLog(@"user needs to grant permission to photo library");
 }
 
 @end

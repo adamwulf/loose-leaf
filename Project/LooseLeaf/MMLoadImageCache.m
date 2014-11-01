@@ -9,6 +9,7 @@
 #import "MMLoadImageCache.h"
 #import "UIImage+Memory.h"
 #import "Constants.h"
+#import <JotUI/JotUI.h>
 
 // TODO: possibly use this tutorial for threadsafe cache
 // https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
@@ -69,7 +70,7 @@ static int count = 0;
                 return nil;
             }
         }
-        cachedImage = [UIImage imageWithContentsOfFile:path];
+        cachedImage = [JotDiskAssetManager imageWithContentsOfFile:path];
         count++;
         @synchronized(self){
             if(cachedImage){
@@ -79,7 +80,7 @@ static int count = 0;
                 [orderedKeys removeObject:path];
                 [orderedKeys insertObject:path atIndex:0];
             }else{
-                NSLog(@"how did we get nil path?");
+                DebugLog(@"how did we get nil path?");
             }
             [self ensureCacheSize];
             

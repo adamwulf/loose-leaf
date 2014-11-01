@@ -123,7 +123,7 @@
 -(void) hide{
     [super hide];
     [cloudKeyButton tearDownTimer];
-    NSLog(@"hiding cloudkit view");
+    DebugLog(@"hiding cloudkit view");
 }
 
 -(void) updateCloudKeyBounceTimer{
@@ -166,7 +166,7 @@ BOOL hasSent = NO;
     lblFr.size.width = self.bounds.size.width;
     cloudKitLabel.frame = lblFr;
     
-//    NSLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
+//    DebugLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
 //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
     
 //    

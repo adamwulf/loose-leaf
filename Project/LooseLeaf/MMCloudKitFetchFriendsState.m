@@ -13,6 +13,7 @@
 #import "MMCloudKitLoggedInState.h"
 #import "NSArray+MapReduce.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
+#import "Constants.h"
 
 @implementation MMCloudKitFetchFriendsState{
     BOOL isCheckingStatus;
@@ -95,7 +96,7 @@
                 NSArray* filteredAndUpdatedFriendList = [self filteredFriendsList:friendRecords];
                 
                 if(![NSKeyedArchiver archiveRootObject:filteredAndUpdatedFriendList toFile:[MMCloudKitFetchFriendsState friendsPlistPath]]){
-                    NSLog(@"couldn't archive CloudKit data");
+                    DebugLog(@"couldn't archive CloudKit data");
                 }
                 [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitLoggedInState alloc] initWithUserRecord:userRecord
                                                                                                          andUserInfo:userInfo

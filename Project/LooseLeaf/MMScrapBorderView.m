@@ -13,12 +13,18 @@
  */
 @implementation MMScrapBorderView{
     UIBezierPath* bezierPath;
+    CAShapeLayer* shapeBorderLayer;
 }
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         self.opaque = NO;
         self.contentScaleFactor = 1.0;
+        shapeBorderLayer = [CAShapeLayer layer];
+        shapeBorderLayer.lineWidth = 1;
+        shapeBorderLayer.strokeColor = [self borderColor].CGColor;
+        shapeBorderLayer.fillColor = [UIColor clearColor].CGColor;
+        [self.layer addSublayer:shapeBorderLayer];
     }
     return self;
 }
@@ -30,18 +36,7 @@
 
 -(void) setBezierPath:(UIBezierPath*)path{
     bezierPath = [path copy];
-    [self setNeedsDisplay];
-}
-
-
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-    [[self borderColor] setStroke];
-    bezierPath.lineWidth = 1;
-    [bezierPath stroke];
+    shapeBorderLayer.path = bezierPath.CGPath;
 }
 
 

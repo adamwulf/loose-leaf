@@ -12,5 +12,8 @@
 @interface MMScrapSidebarButton : UIButton
 
 @property (nonatomic) MMScrapView* scrap;
+@property (nonatomic, assign) NSInteger rowNumber;
+
++(CGSize) sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width;
 
 @end
