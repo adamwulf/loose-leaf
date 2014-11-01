@@ -1601,6 +1601,15 @@
 			name = MixPanel;
 			sourceTree = "<group>";
 		};
+		662B7D1C19E7A54C00C5529B /* Trackers */ = {
+			isa = PBXGroup;
+			children = (
+				662B7D1D19E7A55700C5529B /* MMStatTracker.h */,
+				662B7D1E19E7A55700C5529B /* MMStatTracker.m */,
+			);
+			name = Trackers;
+			sourceTree = "<group>";
+		};
 		6634855519DA2C5F00B5CF2D /* MMTouchDotView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1611,15 +1620,6 @@
 				6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */,
 			);
 			name = MMTouchDotView;
-			sourceTree = "<group>";
-		};
-		662B7D1C19E7A54C00C5529B /* Trackers */ = {
-			isa = PBXGroup;
-			children = (
-				662B7D1D19E7A55700C5529B /* MMStatTracker.h */,
-				662B7D1E19E7A55700C5529B /* MMStatTracker.m */,
-			);
-			name = Trackers;
 			sourceTree = "<group>";
 		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
@@ -3070,7 +3070,6 @@
 				6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */,
 				66627F951A02582F0064FAD3 /* MPObjectSerializerContext.m in Sources */,
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
-				667C6360199FE4BC00E93CD6 /* UIImage+MPImageEffects.m in Sources */,
 				6634855C19DA2C7D00B5CF2D /* MMTouchDotView.m in Sources */,
 				6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */,
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
@@ -3464,7 +3463,7 @@
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"DEBUGLABELS=1",
+					"DEBUGLABELS=0",
 					"DEBUGUSERDEFAULTS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
