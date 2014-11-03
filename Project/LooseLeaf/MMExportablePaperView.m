@@ -107,6 +107,9 @@
     dispatch_block_t block = ^{
         @autoreleasepool {
             cloudKitSenderInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[[self pagesPath] stringByAppendingPathComponent:@"sender.plist"]];
+            cloudKitSenderInfo = @{@"firstName" : @"Tim",
+                                   @"lastName" : @"Cook",
+                                   @"initials" : @"TC"};
         }
     };
 

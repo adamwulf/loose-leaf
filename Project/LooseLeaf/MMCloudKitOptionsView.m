@@ -384,10 +384,7 @@ BOOL hasSent = NO;
 
 #ifdef DEBUG
 -(void) addExtraUsers{
-    NSArray* extra = @[@{@"firstName" : @"Tim",
-                         @"lastName" : @"Cook",
-                         @"initials" : @"TC"},
-                       @{@"firstName" : @"Angela",
+    NSArray* extra = @[@{@"firstName" : @"Angela",
                          @"lastName" : @"Ahrendts",
                          @"initials" : @"AA"},
                        @{@"firstName" : @"Eddy",

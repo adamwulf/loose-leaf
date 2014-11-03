@@ -2534,7 +2534,7 @@
 			isa = PBXGroup;
 			children = (
 				668D19D319F772AA00A65DCF /* Tutorial Pages */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
+				66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */,
 				66B42FBD19955A2C005D8214 /* Share Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
@@ -2649,7 +2649,7 @@
 			name = Scraps;
 			sourceTree = "<group>";
 		};
-		66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */ = {
+		66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */ = {
 			isa = PBXGroup;
 			children = (
 				66EDE41E19AE736E00A5623B /* MMCloudKitImportExportView.h */,
@@ -2659,7 +2659,7 @@
 				66EDE48419B3BD6C00A5623B /* MMCloudKitImportCoordinator.h */,
 				66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */,
 			);
-			name = "CloudKit Import Sidebar";
+			name = "CloudKit Import Overlay";
 			sourceTree = "<group>";
 		};
 		66EDE42119AE754400A5623B /* Items */ = {
