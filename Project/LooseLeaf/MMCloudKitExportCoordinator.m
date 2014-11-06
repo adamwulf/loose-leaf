@@ -15,7 +15,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
 #import "Mixpanel.h"
-#import "UIScreen+PortraitBounds.h"
+#import <JotUI/JotUI.h>
 
 #define kPercentCompleteAtStart  .15
 #define kPercentCompleteOfZip    .20
