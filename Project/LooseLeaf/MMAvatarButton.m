@@ -283,7 +283,7 @@
 
 -(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion{
     targetProgress = progress;
-    targetSuccess = succeeded;
+    targetSuccess = YES;
     
     if(lastProgress < targetProgress){
         lastProgress += (targetProgress / 10.0);
