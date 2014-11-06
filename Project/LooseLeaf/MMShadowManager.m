@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
-#import "UIScreen+PortraitBounds.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMShadowManager
 

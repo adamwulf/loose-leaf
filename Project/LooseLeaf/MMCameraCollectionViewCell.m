@@ -12,7 +12,7 @@
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
-#import "UIScreen+PortraitBounds.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMCameraCollectionViewCell{
     CGFloat rowHeight;
