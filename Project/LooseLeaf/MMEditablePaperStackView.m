@@ -227,6 +227,24 @@ struct SidebarButton{
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
         
+        
+        [[NSThread mainThread] performBlock:^{
+            for(int i=0;i<10;i++){
+                @autoreleasepool {
+                    MMSidebarButton* button = (__bridge MMSidebarButton*) buttons[i].button;
+                    if(button){
+                        UIGraphicsBeginImageContextWithOptions(button.bounds.size, NO, 2.0);
+                        [button drawViewHierarchyInRect:button.bounds afterScreenUpdates:NO];
+                        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+                        UIGraphicsEndImageContext();
+                        
+                        NSString* path = [[NSFileManager documentsPath] stringByAppendingFormat:@"/button%d.png", i];
+                        [UIImagePNGRepresentation(image) writeToFile:path atomically:YES];
+                        NSLog(@"wrote to %@", path);
+                    }
+                }
+            }
+        } afterDelay:2];
     }
     return self;
 }
