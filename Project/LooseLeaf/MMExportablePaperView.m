@@ -35,14 +35,19 @@
         __block __strong MMExportablePaperView* strongSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             @autoreleasepool {
-                [strongSelf saveToDisk:^(BOOL didSaveEdits){
-                    if([self hasEditsToSave]){
-                        // save failed, try again
-                        [[Mixpanel sharedInstance] track:kMPSaveFailedNeedsRetry];
-                        waitingForSave = YES;
-                        [strongSelf retrySaveOrExport];
-                    }
-                }];
+                if(isCurrentlySaving == YES){
+                    NSLog(@"already saving. will need to wait for a save too");
+                }else{
+                    [strongSelf saveToDisk:^(BOOL didSaveEdits){
+                        if([self hasEditsToSave]){
+                            // save failed, try again
+                            [[Mixpanel sharedInstance] track:kMPSaveFailedNeedsRetry];
+                            NSLog(@"====================== kMPSaveFailedNeedsRetry");
+                            waitingForSave = YES;
+                            [strongSelf retrySaveOrExport];
+                        }
+                    }];
+                }
                 strongSelf = nil;
             }
         });
