@@ -153,7 +153,7 @@
             }completion:^(BOOL finished){
                 [labelForLink removeFromSuperview];
             }];
-        } afterDelay:1.2];
+        } afterDelay:2.2];
     }];
     
 }
