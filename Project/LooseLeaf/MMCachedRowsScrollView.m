@@ -123,9 +123,8 @@
     while([self rowIndexIsVisible:[self rowIndexForY:currOffset]]){
         NSInteger currIndex = [self rowIndexForY:currOffset];
         if(currIndex < totalRowCount){
-            UIView* row = nil;
             // load the row
-            row = [self rowAtIndex:currIndex];
+            [self rowAtIndex:currIndex];
         }
         currOffset += self.rowHeight;
     }

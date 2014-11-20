@@ -302,6 +302,15 @@
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
     [crashProperties setObject:@"Exception" forKey:@"Cause"];
+
+    // set default values
+    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+    [crashProperties setObject:[NSDate date] forKey:@"crashedOnDate"];
+    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+    
+    // set crash specific values
     if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
     if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
     if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];

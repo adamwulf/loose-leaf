@@ -16,10 +16,6 @@
 @implementation UIGestureRecognizer (GestureDebug)
 
 -(void) swizzle_setState:(UIGestureRecognizerState)state{
-    NSString* uuid = @"";
-    if([self.view respondsToSelector:@selector(uuid)]){
-        uuid = [(NSString*) self.view performSelector:@selector(uuid)];
-    }
     if(state == UIGestureRecognizerStateBegan){
         DebugLog(@"%@ began", [self description]);
     }else if(state == UIGestureRecognizerStateCancelled){

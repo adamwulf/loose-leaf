@@ -308,20 +308,20 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 
 -(NSError*) processError:(NSError*)error{
-    NSString *errorMessage = nil;
+//    NSString *errorMessage = nil;
     switch ([error code]) {
         case ALAssetsLibraryAccessUserDeniedError:
         case ALAssetsLibraryAccessGloballyDeniedError:
             @synchronized(self){
                 hasEverInitailized = YES;
             }
-            errorMessage = @"The user has declined access to it.";
+//            errorMessage = @"The user has declined access to it.";
             break;
         default:
             @synchronized(self){
                 hasEverInitailized = NO;
             }
-            errorMessage = @"Reason unknown.";
+//            errorMessage = @"Reason unknown.";
             break;
     }
     @synchronized(self){

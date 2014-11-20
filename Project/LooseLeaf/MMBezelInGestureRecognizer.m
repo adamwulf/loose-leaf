@@ -202,7 +202,7 @@
     [self processSubStateForNextIteration];
     [ignoredTouches removeObjectsInSet:touches];
     [validTouches removeObjectsInSet:touches];
-    BOOL didChangeTouchLoc = NO;
+//    BOOL didChangeTouchLoc = NO;
     if(gestureIsFromRightBezel){
         CGPoint locationOfLeft = [self furthestLeftTouchLocation];
         for(UITouch* touch in touches){
@@ -212,7 +212,7 @@
                 if([self furthestLeftTouchLocation].x != MAXFLOAT){
                     liftedFingerOffset += [self furthestLeftTouchLocation].x - touchLocation.x;
                 }
-                didChangeTouchLoc = YES;
+//                didChangeTouchLoc = YES;
             }
         }
     }else{
@@ -224,7 +224,7 @@
                 if([self furthestRightTouchLocation].x != MAXFLOAT){
                     liftedFingerOffset += [self furthestRightTouchLocation].x - touchLocation.x;
                 }
-                didChangeTouchLoc = YES;
+//                didChangeTouchLoc = YES;
             }
         }
     }

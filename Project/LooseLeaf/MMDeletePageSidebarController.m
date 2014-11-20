@@ -169,7 +169,7 @@ static CGFloat(^clampPercent)(CGFloat);
     pageToDelete.center = center;
     
     [UIView animateWithDuration:.3 animations:^{
-        pageToDelete.center = CGPointMake(-200 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
+        pageToDelete.center = CGPointMake(-100 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
     } completion:^(BOOL finished) {
         [pageToDelete removeFromSuperview];
     }];
@@ -180,7 +180,7 @@ static CGFloat(^clampPercent)(CGFloat);
 -(void) closeSidebarAnimated{
     trashBackground.alpha = alphaForPercent(.1);
 
-    [UIView animateWithDuration:.15 animations:^{
+    [UIView animateWithDuration:.20 animations:^{
         CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
         deleteSidebarBackground.frame = fr;
         trashIcon.alpha = 0;

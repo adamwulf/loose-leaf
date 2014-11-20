@@ -388,7 +388,9 @@
     // long array.
     @synchronized(scrapContainerView){
         NSMutableArray* scrapsOnPaper = [NSMutableArray arrayWithArray:scrapContainerView.subviews];
-        [scrapsOnPaper removeObjectsInArray:scrapsPendingRemoval];
+        @synchronized(scrapsPendingRemoval){
+            [scrapsOnPaper removeObjectsInArray:scrapsPendingRemoval];
+        }
         return scrapsOnPaper;
     }
 }

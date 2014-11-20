@@ -129,9 +129,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void) viewWillAppear:(BOOL)animated{
-    
-}
 
 -(void) pageCacheManagerDidLoadPage{
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
