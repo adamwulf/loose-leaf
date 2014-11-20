@@ -915,31 +915,31 @@ struct SidebarButton{
 #pragma mark - JotStylusManager Connection Notification
 
 -(void)connectionChange:(NSNotification *) note{
-    NSString *text;
+//    NSString *text;
     switch([[JotStylusManager sharedInstance] connectionStatus])
     {
         case JotConnectionStatusOff:
-            text = @"Off";
+//            text = @"Off";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusScanning:
-            text = @"Scanning";
+//            text = @"Scanning";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusPairing:
-            text = @"Pairing";
+//            text = @"Pairing";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusConnected:
-            text = @"Connected";
+//            text = @"Connected";
             settingsButton.selected = YES;
             break;
         case JotConnectionStatusDisconnected:
-            text = @"Disconnected";
+//            text = @"Disconnected";
             settingsButton.selected = NO;
             break;
         default:
-            text = @"";
+//            text = @"";
             settingsButton.selected = NO;
             break;
     }

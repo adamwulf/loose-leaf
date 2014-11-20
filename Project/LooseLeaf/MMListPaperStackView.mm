@@ -1398,7 +1398,7 @@
         }
         NSInteger endIndex = endRow * kNumberOfColumnsInListView;
 
-        NSInteger actualStart = -1;
+//        NSInteger actualStart = -1;
         NSInteger actualEnd = -1;
 
         // iterate over the visible indexes in the list
@@ -1437,7 +1437,7 @@
                     if(actualEnd == -1){
                         actualEnd = indexInList;
                     }
-                    actualStart = indexInList;
+//                    actualStart = indexInList;
                 }
             }
         }

@@ -66,7 +66,7 @@
                     NSString* strResult;
                     if(result == SLComposeViewControllerResultCancelled){
                         strResult = @"Cancelled";
-                    }else if(result == SLComposeViewControllerResultDone){
+                    }else{
                         strResult = @"Sent";
                     }
                     if(result == SLComposeViewControllerResultDone){

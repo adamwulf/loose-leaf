@@ -94,6 +94,8 @@
     cloudPath.lineWidth = 2;
     [cloudPath stroke];
 
+    CGColorSpaceRelease(colorSpace);
+    CGGradientRelease(gradient);
 }
 
 
