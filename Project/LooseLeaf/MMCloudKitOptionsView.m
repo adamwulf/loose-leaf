@@ -27,6 +27,7 @@
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
+#import "Mixpanel.h"
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;
@@ -195,7 +196,7 @@ BOOL hasSent = NO;
     }else{
         [cloudKeyButton tearDownTimer];
     }
-    
+
     // show update what's being shown in our UI
     if([currentState isMemberOfClass:[MMCloudKitBaseState class]]){
         noAccountHelpView.hidden = YES;
@@ -215,6 +216,7 @@ BOOL hasSent = NO;
         [cloudKeyButton flipAnimatedToKeyWithCompletion:^{
             cloudKeyButton.enabled = YES;
         }];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
     }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
         listOfFriendsView.hidden = YES;
         declinedHelpView.hidden = YES;
@@ -223,6 +225,7 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = NO;
         [noAccountHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
     }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
@@ -231,6 +234,7 @@ BOOL hasSent = NO;
         noAccountHelpView.hidden = YES;
         [declinedHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
     }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
         // don't need to manually flip key here
         // since it was flipped to cloud when tapped
@@ -255,6 +259,7 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = YES;
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusAvailable];
     }else{
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;

@@ -95,6 +95,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPShareStatusUnavailable @"Unavailable"
 #define kMPShareStatusUnknown @"Unknown"
 
+#define kMPShareStatusCloudKit @"Share Status: CloudKit"
 #define kMPShareStatusFacebook @"Share Status: Facebook"
 #define kMPShareStatusTwitter @"Share Status: Twitter"
 #define kMPShareStatusEmail @"Share Status: Email"

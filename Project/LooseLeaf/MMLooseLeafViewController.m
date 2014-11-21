@@ -99,6 +99,7 @@
                                                       kMPDistanceDrawn : @(0.0),
                                                       kMPDistanceErased : @(0.0),
                                                       kMPNumberOfClippingExceptions : @(0.0),
+                                                      kMPShareStatusCloudKit : kMPShareStatusUnknown,
                                                       kMPShareStatusFacebook : kMPShareStatusUnknown,
                                                       kMPShareStatusTwitter : kMPShareStatusUnknown,
                                                       kMPShareStatusEmail : kMPShareStatusUnknown,
