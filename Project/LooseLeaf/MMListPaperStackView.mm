@@ -1176,7 +1176,9 @@
     pageBeingDragged = gestureAsLongPress.pinchedPage;
     CGPoint locatinInScrollView = [gesture locationInView:self];
     NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
-    [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+    if([self ensurePage:pageBeingDragged isAtIndex:indexOfGesture]){
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasReorderedPage : @(YES)}];
+    }
     //
     // scroll update for drag
     lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
@@ -1231,8 +1233,11 @@
  *
  * this will also trigger animations for all the pages that will
  * be affected by this change
+ * 
+ * @returns YES if the page's index needed to be updated, false if
+ * it already matched
  */
--(void) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex{
+-(BOOL) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex{
     // find out where it currently is
     NSInteger currentIndex = [self indexOfPageInCompleteStack:thePage];
     [self ensurePageIsAtTopOfVisibleStack:thePage];
@@ -1275,6 +1280,7 @@
         [self realignPagesInListView:pagesToAnimate animated:YES];
         [self saveStacksToDisk];
     }
+    return currentIndex != newIndex;
 }
 
 

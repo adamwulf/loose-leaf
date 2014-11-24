@@ -114,6 +114,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
+#define kMPHasBookTurnedPage @"Has Ever Turned Page"
+#define kMPHasReorderedPage @"Has Ever Reordered Page"
 #define kMPHasAddedPage @"Has Ever Added Page"
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
