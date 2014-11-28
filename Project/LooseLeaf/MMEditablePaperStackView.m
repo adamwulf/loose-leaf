@@ -350,6 +350,26 @@ struct SidebarButton{
     rulerButton.selected = NO;
 }
 
+-(void) bounceHandButton{
+    CheckMainThread;
+    CGPoint onscreen = handButton.center;
+    
+    [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
+            handButton.center = CGPointMake(onscreen.x+12, onscreen.y);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
+            handButton.center = onscreen;
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
+            handButton.center = CGPointMake(onscreen.x + 8, onscreen.y);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
+            handButton.center = onscreen;
+        }];
+    } completion:nil];
+}
+
 -(void) rulerTapped:(UIButton*)_button{
     if(!rulerButton.selected){
         numberOfRulerGesturesWithoutStroke = 0;
@@ -653,8 +673,14 @@ struct SidebarButton{
 }
 
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
-    [rulerView liftRuler];
-    NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
+    if(rulerView.rulerIsVisible){
+        [rulerView liftRuler];
+        numberOfRulerGesturesWithoutStroke++;
+        NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
+        if(numberOfRulerGesturesWithoutStroke > 2){
+            [self bounceHandButton];
+        }
+    }
 }
 
 #pragma mark - MMGestureTouchOwnershipDelegate
