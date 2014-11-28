@@ -656,7 +656,7 @@ static NSDate* lastRender;
  * this method is called to give us a chance
  * to realign all the input elements to the ruler
  */
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+-(MMRulerAdjustment*) adjustElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     if(path1){
         // only adjust the strokes to the ruler if
         // we actually have a path for the ruler
@@ -665,9 +665,9 @@ static NSDate* lastRender;
             [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
             previousElement = element;
         }
-        return output;
+        return [[MMRulerAdjustment alloc] initWithAdjustments:output andDidAdjust:YES];
     }
-    return elements;
+    return [[MMRulerAdjustment alloc] initWithAdjustments:elements andDidAdjust:NO];
 }
 
 /**

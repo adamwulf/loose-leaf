@@ -27,6 +27,13 @@ struct SidebarButton{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
     struct SidebarButton buttons[10];
+    
+    // this tracks how many times the user has
+    // used two fingers with the ruler gesture in
+    // a row but didn't actually draw.
+    // this way we can bounce the hand button, they're
+    // probably trying to use hands.
+    NSInteger numberOfRulerGesturesWithoutStroke;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -344,6 +351,9 @@ struct SidebarButton{
 }
 
 -(void) rulerTapped:(UIButton*)_button{
+    if(!rulerButton.selected){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
     [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
@@ -644,6 +654,7 @@ struct SidebarButton{
 
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
     [rulerView liftRuler];
+    NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
 }
 
 #pragma mark - MMGestureTouchOwnershipDelegate
@@ -875,7 +886,13 @@ struct SidebarButton{
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+
+    if(adjustments.didAdjust){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
+    
+    return adjustments.elements;
 }
 
 #pragma mark - PolygonToolDelegate
