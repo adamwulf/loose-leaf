@@ -135,7 +135,10 @@
         // this'll also trigger when the app first launches, as resignedActiveStamp == 0
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
-    };
+    }else{
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfResumes by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventResume];
+    }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
     DebugLog(@"DID BECOME ACTIVE");
