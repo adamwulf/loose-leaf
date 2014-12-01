@@ -40,7 +40,7 @@
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
-    [[[Mixpanel sharedInstance] people] set:@"Mixpanel ID" to:[MMAppDelegate userID]];
+    [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
     
     dispatch_async(dispatch_get_background_queue(), ^{
         NSString* str = [MMAppDelegate userID];
@@ -51,7 +51,8 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     });
     
-    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
+    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
+                                                        [MMAppDelegate userID], kMPID, nil]];
     
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [[Crashlytics sharedInstance] setDelegate:self];

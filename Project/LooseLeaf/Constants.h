@@ -109,6 +109,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
 #define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
+#define kMPID @"Mixpanel ID"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
