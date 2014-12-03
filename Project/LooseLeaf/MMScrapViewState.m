@@ -264,6 +264,14 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
         if(!cachedImage){
             cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+            if(cachedImage){
+                // if we have a bundled image but not a non-bundled image,
+                // then we need to set the non-bundled so that
+                // loading next time w/ a primed cache will get
+                // the bundled version on the non-bundled path
+                // https://github.com/adamwulf/loose-leaf/issues/1100
+                [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:cachedImage];
+            }
         }
         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForDecompressedImage:cachedImage andDelegate:self]];
     }else if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
