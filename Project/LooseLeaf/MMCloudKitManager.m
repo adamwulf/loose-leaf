@@ -77,7 +77,7 @@ static NSString* cloudKitFilesPath;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
         
         [MMCloudKitBaseState clearCache];
-        currentState = [[MMCloudKitLoggedInState alloc] initWithCachedFriendList:@[]];
+        currentState = [[MMCloudKitBaseState alloc] init];
         
         dispatch_async([MMCloudKitManager messageQueue], ^{
             @autoreleasepool {

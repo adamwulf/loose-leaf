@@ -387,9 +387,9 @@ BOOL hasSent = NO;
     NSArray* extra = @[@{@"firstName" : @"Tim",
                          @"lastName" : @"Cook",
                          @"initials" : @"TC"},
-                       @{@"firstName" : @"Christi",
-                         @"lastName" : @"Wulf",
-                         @"initials" : @"CW"},
+                       @{@"firstName" : @"Angela",
+                         @"lastName" : @"Ahrendts",
+                         @"initials" : @"AA"},
                        @{@"firstName" : @"Eddy",
                          @"lastName" : @"Cue",
                          @"initials" : @"EC"},
@@ -399,21 +399,9 @@ BOOL hasSent = NO;
                        @{@"firstName" : @"Jony",
                          @"lastName" : @"Ive",
                          @"initials" : @"JI"},
-                       @{@"firstName" : @"Luca",
-                         @"lastName" : @"Maestri",
-                         @"initials" : @"LM"},
-                       @{@"firstName" : @"Dan",
-                         @"lastName" : @"Riccio",
-                         @"initials" : @"DR"},
                        @{@"firstName" : @"Phil",
                          @"lastName" : @"Schiller",
-                         @"initials" : @"PS"},
-                       @{@"firstName" : @"Bruce",
-                         @"lastName" : @"Sewell",
-                         @"initials" : @"BS"},
-                       @{@"firstName" : @"Jeff",
-                         @"lastName" : @"Williams",
-                         @"initials" : @"JW"}];
+                         @"initials" : @"PS"}];
     
     allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
     allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
