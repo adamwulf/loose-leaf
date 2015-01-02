@@ -208,6 +208,7 @@
 		666425C018CBC3EF00A306C1 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */; };
 		666425C218CBC40000A306C1 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666425C118CBC40000A306C1 /* CoreMedia.framework */; };
 		666425C418CBC61200A306C1 /* opencv.license in Resources */ = {isa = PBXBuildFile; fileRef = 666425C318CBC61200A306C1 /* opencv.license */; };
+		66651BDD1A567F200065EEBE /* blank-loose-leaf.png in Resources */ = {isa = PBXBuildFile; fileRef = 66651BDC1A567F200065EEBE /* blank-loose-leaf.png */; };
 		6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6667480517C0166100D5C390 /* MMShapeBuilderView.m */; };
 		66684B31182D887E005A27B4 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 66684B30182D887E005A27B4 /* Settings.bundle */; };
 		66684B3B182D9624005A27B4 /* AGG.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B3A182D9624005A27B4 /* AGG.license */; };
@@ -793,6 +794,7 @@
 		666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		666425C118CBC40000A306C1 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		666425C318CBC61200A306C1 /* opencv.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = opencv.license; sourceTree = "<group>"; };
+		66651BDC1A567F200065EEBE /* blank-loose-leaf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blank-loose-leaf.png"; sourceTree = "<group>"; };
 		6667480317BEEDD300D5C390 /* PolygonToolDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PolygonToolDelegate.h; sourceTree = "<group>"; };
 		6667480417C0166100D5C390 /* MMShapeBuilderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShapeBuilderView.h; sourceTree = "<group>"; };
 		6667480517C0166100D5C390 /* MMShapeBuilderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShapeBuilderView.m; sourceTree = "<group>"; };
@@ -1877,6 +1879,27 @@
 			name = Pencil;
 			sourceTree = "<group>";
 		};
+		66651BC61A567CA00065EEBE /* App Info */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
+				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
+				667D98A9192D010900625879 /* Loose-Leaf_76.png */,
+				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
+				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
+				660E9DCA19183032000A392A /* blackblur.png */,
+			);
+			name = "App Info";
+			sourceTree = "<group>";
+		};
+		66651BDB1A567F140065EEBE /* Launch Images */ = {
+			isa = PBXGroup;
+			children = (
+				66651BDC1A567F200065EEBE /* blank-loose-leaf.png */,
+			);
+			name = "Launch Images";
+			sourceTree = "<group>";
+		};
 		66684B2F182D8869005A27B4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -2497,6 +2520,8 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				66651BDB1A567F140065EEBE /* Launch Images */,
+				66651BC61A567CA00065EEBE /* App Info */,
 				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
 				665245321996D9E700C36609 /* AFNetworking */,
 				6653B8A7195CC79A001C6E15 /* Default user content */,
@@ -2505,12 +2530,6 @@
 				66684B2F182D8869005A27B4 /* Settings */,
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
-				660E9DCA19183032000A392A /* blackblur.png */,
-				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
-				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
-				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
-				667D98A9192D010900625879 /* Loose-Leaf_76.png */,
-				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
 				66DCFB961581BCEF00B4918C /* main.m */,
 				66DCFB981581BCEF00B4918C /* LooseLeaf-Prefix.pch */,
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
@@ -2907,6 +2926,7 @@
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
+				66651BDD1A567F200065EEBE /* blank-loose-leaf.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
 				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
@@ -3490,7 +3510,7 @@
 				);
 				PRODUCT_NAME = LooseLeaf;
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3524,7 +3544,7 @@
 				);
 				PRODUCT_NAME = LooseLeaf;
 				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
