@@ -24,6 +24,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
+#import "MMSilhouetteView.h"
 
 
 @implementation MMAppDelegate{
@@ -81,6 +82,9 @@
     MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:blueDots];
 //    [self.window.layer setSpeed:0.1f];
+    
+    MMSilhouetteView* silhouetteView = [[MMSilhouetteView alloc] initWithFrame:self.window.bounds];
+    [self.window addSubview:silhouetteView];
 
     // fire timer each minute
     [self setupTimer];
