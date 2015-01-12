@@ -14,48 +14,29 @@
 #import "MMTouchDotGestureRecognizer.h"
 
 @implementation MMSilhouetteView{
-    MMHandPathHelper* handPathHelper;
+    MMHandPathHelper* pointerFingerHelper;
     MMTouchDotGestureRecognizer* touchGesture;
-    CAShapeLayer* handLayer;
 }
 
 
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        // noop
-        handPathHelper = [[MMHandPathHelper alloc] init];
         
+        self.backgroundColor = [UIColor clearColor];
+        self.opaque = NO;
+        
+        
+        // setup hand path
+        pointerFingerHelper = [[MMHandPathHelper alloc] init];
+        [self.layer addSublayer:pointerFingerHelper.handLayer];
+        
+        
+        
+        // to refactor
         touchGesture = [MMTouchDotGestureRecognizer sharedInstace];
         [touchGesture setTouchDelegate:self];
         [self.window addGestureRecognizer:touchGesture];
-        
-        
-        
-        UIBezierPath* handPath = handPathHelper.pointerFingerPath;
-        
-        [CATransaction begin];
-        [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-        
-        
-        handLayer = [CAShapeLayer layer];
-        handLayer.opacity = 0;
-        handLayer.anchorPoint = CGPointZero;
-        handLayer.position = CGPointZero;
-        handLayer.backgroundColor = [UIColor blackColor].CGColor;
-        handLayer.path = handPath.CGPath;
-        
-        NSLog(@"size of path: %f %f %f %f", handPath.bounds.origin.x, handPath.bounds.origin.y,
-              handPath.bounds.size.width, handPath.bounds.size.height);
-        NSLog(@"size of layer: %f %f %f %f", handLayer.bounds.origin.x, handLayer.bounds.origin.y,
-              handLayer.bounds.size.width, handLayer.bounds.size.height);
-        
-        self.layer.backgroundColor = [UIColor clearColor].CGColor;
-        [self.layer addSublayer:handLayer];
-        
-        // change properties here without animation
-        [CATransaction commit];
-
     }
     return self;
 }
@@ -69,28 +50,21 @@
 #pragma mark - MMTouchDotGestureRecognizerDelegate
 
 -(void) dotTouchesBegan:(NSSet *)touches{
-    handLayer.opacity = .5;
+    pointerFingerHelper.handLayer.opacity = .5;
 }
 
 -(void) dotTouchesMoved:(NSSet *)touches{
-    [CATransaction begin];
-    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
-
-    CGPoint locationOfTouch = [[touches anyObject] locationInView:self];
-    CGPoint offset = handPathHelper.currentOffset;
-    CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-    handLayer.position = finalLocation;
-    
-    [CATransaction commit];
+    [pointerFingerHelper moveToTouch:[touches anyObject]];
 }
 
 -(void) dotTouchesEnded:(NSSet *)touches{
-    handLayer.opacity = 0;
+    pointerFingerHelper.handLayer.opacity = 0;
 }
 
 -(void) dotTouchesCancelled:(NSSet *)touches{
     
 }
+
 
 #pragma mark - Ignore Touches
 

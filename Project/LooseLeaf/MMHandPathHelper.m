@@ -11,18 +11,36 @@
 @implementation MMHandPathHelper{
     UIBezierPath* pointerFingerPath;
     CGPoint currentOffset;
+    CAShapeLayer* handLayer;
 }
 
 @synthesize pointerFingerPath;
 @synthesize currentOffset;
+@synthesize handLayer;
 
 -(id) init{
     if(self = [super init]){
         CGSize defSize = CGSizeMake(100, 227);
         defSize = CGSizeApplyAffineTransform(defSize, CGAffineTransformMakeScale(3, 3));
         [self scalePathToSize:defSize];
+        
+        handLayer = [CAShapeLayer layer];
+        handLayer.opacity = 0;
+        handLayer.anchorPoint = CGPointZero;
+        handLayer.position = CGPointZero;
+        handLayer.backgroundColor = [UIColor blackColor].CGColor;
+        handLayer.path = pointerFingerPath.CGPath;
     }
     return self;
+}
+
+-(void) moveToTouch:(UITouch*)touch{
+    [self preventCALayerImplicitAnimation:^{
+        CGPoint locationOfTouch = [touch locationInView:touch.view];
+        CGPoint offset = self.currentOffset;
+        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
+        self.handLayer.position = finalLocation;
+    }];
 }
 
 -(void) scalePathToSize:(CGSize)sizeOfHand{
@@ -62,6 +80,18 @@
     [pointerFingerPath closePath];
     
     currentOffset = CGPointMake(21.0 / 100.0 * handFrame.size.width, 12.0 / 228.0 * handFrame.size.height);
+    handLayer.path = pointerFingerPath.CGPath;
 }
+
+
+#pragma mark - CALayer Helper
+
+-(void) preventCALayerImplicitAnimation:(void(^)(void))block{
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    block();
+    [CATransaction commit];
+}
+
 
 @end
