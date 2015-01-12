@@ -9,6 +9,7 @@
 #import "MMTwoFingerPanSilhouette.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
+#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @implementation MMTwoFingerPanSilhouette{
     CAShapeLayer* handLayer;
@@ -34,9 +35,57 @@
     return self;
 }
 
+-(CGPoint) avgPoint:(CGPoint)p1 withPoint:(CGPoint)p2 weight:(CGFloat)weight{
+    return CGPointMake(p1.x*weight + p2.x*(1-weight),
+                       p1.y*weight + p2.y*(1-weight));
+}
+
 -(void) openTo:(CGFloat)openPercent{
     // iterpolate between open/closed paths
     NSLog(@"interpolate! %f", openPercent);
+    
+    UIBezierPath* interpolatedPath = [UIBezierPath bezierPath];
+    
+    for(int i=0;i<[openPath elementCount];i++){
+        CGPathElement openElement = [openPath elementAtIndex:i];
+        CGPathElement closedElement = [closedPath elementAtIndex:i];
+        
+        if(openElement.type == kCGPathElementMoveToPoint){
+            [interpolatedPath moveToPoint:[self avgPoint:openElement.points[0]
+                                               withPoint:closedElement.points[0]
+                                                  weight:openPercent]];
+        }else if(openElement.type == kCGPathElementAddLineToPoint){
+            [interpolatedPath addLineToPoint:[self avgPoint:openElement.points[0]
+                                               withPoint:closedElement.points[0]
+                                                  weight:openPercent]];
+        }else if(openElement.type == kCGPathElementAddQuadCurveToPoint){
+            CGPoint endPt = [self avgPoint:openElement.points[1]
+                                 withPoint:closedElement.points[1]
+                                    weight:openPercent];
+            CGPoint ctrlPt = [self avgPoint:openElement.points[0]
+                                 withPoint:closedElement.points[0]
+                                    weight:openPercent];
+            
+            [interpolatedPath addQuadCurveToPoint:endPt controlPoint:ctrlPt];
+        }else if(openElement.type == kCGPathElementAddCurveToPoint){
+            CGPoint endPt = [self avgPoint:openElement.points[2]
+                                 withPoint:closedElement.points[2]
+                                    weight:openPercent];
+            CGPoint ctrlPt1 = [self avgPoint:openElement.points[0]
+                                  withPoint:closedElement.points[0]
+                                     weight:openPercent];
+            CGPoint ctrlPt2 = [self avgPoint:openElement.points[1]
+                                   withPoint:closedElement.points[1]
+                                      weight:openPercent];
+            
+            [interpolatedPath addCurveToPoint:endPt controlPoint1:ctrlPt1 controlPoint2:ctrlPt2];
+        }else if(openElement.type == kCGPathElementCloseSubpath){
+            [interpolatedPath closePath];
+        }
+    }
+    [self preventCALayerImplicitAnimation:^{
+        handLayer.path = interpolatedPath.CGPath;
+    }];
 }
 
 
@@ -115,6 +164,19 @@
     [closedPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66734 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.77956 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.66160 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66827 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.66734 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.77089 * CGRectGetHeight(frame))];
     [closedPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66734 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.80639 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.66734 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.78818 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.66734 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.80639 * CGRectGetHeight(frame))];
     [closedPath closePath];
+}
+
+
+
+
+
+#pragma mark - CALayer Helper
+
+-(void) preventCALayerImplicitAnimation:(void(^)(void))block{
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    block();
+    [CATransaction commit];
 }
 
 @end
