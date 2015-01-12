@@ -25,6 +25,8 @@
     MMCloudKitImportExportView* cloudKitExportView;
 }
 
+@synthesize stackView;
+
 - (id)init{
     if(self = [super init]){
 #ifdef DEBUG

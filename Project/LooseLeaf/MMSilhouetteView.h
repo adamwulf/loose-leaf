@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "MMTouchDotGestureRecognizerDelegate.h"
 
-@interface MMSilhouetteView : UIView<MMTouchDotGestureRecognizerDelegate>
+@interface MMSilhouetteView : UIView
 
-
--(void) moveHandToTouch:(UITouch*)touch;
+-(void) startDrawingAtTouch:(UITouch*)touch;
+-(void) continueDrawingAtTouch:(UITouch*)touch;
+-(void) endDrawingAtTouch:(UITouch*)touch;
 
 @end

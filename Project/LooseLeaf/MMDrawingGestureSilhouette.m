@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMHandPathHelper.h"
+#import "MMDrawingGestureSilhouette.h"
 
-@implementation MMHandPathHelper{
+@implementation MMDrawingGestureSilhouette{
     UIBezierPath* pointerFingerPath;
     CGPoint currentOffset;
     CAShapeLayer* handLayer;

@@ -85,6 +85,7 @@
     
     MMSilhouetteView* silhouetteView = [[MMSilhouetteView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:silhouetteView];
+    self.viewController.stackView.silhouette = silhouetteView;
 
     // fire timer each minute
     [self setupTimer];

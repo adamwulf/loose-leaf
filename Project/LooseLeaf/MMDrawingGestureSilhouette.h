@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MMHandPathHelper : NSObject
+@interface MMDrawingGestureSilhouette : NSObject
 
 @property (readonly) UIBezierPath* pointerFingerPath;
 @property (readonly) CGPoint currentOffset;

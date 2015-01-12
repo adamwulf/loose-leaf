@@ -371,7 +371,7 @@
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D0A8C51A6454030003BBF7 /* MMSilhouetteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */; };
-		66D0A8C81A6454600003BBF7 /* MMHandPathHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMHandPathHelper.m */; };
+		66D0A8C81A6454600003BBF7 /* MMDrawingGestureSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D4FE6818DCA6950010CCBF /* Crashlytics.framework */; };
 		66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */; };
@@ -1125,8 +1125,8 @@
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSilhouetteView.h; sourceTree = "<group>"; };
 		66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSilhouetteView.m; sourceTree = "<group>"; };
-		66D0A8C61A6454600003BBF7 /* MMHandPathHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandPathHelper.h; sourceTree = "<group>"; };
-		66D0A8C71A6454600003BBF7 /* MMHandPathHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandPathHelper.m; sourceTree = "<group>"; };
+		66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawingGestureSilhouette.h; sourceTree = "<group>"; };
+		66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawingGestureSilhouette.m; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* MMShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowedView.m; sourceTree = "<group>"; };
 		66D4FE6818DCA6950010CCBF /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Frameworks/Crashlytics.framework; sourceTree = "<group>"; };
@@ -2466,8 +2466,8 @@
 			children = (
 				66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */,
 				66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */,
-				66D0A8C61A6454600003BBF7 /* MMHandPathHelper.h */,
-				66D0A8C71A6454600003BBF7 /* MMHandPathHelper.m */,
+				66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */,
+				66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */,
 			);
 			name = Silhouette;
 			sourceTree = "<group>";
@@ -3382,7 +3382,7 @@
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,
 				66627F931A02582F0064FAD3 /* MPObjectSerializer.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
-				66D0A8C81A6454600003BBF7 /* MMHandPathHelper.m in Sources */,
+				66D0A8C81A6454600003BBF7 /* MMDrawingGestureSilhouette.m in Sources */,
 				6601170119ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m in Sources */,
 				66627F941A02582F0064FAD3 /* MPObjectSerializerConfig.m in Sources */,
 			);

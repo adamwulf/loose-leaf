@@ -37,6 +37,7 @@
 
 @implementation MMScrapPaperStackView{
     
+    __weak MMSilhouetteView* silhouette;
     MMScrapsInBezelContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
@@ -73,6 +74,7 @@
     UIImageView* testImageView;
 }
 
+@synthesize silhouette;
 @synthesize cloudKitExportView;
 
 - (id)initWithFrame:(CGRect)frame
@@ -1993,6 +1995,50 @@ int skipAll = NO;
         } afterDelay:.1];
     }
     return YES;
+}
+
+#pragma mark - JotViewDelegate
+
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    // dont start a new stroke if one already exists
+    BOOL ret = [super willBeginStrokeWithTouch:touch];
+    if(ret){
+        [silhouette startDrawingAtTouch:touch.touch];
+    }
+    return ret;
+}
+
+-(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+    JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
+    if(currentStroke){
+        NSLog(@"yep, i'm called: %f %f", [touch locationInView:self].x, [touch locationInView:self].y);
+        [silhouette continueDrawingAtTouch:touch.touch];
+    }
+    [super willMoveStrokeWithTouch:touch];
+}
+
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
+    if(currentStroke){
+        [silhouette endDrawingAtTouch:touch.touch];
+    }
+    [super willEndStrokeWithTouch:touch];
+}
+
+-(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    [super didEndStrokeWithTouch:touch];
+}
+
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
+    if(currentStroke){
+        [silhouette endDrawingAtTouch:touch.touch];
+    }
+    [super willCancelStroke:stroke withTouch:touch];
+}
+
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [super didCancelStroke:stroke withTouch:touch];
 }
 
 

@@ -14,6 +14,9 @@
     MMScrapPaperStackView* stackView;
 }
 
+
+@property (readonly) MMScrapPaperStackView* stackView;
+
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 -(void) willResignActive;
