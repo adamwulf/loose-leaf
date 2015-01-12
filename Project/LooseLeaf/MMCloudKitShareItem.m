@@ -168,7 +168,7 @@
         strResult = @"Failed";
     }else if(result == MFMailComposeResultSaved){
         strResult = @"Saved";
-    }else if(result == MFMailComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){
@@ -189,7 +189,7 @@
         strResult = @"Cancelled";
     }else if(result == MessageComposeResultFailed){
         strResult = @"Failed";
-    }else if(result == MessageComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MessageComposeResultSent){

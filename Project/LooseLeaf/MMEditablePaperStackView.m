@@ -27,6 +27,13 @@ struct SidebarButton{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
     struct SidebarButton buttons[10];
+    
+    // this tracks how many times the user has
+    // used two fingers with the ruler gesture in
+    // a row but didn't actually draw.
+    // this way we can bounce the hand button, they're
+    // probably trying to use hands.
+    NSInteger numberOfRulerGesturesWithoutStroke;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -343,7 +350,30 @@ struct SidebarButton{
     rulerButton.selected = NO;
 }
 
+-(void) bounceHandButton{
+    CheckMainThread;
+    CGPoint onscreen = handButton.center;
+    
+    [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
+            handButton.center = CGPointMake(onscreen.x+12, onscreen.y);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
+            handButton.center = onscreen;
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
+            handButton.center = CGPointMake(onscreen.x + 8, onscreen.y);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
+            handButton.center = onscreen;
+        }];
+    } completion:nil];
+}
+
 -(void) rulerTapped:(UIButton*)_button{
+    if(!rulerButton.selected){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
     [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
@@ -643,7 +673,14 @@ struct SidebarButton{
 }
 
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
-    [rulerView liftRuler];
+    if(rulerView.rulerIsVisible){
+        [rulerView liftRuler];
+        numberOfRulerGesturesWithoutStroke++;
+        NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
+        if(numberOfRulerGesturesWithoutStroke > 2){
+            [self bounceHandButton];
+        }
+    }
 }
 
 #pragma mark - MMGestureTouchOwnershipDelegate
@@ -875,7 +912,13 @@ struct SidebarButton{
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+
+    if(adjustments.didAdjust){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
+    
+    return adjustments.elements;
 }
 
 #pragma mark - PolygonToolDelegate
@@ -915,31 +958,31 @@ struct SidebarButton{
 #pragma mark - JotStylusManager Connection Notification
 
 -(void)connectionChange:(NSNotification *) note{
-    NSString *text;
+//    NSString *text;
     switch([[JotStylusManager sharedInstance] connectionStatus])
     {
         case JotConnectionStatusOff:
-            text = @"Off";
+//            text = @"Off";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusScanning:
-            text = @"Scanning";
+//            text = @"Scanning";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusPairing:
-            text = @"Pairing";
+//            text = @"Pairing";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusConnected:
-            text = @"Connected";
+//            text = @"Connected";
             settingsButton.selected = YES;
             break;
         case JotConnectionStatusDisconnected:
-            text = @"Disconnected";
+//            text = @"Disconnected";
             settingsButton.selected = NO;
             break;
         default:
-            text = @"";
+//            text = @"";
             settingsButton.selected = NO;
             break;
     }

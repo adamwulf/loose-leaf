@@ -1129,6 +1129,7 @@
     [self updateIconAnimations];
     
     if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasBookTurnedPage : @(YES)}];
 //        DebugLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
         //
         // CASE 1:
@@ -1224,6 +1225,7 @@
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         return;
     }else if((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasBookTurnedPage : @(YES)}];
 //        DebugLog(@"finished top page, bezel right");
         //
         // CASE 4:

@@ -95,6 +95,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPShareStatusUnavailable @"Unavailable"
 #define kMPShareStatusUnknown @"Unknown"
 
+#define kMPShareStatusCloudKit @"Share Status: CloudKit"
 #define kMPShareStatusFacebook @"Share Status: Facebook"
 #define kMPShareStatusTwitter @"Share Status: Twitter"
 #define kMPShareStatusEmail @"Share Status: Email"
@@ -108,11 +109,14 @@ _Pragma("clang diagnostic pop") \
 #define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
 #define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
+#define kMPID @"Mixpanel ID"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
+#define kMPHasBookTurnedPage @"Has Ever Turned Page"
+#define kMPHasReorderedPage @"Has Ever Reordered Page"
 #define kMPHasAddedPage @"Has Ever Added Page"
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
@@ -132,6 +136,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPHasShakeToReorder @"Has Shaken Scrap"
 #define kMPHasBezelledScrap @"Has Bezelled Scrap"
 #define kMPNumberOfLaunches @"Number Of Launches"
+#define kMPNumberOfResumes @"Number Of Resumes"
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPNumberOfMemoryCrashes @"Number of Mem Crashes"
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
@@ -157,6 +162,7 @@ _Pragma("clang diagnostic pop") \
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
+#define kMPEventResume @"App Resume"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventImportPage @"Import Page"

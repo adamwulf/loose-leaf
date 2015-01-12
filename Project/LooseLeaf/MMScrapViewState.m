@@ -264,6 +264,14 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         UIImage* cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.thumbImageFile];
         if(!cachedImage){
             cachedImage = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
+            if(cachedImage){
+                // if we have a bundled image but not a non-bundled image,
+                // then we need to set the non-bundled so that
+                // loading next time w/ a primed cache will get
+                // the bundled version on the non-bundled path
+                // https://github.com/adamwulf/loose-leaf/issues/1100
+                [[MMLoadImageCache sharedInstance] updateCacheForPath:self.thumbImageFile toImage:cachedImage];
+            }
         }
         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForDecompressedImage:cachedImage andDelegate:self]];
     }else if([[MMLoadImageCache sharedInstance] containsPathInCache:self.thumbImageFile]){
@@ -600,38 +608,48 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
     dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
         @autoreleasepool {
             [lock lock];
+            BOOL hasEdits = NO;
             @synchronized(self){
-                if(drawableViewState && [drawableViewState isStateLoaded] && [drawableViewState hasEditsToSave]){
+                // I don't want to synchronize this whole method, because
+                // the dispatch_wait() in the else clause could deadlock
+                // with the main thread, which could be waiting on our
+                // @sync(self);
+                hasEdits = drawableViewState && [drawableViewState isStateLoaded] && [drawableViewState hasEditsToSave];
+            }
+            if(hasEdits){
 //                    DebugLog(@"(%@) unload failed, will retry", uuid);
-                    // we want to unload, but we're not saved.
-                    // save, then try to unload again
-                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-                        @autoreleasepool {
-                            [self saveScrapStateToDisk:nil];
-                        }
-                    });
-                    dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
-                        @autoreleasepool {
-                            [self unloadState];
-                        }
-                    });
-                }else{
-//                    DebugLog(@"(%@) unload success", uuid);
-                    targetIsLoadedState = NO;
-                    if(!isLoadingState && drawableViewState){
-                        dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-                        [NSThread performBlockOnMainThread:^{
-                            [drawableView removeFromSuperview];
-                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
-                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
-                            drawableViewState = nil;
-                            drawableView = nil;
-                            thumbnailView.hidden = NO;
-                            dispatch_semaphore_signal(sema1);
-                        }];
-                        dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-//                        dispatch_release(sema1); ARC handles this
+                // we want to unload, but we're not saved.
+                // save, then try to unload again
+                dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                    @autoreleasepool {
+                        [self saveScrapStateToDisk:nil];
                     }
+                });
+                dispatch_async([MMScrapViewState importExportScrapStateQueue], ^{
+                    @autoreleasepool {
+                        [self unloadState];
+                    }
+                });
+            }else{
+//                    DebugLog(@"(%@) unload success", uuid);
+                BOOL needsToRemoveDrawableView = NO;
+                @synchronized(self){
+                    targetIsLoadedState = NO;
+                    needsToRemoveDrawableView = !isLoadingState && drawableViewState;
+                }
+                if(needsToRemoveDrawableView){
+                    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                    [NSThread performBlockOnMainThread:^{
+                        [drawableView removeFromSuperview];
+                        [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                        [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
+                        drawableViewState = nil;
+                        drawableView = nil;
+                        thumbnailView.hidden = NO;
+                        dispatch_semaphore_signal(sema1);
+                    }];
+                    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+//                        dispatch_release(sema1); ARC handles this
                 }
             }
             [lock unlock];

@@ -197,7 +197,7 @@
 -(void) willShow{
     @autoreleasepool {
         if(!blurView){
-            CGRect b = self.bounds;
+//            CGRect b = self.bounds;
             blurView = [[FXBlurView alloc] initWithFrame:self.bounds];
             blurView.contentScaleFactor = 1.0;
             blurView.blurEnabled = YES;
@@ -207,7 +207,7 @@
             blurView.frame = blurContainerView.bounds;
             blurView.underlyingView = delegate.viewForBlur;
             blurView.underlyingImage = delegate.imageForBlur;
-            b = blurContainerView.bounds;
+//            b = blurContainerView.bounds;
             
             // set the anchor to 0,0 for the sliding animations
             [UIView setAnchorPoint:CGPointZero forView:blurView];

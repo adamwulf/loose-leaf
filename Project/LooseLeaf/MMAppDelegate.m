@@ -42,7 +42,19 @@
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
-    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
+    [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
+    
+    dispatch_async(dispatch_get_background_queue(), ^{
+        NSString* str = [MMAppDelegate userID];
+        NSInteger loc1 = [str rangeOfString:@"-"].location;
+        NSInteger loc2 = [str rangeOfString:@"-" options:NSLiteralSearch range:NSMakeRange(loc1+1, [str length]-loc1-1)].location;
+        str = [str substringToIndex:loc2];
+        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"mixpanel_uuid"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    });
+    
+    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
+                                                        [MMAppDelegate userID], kMPID, nil]];
     
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [[Crashlytics sharedInstance] setDelegate:self];
@@ -115,8 +127,7 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     resignedActiveAtStamp = CFAbsoluteTimeGetCurrent();
     [self logActiveAppDuration];
-    [durationTimer invalidate];
-    durationTimer = nil;
+    [self stopTimer];
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
     [[JotDiskAssetManager sharedManager] blockUntilAllWritesHaveFinished];
@@ -140,7 +151,10 @@
         // this'll also trigger when the app first launches, as resignedActiveStamp == 0
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
-    };
+    }else{
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfResumes by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventResume];
+    }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
     DebugLog(@"DID BECOME ACTIVE");
@@ -152,8 +166,7 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     [self logActiveAppDuration];
-    [durationTimer invalidate];
-    durationTimer = nil;
+    [self stopTimer];
     [self removeDateOfLaunch];
     DebugLog(@"WILL TERMINATE");
 }
@@ -220,23 +233,31 @@
 #pragma mark - Session Duration
 
 -(void) logActiveAppDuration{
-    [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:@((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0)];
+    if(durationTimer){
+        NSNumber* amount = @((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0);
+        NSLog(@"duration tick: %@", amount);
+        // sanity check, only log time if our timer is running
+        [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:amount];
+        sessionStartStamp = CFAbsoluteTimeGetCurrent();
+    }
+}
+
+-(void) stopTimer{
+    [durationTimer invalidate];
+    durationTimer = nil;
 }
 
 -(void) setupTimer{
     sessionStartStamp = CFAbsoluteTimeGetCurrent();
-    // track every five minutes that the app is open
-    durationTimer = [NSTimer scheduledTimerWithTimeInterval:60 * 5
+    // track every minute that the app is open
+    [self stopTimer];
+    durationTimer = [NSTimer scheduledTimerWithTimeInterval:60
                                                      target:self
-                                                   selector:@selector(durationTimerDidFire:)
+                                                   selector:@selector(logActiveAppDuration)
                                                    userInfo:nil
                                                     repeats:YES];
 }
 
--(void) durationTimerDidFire:(NSTimer*)timer{
-    [self logActiveAppDuration];
-    sessionStartStamp = CFAbsoluteTimeGetCurrent();
-}
 
 
 #pragma mark - User UUID
@@ -307,6 +328,15 @@
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
     [crashProperties setObject:@"Exception" forKey:@"Cause"];
+
+    // set default values
+    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+    [crashProperties setObject:[NSDate date] forKey:@"crashedOnDate"];
+    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+    
+    // set crash specific values
     if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
     if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
     if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
