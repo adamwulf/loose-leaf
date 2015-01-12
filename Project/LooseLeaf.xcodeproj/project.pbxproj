@@ -372,6 +372,7 @@
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D0A8C51A6454030003BBF7 /* MMSilhouetteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */; };
 		66D0A8C81A6454600003BBF7 /* MMDrawingGestureSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */; };
+		66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8CA1A64684A0003BBF7 /* MMTwoFingerPanSilhouette.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D4FE6818DCA6950010CCBF /* Crashlytics.framework */; };
 		66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */; };
@@ -1127,6 +1128,8 @@
 		66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSilhouetteView.m; sourceTree = "<group>"; };
 		66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawingGestureSilhouette.h; sourceTree = "<group>"; };
 		66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawingGestureSilhouette.m; sourceTree = "<group>"; };
+		66D0A8C91A64684A0003BBF7 /* MMTwoFingerPanSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTwoFingerPanSilhouette.h; sourceTree = "<group>"; };
+		66D0A8CA1A64684A0003BBF7 /* MMTwoFingerPanSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwoFingerPanSilhouette.m; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
 		66D33F4B15A6408A0044C809 /* MMShadowedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowedView.m; sourceTree = "<group>"; };
 		66D4FE6818DCA6950010CCBF /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Frameworks/Crashlytics.framework; sourceTree = "<group>"; };
@@ -2468,6 +2471,8 @@
 				66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */,
 				66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */,
 				66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */,
+				66D0A8C91A64684A0003BBF7 /* MMTwoFingerPanSilhouette.h */,
+				66D0A8CA1A64684A0003BBF7 /* MMTwoFingerPanSilhouette.m */,
 			);
 			name = Silhouette;
 			sourceTree = "<group>";
@@ -3199,6 +3204,7 @@
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
 				6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */,
+				66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanSilhouette.m in Sources */,
 				66E2240B19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
