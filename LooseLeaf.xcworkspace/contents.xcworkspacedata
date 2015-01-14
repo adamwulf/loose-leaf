@@ -23,6 +23,9 @@
       location = "group:LittleClipper/LittleClipper.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Submodules/RMStore/RMStore.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "container:Project/LooseLeaf.xcodeproj">
    </FileRef>
 </Workspace>

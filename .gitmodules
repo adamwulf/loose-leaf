@@ -37,3 +37,6 @@
 [submodule "Submodules/zip-archive"]
 	path = Submodules/zip-archive
 	url = git@github.com:mattconnolly/ZipArchive.git
+[submodule "Submodules/RMStore"]
+	path = Submodules/RMStore
+	url = git@github.com:robotmedia/RMStore.git

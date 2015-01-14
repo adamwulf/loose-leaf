@@ -29,7 +29,6 @@
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
 		6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */; };
 		6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */; };
-		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
 		6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
@@ -38,6 +37,9 @@
 		661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D018F9ABD70016A333 /* MMFlipCameraButton.m */; };
 		661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D318F9AED50016A333 /* MMDarkSidebarButton.m */; };
 		661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 661EBA56182AF1AD00893274 /* MMScissorTool.m */; };
+		66244CB01A65EF1C00A009BC /* libRMStore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CAF1A65EF1C00A009BC /* libRMStore.a */; };
+		66244CB41A65EF4500A009BC /* MMStoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66244CB31A65EF4500A009BC /* MMStoreManager.m */; };
+		66244CB61A65F2B700A009BC /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CB51A65F2B700A009BC /* StoreKit.framework */; };
 		66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9C192BC99D003E97C0 /* SSKeychain.m */; };
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
@@ -498,6 +500,10 @@
 		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
 		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
 		662441E4187BC68700011A54 /* Pomax.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomax.license; sourceTree = "<group>"; };
+		66244CAF1A65EF1C00A009BC /* libRMStore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRMStore.a; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/libRMStore.a"; sourceTree = "<group>"; };
+		66244CB21A65EF4500A009BC /* MMStoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStoreManager.h; sourceTree = "<group>"; };
+		66244CB31A65EF4500A009BC /* MMStoreManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStoreManager.m; sourceTree = "<group>"; };
+		66244CB51A65F2B700A009BC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		66277C9B192BC99D003E97C0 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
 		66277C9C192BC99D003E97C0 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		66277C9D192BC99D003E97C0 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
@@ -1224,6 +1230,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66244CB61A65F2B700A009BC /* StoreKit.framework in Frameworks */,
+				66244CB01A65EF1C00A009BC /* libRMStore.a in Frameworks */,
 				66627FB21A0258D10064FAD3 /* libicucore.dylib in Frameworks */,
 				66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */,
 				66A7AF1919A5399100E0AA29 /* SimpleCloudKitManager.framework in Frameworks */,
@@ -1252,7 +1260,6 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
-				661507641783338E00B181F3 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1470,6 +1477,15 @@
 				661708ED19841988006A73EF /* MMTrashManager.m */,
 			);
 			name = Trash;
+			sourceTree = "<group>";
+		};
+		66244CB11A65EF2C00A009BC /* Store Manager */ = {
+			isa = PBXGroup;
+			children = (
+				66244CB21A65EF4500A009BC /* MMStoreManager.h */,
+				66244CB31A65EF4500A009BC /* MMStoreManager.m */,
+			);
+			name = "Store Manager";
 			sourceTree = "<group>";
 		};
 		66277C9A192BC97E003E97C0 /* SSKeychain */ = {
@@ -2023,6 +2039,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				66244CB11A65EF2C00A009BC /* Store Manager */,
 				66EC7B7219ABD06100406D97 /* CloudKit Manager */,
 				665245771996EA5100C36609 /* ReachabilityManager */,
 				661708EB1984197C006A73EF /* Trash */,
@@ -2456,6 +2473,8 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66244CB51A65F2B700A009BC /* StoreKit.framework */,
+				66244CAF1A65EF1C00A009BC /* libRMStore.a */,
 				66627FB11A0258D10064FAD3 /* libicucore.dylib */,
 				66EDE47719B1039000A5623B /* ZipArchive.framework */,
 				66EDE44419B1025400A5623B /* libZipArchive-ios.a */,
@@ -2841,7 +2860,7 @@
 								enabled = 0;
 							};
 							com.apple.InAppPurchase = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.Keychain = {
 								enabled = 0;
@@ -3133,6 +3152,7 @@
 				668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				66627FA11A02582F0064FAD3 /* MPTweakStore.m in Sources */,
+				66244CB41A65EF4500A009BC /* MMStoreManager.m in Sources */,
 				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
 				66ACECE819D4D571000EA792 /* MMPhotoOnDisk.m in Sources */,
 				663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */,
@@ -3477,11 +3497,16 @@
 					"DEBUGLABELS=1",
 					"DEBUGUSERDEFAULTS=0",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../Submodules/RMStore/RMStore/**",
+				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/External/TestFlightSDK\"",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos",
 				);
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
@@ -3489,7 +3514,7 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3b640b0d-b351-45a5-9330-eb76473a5093";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3512,18 +3537,23 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(SRCROOT)/../Submodules/RMStore/RMStore/**",
+				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/External/TestFlightSDK\"",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3b640b0d-b351-45a5-9330-eb76473a5093";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};

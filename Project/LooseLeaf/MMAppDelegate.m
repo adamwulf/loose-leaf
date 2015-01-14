@@ -16,12 +16,12 @@
 #import "Mixpanel.h"
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
-#import "TestFlight.h"
 #import "MMPresentationWindow.h"
 #import "UIDevice+PPI.h"
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
+#import "MMStoreManager.h"
 
 
 @implementation MMAppDelegate{
@@ -57,15 +57,6 @@
     [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [[Crashlytics sharedInstance] setDelegate:self];
 
-    [[NSThread mainThread] performBlock:^{
-        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-        [TestFlight takeOff:kTestflightAppToken];
-    } afterDelay:3];
-    
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [presentationWindow makeKeyAndVisible];
 
@@ -102,7 +93,26 @@
             // log as a possible memory crash or user force-close
             [self trackDidCrashFromMemoryForDate:dateOfCrash];
         }
+        
+        
+        NSURL* receiptURL = [[NSBundle mainBundle] appStoreReceiptURL];
+        NSLog(@"receipt: %@", receiptURL);
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:[receiptURL path]]){
+            NSLog(@"file exists");
+        }else{
+            NSLog(@"file doesn't exist");
+        }
+        
+        [[MMStoreManager sharedManager] validateReceipt];
+        
+        
     } afterDelay:5];
+    
+    
+    
+    
+    
     
     return YES;
 }
