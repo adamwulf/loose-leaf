@@ -8,7 +8,6 @@
 
 #import "MMAppDelegate.h"
 #import "TCViewController.h"
-#import <Crashlytics/Crashlytics.h>
 
 @implementation MMAppDelegate
 

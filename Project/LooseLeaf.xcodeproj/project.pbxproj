@@ -38,6 +38,7 @@
 		661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D018F9ABD70016A333 /* MMFlipCameraButton.m */; };
 		661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D318F9AED50016A333 /* MMDarkSidebarButton.m */; };
 		661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 661EBA56182AF1AD00893274 /* MMScissorTool.m */; };
+		66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CAD1A65145100A009BC /* Fabric.framework */; };
 		66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9C192BC99D003E97C0 /* SSKeychain.m */; };
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
@@ -498,6 +499,7 @@
 		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
 		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
 		662441E4187BC68700011A54 /* Pomax.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomax.license; sourceTree = "<group>"; };
+		66244CAD1A65145100A009BC /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = ../Frameworks/Fabric.framework; sourceTree = "<group>"; };
 		66277C9B192BC99D003E97C0 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
 		66277C9C192BC99D003E97C0 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		66277C9D192BC99D003E97C0 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
@@ -1235,6 +1237,7 @@
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */,
 				66999051185F7501005581D9 /* DrawKit-iOS.framework in Frameworks */,
+				66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */,
 				6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */,
 				66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */,
 				665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */,
@@ -2456,6 +2459,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66244CAD1A65145100A009BC /* Fabric.framework */,
 				66627FB11A0258D10064FAD3 /* libicucore.dylib */,
 				66EDE47719B1039000A5623B /* ZipArchive.framework */,
 				66EDE44419B1025400A5623B /* libZipArchive-ios.a */,
@@ -2991,7 +2995,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./../Frameworks/Crashlytics.framework/run 9e59cb6d909c971a2db30c84cb9be7f37273a7af 0e5d6861b92a7859ecb87362f5b611251a8128c79cc2af6283e5e9ef13d1e59e";
+			shellScript = "./../Frameworks/Fabric.framework/run 9e59cb6d909c971a2db30c84cb9be7f37273a7af 0e5d6861b92a7859ecb87362f5b611251a8128c79cc2af6283e5e9ef13d1e59e";
 		};
 		66684B3C182DA0D3005A27B4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
