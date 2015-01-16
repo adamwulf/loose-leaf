@@ -16,6 +16,7 @@
 #import "MMTouchDotGestureRecognizer.h"
 #import "NSThread+BlockAdditions.h"
 #import "UITouch+Distance.h"
+#import "MMVector.h"
 
 @implementation MMSilhouetteView{
     MMDrawingGestureSilhouette* pointerFingerHelper;
@@ -45,6 +46,8 @@
         leftHandLayer.anchorPoint = CGPointZero;
         leftHandLayer.position = CGPointZero;
         leftHandLayer.backgroundColor = [UIColor blackColor].CGColor;
+        leftHandLayer.borderColor = [UIColor redColor].CGColor;
+        leftHandLayer.borderWidth = 2;
         
         
         slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
@@ -82,10 +85,15 @@
 
 #pragma mark - Panning a Page
 
+
+static MMVector* initialVector;
+
 -(void) startPanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
     leftHandLayer.opacity = .5;
     if([touches count] >= 2){
         CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
+        initialVector = [MMVector vectorWithPoint:[[touches firstObject] locationInView:self.window]
+                                         andPoint:[[touches lastObject] locationInView:self.window]];
         [leftTwoFingerHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
             leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
@@ -109,10 +117,15 @@
 
 -(void) continuePanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
     if([touches count] >= 2){
+        MMVector* currVector = [MMVector vectorWithPoint:[[touches firstObject] locationInView:self.window]
+                                         andPoint:[[touches lastObject] locationInView:self.window]];
+        CGFloat theta = [initialVector angleBetween:currVector];
         CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
         [leftTwoFingerHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
-            leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+            leftHandLayer.affineTransform = CGAffineTransformIdentity;
+            UIBezierPath* handPath = [leftTwoFingerHelper pathForTouches:nil];
+            leftHandLayer.path = handPath.CGPath;
             
             UITouch* touch = [touches firstObject];
             if([[touches lastObject] locationInView:self].x > [touch locationInView:self].x){
@@ -122,12 +135,17 @@
             CGPoint offset = [leftTwoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
             CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
             leftHandLayer.position = finalLocation;
+
+            leftHandLayer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
         }];
         [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             NSLog(@"continue pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
         }];
     }
 }
+
+
+
 
 -(void) endPanningPage:(MMPaperView*)page{
     NSLog(@"end pan");
@@ -144,7 +162,7 @@
     
     [self preventCALayerImplicitAnimation:^{
         rightHandLayer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
-        CGPoint locationOfTouch = [touch locationInView:touch.view];
+        CGPoint locationOfTouch = [touch locationInView:self.window];
         CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
         CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
         rightHandLayer.position = finalLocation;
@@ -153,7 +171,7 @@
 -(void) continueDrawingAtTouch:(UITouch*)touch{
     [self preventCALayerImplicitAnimation:^{
         rightHandLayer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
-        CGPoint locationOfTouch = [touch locationInView:touch.view];
+        CGPoint locationOfTouch = [touch locationInView:self.window];
         CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
         CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
         rightHandLayer.position = finalLocation;

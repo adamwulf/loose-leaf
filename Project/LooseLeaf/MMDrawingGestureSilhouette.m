@@ -19,7 +19,7 @@
 -(id) init{
     if(self = [super init]){
         CGSize defSize = CGSizeMake(100, 227);
-        defSize = CGSizeApplyAffineTransform(defSize, CGAffineTransformMakeScale(3, 3));
+        defSize = CGSizeApplyAffineTransform(defSize, CGAffineTransformMakeScale(4, 4));
         [self scalePathToSize:defSize];
     }
     return self;
