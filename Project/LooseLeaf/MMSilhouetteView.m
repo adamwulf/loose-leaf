@@ -11,13 +11,15 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "UIView+Debug.h"
-#import "MMTwoFingerPanSilhouette.h"
+#import "MMLeftTwoFingerPanSilhouette.h"
+#import "MMRightTwoFingerPanSilhouette.h"
 #import "MMTouchDotGestureRecognizer.h"
 #import "NSThread+BlockAdditions.h"
 
 @implementation MMSilhouetteView{
     MMDrawingGestureSilhouette* pointerFingerHelper;
-    MMTwoFingerPanSilhouette* twoFingerHelper;
+    MMLeftTwoFingerPanSilhouette* leftTwoFingerHelper;
+    MMRightTwoFingerPanSilhouette* rightTwoFingerHelper;
     UISlider* slider;
 }
 
@@ -29,6 +31,7 @@
         self.opaque = NO;
         
         slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
+        slider.value = 1;
         slider.minimumValue = 0;
         slider.maximumValue = 1;
         [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
@@ -41,14 +44,18 @@
 //        pointerFingerHelper = [[MMDrawingGestureSilhouette alloc] init];
 //        [self.layer addSublayer:pointerFingerHelper.handLayer];
         
-        twoFingerHelper = [[MMTwoFingerPanSilhouette alloc] init];
-        [self.layer addSublayer:twoFingerHelper.handLayer];
+//        leftTwoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
+//        [self.layer addSublayer:leftTwoFingerHelper.handLayer];
+        
+        rightTwoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
+        [self.layer addSublayer:rightTwoFingerHelper.handLayer];
     }
     return self;
 }
 
 -(void) sliderValueChanged:(UISlider*)_slider{
-    [twoFingerHelper openTo:slider.value];
+    [leftTwoFingerHelper openTo:slider.value];
+    [rightTwoFingerHelper openTo:slider.value];
 }
 
 
