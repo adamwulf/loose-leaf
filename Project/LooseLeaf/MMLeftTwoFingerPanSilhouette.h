@@ -18,8 +18,8 @@
     UIBezierPath* closedIndexFingerTipPath;
 }
 
--(UIBezierPath*) pathForTouches:(NSSet*)touches;
--(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSSet*)touches;
+-(UIBezierPath*) pathForTouches:(NSArray*)touches;
+-(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSArray*)touches;
 
 -(void) setFingerDistance:(CGFloat)distance;
 

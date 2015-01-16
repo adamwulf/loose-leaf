@@ -13,6 +13,7 @@
 
 @implementation MMLeftTwoFingerPanSilhouette{
     UIBezierPath* lastInterpolatedPath;
+    CGPoint lastInterpolatedIndexFinger;
 }
 
 -(id) init{
@@ -29,16 +30,19 @@
                        p1.y*weight + p2.y*(1-weight));
 }
 
--(UIBezierPath*) pathForTouches:(NSSet*)touches{
+-(UIBezierPath*) pathForTouches:(NSArray*)touches{
     return lastInterpolatedPath;
 }
 
--(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSSet*)touches{
-    return CGPointZero;
+-(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSArray*)touches{
+    return lastInterpolatedIndexFinger;
 }
 
 -(void) openTo:(CGFloat)openPercent{
     lastInterpolatedPath = [UIBezierPath bezierPath];
+    
+    lastInterpolatedIndexFinger = CGPointMake(openPercent * openIndexFingerTipPath.center.x + (1-openPercent) * closedIndexFingerTipPath.center.x,
+                                              openPercent * openIndexFingerTipPath.center.y + (1-openPercent) * closedIndexFingerTipPath.center.y);
     
     for(int i=0;i<[openPath elementCount];i++){
         CGPathElement openElement = [openPath elementAtIndex:i];

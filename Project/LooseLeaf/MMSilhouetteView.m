@@ -89,7 +89,17 @@
         [leftTwoFingerHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
             leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+
+            UITouch* touch = [touches firstObject];
+            if([[touches lastObject] locationInView:self].x > [touch locationInView:self].x){
+                touch = [touches lastObject];
+            }
+            CGPoint locationOfTouch = [touch locationInView:self.window];
+            CGPoint offset = [leftTwoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
+            CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
+            leftHandLayer.position = finalLocation;
         }];
+
 
         [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             NSLog(@"start pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
@@ -103,6 +113,15 @@
         [leftTwoFingerHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
             leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+            
+            UITouch* touch = [touches firstObject];
+            if([[touches lastObject] locationInView:self].x > [touch locationInView:self].x){
+                touch = [touches lastObject];
+            }
+            CGPoint locationOfTouch = [touch locationInView:self.window];
+            CGPoint offset = [leftTwoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
+            CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
+            leftHandLayer.position = finalLocation;
         }];
         [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             NSLog(@"continue pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
