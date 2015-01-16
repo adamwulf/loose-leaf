@@ -1516,6 +1516,13 @@ int skipAll = NO;
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
 
+    
+    if(beginning){
+        [silhouette startPanningPage:page withTouches:touches];
+    }else{
+        [silhouette continuePanningPage:page withTouches:touches];
+    }
+    
     return ret;
 }
 
@@ -1523,6 +1530,8 @@ int skipAll = NO;
     [super finishedPanningAndScalingPage:page intoBezel:direction fromFrame:fromFrame toFrame:toFrame];
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
+    
+    [silhouette endPanningPage:page];
 }
 
 -(void) setButtonsVisible:(BOOL)visible{

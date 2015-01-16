@@ -35,9 +35,6 @@
 }
 
 -(void) openTo:(CGFloat)openPercent{
-    // iterpolate between open/closed paths
-    NSLog(@"interpolate! %f", openPercent);
-    
     UIBezierPath* interpolatedPath = [UIBezierPath bezierPath];
     
     for(int i=0;i<[openPath elementCount];i++){

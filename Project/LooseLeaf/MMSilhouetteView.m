@@ -52,9 +52,9 @@
         slider.maximumValue = 1;
         [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
         
-        [[NSThread mainThread] performBlock:^{
-            [self.window addSubview:slider];
-        } afterDelay:.3];
+//        [[NSThread mainThread] performBlock:^{
+//            [self.window addSubview:slider];
+//        } afterDelay:.3];
         
         // setup hand path
         pointerFingerHelper = [[MMDrawingGestureSilhouette alloc] init];
@@ -77,7 +77,27 @@
 
 
 
-#pragma mark - incoming drawing events
+#pragma mark - Panning a Page
+
+-(void) startPanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
+    [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSLog(@"start pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
+    }];
+}
+
+-(void) continuePanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
+    [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSLog(@"continue pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
+    }];
+}
+
+-(void) endPanningPage:(MMPaperView*)page{
+    NSLog(@"end pan");
+}
+
+
+
+#pragma mark - Drawing Events
 
 -(void) startDrawingAtTouch:(UITouch*)touch{
     [self continueDrawingAtTouch:touch];
