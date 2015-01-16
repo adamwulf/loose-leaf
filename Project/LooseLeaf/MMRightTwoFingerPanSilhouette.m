@@ -21,8 +21,6 @@
         [self flipPathAroundYAxis:openIndexFingerTipPath];
         [self flipPathAroundYAxis:closedMiddleFingerTipPath];
         [self flipPathAroundYAxis:closedIndexFingerTipPath];
-
-        handLayer.path = openPath.CGPath;
     }
     return self;
 }

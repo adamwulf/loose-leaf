@@ -21,6 +21,8 @@
     MMLeftTwoFingerPanSilhouette* leftTwoFingerHelper;
     MMRightTwoFingerPanSilhouette* rightTwoFingerHelper;
     UISlider* slider;
+    CAShapeLayer* rightHandLayer;
+    CAShapeLayer* leftHandLayer;
 }
 
 
@@ -29,6 +31,20 @@
     if(self = [super initWithFrame:frame]){
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
+        
+        
+        rightHandLayer = [CAShapeLayer layer];
+        rightHandLayer.opacity = .5;
+        rightHandLayer.anchorPoint = CGPointZero;
+        rightHandLayer.position = CGPointZero;
+        rightHandLayer.backgroundColor = [UIColor blackColor].CGColor;
+        
+        leftHandLayer = [CAShapeLayer layer];
+        leftHandLayer.opacity = .5;
+        leftHandLayer.anchorPoint = CGPointZero;
+        leftHandLayer.position = CGPointZero;
+        leftHandLayer.backgroundColor = [UIColor blackColor].CGColor;
+        
         
         slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
         slider.value = 1;
@@ -41,14 +57,13 @@
         } afterDelay:.3];
         
         // setup hand path
-//        pointerFingerHelper = [[MMDrawingGestureSilhouette alloc] init];
-//        [self.layer addSublayer:pointerFingerHelper.handLayer];
-        
-//        leftTwoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
-//        [self.layer addSublayer:leftTwoFingerHelper.handLayer];
-        
+        pointerFingerHelper = [[MMDrawingGestureSilhouette alloc] init];
+        leftTwoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
         rightTwoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
-        [self.layer addSublayer:rightTwoFingerHelper.handLayer];
+        
+        
+        [self.layer addSublayer:leftHandLayer];
+        [self.layer addSublayer:rightHandLayer];
     }
     return self;
 }
@@ -56,6 +71,8 @@
 -(void) sliderValueChanged:(UISlider*)_slider{
     [leftTwoFingerHelper openTo:slider.value];
     [rightTwoFingerHelper openTo:slider.value];
+    
+    leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
 }
 
 
@@ -64,13 +81,27 @@
 
 -(void) startDrawingAtTouch:(UITouch*)touch{
     [self continueDrawingAtTouch:touch];
-    pointerFingerHelper.handLayer.opacity = .5;
+    rightHandLayer.opacity = .5;
+    
+    [self preventCALayerImplicitAnimation:^{
+        rightHandLayer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
+        CGPoint locationOfTouch = [touch locationInView:touch.view];
+        CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
+        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
+        rightHandLayer.position = finalLocation;
+    }];
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{
-    [pointerFingerHelper moveToTouch:touch];
+    [self preventCALayerImplicitAnimation:^{
+        rightHandLayer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
+        CGPoint locationOfTouch = [touch locationInView:touch.view];
+        CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
+        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
+        rightHandLayer.position = finalLocation;
+    }];
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{
-    pointerFingerHelper.handLayer.opacity = 0;
+    rightHandLayer.opacity = 0;
 }
 
 
@@ -86,6 +117,17 @@
 
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
     return NO;
+}
+
+
+
+#pragma mark - CALayer Helper
+
+-(void) preventCALayerImplicitAnimation:(void(^)(void))block{
+    [CATransaction begin];
+    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    block();
+    [CATransaction commit];
 }
 
 

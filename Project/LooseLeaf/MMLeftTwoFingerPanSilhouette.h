@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface MMLeftTwoFingerPanSilhouette : NSObject{
-    CAShapeLayer* handLayer;
     UIBezierPath* openPath;
     UIBezierPath* closedPath;
 
@@ -19,9 +18,10 @@
     UIBezierPath* closedIndexFingerTipPath;
 }
 
-@property (readonly) CAShapeLayer* handLayer;
-
 -(void) openTo:(CGFloat)openPercent;
+
+-(UIBezierPath*) pathForTouches:(NSSet*)touches;
+-(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSSet*)touches;
 
 
 @end

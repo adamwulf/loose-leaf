@@ -12,8 +12,8 @@
 
 @property (readonly) UIBezierPath* pointerFingerPath;
 @property (readonly) CGPoint currentOffset;
-@property (readonly) CAShapeLayer* handLayer;
 
--(void) moveToTouch:(UITouch*)touch;
+-(UIBezierPath*) pathForTouch:(UITouch*)touch;
+-(CGPoint) locationOfIndexFingerInPathBoundsForTouch:(UITouch*)touch;
 
 @end

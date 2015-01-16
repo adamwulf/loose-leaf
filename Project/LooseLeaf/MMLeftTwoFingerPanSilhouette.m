@@ -13,20 +13,10 @@
 
 @implementation MMLeftTwoFingerPanSilhouette
 
-@synthesize handLayer;
-
 -(id) init{
     if(self = [super init]){
         
-        handLayer = [CAShapeLayer layer];
-        handLayer.opacity = .5;
-        handLayer.anchorPoint = CGPointZero;
-        handLayer.position = CGPointZero;
-        handLayer.backgroundColor = [UIColor blackColor].CGColor;
-        
         [self initPaths];
-        
-        handLayer.path = openPath.CGPath;
     }
     return self;
 }
@@ -34,6 +24,14 @@
 -(CGPoint) avgPoint:(CGPoint)p1 withPoint:(CGPoint)p2 weight:(CGFloat)weight{
     return CGPointMake(p1.x*weight + p2.x*(1-weight),
                        p1.y*weight + p2.y*(1-weight));
+}
+
+-(UIBezierPath*) pathForTouches:(NSSet*)touches{
+    return openPath;
+}
+
+-(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSSet*)touches{
+    return CGPointZero;
 }
 
 -(void) openTo:(CGFloat)openPercent{
@@ -79,10 +77,6 @@
             [interpolatedPath closePath];
         }
     }
-    
-    [self preventCALayerImplicitAnimation:^{
-        handLayer.path = interpolatedPath.CGPath;
-    }];
 }
 
 
