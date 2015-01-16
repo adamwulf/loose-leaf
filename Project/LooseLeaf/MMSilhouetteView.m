@@ -15,6 +15,7 @@
 #import "MMRightTwoFingerPanSilhouette.h"
 #import "MMTouchDotGestureRecognizer.h"
 #import "NSThread+BlockAdditions.h"
+#import "UITouch+Distance.h"
 
 @implementation MMSilhouetteView{
     MMDrawingGestureSilhouette* pointerFingerHelper;
@@ -72,7 +73,9 @@
     [leftTwoFingerHelper openTo:slider.value];
     [rightTwoFingerHelper openTo:slider.value];
     
-    leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+    [self preventCALayerImplicitAnimation:^{
+        leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+    }];
 }
 
 
@@ -80,19 +83,36 @@
 #pragma mark - Panning a Page
 
 -(void) startPanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
-    [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSLog(@"start pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
-    }];
+    leftHandLayer.opacity = .5;
+    if([touches count] >= 2){
+        CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
+        [leftTwoFingerHelper setFingerDistance:distance];
+        [self preventCALayerImplicitAnimation:^{
+            leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+        }];
+
+        [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSLog(@"start pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
+        }];
+    }
 }
 
 -(void) continuePanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
-    [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSLog(@"continue pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
-    }];
+    if([touches count] >= 2){
+        CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
+        [leftTwoFingerHelper setFingerDistance:distance];
+        [self preventCALayerImplicitAnimation:^{
+            leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+        }];
+        [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            NSLog(@"continue pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
+        }];
+    }
 }
 
 -(void) endPanningPage:(MMPaperView*)page{
     NSLog(@"end pan");
+    leftHandLayer.opacity = 0;
 }
 
 

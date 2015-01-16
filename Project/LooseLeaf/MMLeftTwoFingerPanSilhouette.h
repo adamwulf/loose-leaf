@@ -18,10 +18,13 @@
     UIBezierPath* closedIndexFingerTipPath;
 }
 
--(void) openTo:(CGFloat)openPercent;
-
 -(UIBezierPath*) pathForTouches:(NSSet*)touches;
 -(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSSet*)touches;
 
+-(void) setFingerDistance:(CGFloat)distance;
+
+#pragma mark - Debug
+
+-(void) openTo:(CGFloat)openPercent;
 
 @end

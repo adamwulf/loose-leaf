@@ -11,12 +11,15 @@
 #import <QuartzCore/QuartzCore.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
 
-@implementation MMLeftTwoFingerPanSilhouette
+@implementation MMLeftTwoFingerPanSilhouette{
+    UIBezierPath* lastInterpolatedPath;
+}
 
 -(id) init{
     if(self = [super init]){
         
         [self initPaths];
+        lastInterpolatedPath = openPath;
     }
     return self;
 }
@@ -27,7 +30,7 @@
 }
 
 -(UIBezierPath*) pathForTouches:(NSSet*)touches{
-    return openPath;
+    return lastInterpolatedPath;
 }
 
 -(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSSet*)touches{
@@ -35,18 +38,18 @@
 }
 
 -(void) openTo:(CGFloat)openPercent{
-    UIBezierPath* interpolatedPath = [UIBezierPath bezierPath];
+    lastInterpolatedPath = [UIBezierPath bezierPath];
     
     for(int i=0;i<[openPath elementCount];i++){
         CGPathElement openElement = [openPath elementAtIndex:i];
         CGPathElement closedElement = [closedPath elementAtIndex:i];
         
         if(openElement.type == kCGPathElementMoveToPoint){
-            [interpolatedPath moveToPoint:[self avgPoint:openElement.points[0]
+            [lastInterpolatedPath moveToPoint:[self avgPoint:openElement.points[0]
                                                withPoint:closedElement.points[0]
                                                   weight:openPercent]];
         }else if(openElement.type == kCGPathElementAddLineToPoint){
-            [interpolatedPath addLineToPoint:[self avgPoint:openElement.points[0]
+            [lastInterpolatedPath addLineToPoint:[self avgPoint:openElement.points[0]
                                                withPoint:closedElement.points[0]
                                                   weight:openPercent]];
         }else if(openElement.type == kCGPathElementAddQuadCurveToPoint){
@@ -57,7 +60,7 @@
                                  withPoint:closedElement.points[0]
                                     weight:openPercent];
             
-            [interpolatedPath addQuadCurveToPoint:endPt controlPoint:ctrlPt];
+            [lastInterpolatedPath addQuadCurveToPoint:endPt controlPoint:ctrlPt];
         }else if(openElement.type == kCGPathElementAddCurveToPoint){
             CGPoint endPt = [self avgPoint:openElement.points[2]
                                  withPoint:closedElement.points[2]
@@ -69,23 +72,31 @@
                                    withPoint:closedElement.points[1]
                                       weight:openPercent];
             
-            [interpolatedPath addCurveToPoint:endPt controlPoint1:ctrlPt1 controlPoint2:ctrlPt2];
+            [lastInterpolatedPath addCurveToPoint:endPt controlPoint1:ctrlPt1 controlPoint2:ctrlPt2];
         }else if(openElement.type == kCGPathElementCloseSubpath){
-            [interpolatedPath closePath];
+            [lastInterpolatedPath closePath];
         }
     }
+}
+
+-(void) setFingerDistance:(CGFloat)idealDistance{
+    idealDistance -= 80; // adjust for width of fingers (?)
+    CGFloat openDist = distance(openMiddleFingerTipPath.center, openIndexFingerTipPath.center);
+    CGFloat closedDist = distance(closedMiddleFingerTipPath.center, closedIndexFingerTipPath.center);
+    CGFloat perc = idealDistance / (openDist - closedDist);
+    [self openTo:perc > 1 ? 1.0 : perc];
 }
 
 
 
 -(void) initPaths{
     
-    CGRect frame = CGRectMake(0, 0, 300, 900);
+    CGRect frame = CGRectMake(0, 0, 400, 1200);
     
-    openMiddleFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 32.53, CGRectGetMinY(frame) + 12.11, 7, 7)];
-    openIndexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 78.93, CGRectGetMinY(frame) + 20.7, 7, 7)];
-    closedMiddleFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 49.42, CGRectGetMinY(frame) + 12.22, 7, 7)];
-    closedIndexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 66.93, CGRectGetMinY(frame) + 18.18, 7, 7)];
+    openMiddleFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor((CGRectGetWidth(frame) - 7) * 0.34891 - 0.03) + 0.53, CGRectGetMinY(frame) + floor((CGRectGetHeight(frame) - 7) * 0.04132 - 0.39) + 0.89, 7, 7)];
+    openIndexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor((CGRectGetWidth(frame) - 7) * 0.84662 - 0.43) + 0.93, CGRectGetMinY(frame) + floor((CGRectGetHeight(frame) - 7) * 0.07063 + 0.2) + 0.3, 7, 7)];
+    closedMiddleFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor((CGRectGetWidth(frame) - 7) * 0.53012 + 0.08) + 0.42, CGRectGetMinY(frame) + floor((CGRectGetHeight(frame) - 7) * 0.04172 - 0.28) + 0.78, 7, 7)];
+    closedIndexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor((CGRectGetWidth(frame) - 7) * 0.71794 - 0.43) + 0.93, CGRectGetMinY(frame) + floor((CGRectGetHeight(frame) - 7) * 0.06205 - 0.32) + 0.82, 7, 7)];
     
     openPath = UIBezierPath.bezierPath;
     [openPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.66734 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.80639 * CGRectGetHeight(frame))];
