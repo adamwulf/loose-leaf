@@ -7,12 +7,11 @@
 //
 
 #import "MMSilhouetteView.h"
-#import "MMRightDrawingGestureSilhouette.h"
+#import "MMDrawingGestureShadow.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "UIView+Debug.h"
-#import "MMLeftTwoFingerPanSilhouette.h"
-#import "MMRightTwoFingerPanSilhouette.h"
+#import "MMTwoFingerPanShadow.h"
 #import "MMTouchDotGestureRecognizer.h"
 #import "NSThread+BlockAdditions.h"
 #import "UITouch+Distance.h"
@@ -20,12 +19,10 @@
 #import "MMShadowHand.h"
 
 @implementation MMSilhouetteView{
-    MMRightDrawingGestureSilhouette* pointerFingerHelper;
-    MMLeftTwoFingerPanSilhouette* leftTwoFingerHelper;
-    MMRightTwoFingerPanSilhouette* rightTwoFingerHelper;
+    MMDrawingGestureShadow* pointerFingerHelper;
 //    UISlider* slider;
-    MMShadowHand* rightHandLayer;
-    MMShadowHand* leftHandLayer;
+    MMShadowHand* rightHand;
+    MMShadowHand* leftHand;
 }
 
 
@@ -35,8 +32,8 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         
-        leftHandLayer = [[MMShadowHand alloc] initForRightHand:NO forView:self.window];
-        rightHandLayer = [[MMShadowHand alloc] initForRightHand:YES forView:self.window];
+        leftHand = [[MMShadowHand alloc] initForRightHand:NO forView:self.window];
+        rightHand = [[MMShadowHand alloc] initForRightHand:YES forView:self.window];
         
         
 //        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
@@ -49,14 +46,9 @@
 //            [self.window addSubview:slider];
 //        } afterDelay:.3];
         
-        // setup hand path
-        pointerFingerHelper = [[MMRightDrawingGestureSilhouette alloc] init];
-        leftTwoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
-        rightTwoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
         
-        
-        [self.layer addSublayer:leftHandLayer.layer];
-        [self.layer addSublayer:rightHandLayer.layer];
+        [self.layer addSublayer:leftHand.layer];
+        [self.layer addSublayer:rightHand.layer];
     }
     return self;
 }
@@ -74,31 +66,28 @@
 
 #pragma mark - Panning a Page
 
-
-static MMVector* initialVector;
-
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    [leftHandLayer startPanningObject:obj withTouches:touches];
+    [rightHand startPanningObject:obj withTouches:touches];
 }
 
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
-    [leftHandLayer continuePanningObject:obj withTouches:touches];
+    [rightHand continuePanningObject:obj withTouches:touches];
 }
 
 -(void) endPanningObject:(id)obj{
-    [leftHandLayer endPanningObject:obj];
+    [rightHand endPanningObject:obj];
 }
 
 #pragma mark - Drawing Events
 
 -(void) startDrawingAtTouch:(UITouch*)touch{
-    [leftHandLayer startDrawingAtTouch:touch];
+    [rightHand startDrawingAtTouch:touch];
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{
-    [leftHandLayer continueDrawingAtTouch:touch];
+    [rightHand continueDrawingAtTouch:touch];
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{
-    [leftHandLayer endDrawingAtTouch:touch];
+    [rightHand endDrawingAtTouch:touch];
 }
 
 

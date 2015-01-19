@@ -9,10 +9,9 @@
 #import "MMShadowHand.h"
 #import "MMVector.h"
 #import "UITouch+Distance.h"
-#import "MMRightDrawingGestureSilhouette.h"
-#import "MMLeftTwoFingerPanSilhouette.h"
-#import "MMRightTwoFingerPanSilhouette.h"
-#import "MMLeftDrawingGestureSilhouette.h"
+#import "MMDrawingGestureShadow.h"
+#import "MMTwoFingerPanShadow.h"
+#import "MMDrawingGestureShadow.h"
 
 @implementation MMShadowHand{
     UIView* relativeView;
@@ -22,8 +21,8 @@
     id relatedObject;
     MMVector* initialVector;
     
-    MMRightDrawingGestureSilhouette* pointerFingerHelper;
-    MMLeftTwoFingerPanSilhouette* twoFingerHelper;
+    MMDrawingGestureShadow* pointerFingerHelper;
+    MMTwoFingerPanShadow* twoFingerHelper;
 }
 
 @synthesize layer;
@@ -42,13 +41,8 @@
         layer.backgroundColor = [UIColor blackColor].CGColor;
 
         
-        if(isRight){
-            pointerFingerHelper = [[MMRightDrawingGestureSilhouette alloc] init];
-            twoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
-        }else{
-            pointerFingerHelper = [[MMLeftDrawingGestureSilhouette alloc] init];
-            twoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
-        }
+        pointerFingerHelper = [[MMDrawingGestureShadow alloc] initForRightHand:isRight];
+        twoFingerHelper = [[MMTwoFingerPanShadow alloc] initForRightHand:isRight];
     }
     return self;
 }
@@ -69,7 +63,9 @@
             layer.path = [twoFingerHelper pathForTouches:nil].CGPath;
             
             UITouch* touch = [touches firstObject];
-            if([[touches lastObject] locationInView:relativeView].x > [touch locationInView:relativeView].x){
+            if(!isRight && [[touches lastObject] locationInView:relativeView].x > [touch locationInView:relativeView].x){
+                touch = [touches lastObject];
+            }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [touch locationInView:relativeView].x){
                 touch = [touches lastObject];
             }
             CGPoint locationOfTouch = [touch locationInView:relativeView];
@@ -93,7 +89,9 @@
             layer.path = handPath.CGPath;
             
             UITouch* touch = [touches firstObject];
-            if([[touches lastObject] locationInView:relativeView].x > [touch locationInView:relativeView].x){
+            if(!isRight && [[touches lastObject] locationInView:relativeView].x > [touch locationInView:relativeView].x){
+                touch = [touches lastObject];
+            }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [touch locationInView:relativeView].x){
                 touch = [touches lastObject];
             }
             CGPoint locationOfTouch = [touch locationInView:relativeView];

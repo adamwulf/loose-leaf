@@ -11,13 +11,16 @@
 #import <QuartzCore/QuartzCore.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
 
-@interface MMRightDrawingGestureSilhouette : NSObject{
+@interface MMDrawingGestureShadow : NSObject{
     CGRect boundingBox;
     UIBezierPath* pointerFingerPath;
     UIBezierPath* indexFingerTipPath;
 }
 
 @property (readonly) UIBezierPath* pointerFingerPath;
+
+- (instancetype)init NS_UNAVAILABLE;
+-(id) initForRightHand:(BOOL)isRight;
 
 -(UIBezierPath*) pathForTouch:(UITouch*)touch;
 -(CGPoint) locationOfIndexFingerInPathBoundsForTouch:(UITouch*)touch;

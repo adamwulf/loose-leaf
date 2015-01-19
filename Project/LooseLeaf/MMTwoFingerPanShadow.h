@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MMLeftTwoFingerPanSilhouette : NSObject{
+@interface MMTwoFingerPanShadow : NSObject{
     CGRect boundingBox;
     UIBezierPath* openPath;
     UIBezierPath* closedPath;
@@ -18,6 +18,9 @@
     UIBezierPath* closedMiddleFingerTipPath;
     UIBezierPath* closedIndexFingerTipPath;
 }
+
+- (instancetype)init NS_UNAVAILABLE;
+-(id) initForRightHand:(BOOL)isRight;
 
 -(UIBezierPath*) pathForTouches:(NSArray*)touches;
 -(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSArray*)touches;

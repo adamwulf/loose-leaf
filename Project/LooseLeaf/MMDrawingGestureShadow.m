@@ -6,17 +6,22 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMRightDrawingGestureSilhouette.h"
+#import "MMDrawingGestureShadow.h"
 
-@implementation MMRightDrawingGestureSilhouette
+@implementation MMDrawingGestureShadow
 
 @synthesize pointerFingerPath;
 
--(id) init{
+-(id) initForRightHand:(BOOL)isRight{
     if(self = [super init]){
         boundingBox = CGRectMake(0, 0, 100, 227);
         boundingBox = CGRectApplyAffineTransform(boundingBox, CGAffineTransformMakeScale(4, 4));
         [self scalePathToSize:boundingBox.size];
+        
+        if(!isRight){
+            [self flipPathAroundYAxis:pointerFingerPath];
+            [self flipPathAroundYAxis:indexFingerTipPath];
+        }
     }
     return self;
 }
@@ -67,6 +72,14 @@
     [pointerFingerPath closePath];
     
     indexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(handFrame) + floor((CGRectGetWidth(handFrame) - 7) * 0.18021 - 0.06) + 0.56, CGRectGetMinY(handFrame) + floor((CGRectGetHeight(handFrame) - 7) * 0.04176 + 0.45) + 0.05, 7, 7)];
+}
+
+
+-(void) flipPathAroundYAxis:(UIBezierPath*)path{
+    [path applyTransform:CGAffineTransformMakeTranslation(-boundingBox.size.width/2 - boundingBox.origin.x, 0)];
+    [path applyTransform:CGAffineTransformMakeScale(-1, 1)];
+    [path applyTransform:CGAffineTransformMakeTranslation(boundingBox.size.width/2 + boundingBox.origin.x, 0)];
+    
 }
 
 @end

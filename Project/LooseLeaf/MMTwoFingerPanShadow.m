@@ -6,23 +6,35 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMLeftTwoFingerPanSilhouette.h"
+#import "MMTwoFingerPanShadow.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
 
-@implementation MMLeftTwoFingerPanSilhouette{
+@implementation MMTwoFingerPanShadow{
+    BOOL isRight;
     UIBezierPath* lastInterpolatedPath;
     CGPoint lastInterpolatedIndexFinger;
 }
 
--(id) init{
+-(id) initForRightHand:(BOOL)_isRight{
     if(self = [super init]){
+        isRight = _isRight;
         boundingBox = CGRectMake(0, 0, 100, 300);
         boundingBox = CGRectApplyAffineTransform(boundingBox, CGAffineTransformMakeScale(4, 4));
 
         [self initPaths];
         lastInterpolatedPath = openPath;
+        
+        if(isRight){
+            [self flipPathAroundYAxis:openPath];
+            [self flipPathAroundYAxis:closedPath];
+            
+            [self flipPathAroundYAxis:openMiddleFingerTipPath];
+            [self flipPathAroundYAxis:openIndexFingerTipPath];
+            [self flipPathAroundYAxis:closedMiddleFingerTipPath];
+            [self flipPathAroundYAxis:closedIndexFingerTipPath];
+        }
     }
     return self;
 }
@@ -188,5 +200,15 @@
     block();
     [CATransaction commit];
 }
+
+
+
+-(void) flipPathAroundYAxis:(UIBezierPath*)path{
+    [path applyTransform:CGAffineTransformMakeTranslation(-boundingBox.size.width/2 - boundingBox.origin.x, 0)];
+    [path applyTransform:CGAffineTransformMakeScale(-1, 1)];
+    [path applyTransform:CGAffineTransformMakeTranslation(boundingBox.size.width/2 + boundingBox.origin.x, 0)];
+    
+}
+
 
 @end
