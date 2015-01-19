@@ -107,11 +107,6 @@ static MMVector* initialVector;
             CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
             leftHandLayer.position = finalLocation;
         }];
-
-
-        [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSLog(@"start pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
-        }];
     }
 }
 
@@ -137,9 +132,6 @@ static MMVector* initialVector;
             leftHandLayer.position = finalLocation;
 
             leftHandLayer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
-        }];
-        [touches enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            NSLog(@"continue pan: %f %f", [obj locationInView:self.window].x, [obj locationInView:self.window].y);
         }];
     }
 }

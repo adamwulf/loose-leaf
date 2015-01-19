@@ -25,6 +25,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
 #import "MMSilhouetteView.h"
+#import "Constants.h"
 
 
 @implementation MMAppDelegate{
@@ -57,7 +58,7 @@
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
                                                         [MMAppDelegate userID], kMPID, nil]];
     
-    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    [Crashlytics startWithAPIKey:kCrashlyticsAPIKey];
     [[Crashlytics sharedInstance] setDelegate:self];
 
     [[NSThread mainThread] performBlock:^{
