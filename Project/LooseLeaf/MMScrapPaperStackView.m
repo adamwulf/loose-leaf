@@ -907,7 +907,12 @@ int skipAll = NO;
             }
         }
         
-        
+        if(gesture.state == UIGestureRecognizerStateBegan){
+            [silhouette startPanningObject:gesture.scrap withTouches:gesture.validTouches];
+        }else{
+            [silhouette continuePanningObject:gesture.scrap withTouches:gesture.validTouches];
+        }
+
         [self isBeginningToPanAndScaleScrapWithTouches:gesture.validTouches];
     }
     
@@ -1051,6 +1056,7 @@ int skipAll = NO;
         }
     }
     if(scrapViewIfFinished){
+        [silhouette endPanningObject:scrapViewIfFinished];
         [self finishedPanningAndScalingScrap:scrapViewIfFinished];
     }
 }
@@ -1518,9 +1524,9 @@ int skipAll = NO;
 
     
     if(beginning){
-        [silhouette startPanningPage:page withTouches:touches];
+        [silhouette startPanningObject:page withTouches:touches];
     }else{
-        [silhouette continuePanningPage:page withTouches:touches];
+        [silhouette continuePanningObject:page withTouches:touches];
     }
     
     return ret;
@@ -1531,7 +1537,7 @@ int skipAll = NO;
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
     
-    [silhouette endPanningPage:page];
+    [silhouette endPanningObject:page];
 }
 
 -(void) setButtonsVisible:(BOOL)visible{

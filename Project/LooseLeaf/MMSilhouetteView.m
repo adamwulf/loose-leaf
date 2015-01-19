@@ -17,14 +17,15 @@
 #import "NSThread+BlockAdditions.h"
 #import "UITouch+Distance.h"
 #import "MMVector.h"
+#import "MMShadowHand.h"
 
 @implementation MMSilhouetteView{
     MMDrawingGestureSilhouette* pointerFingerHelper;
     MMLeftTwoFingerPanSilhouette* leftTwoFingerHelper;
     MMRightTwoFingerPanSilhouette* rightTwoFingerHelper;
-    UISlider* slider;
-    CAShapeLayer* rightHandLayer;
-    CAShapeLayer* leftHandLayer;
+//    UISlider* slider;
+    MMShadowHand* rightHandLayer;
+    MMShadowHand* leftHandLayer;
 }
 
 
@@ -34,27 +35,15 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         
-        
-        rightHandLayer = [CAShapeLayer layer];
-        rightHandLayer.opacity = .5;
-        rightHandLayer.anchorPoint = CGPointZero;
-        rightHandLayer.position = CGPointZero;
-        rightHandLayer.backgroundColor = [UIColor blackColor].CGColor;
-        
-        leftHandLayer = [CAShapeLayer layer];
-        leftHandLayer.opacity = .5;
-        leftHandLayer.anchorPoint = CGPointZero;
-        leftHandLayer.position = CGPointZero;
-        leftHandLayer.backgroundColor = [UIColor blackColor].CGColor;
-        leftHandLayer.borderColor = [UIColor redColor].CGColor;
-        leftHandLayer.borderWidth = 2;
+        leftHandLayer = [[MMShadowHand alloc] initForRightHand:NO forView:self.window];
+        rightHandLayer = [[MMShadowHand alloc] initForRightHand:YES forView:self.window];
         
         
-        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
-        slider.value = 1;
-        slider.minimumValue = 0;
-        slider.maximumValue = 1;
-        [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+//        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
+//        slider.value = 1;
+//        slider.minimumValue = 0;
+//        slider.maximumValue = 1;
+//        [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
         
 //        [[NSThread mainThread] performBlock:^{
 //            [self.window addSubview:slider];
@@ -66,20 +55,20 @@
         rightTwoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
         
         
-        [self.layer addSublayer:leftHandLayer];
-        [self.layer addSublayer:rightHandLayer];
+        [self.layer addSublayer:leftHandLayer.layer];
+        [self.layer addSublayer:rightHandLayer.layer];
     }
     return self;
 }
 
--(void) sliderValueChanged:(UISlider*)_slider{
-    [leftTwoFingerHelper openTo:slider.value];
-    [rightTwoFingerHelper openTo:slider.value];
-    
-    [self preventCALayerImplicitAnimation:^{
-        leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
-    }];
-}
+//-(void) sliderValueChanged:(UISlider*)_slider{
+//    [leftTwoFingerHelper openTo:slider.value];
+//    [rightTwoFingerHelper openTo:slider.value];
+//    
+//    [self preventCALayerImplicitAnimation:^{
+//        leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
+//    }];
+//}
 
 
 
@@ -88,89 +77,28 @@
 
 static MMVector* initialVector;
 
--(void) startPanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
-    leftHandLayer.opacity = .5;
-    if([touches count] >= 2){
-        CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
-        initialVector = [MMVector vectorWithPoint:[[touches firstObject] locationInView:self.window]
-                                         andPoint:[[touches lastObject] locationInView:self.window]];
-        [leftTwoFingerHelper setFingerDistance:distance];
-        [self preventCALayerImplicitAnimation:^{
-            leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
-
-            UITouch* touch = [touches firstObject];
-            if([[touches lastObject] locationInView:self].x > [touch locationInView:self].x){
-                touch = [touches lastObject];
-            }
-            CGPoint locationOfTouch = [touch locationInView:self.window];
-            CGPoint offset = [leftTwoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
-            CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-            leftHandLayer.position = finalLocation;
-        }];
-    }
+-(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
+    [leftHandLayer startPanningObject:obj withTouches:touches];
 }
 
--(void) continuePanningPage:(MMPaperView*)page withTouches:(NSArray*)touches{
-    if([touches count] >= 2){
-        MMVector* currVector = [MMVector vectorWithPoint:[[touches firstObject] locationInView:self.window]
-                                         andPoint:[[touches lastObject] locationInView:self.window]];
-        CGFloat theta = [initialVector angleBetween:currVector];
-        CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
-        [leftTwoFingerHelper setFingerDistance:distance];
-        [self preventCALayerImplicitAnimation:^{
-            leftHandLayer.affineTransform = CGAffineTransformIdentity;
-            UIBezierPath* handPath = [leftTwoFingerHelper pathForTouches:nil];
-            leftHandLayer.path = handPath.CGPath;
-            
-            UITouch* touch = [touches firstObject];
-            if([[touches lastObject] locationInView:self].x > [touch locationInView:self].x){
-                touch = [touches lastObject];
-            }
-            CGPoint locationOfTouch = [touch locationInView:self.window];
-            CGPoint offset = [leftTwoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
-            CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-            leftHandLayer.position = finalLocation;
-
-            leftHandLayer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
-        }];
-    }
+-(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
+    [leftHandLayer continuePanningObject:obj withTouches:touches];
 }
 
-
-
-
--(void) endPanningPage:(MMPaperView*)page{
-    NSLog(@"end pan");
-    leftHandLayer.opacity = 0;
+-(void) endPanningObject:(id)obj{
+    [leftHandLayer endPanningObject:obj];
 }
-
-
 
 #pragma mark - Drawing Events
 
 -(void) startDrawingAtTouch:(UITouch*)touch{
-    [self continueDrawingAtTouch:touch];
-    rightHandLayer.opacity = .5;
-    
-    [self preventCALayerImplicitAnimation:^{
-        rightHandLayer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
-        CGPoint locationOfTouch = [touch locationInView:self.window];
-        CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
-        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-        rightHandLayer.position = finalLocation;
-    }];
+    [leftHandLayer startDrawingAtTouch:touch];
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{
-    [self preventCALayerImplicitAnimation:^{
-        rightHandLayer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
-        CGPoint locationOfTouch = [touch locationInView:self.window];
-        CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
-        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-        rightHandLayer.position = finalLocation;
-    }];
+    [leftHandLayer continueDrawingAtTouch:touch];
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{
-    rightHandLayer.opacity = 0;
+    [leftHandLayer endDrawingAtTouch:touch];
 }
 
 

@@ -221,6 +221,7 @@
 		66684B46182DACAE005A27B4 /* DrawKit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B45182DACAE005A27B4 /* DrawKit.license */; };
 		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
 		66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */; };
+		666A81E51A6D933200B6B639 /* MMShadowHand.m in Sources */ = {isa = PBXBuildFile; fileRef = 666A81E41A6D933200B6B639 /* MMShadowHand.m */; };
 		666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E252F18F5D9F100C17295 /* MMFaceButton.m */; };
 		666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253118F5DDF100C17295 /* clearphotoalbum.png */; };
 		666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */; };
@@ -822,6 +823,8 @@
 		66684B45182DACAE005A27B4 /* DrawKit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrawKit.license; sourceTree = "<group>"; };
 		66684B47182DAD05005A27B4 /* 2Geom.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2Geom.license; sourceTree = "<group>"; };
 		66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImageRoundedCorner.license; sourceTree = "<group>"; };
+		666A81E31A6D933200B6B639 /* MMShadowHand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowHand.h; sourceTree = "<group>"; };
+		666A81E41A6D933200B6B639 /* MMShadowHand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowHand.m; sourceTree = "<group>"; };
 		666E252E18F5D9F100C17295 /* MMFaceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFaceButton.h; sourceTree = "<group>"; };
 		666E252F18F5D9F100C17295 /* MMFaceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFaceButton.m; sourceTree = "<group>"; };
 		666E253118F5DDF100C17295 /* clearphotoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearphotoalbum.png; sourceTree = "<group>"; };
@@ -2475,6 +2478,8 @@
 		66D0A8C21A6453E80003BBF7 /* Silhouette */ = {
 			isa = PBXGroup;
 			children = (
+				666A81E31A6D933200B6B639 /* MMShadowHand.h */,
+				666A81E41A6D933200B6B639 /* MMShadowHand.m */,
 				66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */,
 				66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */,
 				66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */,
@@ -3385,6 +3390,7 @@
 				66E1010619ECDD6C006E7C15 /* MMPresentationWindow.m in Sources */,
 				660116F819ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m in Sources */,
 				66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */,
+				666A81E51A6D933200B6B639 /* MMShadowHand.m in Sources */,
 				6634855B19DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m in Sources */,
 				667C6364199FED6E00E93CD6 /* MMPrintShareItem.m in Sources */,
 				667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */,
