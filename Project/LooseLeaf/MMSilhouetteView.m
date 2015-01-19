@@ -32,8 +32,8 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         
-        leftHand = [[MMShadowHand alloc] initForRightHand:NO forView:self.window];
-        rightHand = [[MMShadowHand alloc] initForRightHand:YES forView:self.window];
+        leftHand = [[MMShadowHand alloc] initForRightHand:NO forView:self];
+        rightHand = [[MMShadowHand alloc] initForRightHand:YES forView:self];
         
         
 //        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
@@ -62,6 +62,21 @@
 //    }];
 //}
 
+
+
+#pragma mark - Panning a Page
+
+-(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
+    [rightHand startBezelingInFromRight:fromRight withTouches:touches];
+}
+
+-(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
+    [rightHand continueBezelingInFromRight:fromRight withTouches:touches];
+}
+
+-(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
+    [rightHand endBezelingInFromRight:fromRight withTouches:touches];
+}
 
 
 #pragma mark - Panning a Page

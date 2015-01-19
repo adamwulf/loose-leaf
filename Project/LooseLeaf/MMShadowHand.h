@@ -15,6 +15,11 @@
 
 -(id) initForRightHand:(BOOL)isRight forView:(UIView*)relativeView;
 
+// bezel
+-(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+-(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+-(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+
 // panning a page
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches;
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches;

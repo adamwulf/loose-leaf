@@ -12,6 +12,10 @@
 
 @interface MMSilhouetteView : UIView
 
+// bezel
+-(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+-(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+-(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
 
 // panning a page
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches;

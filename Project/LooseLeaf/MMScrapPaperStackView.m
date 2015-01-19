@@ -788,6 +788,15 @@ int skipAll = NO;
         [self forceScrapToScrapContainerDuringGesture];
         [super isBezelingInLeftWithGesture:bezelGesture];
     }
+    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
+        [silhouette startBezelingInFromRight:NO withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged){
+        [silhouette continueBezelingInFromRight:NO withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
+             bezelGesture.subState == UIGestureRecognizerStateCancelled ||
+             bezelGesture.subState == UIGestureRecognizerStateFailed){
+        [silhouette endBezelingInFromRight:NO withTouches:bezelGesture.touches];
+    }
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
@@ -795,6 +804,15 @@ int skipAll = NO;
        bezelGesture.subState != UIGestureRecognizerStateFailed){
         [self forceScrapToScrapContainerDuringGesture];
         [super isBezelingInRightWithGesture:bezelGesture];
+    }
+    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
+        [silhouette startBezelingInFromRight:YES withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged){
+        [silhouette continueBezelingInFromRight:YES withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
+             bezelGesture.subState == UIGestureRecognizerStateCancelled ||
+             bezelGesture.subState == UIGestureRecognizerStateFailed){
+        [silhouette endBezelingInFromRight:YES withTouches:bezelGesture.touches];
     }
 }
 
