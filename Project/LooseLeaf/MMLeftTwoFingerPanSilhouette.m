@@ -18,7 +18,9 @@
 
 -(id) init{
     if(self = [super init]){
-        
+        boundingBox = CGRectMake(0, 0, 100, 300);
+        boundingBox = CGRectApplyAffineTransform(boundingBox, CGAffineTransformMakeScale(4, 4));
+
         [self initPaths];
         lastInterpolatedPath = openPath;
     }
@@ -95,7 +97,7 @@
 
 -(void) initPaths{
     
-    CGRect frame = CGRectMake(0, 0, 400, 1200);
+    CGRect frame = boundingBox;
     
     openMiddleFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor((CGRectGetWidth(frame) - 7) * 0.34891 - 0.03) + 0.53, CGRectGetMinY(frame) + floor((CGRectGetHeight(frame) - 7) * 0.04132 - 0.39) + 0.89, 7, 7)];
     openIndexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + floor((CGRectGetWidth(frame) - 7) * 0.84662 - 0.43) + 0.93, CGRectGetMinY(frame) + floor((CGRectGetHeight(frame) - 7) * 0.07063 + 0.2) + 0.3, 7, 7)];

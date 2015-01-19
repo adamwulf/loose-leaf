@@ -1,26 +1,21 @@
 //
-//  MMRightTwoFingerPanSilhouette.m
+//  MMLeftDrawingGestureSilhouette.m
 //  LooseLeaf
 //
-//  Created by Adam Wulf on 1/15/15.
+//  Created by Adam Wulf on 1/19/15.
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMRightTwoFingerPanSilhouette.h"
+#import "MMLeftDrawingGestureSilhouette.h"
 
-@implementation MMRightTwoFingerPanSilhouette
+@implementation MMLeftDrawingGestureSilhouette
+
 
 -(id) init{
     if(self = [super init]){
         // transform paths
-        
-        [self flipPathAroundYAxis:openPath];
-        [self flipPathAroundYAxis:closedPath];
-
-        [self flipPathAroundYAxis:openMiddleFingerTipPath];
-        [self flipPathAroundYAxis:openIndexFingerTipPath];
-        [self flipPathAroundYAxis:closedMiddleFingerTipPath];
-        [self flipPathAroundYAxis:closedIndexFingerTipPath];
+        [self flipPathAroundYAxis:pointerFingerPath];
+        [self flipPathAroundYAxis:indexFingerTipPath];
     }
     return self;
 }
@@ -29,7 +24,7 @@
     [path applyTransform:CGAffineTransformMakeTranslation(-boundingBox.size.width/2 - boundingBox.origin.x, 0)];
     [path applyTransform:CGAffineTransformMakeScale(-1, 1)];
     [path applyTransform:CGAffineTransformMakeTranslation(boundingBox.size.width/2 + boundingBox.origin.x, 0)];
-
+    
 }
 
 @end

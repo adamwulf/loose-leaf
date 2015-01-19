@@ -7,7 +7,7 @@
 //
 
 #import "MMSilhouetteView.h"
-#import "MMDrawingGestureSilhouette.h"
+#import "MMRightDrawingGestureSilhouette.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "UIView+Debug.h"
@@ -20,7 +20,7 @@
 #import "MMShadowHand.h"
 
 @implementation MMSilhouetteView{
-    MMDrawingGestureSilhouette* pointerFingerHelper;
+    MMRightDrawingGestureSilhouette* pointerFingerHelper;
     MMLeftTwoFingerPanSilhouette* leftTwoFingerHelper;
     MMRightTwoFingerPanSilhouette* rightTwoFingerHelper;
 //    UISlider* slider;
@@ -50,7 +50,7 @@
 //        } afterDelay:.3];
         
         // setup hand path
-        pointerFingerHelper = [[MMDrawingGestureSilhouette alloc] init];
+        pointerFingerHelper = [[MMRightDrawingGestureSilhouette alloc] init];
         leftTwoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
         rightTwoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
         

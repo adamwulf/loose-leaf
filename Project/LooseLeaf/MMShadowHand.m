@@ -9,10 +9,10 @@
 #import "MMShadowHand.h"
 #import "MMVector.h"
 #import "UITouch+Distance.h"
-#import "MMDrawingGestureSilhouette.h"
+#import "MMRightDrawingGestureSilhouette.h"
 #import "MMLeftTwoFingerPanSilhouette.h"
 #import "MMRightTwoFingerPanSilhouette.h"
-
+#import "MMLeftDrawingGestureSilhouette.h"
 
 @implementation MMShadowHand{
     UIView* relativeView;
@@ -22,7 +22,7 @@
     id relatedObject;
     MMVector* initialVector;
     
-    MMDrawingGestureSilhouette* pointerFingerHelper;
+    MMRightDrawingGestureSilhouette* pointerFingerHelper;
     MMLeftTwoFingerPanSilhouette* twoFingerHelper;
 }
 
@@ -41,10 +41,12 @@
         layer.position = CGPointZero;
         layer.backgroundColor = [UIColor blackColor].CGColor;
 
-        pointerFingerHelper = [[MMDrawingGestureSilhouette alloc] init];
+        
         if(isRight){
+            pointerFingerHelper = [[MMRightDrawingGestureSilhouette alloc] init];
             twoFingerHelper = [[MMRightTwoFingerPanSilhouette alloc] init];
         }else{
+            pointerFingerHelper = [[MMLeftDrawingGestureSilhouette alloc] init];
             twoFingerHelper = [[MMLeftTwoFingerPanSilhouette alloc] init];
         }
     }
@@ -96,6 +98,7 @@
             }
             CGPoint locationOfTouch = [touch locationInView:relativeView];
             CGPoint offset = [twoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
+            NSLog(@"offset of index finger: %f %f", offset.x, offset.y);
             CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
             layer.position = finalLocation;
             
@@ -130,6 +133,7 @@
         layer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
         CGPoint locationOfTouch = [touch locationInView:relativeView];
         CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
+        NSLog(@"offset of index finger: %f %f", offset.x, offset.y);
         CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
         layer.position = finalLocation;
     }];

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface MMLeftTwoFingerPanSilhouette : NSObject{
+    CGRect boundingBox;
     UIBezierPath* openPath;
     UIBezierPath* closedPath;
 

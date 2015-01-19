@@ -222,6 +222,7 @@
 		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
 		66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */; };
 		666A81E51A6D933200B6B639 /* MMShadowHand.m in Sources */ = {isa = PBXBuildFile; fileRef = 666A81E41A6D933200B6B639 /* MMShadowHand.m */; };
+		666A81E81A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 666A81E71A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.m */; };
 		666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E252F18F5D9F100C17295 /* MMFaceButton.m */; };
 		666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253118F5DDF100C17295 /* clearphotoalbum.png */; };
 		666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */; };
@@ -374,7 +375,7 @@
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D0A8C51A6454030003BBF7 /* MMSilhouetteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */; };
-		66D0A8C81A6454600003BBF7 /* MMDrawingGestureSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */; };
+		66D0A8C81A6454600003BBF7 /* MMRightDrawingGestureSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMRightDrawingGestureSilhouette.m */; };
 		66D0A8CB1A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8CA1A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
 		66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D4FE6818DCA6950010CCBF /* Crashlytics.framework */; };
@@ -825,6 +826,8 @@
 		66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImageRoundedCorner.license; sourceTree = "<group>"; };
 		666A81E31A6D933200B6B639 /* MMShadowHand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowHand.h; sourceTree = "<group>"; };
 		666A81E41A6D933200B6B639 /* MMShadowHand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowHand.m; sourceTree = "<group>"; };
+		666A81E61A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftDrawingGestureSilhouette.h; sourceTree = "<group>"; };
+		666A81E71A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftDrawingGestureSilhouette.m; sourceTree = "<group>"; };
 		666E252E18F5D9F100C17295 /* MMFaceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFaceButton.h; sourceTree = "<group>"; };
 		666E252F18F5D9F100C17295 /* MMFaceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFaceButton.m; sourceTree = "<group>"; };
 		666E253118F5DDF100C17295 /* clearphotoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearphotoalbum.png; sourceTree = "<group>"; };
@@ -1135,8 +1138,8 @@
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
 		66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSilhouetteView.h; sourceTree = "<group>"; };
 		66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSilhouetteView.m; sourceTree = "<group>"; };
-		66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawingGestureSilhouette.h; sourceTree = "<group>"; };
-		66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawingGestureSilhouette.m; sourceTree = "<group>"; };
+		66D0A8C61A6454600003BBF7 /* MMRightDrawingGestureSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRightDrawingGestureSilhouette.h; sourceTree = "<group>"; };
+		66D0A8C71A6454600003BBF7 /* MMRightDrawingGestureSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRightDrawingGestureSilhouette.m; sourceTree = "<group>"; };
 		66D0A8C91A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftTwoFingerPanSilhouette.h; sourceTree = "<group>"; };
 		66D0A8CA1A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftTwoFingerPanSilhouette.m; sourceTree = "<group>"; };
 		66D33F4A15A6408A0044C809 /* MMShadowedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowedView.h; sourceTree = "<group>"; };
@@ -1951,6 +1954,21 @@
 			name = Licenses;
 			sourceTree = "<group>";
 		};
+		666A81E91A6D99E600B6B639 /* Path Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				66D0A8C61A6454600003BBF7 /* MMRightDrawingGestureSilhouette.h */,
+				66D0A8C71A6454600003BBF7 /* MMRightDrawingGestureSilhouette.m */,
+				666A81E61A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.h */,
+				666A81E71A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.m */,
+				66D0A8C91A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.h */,
+				66D0A8CA1A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.m */,
+				665B181B1A68974A0000E548 /* MMRightTwoFingerPanSilhouette.h */,
+				665B181C1A68974A0000E548 /* MMRightTwoFingerPanSilhouette.m */,
+			);
+			name = "Path Helpers";
+			sourceTree = "<group>";
+		};
 		666E254218F60DD100C17295 /* Helper Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2478,16 +2496,11 @@
 		66D0A8C21A6453E80003BBF7 /* Silhouette */ = {
 			isa = PBXGroup;
 			children = (
+				666A81E91A6D99E600B6B639 /* Path Helpers */,
 				666A81E31A6D933200B6B639 /* MMShadowHand.h */,
 				666A81E41A6D933200B6B639 /* MMShadowHand.m */,
 				66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */,
 				66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */,
-				66D0A8C61A6454600003BBF7 /* MMDrawingGestureSilhouette.h */,
-				66D0A8C71A6454600003BBF7 /* MMDrawingGestureSilhouette.m */,
-				66D0A8C91A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.h */,
-				66D0A8CA1A64684A0003BBF7 /* MMLeftTwoFingerPanSilhouette.m */,
-				665B181B1A68974A0000E548 /* MMRightTwoFingerPanSilhouette.h */,
-				665B181C1A68974A0000E548 /* MMRightTwoFingerPanSilhouette.m */,
 			);
 			name = Silhouette;
 			sourceTree = "<group>";
@@ -3332,6 +3345,7 @@
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				66627F8E1A02582F0064FAD3 /* MPNotificationViewController.m in Sources */,
 				665245621996DAB800C36609 /* AFHTTPRequestOperation.m in Sources */,
+				666A81E81A6D983400B6B639 /* MMLeftDrawingGestureSilhouette.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
 				663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */,
 				6652451E19958C4900C36609 /* MMSinaWeiboShareItem.m in Sources */,
@@ -3406,7 +3420,7 @@
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,
 				66627F931A02582F0064FAD3 /* MPObjectSerializer.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
-				66D0A8C81A6454600003BBF7 /* MMDrawingGestureSilhouette.m in Sources */,
+				66D0A8C81A6454600003BBF7 /* MMRightDrawingGestureSilhouette.m in Sources */,
 				6601170119ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m in Sources */,
 				66627F941A02582F0064FAD3 /* MPObjectSerializerConfig.m in Sources */,
 			);

@@ -6,21 +6,17 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMDrawingGestureSilhouette.h"
+#import "MMRightDrawingGestureSilhouette.h"
 
-@implementation MMDrawingGestureSilhouette{
-    UIBezierPath* pointerFingerPath;
-    CGPoint currentOffset;
-}
+@implementation MMRightDrawingGestureSilhouette
 
 @synthesize pointerFingerPath;
-@synthesize currentOffset;
 
 -(id) init{
     if(self = [super init]){
-        CGSize defSize = CGSizeMake(100, 227);
-        defSize = CGSizeApplyAffineTransform(defSize, CGAffineTransformMakeScale(4, 4));
-        [self scalePathToSize:defSize];
+        boundingBox = CGRectMake(0, 0, 100, 227);
+        boundingBox = CGRectApplyAffineTransform(boundingBox, CGAffineTransformMakeScale(4, 4));
+        [self scalePathToSize:boundingBox.size];
     }
     return self;
 }
@@ -30,7 +26,7 @@
 }
 
 -(CGPoint) locationOfIndexFingerInPathBoundsForTouch:(UITouch*)touch{
-    return self.currentOffset;
+    return indexFingerTipPath.center;
 }
 
 
@@ -70,7 +66,7 @@
     [pointerFingerPath addCurveToPoint: CGPointMake(CGRectGetMinX(handFrame) + 0.28066 * CGRectGetWidth(handFrame), CGRectGetMinY(handFrame) + 0.95491 * CGRectGetHeight(handFrame)) controlPoint1: CGPointMake(CGRectGetMinX(handFrame) + 0.28951 * CGRectGetWidth(handFrame), CGRectGetMinY(handFrame) + 0.81884 * CGRectGetHeight(handFrame)) controlPoint2: CGPointMake(CGRectGetMinX(handFrame) + 0.27939 * CGRectGetWidth(handFrame), CGRectGetMinY(handFrame) + 0.93627 * CGRectGetHeight(handFrame))];
     [pointerFingerPath closePath];
     
-    currentOffset = CGPointMake(21.0 / 100.0 * handFrame.size.width, 12.0 / 228.0 * handFrame.size.height);
+    indexFingerTipPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(handFrame) + floor((CGRectGetWidth(handFrame) - 7) * 0.18021 - 0.06) + 0.56, CGRectGetMinY(handFrame) + floor((CGRectGetHeight(handFrame) - 7) * 0.04176 + 0.45) + 0.05, 7, 7)];
 }
 
 @end

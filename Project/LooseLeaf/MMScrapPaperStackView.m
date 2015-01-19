@@ -2026,7 +2026,6 @@ int skipAll = NO;
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
     JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
     if(currentStroke){
-        NSLog(@"yep, i'm called: %f %f", [touch locationInView:self].x, [touch locationInView:self].y);
         [silhouette continueDrawingAtTouch:touch.touch];
     }
     [super willMoveStrokeWithTouch:touch];
