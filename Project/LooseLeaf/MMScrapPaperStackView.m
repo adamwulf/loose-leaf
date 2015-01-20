@@ -1517,6 +1517,21 @@ int skipAll = NO;
 
 #pragma mark - PolygonToolDelegate
 
+-(void) beginShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
+    [super beginShapeWithTouch:touch withTool:tool];
+    [silhouette startDrawingAtTouch:touch];
+}
+
+-(void) continueShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
+    [super continueShapeWithTouch:touch withTool:tool];
+    [silhouette startDrawingAtTouch:touch];
+}
+
+-(void) cancelShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
+    [super cancelShapeWithTouch:touch withTool:tool];
+    [silhouette endDrawingAtTouch:touch];
+}
+
 // when scissors complete, i need to drop all held scraps
 -(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     // only cancel scrap gestures
@@ -1525,6 +1540,7 @@ int skipAll = NO;
     [stretchScrapGesture cancel];
     // now cut with scissors
     [super finishShapeWithTouch:touch withTool:tool];
+    [silhouette endDrawingAtTouch:touch];
 }
 
 #pragma mark - MMPaperViewDelegate
