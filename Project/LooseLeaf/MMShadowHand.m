@@ -52,27 +52,7 @@
 -(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
     hasStartedToBezel = YES;
     layer.opacity = .5;
-    if([touches count] >= 2){
-        UITouch* indexTouch = [touches firstObject];
-        if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexTouch locationInView:relativeView].x){
-            indexTouch = [touches lastObject];
-        }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexTouch locationInView:relativeView].x){
-            indexTouch = [touches lastObject];
-        }
-        UITouch* otherTouch = [touches firstObject] == indexTouch ? [touches lastObject] : [touches firstObject];
-        CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
-        initialVector = [MMVector vectorWithPoint:[indexTouch locationInView:relativeView]
-                                         andPoint:[otherTouch locationInView:relativeView]];
-        [twoFingerHelper setFingerDistance:distance];
-        [self preventCALayerImplicitAnimation:^{
-            layer.path = [twoFingerHelper pathForTouches:nil].CGPath;
-            
-            CGPoint locationOfTouch = [indexTouch locationInView:relativeView];
-            CGPoint offset = [twoFingerHelper locationOfIndexFingerInPathBounds];
-            CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-            layer.position = finalLocation;
-        }];
-    }
+    [self continueBezelingInFromRight:fromRight withTouches:touches];
 }
 
 -(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
@@ -80,44 +60,41 @@
         [self startBezelingInFromRight:fromRight withTouches:touches];
         return;
     }
-    UITouch* indexTouch = [touches firstObject];
-    if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexTouch locationInView:relativeView].x){
-        indexTouch = [touches lastObject];
-    }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexTouch locationInView:relativeView].x){
-        indexTouch = [touches lastObject];
+    UITouch* indexFingerTouch = [touches firstObject];
+    if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexFingerTouch locationInView:relativeView].x){
+        indexFingerTouch = [touches lastObject];
+    }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexFingerTouch locationInView:relativeView].x){
+        indexFingerTouch = [touches lastObject];
     }
-    UITouch* otherTouch = [touches firstObject] == indexTouch ? [touches lastObject] : [touches firstObject];
-    
-    MMVector* currVector = [MMVector vectorWithPoint:[indexTouch locationInView:relativeView]
-                                            andPoint:[otherTouch locationInView:relativeView]];
-    CGFloat theta = [initialVector angleBetween:currVector];
-    CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
+    UITouch* middleFingerTouch = [touches firstObject] == indexFingerTouch ? [touches lastObject] : [touches firstObject];
+
+    CGPoint indexFingerLocation = [indexFingerTouch locationInView:relativeView];
+    CGPoint middleFingerLocation = [middleFingerTouch locationInView:relativeView];
     if([touches count] == 1){
-        // we only have the index finger on screen,
-        // so pretend the middle finger is at the edge
-        theta = 0;
-        if(isRight){
-            CGFloat widthOfView = relativeView.bounds.size.width;
-            CGFloat xOfTouch = [[touches firstObject] locationInView:relativeView].x;
-            distance = widthOfView - xOfTouch;
+        // only 1 touch, so we need to fake the middle finger
+        // being off the edge of the screen
+        if(fromRight){
+            if(isRight){
+                // find the right-hand edge of the screen
+                middleFingerLocation = CGPointMake(relativeView.bounds.size.width + 15, indexFingerLocation.y);
+            }else{
+                // find the right-hand edge of the screen
+                indexFingerLocation = CGPointMake(relativeView.bounds.size.width + 15, indexFingerLocation.y);
+            }
         }else{
-            distance = [[touches firstObject] locationInView:relativeView].x;
+            if(isRight){
+                // find the left-hand edge of the screen
+                indexFingerLocation = CGPointMake(-15, indexFingerLocation.y);
+            }else{
+                // find the left-hand edge of the screen
+                middleFingerLocation = CGPointMake(-15, indexFingerLocation.y);
+            }
         }
-        distance += 15;
     }
-    [twoFingerHelper setFingerDistance:distance];
-    [self preventCALayerImplicitAnimation:^{
-        layer.affineTransform = CGAffineTransformIdentity;
-        UIBezierPath* handPath = [twoFingerHelper pathForTouches:nil];
-        layer.path = handPath.CGPath;
-        
-        CGPoint locationOfTouch = [indexTouch locationInView:relativeView];
-        CGPoint offset = [twoFingerHelper locationOfIndexFingerInPathBounds];
-        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-        layer.position = finalLocation;
-        
-        layer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
-    }];
+    
+    [self continuePanningWithIndexFinger:indexFingerLocation
+                         andMiddleFinger:middleFingerLocation];
+    
 }
 
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
