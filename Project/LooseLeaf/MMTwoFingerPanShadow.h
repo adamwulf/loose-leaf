@@ -23,7 +23,7 @@
 -(id) initForRightHand:(BOOL)isRight;
 
 -(UIBezierPath*) pathForTouches:(NSArray*)touches;
--(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSArray*)touches;
+-(CGPoint) locationOfIndexFingerInPathBounds;
 
 -(void) setFingerDistance:(CGFloat)distance;
 

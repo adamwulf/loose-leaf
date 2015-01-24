@@ -49,7 +49,7 @@
     return lastInterpolatedPath;
 }
 
--(CGPoint) locationOfIndexFingerInPathBoundsForTouches:(NSArray*)touches{
+-(CGPoint) locationOfIndexFingerInPathBounds{
     return lastInterpolatedIndexFinger;
 }
 
