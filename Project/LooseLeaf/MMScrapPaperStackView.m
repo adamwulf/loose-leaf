@@ -1515,6 +1515,32 @@ int skipAll = NO;
     return (MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate;
 }
 
+#pragma mark - MMLongPressFromListViewGestureRecognizer - MMPanAndPinchFromListViewGestureRecognizer
+
+-(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
+    [super didPickUpAPageInListView:gesture];
+    if([gesture.validTouches count] == 2){
+        if(gesture.state == UIGestureRecognizerStateBegan){
+            [silhouette startPanningObject:gesture.view withTouches:gesture.validTouches];
+        }else if(gesture.state == UIGestureRecognizerStateChanged){
+            [silhouette continuePanningObject:gesture.view withTouches:gesture.validTouches];
+        }else if(gesture.state == UIGestureRecognizerStateEnded ||
+                 gesture.state == UIGestureRecognizerStateCancelled){
+            [silhouette endPanningObject:gesture.view];
+        }
+    }else{
+        if(gesture.state == UIGestureRecognizerStateBegan){
+            [silhouette startDrawingAtTouch:[gesture.validTouches firstObject]];
+        }else if(gesture.state == UIGestureRecognizerStateChanged){
+            [silhouette continueDrawingAtTouch:[gesture.validTouches firstObject]];
+        }else if(gesture.state == UIGestureRecognizerStateEnded ||
+                 gesture.state == UIGestureRecognizerStateCancelled){
+            [silhouette endDrawingAtTouch:[gesture.validTouches firstObject]];
+        }
+    }
+}
+
+
 #pragma mark - PolygonToolDelegate
 
 -(void) beginShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{

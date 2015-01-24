@@ -270,6 +270,7 @@
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
+		6692B8A51A74606800CE73EF /* NSSet+Array.m in Sources */ = {isa = PBXBuildFile; fileRef = 6692B8A41A74606800CE73EF /* NSSet+Array.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
 		6693296A1595A87E0033E557 /* MMMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MMMapButton.m */; };
@@ -419,7 +420,7 @@
 		66EDE44319B1011800A5623B /* minizip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66EDE44219B1011800A5623B /* minizip.license */; };
 		66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EDE47719B1039000A5623B /* ZipArchive.framework */; };
 		66EDE48619B3BD6C00A5623B /* MMCloudKitImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */; };
-		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
 		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
 		66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AA19C393DE00C1F696 /* ios-settings-icon.png */; };
@@ -903,6 +904,8 @@
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
 		6690EF1617CC6F710009A0AC /* MMDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDotView.m; sourceTree = "<group>"; };
+		6692B8A31A74606800CE73EF /* NSSet+Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+Array.h"; sourceTree = "<group>"; };
+		6692B8A41A74606800CE73EF /* NSSet+Array.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+Array.m"; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
 		6693295915958A950033E557 /* MMShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowManager.m; sourceTree = "<group>"; };
 		66932963159593C00033E557 /* MMRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotationManager.h; sourceTree = "<group>"; };
@@ -1367,6 +1370,8 @@
 				668D19DB19F8572700A65DCF /* UIApplication+Version.m */,
 				665B181E1A68D7370000E548 /* UITouch+Distance.h */,
 				665B181F1A68D7370000E548 /* UITouch+Distance.m */,
+				6692B8A31A74606800CE73EF /* NSSet+Array.h */,
+				6692B8A41A74606800CE73EF /* NSSet+Array.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -3263,6 +3268,7 @@
 				664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */,
 				6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */,
 				66A790BC196899980037F01A /* MMUndoRedoPageItem.m in Sources */,
+				6692B8A51A74606800CE73EF /* NSSet+Array.m in Sources */,
 				66BEBFFA19BD6AAA0032D30C /* MMProgressedImageViewButton.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66E2241619D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m in Sources */,

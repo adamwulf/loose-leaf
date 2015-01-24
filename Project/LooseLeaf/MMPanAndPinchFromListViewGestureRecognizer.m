@@ -42,6 +42,10 @@
     return self;
 }
 
+-(NSArray*) validTouches{
+    return [validTouches array];
+}
+
 #pragma mark - Touch Methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

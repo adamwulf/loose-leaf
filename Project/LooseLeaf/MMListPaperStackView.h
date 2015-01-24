@@ -71,4 +71,6 @@
 
 -(void) deletePage:(MMPaperView*)page;
 
+-(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
+
 @end
