@@ -18,15 +18,15 @@
     
     BOOL isRight;
     CAShapeLayer* layer;
-    id relatedObject;
     MMVector* initialVector;
     
     MMDrawingGestureShadow* pointerFingerHelper;
     MMTwoFingerPanShadow* twoFingerHelper;
+    
+    BOOL hasStartedToBezel;
 }
 
 @synthesize layer;
-@synthesize relatedObject;
 
 
 -(id) initForRightHand:(BOOL)_isRight forView:(UIView*)_relativeView{
@@ -50,7 +50,7 @@
 #pragma mark - Bezeling Pages
 
 -(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    relatedObject = [NSNull null];
+    hasStartedToBezel = YES;
     layer.opacity = .5;
     if([touches count] >= 2){
         UITouch* indexTouch = [touches firstObject];
@@ -76,7 +76,7 @@
 }
 
 -(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    if(!relatedObject){
+    if(!hasStartedToBezel){
         [self startBezelingInFromRight:fromRight withTouches:touches];
         return;
     }
@@ -87,8 +87,6 @@
         indexTouch = [touches lastObject];
     }
     UITouch* otherTouch = [touches firstObject] == indexTouch ? [touches lastObject] : [touches firstObject];
-    
-    
     
     MMVector* currVector = [MMVector vectorWithPoint:[indexTouch locationInView:relativeView]
                                             andPoint:[otherTouch locationInView:relativeView]];
@@ -124,20 +122,21 @@
 }
 
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    layer.opacity = 0;
-    relatedObject = nil;
+    if(hasStartedToBezel){
+        layer.opacity = 0;
+        hasStartedToBezel = NO;
+    }
 }
 
 #pragma mark - Panning a Page
 
 
--(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    relatedObject = obj;
+-(void) startPanningWithTouches:(NSArray*)touches{
     layer.opacity = .5;
-    [self continuePanningObject:obj withTouches:touches];
+    [self continuePanningWithTouches:touches];
 }
 
--(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
+-(void) continuePanningWithTouches:(NSArray*)touches{
     if([touches count] >= 2){
         CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
         [twoFingerHelper setFingerDistance:distance];
@@ -163,9 +162,8 @@
     }
 }
 
--(void) endPanningObject:(id)obj{
+-(void) endPanning{
     layer.opacity = 0;
-    relatedObject = nil;
 }
 
 
@@ -194,9 +192,7 @@
     }];
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{
-    if(!relatedObject){
-        layer.opacity = 0;
-    }
+    layer.opacity = 0;
 }
 
 

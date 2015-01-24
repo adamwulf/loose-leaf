@@ -1794,6 +1794,7 @@ int skipAll = NO;
     [panAndPinchScrapGesture setEnabled:YES];
     [panAndPinchScrapGesture2 setEnabled:YES];
     [super cancelledScalingReallySmall:page];
+    [silhouette endPanningObject:page];
 }
 
 
@@ -1807,6 +1808,7 @@ int skipAll = NO;
     [panAndPinchScrapGesture setEnabled:NO];
     [panAndPinchScrapGesture2 setEnabled:NO];
     [super finishedScalingReallySmall:page];
+    [silhouette endPanningObject:page];
 }
 
 -(void) finishedScalingBackToPageView:(MMPaperView *)page{

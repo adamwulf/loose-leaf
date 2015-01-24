@@ -21,9 +21,9 @@
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
 
 // panning a page
--(void) startPanningObject:(id)obj withTouches:(NSArray*)touches;
--(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches;
--(void) endPanningObject:(id)obj;
+-(void) startPanningWithTouches:(NSArray*)touches;
+-(void) continuePanningWithTouches:(NSArray*)touches;
+-(void) endPanning;
 
 // drawing
 -(void) startDrawingAtTouch:(UITouch*)touch;
