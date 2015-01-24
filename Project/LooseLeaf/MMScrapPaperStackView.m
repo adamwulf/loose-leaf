@@ -1794,7 +1794,6 @@ int skipAll = NO;
     [panAndPinchScrapGesture setEnabled:YES];
     [panAndPinchScrapGesture2 setEnabled:YES];
     [super cancelledScalingReallySmall:page];
-    [silhouette endPanningObject:page];
 }
 
 
