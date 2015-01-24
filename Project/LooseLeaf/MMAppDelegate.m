@@ -24,7 +24,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
-#import "MMSilhouetteView.h"
+#import "MMShadowHandView.h"
 #import "Constants.h"
 
 
@@ -84,7 +84,7 @@
     [self.window addSubview:blueDots];
 //    [self.window.layer setSpeed:0.1f];
     
-    MMSilhouetteView* silhouetteView = [[MMSilhouetteView alloc] initWithFrame:self.window.bounds];
+    MMShadowHandView* silhouetteView = [[MMShadowHandView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:silhouetteView];
     self.viewController.stackView.silhouette = silhouetteView;
 

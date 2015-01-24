@@ -136,31 +136,33 @@
     layer.opacity = .5;
     if([touches count] >= 2){
         CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
-        initialVector = [MMVector vectorWithPoint:[[touches firstObject] locationInView:relativeView]
-                                         andPoint:[[touches lastObject] locationInView:relativeView]];
+        initialVector = [MMVector vectorWithPoint:CGPointMake(0, 0)
+                                         andPoint:CGPointMake(1, 0)];
         [twoFingerHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
             layer.path = [twoFingerHelper pathForTouches:nil].CGPath;
             
-            UITouch* touch = [touches firstObject];
-            if(!isRight && [[touches lastObject] locationInView:relativeView].x > [touch locationInView:relativeView].x){
-                touch = [touches lastObject];
-            }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [touch locationInView:relativeView].x){
-                touch = [touches lastObject];
+            UITouch* indexFingerTouch = [touches firstObject];
+            if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexFingerTouch locationInView:relativeView].x){
+                indexFingerTouch = [touches lastObject];
+            }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexFingerTouch locationInView:relativeView].x){
+                indexFingerTouch = [touches lastObject];
             }
-            CGPoint locationOfTouch = [touch locationInView:relativeView];
+            UITouch* middleFingerTouch = [touches firstObject] == indexFingerTouch ? [touches lastObject] : [touches firstObject];
+            MMVector* currVector = [MMVector vectorWithPoint:[middleFingerTouch locationInView:relativeView]
+                                                    andPoint:[indexFingerTouch locationInView:relativeView]];
+            CGFloat theta = [initialVector angleBetween:currVector];
+            CGPoint locationOfTouch = [indexFingerTouch locationInView:relativeView];
             CGPoint offset = [twoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
             CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
             layer.position = finalLocation;
+            layer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
         }];
     }
 }
 
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
     if([touches count] >= 2){
-        MMVector* currVector = [MMVector vectorWithPoint:[[touches firstObject] locationInView:relativeView]
-                                                andPoint:[[touches lastObject] locationInView:relativeView]];
-        CGFloat theta = [initialVector angleBetween:currVector];
         CGFloat distance = [[touches firstObject] distanceToTouch:[touches lastObject]];
         [twoFingerHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
@@ -168,17 +170,21 @@
             UIBezierPath* handPath = [twoFingerHelper pathForTouches:nil];
             layer.path = handPath.CGPath;
             
-            UITouch* touch = [touches firstObject];
-            if(!isRight && [[touches lastObject] locationInView:relativeView].x > [touch locationInView:relativeView].x){
-                touch = [touches lastObject];
-            }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [touch locationInView:relativeView].x){
-                touch = [touches lastObject];
+            UITouch* indexFingerTouch = [touches firstObject];
+            if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexFingerTouch locationInView:relativeView].x){
+                indexFingerTouch = [touches lastObject];
+            }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexFingerTouch locationInView:relativeView].x){
+                indexFingerTouch = [touches lastObject];
             }
-            CGPoint locationOfTouch = [touch locationInView:relativeView];
+            UITouch* middleFingerTouch = [touches firstObject] == indexFingerTouch ? [touches lastObject] : [touches firstObject];
+            MMVector* currVector = [MMVector vectorWithPoint:[middleFingerTouch locationInView:relativeView]
+                                                    andPoint:[indexFingerTouch locationInView:relativeView]];
+            CGFloat theta = [initialVector angleBetween:currVector];
+            CGPoint locationOfTouch = [indexFingerTouch locationInView:relativeView];
             CGPoint offset = [twoFingerHelper locationOfIndexFingerInPathBoundsForTouches:touches];
             CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
             layer.position = finalLocation;
-            
+            NSLog(@"theta: %f", theta);
             layer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
         }];
     }

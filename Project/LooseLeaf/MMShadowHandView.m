@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSilhouetteView.h"
+#import "MMShadowHandView.h"
 #import "MMDrawingGestureShadow.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
@@ -18,7 +18,7 @@
 #import "MMVector.h"
 #import "MMShadowHand.h"
 
-@implementation MMSilhouetteView{
+@implementation MMShadowHandView{
     MMDrawingGestureShadow* pointerFingerHelper;
 //    UISlider* slider;
     MMShadowHand* rightHand;
@@ -67,30 +67,30 @@
 #pragma mark - Panning a Page
 
 -(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    [rightHand startBezelingInFromRight:fromRight withTouches:touches];
+    [leftHand startBezelingInFromRight:fromRight withTouches:touches];
 }
 
 -(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    [rightHand continueBezelingInFromRight:fromRight withTouches:touches];
+    [leftHand continueBezelingInFromRight:fromRight withTouches:touches];
 }
 
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    [rightHand endBezelingInFromRight:fromRight withTouches:touches];
+    [leftHand endBezelingInFromRight:fromRight withTouches:touches];
 }
 
 
 #pragma mark - Panning a Page
 
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    [rightHand startPanningObject:obj withTouches:touches];
+    [leftHand startPanningObject:obj withTouches:touches];
 }
 
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
-    [rightHand continuePanningObject:obj withTouches:touches];
+    [leftHand continuePanningObject:obj withTouches:touches];
 }
 
 -(void) endPanningObject:(id)obj{
-    [rightHand endPanningObject:obj];
+    [leftHand endPanningObject:obj];
 }
 
 #pragma mark - Drawing Events

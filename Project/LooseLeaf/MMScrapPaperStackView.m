@@ -37,7 +37,7 @@
 
 @implementation MMScrapPaperStackView{
     
-    __weak MMSilhouetteView* silhouette;
+    __weak MMShadowHandView* silhouette;
     MMScrapsInBezelContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support

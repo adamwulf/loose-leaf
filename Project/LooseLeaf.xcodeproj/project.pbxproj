@@ -372,7 +372,7 @@
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
-		66D0A8C51A6454030003BBF7 /* MMSilhouetteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */; };
+		66D0A8C51A6454030003BBF7 /* MMShadowHandView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C41A6454030003BBF7 /* MMShadowHandView.m */; };
 		66D0A8C81A6454600003BBF7 /* MMDrawingGestureShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMDrawingGestureShadow.m */; };
 		66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8CA1A64684A0003BBF7 /* MMTwoFingerPanShadow.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
@@ -1130,8 +1130,8 @@
 		66D0905415F7080F004D2CAF /* MMListAddPageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButton.h; sourceTree = "<group>"; };
 		66D0905515F70810004D2CAF /* MMListAddPageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListAddPageButton.m; sourceTree = "<group>"; };
 		66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListAddPageButtonDelegate.h; sourceTree = "<group>"; };
-		66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSilhouetteView.h; sourceTree = "<group>"; };
-		66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSilhouetteView.m; sourceTree = "<group>"; };
+		66D0A8C31A6454030003BBF7 /* MMShadowHandView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowHandView.h; sourceTree = "<group>"; };
+		66D0A8C41A6454030003BBF7 /* MMShadowHandView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowHandView.m; sourceTree = "<group>"; };
 		66D0A8C61A6454600003BBF7 /* MMDrawingGestureShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawingGestureShadow.h; sourceTree = "<group>"; };
 		66D0A8C71A6454600003BBF7 /* MMDrawingGestureShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawingGestureShadow.m; sourceTree = "<group>"; };
 		66D0A8C91A64684A0003BBF7 /* MMTwoFingerPanShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTwoFingerPanShadow.h; sourceTree = "<group>"; };
@@ -2483,16 +2483,16 @@
 			name = "Scrap Bubble";
 			sourceTree = "<group>";
 		};
-		66D0A8C21A6453E80003BBF7 /* Silhouette */ = {
+		66D0A8C21A6453E80003BBF7 /* Hand Shadow */ = {
 			isa = PBXGroup;
 			children = (
 				666A81E91A6D99E600B6B639 /* Path Helpers */,
 				666A81E31A6D933200B6B639 /* MMShadowHand.h */,
 				666A81E41A6D933200B6B639 /* MMShadowHand.m */,
-				66D0A8C31A6454030003BBF7 /* MMSilhouetteView.h */,
-				66D0A8C41A6454030003BBF7 /* MMSilhouetteView.m */,
+				66D0A8C31A6454030003BBF7 /* MMShadowHandView.h */,
+				66D0A8C41A6454030003BBF7 /* MMShadowHandView.m */,
 			);
-			name = Silhouette;
+			name = "Hand Shadow";
 			sourceTree = "<group>";
 		};
 		66DCFB7B1581BCED00B4918C = {
@@ -2582,7 +2582,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
-				66D0A8C21A6453E80003BBF7 /* Silhouette */,
+				66D0A8C21A6453E80003BBF7 /* Hand Shadow */,
 				668D19D319F772AA00A65DCF /* Tutorial Pages */,
 				66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */,
 				66B42FBD19955A2C005D8214 /* Share Sidebar */,
@@ -3109,7 +3109,7 @@
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
 				6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */,
 				66627F7A1A02582F0064FAD3 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,
-				66D0A8C51A6454030003BBF7 /* MMSilhouetteView.m in Sources */,
+				66D0A8C51A6454030003BBF7 /* MMShadowHandView.m in Sources */,
 				66627FA21A02582F0064FAD3 /* MPTypeDescription.m in Sources */,
 				6606674A193A8BC400C985E9 /* MMMemoryManager.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,

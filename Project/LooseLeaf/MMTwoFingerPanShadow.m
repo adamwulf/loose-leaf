@@ -10,6 +10,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import "MMVector.h"
 
 @implementation MMTwoFingerPanShadow{
     BOOL isRight;
@@ -57,6 +58,8 @@
     
     lastInterpolatedIndexFinger = CGPointMake(openPercent * openIndexFingerTipPath.center.x + (1-openPercent) * closedIndexFingerTipPath.center.x,
                                               openPercent * openIndexFingerTipPath.center.y + (1-openPercent) * closedIndexFingerTipPath.center.y);
+    CGPoint lastInterpolatedMiddleFinger = CGPointMake(openPercent * openMiddleFingerTipPath.center.x + (1-openPercent) * closedMiddleFingerTipPath.center.x,
+                                              openPercent * openMiddleFingerTipPath.center.y + (1-openPercent) * closedMiddleFingerTipPath.center.y);
     
     for(int i=0;i<[openPath elementCount];i++){
         CGPathElement openElement = [openPath elementAtIndex:i];
@@ -95,6 +98,18 @@
             [lastInterpolatedPath closePath];
         }
     }
+    
+    // this is the angle between the index finger and middle finger assuming the user
+    // has their hand at a perfect 90 deg to the screen
+    MMVector* initialFingerAngle = [MMVector vectorWithPoint:lastInterpolatedIndexFinger andPoint:lastInterpolatedMiddleFinger];
+    if(!isRight){
+        initialFingerAngle = [initialFingerAngle flip];
+    }
+    // right hand: -.17 to -.33
+    // left hand:  +.17 to +.33
+    CGFloat theta = -initialFingerAngle.angle;
+    CGPoint offset = lastInterpolatedIndexFinger;
+    [lastInterpolatedPath applyTransform:CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y)];
 }
 
 -(void) setFingerDistance:(CGFloat)idealDistance{

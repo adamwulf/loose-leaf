@@ -10,7 +10,7 @@
 #import "MMTouchDotGestureRecognizerDelegate.h"
 #import "MMPaperView.h"
 
-@interface MMSilhouetteView : UIView
+@interface MMShadowHandView : UIView
 
 // bezel
 -(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;

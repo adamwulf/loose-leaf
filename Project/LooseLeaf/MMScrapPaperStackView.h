@@ -15,13 +15,13 @@
 #import "MMExportablePaperView.h"
 #import "MMScrapViewOwnershipDelegate.h"
 #import "MMCloudKitImportExportView.h"
-#import "MMSilhouetteView.h"
+#import "MMShadowHandView.h"
 
 @interface MMScrapPaperStackView : MMEditablePaperStackView<MMScrapViewOwnershipDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMShareItemDelegate,MMCloudKitManagerDelegate>{
     __weak MMCloudKitImportExportView* cloudKitExportView;
 }
 
 @property (nonatomic, weak) MMCloudKitImportExportView* cloudKitExportView;
-@property (nonatomic, weak) MMSilhouetteView* silhouette;
+@property (nonatomic, weak) MMShadowHandView* silhouette;
 
 @end
