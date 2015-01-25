@@ -1519,7 +1519,7 @@ int skipAll = NO;
 
 -(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
     [super didPickUpAPageInListView:gesture];
-    if([gesture.validTouches count] == 2){
+    if([gesture isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]]){
         if(gesture.state == UIGestureRecognizerStateBegan){
             [silhouette startPanningObject:gesture.view withTouches:gesture.validTouches];
         }else if(gesture.state == UIGestureRecognizerStateChanged){

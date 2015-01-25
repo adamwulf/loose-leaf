@@ -103,19 +103,14 @@
 		6651CADB18775B3800A95F2F /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				6651CAD818775B1500A95F2F /* SYShape+Bezier.h */,
+				6651CAD918775B1500A95F2F /* SYShape+Bezier.m */,
+				6651CAE018775CA700A95F2F /* UIBezierPath+Description.h */,
+				6651CAE118775CA700A95F2F /* UIBezierPath+Description.m */,
 				6651CADC18775B5D00A95F2F /* UIColor+ColorWithHex.h */,
 				6651CADD18775B5D00A95F2F /* UIColor+ColorWithHex.m */,
 			);
 			name = Categories;
-			sourceTree = "<group>";
-		};
-		6651CAEF187760ED00A95F2F /* External */ = {
-			isa = PBXGroup;
-			children = (
-				6651CAD818775B1500A95F2F /* SYShape+Bezier.h */,
-				6651CAD918775B1500A95F2F /* SYShape+Bezier.m */,
-			);
-			name = External;
 			sourceTree = "<group>";
 		};
 		6693BB6218775521002898D6 = {
@@ -165,9 +160,7 @@
 		6693BB7418775521002898D6 /* LittleClipper */ = {
 			isa = PBXGroup;
 			children = (
-				6651CAEF187760ED00A95F2F /* External */,
 				6651CADB18775B3800A95F2F /* Categories */,
-				6693BB9F18775543002898D6 /* Categories */,
 				6693BBA418775543002898D6 /* ShapeFillerView */,
 				6693BBAB18775543002898D6 /* Paint Code */,
 				6693BBB218775543002898D6 /* View Controllers */,
@@ -193,16 +186,6 @@
 				6693BB7C18775521002898D6 /* LittleClipper-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		6693BB9F18775543002898D6 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				6651CAE018775CA700A95F2F /* UIBezierPath+Description.h */,
-				6651CAE118775CA700A95F2F /* UIBezierPath+Description.m */,
-			);
-			name = Categories;
-			path = ../../Project/LittleClipper;
 			sourceTree = "<group>";
 		};
 		6693BBA418775543002898D6 /* ShapeFillerView */ = {

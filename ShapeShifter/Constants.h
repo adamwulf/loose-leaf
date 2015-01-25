@@ -9,6 +9,7 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
+#define DebugLog NSLog
 
 #ifdef __cplusplus
 extern "C" {
