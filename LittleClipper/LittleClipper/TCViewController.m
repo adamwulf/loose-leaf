@@ -91,7 +91,6 @@
 
 -(void) resetData{
     shapeController = [[TCShapeController alloc] init];
-    [self rebuildShape:nil];
 }
 
 - (IBAction) rebuildShape:(id)sender
