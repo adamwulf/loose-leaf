@@ -23,40 +23,53 @@
     MMDrawingGestureShadow* pointerFingerHelper;
     MMTwoFingerPanShadow* twoFingerHelper;
     
-    BOOL hasStartedToBezel;
+    id heldObject;
+    BOOL isBezeling;
+    BOOL isPanning;
+    BOOL isDrawing;
 }
 
 @synthesize layer;
+@synthesize heldObject;
 
 
 -(id) initForRightHand:(BOOL)_isRight forView:(UIView*)_relativeView{
     if(self = [super init]){
+        // properties
         isRight = _isRight;
         relativeView = _relativeView;
         
+        // the layer that we'll use to show the hand
         layer = [CAShapeLayer layer];
         layer.opacity = .5;
         layer.anchorPoint = CGPointZero;
         layer.position = CGPointZero;
         layer.backgroundColor = [UIColor blackColor].CGColor;
 
-        
+        // path helpers
         pointerFingerHelper = [[MMDrawingGestureShadow alloc] initForRightHand:isRight];
         twoFingerHelper = [[MMTwoFingerPanShadow alloc] initForRightHand:isRight];
     }
     return self;
 }
 
+-(BOOL) isActive{
+    // return true if this hand is currently shown with
+    // a gesture
+    return isBezeling || isPanning || isDrawing;
+}
+
 #pragma mark - Bezeling Pages
 
 -(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    hasStartedToBezel = YES;
+    heldObject = nil;
+    isBezeling = YES;
     layer.opacity = .5;
     [self continueBezelingInFromRight:fromRight withTouches:touches];
 }
 
 -(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    if(!hasStartedToBezel){
+    if(!isBezeling){
         [self startBezelingInFromRight:fromRight withTouches:touches];
         return;
     }
@@ -91,28 +104,32 @@
             }
         }
     }
-    
     [self continuePanningWithIndexFinger:indexFingerLocation
                          andMiddleFinger:middleFingerLocation];
     
 }
 
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    if(hasStartedToBezel){
+    if(isBezeling){
         layer.opacity = 0;
-        hasStartedToBezel = NO;
+        isBezeling = NO;
     }
 }
 
 #pragma mark - Panning a Page
 
 
--(void) startPanningWithTouches:(NSArray*)touches{
+-(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
+    heldObject = obj;
+    isPanning = YES;
     layer.opacity = .5;
-    [self continuePanningWithTouches:touches];
+    [self continuePanningObject:obj withTouches:touches];
 }
 
--(void) continuePanningWithTouches:(NSArray*)touches{
+-(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
+    if(!isPanning){
+        [self startPanningObject:obj withTouches:touches];
+    }
     if([touches count] >= 2){
         UITouch* indexFingerTouch = [touches firstObject];
         if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexFingerTouch locationInView:relativeView].x){
@@ -127,8 +144,15 @@
     }
 }
 
--(void) endPanning{
-    layer.opacity = 0;
+-(void) endPanningObject:(id)obj{
+    if(obj != heldObject){
+        @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to stop holding different object than what's held." userInfo:nil];
+    }
+    if(isPanning){
+        isPanning = NO;
+        heldObject = nil;
+        layer.opacity = 0;
+    }
 }
 
 
@@ -136,18 +160,16 @@
 #pragma mark - Drawing Events
 
 -(void) startDrawingAtTouch:(UITouch*)touch{
+    heldObject = nil;
+    isDrawing = YES;
     [self continueDrawingAtTouch:touch];
     layer.opacity = .5;
-    
-    [self preventCALayerImplicitAnimation:^{
-        layer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
-        CGPoint locationOfTouch = [touch locationInView:relativeView];
-        CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
-        CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
-        layer.position = finalLocation;
-    }];
+    [self continueDrawingAtTouch:touch];
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{
+    if(!isDrawing){
+        [self startDrawingAtTouch:touch];
+    }
     [self preventCALayerImplicitAnimation:^{
         layer.path = [pointerFingerHelper pathForTouch:touch].CGPath;
         CGPoint locationOfTouch = [touch locationInView:relativeView];
@@ -157,13 +179,11 @@
     }];
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{
-    layer.opacity = 0;
+    if(isDrawing){
+        isDrawing = NO;
+        layer.opacity = 0;
+    }
 }
-
-
-
-
-
 
 
 #pragma mark - Two Finger Gesture Helper

@@ -10,9 +10,15 @@
 
 @interface MMShadowHand : NSObject
 
+// the layer that contains the hand shadow
 @property (readonly) CALayer* layer;
-@property (strong) id relatedObject;
+// the id of the object that's being held with a pan, nil otherwise
+@property (strong) id heldObject;
+// YES if the hand is actively being shown, NO otherwise
+-(BOOL) isActive;
 
+// @param isRight: YES if this should show only the right hand, NO for the left hand
+// @param relativeView: the view that should track touch locations
 -(id) initForRightHand:(BOOL)isRight forView:(UIView*)relativeView;
 
 // bezel
@@ -21,9 +27,9 @@
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
 
 // panning a page
--(void) startPanningWithTouches:(NSArray*)touches;
--(void) continuePanningWithTouches:(NSArray*)touches;
--(void) endPanning;
+-(void) startPanningObject:(id)obj withTouches:(NSArray*)touches;
+-(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches;
+-(void) endPanningObject:(id)obj;
 
 // drawing
 -(void) startDrawingAtTouch:(UITouch*)touch;

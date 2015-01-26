@@ -2093,14 +2093,11 @@ int skipAll = NO;
 }
 
 -(void) willEndStrokeWithTouch:(JotTouch*)touch{
-    JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
-    if(currentStroke){
-        [silhouette endDrawingAtTouch:touch.touch];
-    }
     [super willEndStrokeWithTouch:touch];
 }
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    [silhouette endDrawingAtTouch:touch.touch];
     [super didEndStrokeWithTouch:touch];
 }
 

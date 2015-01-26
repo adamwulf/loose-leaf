@@ -82,15 +82,15 @@
 #pragma mark - Panning a Page
 
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    [leftHand startPanningWithTouches:touches];
+    [leftHand startPanningObject:obj withTouches:touches];
 }
 
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
-    [leftHand continuePanningWithTouches:touches];
+    [leftHand continuePanningObject:obj withTouches:touches];
 }
 
 -(void) endPanningObject:(id)obj{
-    [leftHand endPanning];
+    [leftHand endPanningObject:obj];
 }
 
 #pragma mark - Drawing Events
