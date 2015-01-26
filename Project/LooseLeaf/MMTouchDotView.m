@@ -42,7 +42,7 @@
         dot.backgroundColor = dotColor;
         dot.layer.cornerRadius = dotWidth/2;
         dot.tag = key.unsignedIntegerValue;
-//        [self addSubview:dot];
+        [self addSubview:dot];
         [dots setObject:dot forKey:key];
         
         UIView* anim = [[UIView alloc] initWithFrame:dot.frame];

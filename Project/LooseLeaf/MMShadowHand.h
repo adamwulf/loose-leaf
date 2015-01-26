@@ -29,7 +29,7 @@
 
 // pinching a page
 -(void) startPinchingObject:(id)obj withTouches:(NSArray*)touches;
--(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches andDistance:(CGFloat)dist;
+-(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches;
 -(void) endPinchingObject:(id)obj;
 
 // panning a page

@@ -179,34 +179,28 @@
     heldObject = obj;
     isPinching = YES;
     layer.opacity = .5;
-    [self continuePinchingObject:obj withTouches:touches andDistance:0];
+    [self continuePinchingObject:obj withTouches:touches];
 }
--(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches andDistance:(CGFloat)dist{
+-(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches{
     if(!isPinching){
         [self startPinchingObject:obj withTouches:touches];
     }
     if(obj != heldObject){
         @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to pinch different object than what's held." userInfo:nil];
     }
-//    if([touches count] >= 2){
+    if([touches count] >= 2){
         UITouch* indexFingerTouch = [touches firstObject];
-        if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexFingerTouch locationInView:relativeView].x){
-            indexFingerTouch = [touches lastObject];
-        }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexFingerTouch locationInView:relativeView].x){
+        if([[touches lastObject] locationInView:relativeView].y < [indexFingerTouch locationInView:relativeView].y){
             indexFingerTouch = [touches lastObject];
         }
-        UITouch* middleFingerTouch = [touches firstObject] == indexFingerTouch ? [touches lastObject] : [touches firstObject];
+        UITouch* thumbTouch = [touches firstObject] == indexFingerTouch ? [touches lastObject] : [touches firstObject];
         
         
         
         CGPoint indexFingerLocation = [indexFingerTouch locationInView:relativeView];
-        CGPoint middleFingerLocation = [middleFingerTouch locationInView:relativeView];
+        CGPoint middleFingerLocation = [thumbTouch locationInView:relativeView];
         
         CGFloat distance = [MMShadowHand distanceBetweenPoint:indexFingerLocation andPoint:middleFingerLocation];
-    
-    indexFingerLocation = CGPointMake(400, 200);
-    middleFingerLocation = CGPointMake(700, 800);
-    distance = dist;
     
         [thumbAndIndexHelper setFingerDistance:distance];
         [self preventCALayerImplicitAnimation:^{
@@ -223,7 +217,7 @@
             layer.position = finalLocation;
             layer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
         }];
-//    }
+    }
 }
 -(void) endPinchingObject:(id)obj{
     if(obj != heldObject){
