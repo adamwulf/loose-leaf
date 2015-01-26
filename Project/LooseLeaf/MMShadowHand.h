@@ -27,6 +27,11 @@
 -(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
 
+// pinching a page
+-(void) startPinchingObject:(id)obj withTouches:(NSArray*)touches;
+-(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches andDistance:(CGFloat)dist;
+-(void) endPinchingObject:(id)obj;
+
 // panning a page
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches;
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches;

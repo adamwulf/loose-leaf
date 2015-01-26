@@ -20,7 +20,7 @@
 
 @implementation MMShadowHandView{
     MMDrawingGestureShadow* pointerFingerHelper;
-//    UISlider* slider;
+    UISlider* slider;
     MMShadowHand* rightHand;
     MMShadowHand* leftHand;
 }
@@ -36,15 +36,16 @@
         rightHand = [[MMShadowHand alloc] initForRightHand:YES forView:self];
         
         
-//        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
-//        slider.value = 1;
-//        slider.minimumValue = 0;
-//        slider.maximumValue = 1;
-//        [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
+        slider.value = 1;
+        slider.minimumValue = 0;
+        slider.maximumValue = 1;
+        [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
         
-//        [[NSThread mainThread] performBlock:^{
-//            [self.window addSubview:slider];
-//        } afterDelay:.3];
+        [[NSThread mainThread] performBlock:^{
+            [self.window addSubview:slider];
+            [leftHand startPinchingObject:nil withTouches:nil];
+        } afterDelay:.3];
         
         
         [self.layer addSublayer:leftHand.layer];
@@ -53,14 +54,9 @@
     return self;
 }
 
-//-(void) sliderValueChanged:(UISlider*)_slider{
-//    [leftTwoFingerHelper openTo:slider.value];
-//    [rightTwoFingerHelper openTo:slider.value];
-//    
-//    [self preventCALayerImplicitAnimation:^{
-//        leftHandLayer.path = [leftTwoFingerHelper pathForTouches:nil].CGPath;
-//    }];
-//}
+-(void) sliderValueChanged:(UISlider*)_slider{
+    [leftHand continuePinchingObject:nil withTouches:nil andDistance:_slider.value *400+40];
+}
 
 
 

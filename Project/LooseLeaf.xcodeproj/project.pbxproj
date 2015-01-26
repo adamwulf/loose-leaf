@@ -435,6 +435,7 @@
 		66FA03A219BFE68000AF0DC4 /* MMCloudKeyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A119BFE68000AF0DC4 /* MMCloudKeyButton.m */; };
 		66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
+		66FD2E991A76C7B100ED7DFA /* MMThumbAndIndexShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1242,6 +1243,8 @@
 		66FA03A319BFFB7900AF0DC4 /* MMBrokenCloudLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBrokenCloudLayer.h; sourceTree = "<group>"; };
 		66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBrokenCloudLayer.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
+		66FD2E971A76C7B100ED7DFA /* MMThumbAndIndexShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMThumbAndIndexShadow.h; sourceTree = "<group>"; };
+		66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMThumbAndIndexShadow.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1960,6 +1963,8 @@
 				66D0A8C71A6454600003BBF7 /* MMDrawingGestureShadow.m */,
 				66D0A8C91A64684A0003BBF7 /* MMTwoFingerPanShadow.h */,
 				66D0A8CA1A64684A0003BBF7 /* MMTwoFingerPanShadow.m */,
+				66FD2E971A76C7B100ED7DFA /* MMThumbAndIndexShadow.h */,
+				66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */,
 			);
 			name = "Path Helpers";
 			sourceTree = "<group>";
@@ -3417,6 +3422,7 @@
 				66D0A8C81A6454600003BBF7 /* MMDrawingGestureShadow.m in Sources */,
 				6601170119ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m in Sources */,
 				66627F941A02582F0064FAD3 /* MPObjectSerializerConfig.m in Sources */,
+				66FD2E991A76C7B100ED7DFA /* MMThumbAndIndexShadow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

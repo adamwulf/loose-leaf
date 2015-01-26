@@ -12,6 +12,7 @@
 #import "MMDrawingGestureShadow.h"
 #import "MMTwoFingerPanShadow.h"
 #import "MMDrawingGestureShadow.h"
+#import "MMThumbAndIndexShadow.h"
 #import "NSArray+Extras.h"
 
 @implementation MMShadowHand{
@@ -23,10 +24,12 @@
     
     MMDrawingGestureShadow* pointerFingerHelper;
     MMTwoFingerPanShadow* twoFingerHelper;
-    
+    MMThumbAndIndexShadow* thumbAndIndexHelper;
+
     id heldObject;
     NSSet* activeTouches;
     BOOL isBezeling;
+    BOOL isPinching;
     BOOL isPanning;
     BOOL isDrawing;
 }
@@ -51,6 +54,7 @@
         // path helpers
         pointerFingerHelper = [[MMDrawingGestureShadow alloc] initForRightHand:isRight];
         twoFingerHelper = [[MMTwoFingerPanShadow alloc] initForRightHand:isRight];
+        thumbAndIndexHelper = [[MMThumbAndIndexShadow alloc] initForRightHand:isRight];
     }
     return self;
 }
@@ -58,7 +62,7 @@
 -(BOOL) isActive{
     // return true if this hand is currently shown with
     // a gesture
-    return isBezeling || isPanning || isDrawing;
+    return isBezeling || isPanning || isDrawing || isPinching;
 }
 -(BOOL) isDrawing{
     return isDrawing;
@@ -168,6 +172,70 @@
 }
 
 
+
+#pragma mark - Pinching a Page
+
+-(void) startPinchingObject:(id)obj withTouches:(NSArray*)touches{
+    heldObject = obj;
+    isPinching = YES;
+    layer.opacity = .5;
+    [self continuePinchingObject:obj withTouches:touches andDistance:0];
+}
+-(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches andDistance:(CGFloat)dist{
+    if(!isPinching){
+        [self startPinchingObject:obj withTouches:touches];
+    }
+    if(obj != heldObject){
+        @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to pinch different object than what's held." userInfo:nil];
+    }
+//    if([touches count] >= 2){
+        UITouch* indexFingerTouch = [touches firstObject];
+        if(!isRight && [[touches lastObject] locationInView:relativeView].x > [indexFingerTouch locationInView:relativeView].x){
+            indexFingerTouch = [touches lastObject];
+        }else if(isRight && [[touches lastObject] locationInView:relativeView].x < [indexFingerTouch locationInView:relativeView].x){
+            indexFingerTouch = [touches lastObject];
+        }
+        UITouch* middleFingerTouch = [touches firstObject] == indexFingerTouch ? [touches lastObject] : [touches firstObject];
+        
+        
+        
+        CGPoint indexFingerLocation = [indexFingerTouch locationInView:relativeView];
+        CGPoint middleFingerLocation = [middleFingerTouch locationInView:relativeView];
+        
+        CGFloat distance = [MMShadowHand distanceBetweenPoint:indexFingerLocation andPoint:middleFingerLocation];
+    
+    indexFingerLocation = CGPointMake(100, 100);
+    middleFingerLocation = CGPointMake(300, 600);
+    distance = dist;
+    
+        [thumbAndIndexHelper setFingerDistance:distance];
+        [self preventCALayerImplicitAnimation:^{
+            layer.path = [thumbAndIndexHelper pathForTouches:nil].CGPath;
+            
+            MMVector* currVector = [MMVector vectorWithPoint:indexFingerLocation
+                                                    andPoint:middleFingerLocation];
+            if(!isRight){
+                currVector = [currVector flip];
+            }
+            CGFloat theta = [[MMVector vectorWithX:1 andY:0] angleBetween:currVector];
+            CGPoint offset = [thumbAndIndexHelper locationOfIndexFingerInPathBounds];
+            CGPoint finalLocation = CGPointMake(indexFingerLocation.x - offset.x, indexFingerLocation.y - offset.y);
+            layer.position = finalLocation;
+            layer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
+        }];
+//    }
+}
+-(void) endPinchingObject:(id)obj{
+    if(obj != heldObject){
+        @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to stop holding different object than what's held." userInfo:nil];
+    }
+    if(isPinching){
+        activeTouches = nil;
+        isPinching = NO;
+        heldObject = nil;
+        layer.opacity = 0;
+    }
+}
 
 #pragma mark - Drawing Events
 
