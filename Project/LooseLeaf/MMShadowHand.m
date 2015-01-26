@@ -12,6 +12,7 @@
 #import "MMDrawingGestureShadow.h"
 #import "MMTwoFingerPanShadow.h"
 #import "MMDrawingGestureShadow.h"
+#import "NSArray+Extras.h"
 
 @implementation MMShadowHand{
     UIView* relativeView;
@@ -24,6 +25,7 @@
     MMTwoFingerPanShadow* twoFingerHelper;
     
     id heldObject;
+    NSSet* activeTouches;
     BOOL isBezeling;
     BOOL isPanning;
     BOOL isDrawing;
@@ -58,11 +60,14 @@
     // a gesture
     return isBezeling || isPanning || isDrawing;
 }
+-(BOOL) isDrawing{
+    return isDrawing;
+}
 
 #pragma mark - Bezeling Pages
 
 -(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
-    heldObject = nil;
+    activeTouches = [[touches asSet] copy];
     isBezeling = YES;
     layer.opacity = .5;
     [self continueBezelingInFromRight:fromRight withTouches:touches];
@@ -111,8 +116,11 @@
 
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
     if(isBezeling){
-        layer.opacity = 0;
-        isBezeling = NO;
+        if([activeTouches isEqualToSet:[touches asSet]]){
+            activeTouches = nil;
+            layer.opacity = 0;
+            isBezeling = NO;
+        }
     }
 }
 
@@ -129,6 +137,9 @@
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
     if(!isPanning){
         [self startPanningObject:obj withTouches:touches];
+    }
+    if(obj != heldObject){
+        @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to pan different object than what's held." userInfo:nil];
     }
     if([touches count] >= 2){
         UITouch* indexFingerTouch = [touches firstObject];
@@ -149,6 +160,7 @@
         @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to stop holding different object than what's held." userInfo:nil];
     }
     if(isPanning){
+        activeTouches = nil;
         isPanning = NO;
         heldObject = nil;
         layer.opacity = 0;
@@ -160,8 +172,8 @@
 #pragma mark - Drawing Events
 
 -(void) startDrawingAtTouch:(UITouch*)touch{
-    heldObject = nil;
     isDrawing = YES;
+    activeTouches = [NSSet setWithObject:touch];
     [self continueDrawingAtTouch:touch];
     layer.opacity = .5;
     [self continueDrawingAtTouch:touch];
@@ -180,8 +192,13 @@
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{
     if(isDrawing){
-        isDrawing = NO;
-        layer.opacity = 0;
+        if(!touch || [activeTouches isEqualToSet:[NSSet setWithObject:touch]]){
+            activeTouches = nil;
+            isDrawing = NO;
+            if(!isPanning && !isBezeling){
+                layer.opacity = 0;
+            }
+        }
     }
 }
 

@@ -16,6 +16,7 @@
 @property (strong) id heldObject;
 // YES if the hand is actively being shown, NO otherwise
 -(BOOL) isActive;
+-(BOOL) isDrawing;
 
 // @param isRight: YES if this should show only the right hand, NO for the left hand
 // @param relativeView: the view that should track touch locations
