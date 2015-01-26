@@ -204,8 +204,8 @@
         
         CGFloat distance = [MMShadowHand distanceBetweenPoint:indexFingerLocation andPoint:middleFingerLocation];
     
-    indexFingerLocation = CGPointMake(100, 100);
-    middleFingerLocation = CGPointMake(300, 600);
+    indexFingerLocation = CGPointMake(400, 200);
+    middleFingerLocation = CGPointMake(700, 800);
     distance = dist;
     
         [thumbAndIndexHelper setFingerDistance:distance];
