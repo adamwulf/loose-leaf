@@ -118,9 +118,7 @@
     CGFloat openTheta = -openAngle.angle;
     CGFloat closedTheta = -closedAngle.angle;
     NSLog(@"open:%f   closed: %f   theta: %f", openTheta, closedTheta, theta);
-    
-//    theta -= (1-openPercent) * (openTheta - closedTheta);
-    
+        
     if(isnan(theta)){
         theta = 0;
     }

@@ -78,7 +78,7 @@
 #pragma mark - Panning a Page
 
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    [leftHand startPinchingObject:obj withTouches:touches];
+    [rightHand startPinchingObject:obj withTouches:touches];
     return;
     if(!leftHand.isActive){
         [leftHand startPanningObject:obj withTouches:touches];
@@ -88,7 +88,7 @@
 }
 
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
-    [leftHand continuePinchingObject:obj withTouches:touches];
+    [rightHand continuePinchingObject:obj withTouches:touches];
     return;
     if(leftHand.heldObject == obj ||
        (rightHand.heldObject !=obj && leftHand.heldObject == nil)){
@@ -99,7 +99,7 @@
 }
 
 -(void) endPanningObject:(id)obj{
-    [leftHand endPinchingObject:obj];
+    [rightHand endPinchingObject:obj];
     return;
     if(leftHand.heldObject == obj){
         [leftHand endPanningObject:obj];
