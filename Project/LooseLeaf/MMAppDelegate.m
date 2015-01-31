@@ -55,7 +55,7 @@
                                                         [MMAppDelegate userID], kMPID, nil]];
     
     [[Crashlytics sharedInstance] setDelegate:self];
-    [Fabric with:@[CrashlyticsKit]];
+    [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
     [[NSThread mainThread] performBlock:^{
         [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];

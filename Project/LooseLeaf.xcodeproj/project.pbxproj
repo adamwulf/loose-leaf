@@ -24,6 +24,8 @@
 		660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DAF158FC7DB0001DA12 /* MMPaperIcon.m */; };
 		660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */ = {isa = PBXBuildFile; fileRef = 660E1DB2159028560001DA12 /* NSArray+MapReduce.m */; };
 		660E9DCB19183032000A392A /* blackblur.png in Resources */ = {isa = PBXBuildFile; fileRef = 660E9DCA19183032000A392A /* blackblur.png */; };
+		660FA2951A7C5B6F00BA0ECE /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */; };
+		660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */; };
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
@@ -465,6 +467,8 @@
 		660E1DB2159028560001DA12 /* NSArray+MapReduce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MapReduce.m"; sourceTree = "<group>"; };
 		660E9DCA19183032000A392A /* blackblur.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackblur.png; sourceTree = "<group>"; };
 		660EDC2019DE6AC3003688E7 /* MMEditablePaperViewSubclass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperViewSubclass.h; sourceTree = "<group>"; };
+		660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterKit.framework; path = ../Frameworks/TwitterKit.framework; sourceTree = "<group>"; };
+		660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = ../Frameworks/TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
 		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
 		6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageUndoRedoManager.m; sourceTree = "<group>"; };
 		6612C8861964C113003A9575 /* MMUndoablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoablePaperView.h; sourceTree = "<group>"; };
@@ -1252,6 +1256,7 @@
 				66BD6E7D1593ACD400D4544C /* QuartzCore.framework in Frameworks */,
 				666425BC18CBC37700A306C1 /* opencv2.framework in Frameworks */,
 				66BD6E65159316CF00D4544C /* CoreImage.framework in Frameworks */,
+				660FA2951A7C5B6F00BA0ECE /* TwitterKit.framework in Frameworks */,
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
@@ -2459,6 +2464,8 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */,
+				660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */,
 				66244CAD1A65145100A009BC /* Fabric.framework */,
 				66627FB11A0258D10064FAD3 /* libicucore.dylib */,
 				66EDE47719B1039000A5623B /* ZipArchive.framework */,
@@ -2923,6 +2930,7 @@
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
+				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				665245271996AA7B00C36609 /* FXBlurView.license in Resources */,
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,

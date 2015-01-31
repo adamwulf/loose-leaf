@@ -1,0 +1,110 @@
+/* Label before phone input field */
+"LABEL_ENTER_PHONE_NUMBER" = "Enter your phone number";
+
+/* Phone number field placeholder */
+"PLACEHOLDER_YOUR_NUMBER" = "Your number";
+
+/* Send confirmation code button text */
+"BUTTON_SEND_CONF_CODE" = "Send confirmation code";
+
+/* Sending confirmation code button text */
+"BUTTON_SENDING_CONF_CODE" = "Sending confirmation code";
+
+/* Sent confirmation code button text */
+"BUTTON_SENT_CONF_CODE" = "Sent confirmation code";
+
+/* Footnote disclaimer for send confirmation code screen */
+"FOOTNOTE_SEND_CONF_CODE" = "By tapping \"Send confirmation code\" above, <u>Digits by Twitter</u>, will send you a SMS message to confirm your phone number.";
+
+/* Label before confirmation code input field */
+"LABEL_ENTER_CONF_CODE" = "Enter confirmation code";
+
+/* Placeholder for confirmation code input field */
+"PLACEHOLDER_CONF_CODE" = "Confirmation code";
+
+/* Create account button title */
+"BUTTON_CREATE_ACCOUNT" = "Create account";
+
+/* Creating account button title */
+"BUTTON_CREATING_ACCOUNT" = "Creating account";
+
+/* Created account button title */
+"BUTTON_CREATED_ACCOUNT" = "Created account";
+
+/* Sign in button title */
+"BUTTON_SIGN_IN" = "Sign in";
+
+/* Signing in button title */
+"BUTTON_SIGNING_IN" = "Sign in";
+
+/* Signed in button title */
+"BUTTON_SIGNED_IN" = "Signed in";
+
+/* Button title for resending the confirmation code */
+"BUTTON_RESEND_CONF_CODE" = "Resend confirmation code";
+
+/* Footnote when creating account */
+"FOOTNOTE_CREATE_ACCOUNT" = "By tapping \"Create account\" above, you agree to the <u>Terms of Service</u>, <u>Privacy Policy</u>, and <u>Cookies Policy</u> of Digits by Twitter, and that other users of %@ can discover you by phone number and/or email.";
+
+/* Text to be inserted when the name of the app is unknown in the sentence: "... other users of [app name] can discover you..." */
+"PARTIAL_FOOTNOTE_THIS_APP" = "this app";
+
+/* OK button text */
+"BUTTON_OK" = "OK";
+
+/* Dismiss button text */
+"BUTTON_DISMISS" = "Dismiss";
+
+/* Retry button text */
+"BUTTON_RETRY" = "Retry";
+
+/* Large label when we couldn't confirm a user's number */
+"LABEL_UNABLE_TO_CONFIRM_NUMBER" = "Unable to confirm your phone number";
+
+/* Text explaining why we couldn't confirm a user's number */
+"LABEL_UNABLE_TO_CONFIRM_NUMBER_EXPLANATION" = "Sorry, we are having trouble sending you a confirmation code.";
+
+/* Large label displayed when we the phone number is already associated with a Twitter account */
+"LABEL_PLEASE_USE_TWITTER" = "Please sign in with Twitter";
+
+/* Text explaining why we're asking to sign in with Twitter */
+"LABEL_PLEASE_USE_TWITTER_EXPLANATION" = "Your number is already associated with a Twitter account. Please sign in with Twitter below.";
+
+/* Button text for signing in with a Twitter account */
+"BUTTON_SIGN_IN_WITH_TWITTER" = "Sign in with Twitter";
+
+/* Button text for trying a different number */
+"BUTTON_TRY_DIFFERENT_NUMBER" = "Try a different number";
+
+/* Error text after nothing else works */
+"ERROR_TRY_AGAIN_LATER" = "We could not sign you in with Twitter at this time. Please try again later.";
+
+/* Error text when number may be invalid */
+"ERROR_CHECK_NUMBER_TRY_AGAIN" = "Please check your number and try again";
+
+/* Error text when confirmation code may be invalid */
+"ERROR_CHECK_CODE_TRY_AGAIN" = "Please check your code and try again";
+
+/* Error text when network connection may be broken */
+"ERROR_CHECK_CONNECTION_TRY_AGAIN" = "Please check your network connection and try again";
+
+/* Authenticate button label */
+"BUTTON_AUTHENTICATE" = "Use my phone number";
+
+/* PIN Code entry screen header label */
+"LABEL_ENTER_2_STEP_VERIFICATION_CODE" = "Enter 2-step verification code";
+
+/* PIN Code entry screen footer label */
+"FOOTNOTE_2_STEP_VERIFICATION_CODE" = "You have previously set a 2-step verification code on <u>digits.com</u>";
+
+/* PIN Code entry screen button title */
+"BUTTON_SEND_2_STEP_VERIFICATION_CODE" = "Verify";
+
+/* PIN Code entry screen button title in progress */
+"BUTTON_SEND_2_STEP_VERIFICATION_CODE_IN_PROGRESS" = "Verifying";
+
+/* PIN Code entry screen button title finished */
+"BUTTON_SEND_2_STEP_VERIFICATION_CODE_FINISHED" = "Verified";
+
+/* PIN Code field placeholder */
+"PLACEHOLDER_2_STEP_VERIFICATION_CODE" = "Verification code";
