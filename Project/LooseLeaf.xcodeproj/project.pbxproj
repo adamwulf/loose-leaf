@@ -27,6 +27,7 @@
 		660FA2951A7C5B6F00BA0ECE /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */; };
 		660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */; };
 		660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2971A7C5D5A00BA0ECE /* AdSupport.framework */; };
+		660FA29A1A7C6F5700BA0ECE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */; };
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
@@ -471,6 +472,7 @@
 		660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterKit.framework; path = ../Frameworks/TwitterKit.framework; sourceTree = "<group>"; };
 		660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = ../Frameworks/TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
 		660FA2971A7C5D5A00BA0ECE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../Frameworks/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
 		6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageUndoRedoManager.m; sourceTree = "<group>"; };
 		6612C8861964C113003A9575 /* MMUndoablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoablePaperView.h; sourceTree = "<group>"; };
@@ -1240,6 +1242,7 @@
 				666425C218CBC40000A306C1 /* CoreMedia.framework in Frameworks */,
 				666425C018CBC3EF00A306C1 /* AssetsLibrary.framework in Frameworks */,
 				666425BE18CBC3DD00A306C1 /* AVFoundation.framework in Frameworks */,
+				660FA29A1A7C6F5700BA0ECE /* FacebookSDK.framework in Frameworks */,
 				6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */,
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */,
@@ -2467,6 +2470,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */,
 				660FA2971A7C5D5A00BA0ECE /* AdSupport.framework */,
 				660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */,
 				660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */,
@@ -3485,6 +3489,7 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/JotUI/JotTouchSDK",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -3525,6 +3530,7 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/JotUI/JotTouchSDK",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";

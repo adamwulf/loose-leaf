@@ -22,6 +22,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 
 @implementation MMAppDelegate{
@@ -57,6 +58,9 @@
     [[Crashlytics sharedInstance] setDelegate:self];
     [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
+    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    [FBAppEvents activateApp];
+    
     [[NSThread mainThread] performBlock:^{
         [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
         [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
