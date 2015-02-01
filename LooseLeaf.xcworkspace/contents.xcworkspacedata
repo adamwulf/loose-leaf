@@ -17,6 +17,9 @@
       location = "group:Submodules/touch-chart/TouchChart/TouchShape.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
    </FileRef>
    <FileRef

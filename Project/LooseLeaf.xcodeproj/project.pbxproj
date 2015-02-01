@@ -326,6 +326,7 @@
 		66ACECDF19D4C122000EA792 /* NSArray+IndexSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECDE19D4C122000EA792 /* NSArray+IndexSetAdditions.m */; };
 		66ACECE219D4C28E000EA792 /* MMPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECE119D4C28E000EA792 /* MMPhoto.m */; };
 		66ACECE819D4D571000EA792 /* MMPhotoOnDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECE719D4D571000EA792 /* MMPhotoOnDisk.m */; };
+		66ADFB6C1A7ECEA1001A1D56 /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66ADFB6B1A7ECEA1001A1D56 /* PerformanceBezier.framework */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
@@ -1016,6 +1017,8 @@
 		66ACECE119D4C28E000EA792 /* MMPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhoto.m; sourceTree = "<group>"; };
 		66ACECE619D4D571000EA792 /* MMPhotoOnDisk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotoOnDisk.h; sourceTree = "<group>"; };
 		66ACECE719D4D571000EA792 /* MMPhotoOnDisk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotoOnDisk.m; sourceTree = "<group>"; };
+		66ADFB691A7ECD7D001A1D56 /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../../PerformanceBezier/build/Debug-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
+		66ADFB6B1A7ECEA1001A1D56 /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/PerformanceBezier/build/Debug-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		66AE5AA617F4D064009F82B6 /* MMScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapsOnPaperState.m; sourceTree = "<group>"; };
 		66AE5AA917F4D124009F82B6 /* MMScrapsOnPaperStateDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMScrapsOnPaperStateDelegate.h; sourceTree = "<group>"; };
@@ -1234,6 +1237,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66ADFB6C1A7ECEA1001A1D56 /* PerformanceBezier.framework in Frameworks */,
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
 				66627FB21A0258D10064FAD3 /* libicucore.dylib in Frameworks */,
 				66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */,
@@ -2470,6 +2474,8 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66ADFB6B1A7ECEA1001A1D56 /* PerformanceBezier.framework */,
+				66ADFB691A7ECD7D001A1D56 /* PerformanceBezier.framework */,
 				660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */,
 				660FA2971A7C5D5A00BA0ECE /* AdSupport.framework */,
 				660FA2931A7C5B6F00BA0ECE /* TwitterKit.framework */,
