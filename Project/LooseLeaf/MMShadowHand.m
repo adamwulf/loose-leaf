@@ -183,7 +183,8 @@
 }
 -(void) continuePinchingObject:(id)obj withTouches:(NSArray*)touches{
     if(!isPinching){
-        [self startPinchingObject:obj withTouches:touches];
+        return;
+//        [self startPinchingObject:obj withTouches:touches];
     }
     if(obj != heldObject){
         @throw [NSException exceptionWithName:@"ShadowException" reason:@"Asked to pinch different object than what's held." userInfo:nil];
