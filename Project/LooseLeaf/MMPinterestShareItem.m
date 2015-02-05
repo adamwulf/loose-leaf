@@ -53,10 +53,22 @@
     return YES;
 }
 
+-(void) performShareAction{
+    if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pinterest://pin/"]]){
+        // call the pinterest method to send the user to the store
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Share with Pinterest" message:@"The Pinterest app needs to be installed to share to Pinterest." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Get the App", nil];
+        [alertView show];
+    }else{
+        [super performShareAction];
+    }
+}
+
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
     if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
+        button.greyscale = YES;
+    }else if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pinterest://pin/"]]){
         button.greyscale = YES;
     }else{
         button.greyscale = NO;
@@ -80,6 +92,17 @@
 
 -(void) dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 1){
+        [pinterest createPinWithImageURL:[NSURL URLWithString:@"http://placekitten.com/g/500/400"]
+                               sourceURL:[NSURL URLWithString:@"http://getlooseleaf.com"]
+                             description:@"Made with @getlooseleaf"];
+    }
 }
 
 @end

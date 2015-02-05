@@ -14,4 +14,9 @@
     MMImageViewButton* button;
 }
 
+// protected
+
+-(void) performShareAction;
+-(void) animateLinkTo:(NSString*) linkURL;
+
 @end
