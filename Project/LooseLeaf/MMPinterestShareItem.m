@@ -67,11 +67,12 @@
 #pragma mark - Imgur
 
 -(void) animateLinkTo:(NSString*) linkURL{
-    // don't animate the link, we'll send it to pinterest
-    [pinterest createPinWithImageURL:[NSURL URLWithString:linkURL]
-                           sourceURL:[NSURL URLWithString:@"http://getlooseleaf.com"]
-                         description:@"Made with @getlooseleaf"];
-
+    [[NSThread mainThread] performBlock:^{
+        // don't animate the link, we'll send it to pinterest instead
+        [pinterest createPinWithImageURL:[NSURL URLWithString:linkURL]
+                               sourceURL:[NSURL URLWithString:@"http://getlooseleaf.com"]
+                             description:@"Made with @getlooseleaf"];
+    } afterDelay:.3];
 }
 
 
