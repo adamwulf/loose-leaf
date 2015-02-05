@@ -53,11 +53,17 @@
     return YES;
 }
 
+-(NSString*) exportDestinationName{
+    return @"Pinterest";
+}
+
 -(void) performShareAction{
     if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pinterest://pin/"]]){
         // call the pinterest method to send the user to the store
         UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Share with Pinterest" message:@"The Pinterest app needs to be installed to share to Pinterest." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Get the App", nil];
         [alertView show];
+        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                     kMPEventExportPropResult : @"Failed"}];
     }else{
         [super performShareAction];
     }
@@ -84,6 +90,7 @@
         [pinterest createPinWithImageURL:[NSURL URLWithString:linkURL]
                                sourceURL:[NSURL URLWithString:@"http://getlooseleaf.com"]
                              description:@"Made with @getlooseleaf"];
+        [delegate didShare:self];
     } afterDelay:.3];
 }
 

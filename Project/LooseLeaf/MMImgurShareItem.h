@@ -16,6 +16,7 @@
 
 // protected
 
+-(NSString*) exportDestinationName;
 -(void) performShareAction;
 -(void) animateLinkTo:(NSString*) linkURL;
 

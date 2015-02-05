@@ -52,6 +52,10 @@
     return button;
 }
 
+-(NSString*) exportDestinationName{
+    return @"Imgur";
+}
+
 -(void) performShareAction{
     if(targetProgress){
         // only try to share if not already sharing
@@ -83,7 +87,7 @@
                     conn = nil;
                     reason = nil;
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                  kMPEventExportPropResult : @"Success"}];
                 } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
                     lastLinkURL = nil;
@@ -94,11 +98,11 @@
                     
                     NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
                     if(failedReason){
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                      kMPEventExportPropResult : @"Failed",
                                                                                      kMPEventExportPropReason : failedReason}];
                     }else{
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                      kMPEventExportPropResult : @"Failed"}];
                     }
                 }];
