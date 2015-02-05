@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMImgurShareItem.h"
 #import "MMShareItem.h"
 
-@interface MMPinterestShareItem : NSObject<MMShareItem>
+@interface MMPinterestShareItem : MMImgurShareItem<MMShareItem>
 
 @end

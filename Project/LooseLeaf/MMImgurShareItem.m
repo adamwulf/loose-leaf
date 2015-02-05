@@ -18,7 +18,6 @@
 #import "MMOfflineIconView.h"
 
 @implementation MMImgurShareItem{
-    MMImageViewButton* button;
     AFURLConnectionOperation* conn;
     NSString* lastLinkURL;
     CGFloat lastProgress;
