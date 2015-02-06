@@ -107,7 +107,7 @@
         colorDiff[2] = elementColor[2] - prevColor[2];
         colorDiff[3] = elementColor[3] - prevColor[3];
         
-        [pathSegment iteratePathWithBlock:[^(CGPathElement pathEle){
+        [pathSegment iteratePathWithBlock:^(CGPathElement pathEle, NSUInteger idx){
             CGFloat tValueAtEndPoint;
             AbstractBezierPathElement* newElement = nil;
             if(pathEle.type == kCGPathElementAddCurveToPoint){
@@ -142,7 +142,7 @@
                 newElement.width /= scale;
                 [convertedElements addObject:newElement];
             }
-        } copy]];
+        }];
     }@catch(NSException* e){
         NSString* pathCannotBeIterated = [pathSegment description];
         [[Mixpanel sharedInstance] track:kMPPathIterationException properties:@{@"Path" : pathCannotBeIterated}];

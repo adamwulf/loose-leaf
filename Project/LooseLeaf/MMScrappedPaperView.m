@@ -22,7 +22,6 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "UIBezierPath+PathElement.h"
-#import "UIBezierPath+Description.h"
 #import "MMVector.h"
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"

@@ -369,7 +369,6 @@
 		66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9CF178386B8009491B3 /* MMLikeButton.m */; };
 		66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */; };
 		66C2C15B1879EFED00804123 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66B50FCD1862B7D30032F704 /* MessageUI.framework */; };
-		66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C2C1641879F3F200804123 /* UIBezierPath+Description.m */; };
 		66C3CBE11A29046200D7EE42 /* MMRulerAdjustment.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C3CBE01A29046200D7EE42 /* MMRulerAdjustment.m */; };
 		66C4734F19CB999000505BC0 /* MMPhotoAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */; };
 		66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
@@ -1102,8 +1101,6 @@
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
 		66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAdonitButton.h; sourceTree = "<group>"; };
 		66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAdonitButton.m; sourceTree = "<group>"; };
-		66C2C1631879F3F200804123 /* UIBezierPath+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+Description.h"; sourceTree = "<group>"; };
-		66C2C1641879F3F200804123 /* UIBezierPath+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+Description.m"; sourceTree = "<group>"; };
 		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C3CBDF1A29046200D7EE42 /* MMRulerAdjustment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerAdjustment.h; sourceTree = "<group>"; };
 		66C3CBE01A29046200D7EE42 /* MMRulerAdjustment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerAdjustment.m; sourceTree = "<group>"; };
@@ -1316,8 +1313,6 @@
 			children = (
 				66BC6F6219B7CEB500460E03 /* SPRMessage+Initials.h */,
 				66BC6F6319B7CEB500460E03 /* SPRMessage+Initials.m */,
-				66C2C1631879F3F200804123 /* UIBezierPath+Description.h */,
-				66C2C1641879F3F200804123 /* UIBezierPath+Description.m */,
 				66B75DB21877ADAF00EF0A48 /* DrawKit */,
 				66A471BF17C7DED500C2A5B6 /* TouchShape */,
 				66B75DB61877D93000EF0A48 /* UIBezierPath+PathElement.h */,
@@ -3120,7 +3115,6 @@
 				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
 				66627FAE1A02582F0064FAD3 /* UIImage+MPAverageColor.m in Sources */,
 				66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */,
-				66C2C1651879F3F200804123 /* UIBezierPath+Description.m in Sources */,
 				66627F9E1A02582F0064FAD3 /* MPSwizzler.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
 				66627F821A02582F0064FAD3 /* MPCATransform3DToNSDictionaryValueTransformer.m in Sources */,

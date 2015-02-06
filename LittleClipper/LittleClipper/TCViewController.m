@@ -126,7 +126,7 @@
     __block BOOL doesIntersect = NO;
     
     __block CGPoint ele1Start = CGPointZero;
-    [shape.bezierPath iteratePathWithBlock:^(CGPathElement ele1){
+    [shape.bezierPath iteratePathWithBlock:^(CGPathElement ele1, NSUInteger idx){
         CGPoint ele1End;
         if(ele1.type == kCGPathElementMoveToPoint){
             ele1End = ele1.points[0];
@@ -143,7 +143,7 @@
         
         if(ele1.type != kCGPathElementMoveToPoint){
             __block CGPoint ele2Start = CGPointZero;
-            [shape.bezierPath iteratePathWithBlock:^(CGPathElement ele2){
+            [shape.bezierPath iteratePathWithBlock:^(CGPathElement ele2, NSUInteger idx){
                 CGPoint ele2End;
                 if(ele2.type == kCGPathElementMoveToPoint){
                     ele2End = ele2.points[0];

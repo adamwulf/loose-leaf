@@ -8,11 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		6616CC9818B684F600CAD0F3 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6693BBD9187755EC002898D6 /* TouchShape.framework */; };
-		6616CCD418B6AF1A00CAD0F3 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */; };
+		663355D21A85783100C45718 /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663355D11A85783100C45718 /* PerformanceBezier.framework */; };
 		6651CADA18775B1500A95F2F /* SYShape+Bezier.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CAD918775B1500A95F2F /* SYShape+Bezier.m */; };
 		6651CADE18775B5D00A95F2F /* UIColor+ColorWithHex.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CADD18775B5D00A95F2F /* UIColor+ColorWithHex.m */; };
 		6651CADF18775B7800A95F2F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6693BBD7187755E1002898D6 /* libc++.dylib */; };
-		6651CAE218775CA700A95F2F /* UIBezierPath+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CAE118775CA700A95F2F /* UIBezierPath+Description.m */; };
 		6651CAE518775CB000A95F2F /* MMFilledShapeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CAE418775CB000A95F2F /* MMFilledShapeView.m */; };
 		6651CAEA18775CBA00A95F2F /* SYSaveMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CAE718775CBA00A95F2F /* SYSaveMessageView.m */; };
 		6651CAEB18775CBA00A95F2F /* SYTableBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6651CAE918775CBA00A95F2F /* SYTableBase.m */; };
@@ -34,12 +33,11 @@
 
 /* Begin PBXFileReference section */
 		6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Crashlytics.framework; path = ../Project/Crashlytics.framework; sourceTree = "<group>"; };
+		663355D11A85783100C45718 /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/PerformanceBezier/build/Debug-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		6651CAD818775B1500A95F2F /* SYShape+Bezier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "SYShape+Bezier.h"; path = "../../Project/SYShape+Bezier.h"; sourceTree = "<group>"; };
 		6651CAD918775B1500A95F2F /* SYShape+Bezier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "SYShape+Bezier.m"; path = "../../Project/SYShape+Bezier.m"; sourceTree = "<group>"; };
 		6651CADC18775B5D00A95F2F /* UIColor+ColorWithHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+ColorWithHex.h"; sourceTree = "<group>"; };
 		6651CADD18775B5D00A95F2F /* UIColor+ColorWithHex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+ColorWithHex.m"; sourceTree = "<group>"; };
-		6651CAE018775CA700A95F2F /* UIBezierPath+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIBezierPath+Description.h"; path = "LittleClipper/UIBezierPath+Description.h"; sourceTree = SOURCE_ROOT; };
-		6651CAE118775CA700A95F2F /* UIBezierPath+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIBezierPath+Description.m"; path = "LittleClipper/UIBezierPath+Description.m"; sourceTree = SOURCE_ROOT; };
 		6651CAE318775CB000A95F2F /* MMFilledShapeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMFilledShapeView.h; path = LittleClipper/MMFilledShapeView.h; sourceTree = SOURCE_ROOT; };
 		6651CAE418775CB000A95F2F /* MMFilledShapeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMFilledShapeView.m; path = LittleClipper/MMFilledShapeView.m; sourceTree = SOURCE_ROOT; };
 		6651CAE618775CBA00A95F2F /* SYSaveMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SYSaveMessageView.h; path = LittleClipper/SYSaveMessageView.h; sourceTree = SOURCE_ROOT; };
@@ -87,13 +85,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				663355D21A85783100C45718 /* PerformanceBezier.framework in Frameworks */,
 				6616CC9818B684F600CAD0F3 /* TouchShape.framework in Frameworks */,
 				6651CADF18775B7800A95F2F /* libc++.dylib in Frameworks */,
 				6693BBF11877567C002898D6 /* DrawKit-iOS.framework in Frameworks */,
 				6693BB7118775521002898D6 /* CoreGraphics.framework in Frameworks */,
 				6693BB7318775521002898D6 /* UIKit.framework in Frameworks */,
 				6693BB6F18775521002898D6 /* Foundation.framework in Frameworks */,
-				6616CCD418B6AF1A00CAD0F3 /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +136,7 @@
 		6693BB6D18775521002898D6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				663355D11A85783100C45718 /* PerformanceBezier.framework */,
 				6616CCD318B6AF1A00CAD0F3 /* Crashlytics.framework */,
 				6693BBF2187756B6002898D6 /* TouchShape.framework */,
 				6693BBEF18775653002898D6 /* DrawKit-iOS.framework */,
@@ -167,7 +166,6 @@
 			children = (
 				6651CAEF187760ED00A95F2F /* External */,
 				6651CADB18775B3800A95F2F /* Categories */,
-				6693BB9F18775543002898D6 /* Categories */,
 				6693BBA418775543002898D6 /* ShapeFillerView */,
 				6693BBAB18775543002898D6 /* Paint Code */,
 				6693BBB218775543002898D6 /* View Controllers */,
@@ -193,16 +191,6 @@
 				6693BB7C18775521002898D6 /* LittleClipper-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		6693BB9F18775543002898D6 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				6651CAE018775CA700A95F2F /* UIBezierPath+Description.h */,
-				6651CAE118775CA700A95F2F /* UIBezierPath+Description.m */,
-			);
-			name = Categories;
-			path = ../../Project/LittleClipper;
 			sourceTree = "<group>";
 		};
 		6693BBA418775543002898D6 /* ShapeFillerView */ = {
@@ -328,7 +316,6 @@
 				6693BB7B18775521002898D6 /* main.m in Sources */,
 				6651CAEE18775CC200A95F2F /* TCViewController.m in Sources */,
 				6651CAE518775CB000A95F2F /* MMFilledShapeView.m in Sources */,
-				6651CAE218775CA700A95F2F /* UIBezierPath+Description.m in Sources */,
 				6651CADA18775B1500A95F2F /* SYShape+Bezier.m in Sources */,
 				6651CAEB18775CBA00A95F2F /* SYTableBase.m in Sources */,
 				6651CADE18775B5D00A95F2F /* UIColor+ColorWithHex.m in Sources */,
@@ -428,7 +415,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/LittleClipper",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 				);
@@ -452,7 +438,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/LittleClipper",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 				);
