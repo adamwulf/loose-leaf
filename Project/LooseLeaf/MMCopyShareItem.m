@@ -58,7 +58,11 @@
 }
 
 -(void) animateToSuccess:(BOOL)succeeded{
-    CGPoint center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
+    if(button.contentScaleFactor == 2){
+        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    }
+    
     
     CAShapeLayer *circle=[CAShapeLayer layer];
     CGFloat radius = button.drawableFrame.size.width / 2;

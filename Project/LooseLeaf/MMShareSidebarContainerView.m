@@ -20,6 +20,7 @@
 #import "MMPrintShareItem.h"
 #import "MMOpenInAppShareItem.h"
 #import "MMCopyShareItem.h"
+#import "MMPinterestShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShareOptionsView.h"
 #import "MMRotationManager.h"
@@ -63,6 +64,7 @@
         [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
+        [shareItems addObject:[[MMPinterestShareItem alloc] init]];
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
         [shareItems addObject:[[MMPrintShareItem alloc] init]];
         [shareItems addObject:[[MMCopyShareItem alloc] init]];
