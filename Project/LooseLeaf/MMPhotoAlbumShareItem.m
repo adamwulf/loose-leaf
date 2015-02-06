@@ -89,6 +89,10 @@
     }
     
     CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
+    if(button.contentScaleFactor == 2){
+        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    }
+    
     
     CGFloat radius = button.drawableFrame.size.width / 2 - 1;
     CAShapeLayer *circle;
@@ -103,14 +107,14 @@
         [button.layer addSublayer:circle];
         circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.lineWidth=radius*2;
-        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     }
     
     circle.strokeEnd = lastProgress;
     
     if(lastProgress >= 1.0){
         CAShapeLayer *mask2=[CAShapeLayer layer];
-        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         
         UIView* checkOrXView = [[UIView alloc] initWithFrame:button.bounds];
         checkOrXView.backgroundColor = [UIColor whiteColor];

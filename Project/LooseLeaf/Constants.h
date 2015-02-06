@@ -95,6 +95,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPShareStatusUnavailable @"Unavailable"
 #define kMPShareStatusUnknown @"Unknown"
 
+#define kMPShareStatusCloudKit @"Share Status: CloudKit"
 #define kMPShareStatusFacebook @"Share Status: Facebook"
 #define kMPShareStatusTwitter @"Share Status: Twitter"
 #define kMPShareStatusEmail @"Share Status: Email"
@@ -132,6 +133,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPHasShakeToReorder @"Has Shaken Scrap"
 #define kMPHasBezelledScrap @"Has Bezelled Scrap"
 #define kMPNumberOfLaunches @"Number Of Launches"
+#define kMPNumberOfResumes @"Number Of Resumes"
 #define kMPNumberOfCrashes @"Number of Crashes"
 #define kMPNumberOfMemoryCrashes @"Number of Mem Crashes"
 #define kMPNumberOfDuplicatePages @"Duplicate Pages Found"
@@ -157,6 +159,7 @@ _Pragma("clang diagnostic pop") \
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
+#define kMPEventResume @"App Resume"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventImportPage @"Import Page"

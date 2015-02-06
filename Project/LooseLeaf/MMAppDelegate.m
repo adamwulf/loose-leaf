@@ -110,8 +110,7 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     resignedActiveAtStamp = CFAbsoluteTimeGetCurrent();
     [self logActiveAppDuration];
-    [durationTimer invalidate];
-    durationTimer = nil;
+    [self stopTimer];
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
     [[JotDiskAssetManager sharedManager] blockUntilAllWritesHaveFinished];
@@ -135,7 +134,10 @@
         // this'll also trigger when the app first launches, as resignedActiveStamp == 0
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventLaunch];
-    };
+    }else{
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfResumes by:@(1)];
+        [[Mixpanel sharedInstance] track:kMPEventResume];
+    }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
     DebugLog(@"DID BECOME ACTIVE");
@@ -147,8 +149,7 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     [self logActiveAppDuration];
-    [durationTimer invalidate];
-    durationTimer = nil;
+    [self stopTimer];
     [self removeDateOfLaunch];
     DebugLog(@"WILL TERMINATE");
 }
@@ -215,23 +216,31 @@
 #pragma mark - Session Duration
 
 -(void) logActiveAppDuration{
-    [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:@((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0)];
+    if(durationTimer){
+        NSNumber* amount = @((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0);
+        NSLog(@"duration tick: %@", amount);
+        // sanity check, only log time if our timer is running
+        [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:amount];
+        sessionStartStamp = CFAbsoluteTimeGetCurrent();
+    }
+}
+
+-(void) stopTimer{
+    [durationTimer invalidate];
+    durationTimer = nil;
 }
 
 -(void) setupTimer{
     sessionStartStamp = CFAbsoluteTimeGetCurrent();
-    // track every five minutes that the app is open
-    durationTimer = [NSTimer scheduledTimerWithTimeInterval:60 * 5
+    // track every minute that the app is open
+    [self stopTimer];
+    durationTimer = [NSTimer scheduledTimerWithTimeInterval:60
                                                      target:self
-                                                   selector:@selector(durationTimerDidFire:)
+                                                   selector:@selector(logActiveAppDuration)
                                                    userInfo:nil
                                                     repeats:YES];
 }
 
--(void) durationTimerDidFire:(NSTimer*)timer{
-    [self logActiveAppDuration];
-    sessionStartStamp = CFAbsoluteTimeGetCurrent();
-}
 
 
 #pragma mark - User UUID

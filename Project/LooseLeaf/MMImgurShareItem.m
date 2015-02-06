@@ -18,7 +18,6 @@
 #import "MMOfflineIconView.h"
 
 @implementation MMImgurShareItem{
-    MMImageViewButton* button;
     AFURLConnectionOperation* conn;
     NSString* lastLinkURL;
     CGFloat lastProgress;
@@ -53,6 +52,10 @@
     return button;
 }
 
+-(NSString*) exportDestinationName{
+    return @"Imgur";
+}
+
 -(void) performShareAction{
     if(targetProgress){
         // only try to share if not already sharing
@@ -84,7 +87,7 @@
                     conn = nil;
                     reason = nil;
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                  kMPEventExportPropResult : @"Success"}];
                 } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
                     lastLinkURL = nil;
@@ -95,11 +98,11 @@
                     
                     NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
                     if(failedReason){
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                      kMPEventExportPropResult : @"Failed",
                                                                                      kMPEventExportPropReason : failedReason}];
                     }else{
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                      kMPEventExportPropResult : @"Failed"}];
                     }
                 }];
@@ -114,14 +117,12 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = linkURL;
     
-    linkURL = [@"        " stringByAppendingString:linkURL];
-    
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
     imgView.image = [UIImage imageNamed:@"link"];
     
     UILabel* labelForLink = [[UILabel alloc] initWithFrame:CGRectZero];
     labelForLink.alpha = 0;
-    labelForLink.text = linkURL;
+    labelForLink.text = @"       link copied to clipboard";
     labelForLink.font = [UIFont boldSystemFontOfSize:16];
     labelForLink.textAlignment = NSTextAlignmentCenter;
     labelForLink.textColor = [UIColor whiteColor];
@@ -150,7 +151,7 @@
             }completion:^(BOOL finished){
                 [labelForLink removeFromSuperview];
             }];
-        } afterDelay:1.2];
+        } afterDelay:2.2];
     }];
     
 }
@@ -166,7 +167,11 @@
         }
     }
 
+    
     CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
+    if(button.contentScaleFactor == 2){
+        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    }
 
     CGFloat radius = button.drawableFrame.size.width / 2;
     CAShapeLayer *circle;
@@ -179,7 +184,7 @@
         circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
         circle.lineWidth=radius*2;
         CAShapeLayer *mask=[CAShapeLayer layer];
-        mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.mask = mask;
         [button.layer addSublayer:circle];
     }
@@ -188,7 +193,7 @@
     
     if(lastProgress >= 1.0){
         CAShapeLayer *mask2=[CAShapeLayer layer];
-        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         
         UIView* checkOrXView = [[UIView alloc] initWithFrame:button.bounds];
         checkOrXView.backgroundColor = [UIColor whiteColor];
