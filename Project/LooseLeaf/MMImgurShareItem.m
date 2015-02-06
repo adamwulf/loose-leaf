@@ -117,14 +117,12 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = linkURL;
     
-    linkURL = [@"        " stringByAppendingString:linkURL];
-    
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
     imgView.image = [UIImage imageNamed:@"link"];
     
     UILabel* labelForLink = [[UILabel alloc] initWithFrame:CGRectZero];
     labelForLink.alpha = 0;
-    labelForLink.text = linkURL;
+    labelForLink.text = @"       link copied to clipboard";
     labelForLink.font = [UIFont boldSystemFontOfSize:16];
     labelForLink.textAlignment = NSTextAlignmentCenter;
     labelForLink.textColor = [UIColor whiteColor];
