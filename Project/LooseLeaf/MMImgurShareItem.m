@@ -151,7 +151,7 @@
             }completion:^(BOOL finished){
                 [labelForLink removeFromSuperview];
             }];
-        } afterDelay:2.2];
+        } afterDelay:1.2];
     }];
     
 }
