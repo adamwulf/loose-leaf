@@ -57,6 +57,10 @@
     return @"Pinterest";
 }
 
+-(NSString*) exportDestinationResult{
+    return @"Pending";
+}
+
 -(void) performShareAction{
     if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pinterest://pin/"]]){
         // call the pinterest method to send the user to the store

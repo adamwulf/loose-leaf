@@ -56,6 +56,10 @@
     return @"Imgur";
 }
 
+-(NSString*) exportDestinationResult{
+    return @"Success";
+}
+
 -(void) performShareAction{
     if(targetProgress){
         // only try to share if not already sharing
@@ -88,7 +92,7 @@
                     reason = nil;
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                     [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                 kMPEventExportPropResult : @"Success"}];
+                                                                                 kMPEventExportPropResult : [self exportDestinationResult]}];
                 } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
                     lastLinkURL = nil;
                     targetProgress = 1.0;
