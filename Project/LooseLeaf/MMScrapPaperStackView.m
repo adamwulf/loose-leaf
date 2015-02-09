@@ -215,11 +215,19 @@
 
 -(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
     DebugLog(@"too bad! can't import file from %@", url);
-    // log this to mixpanel
-    [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : [url fileExtension],
-                                                                            kMPEventImportPropFileType : [url universalTypeID],
-                                                                            kMPEventImportPropSource : kMPEventImportPropSourceApplication,
-                                                                            kMPEventImportPropReferApp : sourceApplication}];
+    if([[url scheme] hasPrefix:@"pin"]){
+        // pinterest export completed successfully
+        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Pinterest",
+                                                                     kMPEventExportPropResult : @"Success"}];
+    }else{
+        // log this to mixpanel
+        NSString* fileExtension = [url fileExtension] ? [url fileExtension] : @"nofile";
+        NSString* typeId = [url universalTypeID] ? [url universalTypeID] : @"notype";
+        [[Mixpanel sharedInstance] track:kMPEventImportPhotoFailed properties:@{kMPEventImportPropFileExt : fileExtension,
+                                                                                kMPEventImportPropFileType : typeId,
+                                                                                kMPEventImportPropSource : kMPEventImportPropSourceApplication,
+                                                                                kMPEventImportPropReferApp : sourceApplication}];
+    }
 }
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
