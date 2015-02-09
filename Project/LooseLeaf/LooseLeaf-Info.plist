@@ -54,12 +54,12 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string>Loose-Leaf_76</string>
+			<string></string>
 			<key>CFBundleURLName</key>
-			<string>com.milestonemade.looseleaf</string>
+			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>looseleaf</string>
+				<string>pinYOUR_PINTEREST_APP_IDlooseleaf</string>
 			</array>
 		</dict>
 	</array>
