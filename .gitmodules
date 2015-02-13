@@ -37,3 +37,6 @@
 [submodule "Submodules/ClippingBezier"]
 	path = Submodules/ClippingBezier
 	url = git@github.com:adamwulf/ClippingBezier.git
+[submodule "Submodules/MMStretchGestureRecognizers"]
+	path = Submodules/MMStretchGestureRecognizers
+	url = git@github.com:adamwulf/MMStretchGestureRecognizers.git
