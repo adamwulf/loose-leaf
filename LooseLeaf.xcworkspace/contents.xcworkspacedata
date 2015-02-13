@@ -17,10 +17,13 @@
       location = "group:Submodules/touch-chart/TouchChart/TouchShape.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
+      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
+      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Submodules/ClippingBezier/ClippingBezier.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:LittleClipper/LittleClipper.xcodeproj">

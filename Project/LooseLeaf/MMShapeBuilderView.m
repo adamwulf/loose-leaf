@@ -9,6 +9,8 @@
 #import "MMShapeBuilderView.h"
 #import <TouchShape/TouchShape.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <ClippingBezier/ClippingBezier.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 

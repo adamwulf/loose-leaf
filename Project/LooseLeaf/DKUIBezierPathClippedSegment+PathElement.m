@@ -9,6 +9,7 @@
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import <JotUI/UIColor+JotHelper.h>
 #import "UIBezierPath+PathElement.h"
+#import <ClippingBezier/ClippingBezier.h>
 
 @implementation DKUIBezierPathClippedSegment (PathElement)
 

@@ -8,7 +8,9 @@
 
 #import "TCViewController.h"
 #import <TouchShape/TouchShape.h>
+#import <ClippingBezier/ClippingBezier.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "SYSaveMessageView.h"
 #import "SYTableBase.h"
 #import "SYShape+Bezier.h"
