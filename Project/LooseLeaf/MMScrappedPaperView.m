@@ -20,9 +20,9 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import <JotUI/UIColor+JotHelper.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "UIBezierPath+PathElement.h"
-#import "UIBezierPath+Description.h"
 #import "MMVector.h"
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"

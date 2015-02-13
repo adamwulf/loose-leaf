@@ -54,6 +54,10 @@
     position.y -= oldPoint.y;
     position.y += newPoint.y;
     
+    if(isnan(position.x) || isnan(position.y)){
+        position = CGPointZero;
+    }
+    
     view.layer.position = position;
     view.layer.anchorPoint = anchorPoint;
 }

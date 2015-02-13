@@ -1,9 +1,6 @@
 [submodule "Submodules/JotUI"]
 	path = Submodules/JotUI
 	url = git@github.com:adamwulf/JotUI.git
-[submodule "Submodules/DrawKit-iOS"]
-	path = Submodules/DrawKit-iOS
-	url = git@github.com:adamwulf/DrawKit-iOS.git
 [submodule "Submodules/ColorWithHex"]
 	path = Submodules/ColorWithHex
 	url = git@github.com:anjerodesu/UIColor-ColorWithHex.git
@@ -37,3 +34,9 @@
 [submodule "Submodules/zip-archive"]
 	path = Submodules/zip-archive
 	url = git@github.com:mattconnolly/ZipArchive.git
+[submodule "Submodules/ClippingBezier"]
+	path = Submodules/ClippingBezier
+	url = git@github.com:adamwulf/ClippingBezier.git
+[submodule "Submodules/MMStretchGestureRecognizers"]
+	path = Submodules/MMStretchGestureRecognizers
+	url = git@github.com:adamwulf/MMStretchGestureRecognizers.git

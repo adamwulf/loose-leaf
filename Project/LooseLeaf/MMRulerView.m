@@ -12,6 +12,8 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <ClippingBezier/ClippingBezier.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "UIDevice+PPI.h"
 #import "UIColor+Shadow.h"
 
@@ -779,7 +781,7 @@ static NSDate* lastRender;
         //
         // now iterate over the path and convert each element
         // into an AbstractBezierElement
-        [subpathForElement iteratePathWithBlock:[^(CGPathElement pathEle){
+        [subpathForElement iteratePathWithBlock:^(CGPathElement pathEle, NSUInteger idx){
             AbstractBezierPathElement* newElement;
             if(pathEle.type == kCGPathElementAddCurveToPoint){
                 // curve
@@ -798,7 +800,7 @@ static NSDate* lastRender;
                 newElement.width = element.width;
                 [output addObject:newElement];
             }
-        } copy]];
+        }];
         
         // lastEndPointOfStroke helps us track if the stroke
         // is beginning or has moved.
