@@ -8,8 +8,11 @@
 
 #import "MMLongPressFromListViewGestureRecognizer.h"
 #import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "NSSet+Array.h"
 
-@implementation MMLongPressFromListViewGestureRecognizer
+@implementation MMLongPressFromListViewGestureRecognizer{
+    NSSet* activeTouches;
+}
 
 #pragma mark - Properties
 
@@ -35,10 +38,15 @@
     return self;
 }
 
+-(NSArray*) validTouches{
+    return [activeTouches array];
+}
+
 #pragma mark - Touch Methods
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     //    DebugLog(@"touchesBegan");
+    activeTouches = [NSSet setWithSet:touches];
     NSMutableSet* mset = [NSMutableSet set];
     [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
         UITouch* touch = obj;
@@ -70,6 +78,14 @@
     }];
     if([mset count]){
         [super touchesBegan:mset withEvent:event];
+    }
+}
+
+-(void) setState:(UIGestureRecognizerState)state{
+    [super setState:state];
+    if(state != UIGestureRecognizerStateBegan &&
+       state != UIGestureRecognizerStateChanged){
+        activeTouches = nil;
     }
 }
 

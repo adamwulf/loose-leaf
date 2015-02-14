@@ -37,6 +37,7 @@
     MMBezelScaleDirection scaleDirection;
 }
 
+@property (nonatomic, readonly) NSArray* validTouches;
 @property (nonatomic, readonly) MMPaperView* pinchedPage;
 @property (nonatomic, readonly) CGPoint normalizedLocationOfScale;
 @property (nonatomic, readonly) CGFloat scale;

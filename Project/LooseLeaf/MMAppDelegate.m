@@ -25,6 +25,8 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import "MMShadowHandView.h"
+#import "Constants.h"
 
 
 @implementation MMAppDelegate{
@@ -85,6 +87,10 @@
     MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:blueDots];
 //    [self.window.layer setSpeed:0.1f];
+    
+    MMShadowHandView* silhouetteView = [[MMShadowHandView alloc] initWithFrame:self.window.bounds];
+    [self.window addSubview:silhouetteView];
+    self.viewController.stackView.silhouette = silhouetteView;
 
     // fire timer each minute
     [self setupTimer];

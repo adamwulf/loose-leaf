@@ -13,13 +13,14 @@
 @interface MMLongPressFromListViewGestureRecognizer : UILongPressGestureRecognizer<UIGestureRecognizerDelegate>{
     CGPoint normalizedLocationOfScale;
     // delegate to help us track down which page is being touched
-    NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
+    __weak NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
     // the current page that the user is pinching
     MMPaperView* pinchedPage;
 }
 
+@property (nonatomic, readonly) NSArray* validTouches;
 @property (nonatomic, readonly) CGPoint normalizedLocationOfScale;
-@property (nonatomic, assign) NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
+@property (nonatomic, weak) NSObject<MMPanAndPinchFromListViewGestureRecognizerDelegate>* pinchDelegate;
 @property (nonatomic, readonly) MMPaperView* pinchedPage;
 
 -(void) cancel;

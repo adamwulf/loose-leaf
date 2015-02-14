@@ -38,6 +38,7 @@
 
 @implementation MMScrapPaperStackView{
     
+    __weak MMShadowHandView* silhouette;
     MMScrapsInBezelContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
@@ -74,6 +75,7 @@
     UIImageView* testImageView;
 }
 
+@synthesize silhouette;
 @synthesize cloudKitExportView;
 
 - (id)initWithFrame:(CGRect)frame
@@ -795,6 +797,15 @@ int skipAll = NO;
         [self forceScrapToScrapContainerDuringGesture];
         [super isBezelingInLeftWithGesture:bezelGesture];
     }
+    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
+        [silhouette startBezelingInFromRight:NO withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged){
+        [silhouette continueBezelingInFromRight:NO withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
+             bezelGesture.subState == UIGestureRecognizerStateCancelled ||
+             bezelGesture.subState == UIGestureRecognizerStateFailed){
+        [silhouette endBezelingInFromRight:NO withTouches:bezelGesture.touches];
+    }
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
@@ -802,6 +813,15 @@ int skipAll = NO;
        bezelGesture.subState != UIGestureRecognizerStateFailed){
         [self forceScrapToScrapContainerDuringGesture];
         [super isBezelingInRightWithGesture:bezelGesture];
+    }
+    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
+        [silhouette startBezelingInFromRight:YES withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged){
+        [silhouette continueBezelingInFromRight:YES withTouches:bezelGesture.touches];
+    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
+             bezelGesture.subState == UIGestureRecognizerStateCancelled ||
+             bezelGesture.subState == UIGestureRecognizerStateFailed){
+        [silhouette endBezelingInFromRight:YES withTouches:bezelGesture.touches];
     }
 }
 
@@ -914,7 +934,12 @@ int skipAll = NO;
             }
         }
         
-        
+        if(gesture.state == UIGestureRecognizerStateBegan){
+            [silhouette startPanningObject:gesture.scrap withTouches:gesture.validTouches];
+        }else{
+            [silhouette continuePanningObject:gesture.scrap withTouches:gesture.validTouches];
+        }
+
         [self isBeginningToPanAndScaleScrapWithTouches:gesture.validTouches];
     }
     
@@ -1058,6 +1083,7 @@ int skipAll = NO;
         }
     }
     if(scrapViewIfFinished){
+        [silhouette endPanningObject:scrapViewIfFinished];
         [self finishedPanningAndScalingScrap:scrapViewIfFinished];
     }
 }
@@ -1498,7 +1524,48 @@ int skipAll = NO;
     return (MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate;
 }
 
+#pragma mark - MMLongPressFromListViewGestureRecognizer - MMPanAndPinchFromListViewGestureRecognizer
+
+-(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
+    [super didPickUpAPageInListView:gesture];
+    if([gesture isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]]){
+        if(gesture.state == UIGestureRecognizerStateBegan){
+            [silhouette startPanningObject:gesture.view withTouches:gesture.validTouches];
+        }else if(gesture.state == UIGestureRecognizerStateChanged){
+            [silhouette continuePanningObject:gesture.view withTouches:gesture.validTouches];
+        }else if(gesture.state == UIGestureRecognizerStateEnded ||
+                 gesture.state == UIGestureRecognizerStateCancelled){
+            [silhouette endPanningObject:gesture.view];
+        }
+    }else{
+        if(gesture.state == UIGestureRecognizerStateBegan){
+            [silhouette startDrawingAtTouch:[gesture.validTouches firstObject]];
+        }else if(gesture.state == UIGestureRecognizerStateChanged){
+            [silhouette continueDrawingAtTouch:[gesture.validTouches firstObject]];
+        }else if(gesture.state == UIGestureRecognizerStateEnded ||
+                 gesture.state == UIGestureRecognizerStateCancelled){
+            [silhouette endDrawingAtTouch:[gesture.validTouches firstObject]];
+        }
+    }
+}
+
+
 #pragma mark - PolygonToolDelegate
+
+-(void) beginShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
+    [super beginShapeWithTouch:touch withTool:tool];
+    [silhouette startDrawingAtTouch:touch];
+}
+
+-(void) continueShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
+    [super continueShapeWithTouch:touch withTool:tool];
+    [silhouette startDrawingAtTouch:touch];
+}
+
+-(void) cancelShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
+    [super cancelShapeWithTouch:touch withTool:tool];
+    [silhouette endDrawingAtTouch:touch];
+}
 
 // when scissors complete, i need to drop all held scraps
 -(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
@@ -1508,6 +1575,7 @@ int skipAll = NO;
     [stretchScrapGesture cancel];
     // now cut with scissors
     [super finishShapeWithTouch:touch withTool:tool];
+    [silhouette endDrawingAtTouch:touch];
 }
 
 #pragma mark - MMPaperViewDelegate
@@ -1523,6 +1591,13 @@ int skipAll = NO;
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
 
+    
+    if(beginning){
+        [silhouette startPanningObject:page withTouches:touches];
+    }else{
+        [silhouette continuePanningObject:page withTouches:touches];
+    }
+    
     return ret;
 }
 
@@ -1530,6 +1605,8 @@ int skipAll = NO;
     [super finishedPanningAndScalingPage:page intoBezel:direction fromFrame:fromFrame toFrame:toFrame];
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
+    
+    [silhouette endPanningObject:page];
 }
 
 -(void) setButtonsVisible:(BOOL)visible{
@@ -1765,6 +1842,7 @@ int skipAll = NO;
     [panAndPinchScrapGesture setEnabled:NO];
     [panAndPinchScrapGesture2 setEnabled:NO];
     [super finishedScalingReallySmall:page];
+    [silhouette endPanningObject:page];
 }
 
 -(void) finishedScalingBackToPageView:(MMPaperView *)page{
@@ -2002,6 +2080,46 @@ int skipAll = NO;
         } afterDelay:.1];
     }
     return YES;
+}
+
+#pragma mark - JotViewDelegate
+
+-(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+    // dont start a new stroke if one already exists
+    BOOL ret = [super willBeginStrokeWithTouch:touch];
+    if(ret){
+        [silhouette startDrawingAtTouch:touch.touch];
+    }
+    return ret;
+}
+
+-(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+    JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
+    if(currentStroke){
+        [silhouette continueDrawingAtTouch:touch.touch];
+    }
+    [super willMoveStrokeWithTouch:touch];
+}
+
+-(void) willEndStrokeWithTouch:(JotTouch*)touch{
+    [super willEndStrokeWithTouch:touch];
+}
+
+-(void) didEndStrokeWithTouch:(JotTouch*)touch{
+    [silhouette endDrawingAtTouch:touch.touch];
+    [super didEndStrokeWithTouch:touch];
+}
+
+-(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
+    if(currentStroke){
+        [silhouette endDrawingAtTouch:touch.touch];
+    }
+    [super willCancelStroke:stroke withTouch:touch];
+}
+
+-(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+    [super didCancelStroke:stroke withTouch:touch];
 }
 
 
