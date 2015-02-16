@@ -934,7 +934,7 @@ int skipAll = NO;
             }
         }
         
-        if(gesture.state == UIGestureRecognizerStateBegan){
+        if(gesture.state == UIGestureRecognizerStateBegan || didReset){
             [silhouette startPanningObject:gesture.scrap withTouches:gesture.validTouches];
         }else{
             [silhouette continuePanningObject:gesture.scrap withTouches:gesture.validTouches];
@@ -1179,6 +1179,7 @@ int skipAll = NO;
 // scrap.
 -(void) stretchScrapGesture:(MMStretchScrapGestureRecognizer*)gesture{
     if(gesture.scrap){
+        NSLog(@"stretching: %@", gesture.scrap);
         // don't allow animations during a stretch
         [gesture.scrap.layer removeAllAnimations];
         if(!CGPointEqualToPoint(gesture.scrap.layer.anchorPoint, CGPointZero)){
@@ -1191,11 +1192,13 @@ int skipAll = NO;
         
         // generate the actual transform between the two quads
         gesture.scrap.layer.transform = CATransform3DConcat(startSkewTransform, [gesture skewTransform]);
+        
+        [silhouette continuePanningObject:gesture.scrap withTouches:gesture.validTouches];
     }
 }
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
-//    DebugLog(@"beginStretchForScrap");
+    DebugLog(@"beginStretchForScrap");
 //    [panAndPinchScrapGesture say:@"beginning start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
 //    [panAndPinchScrapGesture2 say:@"beginning start" ISee:[NSSet setWithArray:panAndPinchScrapGesture2.validTouches]];
 //    [stretchScrapGesture say:@"beginning start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
@@ -1236,6 +1239,7 @@ int skipAll = NO;
 // the pan gesture back it's scrap if its still alive
 -(void) endStretchWithoutSplittingScrap:(MMScrapView*)scrap atNormalPoint:(CGPoint)np{
     // [stretchScrapGesture say:@"ending start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
+    [silhouette endPanningObject:scrap];
     
     // check the gestures first to see if they're still alive,
     // and give the scrap back if possible.
@@ -1365,7 +1369,9 @@ int skipAll = NO;
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
-
+    NSLog(@"splitting");
+    [silhouette endPanningObject:scrap];
+    
     // save the gestures to local variables.
     // this will let us make sure the input scrap stays with its
     // current gesture, if any
@@ -1591,7 +1597,6 @@ int skipAll = NO;
     [self panAndScaleScrap:panAndPinchScrapGesture];
     [self panAndScaleScrap:panAndPinchScrapGesture2];
 
-    
     if(beginning){
         [silhouette startPanningObject:page withTouches:touches];
     }else{
