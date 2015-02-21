@@ -204,6 +204,32 @@
     
 }
 
+#pragma mark = Ruler
+
+/**
+ * return YES if we're in hand mode, no otherwise
+ */
+-(BOOL) shouldAllowPan:(MMPaperView*)page{
+    return handButton.selected;
+}
+
+-(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+    if(gesture.subState == UIGestureRecognizerStateBegan ||
+       (gesture.state == UIGestureRecognizerStateBegan && gesture.subState == UIGestureRecognizerStateChanged)){
+        [silhouette startPanningObject:rulerView withTouches:gesture.validTouches];
+    }else{
+        [silhouette continuePanningObject:rulerView withTouches:gesture.validTouches];
+    }
+    [super didMoveRuler:gesture];
+}
+
+-(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
+    if(rulerView.rulerIsVisible){
+        [silhouette endPanningObject:rulerView];
+    }
+    [super didStopRuler:gesture];
+}
+
 #pragma mark - Insert Image
 
 -(void) insertImageButtonTapped:(UIButton*)_button{

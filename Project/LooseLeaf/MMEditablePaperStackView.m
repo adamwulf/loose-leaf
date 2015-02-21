@@ -670,6 +670,7 @@ struct SidebarButton{
     }
     [rulerView updateLineAt:[gesture point1InView:rulerView] to:[gesture point2InView:rulerView]
            startingDistance:[gesture initialDistance]];
+    
 }
 
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{

@@ -32,6 +32,7 @@
 }
 
 -(void) updateTouch:(UITouch*)t{
+    return;
     NSMutableSet* seenKeys = [NSMutableSet set];
     CGPoint loc = [t locationInView:self];
     NSNumber* key = [NSNumber numberWithUnsignedInteger:t.hash];

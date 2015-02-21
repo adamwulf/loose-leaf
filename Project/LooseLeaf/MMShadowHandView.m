@@ -78,43 +78,46 @@
 #pragma mark - Panning a Page
 
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    if(!leftHand.isActive){
-        [leftHand startPanningObject:obj withTouches:touches];
-    }else{
-        [rightHand startPanningObject:obj withTouches:touches];
-    }
+    [leftHand startPinchingObject:obj withTouches:touches];
+//    if(!leftHand.isActive){
+//        [leftHand startPanningObject:obj withTouches:touches];
+//    }else{
+//        [rightHand startPanningObject:obj withTouches:touches];
+//    }
 }
 
 -(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
-    if([touches count] == 4){
-        touches = [touches sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [obj1 locationInView:self].x > [obj2 locationInView:self].x;
-        }];
-        [leftHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(0, 2)]];
-        [rightHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(2, 2)]];
-    }else{
-        if(leftHand.heldObject == obj ||
-           (rightHand.heldObject !=obj && leftHand.heldObject == nil)){
-            [leftHand continuePanningObject:obj withTouches:touches];
-        }else{
-            [rightHand continuePanningObject:obj withTouches:touches];
-        }
-    }
+    [leftHand continuePinchingObject:obj withTouches:touches];
+//    if([touches count] == 4){
+//        touches = [touches sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+//            return [obj1 locationInView:self].x > [obj2 locationInView:self].x;
+//        }];
+//        [leftHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(0, 2)]];
+//        [rightHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(2, 2)]];
+//    }else{
+//        if(leftHand.heldObject == obj ||
+//           (rightHand.heldObject !=obj && leftHand.heldObject == nil)){
+//            [leftHand continuePanningObject:obj withTouches:touches];
+//        }else{
+//            [rightHand continuePanningObject:obj withTouches:touches];
+//        }
+//    }
 }
 
 -(void) endPanningObject:(id)obj{
-    if(leftHand.heldObject == obj){
-        NSLog(@"ending left pan");
-        [leftHand endPanningObject:obj];
-    }else{
-        NSLog(@"didn't end left pan %@", [leftHand.heldObject uuid]);
-    }
-    if(rightHand.heldObject == obj){
-        NSLog(@"ending right pan");
-        [rightHand endPanningObject:obj];
-    }else{
-        NSLog(@"didn't end right pan %@", [leftHand.heldObject uuid]);
-    }
+    [leftHand endPinchingObject:obj];
+//    if(leftHand.heldObject == obj){
+//        NSLog(@"ending left pan");
+//        [leftHand endPanningObject:obj];
+//    }else{
+//        NSLog(@"didn't end left pan %@", [leftHand.heldObject uuid]);
+//    }
+//    if(rightHand.heldObject == obj){
+//        NSLog(@"ending right pan");
+//        [rightHand endPanningObject:obj];
+//    }else{
+//        NSLog(@"didn't end right pan %@", [leftHand.heldObject uuid]);
+//    }
 }
 
 #pragma mark - Drawing Events
