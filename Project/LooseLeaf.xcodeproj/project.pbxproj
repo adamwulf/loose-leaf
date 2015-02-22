@@ -272,6 +272,9 @@
 		667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */; };
 		6682FEC21A8DB21800187325 /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6682FEC11A8DB21800187325 /* ClippingBezier.framework */; };
 		6682FEF41A8DB41700187325 /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6682FEF31A8DB41700187325 /* SimpleCloudKitManager.framework */; };
+		6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */; };
+		6688D1E61A994FC700EB17EC /* ruler-circle.mov in Resources */ = {isa = PBXBuildFile; fileRef = 6688D1E51A994FC700EB17EC /* ruler-circle.mov */; };
+		6688D1E91A99508700EB17EC /* MMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6688D1E81A99508700EB17EC /* MMTutorialView.m */; };
 		668D19D619F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */; };
 		668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */; };
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
@@ -899,6 +902,11 @@
 		667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitButton.m; sourceTree = "<group>"; };
 		6682FEC11A8DB21800187325 /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/ClippingBezier-gcinlesstmdcbyecupfxufnlcfyq/Build/Products/Debug-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
 		6682FEF31A8DB41700187325 /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
+		6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVideoLoopView.h; sourceTree = "<group>"; };
+		6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVideoLoopView.m; sourceTree = "<group>"; };
+		6688D1E51A994FC700EB17EC /* ruler-circle.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "ruler-circle.mov"; sourceTree = "<group>"; };
+		6688D1E71A99508700EB17EC /* MMTutorialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialView.h; sourceTree = "<group>"; };
+		6688D1E81A99508700EB17EC /* MMTutorialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialView.m; sourceTree = "<group>"; };
 		668D19D419F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitTutorialImportCoordinator.h; sourceTree = "<group>"; };
 		668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitTutorialImportCoordinator.m; sourceTree = "<group>"; };
 		668D19D719F781EB00A65DCF /* MMCloudAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudAvatarButton.h; sourceTree = "<group>"; };
@@ -2042,6 +2050,18 @@
 			name = PDFs;
 			sourceTree = "<group>";
 		};
+		6688D1E11A994E7500EB17EC /* TutorialView */ = {
+			isa = PBXGroup;
+			children = (
+				6688D1E51A994FC700EB17EC /* ruler-circle.mov */,
+				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
+				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
+				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
+				6688D1E81A99508700EB17EC /* MMTutorialView.m */,
+			);
+			name = TutorialView;
+			sourceTree = "<group>";
+		};
 		668D19D319F772AA00A65DCF /* Tutorial Pages */ = {
 			isa = PBXGroup;
 			children = (
@@ -2519,6 +2539,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				6688D1E11A994E7500EB17EC /* TutorialView */,
 				662B7D1C19E7A54C00C5529B /* Trackers */,
 				661708E31981B434006A73EF /* FXBlurView */,
 				6693295715958A890033E557 /* Managers */,
@@ -2984,6 +3005,7 @@
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6634856519DB41F000B5CF2D /* Crumple.license in Resources */,
+				6688D1E61A994FC700EB17EC /* ruler-circle.mov in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				66627F891A02582F0064FAD3 /* MPCloseBtn.png in Resources */,
 				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
@@ -3106,6 +3128,7 @@
 				66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */,
 				667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
+				6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
 				6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */,
 				667AE6AB19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m in Sources */,
@@ -3232,6 +3255,7 @@
 				66627F811A02582F0064FAD3 /* MPBOOLToNSNumberValueTransformer.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
 				66627F851A02582F0064FAD3 /* MPCGPointToNSDictionaryValueTransformer.m in Sources */,
+				6688D1E91A99508700EB17EC /* MMTutorialView.m in Sources */,
 				66A7AF1D19A53AF400E0AA29 /* MMCloudKitShareItem.m in Sources */,
 				667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */,
 				66627F861A02582F0064FAD3 /* MPCGRectToNSDictionaryValueTransformer.m in Sources */,
