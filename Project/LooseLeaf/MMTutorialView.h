@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMTutorialView : UIView
+@interface MMTutorialView : UIView<UIScrollViewDelegate>
 
 @end

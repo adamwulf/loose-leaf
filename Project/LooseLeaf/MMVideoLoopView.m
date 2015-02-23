@@ -16,11 +16,11 @@
 
 -(id) initForVideo:(NSURL*)videoURL{
     if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
-        avPlayer = [AVPlayer playerWithURL:videoURL];
-        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
+//        avPlayer = [AVPlayer playerWithURL:videoURL];
+//        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
         
-        avPlayerLayer.frame = self.layer.bounds;
-        [self.layer addSublayer: avPlayerLayer];
+//        avPlayerLayer.frame = self.layer.bounds;
+//        [self.layer addSublayer: avPlayerLayer];
         [avPlayer play];
         
         avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
