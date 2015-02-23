@@ -47,8 +47,20 @@
         titleLabel.text = _title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:titleLabel];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     return self;
+}
+
+-(void) didBecomeActive{
+    if(avPlayer){
+        [avPlayer play];
+    }
+}
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
