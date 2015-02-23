@@ -149,8 +149,8 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 
 // cloudkit tutorial
-#define kMPCloudKitTutorialUUID @"2E73BFF3-843D-417F-A8FA-71C6E9783D67"
-#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
+#define kMPHasFinishedTutorial @"Has Finished Tutorial"
+#define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
