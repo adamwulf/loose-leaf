@@ -609,7 +609,6 @@ struct SidebarButton{
         [editablePage setEditable:NO];
         [editablePage updateThumbnailVisibility];
     }
-//    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 #pragma mark = Saving and Editing

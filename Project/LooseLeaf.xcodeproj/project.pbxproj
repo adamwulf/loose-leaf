@@ -280,7 +280,6 @@
 		6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */; };
 		6688D1E61A994FC700EB17EC /* ruler-circle.mov in Resources */ = {isa = PBXBuildFile; fileRef = 6688D1E51A994FC700EB17EC /* ruler-circle.mov */; };
 		6688D1E91A99508700EB17EC /* MMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6688D1E81A99508700EB17EC /* MMTutorialView.m */; };
-		668D19D619F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */; };
 		668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */; };
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
@@ -919,8 +918,6 @@
 		6688D1E51A994FC700EB17EC /* ruler-circle.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "ruler-circle.mov"; sourceTree = "<group>"; };
 		6688D1E71A99508700EB17EC /* MMTutorialView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialView.h; sourceTree = "<group>"; };
 		6688D1E81A99508700EB17EC /* MMTutorialView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialView.m; sourceTree = "<group>"; };
-		668D19D419F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitTutorialImportCoordinator.h; sourceTree = "<group>"; };
-		668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitTutorialImportCoordinator.m; sourceTree = "<group>"; };
 		668D19D719F781EB00A65DCF /* MMCloudAvatarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudAvatarButton.h; sourceTree = "<group>"; };
 		668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudAvatarButton.m; sourceTree = "<group>"; };
 		668D19DA19F8572700A65DCF /* UIApplication+Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Version.h"; sourceTree = "<group>"; };
@@ -2090,8 +2087,6 @@
 		668D19D319F772AA00A65DCF /* Tutorial Pages */ = {
 			isa = PBXGroup;
 			children = (
-				668D19D419F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.h */,
-				668D19D519F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m */,
 			);
 			name = "Tutorial Pages";
 			sourceTree = "<group>";
@@ -3420,7 +3415,6 @@
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,
 				66627FA41A02582F0064FAD3 /* MPUIEdgeInsetsToNSDictionaryValueTransformer.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
-				668D19D619F772E600A65DCF /* MMCloudKitTutorialImportCoordinator.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
 				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,
 				66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */,
