@@ -7,24 +7,29 @@
 //
 
 #import "MMVideoLoopView.h"
+#import "NSThread+BlockAdditions.h"
 #import <AVFoundation/AVFoundation.h>
 
 @implementation MMVideoLoopView{
+    NSURL* videoURL;
+    UIImageView* imageView;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
 }
 
--(id) initForVideo:(NSURL*)videoURL{
+-(id) initForVideo:(NSURL*)_videoURL{
     if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
-//        avPlayer = [AVPlayer playerWithURL:videoURL];
-//        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
         
-//        avPlayerLayer.frame = self.layer.bounds;
-//        [self.layer addSublayer: avPlayerLayer];
-        [avPlayer play];
+        videoURL = _videoURL;
         
-        avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-        
+        imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        [self addSubview:imageView];
+
+        AVURLAsset* asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
+        AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+        UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
+        imageView.image = image;
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playerItemDidReachEnd:)
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
@@ -41,13 +46,28 @@
 
 -(void) startAnimating{
     if(![self isAnimating]){
+        [[NSThread mainThread] performBlock:^{
+            imageView.hidden = YES;
+        } afterDelay:.1];
+        
+
+        avPlayer = [AVPlayer playerWithURL:videoURL];
+        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
+        avPlayerLayer.frame = self.layer.bounds;
+        [self.layer addSublayer: avPlayerLayer];
         [avPlayer play];
+        avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
     }
 }
 
 -(void) stopAnimating{
     if([self isAnimating]){
+        [avPlayerLayer removeFromSuperlayer];
+        avPlayerLayer = nil;
         [avPlayer pause];
+        avPlayer = nil;
+        
+        imageView.hidden = NO;
     }
 }
 
