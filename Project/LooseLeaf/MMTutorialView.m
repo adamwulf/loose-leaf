@@ -9,12 +9,14 @@
 #import "MMTutorialView.h"
 #import "MMVideoLoopView.h"
 #import "AVHexColor.h"
+#import "UIColor+Shadow.h"
 
 @implementation MMTutorialView{
     UIPageControl* pageControl;
     UIView* fadedBackground;
     UIScrollView* scrollView;
     UIView* separator;
+    UIButton* nextButton;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -69,6 +71,7 @@
         
         pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y + boxSize-40, boxSize, 40)];
         pageControl.pageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
+        pageControl.userInteractionEnabled = NO;
         pageControl.currentPageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
         [self addSubview:pageControl];
 
@@ -79,10 +82,44 @@
         [maskedScrollContainer addSubview:separator];
 
         
+        
+        CGFloat buttonWidth = 160;
+        CGFloat buttonHeight = 70;
+        CGFloat adjust = .35;
+        nextButton = [[UIButton alloc] initWithFrame:CGRectMake(boxSize-buttonWidth, boxSize-buttonHeight, buttonWidth, buttonHeight*(1+adjust))];
+        nextButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, adjust*buttonHeight, 0);
+        nextButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
+        nextButton.adjustsImageWhenHighlighted = NO;
+        [nextButton setImage:[UIImage imageNamed:@"white-arrow.png"] forState:UIControlStateNormal];
+        [nextButton addTarget:self action:@selector(nextPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+        CAShapeLayer* nextButtonMask = [CAShapeLayer layer];
+        nextButtonMask.backgroundColor = [UIColor clearColor].CGColor;
+        nextButtonMask.fillColor = [UIColor whiteColor].CGColor;
+        nextButtonMask.path = [UIBezierPath bezierPathWithRoundedRect:nextButton.bounds
+                                                    byRoundingCorners:UIRectCornerTopLeft
+                                                          cornerRadii:CGSizeMake(boxSize/10, boxSize/10)].CGPath;
+        nextButton.layer.mask = nextButtonMask;
+        
+        [maskedScrollContainer addSubview:nextButton];
+        
         [self loadTutorials];
     }
     return self;
 }
+
+#pragma mark - Actions
+
+-(void) nextPressed:(UIButton*)_button{
+    NSLog(@"next!");
+    
+    CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
+    NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
+    idx = MIN(idx+1, [scrollView.subviews count]-1);
+    CGFloat x = idx*scrollView.bounds.size.width;
+    [scrollView scrollRectToVisible:CGRectMake(x, 0, scrollView.bounds.size.width, scrollView.bounds.size.height) animated:YES];
+}
+
 
 #pragma mark - UIScrollViewDelegate
 
@@ -147,6 +184,7 @@
 
     pageControl.numberOfPages = [tutorials count];
     pageControl.currentPage = 0;
+    
 }
 
 

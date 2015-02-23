@@ -54,6 +54,7 @@
 		662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */; };
 		662808FD1A9BB6D500CA3F9A /* ruler-for-curve-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */; };
 		662808FF1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */; };
+		662809011A9BB97500CA3F9A /* white-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 662809001A9BB97500CA3F9A /* white-arrow.png */; };
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -537,6 +538,7 @@
 		662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "draw-clip-2-2.mov"; sourceTree = "<group>"; };
 		662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "ruler-for-curve-2.mov"; sourceTree = "<group>"; };
 		662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "stretch-in-app-alt-2.mov"; sourceTree = "<group>"; };
+		662809001A9BB97500CA3F9A /* white-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-arrow.png"; sourceTree = "<group>"; };
 		6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewStateDelegate.h; sourceTree = "<group>"; };
 		662B7D1D19E7A55700C5529B /* MMStatTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStatTracker.h; sourceTree = "<group>"; };
 		662B7D1E19E7A55700C5529B /* MMStatTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStatTracker.m; sourceTree = "<group>"; };
@@ -2062,6 +2064,7 @@
 		6688D1E11A994E7500EB17EC /* TutorialView */ = {
 			isa = PBXGroup;
 			children = (
+				662809001A9BB97500CA3F9A /* white-arrow.png */,
 				6688D1E51A994FC700EB17EC /* ruler-circle.mov */,
 				662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */,
 				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
@@ -3057,6 +3060,7 @@
 				66EDE44319B1011800A5623B /* minizip.license in Resources */,
 				667C6368199FF26100E93CD6 /* copy@2x.png in Resources */,
 				66627F8D1A02582F0064FAD3 /* MPNotification.storyboard in Resources */,
+				662809011A9BB97500CA3F9A /* white-arrow.png in Resources */,
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
