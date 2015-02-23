@@ -79,7 +79,8 @@
         NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
                                              to:language];
-        [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
+        [[[Mixpanel sharedInstance] people] setOnce:@{@"Has Finished Tutorial" : @(NO),
+                                                      kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
                                                       kMPHasReorderedPage : @(NO),

@@ -8,6 +8,7 @@
 
 #import "MMTutorialStackView.h"
 #import "MMTutorialView.h"
+#import "Mixpanel.h"
 
 @implementation MMTutorialStackView{
     UIView* backdrop;
@@ -17,13 +18,17 @@
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         
-        backdrop = [[UIView alloc] initWithFrame:self.bounds];
-        backdrop.backgroundColor = [UIColor whiteColor];
-        [self addSubview:backdrop];
-        
-        tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds];
-        tutorialView.delegate = self;
-        [self addSubview:tutorialView];
+        BOOL hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:@"hasFinishedTutorial"];
+
+        if(!hasFinishedTutorial){
+            backdrop = [[UIView alloc] initWithFrame:self.bounds];
+            backdrop.backgroundColor = [UIColor whiteColor];
+            [self addSubview:backdrop];
+            
+            tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds];
+            tutorialView.delegate = self;
+            [self addSubview:tutorialView];
+        }
     }
     return self;
 }
@@ -32,6 +37,8 @@
 
 -(void) userIsViewingTutorialStep:(NSInteger)stepNum{
     NSLog(@"user is watching %d", (int) stepNum);
+    
+    
 }
 
 -(void) didFinishTutorial{
@@ -44,7 +51,9 @@
         [tutorialView removeFromSuperview];
         tutorialView = nil;
     }];
-    NSLog(@"user finished tutorial");
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasFinishedTutorial"];
+    [[[Mixpanel sharedInstance] people] set:@"Has Finished Tutorial" to:@(YES)];
 }
 
 @end

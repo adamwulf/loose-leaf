@@ -120,8 +120,6 @@
 #pragma mark - Actions
 
 -(void) nextPressed:(UIButton*)_button{
-    NSLog(@"next!");
-    
     CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
     if(idx == [scrollView.subviews count]-1){
