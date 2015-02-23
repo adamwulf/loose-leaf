@@ -10,6 +10,8 @@
 
 @protocol MMTutorialViewDelegate <NSObject>
 
+-(void) userIsViewingTutorialStep:(NSInteger)stepNum;
+
 -(void) didFinishTutorial;
 
 @end

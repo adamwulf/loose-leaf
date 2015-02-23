@@ -30,6 +30,10 @@
 
 #pragma mark - MMTutorialViewDelegate
 
+-(void) userIsViewingTutorialStep:(NSInteger)stepNum{
+    NSLog(@"user is watching %d", (int) stepNum);
+}
+
 -(void) didFinishTutorial{
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 0;
@@ -40,6 +44,7 @@
         [tutorialView removeFromSuperview];
         tutorialView = nil;
     }];
+    NSLog(@"user finished tutorial");
 }
 
 @end

@@ -72,14 +72,12 @@
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         }
         [avPlayer play];
-        NSLog(@"tutorial: %@ startAnimating", title);
     }
 }
 
 -(void) pauseAnimating{
     if([self isAnimating]){
         [avPlayer pause];
-        NSLog(@"tutorial: %@ paused", title);
     }
 }
 
@@ -89,8 +87,6 @@
         avPlayerLayer = nil;
         [avPlayer pause];
         avPlayer = nil;
-        
-        NSLog(@"tutorial: %@ stopAnimating", title);
     }
 }
 

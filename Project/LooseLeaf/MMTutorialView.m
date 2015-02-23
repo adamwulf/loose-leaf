@@ -111,6 +111,12 @@
     return self;
 }
 
+-(void) setDelegate:(NSObject<MMTutorialViewDelegate> *)_delegate{
+    delegate = _delegate;
+    NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
+    [self.delegate userIsViewingTutorialStep:idx];
+}
+
 #pragma mark - Actions
 
 -(void) nextPressed:(UIButton*)_button{
@@ -153,6 +159,7 @@
         [scrollView.subviews makeObjectsPerformSelector:@selector(stopAnimating)];
     }
     [visible startAnimating];
+    [self.delegate userIsViewingTutorialStep:idx];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)_scrollView{
@@ -192,10 +199,9 @@
     
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width * [tutorials count], scrollView.bounds.size.height);
     [(MMVideoLoopView*)scrollView.subviews.firstObject startAnimating];
-
+    
     pageControl.numberOfPages = [tutorials count];
     pageControl.currentPage = 0;
-    
 }
 
 
