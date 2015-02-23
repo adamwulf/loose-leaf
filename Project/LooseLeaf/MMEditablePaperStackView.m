@@ -18,15 +18,9 @@
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
-struct SidebarButton{
-    void* button;
-    CGRect originalRect;
-} SidebarButton;
-
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
-    struct SidebarButton buttons[10];
     
     // this tracks how many times the user has
     // used two fingers with the ruler gesture in
@@ -41,6 +35,8 @@ struct SidebarButton{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        
+        numberOfButtons = 10;
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
         
@@ -421,20 +417,15 @@ struct SidebarButton{
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration{
     [UIView animateWithDuration:duration animations:^{
-        addPageSidebarButton.alpha = visible;
+        
+        for(int i=0;i<numberOfButtons;i++){
+            [((__bridge UIButton*)buttons[i].button) setAlpha:visible];
+        }
+        
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
-        insertImageButton.alpha = visible;
         textButton.alpha = visible;
-        pencilTool.alpha = visible;
-        scissorButton.alpha = visible;
-        eraserButton.alpha = visible;
-        shareButton.alpha = visible;
         mapButton.alpha = visible;
-        redoButton.alpha = visible;
-        undoButton.alpha = visible;
-        rulerButton.alpha = visible;
-        handButton.alpha = visible;
         settingsButton.alpha = visible;
     }];
 }
@@ -1041,7 +1032,7 @@ struct SidebarButton{
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
     if([self shouldPrioritizeSidebarButtonsForTaps]){
-        for(int i=0;i<10;i++){
+        for(int i=0;i<numberOfButtons;i++){
             if(CGRectContainsPoint(buttons[i].originalRect, point)){
                 return (__bridge UIView*) buttons[i].button;
             }

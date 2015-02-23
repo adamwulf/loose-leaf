@@ -13,6 +13,7 @@
 @implementation MMTutorialStackView{
     UIView* backdrop;
     MMTutorialView* tutorialView;
+    MMUndoRedoButton* helpButton;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -21,16 +22,37 @@
         BOOL hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:@"hasFinishedTutorial"];
 
         if(!hasFinishedTutorial){
-            backdrop = [[UIView alloc] initWithFrame:self.bounds];
-            backdrop.backgroundColor = [UIColor whiteColor];
-            [self addSubview:backdrop];
-            
-            tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds];
-            tutorialView.delegate = self;
-            [self addSubview:tutorialView];
+            [self startTutorial];
         }
+ 
+        helpButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        helpButton.delegate = self;
+        [helpButton addTarget:self action:@selector(startTutorial) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:helpButton];
+        buttons[numberOfButtons].button = (__bridge void *)(helpButton);
+        buttons[numberOfButtons].originalRect = helpButton.frame;
+        numberOfButtons++;
     }
     return self;
+}
+
+#pragma mark - Restart Tutorial
+
+-(void) startTutorial{
+    backdrop = [[UIView alloc] initWithFrame:self.bounds];
+    backdrop.backgroundColor = [UIColor whiteColor];
+    backdrop.alpha = 0;
+    [self addSubview:backdrop];
+    
+    tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds];
+    tutorialView.delegate = self;
+    tutorialView.alpha = 0;
+    [self addSubview:tutorialView];
+    
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 1;
+        tutorialView.alpha = 1;
+    }];
 }
 
 #pragma mark - MMTutorialViewDelegate
