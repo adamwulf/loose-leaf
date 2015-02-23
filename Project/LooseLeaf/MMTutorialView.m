@@ -75,6 +75,7 @@
         
         separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
+        separator.hidden = YES;
         [maskedScrollContainer addSubview:separator];
 
         
@@ -113,11 +114,25 @@
 #pragma mark - Tutorial Loading
 
 -(void) loadTutorials{
-    NSArray* tutorials = @[@"ruler-circle.mov",@"ruler-circle.mov",@"ruler-circle.mov"];
+    NSArray* tutorials = @[@{
+        @"title":@"Draw a Circle",
+        @"video":@"ruler-circle.mov"
+    },@{
+        @"title":@"Clone a Photo",
+        @"video":@"stretch-in-app-alt-2.mov"
+    },@{
+        @"title":@"Draw a Curve",
+        @"video":@"ruler-for-curve-2.mov"
+    },@{
+        @"title":@"Draw on your Photos",
+        @"video":@"draw-clip-2-2.mov"
+    }];
     
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        NSURL* tutorialMov = [[NSBundle mainBundle] URLForResource:obj withExtension:nil];
-        MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov];
+        NSString* videoURL = [obj objectForKey:@"video"];
+        NSString* videoTitle = [obj objectForKey:@"title"];
+        NSURL* tutorialMov = [[NSBundle mainBundle] URLForResource:videoURL withExtension:nil];
+        MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov withTitle:videoTitle];
         tutorial.backgroundColor = [AVHexColor randomColor];
         [scrollView addSubview:tutorial];
 

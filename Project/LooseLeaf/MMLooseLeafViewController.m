@@ -17,6 +17,7 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMDeletePageSidebarController.h"
 #import "MMPhotoManager.h"
+#import "MMTutorialStackView.h"
 #import "MMCloudKitImportExportView.h"
 
 @implementation MMLooseLeafViewController{
@@ -51,7 +52,7 @@
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
-        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
+        stackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
 //        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];

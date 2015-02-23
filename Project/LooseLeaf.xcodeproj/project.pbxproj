@@ -50,6 +50,10 @@
 		66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9C192BC99D003E97C0 /* SSKeychain.m */; };
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
+		662808F91A9BB57100CA3F9A /* MMTutorialStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 662808F81A9BB57100CA3F9A /* MMTutorialStackView.m */; };
+		662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */; };
+		662808FD1A9BB6D500CA3F9A /* ruler-for-curve-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */; };
+		662808FF1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */; };
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -528,6 +532,11 @@
 		6627DFA519003DF900592EEF /* CaptureSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureSessionManager.h; sourceTree = "<group>"; };
 		6627DFA619003DF900592EEF /* CaptureSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureSessionManager.m; sourceTree = "<group>"; };
 		6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = LooseLeaf.entitlements; sourceTree = "<group>"; };
+		662808F71A9BB57100CA3F9A /* MMTutorialStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialStackView.h; sourceTree = "<group>"; };
+		662808F81A9BB57100CA3F9A /* MMTutorialStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialStackView.m; sourceTree = "<group>"; };
+		662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "draw-clip-2-2.mov"; sourceTree = "<group>"; };
+		662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "ruler-for-curve-2.mov"; sourceTree = "<group>"; };
+		662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "stretch-in-app-alt-2.mov"; sourceTree = "<group>"; };
 		6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewStateDelegate.h; sourceTree = "<group>"; };
 		662B7D1D19E7A55700C5529B /* MMStatTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStatTracker.h; sourceTree = "<group>"; };
 		662B7D1E19E7A55700C5529B /* MMStatTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStatTracker.m; sourceTree = "<group>"; };
@@ -2054,6 +2063,9 @@
 			isa = PBXGroup;
 			children = (
 				6688D1E51A994FC700EB17EC /* ruler-circle.mov */,
+				662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */,
+				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
+				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
 				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
 				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
@@ -2600,6 +2612,8 @@
 				66728714159515FC0018571A /* MMEditablePaperStackView.m */,
 				66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */,
 				66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */,
+				662808F71A9BB57100CA3F9A /* MMTutorialStackView.h */,
+				662808F81A9BB57100CA3F9A /* MMTutorialStackView.m */,
 				6699715317DBA07300E81467 /* Debug */,
 			);
 			name = MMPaperStack;
@@ -3003,14 +3017,17 @@
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */,
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
+				662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6634856519DB41F000B5CF2D /* Crumple.license in Resources */,
 				6688D1E61A994FC700EB17EC /* ruler-circle.mov in Resources */,
+				662808FF1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				66627F891A02582F0064FAD3 /* MPCloseBtn.png in Resources */,
 				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
+				662808FD1A9BB6D500CA3F9A /* ruler-for-curve-2.mov in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */,
@@ -3331,6 +3348,7 @@
 				66381F5D19CB96730014796F /* MMSinglePhotoCollectionViewCell.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
 				66627FA91A02582F0064FAD3 /* NSData+MPBase64.m in Sources */,
+				662808F91A9BB57100CA3F9A /* MMTutorialStackView.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,

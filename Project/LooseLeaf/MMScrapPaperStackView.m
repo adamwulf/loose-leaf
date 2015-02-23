@@ -179,9 +179,6 @@
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
 
-        MMTutorialView* tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds];
-        [self addSubview:tutorialView];
-        
 //        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(380, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
 //        debugImgView.layer.borderWidth = 1;
 //        debugImgView.layer.borderColor = [UIColor redColor].CGColor;

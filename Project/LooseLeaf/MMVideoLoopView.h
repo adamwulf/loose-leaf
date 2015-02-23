@@ -14,7 +14,7 @@
 - (instancetype) initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
--(id) initForVideo:(NSURL*)videoURL;
+-(id) initForVideo:(NSURL*)videoURL withTitle:(NSString*)_title;
 
 
 -(BOOL) isBuffered;

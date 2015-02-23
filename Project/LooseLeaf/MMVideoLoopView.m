@@ -13,17 +13,22 @@
 @implementation MMVideoLoopView{
     NSURL* videoURL;
     UIImageView* imageView;
+    UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
 }
 
--(id) initForVideo:(NSURL*)_videoURL{
+-(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title{
     if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
         
         videoURL = _videoURL;
         
         imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         [self addSubview:imageView];
+        
+        videoHolder = [[UIView alloc] initWithFrame:self.bounds];
+        videoHolder.backgroundColor = [UIColor clearColor];
+        [self addSubview:videoHolder];
 
         AVURLAsset* asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
         AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
@@ -34,6 +39,12 @@
                                                  selector:@selector(playerItemDidReachEnd:)
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
                                                    object:[avPlayer currentItem]];
+        
+        UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 50)];
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.text = _title;
+        titleLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:titleLabel];
     }
     return self;
 }
@@ -58,7 +69,7 @@
             avPlayer = [AVPlayer playerWithURL:videoURL];
             avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
             avPlayerLayer.frame = self.layer.bounds;
-            [self.layer addSublayer: avPlayerLayer];
+            [videoHolder.layer addSublayer: avPlayerLayer];
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         }
         [avPlayer play];
