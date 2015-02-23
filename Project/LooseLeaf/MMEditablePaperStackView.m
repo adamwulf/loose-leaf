@@ -346,22 +346,22 @@
     rulerButton.selected = NO;
 }
 
--(void) bounceHandButton{
+-(void) bounceSidebarButton:(MMSidebarButton*)button{
     CheckMainThread;
-    CGPoint onscreen = handButton.center;
+    CGPoint onscreen = button.center;
     
     [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
         [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
-            handButton.center = CGPointMake(onscreen.x+12, onscreen.y);
+            button.center = CGPointMake(onscreen.x+12, onscreen.y);
         }];
-        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
-            handButton.center = onscreen;
+        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.3 animations:^{
+            button.center = onscreen;
         }];
-        [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
-            handButton.center = CGPointMake(onscreen.x + 8, onscreen.y);
+        [UIView addKeyframeWithRelativeStartTime:.55 relativeDuration:.25 animations:^{
+            button.center = CGPointMake(onscreen.x + 8, onscreen.y);
         }];
-        [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
-            handButton.center = onscreen;
+        [UIView addKeyframeWithRelativeStartTime:.80 relativeDuration:.2 animations:^{
+            button.center = onscreen;
         }];
     } completion:nil];
 }
@@ -668,7 +668,7 @@
         numberOfRulerGesturesWithoutStroke++;
         NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
         if(numberOfRulerGesturesWithoutStroke > 2){
-            [self bounceHandButton];
+            [self bounceSidebarButton:handButton];
         }
     }
 }

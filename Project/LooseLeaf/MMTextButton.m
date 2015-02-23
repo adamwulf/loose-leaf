@@ -11,7 +11,11 @@
 #import "Constants.h"
 #import "UIFont+UIBezierCurve.h"
 
-@implementation MMTextButton
+@implementation MMTextButton{
+    BOOL inverted;
+}
+
+@synthesize inverted;
 
 - (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset andYOffset:(CGFloat)_yOffset{
     self = [super initWithFrame:_frame];
@@ -29,6 +33,9 @@
 }
 
 -(UIColor*) backgroundColor{
+    if(inverted){
+        return [super backgroundColor];
+    }
     return [[UIColor whiteColor] colorWithAlphaComponent:.7];
 }
 
@@ -45,7 +52,8 @@
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-    
+//    UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
+
     
     CGContextSaveGState(context);
     
@@ -76,8 +84,21 @@
     [glyphPath fill];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
     
-    [darkerGreyBorder setFill];
-    [glyphPath fill];
+    if(inverted){
+//        [barelyWhite setFill];
+//        [glyphPath fill];
+//        CGContextSetBlendMode(context, kCGBlendModeClear);
+//        [[UIColor whiteColor] setStroke];
+//        [glyphPath stroke];
+//        CGContextSetBlendMode(context, kCGBlendModeNormal);
+//        [darkerGreyBorder setStroke];
+//        [glyphPath stroke];
+        [darkerGreyBorder setFill];
+        [glyphPath fill];
+    }else{
+        [darkerGreyBorder setFill];
+        [glyphPath fill];
+    }
     
     CGContextRestoreGState(context);
     

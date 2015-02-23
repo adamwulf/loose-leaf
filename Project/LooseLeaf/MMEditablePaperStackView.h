@@ -103,4 +103,6 @@ struct SidebarButton{
 
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps;
 
+-(void) bounceSidebarButton:(MMSidebarButton*)button;
+
 @end

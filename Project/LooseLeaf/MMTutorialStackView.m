@@ -13,7 +13,7 @@
 @implementation MMTutorialStackView{
     UIView* backdrop;
     MMTutorialView* tutorialView;
-    MMUndoRedoButton* helpButton;
+    MMTextButton* helpButton;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -24,8 +24,9 @@
         if(!hasFinishedTutorial){
             [self startTutorial];
         }
- 
-        helpButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        
+        helpButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont fontWithName:@"AvenirNext-Regular" size:24] andLetter:@"?" andXOffset:0 andYOffset:0];
+        helpButton.inverted = YES;
         helpButton.delegate = self;
         [helpButton addTarget:self action:@selector(startTutorial) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:helpButton];
@@ -72,6 +73,8 @@
         backdrop = nil;
         [tutorialView removeFromSuperview];
         tutorialView = nil;
+        [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
+//        [self bounceSidebarButton:helpButton];
     }];
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"hasFinishedTutorial"];
