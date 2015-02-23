@@ -1531,6 +1531,18 @@
 			name = SSKeychain;
 			sourceTree = "<group>";
 		};
+		662809021A9BBF2000CA3F9A /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				662809001A9BB97500CA3F9A /* white-arrow.png */,
+				6688D1E51A994FC700EB17EC /* ruler-circle.mov */,
+				662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */,
+				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
+				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
+			);
+			name = assets;
+			sourceTree = "<group>";
+		};
 		662A21B8191D66FF00AD9E31 /* MixPanel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2064,11 +2076,7 @@
 		6688D1E11A994E7500EB17EC /* TutorialView */ = {
 			isa = PBXGroup;
 			children = (
-				662809001A9BB97500CA3F9A /* white-arrow.png */,
-				6688D1E51A994FC700EB17EC /* ruler-circle.mov */,
-				662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */,
-				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
-				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
+				662809021A9BBF2000CA3F9A /* assets */,
 				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
 				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,

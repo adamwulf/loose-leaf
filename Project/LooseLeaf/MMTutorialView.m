@@ -61,7 +61,7 @@
         scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, boxSize, boxSize)];
         scrollView.delegate = self;
         scrollView.pagingEnabled = YES;
-        scrollView.backgroundColor = [UIColor redColor];
+        scrollView.backgroundColor = [UIColor whiteColor];
         scrollView.showsVerticalScrollIndicator = NO;
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.alwaysBounceVertical = NO;
@@ -76,9 +76,8 @@
         [self addSubview:pageControl];
 
         
-        separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, boxSize)];
+        separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
-        separator.hidden = YES;
         [maskedScrollContainer addSubview:separator];
 
         
@@ -170,7 +169,6 @@
         NSString* videoTitle = [obj objectForKey:@"title"];
         NSURL* tutorialMov = [[NSBundle mainBundle] URLForResource:videoURL withExtension:nil];
         MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov withTitle:videoTitle];
-        tutorial.backgroundColor = [AVHexColor randomColor];
         [scrollView addSubview:tutorial];
 
         CGRect fr = scrollView.bounds;

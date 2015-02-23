@@ -12,7 +12,7 @@
 
 @implementation MMVideoLoopView{
     NSURL* videoURL;
-    UIImageView* imageView;
+    NSString* title;
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
@@ -20,10 +20,12 @@
 
 -(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title{
     if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
-        
+        title = _title;
         videoURL = _videoURL;
         
-        imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        self.backgroundColor = [UIColor whiteColor];
+
+        UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         [self addSubview:imageView];
         
         videoHolder = [[UIView alloc] initWithFrame:self.bounds];
@@ -62,10 +64,6 @@
 
 -(void) startAnimating{
     if(![self isAnimating]){
-        [[NSThread mainThread] performBlock:^{
-            imageView.hidden = YES;
-        } afterDelay:.3];
-        
         if(!avPlayer){
             avPlayer = [AVPlayer playerWithURL:videoURL];
             avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
@@ -74,12 +72,14 @@
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         }
         [avPlayer play];
+        NSLog(@"tutorial: %@ startAnimating", title);
     }
 }
 
 -(void) pauseAnimating{
     if([self isAnimating]){
         [avPlayer pause];
+        NSLog(@"tutorial: %@ paused", title);
     }
 }
 
@@ -90,7 +90,7 @@
         [avPlayer pause];
         avPlayer = nil;
         
-        imageView.hidden = NO;
+        NSLog(@"tutorial: %@ stopAnimating", title);
     }
 }
 
