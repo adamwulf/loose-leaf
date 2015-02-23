@@ -14,6 +14,7 @@
     UIPageControl* pageControl;
     UIView* fadedBackground;
     UIScrollView* scrollView;
+    UIView* separator;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -72,6 +73,10 @@
         [self addSubview:pageControl];
 
         
+        separator = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, boxSize)];
+        separator.backgroundColor = [UIColor lightGrayColor];
+        [maskedScrollContainer addSubview:separator];
+
         
         [self loadTutorials];
     }
@@ -84,15 +89,23 @@
     CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
     pageControl.currentPage = MAX(0, MIN(idx, pageControl.numberOfPages-1));
+    
+    int location = scrollView.bounds.size.width - (int)scrollView.contentOffset.x % (int)scrollView.bounds.size.width;
+    CGRect fr = separator.frame;
+    fr.origin.x = location;
+    separator.frame = fr;
 }
 
 -(void) scrollViewWillBeginDragging:(UIScrollView *)_scrollView{
-    [scrollView.subviews makeObjectsPerformSelector:@selector(stopAnimating)];
+    [scrollView.subviews makeObjectsPerformSelector:@selector(pauseAnimating)];
 }
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)_scrollView{
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
+    if(![visible isBuffered]){
+        [scrollView.subviews makeObjectsPerformSelector:@selector(stopAnimating)];
+    }
     [visible startAnimating];
 }
 
@@ -103,7 +116,6 @@
     NSArray* tutorials = @[@"ruler-circle.mov",@"ruler-circle.mov",@"ruler-circle.mov"];
     
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        
         NSURL* tutorialMov = [[NSBundle mainBundle] URLForResource:obj withExtension:nil];
         MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov];
         tutorial.backgroundColor = [AVHexColor randomColor];

@@ -17,8 +17,10 @@
 -(id) initForVideo:(NSURL*)videoURL;
 
 
+-(BOOL) isBuffered;
 -(BOOL) isAnimating;
 -(void) startAnimating;
+-(void) pauseAnimating;
 -(void) stopAnimating;
 
 @end

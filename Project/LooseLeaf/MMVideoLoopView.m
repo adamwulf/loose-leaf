@@ -44,24 +44,35 @@
     return (avPlayer.rate > 0 && !avPlayer.error);
 }
 
+-(BOOL) isBuffered{
+    return avPlayer != nil;
+}
+
 -(void) startAnimating{
     if(![self isAnimating]){
         [[NSThread mainThread] performBlock:^{
             imageView.hidden = YES;
-        } afterDelay:.1];
+        } afterDelay:.3];
         
-
-        avPlayer = [AVPlayer playerWithURL:videoURL];
-        avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
-        avPlayerLayer.frame = self.layer.bounds;
-        [self.layer addSublayer: avPlayerLayer];
+        if(!avPlayer){
+            avPlayer = [AVPlayer playerWithURL:videoURL];
+            avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
+            avPlayerLayer.frame = self.layer.bounds;
+            [self.layer addSublayer: avPlayerLayer];
+            avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+        }
         [avPlayer play];
-        avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+    }
+}
+
+-(void) pauseAnimating{
+    if([self isAnimating]){
+        [avPlayer pause];
     }
 }
 
 -(void) stopAnimating{
-    if([self isAnimating]){
+    if([self isBuffered]){
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
