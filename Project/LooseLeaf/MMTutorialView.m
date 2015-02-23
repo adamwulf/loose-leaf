@@ -155,6 +155,10 @@
     [visible startAnimating];
 }
 
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)_scrollView{
+    [self scrollViewDidEndDecelerating:scrollView];
+}
+
 
 #pragma mark - Tutorial Loading
 
