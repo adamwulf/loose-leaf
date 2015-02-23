@@ -17,7 +17,11 @@
     UIScrollView* scrollView;
     UIView* separator;
     UIButton* nextButton;
+    
+    __weak NSObject<MMTutorialViewDelegate>* delegate;
 }
+
+@synthesize delegate;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -114,6 +118,11 @@
     
     CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
+    if(idx == [scrollView.subviews count]-1){
+        // they're already on the last step,
+        // and are finishing the tutorial
+        [self.delegate didFinishTutorial];
+    }
     idx = MIN(idx+1, [scrollView.subviews count]-1);
     CGFloat x = idx*scrollView.bounds.size.width;
     [scrollView scrollRectToVisible:CGRectMake(x, 0, scrollView.bounds.size.width, scrollView.bounds.size.height) animated:YES];

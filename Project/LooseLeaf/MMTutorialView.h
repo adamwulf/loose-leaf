@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMTutorialViewDelegate.h"
 
 @interface MMTutorialView : UIView<UIScrollViewDelegate>
+
+@property (nonatomic, weak) NSObject<MMTutorialViewDelegate>* delegate;
 
 @end

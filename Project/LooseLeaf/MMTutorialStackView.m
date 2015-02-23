@@ -22,10 +22,24 @@
         [self addSubview:backdrop];
         
         tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds];
+        tutorialView.delegate = self;
         [self addSubview:tutorialView];
-
     }
     return self;
+}
+
+#pragma mark - MMTutorialViewDelegate
+
+-(void) didFinishTutorial{
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 0;
+        tutorialView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [backdrop removeFromSuperview];
+        backdrop = nil;
+        [tutorialView removeFromSuperview];
+        tutorialView = nil;
+    }];
 }
 
 @end

@@ -539,6 +539,7 @@
 		662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "ruler-for-curve-2.mov"; sourceTree = "<group>"; };
 		662808FE1A9BB6DF00CA3F9A /* stretch-in-app-alt-2.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "stretch-in-app-alt-2.mov"; sourceTree = "<group>"; };
 		662809001A9BB97500CA3F9A /* white-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white-arrow.png"; sourceTree = "<group>"; };
+		662809031A9BC16C00CA3F9A /* MMTutorialViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialViewDelegate.h; sourceTree = "<group>"; };
 		6629058B17FE0C4700FA680B /* MMScrapViewStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapViewStateDelegate.h; sourceTree = "<group>"; };
 		662B7D1D19E7A55700C5529B /* MMStatTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStatTracker.h; sourceTree = "<group>"; };
 		662B7D1E19E7A55700C5529B /* MMStatTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStatTracker.m; sourceTree = "<group>"; };
@@ -2081,6 +2082,7 @@
 				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
 				6688D1E81A99508700EB17EC /* MMTutorialView.m */,
+				662809031A9BC16C00CA3F9A /* MMTutorialViewDelegate.h */,
 			);
 			name = TutorialView;
 			sourceTree = "<group>";
