@@ -22,6 +22,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 
 @implementation MMAppDelegate{
@@ -40,11 +41,26 @@
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
-    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale, nil]];
+    [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
     
-    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
+    dispatch_async(dispatch_get_background_queue(), ^{
+        NSString* str = [MMAppDelegate userID];
+        NSInteger loc1 = [str rangeOfString:@"-"].location;
+        NSInteger loc2 = [str rangeOfString:@"-" options:NSLiteralSearch range:NSMakeRange(loc1+1, [str length]-loc1-1)].location;
+        str = [str substringToIndex:loc2];
+        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"mixpanel_uuid"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    });
+    
+    [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
+                                                        [MMAppDelegate userID], kMPID, nil]];
+    
     [[Crashlytics sharedInstance] setDelegate:self];
+    [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
+    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    [FBAppEvents activateApp];
+    
     [[NSThread mainThread] performBlock:^{
         [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
         [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
@@ -319,6 +335,15 @@
     
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
     [crashProperties setObject:@"Exception" forKey:@"Cause"];
+
+    // set default values
+    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
+    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
+    [crashProperties setObject:[NSDate date] forKey:@"crashedOnDate"];
+    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
+    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
+    
+    // set crash specific values
     if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
     if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
     if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];

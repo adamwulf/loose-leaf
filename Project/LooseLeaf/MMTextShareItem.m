@@ -104,7 +104,7 @@
         strResult = @"Cancelled";
     }else if(result == MessageComposeResultFailed){
         strResult = @"Failed";
-    }else if(result == MessageComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MessageComposeResultSent){

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <JotUI/JotUI.h>
+#import "MMRulerAdjustment.h"
 
 @interface MMRulerView : UIView
 
@@ -17,7 +18,7 @@
 
 -(void) liftRuler;
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement;
+-(MMRulerAdjustment*) adjustElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement;
 
 -(void) willBeginStrokeAt:(CGPoint)point;
 

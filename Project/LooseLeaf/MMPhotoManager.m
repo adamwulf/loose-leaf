@@ -161,12 +161,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                           resultBlock:^(ALAssetsGroup *group) {
                               MMPhotoAlbum* addedAlbum = [[MMPhotoAlbum alloc] initWithAssetGroup:group];
                               @synchronized(self){
-                                  if(!group){
-                                      [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-                                          [obj loadPreviewPhotos];
-                                          return obj;
-                                      }];
-                                  }
                                   if(addedAlbum.type == ALAssetsGroupAlbum){
                                       albums = [self sortArrayByAlbumName:[albums arrayByAddingObject:addedAlbum]];
                                   }else if(addedAlbum.type == ALAssetsGroupEvent){
@@ -273,10 +267,6 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
-                                                            [[[[albums arrayByAddingObjectsFromArray:events] arrayByAddingObjectsFromArray:faces] arrayByAddingObject:cameraRoll] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-                                                                [obj loadPreviewPhotos];
-                                                                return obj;
-                                                            }];
                                                         }
                                                         hasEverInitailized = YES;
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
@@ -308,20 +298,20 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
 
 
 -(NSError*) processError:(NSError*)error{
-    NSString *errorMessage = nil;
+//    NSString *errorMessage = nil;
     switch ([error code]) {
         case ALAssetsLibraryAccessUserDeniedError:
         case ALAssetsLibraryAccessGloballyDeniedError:
             @synchronized(self){
                 hasEverInitailized = YES;
             }
-            errorMessage = @"The user has declined access to it.";
+//            errorMessage = @"The user has declined access to it.";
             break;
         default:
             @synchronized(self){
                 hasEverInitailized = NO;
             }
-            errorMessage = @"Reason unknown.";
+//            errorMessage = @"Reason unknown.";
             break;
     }
     @synchronized(self){

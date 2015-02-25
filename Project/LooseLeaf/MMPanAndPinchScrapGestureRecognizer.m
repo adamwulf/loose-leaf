@@ -244,6 +244,7 @@ struct TouchInterval{
     // with all others.
     CGFloat avgDist[count];
     for(int i=0;i<count;i++){
+        avgDist[i] = 0;
         for(int j=0;j<count;j++){
             avgDist[i] += dist[i][j] / count;
         }
@@ -528,7 +529,6 @@ struct TouchInterval{
     
     isShaking = NO;
     // pan and pinch and bezel
-    BOOL cancelledFromBezel = NO;
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
     [validTouchesCurrentlyEnding minusSet:ignoredTouches];
@@ -565,16 +565,12 @@ struct TouchInterval{
                 BOOL bezelDirHasDown = ((bezelDirectionMask & MMBezelDirectionDown) == MMBezelDirectionDown);
                 if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
                     didExitToBezel = didExitToBezel | MMBezelDirectionLeft;
-                    cancelledFromBezel = YES;
                 }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
                     didExitToBezel = didExitToBezel | MMBezelDirectionUp;
-                    cancelledFromBezel = YES;
                 }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity && bezelDirHasRight){
                     didExitToBezel = didExitToBezel | MMBezelDirectionRight;
-                    cancelledFromBezel = YES;
                 }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth - pxVelocity && bezelDirHasDown){
                     didExitToBezel = didExitToBezel | MMBezelDirectionDown;
-                    cancelledFromBezel = YES;
                 }
             }
             //

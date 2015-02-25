@@ -81,7 +81,9 @@
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
+                                                      kMPHasReorderedPage : @(NO),
                                                       kMPHasSeenCKTutorial : @(NO),
+                                                      kMPHasBookTurnedPage : @(NO),
                                                       kMPHasShakeToReorder : @(NO),
                                                       kMPHasBezelledScrap : @(NO),
                                                       kMPNumberOfPenUses : @(0),
@@ -129,9 +131,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void) viewWillAppear:(BOOL)animated{
-    
-}
 
 -(void) pageCacheManagerDidLoadPage{
     [[MMPhotoManager sharedInstance] initializeAlbumCache];

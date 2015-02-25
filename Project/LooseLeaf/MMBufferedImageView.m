@@ -89,6 +89,7 @@ CGFloat buffer = 2;
     }
     CGImageRef oldImageRef = (__bridge CGImageRef)(layer.contents);
     // bridge, so ARC doesn't own the object, i'll manage retains myself
+    // http://stackoverflow.com/questions/8577894/setting-the-contents-of-a-calayer-to-a-cgimageref-on-ios-with-arc-on
     layer.contents = (__bridge id)(imageRef);
     if(oldImageRef){
         CFRelease(oldImageRef);

@@ -12,6 +12,8 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <ClippingBezier/ClippingBezier.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "UIDevice+PPI.h"
 #import "UIColor+Shadow.h"
 
@@ -656,7 +658,7 @@ static NSDate* lastRender;
  * this method is called to give us a chance
  * to realign all the input elements to the ruler
  */
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+-(MMRulerAdjustment*) adjustElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     if(path1){
         // only adjust the strokes to the ruler if
         // we actually have a path for the ruler
@@ -665,9 +667,9 @@ static NSDate* lastRender;
             [output addObjectsFromArray:[self adjustElement:element fromPreviousElement:previousElement]];
             previousElement = element;
         }
-        return output;
+        return [[MMRulerAdjustment alloc] initWithAdjustments:output andDidAdjust:YES];
     }
-    return elements;
+    return [[MMRulerAdjustment alloc] initWithAdjustments:elements andDidAdjust:NO];
 }
 
 /**
@@ -779,7 +781,7 @@ static NSDate* lastRender;
         //
         // now iterate over the path and convert each element
         // into an AbstractBezierElement
-        [subpathForElement iteratePathWithBlock:[^(CGPathElement pathEle){
+        [subpathForElement iteratePathWithBlock:^(CGPathElement pathEle, NSUInteger idx){
             AbstractBezierPathElement* newElement;
             if(pathEle.type == kCGPathElementAddCurveToPoint){
                 // curve
@@ -798,7 +800,7 @@ static NSDate* lastRender;
                 newElement.width = element.width;
                 [output addObject:newElement];
             }
-        } copy]];
+        }];
         
         // lastEndPointOfStroke helps us track if the stroke
         // is beginning or has moved.

@@ -9,6 +9,9 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
+
+#define FACEBOOK_APP_ID @"YOUR_FACEBOOK_APP_ID"
+
 #ifdef DEBUG
 #define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
 #else
@@ -109,11 +112,14 @@ _Pragma("clang diagnostic pop") \
 #define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
 #define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
+#define kMPID @"Mixpanel ID"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"
 #define kMPNumberOfPages @"Number of Pages"
 #define kMPFirstLaunchDate @"Date of First Launch"
 #define kMPNumberOfScraps @"Number of Scraps"
+#define kMPHasBookTurnedPage @"Has Ever Turned Page"
+#define kMPHasReorderedPage @"Has Ever Reordered Page"
 #define kMPHasAddedPage @"Has Ever Added Page"
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"

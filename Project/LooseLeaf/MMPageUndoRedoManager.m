@@ -169,9 +169,11 @@
 #pragma mark - Scrap Checking
 
 -(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID{
-    for(MMUndoRedoPageItem* undoItem in [stackOfUndoneItems arrayByAddingObjectsFromArray:stackOfUndoableItems]){
-        if([undoItem containsScrapUUID:scrapUUID]){
-            return YES;
+    @synchronized(self){
+        for(MMUndoRedoPageItem* undoItem in [stackOfUndoneItems arrayByAddingObjectsFromArray:stackOfUndoableItems]){
+            if([undoItem containsScrapUUID:scrapUUID]){
+                return YES;
+            }
         }
     }
     return NO;

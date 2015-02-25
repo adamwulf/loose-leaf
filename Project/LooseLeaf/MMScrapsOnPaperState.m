@@ -17,6 +17,7 @@
 #import "MMPageCacheManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
+#import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
@@ -388,7 +389,9 @@
     // long array.
     @synchronized(scrapContainerView){
         NSMutableArray* scrapsOnPaper = [NSMutableArray arrayWithArray:scrapContainerView.subviews];
-        [scrapsOnPaper removeObjectsInArray:scrapsPendingRemoval];
+        @synchronized(scrapsPendingRemoval){
+            [scrapsOnPaper removeObjectsInArray:scrapsPendingRemoval];
+        }
         return scrapsOnPaper;
     }
 }

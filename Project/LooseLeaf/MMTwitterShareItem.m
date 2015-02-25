@@ -37,6 +37,16 @@
 
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
         
+        
+//        TWTRLogInButton *logInButton = [TWTRLogInButton buttonWithLogInCompletion:^(TWTRSession *session, NSError *error) {
+//            // play with Twitter session
+//        }];
+//        logInButton.center = self.view.center;
+//        [self.view addSubview:logInButton];
+
+        
+        
+        
         [self updateButtonGreyscale];
     }
     return self;
@@ -66,7 +76,7 @@
                     NSString* strResult;
                     if(result == SLComposeViewControllerResultCancelled){
                         strResult = @"Cancelled";
-                    }else if(result == SLComposeViewControllerResultDone){
+                    }else{
                         strResult = @"Sent";
                     }
                     if(result == SLComposeViewControllerResultDone){

@@ -9,17 +9,13 @@
 #import "UIGestureRecognizer+GestureDebug.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 #import "Constants.h"
 #import "MMPaperView.h"
 
 @implementation UIGestureRecognizer (GestureDebug)
 
 -(void) swizzle_setState:(UIGestureRecognizerState)state{
-    NSString* uuid = @"";
-    if([self.view respondsToSelector:@selector(uuid)]){
-        uuid = [(NSString*) self.view performSelector:@selector(uuid)];
-    }
     if(state == UIGestureRecognizerStateBegan){
         DebugLog(@"%@ began", [self description]);
     }else if(state == UIGestureRecognizerStateCancelled){

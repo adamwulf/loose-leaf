@@ -298,7 +298,7 @@
     }
     
     
-    CGFloat radius = self.drawableFrame.size.width / 2 - 1;
+    CGFloat radius = self.drawableFrame.size.width / 2;
     CAShapeLayer *circle;
     if([self.layer.sublayers count]){
         circle = [self.layer.sublayers firstObject];
@@ -358,9 +358,9 @@
             checkMarkOrXLayer.strokeEnd = 1;
             checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
             checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
+            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
             
             checkOrXView.alpha = 0;
-            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
             [self addSubview:checkOrXView];
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;
