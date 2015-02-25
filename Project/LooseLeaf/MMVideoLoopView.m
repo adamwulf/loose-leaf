@@ -59,11 +59,6 @@
     }
 }
 
--(void) dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
 -(BOOL) isAnimating{
     // return true if the player is playing
     // from http://stackoverflow.com/questions/5655864/check-play-state-of-avplayer
