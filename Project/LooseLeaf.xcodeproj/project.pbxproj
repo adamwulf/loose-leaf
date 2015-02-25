@@ -46,6 +46,7 @@
 		661C4B281A83F8D00014DB20 /* pinterest.png in Resources */ = {isa = PBXBuildFile; fileRef = 661C4B271A83F8D00014DB20 /* pinterest.png */; };
 		661C4B2A1A83F8D50014DB20 /* pinterest@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 661C4B291A83F8D50014DB20 /* pinterest@2x.png */; };
 		661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 661EBA56182AF1AD00893274 /* MMScissorTool.m */; };
+		662370DA1A9E90B200B62F69 /* MMBackgroundedPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */; };
 		66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CAD1A65145100A009BC /* Fabric.framework */; };
 		66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9C192BC99D003E97C0 /* SSKeychain.m */; };
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
@@ -516,6 +517,8 @@
 		661EBA56182AF1AD00893274 /* MMScissorTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorTool.m; sourceTree = "<group>"; };
 		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
 		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
+		662370D81A9E90B200B62F69 /* MMBackgroundedPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundedPaperView.h; sourceTree = "<group>"; };
+		662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundedPaperView.m; sourceTree = "<group>"; };
 		662441E4187BC68700011A54 /* Pomax.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomax.license; sourceTree = "<group>"; };
 		66244CAD1A65145100A009BC /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = ../Frameworks/Fabric.framework; sourceTree = "<group>"; };
 		66277C9B192BC99D003E97C0 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
@@ -1725,6 +1728,8 @@
 				66A471BD17C7DAA000C2A5B6 /* MMScrappedPaperView.m */,
 				6612C8861964C113003A9575 /* MMUndoablePaperView.h */,
 				6612C8871964C113003A9575 /* MMUndoablePaperView.m */,
+				662370D81A9E90B200B62F69 /* MMBackgroundedPaperView.h */,
+				662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */,
 				66EDE42B19AFE27300A5623B /* MMExportablePaperView.h */,
 				66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */,
 			);
@@ -3306,6 +3311,7 @@
 				66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */,
 				66381F5D19CB96730014796F /* MMSinglePhotoCollectionViewCell.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
+				662370DA1A9E90B200B62F69 /* MMBackgroundedPaperView.m in Sources */,
 				66627FA91A02582F0064FAD3 /* NSData+MPBase64.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,

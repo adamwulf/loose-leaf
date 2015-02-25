@@ -66,4 +66,6 @@
 
 -(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
+-(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail;
+
 @end

@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMUndoablePaperView.h"
+#import "MMBackgroundedPaperView.h"
 
-@interface MMExportablePaperView : MMUndoablePaperView
+@interface MMExportablePaperView : MMBackgroundedPaperView
 
 @property (nonatomic, readonly) NSDictionary* cloudKitSenderInfo;
 @property (nonatomic, readonly) BOOL isCurrentlySaving;

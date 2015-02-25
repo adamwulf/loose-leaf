@@ -238,6 +238,9 @@
     [[NSThread mainThread] performBlock:^{
 //        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
+        [[visibleStackHolder peekSubview] setPageBackgroundTexture:scrapBacking];
+        return;
+        
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
         CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
