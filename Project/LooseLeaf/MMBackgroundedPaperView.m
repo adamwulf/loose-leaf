@@ -24,11 +24,11 @@
 }
 
 -(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail{
-    if(showDrawableView && !showThumbnail){
-        paperBackgroundView.hidden = NO;
-    }else{
-        paperBackgroundView.hidden = YES;
-    }
+//    if(showDrawableView && !showThumbnail){
+//        paperBackgroundView.hidden = NO;
+//    }else{
+//        paperBackgroundView.hidden = YES;
+//    }
 }
 
 -(void) setPageBackgroundTexture:(UIImage*)img{
@@ -48,16 +48,17 @@
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
-        if(drawableView){
-            [self.contentView insertSubview:paperBackgroundView belowSubview:drawableView];
-        }else{
-            [self.contentView insertSubview:paperBackgroundView belowSubview:scrapsOnPaperState.scrapContainerView];
-        }
-        if(drawableView && !drawableView.hidden){
-            paperBackgroundView.hidden = NO;
-        }else{
-            paperBackgroundView.hidden = YES;
-        }
+        [self.contentView insertSubview:paperBackgroundView atIndex:0];
+//        if(drawableView){
+//            [self.contentView insertSubview:paperBackgroundView belowSubview:drawableView];
+//        }else{
+//            [self.contentView insertSubview:paperBackgroundView belowSubview:scrapsOnPaperState.scrapContainerView];
+//        }
+//        if(drawableView && !drawableView.hidden){
+//            paperBackgroundView.hidden = NO;
+//        }else{
+//            paperBackgroundView.hidden = YES;
+//        }
     }
     paperBackgroundView.image = img;
     
@@ -125,11 +126,11 @@
     CheckMainThread;
     // default will be to just append drawable view. subclasses
     // can (and will) change behavior
-    if(paperBackgroundView){
-        [self.contentView insertSubview:drawableView aboveSubview:paperBackgroundView];
-    }else{
+//    if(paperBackgroundView){
+//        [self.contentView insertSubview:drawableView aboveSubview:paperBackgroundView];
+//    }else{
         [super addDrawableViewToContentView];
-    }
+//    }
 }
 
 

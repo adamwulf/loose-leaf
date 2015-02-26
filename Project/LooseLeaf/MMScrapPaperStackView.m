@@ -231,6 +231,39 @@
     }
 }
 
+
+-(BOOL) imageMatchesPaperDimensions:(UIImage*)img{
+    CGSize stackSize = visibleStackHolder.bounds.size;
+    CGSize imgSize = img.size;
+
+    if(stackSize.width == imgSize.width &&
+       stackSize.height == imgSize.height){
+        // perfect match
+        return YES;
+    }else{
+        CGFloat scale = stackSize.width / imgSize.width;
+        if(stackSize.height == scale * imgSize.height){
+            // aspect ratio matches
+            return YES;
+        }
+    }
+    // what if we rotated?
+    stackSize.width = visibleStackHolder.bounds.size.height;
+    stackSize.height = visibleStackHolder.bounds.size.width;
+    if(stackSize.width == imgSize.width &&
+       stackSize.height == imgSize.height){
+        // perfect match
+        return YES;
+    }else{
+        CGFloat scale = stackSize.width / imgSize.width;
+        if(stackSize.height == scale * imgSize.height){
+            // aspect ratio matches
+            return YES;
+        }
+    }
+    return NO;
+}
+
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
     [super didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
     // import after slight delay so the transition from the other app
@@ -238,8 +271,21 @@
     [[NSThread mainThread] performBlock:^{
 //        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
-        [[visibleStackHolder peekSubview] setPageBackgroundTexture:scrapBacking];
-        return;
+        if([self imageMatchesPaperDimensions:scrapBacking]){
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+            page.isBrandNewPage = YES;
+            page.delegate = self;
+            [page setPageBackgroundTexture:scrapBacking];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [hiddenStackHolder pushSubview:page];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+            return;
+        }
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
