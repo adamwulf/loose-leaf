@@ -1037,6 +1037,11 @@
     return thumbSize;
 }
 
+-(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize{
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+}
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
         NSLog(@"updating thumb for: %@", self.uuid);
@@ -1046,9 +1051,8 @@
         
         // get context
         CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        [[UIColor whiteColor] setFill];
-        CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+
+        [self drawPageBackgroundInContext:context forThumbnailSize:thumbSize];
         
         // drawing code comes here- look at CGContext reference
         // for available operations

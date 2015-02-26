@@ -51,6 +51,19 @@
     paperBackgroundView.image = img;
 }
 
+#pragma mark - Thumbnail Generation
+
+-(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize{
+    [super drawPageBackgroundInContext:context forThumbnailSize:thumbSize];
+    if(paperBackgroundView){
+        UIGraphicsPushContext(context);
+        [paperBackgroundView.image drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
+//        CGContextDrawImage(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height), paperBackgroundView.image.CGImage);
+        UIGraphicsPopContext();
+    }
+}
+
+
 #pragma mark - Protected Methods
 
 -(void) addDrawableViewToContentView{
@@ -58,7 +71,7 @@
     // default will be to just append drawable view. subclasses
     // can (and will) change behavior
     if(paperBackgroundView){
-        [self.contentView insertSubview:drawableView belowSubview:paperBackgroundView];
+        [self.contentView insertSubview:drawableView aboveSubview:paperBackgroundView];
     }else{
         [super addDrawableViewToContentView];
     }
