@@ -10,6 +10,8 @@
 
 @interface UIDevice (PPI)
 
++(BOOL) isMetric;
+
 +(CGFloat) ppi;
 
 +(CGFloat) ppc;
