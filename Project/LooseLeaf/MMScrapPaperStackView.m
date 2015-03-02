@@ -1591,7 +1591,7 @@ int skipAll = NO;
 
 -(void) continueShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
     [super continueShapeWithTouch:touch withTool:tool];
-    [silhouette startDrawingAtTouch:touch];
+    [silhouette continueDrawingAtTouch:touch];
 }
 
 -(void) cancelShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
@@ -2119,7 +2119,9 @@ int skipAll = NO;
     // dont start a new stroke if one already exists
     BOOL ret = [super willBeginStrokeWithTouch:touch];
     if(ret){
-        [silhouette startDrawingAtTouch:touch.touch];
+        if(!scissorButton.selected){
+            [silhouette startDrawingAtTouch:touch.touch];
+        }
     }
     return ret;
 }
@@ -2127,7 +2129,9 @@ int skipAll = NO;
 -(void) willMoveStrokeWithTouch:(JotTouch*)touch{
     JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch.touch];
     if(currentStroke){
-        [silhouette continueDrawingAtTouch:touch.touch];
+        if(!scissorButton.selected){
+            [silhouette continueDrawingAtTouch:touch.touch];
+        }
     }
     [super willMoveStrokeWithTouch:touch];
 }
@@ -2137,7 +2141,9 @@ int skipAll = NO;
 }
 
 -(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    [silhouette endDrawingAtTouch:touch.touch];
+    if(!scissorButton.selected){
+        [silhouette endDrawingAtTouch:touch.touch];
+    }
     [super didEndStrokeWithTouch:touch];
 }
 
