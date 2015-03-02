@@ -12,6 +12,8 @@
 
 -(id) initWithURL:(NSURL*)pdfURL;
 
+-(NSURL*) urlOnDisk;
+
 -(NSUInteger) pageCount;
 
 @end

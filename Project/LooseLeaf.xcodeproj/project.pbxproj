@@ -54,6 +54,9 @@
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */; };
+		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
+		6630F4CB1AA4FC68004F2FDC /* livestream-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6630F4CA1AA4FC68004F2FDC /* livestream-header.png */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -536,6 +539,11 @@
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFAlbum.h; sourceTree = "<group>"; };
+		6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAlbum.m; sourceTree = "<group>"; };
+		6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFPage.h; sourceTree = "<group>"; };
+		6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFPage.m; sourceTree = "<group>"; };
+		6630F4CA1AA4FC68004F2FDC /* livestream-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "livestream-header.png"; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -2041,8 +2049,13 @@
 		667D98B4192FBF0C00625879 /* PDFs */ = {
 			isa = PBXGroup;
 			children = (
+				6630F4CA1AA4FC68004F2FDC /* livestream-header.png */,
 				667D98B5192FBF2400625879 /* MMPDFInboxContentView.h */,
 				667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */,
+				6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */,
+				6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */,
+				6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */,
+				6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */,
 			);
 			name = PDFs;
 			sourceTree = "<group>";
@@ -2954,6 +2967,7 @@
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
+				6630F4CB1AA4FC68004F2FDC /* livestream-header.png in Resources */,
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
@@ -3222,6 +3236,7 @@
 				66627F721A02582F0064FAD3 /* Mixpanel.m in Sources */,
 				66E5AC9019DFA781006CEAAF /* MMScrapCollectionState.m in Sources */,
 				66627F731A02582F0064FAD3 /* MPAbstractABTestDesignerMessage.m in Sources */,
+				6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */,
 				66627F7B1A02582F0064FAD3 /* MPABTestDesignerDisconnectMessage.m in Sources */,
 				66627F8B1A02582F0064FAD3 /* MPEnumDescription.m in Sources */,
 				6650943719AD3ECE00D58118 /* MMCloudKitShareListHorizontalLayout.m in Sources */,
@@ -3269,6 +3284,7 @@
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
+				6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */,
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,
 				66627F751A02582F0064FAD3 /* MPABTestDesignerChangeResponseMessage.m in Sources */,
 				66627F771A02582F0064FAD3 /* MPABTestDesignerClearResponseMessage.m in Sources */,

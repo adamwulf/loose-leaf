@@ -12,8 +12,11 @@
 #import "NSURL+UTI.h"
 #import "MMPDF.h"
 #import "Constants.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
-@implementation MMInboxManager
+@implementation MMInboxManager{
+    NSString* pdfInboxFolderPath;
+}
 
 @synthesize delegate;
 
@@ -24,6 +27,16 @@ static MMInboxManager* _instance = nil;
         _instance = [[MMInboxManager alloc]init];
     }
     return _instance;
+}
+
+-(NSString*) pdfInboxFolderPath{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString* documentsPath = [NSFileManager documentsPath];
+        pdfInboxFolderPath = [documentsPath stringByAppendingPathComponent:@"PDFInbox"];
+        [NSFileManager ensureDirectoryExistsAtPath:pdfInboxFolderPath];
+    });
+    return pdfInboxFolderPath;
 }
 
 #pragma mark - Dispatch Queue
@@ -54,13 +67,21 @@ static dispatch_queue_t fileSystemQueue;
         }
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
         DebugLog(@"PDF!");
-        MMPDF* pdf = [[MMPDF alloc] initWithURL:itemURL];
-        [self.delegate didProcessIncomingPDF:pdf fromURL:itemURL fromApp:sourceApplication];
+        NSString* ourInbox = [self pdfInboxFolderPath];
+        ourInbox = [ourInbox stringByAppendingPathComponent:[itemURL lastPathComponent]];
+        NSURL* ourInboxURL = [[NSURL alloc] initFileURLWithPath:ourInbox];
         
-        if([pdf pageCount] == 1){
-            [self removeInboxItem:itemURL];
-            return;
-        }
+        NSError* err = nil;
+        [[NSFileManager defaultManager] moveItemAtURL:itemURL toURL:ourInboxURL error:&err];
+        
+        MMPDF* pdf = [[MMPDF alloc] initWithURL:ourInboxURL];
+        [self.delegate didProcessIncomingPDF:pdf fromURL:ourInboxURL fromApp:sourceApplication];
+        
+//        if([pdf pageCount] == 1){
+//            [self removeInboxItem:itemURL];
+//            return;
+//        }
+        return;
     }
     
     [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
@@ -140,5 +161,27 @@ static dispatch_queue_t fileSystemQueue;
     return scrapBacking;
 }
 
+
+#pragma mark - Inbox items
+
+-(NSInteger) itemsInInboxCount{
+    NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
+    NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
+                         includingPropertiesForKeys:@[NSURLPathKey]
+                                            options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
+                                       errorHandler:nil];
+    
+    return [[dir allObjects] count];
+}
+
+-(MMPDF*) pdfItemAtIndex:(NSInteger)idx{
+    NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
+    NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
+                                                      includingPropertiesForKeys:@[NSURLPathKey]
+                                                                         options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
+                                                                    errorHandler:nil];
+    
+    return [[MMPDF alloc] initWithURL:[[dir allObjects] objectAtIndex:idx]];
+}
 
 @end

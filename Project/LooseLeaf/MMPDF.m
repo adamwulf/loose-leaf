@@ -25,6 +25,10 @@
     return self;
 }
 
+-(NSURL*) urlOnDisk{
+    return pdfResourceURL;
+}
+
 -(void)renderIntoContext:(CGContextRef)ctx size:(CGSize)size page:(NSUInteger)page
 {
     if ( pdfResourceURL)

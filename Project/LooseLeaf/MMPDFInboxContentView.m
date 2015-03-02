@@ -21,30 +21,26 @@
     return self;
 }
 
-
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstance] albums] indexOfObject:album];
-    }
-    return -1;
+    return 0;
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index < [[[MMPhotoManager sharedInstance] albums] count]){
-        return [[[MMPhotoManager sharedInstance] albums] objectAtIndex:index];
-    }
     return nil;
 }
+
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstance] albums] count];
+        // list of pdfs
+        return [[MMInboxManager sharedInstance] itemsInInboxCount];
     }else{
-        return ceilf(currentAlbum.numberOfPhotos / 2.0);
+        // return # of pages for selected pdf
+        return 0;
     }
 }
 
