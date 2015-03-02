@@ -16,4 +16,8 @@
 
 -(NSUInteger) pageCount;
 
+-(CGSize) sizeForPage:(NSUInteger)page;
+
+-(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
+
 @end

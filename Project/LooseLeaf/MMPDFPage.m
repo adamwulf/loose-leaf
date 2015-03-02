@@ -13,6 +13,7 @@
 @implementation MMPDFPage{
     MMPDF* pdf;
     NSInteger pageNumber;
+    UIImage* thumb;
 }
 
 -(id) initWithPDF:(MMPDF*)_pdf andPage:(NSInteger)_pageNum{
@@ -24,11 +25,14 @@
 }
 
 -(UIImage*) aspectRatioThumbnail{
-    return [[UIImage imageNamed:@"livestream-header.png"] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(100, 100) interpolationQuality:kCGInterpolationMedium];
+    if(!thumb) {
+        thumb = [pdf imageForPage:pageNumber withMaxDim:100];
+    }
+    return thumb;
 }
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
-    return [[UIImage imageNamed:@"livestream-header.png"] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(maxDim, maxDim) interpolationQuality:kCGInterpolationMedium];
+    return [pdf imageForPage:pageNumber withMaxDim:maxDim];
 }
 
 -(NSURL*) fullResolutionURL{
@@ -36,7 +40,7 @@
 }
 
 -(CGSize) fullResolutionSize{
-    return CGSizeMake(1280, 720);
+    return [pdf sizeForPage:pageNumber];
 }
 
 @end

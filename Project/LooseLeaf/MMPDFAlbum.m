@@ -18,6 +18,7 @@
 -(id) initWithPDF:(MMPDF *)_pdf{
     if(self = [super init]){
         pdf = _pdf;
+        [self loadPreviewPhotos];
     }
     return self;
 }
@@ -55,7 +56,10 @@
 }
 
 -(void) loadPreviewPhotos{
-    previewPhotos = @[[[MMPDFPage alloc] initWithPDF:pdf andPage:0],[[MMPDFPage alloc] initWithPDF:pdf andPage:1]];
+    previewPhotos = @[];
+    for (int i=0; i<5 && i < [pdf pageCount]; i++) {
+        previewPhotos = [previewPhotos arrayByAddingObject:[[MMPDFPage alloc] initWithPDF:pdf andPage:i]];
+    }
 }
 
 -(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
@@ -63,7 +67,7 @@
 }
 
 -(void) unloadPreviewPhotos{
-    previewPhotos = nil;
+//    previewPhotos = nil;
 }
 
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
