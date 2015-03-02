@@ -9,28 +9,43 @@
 #import "MMPDFInboxContentView.h"
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
+#import "MMPDFAlbum.h"
 
-@implementation MMPDFInboxContentView
+@implementation MMPDFInboxContentView{
+    NSMutableArray* pdfList;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        pdfList = [NSMutableArray array];
     }
     return self;
 }
 
+#pragma mark - MMAbstractSidebarContentView
+
+-(void) reset:(BOOL)animated{
+    [pdfList removeAllObjects];
+    NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
+    for (int i=0; i<count; i++) {
+        MMPDF* pdf = [[MMInboxManager sharedInstance] pdfItemAtIndex:i];
+        [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:pdf]];
+    }
+}
+
+
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    return 0;
+    return [pdfList indexOfObject:album];
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    return nil;
+    return [pdfList objectAtIndex:index];
 }
-
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
