@@ -13,12 +13,14 @@
 @implementation MMPDFAlbum{
     MMPDF* pdf;
     NSArray* previewPhotos;
+    NSMutableDictionary* cachedPages;
 }
 
 -(id) initWithPDF:(MMPDF *)_pdf{
     if(self = [super init]){
         pdf = _pdf;
         [self loadPreviewPhotos];
+        cachedPages = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -59,6 +61,7 @@
     previewPhotos = @[];
     for (int i=0; i<5 && i < [pdf pageCount]; i++) {
         previewPhotos = [previewPhotos arrayByAddingObject:[[MMPDFPage alloc] initWithPDF:pdf andPage:i]];
+        [cachedPages setObject:[previewPhotos lastObject] forKey:@(i)];
     }
 }
 
@@ -67,11 +70,18 @@
 }
 
 -(void) unloadPreviewPhotos{
-//    previewPhotos = nil;
+    previewPhotos = @[];
+    [cachedPages removeAllObjects];
 }
 
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
-    // todo
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+        MMPDFPage* page = [cachedPages objectForKey:@(idx)];
+        if(!page){
+            page = [[MMPDFPage alloc] initWithPDF:pdf andPage:idx];
+        }
+        enumerationBlock(page, idx, stop);
+    }];
 }
 
 @end

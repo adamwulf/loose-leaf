@@ -47,7 +47,7 @@
     CGContextRef cgContext = UIGraphicsGetCurrentContext();
     [[UIColor whiteColor] setFill];
     CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
-    [self renderIntoContext:cgContext size:sizeOfPage page:page];
+    [self renderIntoContext:cgContext size:sizeOfPage page:page-1];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
@@ -63,7 +63,6 @@
      */
     CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
     
-    size_t num = CGPDFDocumentGetNumberOfPages(pdf);
     CGPDFPageRef page1 = CGPDFDocumentGetPage( pdf, page );
     
     CGRect mediaRect = CGPDFPageGetBoxRect( page1, kCGPDFCropBox );
