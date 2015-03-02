@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MMScrapPaperStackView.h"
+#import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 
 @interface MMLooseLeafViewController : UIViewController{

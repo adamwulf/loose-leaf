@@ -26,6 +26,7 @@
 #import <JotUI/JotUI.h>
 #import "MMShadowHandView.h"
 #import "Constants.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 
 @implementation MMAppDelegate{
@@ -58,9 +59,12 @@
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
                                                         [MMAppDelegate userID], kMPID, nil]];
     
-    [Crashlytics startWithAPIKey:kCrashlyticsAPIKey];
     [[Crashlytics sharedInstance] setDelegate:self];
+    [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
+    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    [FBAppEvents activateApp];
+    
     [[NSThread mainThread] performBlock:^{
         [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
         [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
@@ -114,6 +118,14 @@
             [self trackDidCrashFromMemoryForDate:dateOfCrash];
         }
     } afterDelay:5];
+    
+    return YES;
+}
+
+// Handle deeplinking back to app from Pinterest
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    NSLog(@"Opened by handling url: %@", [url absoluteString]);
     
     return YES;
 }

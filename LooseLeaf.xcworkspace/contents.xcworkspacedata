@@ -8,7 +8,7 @@
       location = "group:Submodules/cloudkit-manager/SimpleCloudKitManager/SimpleCloudKitManager.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:ShapeShifter/ShapeShifter.xcodeproj">
+      location = "group:Submodules/MMStretchGestureRecognizers/ShapeShifter.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Project/../Submodules/JotUI/JotUI/JotUI.xcodeproj">
@@ -17,7 +17,13 @@
       location = "group:Submodules/touch-chart/TouchChart/TouchShape.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
+      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Submodules/ClippingBezier/ClippingBezier.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:LittleClipper/LittleClipper.xcodeproj">

@@ -9,7 +9,7 @@
 #import "UIGestureRecognizer+GestureDebug.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 #import "Constants.h"
 #import "MMPaperView.h"
 

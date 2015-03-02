@@ -18,7 +18,6 @@
 #import "MMOfflineIconView.h"
 
 @implementation MMImgurShareItem{
-    MMImageViewButton* button;
     AFURLConnectionOperation* conn;
     NSString* lastLinkURL;
     CGFloat lastProgress;
@@ -53,6 +52,14 @@
     return button;
 }
 
+-(NSString*) exportDestinationName{
+    return @"Imgur";
+}
+
+-(NSString*) exportDestinationResult{
+    return @"Success";
+}
+
 -(void) performShareAction{
     if(targetProgress){
         // only try to share if not already sharing
@@ -84,8 +91,8 @@
                     conn = nil;
                     reason = nil;
                     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
-                                                                                 kMPEventExportPropResult : @"Success"}];
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                 kMPEventExportPropResult : [self exportDestinationResult]}];
                 } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
                     lastLinkURL = nil;
                     targetProgress = 1.0;
@@ -95,11 +102,11 @@
                     
                     NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
                     if(failedReason){
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                      kMPEventExportPropResult : @"Failed",
                                                                                      kMPEventExportPropReason : failedReason}];
                     }else{
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
                                                                                      kMPEventExportPropResult : @"Failed"}];
                     }
                 }];
@@ -114,14 +121,12 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = linkURL;
     
-    linkURL = [@"        " stringByAppendingString:linkURL];
-    
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
     imgView.image = [UIImage imageNamed:@"link"];
     
     UILabel* labelForLink = [[UILabel alloc] initWithFrame:CGRectZero];
     labelForLink.alpha = 0;
-    labelForLink.text = linkURL;
+    labelForLink.text = @"       link copied to clipboard";
     labelForLink.font = [UIFont boldSystemFontOfSize:16];
     labelForLink.textAlignment = NSTextAlignmentCenter;
     labelForLink.textColor = [UIColor whiteColor];
@@ -166,7 +171,11 @@
         }
     }
 
-    CGPoint center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    
+    CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
+    if(button.contentScaleFactor == 2){
+        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    }
 
     CGFloat radius = button.drawableFrame.size.width / 2;
     CAShapeLayer *circle;

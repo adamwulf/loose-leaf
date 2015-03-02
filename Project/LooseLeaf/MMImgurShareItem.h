@@ -8,7 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "MMShareItem.h"
+#import "MMImageViewButton.h"
 
-@interface MMImgurShareItem : NSObject<MMShareItem>
+@interface MMImgurShareItem : NSObject<MMShareItem>{
+    MMImageViewButton* button;
+}
+
+// protected
+
+-(NSString*) exportDestinationName;
+-(void) performShareAction;
+-(void) animateLinkTo:(NSString*) linkURL;
 
 @end
