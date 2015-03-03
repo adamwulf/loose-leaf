@@ -42,6 +42,7 @@
         albumListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self albumsLayout]];
         albumListScrollView.dataSource = self;
         albumListScrollView.delegate = self;
+        albumListScrollView.backgroundColor = [UIColor clearColor];
         
         [albumListScrollView registerClass:[MMAlbumCell class] forCellWithReuseIdentifier:@"MMAlbumCell"];
         
@@ -144,10 +145,10 @@
 
 -(void) doneLoadingPhotoAlbums{
     [self updateEmptyErrorMessage];
-//    [albumListScrollView refreshVisibleRows];
-//    [albumListScrollView enumerateVisibleRowsWithBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-//        [self updateRow:obj atIndex:idx forFrame:[obj frame] forScrollView:albumListScrollView];
-//    }];
+    if(albumListScrollView.alpha){
+        [albumListScrollView reloadData];
+        photoListScrollView.contentOffset = lastAlbumScrollOffset;
+    }
     if(photoListScrollView.alpha){
         [photoListScrollView reloadData];
         photoListScrollView.contentOffset = lastPhotoScrollOffset;
@@ -156,10 +157,16 @@
 
 -(void) albumUpdated:(MMPhotoAlbum *)album{
     NSInteger index = [self indexForAlbum:album];
-//    if([albumListScrollView rowIndexIsVisible:index]){
-//        MMAlbumRowView* row = (MMAlbumRowView*) [albumListScrollView rowAtIndex:index];
-//        [row loadedPreviewPhotos];
-//    }
+    NSArray* visibleItems = [[albumListScrollView indexPathsForVisibleItems] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSIndexPath* indexPath = evaluatedObject;
+        if(indexPath.row == index){
+            return YES;
+        }
+        return NO;
+    }]];
+    if(visibleItems){
+        NSLog(@"update album row: %@", visibleItems);
+    }
 }
 
 #pragma mark - Row Management
@@ -282,7 +289,7 @@
 -(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == albumListScrollView){
         [self setUserInteractionEnabled:NO];
-//        currentAlbum = row.album;
+        currentAlbum = [self albumAtIndex:indexPath.row];
         photoListScrollView.contentOffset = CGPointZero;
         
         [photoListScrollView reloadData];

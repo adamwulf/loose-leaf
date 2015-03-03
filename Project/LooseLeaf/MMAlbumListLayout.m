@@ -54,7 +54,7 @@
     
     NSMutableArray* attrs = [NSMutableArray array];
     
-    NSInteger startRow = floorf(rect.origin.y / [self albumRowHeight]);
+    NSInteger startRow = MAX(floorf(rect.origin.y / [self albumRowHeight]), 0);
     NSInteger maxRow = ceilf((rect.origin.y + rect.size.height) / [self albumRowHeight]);
     
     NSInteger maxAlbumCount = [self.collectionView numberOfItemsInSection:0];
