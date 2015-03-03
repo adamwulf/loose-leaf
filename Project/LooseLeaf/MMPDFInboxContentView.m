@@ -50,22 +50,12 @@
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
--(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        // list of pdfs
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if(collectionView == albumListScrollView){
         return [[MMInboxManager sharedInstance] itemsInInboxCount];
     }else{
-        // return # of pages for selected pdf
-        return 0;
+        return [super collectionView:collectionView numberOfItemsInSection:section];
     }
-}
-
--(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super prepareRowForReuse:aRow forScrollView:scrollView];
-}
-
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
 }
 
 

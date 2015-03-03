@@ -57,6 +57,8 @@
 		6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */; };
 		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
 		6630F4CB1AA4FC68004F2FDC /* livestream-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6630F4CA1AA4FC68004F2FDC /* livestream-header.png */; };
+		6630F4CF1AA532EE004F2FDC /* MMAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */; };
+		6630F4D21AA534CF004F2FDC /* MMAlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -327,7 +329,6 @@
 		66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D7F18E88BCC00A65036 /* MMPhotoManager.m */; };
 		66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8218E88F4700A65036 /* MMPhotoAlbum.mm */; };
 		66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8518E8902A00A65036 /* ALAssetsGroup+Properties.m */; };
-		66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */; };
 		66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */; };
 		66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */; };
 		66ACECDC19D4C02B000EA792 /* MMDefaultPhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECDB19D4C02B000EA792 /* MMDefaultPhotoAlbum.m */; };
@@ -544,6 +545,10 @@
 		6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFPage.h; sourceTree = "<group>"; };
 		6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFPage.m; sourceTree = "<group>"; };
 		6630F4CA1AA4FC68004F2FDC /* livestream-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "livestream-header.png"; sourceTree = "<group>"; };
+		6630F4CD1AA532EE004F2FDC /* MMAlbumListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumListLayout.h; sourceTree = "<group>"; };
+		6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumListLayout.m; sourceTree = "<group>"; };
+		6630F4D01AA534CF004F2FDC /* MMAlbumCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumCell.h; sourceTree = "<group>"; };
+		6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumCell.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1025,8 +1030,6 @@
 		66AC8D8418E8902A00A65036 /* ALAssetsGroup+Properties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ALAssetsGroup+Properties.h"; sourceTree = "<group>"; };
 		66AC8D8518E8902A00A65036 /* ALAssetsGroup+Properties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ALAssetsGroup+Properties.m"; sourceTree = "<group>"; };
 		66AC8D8718E8939800A65036 /* MMPhotoManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoManagerDelegate.h; sourceTree = "<group>"; };
-		66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollView.h; sourceTree = "<group>"; };
-		66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCachedRowsScrollView.m; sourceTree = "<group>"; };
 		66AC8D8C18E89C9800A65036 /* MMAlbumRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumRowView.h; sourceTree = "<group>"; };
 		66AC8D8D18E89C9800A65036 /* MMAlbumRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumRowView.m; sourceTree = "<group>"; };
 		66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBufferedImageView.h; sourceTree = "<group>"; };
@@ -1225,7 +1228,6 @@
 		66EDE47719B1039000A5623B /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZipArchive.framework; path = "../Submodules/zip-archive/ZipArchive/build/Debug/ZipArchive.framework"; sourceTree = "<group>"; };
 		66EDE48419B3BD6C00A5623B /* MMCloudKitImportCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitImportCoordinator.h; sourceTree = "<group>"; };
 		66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitImportCoordinator.m; sourceTree = "<group>"; };
-		66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCachedRowsScrollViewDataSource.h; sourceTree = "<group>"; };
 		66F4518018EC5AD000A57C95 /* MMImageSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMImageSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
 		66F4B4B5178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLongPressFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
@@ -1652,6 +1654,17 @@
 			name = Trackers;
 			sourceTree = "<group>";
 		};
+		6630F4CC1AA532CF004F2FDC /* AlbumsSection */ = {
+			isa = PBXGroup;
+			children = (
+				6630F4CD1AA532EE004F2FDC /* MMAlbumListLayout.h */,
+				6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */,
+				6630F4D01AA534CF004F2FDC /* MMAlbumCell.h */,
+				6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */,
+			);
+			name = AlbumsSection;
+			sourceTree = "<group>";
+		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1971,9 +1984,6 @@
 			children = (
 				66AC8D7B18E754FE00A65036 /* MMAbstractSidebarContentView.h */,
 				66AC8D7C18E754FE00A65036 /* MMAbstractSidebarContentView.m */,
-				66AC8D8918E89A9C00A65036 /* MMCachedRowsScrollView.h */,
-				66AC8D8A18E89A9C00A65036 /* MMCachedRowsScrollView.m */,
-				66F4517A18EB4C1700A57C95 /* MMCachedRowsScrollViewDataSource.h */,
 			);
 			name = AbstractPhotoAlbumList;
 			sourceTree = "<group>";
@@ -2032,6 +2042,7 @@
 		667D98B3192FBEEF00625879 /* Photo Library */ = {
 			isa = PBXGroup;
 			children = (
+				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
 				66381F5A19CB965D0014796F /* PhotosSection */,
 				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
@@ -3235,6 +3246,7 @@
 				665245651996DAB800C36609 /* AFNetworkReachabilityManager.m in Sources */,
 				66627F721A02582F0064FAD3 /* Mixpanel.m in Sources */,
 				66E5AC9019DFA781006CEAAF /* MMScrapCollectionState.m in Sources */,
+				6630F4D21AA534CF004F2FDC /* MMAlbumCell.m in Sources */,
 				66627F731A02582F0064FAD3 /* MPAbstractABTestDesignerMessage.m in Sources */,
 				6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */,
 				66627F7B1A02582F0064FAD3 /* MPABTestDesignerDisconnectMessage.m in Sources */,
@@ -3260,6 +3272,7 @@
 				66BEBFF719BC10450032D30C /* MMOfflineIconView.m in Sources */,
 				66627F7F1A02582F0064FAD3 /* MPABTestDesignerTweakResponseMessage.m in Sources */,
 				6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */,
+				6630F4CF1AA532EE004F2FDC /* MMAlbumListLayout.m in Sources */,
 				660116FE19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m in Sources */,
 				66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */,
 				66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */,
@@ -3315,7 +3328,6 @@
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,
 				66ACECDC19D4C02B000EA792 /* MMDefaultPhotoAlbum.m in Sources */,
 				663EFFF31946D153006E6AF5 /* MMButtonAwareTapGestureRecognizer.m in Sources */,
-				66AC8D8B18E89A9C00A65036 /* MMCachedRowsScrollView.m in Sources */,
 				6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */,
 				66A790C019689B810037F01A /* MMScissorResult.m in Sources */,
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,

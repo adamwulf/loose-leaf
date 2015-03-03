@@ -47,16 +47,12 @@
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
--(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    return [[[MMPhotoManager sharedInstance] events] count];
-}
-
--(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super prepareRowForReuse:aRow forScrollView:scrollView];
-}
-
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if(collectionView == albumListScrollView){
+        return [[[MMPhotoManager sharedInstance] events] count];
+    }else{
+        return [super collectionView:collectionView numberOfItemsInSection:section];
+    }
 }
 
 #pragma mark - Description
