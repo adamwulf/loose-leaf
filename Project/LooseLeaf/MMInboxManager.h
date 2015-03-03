@@ -19,4 +19,8 @@
 
 -(void) removeInboxItem:(NSURL *)itemURL;
 
+-(NSInteger) itemsInInboxCount;
+
+-(MMPDF*) pdfItemAtIndex:(NSInteger)idx;
+
 @end

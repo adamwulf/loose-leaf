@@ -35,7 +35,7 @@
     MMImageViewButton* iPhotoAlbumButton;
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
-//    MMPDFButton* pdfInboxButton;
+    MMPDFButton* pdfInboxButton;
 }
 
 @dynamic delegate;
@@ -51,7 +51,7 @@
         CGRect buttonBounds = CGRectZero;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
-        buttonBounds.size.width = kWidthOfSidebarButton * 4;
+        buttonBounds.size.width = kWidthOfSidebarButton * 5;
         buttonBounds.origin.x = (contentBounds.size.width - buttonBounds.size.width)/2 + 10;
         
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
@@ -125,12 +125,12 @@
         iPhotoEventsButton.shadowInset = -1;
         [sidebarContentView addSubview:iPhotoEventsButton];
         
-        //        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
-        //                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        //        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        //        pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-        //        pdfInboxButton.shadowInset = -1;
-        //        [sidebarContentView addSubview:pdfInboxButton];
+                pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                        kWidthOfSidebarButton, kWidthOfSidebarButton)];
+                [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+                pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+                pdfInboxButton.shadowInset = -1;
+                [sidebarContentView addSubview:pdfInboxButton];
         
         [self highlightButton:cameraAlbumButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
@@ -200,11 +200,11 @@
 }
 
 -(void) highlightButton:(MMSidebarButton*)button{
-//    pdfInboxButton.selected = NO;
     iPhotoAlbumButton.selected = NO;
     iPhotoEventsButton.selected = NO;
     iPhotoFacesButton.selected = NO;
     cameraAlbumButton.selected = NO;
+    pdfInboxButton.selected = NO;
     button.selected = YES;
 }
 

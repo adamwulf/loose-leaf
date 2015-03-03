@@ -9,42 +9,54 @@
 #import "MMPDFInboxContentView.h"
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
+#import "MMPDFAlbum.h"
 
-@implementation MMPDFInboxContentView
+@implementation MMPDFInboxContentView{
+    NSMutableArray* pdfList;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        pdfList = [NSMutableArray array];
     }
     return self;
+}
+
+#pragma mark - MMAbstractSidebarContentView
+
+-(void) reset:(BOOL)animated{
+    [pdfList removeAllObjects];
+    NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
+    for (int i=0; i<count; i++) {
+        MMPDF* pdf = [[MMInboxManager sharedInstance] pdfItemAtIndex:i];
+        [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:pdf]];
+    }
+    [super reset:animated];
 }
 
 
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstance] albums] indexOfObject:album];
-    }
-    return -1;
+    return [pdfList indexOfObject:album];
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index < [[[MMPhotoManager sharedInstance] albums] count]){
-        return [[[MMPhotoManager sharedInstance] albums] objectAtIndex:index];
-    }
-    return nil;
+    return [pdfList objectAtIndex:index];
 }
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
 -(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
     if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstance] albums] count];
+        // list of pdfs
+        return [[MMInboxManager sharedInstance] itemsInInboxCount];
     }else{
-        return ceilf(currentAlbum.numberOfPhotos / 2.0);
+        // return # of pages for selected pdf
+        return 0;
     }
 }
 
