@@ -7,7 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMPhotoAlbum.h"
 
 @interface MMAlbumCell : UICollectionViewCell
+
+@property (nonatomic, strong) MMPhotoAlbum* album;
+@property (readonly) NSArray* bufferedImageViews;
+
+-(void) loadedPreviewPhotos;
+
+-(void) updatePhotoRotation;
 
 @end

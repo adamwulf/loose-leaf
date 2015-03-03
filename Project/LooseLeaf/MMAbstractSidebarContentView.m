@@ -252,8 +252,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == albumListScrollView){
         MMAlbumCell* albumCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMAlbumCell" forIndexPath:indexPath];
-//        [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
-//        photoCell.delegate = self;
+        albumCell.album = [self albumAtIndex:indexPath.row];
         return albumCell;
     }else{
         if([MMPhotoManager hasPhotosPermission]){
