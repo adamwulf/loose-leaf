@@ -82,7 +82,8 @@
     CGContextGetCTM( ctx );
     CGContextScaleCTM( ctx, 1, -1 );
     CGContextTranslateCTM( ctx, 0, -size.height );
-    
+    CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
+
     CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
     
     CGPDFPageRef page1 = CGPDFDocumentGetPage( pdf, page );

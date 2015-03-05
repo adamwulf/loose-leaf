@@ -2076,6 +2076,7 @@
 		667D98B2192FBEDF00625879 /* Content Views */ = {
 			isa = PBXGroup;
 			children = (
+				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				667D98B4192FBF0C00625879 /* PDFs */,
 				667D98B3192FBEEF00625879 /* Photo Library */,
 			);
@@ -2087,7 +2088,6 @@
 			children = (
 				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
 				66381F5A19CB965D0014796F /* PhotosSection */,
-				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
 				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,

@@ -34,6 +34,7 @@
         MMPDF* pdf = [[MMInboxManager sharedInstance] pdfItemAtIndex:i];
         [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:pdf]];
     }
+    [albumListScrollView reloadData];
     [super reset:animated];
 }
 
