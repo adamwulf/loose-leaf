@@ -59,7 +59,7 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
                                                                              withString:@""
                                                                                 options:NSCaseInsensitiveSearch
                                                                                   range:NSMakeRange(0, [relativeToDocuments length])];
-        NSString* pdfHash = [relativeToDocuments md5];
+        NSString* pdfHash = [relativeToDocuments MD5Hash];
         NSLog(@"generating path: %@ to %@", relativeToDocuments, pdfHash);
         cachedAssetsPath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"] stringByAppendingPathComponent:pdfHash];
         [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];

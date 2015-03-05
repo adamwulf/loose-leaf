@@ -31,8 +31,7 @@
 		6610D0851AA8F4A20019C2FB /* MMDisplayAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */; };
 		6610D08A1AA8F50B0019C2FB /* MMDisplayAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */; };
 		6610D08D1AA8FAFA0019C2FB /* MMInboxButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */; };
-		6610D08F1AA903AF0019C2FB /* NSStringMD5.license in Resources */ = {isa = PBXBuildFile; fileRef = 6610D08E1AA903AF0019C2FB /* NSStringMD5.license */; };
-		6610D0951AA9041B0019C2FB /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0941AA9041B0019C2FB /* NSString+MD5.m */; };
+		6610D0951AA9041B0019C2FB /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0941AA9041B0019C2FB /* NSString+MD5.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
@@ -493,7 +492,6 @@
 		6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAssetGroup.m; sourceTree = "<group>"; };
 		6610D08B1AA8FAFA0019C2FB /* MMInboxButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxButton.h; sourceTree = "<group>"; };
 		6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxButton.m; sourceTree = "<group>"; };
-		6610D08E1AA903AF0019C2FB /* NSStringMD5.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NSStringMD5.license; sourceTree = "<group>"; };
 		6610D0931AA9041B0019C2FB /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MD5.h"; path = "../../Submodules/NSString-MD5/NSString+MD5.h"; sourceTree = "<group>"; };
 		6610D0941AA9041B0019C2FB /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MD5.m"; path = "../../Submodules/NSString-MD5/NSString+MD5.m"; sourceTree = "<group>"; };
 		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
@@ -2003,7 +2001,6 @@
 				662441E4187BC68700011A54 /* Pomax.license */,
 				66684B3A182D9624005A27B4 /* AGG.license */,
 				66684B3D182DA177005A27B4 /* GPC.license */,
-				6610D08E1AA903AF0019C2FB /* NSStringMD5.license */,
 				66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */,
 				66684B43182DAC9B005A27B4 /* CurveFit.license */,
 				66684B45182DACAE005A27B4 /* DrawKit.license */,
@@ -3034,7 +3031,6 @@
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
-				6610D08F1AA903AF0019C2FB /* NSStringMD5.license in Resources */,
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
