@@ -53,12 +53,11 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 #pragma mark - Properties
 
 -(NSString*) cachedAssetsPath{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if(!cachedAssetsPath){
         NSString* pdfHash = [[pdfResourceURL path] md5];
         cachedAssetsPath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"] stringByAppendingPathComponent:pdfHash];
         [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];
-    });
+    }
     return cachedAssetsPath;
 }
 

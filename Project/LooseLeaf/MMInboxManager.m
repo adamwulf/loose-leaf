@@ -84,11 +84,10 @@ static dispatch_queue_t fileSystemQueue;
         [[NSFileManager defaultManager] moveItemAtURL:itemURL toURL:ourInboxURL error:&err];
         
         MMPDF* pdf = [[MMPDF alloc] initWithURL:ourInboxURL];
-        [self.delegate didProcessIncomingPDF:pdf fromURL:ourInboxURL fromApp:sourceApplication];
-        
         @synchronized(self){
-            [contents insertObject:contents atIndex:0];
+            [contents insertObject:pdf atIndex:0];
         }
+        [self.delegate didProcessIncomingPDF:pdf fromURL:ourInboxURL fromApp:sourceApplication];
         
 //        if([pdf pageCount] == 1){
 //            [self removeInboxItem:itemURL];
@@ -196,12 +195,21 @@ static dispatch_queue_t fileSystemQueue;
         
         NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
         NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
-                                                          includingPropertiesForKeys:@[NSURLPathKey]
+                                                          includingPropertiesForKeys:@[NSURLPathKey,NSURLAddedToDirectoryDateKey]
                                                                              options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
                                                                         errorHandler:nil];
+        
+        
         for (NSURL* url in [dir allObjects]) {
             [contents addObject:[[MMPDF alloc] initWithURL:url]];
         }
+        [contents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            NSDate* dt1 = nil;
+            NSDate* dt2 = nil;
+            [[obj1 urlOnDisk] getResourceValue:&dt1 forKey:NSURLAddedToDirectoryDateKey error:nil];
+            [[obj2 urlOnDisk] getResourceValue:&dt2 forKey:NSURLAddedToDirectoryDateKey error:nil];
+            return [dt2 compare:dt1];
+        }];
     }
 }
 
