@@ -30,6 +30,7 @@
 		660FA29A1A7C6F5700BA0ECE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */; };
 		6610D0851AA8F4A20019C2FB /* MMDisplayAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */; };
 		6610D08A1AA8F50B0019C2FB /* MMDisplayAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */; };
+		6610D08D1AA8FAFA0019C2FB /* MMInboxButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */; };
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
@@ -488,6 +489,8 @@
 		6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAsset.m; sourceTree = "<group>"; };
 		6610D0881AA8F50B0019C2FB /* MMDisplayAssetGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetGroup.h; sourceTree = "<group>"; };
 		6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAssetGroup.m; sourceTree = "<group>"; };
+		6610D08B1AA8FAFA0019C2FB /* MMInboxButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxButton.h; sourceTree = "<group>"; };
+		6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxButton.m; sourceTree = "<group>"; };
 		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
 		6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageUndoRedoManager.m; sourceTree = "<group>"; };
 		6612C8861964C113003A9575 /* MMUndoablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoablePaperView.h; sourceTree = "<group>"; };
@@ -2661,6 +2664,8 @@
 		66E100F319EC4B1A006E7C15 /* Import Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				6610D08B1AA8FAFA0019C2FB /* MMInboxButton.h */,
+				6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */,
 				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
 				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 				66E100F419EC4B67006E7C15 /* MMCameraButton.h */,
@@ -3200,6 +3205,7 @@
 				66A790C319689CF00037F01A /* MMUndoRedoRemoveScrapItem.m in Sources */,
 				667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */,
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
+				6610D08D1AA8FAFA0019C2FB /* MMInboxButton.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
 				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
