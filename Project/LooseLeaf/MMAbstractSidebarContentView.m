@@ -111,6 +111,7 @@
 }
 
 -(void) reset:(BOOL)animated{
+    albumListScrollView.hidden = NO;
     albumListScrollView.alpha = 1;
     photoListScrollView.alpha = 0;
     [self updateEmptyErrorMessage];
@@ -298,6 +299,7 @@
             photoListScrollView.alpha = 1;
         }  completion:^(BOOL finished){
             [self setUserInteractionEnabled:YES];
+            albumListScrollView.hidden = YES;
         }];
     }
 }
