@@ -33,7 +33,7 @@
 #pragma mark - Gesture
 
 -(void) tapped:(id)gesture{
-    [album loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:index] usingBlock:^(MMPhoto *result, NSUInteger _index, BOOL *stop) {
+    [album loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:index] usingBlock:^(MMDisplayAsset *result, NSUInteger _index, BOOL *stop) {
         if(result){
             [delegate photoWasTapped:result fromView:bufferedImage withRotation:bufferedImage.rotation];
         }
@@ -47,7 +47,7 @@
         album = _album;
         index = visibleIndex;
         NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:index];
-        [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(MMPhoto *result, NSUInteger index, BOOL *stop) {
+        [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
             if(result){
                 bufferedImage.image = result.aspectRatioThumbnail;
                 bufferedImage.rotation = RandomPhotoRotation(photoIndex);

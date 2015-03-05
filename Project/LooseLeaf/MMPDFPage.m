@@ -26,7 +26,7 @@
 
 -(UIImage*) aspectRatioThumbnail{
     if(!thumb) {
-        thumb = [pdf imageForPage:pageNumber withMaxDim:100];
+        thumb = [self aspectThumbnailWithMaxPixelSize:100];
     }
     return thumb;
 }

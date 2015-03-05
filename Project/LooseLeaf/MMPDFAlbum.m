@@ -37,10 +37,6 @@
     return [[pdf urlOnDisk] path];
 }
 
--(ALAssetsGroupType) type{
-    return ALAuthorizationStatusAuthorized;
-}
-
 -(NSInteger) numberOfPhotos{
     return [pdf pageCount];
 }
@@ -65,16 +61,12 @@
     }
 }
 
--(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group{
-    @throw [NSException exceptionWithName:@"PDFException" reason:@"nope" userInfo:nil];
-}
-
 -(void) unloadPreviewPhotos{
     previewPhotos = @[];
     [cachedPages removeAllObjects];
 }
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
         MMPDFPage* page = [cachedPages objectForKey:@(idx)];
         if(!page){

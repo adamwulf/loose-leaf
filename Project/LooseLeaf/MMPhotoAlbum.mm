@@ -124,7 +124,7 @@ BOOL isEnumerating = NO;
 }
 
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSetInView usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSetInView usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
     @try{
         try{
             NSIndexSet* indexSetOnDisk = indexSetInView;

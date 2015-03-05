@@ -8,17 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "MMDisplayAsset.h"
 
-@interface MMPhoto : NSObject
+@interface MMPhoto : MMDisplayAsset
 
 -(id) initWithALAsset:(ALAsset*)asset;
-
--(UIImage*) aspectRatioThumbnail;
-
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim;
-
--(NSURL*) fullResolutionURL;
-
--(CGSize) fullResolutionSize;
 
 @end

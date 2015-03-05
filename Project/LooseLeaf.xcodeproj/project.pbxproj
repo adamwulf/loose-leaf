@@ -28,6 +28,8 @@
 		660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */; };
 		660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2971A7C5D5A00BA0ECE /* AdSupport.framework */; };
 		660FA29A1A7C6F5700BA0ECE /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */; };
+		6610D0851AA8F4A20019C2FB /* MMDisplayAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */; };
+		6610D08A1AA8F50B0019C2FB /* MMDisplayAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */; };
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
@@ -56,7 +58,6 @@
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */; };
 		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
-		6630F4CB1AA4FC68004F2FDC /* livestream-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 6630F4CA1AA4FC68004F2FDC /* livestream-header.png */; };
 		6630F4CF1AA532EE004F2FDC /* MMAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */; };
 		6630F4D21AA534CF004F2FDC /* MMAlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
@@ -483,6 +484,10 @@
 		660FA2941A7C5B6F00BA0ECE /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = ../Frameworks/TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = "<group>"; };
 		660FA2971A7C5D5A00BA0ECE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		660FA2991A7C6F5700BA0ECE /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../Frameworks/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		6610D0831AA8F4A20019C2FB /* MMDisplayAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAsset.h; sourceTree = "<group>"; };
+		6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAsset.m; sourceTree = "<group>"; };
+		6610D0881AA8F50B0019C2FB /* MMDisplayAssetGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetGroup.h; sourceTree = "<group>"; };
+		6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAssetGroup.m; sourceTree = "<group>"; };
 		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
 		6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageUndoRedoManager.m; sourceTree = "<group>"; };
 		6612C8861964C113003A9575 /* MMUndoablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoablePaperView.h; sourceTree = "<group>"; };
@@ -544,7 +549,6 @@
 		6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAlbum.m; sourceTree = "<group>"; };
 		6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFPage.h; sourceTree = "<group>"; };
 		6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFPage.m; sourceTree = "<group>"; };
-		6630F4CA1AA4FC68004F2FDC /* livestream-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "livestream-header.png"; sourceTree = "<group>"; };
 		6630F4CD1AA532EE004F2FDC /* MMAlbumListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumListLayout.h; sourceTree = "<group>"; };
 		6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumListLayout.m; sourceTree = "<group>"; };
 		6630F4D01AA534CF004F2FDC /* MMAlbumCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumCell.h; sourceTree = "<group>"; };
@@ -1408,6 +1412,42 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		6610D0821AA8F4920019C2FB /* Display Asset */ = {
+			isa = PBXGroup;
+			children = (
+				6610D0881AA8F50B0019C2FB /* MMDisplayAssetGroup.h */,
+				6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */,
+				6610D0831AA8F4A20019C2FB /* MMDisplayAsset.h */,
+				6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */,
+				6610D0871AA8F4C20019C2FB /* PDFs */,
+				6610D0861AA8F4B70019C2FB /* Photos */,
+				66ACECD919D4BF83000EA792 /* DefaultAlbum */,
+			);
+			name = "Display Asset";
+			sourceTree = "<group>";
+		};
+		6610D0861AA8F4B70019C2FB /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				66AC8D8118E88F4700A65036 /* MMPhotoAlbum.h */,
+				66AC8D8218E88F4700A65036 /* MMPhotoAlbum.mm */,
+				66ACECE019D4C28E000EA792 /* MMPhoto.h */,
+				66ACECE119D4C28E000EA792 /* MMPhoto.m */,
+			);
+			name = Photos;
+			sourceTree = "<group>";
+		};
+		6610D0871AA8F4C20019C2FB /* PDFs */ = {
+			isa = PBXGroup;
+			children = (
+				6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */,
+				6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */,
+				6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */,
+				6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */,
+			);
+			name = PDFs;
+			sourceTree = "<group>";
+		};
 		6612C8821964C0C4003A9575 /* Undo Redo */ = {
 			isa = PBXGroup;
 			children = (
@@ -2060,13 +2100,8 @@
 		667D98B4192FBF0C00625879 /* PDFs */ = {
 			isa = PBXGroup;
 			children = (
-				6630F4CA1AA4FC68004F2FDC /* livestream-header.png */,
 				667D98B5192FBF2400625879 /* MMPDFInboxContentView.h */,
 				667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */,
-				6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */,
-				6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */,
-				6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */,
-				6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */,
 			);
 			name = PDFs;
 			sourceTree = "<group>";
@@ -2083,6 +2118,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				6610D0821AA8F4920019C2FB /* Display Asset */,
 				66EC7B7219ABD06100406D97 /* CloudKit Manager */,
 				665245771996EA5100C36609 /* ReachabilityManager */,
 				661708EB1984197C006A73EF /* Trash */,
@@ -2346,14 +2382,9 @@
 		66AC8D8818E89A5600A65036 /* Photo Manager */ = {
 			isa = PBXGroup;
 			children = (
-				66ACECD919D4BF83000EA792 /* DefaultAlbum */,
 				66AC8D7E18E88BCC00A65036 /* MMPhotoManager.h */,
 				66AC8D7F18E88BCC00A65036 /* MMPhotoManager.m */,
 				66AC8D8718E8939800A65036 /* MMPhotoManagerDelegate.h */,
-				66AC8D8118E88F4700A65036 /* MMPhotoAlbum.h */,
-				66AC8D8218E88F4700A65036 /* MMPhotoAlbum.mm */,
-				66ACECE019D4C28E000EA792 /* MMPhoto.h */,
-				66ACECE119D4C28E000EA792 /* MMPhoto.m */,
 			);
 			name = "Photo Manager";
 			sourceTree = "<group>";
@@ -2978,7 +3009,6 @@
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
-				6630F4CB1AA4FC68004F2FDC /* livestream-header.png in Resources */,
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
@@ -3128,6 +3158,7 @@
 				66627F7A1A02582F0064FAD3 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,
 				66627FA21A02582F0064FAD3 /* MPTypeDescription.m in Sources */,
 				6606674A193A8BC400C985E9 /* MMMemoryManager.m in Sources */,
+				6610D08A1AA8F50B0019C2FB /* MMDisplayAssetGroup.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
@@ -3405,6 +3436,7 @@
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
 				66627F7D1A02582F0064FAD3 /* MPABTestDesignerSnapshotResponseMessage.m in Sources */,
+				6610D0851AA8F4A20019C2FB /* MMDisplayAsset.m in Sources */,
 				660116EF19ABB1720065C1B4 /* MMCloudKitAccountMissingState.m in Sources */,
 				66E1010619ECDD6C006E7C15 /* MMPresentationWindow.m in Sources */,
 				660116F819ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m in Sources */,

@@ -6,12 +6,10 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPhoto.h"
+#import "MMDisplayAsset.h"
 #import "MMPDF.h"
 
-@interface MMPDFPage : MMPhoto
-
--(id) initWithALAsset:(ALAsset*)asset NS_UNAVAILABLE;
+@interface MMPDFPage : MMDisplayAsset
 
 -(id) initWithPDF:(MMPDF*)pdf andPage:(NSInteger)pageNum;
 
