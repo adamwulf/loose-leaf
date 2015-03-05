@@ -40,3 +40,6 @@
 [submodule "Submodules/MMStretchGestureRecognizers"]
 	path = Submodules/MMStretchGestureRecognizers
 	url = git@github.com:adamwulf/MMStretchGestureRecognizers.git
+[submodule "Submodules/NSString-MD5"]
+	path = Submodules/NSString-MD5
+	url = git@github.com:Wixel/NSString-MD5.git

@@ -16,6 +16,7 @@
 
 @implementation MMInboxManager{
     NSString* pdfInboxFolderPath;
+    NSMutableArray* contents;
 }
 
 @synthesize delegate;
@@ -27,6 +28,14 @@ static MMInboxManager* _instance = nil;
         _instance = [[MMInboxManager alloc]init];
     }
     return _instance;
+}
+
+-(id) init{
+    if(self = [super init]){
+        contents = [NSMutableArray array];
+        [self loadContents];
+    }
+    return self;
 }
 
 -(NSString*) pdfInboxFolderPath{
@@ -77,6 +86,10 @@ static dispatch_queue_t fileSystemQueue;
         MMPDF* pdf = [[MMPDF alloc] initWithURL:ourInboxURL];
         [self.delegate didProcessIncomingPDF:pdf fromURL:ourInboxURL fromApp:sourceApplication];
         
+        @synchronized(self){
+            [contents insertObject:contents atIndex:0];
+        }
+        
 //        if([pdf pageCount] == 1){
 //            [self removeInboxItem:itemURL];
 //            return;
@@ -95,6 +108,19 @@ static dispatch_queue_t fileSystemQueue;
             //Clean up the inbox once the file has been processed
             NSError *error = nil;
             [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
+            
+            __block MMPDF* pdfToRemove = nil;
+            [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                MMPDF* pdf = obj;
+                if([[pdf urlOnDisk] isEqual:itemURL]){
+                    pdfToRemove = pdf;
+                }
+            }];
+            if(pdfToRemove){
+                @synchronized(self){
+                    [contents removeObject:pdfToRemove];
+                }
+            }
             if (error) {
                 DebugLog(@"ERROR: Inbox file could not be deleted");
             }
@@ -164,24 +190,27 @@ static dispatch_queue_t fileSystemQueue;
 
 #pragma mark - Inbox items
 
+-(void) loadContents{
+    @synchronized(self){
+        [contents removeAllObjects];
+        
+        NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
+        NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
+                                                          includingPropertiesForKeys:@[NSURLPathKey]
+                                                                             options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
+                                                                        errorHandler:nil];
+        for (NSURL* url in [dir allObjects]) {
+            [contents addObject:[[MMPDF alloc] initWithURL:url]];
+        }
+    }
+}
+
 -(NSInteger) itemsInInboxCount{
-    NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
-    NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
-                         includingPropertiesForKeys:@[NSURLPathKey]
-                                            options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
-                                       errorHandler:nil];
-    
-    return [[dir allObjects] count];
+    return [contents count];
 }
 
 -(MMPDF*) pdfItemAtIndex:(NSInteger)idx{
-    NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
-    NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
-                                                      includingPropertiesForKeys:@[NSURLPathKey]
-                                                                         options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
-                                                                    errorHandler:nil];
-    
-    return [[MMPDF alloc] initWithURL:[[dir allObjects] objectAtIndex:idx]];
+    return [contents objectAtIndex:idx];
 }
 
 @end

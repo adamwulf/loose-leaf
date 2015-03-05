@@ -7,11 +7,33 @@
 //
 
 #import "MMPDF.h"
+#import "NSString+MD5.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+#import "MMLoadImageCache.h"
+
 
 @implementation MMPDF{
     NSURL* pdfResourceURL;
     NSUInteger pageCount;
+    NSString* cachedAssetsPath;
+    
+    NSMutableArray* pageSizeCache;
 }
+
+#pragma mark - Queues
+
+static dispatch_queue_t pdfAssetQueue;
+static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
+
++(dispatch_queue_t) pdfAssetQueue{
+    if(!pdfAssetQueue){
+        pdfAssetQueue = dispatch_queue_create("com.milestonemade.looseleaf.pdfAssetQueue", DISPATCH_QUEUE_CONCURRENT);
+        dispatch_queue_set_specific(pdfAssetQueue, kPDFAssetQueueIdentifier, (void *)kPDFAssetQueueIdentifier, NULL);
+    }
+    return pdfAssetQueue;
+}
+
+#pragma mark - Init
 
 -(id) initWithURL:(NSURL*)pdfURL{
     if(self = [super init]){
@@ -21,8 +43,23 @@
         CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
 		pageCount = CGPDFDocumentGetNumberOfPages( pdf );
 		CGPDFDocumentRelease( pdf );
+        pageSizeCache = [NSMutableArray array];
+        
+        [self generatePageThumbnailCache];
     }
     return self;
+}
+
+#pragma mark - Properties
+
+-(NSString*) cachedAssetsPath{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString* pdfHash = [[pdfResourceURL path] md5];
+        cachedAssetsPath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"] stringByAppendingPathComponent:pdfHash];
+        [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];
+    });
+    return cachedAssetsPath;
 }
 
 -(NSURL*) urlOnDisk{
@@ -33,27 +70,26 @@
     return pageCount;
 }
 
+-(UIImage*) thumbnailForPage:(NSUInteger)page{
+    return [self generateThumbnailForPage:page];
+}
+
 -(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
-    page+=1; // pdfs are index 1 at the start!
-    CGSize sizeOfPage = [self sizeForPage:page-1];
-    if(sizeOfPage.width > maxDim || sizeOfPage.height > maxDim){
-        CGFloat maxCurrDim = MAX(sizeOfPage.width, sizeOfPage.height);
-        CGFloat ratio = maxDim / maxCurrDim;
-        sizeOfPage.width *= ratio;
-        sizeOfPage.height *= ratio;
-    }
-    
-    UIGraphicsBeginImageContextWithOptions(sizeOfPage, NO, 1);
-    CGContextRef cgContext = UIGraphicsGetCurrentContext();
-    [[UIColor whiteColor] setFill];
-    CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
-    [self renderIntoContext:cgContext size:sizeOfPage page:page-1];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
+    return [self generateImageForPage:page withMaxDim:maxDim];
 }
 
 -(CGSize) sizeForPage:(NSUInteger)page{
+    @synchronized(self){
+        // first check the cache and see if we have it
+        // calculated already
+        if(page < [pageSizeCache count]){
+            return [[pageSizeCache objectAtIndex:page] CGSizeValue];
+        }
+    }
+    
+    // size isn't in the cache, so find out and return it
+    // we dont' update the cache ourselves though.
+    
     if(page >= pageCount){
         page = pageCount - 1;
     }
@@ -72,6 +108,61 @@
 }
 
 #pragma mark - Private
+#pragma mark Thumbnail Generation
+
+-(void) generatePageThumbnailCache{
+    dispatch_async([MMPDF pdfAssetQueue], ^{
+        @synchronized(self){
+            [pageSizeCache removeAllObjects];
+        }
+        for(int i=0;i<[self pageCount];i++){
+            [self generateThumbnailForPage:i];
+            @synchronized(self){
+                [pageSizeCache addObject:[NSValue valueWithCGSize:[self sizeForPage:i]]];
+            }
+        }
+    });
+}
+
+-(UIImage*) generateThumbnailForPage:(NSInteger)pageNumber{
+    UIImage* pageThumb = nil;
+    @synchronized(self){
+        @autoreleasepool {
+            NSString* thumbnailFilename = [NSString stringWithFormat:@"thumb%d.png",(int) pageNumber];
+            NSString* thumbnailPath = [[self cachedAssetsPath] stringByAppendingPathComponent:thumbnailFilename];
+            
+            if([[NSFileManager defaultManager] fileExistsAtPath:thumbnailPath]){
+                return [[MMLoadImageCache sharedInstance] imageAtPath:thumbnailPath];
+            }
+            pageThumb = [self generateImageForPage:pageNumber withMaxDim:100 * [[UIScreen mainScreen] scale]];
+            [UIImagePNGRepresentation(pageThumb) writeToFile:thumbnailPath atomically:YES];
+            [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
+        }
+    }
+    return pageThumb;
+}
+
+#pragma mark Scaled Image Generation
+
+-(UIImage*) generateImageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
+    CGSize sizeOfPage = [self sizeForPage:page];
+    page+=1; // pdfs are index 1 at the start!
+    if(sizeOfPage.width > maxDim || sizeOfPage.height > maxDim){
+        CGFloat maxCurrDim = MAX(sizeOfPage.width, sizeOfPage.height);
+        CGFloat ratio = maxDim / maxCurrDim;
+        sizeOfPage.width *= ratio;
+        sizeOfPage.height *= ratio;
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(sizeOfPage, NO, 1);
+    CGContextRef cgContext = UIGraphicsGetCurrentContext();
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
+    [self renderIntoContext:cgContext size:sizeOfPage page:page-1];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
 
 -(void)renderIntoContext:(CGContextRef)ctx size:(CGSize)size page:(NSUInteger)page
 {

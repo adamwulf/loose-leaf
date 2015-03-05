@@ -18,6 +18,8 @@
 
 -(CGSize) sizeForPage:(NSUInteger)page;
 
+-(UIImage*) thumbnailForPage:(NSUInteger)page;
+
 -(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
 
 @end
