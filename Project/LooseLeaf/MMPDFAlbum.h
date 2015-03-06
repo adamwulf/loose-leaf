@@ -13,4 +13,6 @@
 
 -(id) initWithPDF:(MMPDF*)pdf;
 
+@property (readonly) MMPDF* pdf;
+
 @end

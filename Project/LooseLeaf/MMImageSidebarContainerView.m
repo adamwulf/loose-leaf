@@ -233,6 +233,12 @@
     [self highlightButton:button];
 }
 
+-(void) showPDF:(MMPDF*)pdf{
+    [self switchToListView:inboxListContent];
+    [inboxListContent switchToPDFView:pdf];
+    [self highlightButton:inboxButton];
+}
+
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums;{

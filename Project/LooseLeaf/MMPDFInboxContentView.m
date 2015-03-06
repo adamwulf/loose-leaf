@@ -25,6 +25,27 @@
     return self;
 }
 
+-(void) switchToPDFView:(MMPDF*)pdf{
+    __block NSInteger indexOfPDF = NSIntegerMax;
+    
+    [pdfList enumerateObjectsUsingBlock:^(MMPDFAlbum* obj, NSUInteger idx, BOOL *stop) {
+        if(obj.pdf == pdf){
+            indexOfPDF = idx;
+            stop[0] = YES;
+        }
+    }];
+    if(indexOfPDF < [pdfList count]){
+        currentAlbum = [self albumAtIndex:indexOfPDF];
+        photoListScrollView.contentOffset = CGPointZero;
+        
+        [photoListScrollView reloadData];
+        
+        albumListScrollView.alpha = 0;
+        photoListScrollView.alpha = 1;
+        albumListScrollView.hidden = YES;
+    }
+}
+
 #pragma mark - MMAbstractSidebarContentView
 
 -(void) reset:(BOOL)animated{

@@ -362,8 +362,18 @@
     if(pdfDoc.pageCount == 1){
         // create a UIImage from teh PDF and add it like normal above
     }else{
-        
+        // automatically open to the PDF in the import sidebar
+        [[MMPhotoManager sharedInstance] bypassAuthRequirement];
+        [self cancelAllGestures];
+        [[visibleStackHolder peekSubview] cancelAllGestures];
+        [self setButtonsVisible:NO withDuration:0.15];
+        [importImageSidebar show:YES];
+
+        // show show the PDF content in the sidebar
+        [importImageSidebar showPDF:pdfDoc];
+
     }
+    
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],

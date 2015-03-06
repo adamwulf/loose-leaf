@@ -16,6 +16,8 @@
     NSMutableDictionary* cachedPages;
 }
 
+@synthesize pdf;
+
 -(id) initWithPDF:(MMPDF *)_pdf{
     if(self = [super init]){
         pdf = _pdf;
