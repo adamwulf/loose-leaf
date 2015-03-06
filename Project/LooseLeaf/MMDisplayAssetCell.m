@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSinglePhotoCollectionViewCell.h"
+#import "MMDisplayAssetCell.h"
 #import "MMBufferedImageView.h"
 #import "Constants.h"
 
-@implementation MMSinglePhotoCollectionViewCell{
+@implementation MMDisplayAssetCell{
     MMBufferedImageView* bufferedImage;
     NSInteger index;
     MMPhotoAlbum* album;
@@ -40,6 +40,19 @@
     }];
 }
 
+#pragma mark - Notification
+
+-(void) assetUpdated:(NSNotification*)note{
+    // called when the underlying asset is updated.
+    // this may or may not ever be called depending
+    // on the asset (PDFs in particular use
+    // this to update their thumbnail)
+    dispatch_async(dispatch_get_main_queue(), ^{
+        MMDisplayAsset* asset = [note object];
+        bufferedImage.image = asset.aspectRatioThumbnail;
+    });
+}
+
 #pragma mark - Properties
 
 -(void) loadPhotoFromAlbum:(MMPhotoAlbum*)_album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
@@ -48,9 +61,11 @@
         index = visibleIndex;
         NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:index];
         [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
+            [[NSNotificationCenter defaultCenter] removeObserver:self];
             if(result){
                 bufferedImage.image = result.aspectRatioThumbnail;
                 bufferedImage.rotation = RandomPhotoRotation(photoIndex);
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetUpdated:) name:kDisplayAssetThumbnailGenerated object:result];
             }else{
                 // was an error. possibly syncing the ipad to iphoto,
                 // so the album is updated faster than we can enumerate.

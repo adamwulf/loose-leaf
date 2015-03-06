@@ -61,7 +61,7 @@
 		6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */; };
 		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
 		6630F4CF1AA532EE004F2FDC /* MMAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */; };
-		6630F4D21AA534CF004F2FDC /* MMAlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */; };
+		6630F4D21AA534CF004F2FDC /* MMDisplayAssetGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -74,7 +74,7 @@
 		6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */; };
 		6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9F197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m */; };
 		66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */; };
-		66381F5D19CB96730014796F /* MMSinglePhotoCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66381F5C19CB96730014796F /* MMSinglePhotoCollectionViewCell.m */; };
+		66381F5D19CB96730014796F /* MMDisplayAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66381F5C19CB96730014796F /* MMDisplayAssetCell.m */; };
 		663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C1877175538A800706A05 /* MMPencilEraserButton.m */; };
 		663C187D1755B63D00706A05 /* Eraser.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C187C1755B63D00706A05 /* Eraser.m */; };
 		663C188B1759B51600706A05 /* MMUndoRedoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 663C188A1759B51600706A05 /* MMUndoRedoButton.m */; };
@@ -408,7 +408,7 @@
 		66E2240419D633E6000FCA96 /* ios8-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */; };
 		66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240519D637AD000FCA96 /* ios7-settings-camera.png */; };
 		66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */; };
-		66E2240B19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2240A19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m */; };
+		66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */; };
 		66E2240D19D645BD000FCA96 /* ios8-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240C19D645BD000FCA96 /* ios8-settings-photos.png */; };
 		66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */; };
 		66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2241019D6463F000FCA96 /* ios7-settings-photos.png */; };
@@ -557,8 +557,8 @@
 		6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFPage.m; sourceTree = "<group>"; };
 		6630F4CD1AA532EE004F2FDC /* MMAlbumListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumListLayout.h; sourceTree = "<group>"; };
 		6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumListLayout.m; sourceTree = "<group>"; };
-		6630F4D01AA534CF004F2FDC /* MMAlbumCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlbumCell.h; sourceTree = "<group>"; };
-		6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumCell.m; sourceTree = "<group>"; };
+		6630F4D01AA534CF004F2FDC /* MMDisplayAssetGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetGroupCell.h; sourceTree = "<group>"; };
+		6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAssetGroupCell.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -582,8 +582,8 @@
 		6635BE9F197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoAddScrapFromBezelItem.m; sourceTree = "<group>"; };
 		66381F5719CB921A0014796F /* MMCameraCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraCollectionViewCell.h; sourceTree = "<group>"; };
 		66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraCollectionViewCell.m; sourceTree = "<group>"; };
-		66381F5B19CB96730014796F /* MMSinglePhotoCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSinglePhotoCollectionViewCell.h; sourceTree = "<group>"; };
-		66381F5C19CB96730014796F /* MMSinglePhotoCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSinglePhotoCollectionViewCell.m; sourceTree = "<group>"; };
+		66381F5B19CB96730014796F /* MMDisplayAssetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetCell.h; sourceTree = "<group>"; };
+		66381F5C19CB96730014796F /* MMDisplayAssetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAssetCell.m; sourceTree = "<group>"; };
 		663C1876175538A800706A05 /* MMPencilEraserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilEraserButton.h; sourceTree = "<group>"; };
 		663C1877175538A800706A05 /* MMPencilEraserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilEraserButton.m; sourceTree = "<group>"; };
 		663C187B1755B63D00706A05 /* Eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Eraser.h; sourceTree = "<group>"; };
@@ -1201,8 +1201,8 @@
 		66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-camera@2x.png"; sourceTree = "<group>"; };
 		66E2240519D637AD000FCA96 /* ios7-settings-camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-camera.png"; sourceTree = "<group>"; };
 		66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-camera@2x.png"; sourceTree = "<group>"; };
-		66E2240919D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPermissionPhotosCollectionViewCell.h; sourceTree = "<group>"; };
-		66E2240A19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPermissionPhotosCollectionViewCell.m; sourceTree = "<group>"; };
+		66E2240919D63B8B000FCA96 /* MMPhotosPermissionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPhotosPermissionCell.h; sourceTree = "<group>"; };
+		66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotosPermissionCell.m; sourceTree = "<group>"; };
 		66E2240C19D645BD000FCA96 /* ios8-settings-photos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-photos.png"; sourceTree = "<group>"; };
 		66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios8-settings-photos@2x.png"; sourceTree = "<group>"; };
 		66E2241019D6463F000FCA96 /* ios7-settings-photos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios7-settings-photos.png"; sourceTree = "<group>"; };
@@ -1707,8 +1707,8 @@
 			children = (
 				6630F4CD1AA532EE004F2FDC /* MMAlbumListLayout.h */,
 				6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */,
-				6630F4D01AA534CF004F2FDC /* MMAlbumCell.h */,
-				6630F4D11AA534CF004F2FDC /* MMAlbumCell.m */,
+				6630F4D01AA534CF004F2FDC /* MMDisplayAssetGroupCell.h */,
+				6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */,
 			);
 			name = AlbumsSection;
 			sourceTree = "<group>";
@@ -1731,13 +1731,13 @@
 				667AA41C19E31ED5006549EE /* Permission Images */,
 				66381F5719CB921A0014796F /* MMCameraCollectionViewCell.h */,
 				66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */,
-				66381F5B19CB96730014796F /* MMSinglePhotoCollectionViewCell.h */,
-				66381F5C19CB96730014796F /* MMSinglePhotoCollectionViewCell.m */,
+				66381F5B19CB96730014796F /* MMDisplayAssetCell.h */,
+				66381F5C19CB96730014796F /* MMDisplayAssetCell.m */,
 				66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */,
 				66C4734D19CB999000505BC0 /* MMPhotoAlbumListLayout.h */,
 				66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */,
-				66E2240919D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.h */,
-				66E2240A19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m */,
+				66E2240919D63B8B000FCA96 /* MMPhotosPermissionCell.h */,
+				66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */,
 				66E2241419D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.h */,
 				66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */,
 				66E2241719D66F8B000FCA96 /* MMEmptyCollectionViewCell.h */,
@@ -3279,7 +3279,7 @@
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
 				6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */,
-				66E2240B19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m in Sources */,
+				66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,
@@ -3289,7 +3289,7 @@
 				665245651996DAB800C36609 /* AFNetworkReachabilityManager.m in Sources */,
 				66627F721A02582F0064FAD3 /* Mixpanel.m in Sources */,
 				66E5AC9019DFA781006CEAAF /* MMScrapCollectionState.m in Sources */,
-				6630F4D21AA534CF004F2FDC /* MMAlbumCell.m in Sources */,
+				6630F4D21AA534CF004F2FDC /* MMDisplayAssetGroupCell.m in Sources */,
 				66627F731A02582F0064FAD3 /* MPAbstractABTestDesignerMessage.m in Sources */,
 				6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */,
 				66627F7B1A02582F0064FAD3 /* MPABTestDesignerDisconnectMessage.m in Sources */,
@@ -3380,7 +3380,7 @@
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */,
-				66381F5D19CB96730014796F /* MMSinglePhotoCollectionViewCell.m in Sources */,
+				66381F5D19CB96730014796F /* MMDisplayAssetCell.m in Sources */,
 				667D98C2192FD87400625879 /* MMPDF.m in Sources */,
 				662370DA1A9E90B200B62F69 /* MMBackgroundedPaperView.m in Sources */,
 				66627FA91A02582F0064FAD3 /* NSData+MPBase64.m in Sources */,

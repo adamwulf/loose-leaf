@@ -71,6 +71,7 @@
         MMPDFPage* page = [cachedPages objectForKey:@(idx)];
         if(!page){
             page = [[MMPDFPage alloc] initWithPDF:pdf andPage:idx];
+            [cachedPages setObject:page forKey:@(idx)];
         }
         enumerationBlock(page, idx, stop);
     }];

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MMPhotoAlbum.h"
 
-@interface MMAlbumCell : UICollectionViewCell
+@interface MMDisplayAssetGroupCell : UICollectionViewCell
 
 @property (nonatomic, strong) MMPhotoAlbum* album;
 @property (readonly) NSArray* bufferedImageViews;

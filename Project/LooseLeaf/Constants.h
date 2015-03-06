@@ -47,6 +47,10 @@ _Pragma("clang diagnostic pop") \
 
 #define kAnimationDelay 0.05
 
+// Display Assets
+#define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
+#define kPDFThumbnailGenerated @"kPDFThumbnailGenerated"
+
 // CloudKit Import
 #define kCloudKitMaxVisibleImports 5
 

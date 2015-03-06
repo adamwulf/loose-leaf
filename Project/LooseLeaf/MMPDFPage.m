@@ -9,6 +9,7 @@
 #import "MMPDFPage.h"
 #import "MMPDF.h"
 #import <JotUI/UIImage+Resize.h>
+#import "Constants.h"
 
 @implementation MMPDFPage{
     MMPDF* pdf;
@@ -20,6 +21,7 @@
     if(self = [super init]){
         pdf = _pdf;
         pageNumber = _pageNum;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfThumbnailGenerated:) name:kPDFThumbnailGenerated object:pdf];
     }
     return self;
 }
@@ -41,6 +43,22 @@
 
 -(CGSize) fullResolutionSize{
     return [pdf sizeForPage:pageNumber];
+}
+
+#pragma mark - Notification
+
+-(void) pdfThumbnailGenerated:(NSNotification*)obj{
+    NSInteger updatedPageNumber = [[[obj userInfo] objectForKey:@"pageNumber"] integerValue];
+    if(updatedPageNumber == pageNumber){
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDisplayAssetThumbnailGenerated object:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
+}
+
+#pragma mark - Dealloc
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

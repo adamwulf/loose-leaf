@@ -59,7 +59,7 @@ CGFloat buffer = 2;
 -(void) setImage:(UIImage *)_image{
     image = _image;
     
-    [CATransaction begin];
+    [CATransaction begin]; // prevent CALayer animation
     [CATransaction setDisableActions:YES];
     
     if(image){

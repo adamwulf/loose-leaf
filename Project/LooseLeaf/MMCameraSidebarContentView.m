@@ -9,13 +9,13 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageSidebarContainerView.h"
-#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPhotosPermissionCell.h"
 #import "MMPermissionCameraPhotosCollectionViewCell.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "MMCameraCollectionViewCell.h"
-#import "MMSinglePhotoCollectionViewCell.h"
+#import "MMDisplayAssetCell.h"
 #import "MMPhotoAlbumListLayout.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
@@ -37,7 +37,7 @@
         currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
         
         [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
-        [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPhotosPermissionCell class] forCellWithReuseIdentifier:@"MMPhotosPermissionCell"];
         [photoListScrollView registerClass:[MMPermissionCameraPhotosCollectionViewCell class]
                 forCellWithReuseIdentifier:@"MMPermissionCameraPhotosCollectionViewCell"];
     }
@@ -158,7 +158,7 @@
                 return cachedCameraCell;
             }
         }else if([MMPhotoManager hasPhotosPermission]){
-            MMPermissionPhotosCollectionViewCell* cell =  [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+            MMPhotosPermissionCell* cell =  [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotosPermissionCell" forIndexPath:indexPath];
             [cell showCameraSteps];
             return cell;
         }else{
@@ -167,12 +167,12 @@
         }
     }
     if([MMPhotoManager hasPhotosPermission]){
-        MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+        MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
         [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
         photoCell.delegate = self;
         return photoCell;
     }else{
-        MMPermissionPhotosCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+        MMPhotosPermissionCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotosPermissionCell" forIndexPath:indexPath];
         [cell showPhotosSteps];
         return cell;
     }

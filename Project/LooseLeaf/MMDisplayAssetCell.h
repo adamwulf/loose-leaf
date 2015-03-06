@@ -10,7 +10,7 @@
 #import "MMSinglePhotoCollectionViewCellDelegate.h"
 #import "MMPhotoAlbum.h"
 
-@interface MMSinglePhotoCollectionViewCell : UICollectionViewCell
+@interface MMDisplayAssetCell : UICollectionViewCell
 
 @property (nonatomic, weak) NSObject<MMSinglePhotoCollectionViewCellDelegate>* delegate;
 @property (nonatomic, assign) CGFloat rotation;

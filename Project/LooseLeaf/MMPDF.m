@@ -10,6 +10,7 @@
 #import "NSString+MD5.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMLoadImageCache.h"
+#import "Constants.h"
 
 
 @implementation MMPDF{
@@ -76,7 +77,7 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 }
 
 -(UIImage*) thumbnailForPage:(NSUInteger)page{
-    return [self generateThumbnailForPage:page];
+    return [self cachedThumbnailForPage:page];
 }
 
 -(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
@@ -98,15 +99,14 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     if(page >= pageCount){
         page = pageCount - 1;
     }
-    page+=1; // pdfs are index 1 at the start!
     /*
      * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
      */
     CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
     
-    CGPDFPageRef page1 = CGPDFDocumentGetPage( pdf, page );
+    CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
     
-    CGRect mediaRect = CGPDFPageGetBoxRect( page1, kCGPDFCropBox );
+    CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
     
     CGPDFDocumentRelease( pdf );
     return mediaRect.size;
@@ -129,20 +129,35 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     });
 }
 
--(UIImage*) generateThumbnailForPage:(NSInteger)pageNumber{
+-(NSString*) thumbnailPathForPage:(NSInteger)pageNumber{
+    NSString* thumbnailFilename = [NSString stringWithFormat:@"thumb%d.png",(int) pageNumber];
+    return [[self cachedAssetsPath] stringByAppendingPathComponent:thumbnailFilename];
+}
+
+-(UIImage*) cachedThumbnailForPage:(NSInteger)pageNumber{
     UIImage* pageThumb = nil;
     @autoreleasepool {
-        NSString* thumbnailFilename = [NSString stringWithFormat:@"thumb%d.png",(int) pageNumber];
-        NSString* thumbnailPath = [[self cachedAssetsPath] stringByAppendingPathComponent:thumbnailFilename];
+        NSString* thumbnailPath = [self thumbnailPathForPage:pageNumber];
         if([[NSFileManager defaultManager] fileExistsAtPath:thumbnailPath]){
             return [[MMLoadImageCache sharedInstance] imageAtPath:thumbnailPath];
         }
-        pageThumb = [self generateImageForPage:pageNumber withMaxDim:100 * [[UIScreen mainScreen] scale]];
-        BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:thumbnailPath atomically:YES];
-        if(!success){
-            NSLog(@"failed");
+    }
+    return pageThumb;
+}
+
+-(UIImage*) generateThumbnailForPage:(NSInteger)pageNumber{
+    UIImage* pageThumb = [self cachedThumbnailForPage:pageNumber];
+    if(!pageThumb){
+        @autoreleasepool {
+            NSString* thumbnailPath = [self thumbnailPathForPage:pageNumber];
+            pageThumb = [self generateImageForPage:pageNumber withMaxDim:100 * [[UIScreen mainScreen] scale]];
+            BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:thumbnailPath atomically:YES];
+            if(!success){
+                NSLog(@"failed");
+            }
+            [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
         }
-        [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
     }
     return pageThumb;
 }
@@ -175,7 +190,6 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 -(void)renderIntoContext:(CGContextRef)ctx size:(CGSize)size page:(NSUInteger)page
 {
     @autoreleasepool {
-        page+=1; // pdfs are index 1 at the start!
         /*
          * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
          */
@@ -186,13 +200,13 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         
         CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
         
-        CGPDFPageRef page1 = CGPDFDocumentGetPage( pdf, page );
+        CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
         
-        CGRect mediaRect = CGPDFPageGetBoxRect( page1, kCGPDFCropBox );
+        CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
         CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
         CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
         
-        CGContextDrawPDFPage( ctx, page1 );
+        CGContextDrawPDFPage( ctx, pageref );
         CGPDFDocumentRelease( pdf );
     }
 }

@@ -8,7 +8,7 @@
 
 #import "MMPhotoAlbumListLayout.h"
 #import "CaptureSessionManager.h"
-#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPhotosPermissionCell.h"
 #import "MMPhotoManager.h"
 #import "Constants.h"
 
@@ -42,10 +42,10 @@
         if ([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) {
             return [self photoRowHeight] * 2 + kCameraMargin;
         }else{
-            return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
+            return [self photoRowHeight] * [MMPhotosPermissionCell idealPhotoRowHeight] + kCameraMargin;
         }
     }else if(![MMPhotoManager hasPhotosPermission]){
-        return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
+        return [self photoRowHeight] * [MMPhotosPermissionCell idealPhotoRowHeight] + kCameraMargin;
     }
     return 0;
 }

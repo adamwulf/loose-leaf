@@ -11,10 +11,10 @@
 #import "MMAlbumRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
-#import "MMSinglePhotoCollectionViewCell.h"
-#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMDisplayAssetCell.h"
+#import "MMPhotosPermissionCell.h"
 #import "MMEmptyCollectionViewCell.h"
-#import "MMAlbumCell.h"
+#import "MMDisplayAssetGroupCell.h"
 #import "MMAlbumListLayout.h"
 #import "MMPhotoAlbumListLayout.h"
 #import "MMRotationManager.h"
@@ -44,15 +44,15 @@
         albumListScrollView.delegate = self;
         albumListScrollView.backgroundColor = [UIColor clearColor];
         
-        [albumListScrollView registerClass:[MMAlbumCell class] forCellWithReuseIdentifier:@"MMAlbumCell"];
+        [albumListScrollView registerClass:[MMDisplayAssetGroupCell class] forCellWithReuseIdentifier:@"MMDisplayAssetGroup"];
         
         photoListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self photosLayout]];
         photoListScrollView.dataSource = self;
         photoListScrollView.alpha = 0;
         photoListScrollView.backgroundColor = [UIColor clearColor];
         
-        [photoListScrollView registerClass:[MMSinglePhotoCollectionViewCell class] forCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell"];
-        [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
+        [photoListScrollView registerClass:[MMDisplayAssetCell class] forCellWithReuseIdentifier:@"MMDisplayAssetCell"];
+        [photoListScrollView registerClass:[MMPhotosPermissionCell class] forCellWithReuseIdentifier:@"MMPhotosPermissionCell"];
 
         currentAlbum = nil;
         
@@ -252,17 +252,17 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == albumListScrollView){
-        MMAlbumCell* albumCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMAlbumCell" forIndexPath:indexPath];
+        MMDisplayAssetGroupCell* albumCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetGroup" forIndexPath:indexPath];
         albumCell.album = [self albumAtIndex:indexPath.row];
         return albumCell;
     }else{
         if([MMPhotoManager hasPhotosPermission]){
-            MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+            MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
             [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
             photoCell.delegate = self;
             return photoCell;
         }else{
-            MMPermissionPhotosCollectionViewCell* permission = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+            MMPhotosPermissionCell* permission = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotosPermissionCell" forIndexPath:indexPath];
             permission.shouldShowLine = NO;
             [permission showPhotosSteps];
             return permission;

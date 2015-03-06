@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMAlbumCell.h"
+#import "MMDisplayAssetGroupCell.h"
 #import "MMPhotoAlbum.h"
 #import "MMBufferedImageView.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
 
-@implementation MMAlbumCell{
+@implementation MMDisplayAssetGroupCell{
     MMPhotoAlbum* album;
     UILabel* name;
     NSArray* bufferedImageViews;

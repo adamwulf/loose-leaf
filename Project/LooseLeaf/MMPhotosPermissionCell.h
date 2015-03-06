@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMPermissionPhotosCollectionViewCell : UICollectionViewCell
+@interface MMPhotosPermissionCell : UICollectionViewCell
 
 +(CGFloat) idealPhotoRowHeight;
 
