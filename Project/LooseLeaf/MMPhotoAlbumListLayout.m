@@ -55,7 +55,7 @@
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    CGFloat width = self.collectionView.bounds.size.width;
+    CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
 
     if(![MMPhotoManager hasPhotosPermission]){
         // don't have photo permissions
@@ -70,7 +70,7 @@
     NSInteger rowNumber = floorf(indexOfPhoto / 2.0);
     NSInteger colNumber = indexOfPhoto % 2;
     
-    CGFloat x = colNumber * width/2;
+    CGFloat x = colNumber * width/2 + 2*kWidthOfSidebarButtonBuffer;
     CGFloat y = rowNumber * [self photoRowHeight];
     
     CGRect b = CGRectMake(0, 0, width/2, [self photoRowHeight]);
