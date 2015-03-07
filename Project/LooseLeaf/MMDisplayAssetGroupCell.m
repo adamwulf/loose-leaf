@@ -17,6 +17,8 @@
     UILabel* name;
     NSArray* bufferedImageViews;
     CGFloat visiblePhotoRotation;
+    CGFloat initialX[5];
+    CGFloat finalX[5];
 }
 
 @synthesize album;
@@ -33,12 +35,14 @@
             imgView.rotation = RandomPhotoRotation(i);
             [self insertSubview:imgView atIndex:0];
             currX += stepX;
+            initialX[5-i-1] = imgView.center.x;
+            finalX[5-i-1] = imgView.center.x - (i+1)*stepX/2;
         }
         bufferedImageViews = [NSArray arrayWithArray:self.subviews];
         
         // clarity
         self.opaque = NO;
-        self.clipsToBounds = YES;
+//        self.clipsToBounds = NO;
     }
     return self;
 }
@@ -92,6 +96,26 @@
         imageView.rotation = visiblePhotoRotation + RandomPhotoRotation(i);
         i++;
     }
+}
+
+#pragma mark - Swipe for Delete
+
+-(void) adjustForDelete:(CGFloat)adjustment{
+    NSLog(@"adjust: %f", adjustment);
+    adjustment = MAX(0, adjustment);
+    
+    for(int i=0;i<5;i++){
+        CGFloat ix = initialX[i];
+        CGFloat fx = finalX[i];
+        CGFloat diff = fx - ix;
+        CGFloat x = ix + diff*adjustment;
+        
+        UIView* imgView = [bufferedImageViews objectAtIndex:i];
+        CGPoint c = imgView.center;
+        c.x = x;
+        imgView.center = c;
+    }
+
 }
 
 @end

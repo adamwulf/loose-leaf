@@ -18,4 +18,6 @@
 
 -(void) updatePhotoRotation;
 
+-(void) adjustForDelete:(CGFloat)adjustment;
+
 @end

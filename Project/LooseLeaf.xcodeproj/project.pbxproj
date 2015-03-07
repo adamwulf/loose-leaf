@@ -32,6 +32,7 @@
 		6610D08A1AA8F50B0019C2FB /* MMDisplayAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */; };
 		6610D08D1AA8FAFA0019C2FB /* MMInboxButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */; };
 		6610D0951AA9041B0019C2FB /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0941AA9041B0019C2FB /* NSString+MD5.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6610D0981AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6610D0971AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m */; };
 		6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */; };
 		6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C8871964C113003A9575 /* MMUndoablePaperView.m */; };
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
@@ -494,6 +495,8 @@
 		6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxButton.m; sourceTree = "<group>"; };
 		6610D0931AA9041B0019C2FB /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+MD5.h"; path = "../../Submodules/NSString-MD5/NSString+MD5.h"; sourceTree = "<group>"; };
 		6610D0941AA9041B0019C2FB /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+MD5.m"; path = "../../Submodules/NSString-MD5/NSString+MD5.m"; sourceTree = "<group>"; };
+		6610D0961AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMContinuousSwipeGestureRecognizer.h; sourceTree = "<group>"; };
+		6610D0971AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMContinuousSwipeGestureRecognizer.m; sourceTree = "<group>"; };
 		6612C8831964C0E3003A9575 /* MMPageUndoRedoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageUndoRedoManager.h; sourceTree = "<group>"; };
 		6612C8841964C0E3003A9575 /* MMPageUndoRedoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageUndoRedoManager.m; sourceTree = "<group>"; };
 		6612C8861964C113003A9575 /* MMUndoablePaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoablePaperView.h; sourceTree = "<group>"; };
@@ -2110,6 +2113,8 @@
 			children = (
 				667D98B5192FBF2400625879 /* MMPDFInboxContentView.h */,
 				667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */,
+				6610D0961AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.h */,
+				6610D0971AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m */,
 			);
 			name = PDFs;
 			sourceTree = "<group>";
@@ -3429,6 +3434,7 @@
 				667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */,
 				66510835178DF9D800A7A7DD /* MMRulerToolGestureRecognizer.m in Sources */,
 				66ACECDF19D4C122000EA792 /* NSArray+IndexSetAdditions.m in Sources */,
+				6610D0981AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m in Sources */,
 				660116F519ABB8290065C1B4 /* MMCloudKitWaitingForLoginState.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,

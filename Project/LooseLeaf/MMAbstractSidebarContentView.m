@@ -64,11 +64,11 @@
         NSObject * opaque = (NSObject *) [[UIColor colorWithWhite:0 alpha:1] CGColor];
         
         CALayer * maskLayer = [CALayer layer];
-        maskLayer.frame = self.bounds;
+        maskLayer.frame = CGRectMake(self.bounds.origin.x-100,0,self.bounds.size.width+200,self.bounds.size.height);
         
         CAGradientLayer * gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = CGRectMake(self.bounds.origin.x, 0,
-                                         self.bounds.size.width, self.bounds.size.height);
+        gradientLayer.frame = CGRectMake(maskLayer.bounds.origin.x, 0,
+                                         maskLayer.bounds.size.width, self.bounds.size.height);
         
         gradientLayer.colors = [NSArray arrayWithObjects: transparent, opaque, nil];
         

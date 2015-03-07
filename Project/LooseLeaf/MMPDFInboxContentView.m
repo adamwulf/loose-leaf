@@ -7,12 +7,22 @@
 //
 
 #import "MMPDFInboxContentView.h"
+#import "MMDisplayAssetGroupCell.h"
+#import "MMContinuousSwipeGestureRecognizer.h"
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
 
+@interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate>
+
+@end
+
 @implementation MMPDFInboxContentView{
     NSMutableArray* pdfList;
+    MMContinuousSwipeGestureRecognizer* deleteGesture;
+    
+    MMDisplayAssetGroupCell* swipeToDeleteCell;
+    NSDate* recentDeleteSwipe;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -21,8 +31,35 @@
     if (self) {
         // Initialization code
         pdfList = [NSMutableArray array];
+        
+        deleteGesture = [[MMContinuousSwipeGestureRecognizer alloc] initWithTarget:self action:@selector(deleteGesture:)];
+        deleteGesture.delegate = self;
+        [albumListScrollView addGestureRecognizer:deleteGesture];
     }
     return self;
+}
+
+
+-(void) deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender{
+    CGPoint p = [sender locationInView:albumListScrollView];
+    
+    if(sender.state == UIGestureRecognizerStateBegan){
+        NSLog(@"start delete gesture: %f %f", p.x, p.y);
+        NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
+        swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
+        albumListScrollView.clipsToBounds = NO;
+    }else if(sender.state == UIGestureRecognizerStateChanged){
+        CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
+        [swipeToDeleteCell adjustForDelete:amount/100.0];
+    }else if(sender.state == UIGestureRecognizerStateEnded){
+        recentDeleteSwipe = [NSDate date];
+        NSLog(@"swipte gesture state: %d", (int) sender.state);
+    }
+    
+    if(sender.state == UIGestureRecognizerStateEnded ||
+       sender.state == UIGestureRecognizerStateCancelled){
+        albumListScrollView.clipsToBounds = YES;
+    }
 }
 
 -(void) switchToPDFView:(MMPDF*)pdf{
@@ -86,4 +123,19 @@
 -(NSString*) description{
     return @"PDF Inbox";
 }
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if([recentDeleteSwipe timeIntervalSinceNow] > -0.3){
+        // if we just did a swipe to delete, then don't select
+        // that row
+        return NO;
+    }
+    return YES;
+}
+
 @end
