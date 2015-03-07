@@ -60,7 +60,7 @@
     if(![MMPhotoManager hasPhotosPermission]){
         // don't have photo permissions
         ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
-        ret.center = CGPointMake(width/2, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
+        ret.center = CGPointMake(width/2 + 2*kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
         ret.transform = CGAffineTransformIdentity;
         return ret;
     }
