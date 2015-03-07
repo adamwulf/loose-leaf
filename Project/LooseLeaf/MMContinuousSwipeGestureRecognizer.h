@@ -10,6 +10,9 @@
 
 @interface MMContinuousSwipeGestureRecognizer : UIPanGestureRecognizer
 
+@property (nonatomic) CGFloat angleBuffer;
+
 -(CGPoint) distanceSinceBegin;
+
 
 @end

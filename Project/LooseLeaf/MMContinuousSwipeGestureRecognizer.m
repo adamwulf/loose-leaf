@@ -13,7 +13,10 @@
 @implementation MMContinuousSwipeGestureRecognizer{
     CGPoint startingLocation;
     UITouch* currTouch;
+    CGFloat distNeeded;
 }
+
+@synthesize angleBuffer;
 
 #pragma mark - Init
 
@@ -23,6 +26,8 @@
     self.delaysTouchesEnded = NO;
     self.delaysTouchesBegan = YES;
     self.maximumNumberOfTouches = 1;
+    angleBuffer = 20;
+    distNeeded = 10;
     return self;
 }
 
@@ -57,13 +62,13 @@
 //    NSLog(@"loc: %f %f    theta: %f", diff.x, diff.y, theta);
     
     if(self.state == UIGestureRecognizerStatePossible){
-        if(diff.x < -20){
-            if(theta > -110 && theta < -70){
+        if(diff.x < -distNeeded || diff.x > distNeeded){
+            if((theta > -90-angleBuffer && theta < -90+angleBuffer) || (theta < 90+angleBuffer && theta > 90-angleBuffer)){
                 NSLog(@"MMContinuousSwipeGestureRecognizer began!");
                 self.state = UIGestureRecognizerStateBegan;
             }
         }
-        if(DistanceBetweenTwoPoints(startingLocation, currLoc) > 20){
+        if(DistanceBetweenTwoPoints(startingLocation, currLoc) > distNeeded){
             if(self.state == UIGestureRecognizerStatePossible){
                 NSLog(@"MMContinuousSwipeGestureRecognizer failed!");
                 self.state = UIGestureRecognizerStateFailed;

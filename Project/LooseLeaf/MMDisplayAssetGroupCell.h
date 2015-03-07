@@ -13,11 +13,15 @@
 
 @property (nonatomic, strong) MMPhotoAlbum* album;
 @property (readonly) NSArray* bufferedImageViews;
+@property (nonatomic) CGFloat squishFactor;
 
 -(void) loadedPreviewPhotos;
 
 -(void) updatePhotoRotation;
 
 -(void) adjustForDelete:(CGFloat)adjustment;
+
+// returns YES if should immediately delete, NO otherwise
+-(BOOL) finishSwipeToDelete;
 
 @end

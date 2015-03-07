@@ -21,6 +21,7 @@
     NSMutableArray* pdfList;
     MMContinuousSwipeGestureRecognizer* deleteGesture;
     
+    CGFloat initialAdjustment;
     MMDisplayAssetGroupCell* swipeToDeleteCell;
     NSDate* recentDeleteSwipe;
 }
@@ -34,7 +35,9 @@
         
         deleteGesture = [[MMContinuousSwipeGestureRecognizer alloc] initWithTarget:self action:@selector(deleteGesture:)];
         deleteGesture.delegate = self;
+        deleteGesture.angleBuffer = 30;
         [albumListScrollView addGestureRecognizer:deleteGesture];
+        albumListScrollView.clipsToBounds = NO;
     }
     return self;
 }
@@ -115,18 +118,19 @@
         NSLog(@"start delete gesture: %f %f", p.x, p.y);
         NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
         swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
-        albumListScrollView.clipsToBounds = NO;
+        initialAdjustment = swipeToDeleteCell.squishFactor;
     }else if(sender.state == UIGestureRecognizerStateChanged){
         CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
-        [swipeToDeleteCell adjustForDelete:amount/100.0];
-    }else if(sender.state == UIGestureRecognizerStateEnded){
+        [swipeToDeleteCell adjustForDelete:initialAdjustment + amount/100.0];
+    }else if(sender.state == UIGestureRecognizerStateEnded ||
+             sender.state == UIGestureRecognizerStateCancelled){
         recentDeleteSwipe = [NSDate date];
         NSLog(@"swipte gesture state: %d", (int) sender.state);
-    }
-    
-    if(sender.state == UIGestureRecognizerStateEnded ||
-       sender.state == UIGestureRecognizerStateCancelled){
-        albumListScrollView.clipsToBounds = YES;
+        if([swipeToDeleteCell finishSwipeToDelete]){
+            NSLog(@"delete immediately");
+        }else{
+            NSLog(@"don't delete, wait for tap");
+        }
     }
 }
 
