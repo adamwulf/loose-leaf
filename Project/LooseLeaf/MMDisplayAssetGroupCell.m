@@ -19,6 +19,9 @@
     CGFloat visiblePhotoRotation;
     CGFloat initialX[5];
     CGFloat finalX[5];
+    CGFloat initRot[5];
+    CGFloat rotAdj[5];
+    CGFloat adjY[5];
 }
 
 @synthesize album;
@@ -37,6 +40,9 @@
             currX += stepX;
             initialX[5-i-1] = imgView.center.x;
             finalX[5-i-1] = imgView.center.x - (i+1)*stepX/2;
+            initRot[5-i-1] = imgView.rotation;
+            rotAdj[5-i-1] = RandomPhotoRotation(i+1);
+            adjY[5-i-1] = 4 + rand()%4 * (i%2 ? 1 : -1);
         }
         bufferedImageViews = [NSArray arrayWithArray:self.subviews];
         
@@ -101,7 +107,6 @@
 #pragma mark - Swipe for Delete
 
 -(void) adjustForDelete:(CGFloat)adjustment{
-    NSLog(@"adjust: %f", adjustment);
     adjustment = MAX(0, adjustment);
     
     for(int i=0;i<5;i++){
@@ -110,10 +115,13 @@
         CGFloat diff = fx - ix;
         CGFloat x = ix + diff*adjustment;
         
-        UIView* imgView = [bufferedImageViews objectAtIndex:i];
+        MMBufferedImageView* imgView = [bufferedImageViews objectAtIndex:i];
         CGPoint c = imgView.center;
         c.x = x;
+        c.y = self.bounds.size.height/2 + adjY[i]*adjustment;
         imgView.center = c;
+        
+        imgView.rotation = initRot[i] + adjustment*rotAdj[i];
     }
 
 }
