@@ -1734,20 +1734,11 @@
 		66381F5A19CB965D0014796F /* PhotosSection */ = {
 			isa = PBXGroup;
 			children = (
-				667AA41C19E31ED5006549EE /* Permission Images */,
-				66381F5719CB921A0014796F /* MMCameraCollectionViewCell.h */,
-				66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */,
 				66381F5B19CB96730014796F /* MMDisplayAssetCell.h */,
 				66381F5C19CB96730014796F /* MMDisplayAssetCell.m */,
 				66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */,
 				66C4734D19CB999000505BC0 /* MMPhotoAlbumListLayout.h */,
 				66C4734E19CB999000505BC0 /* MMPhotoAlbumListLayout.m */,
-				66E2240919D63B8B000FCA96 /* MMPhotosPermissionCell.h */,
-				66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */,
-				66E2241419D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.h */,
-				66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */,
-				66E2241719D66F8B000FCA96 /* MMEmptyCollectionViewCell.h */,
-				66E2241819D66F8B000FCA96 /* MMEmptyCollectionViewCell.m */,
 			);
 			name = PhotosSection;
 			sourceTree = "<group>";
@@ -2057,10 +2048,26 @@
 		6677C58E1AAB777200B2E46C /* CameraSection */ = {
 			isa = PBXGroup;
 			children = (
+				66381F5719CB921A0014796F /* MMCameraCollectionViewCell.h */,
+				66381F5819CB921A0014796F /* MMCameraCollectionViewCell.m */,
 				6677C58F1AAB778E00B2E46C /* MMCameraListLayout.h */,
 				6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */,
 			);
 			name = CameraSection;
+			sourceTree = "<group>";
+		};
+		6677C5921AAB7B5C00B2E46C /* Permissions */ = {
+			isa = PBXGroup;
+			children = (
+				667AA41C19E31ED5006549EE /* Permission Images */,
+				66E2240919D63B8B000FCA96 /* MMPhotosPermissionCell.h */,
+				66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */,
+				66E2241419D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.h */,
+				66E2241519D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m */,
+				66E2241719D66F8B000FCA96 /* MMEmptyCollectionViewCell.h */,
+				66E2241819D66F8B000FCA96 /* MMEmptyCollectionViewCell.m */,
+			);
+			name = Permissions;
 			sourceTree = "<group>";
 		};
 		667AA41C19E31ED5006549EE /* Permission Images */ = {
@@ -2106,6 +2113,7 @@
 		667D98B3192FBEEF00625879 /* Photo Library */ = {
 			isa = PBXGroup;
 			children = (
+				6677C5921AAB7B5C00B2E46C /* Permissions */,
 				6677C58E1AAB777200B2E46C /* CameraSection */,
 				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
 				66381F5A19CB965D0014796F /* PhotosSection */,

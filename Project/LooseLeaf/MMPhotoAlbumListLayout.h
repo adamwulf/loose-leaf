@@ -16,4 +16,9 @@
 
 @property (nonatomic, readonly) CGFloat rotation;
 
+
+// protected
+
+-(CGFloat) cameraRowHeight;
+
 @end

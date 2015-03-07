@@ -212,13 +212,13 @@
     if(animated){
         [[NSThread mainThread] performBlock:^{
             [photoListScrollView reloadData];
-            [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:YES];
+            [photoListScrollView setCollectionViewLayout:[self photosLayout] animated:YES];
             [UIView animateWithDuration:.3 animations:updateVisibleRowsWithRotation];
         }];
     }else{
         [[NSThread mainThread] performBlock:^{
             [photoListScrollView reloadData];
-            [photoListScrollView setCollectionViewLayout:[[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]] animated:NO];
+            [photoListScrollView setCollectionViewLayout:[self photosLayout] animated:NO];
             updateVisibleRowsWithRotation();
         }];
     }

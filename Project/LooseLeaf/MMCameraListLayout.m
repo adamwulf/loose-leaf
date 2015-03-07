@@ -25,40 +25,37 @@
     return self;
 }
 
--(BOOL) hasSectionForCamera{
-    return YES;
+-(BOOL) hasCameraPermission{
+    return [CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission];
 }
 
--(NSInteger) sectionIndexForPhotos{
-    return self.hasSectionForCamera ? 1 : 0;
+-(BOOL) hasPermission{
+    return [MMPhotoManager hasPhotosPermission] || [self hasCameraPermission];
 }
 
 -(CGFloat) photoRowHeight{
     return self.collectionView.bounds.size.width / 2;
 }
 
+-(NSInteger) sectionIndexForPhotos{
+    return [self hasPermission] ? 1 : 0;
+}
+
 -(CGFloat) cameraRowHeight{
-    if(self.hasSectionForCamera){
-        if ([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) {
+    if([self hasPermission]){
+        if ([self hasCameraPermission]) {
             return [self photoRowHeight] * 2 + kCameraMargin;
         }else{
             return [self photoRowHeight] * [MMPhotosPermissionCell idealPhotoRowHeight] + kCameraMargin;
         }
-    }else if(![MMPhotoManager hasPhotosPermission]){
-        return [self photoRowHeight] * [MMPhotosPermissionCell idealPhotoRowHeight] + kCameraMargin;
     }
-    return 0;
+    return [super cameraRowHeight];
 }
 
+
 -(CGSize)collectionViewContentSize{
-    NSInteger numSections = self.collectionView.numberOfSections;
-    if(!numSections){
-        return CGSizeZero;
-    }
-    
-    NSInteger numberOfPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
-    
-    return CGSizeMake(self.collectionView.bounds.size.width, [self cameraRowHeight] + ceil(numberOfPhotos/2.0) * [self photoRowHeight]);
+    CGSize contentSize = [super collectionViewContentSize];
+    return CGSizeMake(contentSize.width, contentSize.height + [self cameraRowHeight]);
 }
 
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -66,7 +63,7 @@
     
     CGFloat width = self.collectionView.bounds.size.width;
     
-    if(indexPath.section == 0 && self.hasSectionForCamera){
+    if(indexPath.section == 0 && [self hasPermission]){
         // camera
         ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
         ret.center = CGPointMake(width/2, [self cameraRowHeight]/2);
@@ -74,30 +71,11 @@
         return ret;
     }
     
-    if(![MMPhotoManager hasPhotosPermission]){
-        // don't have photo permissions
-        ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
-        ret.center = CGPointMake(width/2, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
-        if(self.hasSectionForCamera){
-            ret.center = CGPointMake(ret.center.x, ret.center.y + [self cameraRowHeight]);
-        }
-        ret.transform = CGAffineTransformIdentity;
-        return ret;
+    ret = [super layoutAttributesForItemAtIndexPath:indexPath];
+    // adjust for camera
+    if([self hasPermission]){
+        ret.center = CGPointMake(ret.center.x, ret.center.y + [self cameraRowHeight]);
     }
-    
-    NSInteger indexOfPhoto = indexPath.row;
-    
-    NSInteger rowNumber = floorf(indexOfPhoto / 2.0);
-    NSInteger colNumber = indexOfPhoto % 2;
-    
-    CGFloat x = colNumber * width/2;
-    CGFloat y = rowNumber * [self photoRowHeight];
-    
-    CGRect b = CGRectMake(0, 0, width/2, [self photoRowHeight]);
-    ret.bounds = b;
-    CGPoint c = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
-    ret.center = c;
-    ret.transform = CGAffineTransformMakeRotation(rotation);
     
     return ret;
 }
@@ -110,8 +88,9 @@
     }
     
     NSMutableArray* attrs = [NSMutableArray array];
-    
-    if(self.hasSectionForCamera){
+
+    // add the camera attributes
+    if([self hasPermission]){
         if(rect.origin.y < [self cameraRowHeight]){
             // should show camera
             [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]];
@@ -122,45 +101,11 @@
         }
     }
     
-    NSInteger startRow = floorf(rect.origin.y / [self photoRowHeight]);
-    NSInteger maxRow = ceilf((rect.origin.y + rect.size.height) / [self photoRowHeight]);
+    // add the rest of the attributes
+    [attrs addObjectsFromArray:[super layoutAttributesForElementsInRect:rect]];
     
-    NSInteger maxPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
-    
-    for(NSInteger index = startRow; index < maxRow; index++){
-        NSInteger leftPhoto = index * 2;
-        NSInteger rightPhoto = leftPhoto + 1;
-        
-        if(leftPhoto >= 0 && leftPhoto < maxPhotos){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:leftPhoto inSection:self.sectionIndexForPhotos]]];
-        }
-        if(rightPhoto >= 0 && rightPhoto < maxPhotos){
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:rightPhoto inSection:self.sectionIndexForPhotos]]];
-        }
-    }
     return attrs;
 }
 
--(BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
-{
-    return NO;
-}
-
--(CGPoint) targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset{
-    // keep our content offset
-    return self.collectionView.contentOffset.y == 0 ? self.collectionView.contentOffset : proposedContentOffset;
-}
-
--(void) prepareForTransitionFromLayout:(UICollectionViewLayout *)oldLayout{
-    // noop
-}
-
--(UICollectionViewLayoutAttributes*) initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
-    return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
-}
-
--(UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
-    return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
-}
 
 @end
