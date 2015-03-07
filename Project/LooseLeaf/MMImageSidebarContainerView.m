@@ -63,7 +63,6 @@
         // content
         
         cameraListContentView = [[MMCameraSidebarContentView alloc] initWithFrame:contentBounds];
-        [cameraListContentView showDebugBorder];
         cameraListContentView.delegate = self;
         [slidingSidebarView addSubview:cameraListContentView];
         
@@ -312,8 +311,8 @@
         iPhotoEventsButton.rotation = [self sidebarButtonRotation];
         iPhotoEventsButton.transform = rotationTransform;
         
-//        pdfInboxButton.rotation = [self sidebarButtonRotation];
-//        pdfInboxButton.transform = rotationTransform;
+        inboxButton.rotation = [self sidebarButtonRotation];
+        inboxButton.transform = rotationTransform;
     };
     
     [[NSThread mainThread] performBlock:^{
