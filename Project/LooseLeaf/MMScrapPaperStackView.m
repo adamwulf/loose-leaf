@@ -519,8 +519,16 @@
                                                                        kMPEventImportPropSource: containerDescription}];
     
     CGRect scrapRect = CGRectZero;
+    CGSize buttonSize = [bufferedImage visibleImageSize];
+    CGSize fullScaleSize = photo.fullResolutionSize;
+
+    // force the rect path that we're building to
+    // match the aspect ratio of the input photo
+    CGFloat ratio = buttonSize.width / fullScaleSize.width;
+    buttonSize.height = fullScaleSize.height * ratio;
+    
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
-    scrapRect.size = [bufferedImage visibleImageSize];
+    scrapRect.size = buttonSize;
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
 
     //
@@ -539,16 +547,15 @@
     // max image size in any direction is 300pts
     CGFloat maxDim = 600;
     
-    CGSize fullScale = photo.fullResolutionSize;
-    if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
-        fullScale.height = fullScale.height / fullScale.width * maxDim;
-        fullScale.width = maxDim;
-    }else if(fullScale.height >= fullScale.width && fullScale.height > maxDim){
-        fullScale.width = fullScale.width / fullScale.height * maxDim;
-        fullScale.height = maxDim;
+    if(fullScaleSize.width >= fullScaleSize.height && fullScaleSize.width > maxDim){
+        fullScaleSize.height = fullScaleSize.height / fullScaleSize.width * maxDim;
+        fullScaleSize.width = maxDim;
+    }else if(fullScaleSize.height >= fullScaleSize.width && fullScaleSize.height > maxDim){
+        fullScaleSize.width = fullScaleSize.width / fullScaleSize.height * maxDim;
+        fullScaleSize.height = maxDim;
     }
     
-    CGFloat startingScale = scrapRect.size.width / fullScale.width;
+    CGFloat startingScale = scrapRect.size.width / fullScaleSize.width;
     
     UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
     
@@ -590,7 +597,7 @@
         bufferedImage.alpha = 0;
         
         // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+        CGFloat bounceScale = 20 / MAX(fullScaleSize.width, fullScaleSize.height);
         
         [UIView animateWithDuration:.2
                               delay:.1

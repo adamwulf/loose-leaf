@@ -39,29 +39,11 @@
     return self;
 }
 
-
--(void) deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender{
-    CGPoint p = [sender locationInView:albumListScrollView];
-    
-    if(sender.state == UIGestureRecognizerStateBegan){
-        NSLog(@"start delete gesture: %f %f", p.x, p.y);
-        NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
-        swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
-        albumListScrollView.clipsToBounds = NO;
-    }else if(sender.state == UIGestureRecognizerStateChanged){
-        CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
-        [swipeToDeleteCell adjustForDelete:amount/100.0];
-    }else if(sender.state == UIGestureRecognizerStateEnded){
-        recentDeleteSwipe = [NSDate date];
-        NSLog(@"swipte gesture state: %d", (int) sender.state);
-    }
-    
-    if(sender.state == UIGestureRecognizerStateEnded ||
-       sender.state == UIGestureRecognizerStateCancelled){
-        albumListScrollView.clipsToBounds = YES;
-    }
-}
-
+//
+// immediately switch to show a PDF.
+// this is useful when a user has just
+// imported a PDF and we want to show the
+// sidebar immediately w/o any animation
 -(void) switchToPDFView:(MMPDF*)pdf{
     __block NSInteger indexOfPDF = NSIntegerMax;
     
@@ -123,6 +105,32 @@
 -(NSString*) description{
     return @"PDF Inbox";
 }
+
+#pragma mark - Delete Inbox Items
+
+-(void) deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender{
+    CGPoint p = [sender locationInView:albumListScrollView];
+    
+    if(sender.state == UIGestureRecognizerStateBegan){
+        NSLog(@"start delete gesture: %f %f", p.x, p.y);
+        NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
+        swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
+        albumListScrollView.clipsToBounds = NO;
+    }else if(sender.state == UIGestureRecognizerStateChanged){
+        CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
+        [swipeToDeleteCell adjustForDelete:amount/100.0];
+    }else if(sender.state == UIGestureRecognizerStateEnded){
+        recentDeleteSwipe = [NSDate date];
+        NSLog(@"swipte gesture state: %d", (int) sender.state);
+    }
+    
+    if(sender.state == UIGestureRecognizerStateEnded ||
+       sender.state == UIGestureRecognizerStateCancelled){
+        albumListScrollView.clipsToBounds = YES;
+    }
+}
+
+#pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
