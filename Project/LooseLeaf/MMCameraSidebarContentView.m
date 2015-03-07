@@ -16,9 +16,15 @@
 #import "MMRotationManager.h"
 #import "MMCameraCollectionViewCell.h"
 #import "MMDisplayAssetCell.h"
-#import "MMPhotoAlbumListLayout.h"
+#import "MMCameraListLayout.h"
 #import "UIView+Debug.h"
 #import "Constants.h"
+
+@interface MMAbstractSidebarContentView (Protected)
+
+-(CGFloat) idealRotationForOrientation;
+
+@end
 
 @implementation MMCameraSidebarContentView{
     MMCameraCollectionViewCell * cachedCameraCell;
@@ -93,6 +99,10 @@
 
 -(void) updateEmptyErrorMessage{
     // noop
+}
+
+-(UICollectionViewLayout*) photosLayout{
+    return [[MMCameraListLayout alloc] initForRotation:[self idealRotationForOrientation]];
 }
 
 #pragma mark - MMPhotoManagerDelegate

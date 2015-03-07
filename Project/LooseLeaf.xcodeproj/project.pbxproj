@@ -257,6 +257,7 @@
 		6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFEB19C3AAC40076009F /* CloudKitPermissionSwitch.png */; };
 		6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */; };
 		6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */; };
+		6677C5911AAB778E00B2E46C /* MMCameraListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */; };
 		667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AA41E19E33342006549EE /* MMPolaroidsView.m */; };
 		667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */; };
@@ -295,7 +296,7 @@
 		6693297E1599196E0033E557 /* UIFont+UIBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693297D1599196E0033E557 /* UIFont+UIBezierCurve.m */; };
 		6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94518E4BCD90054FF41 /* MMSlidingSidebarView.m */; };
 		6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */; };
-		6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94B18E4E7860054FF41 /* MMSlidingSidebarContainerView.m */; };
+		6693C94C18E4E7860054FF41 /* MMFullScreenSidebarContainingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693C94B18E4E7860054FF41 /* MMFullScreenSidebarContainingView.m */; };
 		66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66942DCF17C84356001E0150 /* MMUntouchableView.m */; };
 		6695B6E3175008680069E61F /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E2175008680069E61F /* OpenGLES.framework */; };
 		6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E5175008840069E61F /* CoreBluetooth.framework */; };
@@ -888,6 +889,8 @@
 		6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloudKitPermissionSwitch@2x.png"; sourceTree = "<group>"; };
 		6672EFEF19C3AC2B0076009F /* MMCloudErrorIconLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudErrorIconLayer.h; sourceTree = "<group>"; };
 		6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudErrorIconLayer.m; sourceTree = "<group>"; };
+		6677C58F1AAB778E00B2E46C /* MMCameraListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraListLayout.h; sourceTree = "<group>"; };
+		6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraListLayout.m; sourceTree = "<group>"; };
 		667AA41D19E33342006549EE /* MMPolaroidsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPolaroidsView.h; sourceTree = "<group>"; };
 		667AA41E19E33342006549EE /* MMPolaroidsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPolaroidsView.m; sourceTree = "<group>"; };
 		667AC03D18CE32D700AE6AF1 /* MMStretchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMStretchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -955,8 +958,8 @@
 		6693C94518E4BCD90054FF41 /* MMSlidingSidebarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSlidingSidebarView.m; sourceTree = "<group>"; };
 		6693C94718E4C55B0054FF41 /* MMLeftCloseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLeftCloseButton.h; sourceTree = "<group>"; };
 		6693C94818E4C55B0054FF41 /* MMLeftCloseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLeftCloseButton.m; sourceTree = "<group>"; };
-		6693C94A18E4E7860054FF41 /* MMSlidingSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarContainerView.h; sourceTree = "<group>"; };
-		6693C94B18E4E7860054FF41 /* MMSlidingSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSlidingSidebarContainerView.m; sourceTree = "<group>"; };
+		6693C94A18E4E7860054FF41 /* MMFullScreenSidebarContainingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFullScreenSidebarContainingView.h; sourceTree = "<group>"; };
+		6693C94B18E4E7860054FF41 /* MMFullScreenSidebarContainingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFullScreenSidebarContainingView.m; sourceTree = "<group>"; };
 		6693C94D18E52D0D0054FF41 /* MMSlidingSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSlidingSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
 		66942DCE17C84356001E0150 /* MMUntouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUntouchableView.h; sourceTree = "<group>"; };
 		66942DCF17C84356001E0150 /* MMUntouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUntouchableView.m; sourceTree = "<group>"; };
@@ -2051,6 +2054,15 @@
 			name = Camera;
 			sourceTree = "<group>";
 		};
+		6677C58E1AAB777200B2E46C /* CameraSection */ = {
+			isa = PBXGroup;
+			children = (
+				6677C58F1AAB778E00B2E46C /* MMCameraListLayout.h */,
+				6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */,
+			);
+			name = CameraSection;
+			sourceTree = "<group>";
+		};
 		667AA41C19E31ED5006549EE /* Permission Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -2094,6 +2106,7 @@
 		667D98B3192FBEEF00625879 /* Photo Library */ = {
 			isa = PBXGroup;
 			children = (
+				6677C58E1AAB777200B2E46C /* CameraSection */,
 				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
 				66381F5A19CB965D0014796F /* PhotosSection */,
 				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
@@ -2171,8 +2184,8 @@
 		6693C94318E4BCC70054FF41 /* Sliding Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				6693C94A18E4E7860054FF41 /* MMSlidingSidebarContainerView.h */,
-				6693C94B18E4E7860054FF41 /* MMSlidingSidebarContainerView.m */,
+				6693C94A18E4E7860054FF41 /* MMFullScreenSidebarContainingView.h */,
+				6693C94B18E4E7860054FF41 /* MMFullScreenSidebarContainingView.m */,
 				6693C94D18E52D0D0054FF41 /* MMSlidingSidebarContainerViewDelegate.h */,
 				6693C94418E4BCD90054FF41 /* MMSlidingSidebarView.h */,
 				6693C94518E4BCD90054FF41 /* MMSlidingSidebarView.m */,
@@ -3369,6 +3382,7 @@
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
 				661C4B241A830F740014DB20 /* MMPinterestShareItem.m in Sources */,
 				66E1010319ECB5DE006E7C15 /* MMRotateViewController.m in Sources */,
+				6677C5911AAB778E00B2E46C /* MMCameraListLayout.m in Sources */,
 				66627F901A02582F0064FAD3 /* MPNSNumberToCGFloatValueTransformer.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
@@ -3463,7 +3477,7 @@
 				667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */,
 				66627FA01A02582F0064FAD3 /* MPTweakInline.m in Sources */,
 				66627FAF1A02582F0064FAD3 /* UIImage+MPImageEffects.m in Sources */,
-				6693C94C18E4E7860054FF41 /* MMSlidingSidebarContainerView.m in Sources */,
+				6693C94C18E4E7860054FF41 /* MMFullScreenSidebarContainingView.m in Sources */,
 				66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,

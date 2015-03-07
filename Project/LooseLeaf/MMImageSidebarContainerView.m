@@ -21,6 +21,7 @@
 #import "Constants.h"
 #import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIView+Debug.h"
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
@@ -44,7 +45,7 @@
     self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
         
-        CGRect contentBounds = [sidebarContentView contentBounds];
+        CGRect contentBounds = [slidingSidebarView contentBounds];
         
         [MMPhotoManager sharedInstance].delegate = self;
         
@@ -62,27 +63,28 @@
         // content
         
         cameraListContentView = [[MMCameraSidebarContentView alloc] initWithFrame:contentBounds];
+        [cameraListContentView showDebugBorder];
         cameraListContentView.delegate = self;
-        [sidebarContentView addSubview:cameraListContentView];
+        [slidingSidebarView addSubview:cameraListContentView];
         
         albumListContentView = [[MMAlbumSidebarContentView alloc] initWithFrame:contentBounds];
         albumListContentView.delegate = self;
-        [sidebarContentView addSubview:albumListContentView];
+        [slidingSidebarView addSubview:albumListContentView];
         albumListContentView.hidden = YES;
         
         faceListContentView = [[MMFaceSidebarContentView alloc] initWithFrame:contentBounds];
         faceListContentView.delegate = self;
-        [sidebarContentView addSubview:faceListContentView];
+        [slidingSidebarView addSubview:faceListContentView];
         faceListContentView.hidden = YES;
         
         eventListContentView = [[MMEventSidebarContentView alloc] initWithFrame:contentBounds];
         eventListContentView.delegate = self;
-        [sidebarContentView addSubview:eventListContentView];
+        [slidingSidebarView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
         
         inboxListContent = [[MMPDFInboxContentView alloc] initWithFrame:contentBounds];
         inboxListContent.delegate = self;
-        [sidebarContentView addSubview:inboxListContent];
+        [slidingSidebarView addSubview:inboxListContent];
         inboxListContent.hidden = YES;
         
         
@@ -98,7 +100,7 @@
         cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         cameraAlbumButton.shadowInset = -1;
         [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [sidebarContentView addSubview:cameraAlbumButton];
+        [slidingSidebarView addSubview:cameraAlbumButton];
         
         // albums
         iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -107,7 +109,7 @@
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoAlbumButton.shadowInset = -1;
-        [sidebarContentView addSubview:iPhotoAlbumButton];
+        [slidingSidebarView addSubview:iPhotoAlbumButton];
         
         // faces button
         iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -115,7 +117,7 @@
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoFacesButton.shadowInset = -1;
-        [sidebarContentView addSubview:iPhotoFacesButton];
+        [slidingSidebarView addSubview:iPhotoFacesButton];
         
         // event button
         iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -123,14 +125,14 @@
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoEventsButton.shadowInset = -1;
-        [sidebarContentView addSubview:iPhotoEventsButton];
+        [slidingSidebarView addSubview:iPhotoEventsButton];
         
         inboxButton = [[MMInboxButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [inboxButton addTarget:self action:@selector(inboxButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         inboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         inboxButton.shadowInset = -1;
-        [sidebarContentView addSubview:inboxButton];
+        [slidingSidebarView addSubview:inboxButton];
         
         [self highlightButton:cameraAlbumButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];

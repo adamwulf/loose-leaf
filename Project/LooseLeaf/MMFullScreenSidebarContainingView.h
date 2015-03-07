@@ -11,8 +11,8 @@
 #import "MMSlidingSidebarView.h"
 #import "MMSlidingSidebarContainerViewDelegate.h"
 
-@interface MMSlidingSidebarContainerView : UIView{
-    MMSlidingSidebarView* sidebarContentView;
+@interface MMFullScreenSidebarContainingView : UIView{
+    MMSlidingSidebarView* slidingSidebarView;
     __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 }
 

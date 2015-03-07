@@ -27,9 +27,9 @@
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         // load 5 preview image views
+        CGFloat currX = 2*kBounceWidth;
         CGFloat maxDim = self.bounds.size.height;
-        CGFloat stepX = (self.bounds.size.width - maxDim) / 4;
-        CGFloat currX = 0;
+        CGFloat stepX = (self.bounds.size.width - maxDim - currX) / 4;
         for(int i=0;i<5;i++){
             MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
             imgView.rotation = RandomPhotoRotation(i);

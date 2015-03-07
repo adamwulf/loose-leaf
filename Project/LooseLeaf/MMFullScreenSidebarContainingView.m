@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSlidingSidebarContainerView.h"
+#import "MMFullScreenSidebarContainingView.h"
 #import "UIView+Animations.h"
-#import "UIView+Debug.h"
+#import "Constants.h"
 
 #define kAnimationDuration 0.3
 
-@implementation MMSlidingSidebarContainerView{
+@implementation MMFullScreenSidebarContainingView{
     UIButton* dismissButton;
     BOOL directionIsFromLeft;
 }
@@ -35,16 +35,16 @@
         
         // the sidebar content view will hold all of the content and menus
         CGRect imagePickerBounds = [self defaultSidebarFrame];
-        sidebarContentView = [[MMSlidingSidebarView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
-        sidebarContentView.delegate = self;
-        [self addSubview:sidebarContentView];
+        slidingSidebarView = [[MMSlidingSidebarView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
+        slidingSidebarView.delegate = self;
+        [self addSubview:slidingSidebarView];
         
         // a few properties on the view for clarity
         self.clipsToBounds = YES;
         self.opaque = NO;
         
         // set the anchor to 0,0 for the sliding animations
-        [UIView setAnchorPoint:CGPointZero forView:sidebarContentView];
+        [UIView setAnchorPoint:CGPointZero forView:slidingSidebarView];
         
         // init the view positions
         [self hide:NO onComplete:nil];
@@ -54,11 +54,7 @@
 
 -(void) setDelegate:(NSObject<MMSlidingSidebarContainerViewDelegate> *)_delegate{
     delegate = _delegate;
-    sidebarContentView.delegate = self;
-}
-
--(int) fullByteSize{
-    return sidebarContentView.fullByteSize;
+    slidingSidebarView.delegate = self;
 }
 
 #pragma mark - Show and Hide
@@ -80,15 +76,15 @@
     
     void(^realComplete)(BOOL) = ^(BOOL finished){
         if(finished){
-            CGRect fr = sidebarContentView.frame;
+            CGRect fr = slidingSidebarView.frame;
             if(directionIsFromLeft){
                 fr.origin.x = -fr.size.width;
-                sidebarContentView.frame = fr;
+                slidingSidebarView.frame = fr;
             }else{
                 fr.origin.x = self.bounds.size.width;
-                sidebarContentView.frame = fr;
+                slidingSidebarView.frame = fr;
             }
-            [sidebarContentView didHide];
+            [slidingSidebarView didHide];
         }
         if(onComplete) onComplete(finished);
     };
@@ -107,9 +103,9 @@
         }else{
             imagePickerBounds.origin.x = self.bounds.size.width-imagePickerBounds.size.width * 3.0 / 4.0;
         }
-        sidebarContentView.frame = imagePickerBounds;
-        sidebarContentView.alpha = 0;
-        [sidebarContentView hideAnimation];
+        slidingSidebarView.frame = imagePickerBounds;
+        slidingSidebarView.alpha = 0;
+        [slidingSidebarView hideAnimation];
     };
     
     if(animated){
@@ -127,18 +123,18 @@
     [delegate sidebarWillShow];
 
     if(animated){
-        CGRect fr = sidebarContentView.frame;
+        CGRect fr = slidingSidebarView.frame;
         if(directionIsFromLeft){
-            fr.origin = CGPointMake(-sidebarContentView.frame.size.width, 0);
+            fr.origin = CGPointMake(-slidingSidebarView.frame.size.width, 0);
         }else{
             fr.origin = CGPointMake(self.bounds.size.width, 0);
         }
-        sidebarContentView.frame = fr;
+        slidingSidebarView.frame = fr;
 
         
         
-        sidebarContentView.alpha = 0;
-        [sidebarContentView willShow];
+        slidingSidebarView.alpha = 0;
+        [slidingSidebarView willShow];
         
         [CATransaction begin];
         
@@ -153,14 +149,14 @@
                                     [NSNumber numberWithFloat:1.0], nil];
         if(directionIsFromLeft){
             bounceAnimation.values = [NSArray arrayWithObjects:
-                                      [NSValue valueWithCGPoint:CGPointMake(-sidebarContentView.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(-slidingSidebarView.frame.size.width, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(0, 0)],
                                       [NSValue valueWithCGPoint:CGPointMake(-kBounceWidth, 0)], nil];
         }else{
             bounceAnimation.values = [NSArray arrayWithObjects:
                                       [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width, 0)],
-                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width + kBounceWidth, 0)], nil];
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-slidingSidebarView.frame.size.width, 0)],
+                                      [NSValue valueWithCGPoint:CGPointMake(self.bounds.size.width-slidingSidebarView.frame.size.width + kBounceWidth, 0)], nil];
         }
         bounceAnimation.timingFunctions = [NSArray arrayWithObjects:
                                            [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut],
@@ -189,11 +185,11 @@
 
         ///////////////////////////////////////////////
         // Add the animations to the layers
-        [sidebarContentView.layer addAnimation:gr forKey:@"showImagePicker"];
+        [slidingSidebarView.layer addAnimation:gr forKey:@"showImagePicker"];
         
         [dismissButton.layer addAnimation:opacityAnimation forKey:@"alpha"];
         
-        [sidebarContentView showForDuration:kAnimationDuration];
+        [slidingSidebarView showForDuration:kAnimationDuration];
 
         [CATransaction commit];
         
@@ -203,15 +199,15 @@
     // these will affect only take effect after the
     // animation completes. notice the removedOnCompletion
     // on the animations
-    sidebarContentView.alpha = 1;
+    slidingSidebarView.alpha = 1;
     dismissButton.alpha = 1;
-    CGRect fr = sidebarContentView.frame;
+    CGRect fr = slidingSidebarView.frame;
     if(directionIsFromLeft){
         fr.origin = CGPointMake(-kBounceWidth, 0);
     }else{
-        fr.origin = CGPointMake(self.bounds.size.width-sidebarContentView.frame.size.width + kBounceWidth, 0);
+        fr.origin = CGPointMake(self.bounds.size.width-slidingSidebarView.frame.size.width + kBounceWidth, 0);
     }
-    sidebarContentView.frame = fr;
+    slidingSidebarView.frame = fr;
     
 }
 

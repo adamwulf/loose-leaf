@@ -50,6 +50,8 @@ _Pragma("clang diagnostic pop") \
 // Display Assets
 #define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
 #define kPDFThumbnailGenerated @"kPDFThumbnailGenerated"
+#define kBounceWidth 10.0
+
 
 // CloudKit Import
 #define kCloudKitMaxVisibleImports 5
