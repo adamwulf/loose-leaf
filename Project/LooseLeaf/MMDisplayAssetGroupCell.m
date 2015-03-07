@@ -10,10 +10,12 @@
 #import "MMPhotoAlbum.h"
 #import "MMBufferedImageView.h"
 #import "MMRotationManager.h"
+#import "MMDeleteButton.h"
 #import "Constants.h"
 
 @implementation MMDisplayAssetGroupCell{
     MMPhotoAlbum* album;
+    MMDeleteButton* deleteButton;
     UILabel* name;
     NSArray* bufferedImageViews;
     CGFloat visiblePhotoRotation;
@@ -47,9 +49,19 @@
         }
         bufferedImageViews = [NSArray arrayWithArray:self.subviews];
         
+        CGFloat deleteButtonWidth = 80;
+        CGRect deleteRect = CGRectMake(self.bounds.size.width - 80 - kBounceWidth, (maxDim - deleteButtonWidth)/2, deleteButtonWidth, deleteButtonWidth);
+        deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
+        deleteButton.rotation = M_PI/4;
+        deleteButton.transform = [deleteButton rotationTransform];
+        deleteButton.alpha = 0;
+        [self addSubview:deleteButton];
+        
         // clarity
         self.opaque = NO;
         self.clipsToBounds = YES;
+        
+        [self updatePhotoRotation];
     }
     return self;
 }
@@ -100,9 +112,13 @@
     
     int i=0;
     for (MMBufferedImageView* imageView in bufferedImageViews) {
-        imageView.rotation = visiblePhotoRotation + RandomPhotoRotation(i);
+        if([imageView isKindOfClass:[MMBufferedImageView class]]){
+            imageView.rotation = visiblePhotoRotation + RandomPhotoRotation(i);
+        }
         i++;
     }
+    deleteButton.rotation = M_PI/4 + visiblePhotoRotation;
+    deleteButton.transform = [deleteButton rotationTransform];
 }
 
 #pragma mark - Swipe for Delete
@@ -117,6 +133,7 @@
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:0];
+                deleteButton.alpha = 0;
                 self.clipsToBounds = YES;
             }];
         }];
@@ -134,6 +151,7 @@
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:1.0];
                 self.clipsToBounds = YES;
+                deleteButton.alpha = 1.0;
             }];
         }];
         return NO;
@@ -145,8 +163,14 @@
         self.clipsToBounds = NO;
         [self.layer removeAllAnimations];
     }
-    NSLog(@"adjustment: %f", adjustment);
     squishFactor = MAX(-0.2, adjustment);
+    
+    CGFloat alphaForDelete = adjustment - .5;
+    alphaForDelete = MAX(alphaForDelete, 0);
+    alphaForDelete /= .4;
+    alphaForDelete = MIN(alphaForDelete, 1.0);
+    deleteButton.alpha = alphaForDelete;
+    
     
     for(int i=0;i<5;i++){
         CGFloat ix = initialX[i];

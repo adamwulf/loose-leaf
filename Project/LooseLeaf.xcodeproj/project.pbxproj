@@ -258,6 +258,7 @@
 		6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */; };
 		6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */; };
 		6677C5911AAB778E00B2E46C /* MMCameraListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */; };
+		6677C5951AAB9A7000B2E46C /* MMDeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5941AAB9A7000B2E46C /* MMDeleteButton.m */; };
 		667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AA41E19E33342006549EE /* MMPolaroidsView.m */; };
 		667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */; };
@@ -891,6 +892,8 @@
 		6672EFF019C3AC2B0076009F /* MMCloudErrorIconLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudErrorIconLayer.m; sourceTree = "<group>"; };
 		6677C58F1AAB778E00B2E46C /* MMCameraListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraListLayout.h; sourceTree = "<group>"; };
 		6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraListLayout.m; sourceTree = "<group>"; };
+		6677C5931AAB9A7000B2E46C /* MMDeleteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeleteButton.h; sourceTree = "<group>"; };
+		6677C5941AAB9A7000B2E46C /* MMDeleteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeleteButton.m; sourceTree = "<group>"; };
 		667AA41D19E33342006549EE /* MMPolaroidsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPolaroidsView.h; sourceTree = "<group>"; };
 		667AA41E19E33342006549EE /* MMPolaroidsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPolaroidsView.m; sourceTree = "<group>"; };
 		667AC03D18CE32D700AE6AF1 /* MMStretchScrapGestureRecognizerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMStretchScrapGestureRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -2703,6 +2706,8 @@
 				66E100F519EC4B67006E7C15 /* MMCameraButton.m */,
 				666E252E18F5D9F100C17295 /* MMFaceButton.h */,
 				666E252F18F5D9F100C17295 /* MMFaceButton.m */,
+				6677C5931AAB9A7000B2E46C /* MMDeleteButton.h */,
+				6677C5941AAB9A7000B2E46C /* MMDeleteButton.m */,
 			);
 			name = "Import Sidebar";
 			sourceTree = "<group>";
@@ -3232,6 +3237,7 @@
 				6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */,
 				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
+				6677C5951AAB9A7000B2E46C /* MMDeleteButton.m in Sources */,
 				665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */,
 				66A790C319689CF00037F01A /* MMUndoRedoRemoveScrapItem.m in Sources */,
 				667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */,
