@@ -43,7 +43,6 @@
 #pragma mark - Notification
 
 -(void) assetUpdated:(NSNotification*)note{
-    NSLog(@"cell notified that asset updated for %d", (int)index);
     // called when the underlying asset is updated.
     // this may or may not ever be called depending
     // on the asset (PDFs in particular use
@@ -58,7 +57,6 @@
 
 -(void) loadPhotoFromAlbum:(MMPhotoAlbum*)_album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
     @try {
-        NSLog(@"cell asked to load information for index: %d", (int) photoIndex);
         album = _album;
         index = visibleIndex;
         NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:index];
@@ -66,7 +64,6 @@
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             if(result){
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetUpdated:) name:kDisplayAssetThumbnailGenerated object:result];
-                NSLog(@"cell is registered for notifications from index: %d from %p", (int) photoIndex, result);
                 bufferedImage.image = result.aspectRatioThumbnail;
                 bufferedImage.rotation = RandomPhotoRotation(photoIndex);
             }else{
@@ -88,6 +85,10 @@
 
 -(void) setRotation:(CGFloat)rotation{
     bufferedImage.rotation = rotation;
+}
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

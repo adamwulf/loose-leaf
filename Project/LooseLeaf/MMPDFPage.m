@@ -22,7 +22,6 @@
         pdf = _pdf;
         pageNumber = _pageNum;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfThumbnailGenerated:) name:kPDFThumbnailGenerated object:pdf];
-        NSLog(@"pdf page %d %p is registered to listen for notifcations from %p", (int) pageNumber, self, pdf);
     }
     return self;
 }
@@ -51,7 +50,6 @@
 -(void) pdfThumbnailGenerated:(NSNotification*)obj{
     NSInteger updatedPageNumber = [[[obj userInfo] objectForKey:@"pageNumber"] integerValue];
     if(updatedPageNumber == pageNumber){
-        NSLog(@"pdf page %d %p heard thumbnail generation from %p", (int) pageNumber, self, obj.object);
         [[NSNotificationCenter defaultCenter] postNotificationName:kDisplayAssetThumbnailGenerated object:self];
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
