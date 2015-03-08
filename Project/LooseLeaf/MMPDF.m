@@ -153,9 +153,10 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
             pageThumb = [self generateImageForPage:pageNumber withMaxDim:100 * [[UIScreen mainScreen] scale]];
             BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:thumbnailPath atomically:YES];
             if(!success){
-                NSLog(@"failed");
+                NSLog(@"generating thumbnail failed");
             }
             [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
+            NSLog(@"posted kPDFThumbnailGenerated for page %d from %p", (int) pageNumber, self);
             [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
         }
     }
@@ -168,7 +169,6 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     UIImage *image;
     @autoreleasepool {
         CGSize sizeOfPage = [self sizeForPage:page];
-        page+=1; // pdfs are index 1 at the start!
         if(sizeOfPage.width > maxDim || sizeOfPage.height > maxDim){
             CGFloat maxCurrDim = MAX(sizeOfPage.width, sizeOfPage.height);
             CGFloat ratio = maxDim / maxCurrDim;
@@ -180,7 +180,7 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         CGContextRef cgContext = UIGraphicsGetCurrentContext();
         [[UIColor whiteColor] setFill];
         CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
-        [self renderIntoContext:cgContext size:sizeOfPage page:page-1];
+        [self renderIntoContext:cgContext size:sizeOfPage page:page];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }

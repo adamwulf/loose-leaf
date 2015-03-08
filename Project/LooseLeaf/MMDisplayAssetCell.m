@@ -43,6 +43,7 @@
 #pragma mark - Notification
 
 -(void) assetUpdated:(NSNotification*)note{
+    NSLog(@"cell notified that asset updated for %d", (int)index);
     // called when the underlying asset is updated.
     // this may or may not ever be called depending
     // on the asset (PDFs in particular use
@@ -57,15 +58,17 @@
 
 -(void) loadPhotoFromAlbum:(MMPhotoAlbum*)_album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
     @try {
+        NSLog(@"cell asked to load information for index: %d", (int) photoIndex);
         album = _album;
         index = visibleIndex;
         NSIndexSet* assetsToLoad = [[NSIndexSet alloc] initWithIndex:index];
         [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             if(result){
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetUpdated:) name:kDisplayAssetThumbnailGenerated object:result];
+                NSLog(@"cell is registered for notifications from index: %d from %p", (int) photoIndex, result);
                 bufferedImage.image = result.aspectRatioThumbnail;
                 bufferedImage.rotation = RandomPhotoRotation(photoIndex);
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetUpdated:) name:kDisplayAssetThumbnailGenerated object:result];
             }else{
                 // was an error. possibly syncing the ipad to iphoto,
                 // so the album is updated faster than we can enumerate.

@@ -55,11 +55,20 @@
     return [previewPhotos count];
 }
 
+-(MMPDFPage*) pdfPageForIndex:(NSInteger)idx{
+    MMPDFPage* page = [cachedPages objectForKey:@(idx)];
+    if(!page){
+        page = [[MMPDFPage alloc] initWithPDF:pdf andPage:idx];
+        [cachedPages setObject:page forKey:@(idx)];
+    }
+    return page;
+}
+
 -(void) loadPreviewPhotos{
     previewPhotos = @[];
-    for (int i=0; i<5 && i < [pdf pageCount]; i++) {
-        previewPhotos = [previewPhotos arrayByAddingObject:[[MMPDFPage alloc] initWithPDF:pdf andPage:i]];
-        [cachedPages setObject:[previewPhotos lastObject] forKey:@(i)];
+    for (int idx=0; idx<5 && idx < [pdf pageCount]; idx++) {
+        MMPDFPage* page = [self pdfPageForIndex:idx];
+        previewPhotos = [previewPhotos arrayByAddingObject:page];
     }
 }
 
@@ -70,11 +79,7 @@
 
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        MMPDFPage* page = [cachedPages objectForKey:@(idx)];
-        if(!page){
-            page = [[MMPDFPage alloc] initWithPDF:pdf andPage:idx];
-            [cachedPages setObject:page forKey:@(idx)];
-        }
+        MMPDFPage* page = [self pdfPageForIndex:idx];
         enumerationBlock(page, idx, stop);
     }];
 }

@@ -11,6 +11,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "NSURL+UTI.h"
 #import "MMPDF.h"
+#import "NSString+UUID.h"
 #import "Constants.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
@@ -77,7 +78,8 @@ static dispatch_queue_t fileSystemQueue;
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
         DebugLog(@"PDF!");
         NSString* ourInbox = [self pdfInboxFolderPath];
-        ourInbox = [ourInbox stringByAppendingPathComponent:[itemURL lastPathComponent]];
+        NSString* pdfName = [[NSString createStringUUID] stringByAppendingPathExtension:[itemURL pathExtension]];
+        ourInbox = [ourInbox stringByAppendingPathComponent:pdfName];
         NSURL* ourInboxURL = [[NSURL alloc] initFileURLWithPath:ourInbox];
         
         NSError* err = nil;
