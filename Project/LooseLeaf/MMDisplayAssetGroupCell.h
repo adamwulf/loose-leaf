@@ -10,7 +10,14 @@
 #import "MMDisplayAssetGroup.h"
 #import "MMDisplayAssetGroupCellDelegate.h"
 
-@interface MMDisplayAssetGroupCell : UICollectionViewCell
+@interface MMDisplayAssetGroupCell : UICollectionViewCell{
+    MMDisplayAssetGroup* album;
+    CGFloat initialX[5];
+    CGFloat finalX[5];
+    CGFloat initRot[5];
+    CGFloat rotAdj[5];
+    CGFloat adjY[5];
+}
 
 @property (nonatomic, strong) MMDisplayAssetGroup* album;
 @property (readonly) NSArray* bufferedImageViews;

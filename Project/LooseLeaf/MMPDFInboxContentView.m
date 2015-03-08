@@ -13,6 +13,7 @@
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
+#import "MMPDFAssetGroupCell.h"
 
 @interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
@@ -25,6 +26,9 @@
     CGFloat initialAdjustment;
     MMDisplayAssetGroupCell* swipeToDeleteCell;
     NSDate* recentDeleteSwipe;
+    
+    
+    NSIndexPath* decryptingIndexPath;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -34,6 +38,8 @@
         // Initialization code
         pdfList = [NSMutableArray array];
         
+        [albumListScrollView registerClass:[MMPDFAssetGroupCell class] forCellWithReuseIdentifier:@"MMPDFAssetGroupCell"];
+
         deleteGesture = [[MMContinuousSwipeGestureRecognizer alloc] initWithTarget:self action:@selector(deleteGesture:)];
         deleteGesture.delegate = self;
         deleteGesture.angleBuffer = 30;
@@ -104,7 +110,14 @@
 }
 
 -(UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MMDisplayAssetGroupCell* cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    MMDisplayAssetGroupCell* cell;
+    if(collectionView == albumListScrollView){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPDFAssetGroupCell" forIndexPath:indexPath];
+        cell.album = [self albumAtIndex:indexPath.row];
+    }else{
+        cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    }
+    
     cell.delegate = self;
     if(collectionView == albumListScrollView){
         [cell resetDeleteAdjustment];
@@ -152,11 +165,10 @@
 -(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell *)cell{
     NSIndexPath* pathToDelete = [albumListScrollView indexPathForCell:swipeToDeleteCell];
     MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) swipeToDeleteCell.album;
-    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^(NSError* err){
-        if(err){
+    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^(BOOL hasErr){
+        if(hasErr){
             NSLog(@"Error deleting PDF: %@", pdfAlbum.pdf.urlOnDisk);
-            NSLog(@" - error: %@", err);
-            @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf: %@", err] userInfo:nil];
+            @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf"] userInfo:nil];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [albumListScrollView performBatchUpdates:^{
@@ -185,4 +197,48 @@
     return YES;
 }
 
+#pragma mark - UICollectionViewDelegate
+
+-(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if(collectionView == albumListScrollView){
+        MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:indexPath.row];
+        if(pdfAlbum.pdf.isEncrypted){
+            decryptingIndexPath = indexPath;
+            // ask for password
+            UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"PDF is Encrypted" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
+            alertViewChangeName.delegate = self;
+            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            [alertViewChangeName show];
+            
+        }else{
+            [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+        }
+    }
+}
+
+#pragma mark - UIAlertViewDelete
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 1){
+        NSString* password = [[alertView textFieldAtIndex:0] text];
+        NSLog(@"password: %@", password);
+        
+        MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:decryptingIndexPath.row];
+        if([pdfAlbum.pdf attemptToDecrypt:password]){
+            NSLog(@"congrats");
+            
+            MMPDFAssetGroupCell* cell = (MMPDFAssetGroupCell*) [self collectionView:albumListScrollView cellForItemAtIndexPath:decryptingIndexPath];
+            [UIView animateWithDuration:.3 animations:^{
+                cell.album = cell.album; // refresh
+            }];
+        }else{
+            UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"Incorrect Password" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
+            alertViewChangeName.delegate = self;
+            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            [alertViewChangeName show];
+        }
+        
+    }
+    decryptingIndexPath = nil;
+}
 @end

@@ -19,6 +19,9 @@
     NSString* cachedAssetsPath;
     
     NSMutableArray* pageSizeCache;
+    
+    BOOL isEncrypted;
+    NSString* password;
 }
 
 #pragma mark - Queues
@@ -42,16 +45,43 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 
         // fetch page count
         CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
-		pageCount = CGPDFDocumentGetNumberOfPages( pdf );
-		CGPDFDocumentRelease( pdf );
+
+        pageCount = CGPDFDocumentGetNumberOfPages( pdf );
+        isEncrypted = CGPDFDocumentIsEncrypted(pdf);
+
+        CGPDFDocumentRelease( pdf );
         pageSizeCache = [NSMutableArray array];
-        
-        [self generatePageThumbnailCache];
+
+        if(!isEncrypted){
+            [self generatePageThumbnailCache];
+        }
     }
     return self;
 }
 
 #pragma mark - Properties
+
+-(BOOL) attemptToDecrypt:(NSString*)_password{
+    BOOL success = password != nil;
+    if(!password){
+        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
+        
+        const char *key = [_password UTF8String];
+        success = CGPDFDocumentUnlockWithPassword(pdf, key);
+        CGPDFDocumentRelease( pdf );
+        
+        if(success){
+            password = _password;
+        }
+    }
+
+    return success;
+}
+
+-(BOOL) isEncrypted{
+    return isEncrypted && !password;
+}
+
 
 -(NSString*) cachedAssetsPath{
     if(!cachedAssetsPath){
@@ -174,9 +204,15 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
             sizeOfPage.width *= ratio;
             sizeOfPage.height *= ratio;
         }
+        if(CGSizeEqualToSize(sizeOfPage, CGSizeZero)){
+            sizeOfPage = [UIScreen mainScreen].bounds.size;
+        }
         
         UIGraphicsBeginImageContextWithOptions(sizeOfPage, NO, 1);
         CGContextRef cgContext = UIGraphicsGetCurrentContext();
+        if(!cgContext){
+            NSLog(@"no context");
+        }
         [[UIColor whiteColor] setFill];
         CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
         [self renderIntoContext:cgContext size:sizeOfPage page:page];
@@ -189,25 +225,55 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 -(void)renderIntoContext:(CGContextRef)ctx size:(CGSize)size page:(NSUInteger)page
 {
     @autoreleasepool {
-        /*
-         * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
-         */
-        CGContextGetCTM( ctx );
-        CGContextScaleCTM( ctx, 1, -1 );
-        CGContextTranslateCTM( ctx, 0, -size.height );
-        CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
-        
-        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
-        
-        CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
-        
-        CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
-        CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
-        CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
-        
-        CGContextDrawPDFPage( ctx, pageref );
-        CGPDFDocumentRelease( pdf );
+        @try {
+            CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
+            
+            /*
+             * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
+             */
+            CGContextGetCTM( ctx );
+            CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
+            
+            CGContextScaleCTM( ctx, 1, -1 );
+            CGContextTranslateCTM( ctx, 0, -size.height );
+            CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
+            
+            CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
+            CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
+            CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
+            
+            CGContextDrawPDFPage( ctx, pageref );
+                        
+            CGPDFDocumentRelease( pdf );
+        }
+        @catch (NSException *exception) {
+            NSLog(@"error drawing PDF: %@", exception);
+        }
     }
 }
+
+#pragma mark - Dealloc and Delete
+
+-(BOOL) deleteAssets{
+    NSError* errorURL = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:[self.urlOnDisk path] error:&errorURL];
+
+    dispatch_async([MMPDF pdfAssetQueue], ^{
+        // delete cached assets on background queue
+        // since there might be a lot of them
+        NSError* errorCache = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
+    });
+    
+    if(errorURL){
+        NSLog(@"delete PDF erorr: %@", errorURL);
+        return YES;
+    }
+    return NO;
+}
+
+
+
+
 
 @end

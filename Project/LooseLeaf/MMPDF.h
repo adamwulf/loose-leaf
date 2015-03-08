@@ -10,6 +10,10 @@
 
 @interface MMPDF : NSObject
 
+@property (readonly) BOOL isEncrypted;
+
+-(BOOL) attemptToDecrypt:(NSString*)password;
+
 -(id) initWithURL:(NSURL*)pdfURL;
 
 -(NSURL*) urlOnDisk;
@@ -21,5 +25,7 @@
 -(UIImage*) thumbnailForPage:(NSUInteger)page;
 
 -(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
+
+-(BOOL) deleteAssets;
 
 @end

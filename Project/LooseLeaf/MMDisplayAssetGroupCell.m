@@ -13,16 +13,10 @@
 #import "Constants.h"
 
 @implementation MMDisplayAssetGroupCell{
-    MMDisplayAssetGroup* album;
     MMDeleteButton* deleteButton;
     UILabel* name;
     NSArray* bufferedImageViews;
     CGFloat visiblePhotoRotation;
-    CGFloat initialX[5];
-    CGFloat finalX[5];
-    CGFloat initRot[5];
-    CGFloat rotAdj[5];
-    CGFloat adjY[5];
 }
 
 @synthesize album;
@@ -32,24 +26,11 @@
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         // load 5 preview image views
-        CGFloat currX = 2*kBounceWidth;
-        CGFloat maxDim = self.bounds.size.height;
-        CGFloat stepX = (self.bounds.size.width - maxDim - currX) / 4;
-        for(int i=0;i<5;i++){
-            MMBufferedImageView* imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(currX, 0, maxDim, maxDim)];
-            imgView.rotation = RandomPhotoRotation(i);
-            [self insertSubview:imgView atIndex:0];
-            currX += stepX;
-            initialX[5-i-1] = imgView.center.x;
-            finalX[5-i-1] = imgView.center.x - (i+1)*stepX/2;
-            initRot[5-i-1] = imgView.rotation;
-            rotAdj[5-i-1] = RandomPhotoRotation(i+1);
-            adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
-        }
+        [self initializePositionsForPreviewPhotos];
         bufferedImageViews = [NSArray arrayWithArray:self.subviews];
         
         CGFloat deleteButtonWidth = 80;
-        CGRect deleteRect = CGRectMake(self.bounds.size.width - 80 - kBounceWidth, (maxDim - deleteButtonWidth)/2, deleteButtonWidth, deleteButtonWidth);
+        CGRect deleteRect = CGRectMake(self.bounds.size.width - 80 - kBounceWidth, (self.bounds.size.height - deleteButtonWidth)/2, deleteButtonWidth, deleteButtonWidth);
         deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
         [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         deleteButton.rotation = M_PI/4;
@@ -64,6 +45,35 @@
         [self updatePhotoRotation];
     }
     return self;
+}
+
+-(MMBufferedImageView*) previewViewForImage:(int)i{
+    MMBufferedImageView* imgView;
+    int trueIndex = 5-i-1;
+    if([self.subviews count] > 5){
+        imgView = [self.subviews objectAtIndex:trueIndex];
+    }else{
+        imgView = [[MMBufferedImageView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.height, self.bounds.size.height)];
+        [self insertSubview:imgView atIndex:0];
+    }
+    return imgView;
+}
+
+-(void) initializePositionsForPreviewPhotos{
+    CGFloat currX = 2*kBounceWidth;
+    CGFloat maxDim = self.bounds.size.height;
+    CGFloat stepX = (self.bounds.size.width - maxDim - currX) / 4;
+    for(int i=0;i<5;i++){
+        MMBufferedImageView* imgView = [self previewViewForImage:i];
+        imgView.frame = CGRectMake(currX, 0, maxDim, maxDim);
+        currX += stepX;
+        imgView.rotation = RandomPhotoRotation(i);
+        initialX[5-i-1] = imgView.center.x;
+        finalX[5-i-1] = imgView.center.x - (i+1)*stepX/2;
+        initRot[5-i-1] = imgView.rotation;
+        rotAdj[5-i-1] = RandomPhotoRotation(i+1);
+        adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
+    }
 }
 
 -(void) deleteButtonTapped:(id)sender{
