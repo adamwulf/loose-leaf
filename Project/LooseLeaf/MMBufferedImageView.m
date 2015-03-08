@@ -65,13 +65,12 @@ CGFloat buffer = 2;
     if(image){
         CGRect fr = CGRectInset(self.bounds, 8, 8);
         CGSize scaledImageSize = image.size;
-        NSLog(@"initial ratio: %f", scaledImageSize.width / scaledImageSize.height);
+
         CGFloat maxImageDim = MAX(scaledImageSize.width, scaledImageSize.height);
         CGFloat minFrDim = MIN(fr.size.width, fr.size.height);
         
         scaledImageSize.width = (scaledImageSize.width / maxImageDim) * minFrDim;
         scaledImageSize.height = (scaledImageSize.height / maxImageDim) * minFrDim;
-        NSLog(@"scaled ratio: %f", scaledImageSize.width / scaledImageSize.height);
         
         fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
         fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
