@@ -152,7 +152,12 @@
 -(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell *)cell{
     NSIndexPath* pathToDelete = [albumListScrollView indexPathForCell:swipeToDeleteCell];
     MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) swipeToDeleteCell.album;
-    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^{
+    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^(NSError* err){
+        if(err){
+            NSLog(@"Error deleting PDF: %@", pdfAlbum.pdf.urlOnDisk);
+            NSLog(@" - error: %@", err);
+            @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf: %@", err] userInfo:nil];
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             [albumListScrollView performBatchUpdates:^{
                 [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];

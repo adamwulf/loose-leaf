@@ -68,7 +68,7 @@
                 self.state = UIGestureRecognizerStateBegan;
             }
         }
-        if(DistanceBetweenTwoPoints(startingLocation, currLoc) > distNeeded){
+        if(DistanceBetweenTwoPoints(startingLocation, currLoc) > 2*distNeeded){
             if(self.state == UIGestureRecognizerStatePossible){
                 NSLog(@"MMContinuousSwipeGestureRecognizer failed!");
                 self.state = UIGestureRecognizerStateFailed;

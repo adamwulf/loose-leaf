@@ -103,7 +103,7 @@ static dispatch_queue_t fileSystemQueue;
 }
 
 // remove the item from disk on our disk queue
-- (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)())onComplete{
+- (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)(NSError*err))onComplete{
     dispatch_async([MMInboxManager fileSystemQueue], ^{
         @autoreleasepool {
             //Clean up the inbox once the file has been processed
@@ -123,10 +123,10 @@ static dispatch_queue_t fileSystemQueue;
                 }
             }
             if (error) {
-                DebugLog(@"ERROR: Inbox file could not be deleted");
+                DebugLog(@"ERROR: Inbox file %@ could not be deleted: %@", pdfToRemove, error);
             }
             if(onComplete){
-                onComplete();
+                onComplete(error);
             }
         }
     });
