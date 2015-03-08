@@ -7,14 +7,13 @@
 //
 
 #import "MMDisplayAssetGroupCell.h"
-#import "MMPhotoAlbum.h"
 #import "MMBufferedImageView.h"
 #import "MMRotationManager.h"
 #import "MMDeleteButton.h"
 #import "Constants.h"
 
 @implementation MMDisplayAssetGroupCell{
-    MMPhotoAlbum* album;
+    MMDisplayAssetGroup* album;
     MMDeleteButton* deleteButton;
     UILabel* name;
     NSArray* bufferedImageViews;
@@ -52,6 +51,7 @@
         CGFloat deleteButtonWidth = 80;
         CGRect deleteRect = CGRectMake(self.bounds.size.width - 80 - kBounceWidth, (maxDim - deleteButtonWidth)/2, deleteButtonWidth, deleteButtonWidth);
         deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
+        [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         deleteButton.rotation = M_PI/4;
         deleteButton.transform = [deleteButton rotationTransform];
         deleteButton.alpha = 0;
@@ -66,8 +66,12 @@
     return self;
 }
 
+-(void) deleteButtonTapped:(id)sender{
+    [self.delegate deleteButtonWasTappedForCell:self];
+}
 
--(void) setAlbum:(MMPhotoAlbum *)_album{
+
+-(void) setAlbum:(MMDisplayAssetGroup *)_album{
     if(album != _album){
         album = _album;
         [album loadPreviewPhotos];
@@ -80,7 +84,7 @@
 
 -(void) loadedPreviewPhotos{
     for(int i=0;i<5;i++){
-        MMPhoto* img = nil;
+        MMDisplayAsset* img = nil;
         int indexOfPhoto = 4-i;
         if(indexOfPhoto<[album.previewPhotos count]){
             img = [album.previewPhotos objectAtIndex:indexOfPhoto];
@@ -156,6 +160,12 @@
         }];
         return NO;
     }
+}
+
+-(void) resetDeleteAdjustment{
+    [self adjustForDelete:0];
+    self.clipsToBounds = YES;
+    [self.layer removeAllAnimations];
 }
 
 -(void) adjustForDelete:(CGFloat)adjustment{

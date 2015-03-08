@@ -7,17 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMPhotoAlbum.h"
+#import "MMDisplayAssetGroup.h"
+#import "MMDisplayAssetGroupCellDelegate.h"
 
 @interface MMDisplayAssetGroupCell : UICollectionViewCell
 
-@property (nonatomic, strong) MMPhotoAlbum* album;
+@property (nonatomic, strong) MMDisplayAssetGroup* album;
 @property (readonly) NSArray* bufferedImageViews;
 @property (nonatomic) CGFloat squishFactor;
+@property (nonatomic, weak) NSObject<MMDisplayAssetGroupCellDelegate>* delegate;
 
 -(void) loadedPreviewPhotos;
 
 -(void) updatePhotoRotation;
+
+-(void) resetDeleteAdjustment;
 
 -(void) adjustForDelete:(CGFloat)adjustment;
 

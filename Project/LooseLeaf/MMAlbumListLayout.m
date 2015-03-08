@@ -8,7 +8,10 @@
 
 #import "MMAlbumListLayout.h"
 
-@implementation MMAlbumListLayout
+@implementation MMAlbumListLayout{
+    NSMutableArray* deleteIndexPaths;
+    NSMutableArray* insertIndexPaths;
+}
 
 -(id) init{
     if(self = [super init]){
@@ -44,7 +47,6 @@
     
     return ret;
 }
-
 
 -(NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
@@ -83,8 +85,33 @@
     return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
 }
 
+- (void)prepareForCollectionViewUpdates:(NSArray *)updateItems
+{
+    // Keep track of insert and delete index paths
+    [super prepareForCollectionViewUpdates:updateItems];
+    
+    deleteIndexPaths = [NSMutableArray array];
+    insertIndexPaths = [NSMutableArray array];
+    
+    for (UICollectionViewUpdateItem *update in updateItems)
+    {
+        if (update.updateAction == UICollectionUpdateActionDelete)
+        {
+            [deleteIndexPaths addObject:update.indexPathBeforeUpdate];
+        }
+        else if (update.updateAction == UICollectionUpdateActionInsert)
+        {
+            [insertIndexPaths addObject:update.indexPathAfterUpdate];
+        }
+    }
+}
+
 -(UICollectionViewLayoutAttributes*) finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath{
-    return [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+    UICollectionViewLayoutAttributes* attrs = [self layoutAttributesForItemAtIndexPath:itemIndexPath];
+    if([deleteIndexPaths containsObject:itemIndexPath]){
+        attrs.center = CGPointMake(attrs.center.x-attrs.bounds.size.width, attrs.center.y);
+    }
+    return attrs;
 }
 
 

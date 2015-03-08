@@ -71,7 +71,7 @@ static dispatch_queue_t fileSystemQueue;
         UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
         if(importedImage){
             [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
-            [self removeInboxItem:itemURL];
+            [self removeInboxItem:itemURL onComplete:nil];
             return;
         }
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
@@ -101,7 +101,7 @@ static dispatch_queue_t fileSystemQueue;
 }
 
 // remove the item from disk on our disk queue
-- (void)removeInboxItem:(NSURL *)itemURL{
+- (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)())onComplete{
     dispatch_async([MMInboxManager fileSystemQueue], ^{
         @autoreleasepool {
             //Clean up the inbox once the file has been processed
@@ -122,6 +122,9 @@ static dispatch_queue_t fileSystemQueue;
             }
             if (error) {
                 DebugLog(@"ERROR: Inbox file could not be deleted");
+            }
+            if(onComplete){
+                onComplete();
             }
         }
     });

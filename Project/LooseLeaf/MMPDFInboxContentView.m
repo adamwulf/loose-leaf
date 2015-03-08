@@ -9,11 +9,12 @@
 #import "MMPDFInboxContentView.h"
 #import "MMDisplayAssetGroupCell.h"
 #import "MMContinuousSwipeGestureRecognizer.h"
+#import "MMDisplayAssetGroupCellDelegate.h"
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
 
-@interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate>
+@interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
 @end
 
@@ -102,6 +103,15 @@
     }
 }
 
+-(UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    MMDisplayAssetGroupCell* cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    cell.delegate = self;
+    if(collectionView == albumListScrollView){
+        [cell resetDeleteAdjustment];
+    }
+    return cell;
+}
+
 
 #pragma mark - Description
 
@@ -125,13 +135,33 @@
     }else if(sender.state == UIGestureRecognizerStateEnded ||
              sender.state == UIGestureRecognizerStateCancelled){
         recentDeleteSwipe = [NSDate date];
-        NSLog(@"swipte gesture state: %d", (int) sender.state);
+        NSLog(@"swipe gesture state: %d", (int) sender.state);
         if([swipeToDeleteCell finishSwipeToDelete]){
             NSLog(@"delete immediately");
+            
+            [self deleteButtonWasTappedForCell:swipeToDeleteCell];
+            
         }else{
             NSLog(@"don't delete, wait for tap");
         }
     }
+}
+
+#pragma mark - MMDisplayAssetGroupCellDelegate
+
+-(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell *)cell{
+    NSIndexPath* pathToDelete = [albumListScrollView indexPathForCell:swipeToDeleteCell];
+    MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) swipeToDeleteCell.album;
+    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [albumListScrollView performBatchUpdates:^{
+                [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];
+            } completion:^(BOOL finished) {
+                swipeToDeleteCell = nil;
+                recentDeleteSwipe = nil;
+            }];
+        });
+    }];
 }
 
 #pragma mark - UIGestureRecognizerDelegate

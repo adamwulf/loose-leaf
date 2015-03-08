@@ -17,7 +17,7 @@
 
 -(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
 
--(void) removeInboxItem:(NSURL *)itemURL;
+-(void) removeInboxItem:(NSURL *)itemURL onComplete:(void(^)())onComplete;
 
 -(NSInteger) itemsInInboxCount;
 

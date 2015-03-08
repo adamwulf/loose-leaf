@@ -528,6 +528,7 @@
 		661885D218F9AED50016A333 /* MMDarkSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDarkSidebarButton.h; sourceTree = "<group>"; };
 		661885D318F9AED50016A333 /* MMDarkSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDarkSidebarButton.m; sourceTree = "<group>"; };
 		661885D518F9BC920016A333 /* MMCamViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCamViewDelegate.h; sourceTree = "<group>"; };
+		6619D3BA1AAC068300484819 /* MMDisplayAssetGroupCellDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetGroupCellDelegate.h; sourceTree = "<group>"; };
 		661C4B221A830F740014DB20 /* MMPinterestShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPinterestShareItem.h; sourceTree = "<group>"; };
 		661C4B231A830F740014DB20 /* MMPinterestShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPinterestShareItem.m; sourceTree = "<group>"; };
 		661C4B251A830FB20014DB20 /* Pinterest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pinterest.framework; path = ../Frameworks/Pinterest.framework; sourceTree = "<group>"; };
@@ -1718,6 +1719,7 @@
 				6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */,
 				6630F4D01AA534CF004F2FDC /* MMDisplayAssetGroupCell.h */,
 				6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */,
+				6619D3BA1AAC068300484819 /* MMDisplayAssetGroupCellDelegate.h */,
 			);
 			name = AlbumsSection;
 			sourceTree = "<group>";
