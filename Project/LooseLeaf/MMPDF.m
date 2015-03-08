@@ -156,7 +156,6 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
                 NSLog(@"generating thumbnail failed");
             }
             [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
-            NSLog(@"posted kPDFThumbnailGenerated for page %d from %p", (int) pageNumber, self);
             [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
         }
     }
