@@ -516,6 +516,7 @@
 		661EBA56182AF1AD00893274 /* MMScissorTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorTool.m; sourceTree = "<group>"; };
 		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
 		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
+		662280741AAF75BC00DAB609 /* AuthConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthConstants.h; sourceTree = "<group>"; };
 		662441E4187BC68700011A54 /* Pomax.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomax.license; sourceTree = "<group>"; };
 		66244CAD1A65145100A009BC /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = ../Frameworks/Fabric.framework; sourceTree = "<group>"; };
 		66277C9B192BC99D003E97C0 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
@@ -2558,6 +2559,7 @@
 				66DCFB981581BCEF00B4918C /* LooseLeaf-Prefix.pch */,
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
 				664516B8159030FC0012FACA /* Constants.m */,
+				662280741AAF75BC00DAB609 /* AuthConstants.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

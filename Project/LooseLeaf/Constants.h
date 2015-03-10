@@ -9,14 +9,7 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
-
-#define FACEBOOK_APP_ID @"YOUR_FACEBOOK_APP_ID"
-
-#ifdef DEBUG
-#define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
-#else
-#define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
-#endif
+#import "AuthConstants.h"
 
 #define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
@@ -43,17 +36,10 @@ _Pragma("clang diagnostic pop") \
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
-#define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
-
 #define kAnimationDelay 0.05
 
 // CloudKit Import
 #define kCloudKitMaxVisibleImports 5
-
-// Imgur
-#define kImgurClientID @"YOUR_IMGUR_CLIENT_ID"
-#define kImgurClientSecret @"YOUR_IMGUR_CLIENT_SECRET"
-#define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
 
 // Ruler
 #define kWidthOfRuler 70
