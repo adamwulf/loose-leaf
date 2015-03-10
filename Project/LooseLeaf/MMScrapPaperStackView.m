@@ -558,7 +558,7 @@
     
     CGFloat startingScale = scrapRect.size.width / fullScaleSize.width;
     
-    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
+    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:maxDim];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     

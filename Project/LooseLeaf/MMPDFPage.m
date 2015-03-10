@@ -45,7 +45,7 @@ static UIImage* lockThumbnail;
 }
 
 -(NSURL*) fullResolutionURL{
-    return [[NSBundle mainBundle] URLForResource:@"livestream-header" withExtension:@"png"];
+    return [pdf imageURLForPage:pageNumber];
 }
 
 -(CGSize) fullResolutionSize{

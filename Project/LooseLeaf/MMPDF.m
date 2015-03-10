@@ -109,11 +109,11 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 }
 
 -(UIImage*) thumbnailForPage:(NSUInteger)page{
-    return [self cachedThumbnailForPage:page];
+    return [self cachedImageAtPath:[self thumbnailPathForPage:page]];
 }
 
--(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
-    return [self generateImageForPage:page withMaxDim:maxDim];
+-(NSURL*) imageURLForPage:(NSUInteger)page{
+    return [NSURL fileURLWithPath:[self fullScalePathForPage:page]];
 }
 
 -(CGSize) sizeForPage:(NSUInteger)page{
@@ -157,8 +157,10 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         @synchronized(self){
             [pageSizeCache removeAllObjects];
         }
+        CGFloat maxDim = MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         for(int i=0;i<[self pageCount];i++){
-            [self generateThumbnailForPage:i];
+            [self generateImageForPage:i atPath:[self thumbnailPathForPage:i] forMaxDim:100 * [[UIScreen mainScreen] scale]];
+            [self generateImageForPage:i atPath:[self fullScalePathForPage:i] forMaxDim:maxDim];
             @synchronized(self){
                 [pageSizeCache addObject:[NSValue valueWithCGSize:[self sizeForPage:i]]];
             }
@@ -171,28 +173,39 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     return [[self cachedAssetsPath] stringByAppendingPathComponent:thumbnailFilename];
 }
 
--(UIImage*) cachedThumbnailForPage:(NSInteger)pageNumber{
+-(NSString*) fullScalePathForPage:(NSInteger)pageNumber{
+    NSString* fullScaleFilename = [NSString stringWithFormat:@"page%d.png",(int) pageNumber];
+    return [[self cachedAssetsPath] stringByAppendingPathComponent:fullScaleFilename];
+}
+
+-(UIImage*) cachedImageAtPath:(NSString*)cachedImagePath{
     UIImage* pageThumb = nil;
     @autoreleasepool {
-        NSString* thumbnailPath = [self thumbnailPathForPage:pageNumber];
-        if([[NSFileManager defaultManager] fileExistsAtPath:thumbnailPath]){
-            return [[MMLoadImageCache sharedInstance] imageAtPath:thumbnailPath];
+        if(cachedImagePath && [[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
+            return [[MMLoadImageCache sharedInstance] imageAtPath:cachedImagePath];
         }
     }
     return pageThumb;
 }
 
--(UIImage*) generateThumbnailForPage:(NSInteger)pageNumber{
-    UIImage* pageThumb = [self cachedThumbnailForPage:pageNumber];
+-(UIImage*) imageForPage:(NSInteger)pageNumber withMaxDim:(CGFloat)maxDim{
+    NSString* thumbnailFilename = [NSString stringWithFormat:@"thumb%d-%d.png",(int) pageNumber,(int)maxDim];
+    thumbnailFilename = [[self cachedAssetsPath] stringByAppendingPathComponent:thumbnailFilename];
+    return [self generateImageForPage:pageNumber atPath:thumbnailFilename forMaxDim:maxDim];
+}
+
+-(UIImage*) generateImageForPage:(NSInteger)pageNumber atPath:(NSString*)cachedImagePath forMaxDim:(CGFloat)maxDim{
+    UIImage* pageThumb = [self cachedImageAtPath:cachedImagePath];
     if(!pageThumb){
         @autoreleasepool {
-            NSString* thumbnailPath = [self thumbnailPathForPage:pageNumber];
-            pageThumb = [self generateImageForPage:pageNumber withMaxDim:100 * [[UIScreen mainScreen] scale]];
-            BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:thumbnailPath atomically:YES];
+            pageThumb = [self generateImageForPage:pageNumber withMaxDim:maxDim];
+            BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
             if(!success){
                 NSLog(@"generating thumbnail failed");
             }
-            [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
+            if(cachedImagePath){
+                [[MMLoadImageCache sharedInstance] updateCacheForPath:cachedImagePath toImage:pageThumb];
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
         }
     }else{
