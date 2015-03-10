@@ -10,4 +10,6 @@
 
 @interface MMAlbumListLayout : UICollectionViewLayout
 
+-(CGFloat) albumRowHeight;
+
 @end

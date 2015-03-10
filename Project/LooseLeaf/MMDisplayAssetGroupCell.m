@@ -65,14 +65,15 @@
     CGFloat stepX = (self.bounds.size.width - maxDim - currX) / 4;
     for(int i=0;i<5;i++){
         MMBufferedImageView* imgView = [self previewViewForImage:i];
-        imgView.frame = CGRectMake(currX, 0, maxDim, maxDim);
-        currX += stepX;
+        imgView.bounds = CGRectMake(0, 0, maxDim, maxDim);
         imgView.rotation = RandomPhotoRotation(i);
+        imgView.center = CGPointMake(currX + maxDim/2, maxDim/2);
         initialX[5-i-1] = imgView.center.x;
         finalX[5-i-1] = imgView.center.x - (i+1)*stepX/2;
         initRot[5-i-1] = imgView.rotation;
         rotAdj[5-i-1] = RandomPhotoRotation(i+1);
         adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
+        currX += stepX;
     }
 }
 

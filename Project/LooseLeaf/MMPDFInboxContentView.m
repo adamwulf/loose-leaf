@@ -14,6 +14,7 @@
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
 #import "MMPDFAssetGroupCell.h"
+#import "MMPDFListLayout.h"
 
 @interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
@@ -86,6 +87,10 @@
     }
     [albumListScrollView reloadData];
     [super reset:animated];
+}
+
+-(UICollectionViewLayout*) albumsLayout{
+    return [[MMPDFListLayout alloc] init];
 }
 
 
