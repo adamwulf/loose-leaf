@@ -27,4 +27,6 @@
 
 -(void) showPDF:(MMPDF*)pdf;
 
+-(void) refreshPDF;
+
 @end

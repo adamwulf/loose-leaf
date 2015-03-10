@@ -240,6 +240,10 @@
     [self highlightButton:inboxButton];
 }
 
+-(void) refreshPDF{
+    [inboxListContent reset:NO];
+}
+
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums;{

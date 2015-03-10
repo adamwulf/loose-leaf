@@ -35,6 +35,8 @@
 #import "MMStatTracker.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <PerformanceBezier/PerformanceBezier.h>
+#import "MMPDFAlbum.h"
+#import "MMPDFPage.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -359,9 +361,26 @@
 }
 
 -(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-//    if(pdfDoc.pageCount == 1){
-//        // create a UIImage from teh PDF and add it like normal above
-//    }else{
+    if(pdfDoc.isEncrypted){
+        // show PDF sidebar
+        [[MMPhotoManager sharedInstance] bypassAuthRequirement];
+        [self cancelAllGestures];
+        [[visibleStackHolder peekSubview] cancelAllGestures];
+        [self setButtonsVisible:NO withDuration:0.15];
+        [importImageSidebar refreshPDF];
+        [importImageSidebar show:YES];
+    }else if(pdfDoc.pageCount == 1){
+        [importImageSidebar hide:NO onComplete:^(BOOL finished) {
+            // create a UIImage from teh PDF and add it like normal above
+            // immediately import that single page
+            MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithPDF:pdfDoc];
+            NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
+            [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
+                UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:600];
+                [self didProcessIncomingImage:pageImage fromURL:pdfDoc.urlOnDisk fromApp:sourceApplication];
+            }];
+        }];
+    }else{
         // automatically open to the PDF in the import sidebar
         [[MMPhotoManager sharedInstance] bypassAuthRequirement];
         [self cancelAllGestures];
@@ -371,7 +390,7 @@
 
         // show show the PDF content in the sidebar
         [importImageSidebar showPDF:pdfDoc];
-//    }
+    }
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
