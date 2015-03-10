@@ -68,10 +68,6 @@ static UIImage* lockThumbnail;
     // make the lock icon
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        
-        lockThumbnail = nil;
-        
-
         CGRect imageBounds = [[UIScreen mainScreen] bounds];
         UIGraphicsBeginImageContextWithOptions(imageBounds.size, NO, 1);
         CGContextRef cgContext = UIGraphicsGetCurrentContext();
@@ -85,8 +81,6 @@ static UIImage* lockThumbnail;
 
         lockThumbnail = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-
-        
     });
 }
 

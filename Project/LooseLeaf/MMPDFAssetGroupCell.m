@@ -22,11 +22,24 @@
 
 
 -(void) setAlbum:(MMDisplayAssetGroup *)_album{
+    if(album){
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kPDFThumbnailGenerated object:album];
+    }
     [super setAlbum:_album];
     if(![_album isKindOfClass:[MMPDFAlbum class]]){
         @throw [NSException exceptionWithName:@"PDFAssetGroupCellException" reason:@"Cell can only show PDFs" userInfo:nil];
     }
     [self initializePositionsForPreviewPhotos];
+    MMPDFAlbum* pdfAlbum = (MMPDFAlbum*)album;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewUpdated:) name:kPDFThumbnailGenerated object:pdfAlbum.pdf];
+}
+
+-(void) previewUpdated:(NSNotification*) note{
+    if([[note.userInfo objectForKey:@"pageNumber"] integerValue] < 5){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self loadedPreviewPhotos];
+        });
+    }
 }
 
 -(void) initializePositionsForPreviewPhotos{
@@ -46,11 +59,20 @@
             initRot[5-i-1] = randRot;
             rotAdj[5-i-1] = RandomPhotoRotation(i+1);
             adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
+            
         }
     }else{
         // spread out preview images
         [super initializePositionsForPreviewPhotos];
     }
+}
+
+-(void) prepareForReuse{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 

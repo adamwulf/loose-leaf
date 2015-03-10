@@ -104,6 +104,7 @@
             [v setImage:img.aspectRatioThumbnail];
             v.hidden = NO;
         }else{
+            v.image = nil;
             v.hidden = YES;
         }
     }

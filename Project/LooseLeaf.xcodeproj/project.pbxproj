@@ -2133,7 +2133,6 @@
 		667D98B3192FBEEF00625879 /* Photo Library */ = {
 			isa = PBXGroup;
 			children = (
-				662280701AAF56EB00DAB609 /* MMPDFAssetGroupCell */,
 				6677C5921AAB7B5C00B2E46C /* Permissions */,
 				6677C58E1AAB777200B2E46C /* CameraSection */,
 				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
@@ -2153,6 +2152,7 @@
 		667D98B4192FBF0C00625879 /* PDFs */ = {
 			isa = PBXGroup;
 			children = (
+				662280701AAF56EB00DAB609 /* MMPDFAssetGroupCell */,
 				667D98B5192FBF2400625879 /* MMPDFInboxContentView.h */,
 				667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */,
 				6610D0961AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.h */,

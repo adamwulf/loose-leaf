@@ -52,6 +52,7 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         CGPDFDocumentRelease( pdf );
         pageSizeCache = [NSMutableArray array];
 
+        
         if(!isEncrypted){
             [self generatePageThumbnailCache];
         }
@@ -72,6 +73,7 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         
         if(success){
             password = _password;
+            [self generatePageThumbnailCache];
         }
     }
 
@@ -133,7 +135,12 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
      * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
      */
     CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
-    
+
+    if(password){
+        const char *key = [password UTF8String];
+        CGPDFDocumentUnlockWithPassword(pdf, key);
+    }
+
     CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
     
     CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
@@ -188,6 +195,8 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
             [[MMLoadImageCache sharedInstance] updateCacheForPath:thumbnailPath toImage:pageThumb];
             [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
         }
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
     }
     return pageThumb;
 }
@@ -227,6 +236,11 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     @autoreleasepool {
         @try {
             CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) pdfResourceURL );
+
+            if(password){
+                const char *key = [password UTF8String];
+                CGPDFDocumentUnlockWithPassword(pdf, key);
+            }
             
             /*
              * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/

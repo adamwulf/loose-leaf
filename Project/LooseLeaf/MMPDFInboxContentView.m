@@ -103,13 +103,16 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if(collectionView == albumListScrollView){
-        return [[MMInboxManager sharedInstance] itemsInInboxCount];
+        NSInteger numRet = [[MMInboxManager sharedInstance] itemsInInboxCount];
+        NSLog(@"refreshing: %d rows", (int)numRet);
+        return numRet;
     }else{
         return [super collectionView:collectionView numberOfItemsInSection:section];
     }
 }
 
 -(UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
     MMDisplayAssetGroupCell* cell;
     if(collectionView == albumListScrollView){
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPDFAssetGroupCell" forIndexPath:indexPath];
@@ -189,7 +192,7 @@
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if([recentDeleteSwipe timeIntervalSinceNow] > -0.3){
+    if(recentDeleteSwipe && [recentDeleteSwipe timeIntervalSinceNow] > -0.3){
         // if we just did a swipe to delete, then don't select
         // that row
         return NO;
@@ -227,10 +230,17 @@
         if([pdfAlbum.pdf attemptToDecrypt:password]){
             NSLog(@"congrats");
             
-            MMPDFAssetGroupCell* cell = (MMPDFAssetGroupCell*) [self collectionView:albumListScrollView cellForItemAtIndexPath:decryptingIndexPath];
-            [UIView animateWithDuration:.3 animations:^{
-                cell.album = cell.album; // refresh
-            }];
+            if([[albumListScrollView indexPathsForVisibleItems] containsObject:decryptingIndexPath]){
+                // if the cell is already visible, then animate that cell to non-decrypted
+                // otherwise nothing
+                MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                    UICollectionViewCell* cell = evaluatedObject;
+                    return [[albumListScrollView indexPathForCell:cell] isEqual:decryptingIndexPath];
+                }]] firstObject];
+                [UIView animateWithDuration:.3 animations:^{
+                    cell.album = cell.album; // refresh
+                }];
+            }
         }else{
             UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"Incorrect Password" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
             alertViewChangeName.delegate = self;
