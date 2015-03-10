@@ -40,7 +40,7 @@
         
         // clarity
         self.opaque = NO;
-        self.clipsToBounds = YES;
+//        self.clipsToBounds = YES;
         
         [self updatePhotoRotation];
     }
@@ -149,7 +149,6 @@
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:0];
                 deleteButton.alpha = 0;
-                self.clipsToBounds = YES;
             }];
         }];
         return NO;
@@ -165,7 +164,6 @@
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:1.0];
-                self.clipsToBounds = YES;
                 deleteButton.alpha = 1.0;
             }];
         }];
@@ -175,13 +173,11 @@
 
 -(void) resetDeleteAdjustment{
     [self adjustForDelete:0];
-    self.clipsToBounds = YES;
     [self.layer removeAllAnimations];
 }
 
 -(void) adjustForDelete:(CGFloat)adjustment{
-    if(self.clipsToBounds){
-        self.clipsToBounds = NO;
+    if([self.layer.animationKeys count]){
         [self.layer removeAllAnimations];
     }
     squishFactor = MAX(-0.2, adjustment);

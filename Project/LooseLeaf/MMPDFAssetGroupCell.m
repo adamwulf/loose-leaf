@@ -50,11 +50,13 @@
         CGFloat maxDim = self.bounds.size.height;
         for(int i=0;i<5;i++){
             MMBufferedImageView* imgView = [self previewViewForImage:i];
-            imgView.frame = CGRectMake(halfWidth - imgView.bounds.size.width/2, 0, maxDim, maxDim);
+            imgView.bounds = CGRectMake(0, 0, maxDim, maxDim);
 
             CGFloat randRot = RandomPhotoRotation(i);
             imgView.rotation = randRot;
-            initialX[5-i-1] = halfWidth + kBounceWidth;
+            CGFloat extra = i == 0 ? 0 : RandomMod(i, 9)-4;
+            imgView.center = CGPointMake(halfWidth + kBounceWidth + extra, maxDim/2);
+            initialX[5-i-1] = imgView.center.x;
             finalX[5-i-1] = halfWidth - 80;
             initRot[5-i-1] = randRot;
             rotAdj[5-i-1] = RandomPhotoRotation(i+1);

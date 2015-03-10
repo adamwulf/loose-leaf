@@ -103,9 +103,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     if(collectionView == albumListScrollView){
-        NSInteger numRet = [[MMInboxManager sharedInstance] itemsInInboxCount];
-        NSLog(@"refreshing: %d rows", (int)numRet);
-        return numRet;
+        return [[MMInboxManager sharedInstance] itemsInInboxCount];
     }else{
         return [super collectionView:collectionView numberOfItemsInSection:section];
     }
