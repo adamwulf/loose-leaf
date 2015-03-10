@@ -51,8 +51,8 @@ _Pragma("clang diagnostic pop") \
 #define kCloudKitMaxVisibleImports 5
 
 // Imgur
-#define kImgurClientID @"84d82da68fd2438"
-#define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
+#define kImgurClientID @"YOUR_IMGUR_CLIENT_ID"
+#define kImgurClientSecret @"YOUR_IMGUR_CLIENT_SECRET"
 #define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
 
 // Ruler
