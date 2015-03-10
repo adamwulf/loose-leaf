@@ -7,7 +7,11 @@
 //
 
 #import "MMDisplayAssetGroupCell.h"
+#import "MMBufferedImageView.h"
+
 
 @interface MMPDFAssetGroupCell : MMDisplayAssetGroupCell
+
+-(MMBufferedImageView*) firstImageView;
 
 @end

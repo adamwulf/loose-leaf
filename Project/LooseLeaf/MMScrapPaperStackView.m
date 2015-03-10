@@ -526,7 +526,7 @@
                      }];
 }
 
--(void) photoWasTapped:(MMPhoto *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+-(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
     CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];

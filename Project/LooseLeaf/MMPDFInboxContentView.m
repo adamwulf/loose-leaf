@@ -215,7 +215,19 @@
             alertViewChangeName.delegate = self;
             alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
             [alertViewChangeName show];
+        }if(pdfAlbum.pdf.pageCount == 1){
             
+            
+            MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                UICollectionViewCell* cell = evaluatedObject;
+                return [[albumListScrollView indexPathForCell:cell] isEqual:indexPath];
+            }]] firstObject];
+            
+            
+            NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
+            [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
+                [self photoWasTapped:result fromView:cell.firstImageView withRotation:0];
+            }];
         }else{
             [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
         }

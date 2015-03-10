@@ -276,7 +276,7 @@
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(MMPhoto *)asset
+-(void) photoWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation{
     MMPhotoAlbumListLayout* layout = (MMPhotoAlbumListLayout*) photoListScrollView.collectionViewLayout;

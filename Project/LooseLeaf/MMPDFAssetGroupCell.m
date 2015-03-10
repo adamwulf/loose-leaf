@@ -20,6 +20,11 @@
 
 @implementation MMPDFAssetGroupCell
 
+-(MMBufferedImageView*) firstImageView{
+    return [[self.subviews filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject isKindOfClass:[MMBufferedImageView class]] && [evaluatedObject image];
+    }]] lastObject];
+}
 
 -(void) setAlbum:(MMDisplayAssetGroup *)_album{
     if(album){

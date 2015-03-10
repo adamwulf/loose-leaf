@@ -183,7 +183,7 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(MMPhoto *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
+-(void) photoWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
     [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
 }
 
