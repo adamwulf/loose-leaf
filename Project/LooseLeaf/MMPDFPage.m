@@ -45,7 +45,7 @@ static UIImage* lockThumbnail;
 }
 
 -(NSURL*) fullResolutionURL{
-    return [pdf imageURLForPage:pageNumber];
+    return [pdf thumbnailURLForPage:pageNumber];
 }
 
 -(CGSize) fullResolutionSize{

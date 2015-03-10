@@ -26,7 +26,7 @@
 
 -(UIImage*) imageForPage:(NSInteger)pageNumber withMaxDim:(CGFloat)maxDim;
 
--(NSURL*) imageURLForPage:(NSUInteger)page;
+-(NSURL*) thumbnailURLForPage:(NSUInteger)page;
 
 -(BOOL) deleteAssets;
 

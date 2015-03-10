@@ -112,8 +112,8 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     return [self cachedImageAtPath:[self thumbnailPathForPage:page]];
 }
 
--(NSURL*) imageURLForPage:(NSUInteger)page{
-    return [NSURL fileURLWithPath:[self fullScalePathForPage:page]];
+-(NSURL*) thumbnailURLForPage:(NSUInteger)page{
+    return [NSURL fileURLWithPath:[self thumbnailPathForPage:page]];
 }
 
 -(CGSize) sizeForPage:(NSUInteger)page{
@@ -157,10 +157,8 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         @synchronized(self){
             [pageSizeCache removeAllObjects];
         }
-        CGFloat maxDim = MAX([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
         for(int i=0;i<[self pageCount];i++){
             [self generateImageForPage:i atPath:[self thumbnailPathForPage:i] forMaxDim:100 * [[UIScreen mainScreen] scale]];
-            [self generateImageForPage:i atPath:[self fullScalePathForPage:i] forMaxDim:maxDim];
             @synchronized(self){
                 [pageSizeCache addObject:[NSValue valueWithCGSize:[self sizeForPage:i]]];
             }
@@ -171,11 +169,6 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
 -(NSString*) thumbnailPathForPage:(NSInteger)pageNumber{
     NSString* thumbnailFilename = [NSString stringWithFormat:@"thumb%d.png",(int) pageNumber];
     return [[self cachedAssetsPath] stringByAppendingPathComponent:thumbnailFilename];
-}
-
--(NSString*) fullScalePathForPage:(NSInteger)pageNumber{
-    NSString* fullScaleFilename = [NSString stringWithFormat:@"page%d.png",(int) pageNumber];
-    return [[self cachedAssetsPath] stringByAppendingPathComponent:fullScaleFilename];
 }
 
 -(UIImage*) cachedImageAtPath:(NSString*)cachedImagePath{
@@ -290,6 +283,12 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         // since there might be a lot of them
         NSError* errorCache = nil;
         [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
+        
+        if(errorCache){
+            if(errorCache){
+                NSLog(@"delete PDF cache erorr: %@", errorCache);
+            }
+        }
     });
     
     if(errorURL){
