@@ -231,12 +231,61 @@
     }
 }
 
+
+-(BOOL) imageMatchesPaperDimensions:(UIImage*)img{
+    CGSize stackSize = visibleStackHolder.bounds.size;
+    CGSize imgSize = img.size;
+
+    if(stackSize.width == imgSize.width &&
+       stackSize.height == imgSize.height){
+        // perfect match
+        return YES;
+    }else{
+        CGFloat scale = stackSize.width / imgSize.width;
+        if(stackSize.height == scale * imgSize.height){
+            // aspect ratio matches
+            return YES;
+        }
+    }
+    // what if we rotated?
+    stackSize.width = visibleStackHolder.bounds.size.height;
+    stackSize.height = visibleStackHolder.bounds.size.width;
+    if(stackSize.width == imgSize.width &&
+       stackSize.height == imgSize.height){
+        // perfect match
+        return YES;
+    }else{
+        CGFloat scale = stackSize.width / imgSize.width;
+        if(stackSize.height == scale * imgSize.height){
+            // aspect ratio matches
+            return YES;
+        }
+    }
+    return NO;
+}
+
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
     [super didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
 //        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
+        
+        if([self imageMatchesPaperDimensions:scrapBacking]){
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+            page.isBrandNewPage = YES;
+            page.delegate = self;
+            [page setPageBackgroundTexture:scrapBacking];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [hiddenStackHolder pushSubview:page];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+            return;
+        }
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
@@ -310,11 +359,20 @@
 }
 
 -(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    if(pdfDoc.pageCount == 1){
-        // create a UIImage from teh PDF and add it like normal above
-    }else{
-        
-    }
+//    if(pdfDoc.pageCount == 1){
+//        // create a UIImage from teh PDF and add it like normal above
+//    }else{
+        // automatically open to the PDF in the import sidebar
+        [[MMPhotoManager sharedInstance] bypassAuthRequirement];
+        [self cancelAllGestures];
+        [[visibleStackHolder peekSubview] cancelAllGestures];
+        [self setButtonsVisible:NO withDuration:0.15];
+        [importImageSidebar show:YES];
+
+        // show show the PDF content in the sidebar
+        [importImageSidebar showPDF:pdfDoc];
+//    }
+    
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
@@ -460,8 +518,18 @@
                                                                        kMPEventImportPropSource: containerDescription}];
     
     CGRect scrapRect = CGRectZero;
+    CGSize buttonSize = [bufferedImage visibleImageSize];
+    NSLog(@"imported button ratio %f", buttonSize.width / buttonSize.height);
+    CGSize fullScaleSize = photo.fullResolutionSize;
+    NSLog(@"imported photo ratio %f", fullScaleSize.width / fullScaleSize.height);
+
+    // force the rect path that we're building to
+    // match the aspect ratio of the input photo
+    CGFloat ratio = buttonSize.width / fullScaleSize.width;
+    buttonSize.height = fullScaleSize.height * ratio;
+    
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
-    scrapRect.size = [bufferedImage visibleImageSize];
+    scrapRect.size = buttonSize;
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
 
     //
@@ -480,18 +548,17 @@
     // max image size in any direction is 300pts
     CGFloat maxDim = 600;
     
-    CGSize fullScale = photo.fullResolutionSize;
-    if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
-        fullScale.height = fullScale.height / fullScale.width * maxDim;
-        fullScale.width = maxDim;
-    }else if(fullScale.height >= fullScale.width && fullScale.height > maxDim){
-        fullScale.width = fullScale.width / fullScale.height * maxDim;
-        fullScale.height = maxDim;
+    if(fullScaleSize.width >= fullScaleSize.height && fullScaleSize.width > maxDim){
+        fullScaleSize.height = fullScaleSize.height / fullScaleSize.width * maxDim;
+        fullScaleSize.width = maxDim;
+    }else if(fullScaleSize.height >= fullScaleSize.width && fullScaleSize.height > maxDim){
+        fullScaleSize.width = fullScaleSize.width / fullScaleSize.height * maxDim;
+        fullScaleSize.height = maxDim;
     }
     
-    CGFloat startingScale = scrapRect.size.width / fullScale.width;
+    CGFloat startingScale = scrapRect.size.width / fullScaleSize.width;
     
-    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:300];
+    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:maxDim];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     
@@ -531,7 +598,7 @@
         bufferedImage.alpha = 0;
         
         // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
+        CGFloat bounceScale = 20 / MAX(fullScaleSize.width, fullScaleSize.height);
         
         [UIView animateWithDuration:.2
                               delay:.1

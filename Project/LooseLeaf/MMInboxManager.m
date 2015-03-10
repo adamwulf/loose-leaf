@@ -11,9 +11,14 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "NSURL+UTI.h"
 #import "MMPDF.h"
+#import "NSString+UUID.h"
 #import "Constants.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
-@implementation MMInboxManager
+@implementation MMInboxManager{
+    NSString* pdfInboxFolderPath;
+    NSMutableArray* contents;
+}
 
 @synthesize delegate;
 
@@ -24,6 +29,24 @@ static MMInboxManager* _instance = nil;
         _instance = [[MMInboxManager alloc]init];
     }
     return _instance;
+}
+
+-(id) init{
+    if(self = [super init]){
+        contents = [NSMutableArray array];
+        [self loadContents];
+    }
+    return self;
+}
+
+-(NSString*) pdfInboxFolderPath{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString* documentsPath = [NSFileManager documentsPath];
+        pdfInboxFolderPath = [documentsPath stringByAppendingPathComponent:@"PDFInbox"];
+        [NSFileManager ensureDirectoryExistsAtPath:pdfInboxFolderPath];
+    });
+    return pdfInboxFolderPath;
 }
 
 #pragma mark - Dispatch Queue
@@ -49,18 +72,30 @@ static dispatch_queue_t fileSystemQueue;
         UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
         if(importedImage){
             [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
-            [self removeInboxItem:itemURL];
+            [self removeInboxItem:itemURL onComplete:nil];
             return;
         }
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
         DebugLog(@"PDF!");
-        MMPDF* pdf = [[MMPDF alloc] initWithURL:itemURL];
-        [self.delegate didProcessIncomingPDF:pdf fromURL:itemURL fromApp:sourceApplication];
+        NSString* ourInbox = [self pdfInboxFolderPath];
+        NSString* pdfName = [[NSString createStringUUID] stringByAppendingPathExtension:[itemURL pathExtension]];
+        ourInbox = [ourInbox stringByAppendingPathComponent:pdfName];
+        NSURL* ourInboxURL = [[NSURL alloc] initFileURLWithPath:ourInbox];
         
-        if([pdf pageCount] == 1){
-            [self removeInboxItem:itemURL];
-            return;
+        NSError* err = nil;
+        [[NSFileManager defaultManager] moveItemAtURL:itemURL toURL:ourInboxURL error:&err];
+        
+        MMPDF* pdf = [[MMPDF alloc] initWithURL:ourInboxURL];
+        @synchronized(self){
+            [contents insertObject:pdf atIndex:0];
         }
+        [self.delegate didProcessIncomingPDF:pdf fromURL:ourInboxURL fromApp:sourceApplication];
+        
+//        if([pdf pageCount] == 1){
+//            [self removeInboxItem:itemURL];
+//            return;
+//        }
+        return;
     }
     
     [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
@@ -68,14 +103,26 @@ static dispatch_queue_t fileSystemQueue;
 }
 
 // remove the item from disk on our disk queue
-- (void)removeInboxItem:(NSURL *)itemURL{
+- (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)(BOOL err))onComplete{
     dispatch_async([MMInboxManager fileSystemQueue], ^{
         @autoreleasepool {
             //Clean up the inbox once the file has been processed
-            NSError *error = nil;
-            [[NSFileManager defaultManager] removeItemAtPath:[itemURL path] error:&error];
-            if (error) {
-                DebugLog(@"ERROR: Inbox file could not be deleted");
+            __block MMPDF* pdfToRemove = nil;
+            [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                MMPDF* pdf = obj;
+                if([[pdf urlOnDisk] isEqual:itemURL]){
+                    pdfToRemove = pdf;
+                }
+            }];
+            BOOL error = NO;
+            if(pdfToRemove){
+                @synchronized(self){
+                    error = [pdfToRemove deleteAssets];
+                    [contents removeObject:pdfToRemove];
+                }
+            }
+            if(onComplete){
+                onComplete(error);
             }
         }
     });
@@ -140,5 +187,39 @@ static dispatch_queue_t fileSystemQueue;
     return scrapBacking;
 }
 
+
+#pragma mark - Inbox items
+
+-(void) loadContents{
+    @synchronized(self){
+        [contents removeAllObjects];
+        
+        NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
+        NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
+                                                          includingPropertiesForKeys:@[NSURLPathKey,NSURLAddedToDirectoryDateKey]
+                                                                             options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
+                                                                        errorHandler:nil];
+        
+        
+        for (NSURL* url in [dir allObjects]) {
+            [contents addObject:[[MMPDF alloc] initWithURL:url]];
+        }
+        [contents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            NSDate* dt1 = nil;
+            NSDate* dt2 = nil;
+            [[obj1 urlOnDisk] getResourceValue:&dt1 forKey:NSURLAddedToDirectoryDateKey error:nil];
+            [[obj2 urlOnDisk] getResourceValue:&dt2 forKey:NSURLAddedToDirectoryDateKey error:nil];
+            return [dt2 compare:dt1];
+        }];
+    }
+}
+
+-(NSInteger) itemsInInboxCount{
+    return [contents count];
+}
+
+-(MMPDF*) pdfItemAtIndex:(NSInteger)idx{
+    return [contents objectAtIndex:idx];
+}
 
 @end

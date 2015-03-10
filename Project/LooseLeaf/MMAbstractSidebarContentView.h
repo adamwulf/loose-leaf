@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
-#import "MMCachedRowsScrollViewDataSource.h"
-#import "MMCachedRowsScrollView.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 #import "MMSinglePhotoCollectionViewCellDelegate.h"
@@ -18,9 +16,9 @@
 
 @class MMImageSidebarContainerView;
 
-@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
+@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,UICollectionViewDelegate>{
     MMPhotoAlbum* currentAlbum;
-    MMCachedRowsScrollView* albumListScrollView;
+    UICollectionView* albumListScrollView;
     UICollectionView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
     BOOL isShowing;

@@ -59,15 +59,18 @@ CGFloat buffer = 2;
 -(void) setImage:(UIImage *)_image{
     image = _image;
     
-    [CATransaction begin];
+    [CATransaction begin]; // prevent CALayer animation
     [CATransaction setDisableActions:YES];
     
     if(image){
         CGRect fr = CGRectInset(self.bounds, 8, 8);
         CGSize scaledImageSize = image.size;
-        CGFloat maxDim = MAX(scaledImageSize.width, scaledImageSize.height);
-        scaledImageSize.width = scaledImageSize.width / maxDim * fr.size.width;
-        scaledImageSize.height = scaledImageSize.height / maxDim * fr.size.height;
+
+        CGFloat maxImageDim = MAX(scaledImageSize.width, scaledImageSize.height);
+        CGFloat minFrDim = MIN(fr.size.width, fr.size.height);
+        
+        scaledImageSize.width = (scaledImageSize.width / maxImageDim) * minFrDim;
+        scaledImageSize.height = (scaledImageSize.height / maxImageDim) * minFrDim;
         
         fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
         fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;

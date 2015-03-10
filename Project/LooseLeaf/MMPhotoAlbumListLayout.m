@@ -8,7 +8,7 @@
 
 #import "MMPhotoAlbumListLayout.h"
 #import "CaptureSessionManager.h"
-#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPhotosPermissionCell.h"
 #import "MMPhotoManager.h"
 #import "Constants.h"
 
@@ -25,12 +25,8 @@
     return self;
 }
 
--(BOOL) hasSectionForCamera{
-    return self.collectionView.numberOfSections > 1;
-}
-
 -(NSInteger) sectionIndexForPhotos{
-    return self.hasSectionForCamera ? 1 : 0;
+    return 0;
 }
 
 -(CGFloat) photoRowHeight{
@@ -38,14 +34,8 @@
 }
 
 -(CGFloat) cameraRowHeight{
-    if(self.hasSectionForCamera){
-        if ([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) {
-            return [self photoRowHeight] * 2 + kCameraMargin;
-        }else{
-            return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
-        }
-    }else if(![MMPhotoManager hasPhotosPermission]){
-        return [self photoRowHeight] * [MMPermissionPhotosCollectionViewCell idealPhotoRowHeight] + kCameraMargin;
+    if(![MMPhotoManager hasPhotosPermission]){
+        return [self photoRowHeight] * [MMPhotosPermissionCell idealPhotoRowHeight] + kCameraMargin;
     }
     return 0;
 }
@@ -55,32 +45,22 @@
     if(!numSections){
         return CGSizeZero;
     }
-    
+    if(![MMPhotoManager hasPhotosPermission]){
+        return CGSizeMake(self.collectionView.bounds.size.width, [self cameraRowHeight]);
+    }
     NSInteger numberOfPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
-    
-    return CGSizeMake(self.collectionView.bounds.size.width, [self cameraRowHeight] + ceil(numberOfPhotos/2.0) * [self photoRowHeight]);
+    return CGSizeMake(self.collectionView.bounds.size.width, ceil(numberOfPhotos/2.0) * [self photoRowHeight]);
 }
 
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    CGFloat width = self.collectionView.bounds.size.width;
-    
-    if(indexPath.section == 0 && self.hasSectionForCamera){
-        // camera
-        ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
-        ret.center = CGPointMake(width/2, [self cameraRowHeight]/2);
-        ret.transform = CGAffineTransformIdentity;
-        return ret;
-    }
+    CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
 
     if(![MMPhotoManager hasPhotosPermission]){
         // don't have photo permissions
         ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
-        ret.center = CGPointMake(width/2, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
-        if(self.hasSectionForCamera){
-            ret.center = CGPointMake(ret.center.x, ret.center.y + [self cameraRowHeight]);
-        }
+        ret.center = CGPointMake(width/2 + 2*kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
         ret.transform = CGAffineTransformIdentity;
         return ret;
     }
@@ -90,12 +70,12 @@
     NSInteger rowNumber = floorf(indexOfPhoto / 2.0);
     NSInteger colNumber = indexOfPhoto % 2;
     
-    CGFloat x = colNumber * width/2;
+    CGFloat x = colNumber * width/2 + 2*kWidthOfSidebarButtonBuffer;
     CGFloat y = rowNumber * [self photoRowHeight];
     
     CGRect b = CGRectMake(0, 0, width/2, [self photoRowHeight]);
     ret.bounds = b;
-    CGPoint c = CGPointMake(x + ret.bounds.size.width/2, [self cameraRowHeight] + y + ret.bounds.size.height/2);
+    CGPoint c = CGPointMake(x + ret.bounds.size.width/2, y + ret.bounds.size.height/2);
     ret.center = c;
     ret.transform = CGAffineTransformMakeRotation(rotation);
     
@@ -110,17 +90,6 @@
     }
     
     NSMutableArray* attrs = [NSMutableArray array];
-
-    if(self.hasSectionForCamera){
-        if(rect.origin.y < [self cameraRowHeight]){
-            // should show camera
-            [attrs addObject:[self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]];
-            rect.size.height -= rect.origin.y;
-            rect.origin.y = 0;
-        }else{
-            rect.origin.y -= [self cameraRowHeight];
-        }
-    }
 
     NSInteger startRow = floorf(rect.origin.y / [self photoRowHeight]);
     NSInteger maxRow = ceilf((rect.origin.y + rect.size.height) / [self photoRowHeight]);

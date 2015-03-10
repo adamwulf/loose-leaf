@@ -127,6 +127,7 @@
             drawableView.hidden = NO;
             shapeBuilderView.hidden = NO;
             cachedImgView.hidden = YES;
+            [self isShowingDrawableView:YES andIsShowingThumbnail:NO];
         }else if([self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
@@ -136,6 +137,7 @@
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
             cachedImgView.hidden = NO;
+            [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }else{
             // scrap state isn't loaded, so show
             // our thumbnail
@@ -145,6 +147,7 @@
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
             cachedImgView.hidden = NO;
+            [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
 //        DebugLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
@@ -153,12 +156,14 @@
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }else if(!isAskedToLoadThumbnail){
 //        DebugLog(@"default thumb for %@, HIDING thumb", self.uuid);
         [self setThumbnailTo:nil];
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:NO];
     }else{
 //        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
 //        DebugLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
@@ -167,8 +172,17 @@
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }
 }
+
+#pragma mark - Thumbnail helpers
+
+-(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail{
+    // noop
+}
+
+#pragma mark - Undo Redo
 
 -(void) undo{
     if(scrapsOnPaperState){
@@ -1023,6 +1037,11 @@
     return thumbSize;
 }
 
+-(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize{
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+}
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
         NSLog(@"updating thumb for: %@", self.uuid);
@@ -1032,9 +1051,8 @@
         
         // get context
         CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        [[UIColor whiteColor] setFill];
-        CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+
+        [self drawPageBackgroundInContext:context forThumbnailSize:thumbSize];
         
         // drawing code comes here- look at CGContext reference
         // for available operations

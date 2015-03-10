@@ -17,6 +17,10 @@
 
 -(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
 
--(void) removeInboxItem:(NSURL *)itemURL;
+- (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)(BOOL error))onComplete;
+
+-(NSInteger) itemsInInboxCount;
+
+-(MMPDF*) pdfItemAtIndex:(NSInteger)idx;
 
 @end

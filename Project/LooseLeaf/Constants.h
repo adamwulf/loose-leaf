@@ -38,6 +38,12 @@ _Pragma("clang diagnostic pop") \
 
 #define kAnimationDelay 0.05
 
+// Display Assets
+#define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
+#define kPDFThumbnailGenerated @"kPDFThumbnailGenerated"
+#define kBounceWidth 10.0
+
+
 // CloudKit Import
 #define kCloudKitMaxVisibleImports 5
 
@@ -184,6 +190,8 @@ _Pragma("clang diagnostic pop") \
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
 
 #define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
+
+#define RandomMod(a,b) (^float(NSInteger seed, int mod){srand((unsigned)seed); int output = (rand() % mod); srand((unsigned)time(NULL)); return output;})(a, b)
 
 // cache sizes
 #define kMMLoadImageCacheSize 10

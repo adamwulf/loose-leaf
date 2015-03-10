@@ -7,53 +7,128 @@
 //
 
 #import "MMPDFInboxContentView.h"
+#import "MMDisplayAssetGroupCell.h"
+#import "MMContinuousSwipeGestureRecognizer.h"
+#import "MMDisplayAssetGroupCellDelegate.h"
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
+#import "MMPDFAlbum.h"
+#import "MMPDFAssetGroupCell.h"
+#import "MMPDFListLayout.h"
 
-@implementation MMPDFInboxContentView
+@interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
+
+@end
+
+@implementation MMPDFInboxContentView{
+    NSMutableArray* pdfList;
+    MMContinuousSwipeGestureRecognizer* deleteGesture;
+    
+    CGFloat initialAdjustment;
+    MMDisplayAssetGroupCell* swipeToDeleteCell;
+    NSDate* recentDeleteSwipe;
+    
+    
+    NSIndexPath* decryptingIndexPath;
+}
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        pdfList = [NSMutableArray array];
+        
+        [albumListScrollView registerClass:[MMPDFAssetGroupCell class] forCellWithReuseIdentifier:@"MMPDFAssetGroupCell"];
+
+        deleteGesture = [[MMContinuousSwipeGestureRecognizer alloc] initWithTarget:self action:@selector(deleteGesture:)];
+        deleteGesture.delegate = self;
+        deleteGesture.angleBuffer = 30;
+        [albumListScrollView addGestureRecognizer:deleteGesture];
+        albumListScrollView.clipsToBounds = NO;
     }
     return self;
+}
+
+//
+// immediately switch to show a PDF.
+// this is useful when a user has just
+// imported a PDF and we want to show the
+// sidebar immediately w/o any animation
+-(void) switchToPDFView:(MMPDF*)pdf{
+    __block NSInteger indexOfPDF = NSIntegerMax;
+    
+    [pdfList enumerateObjectsUsingBlock:^(MMPDFAlbum* obj, NSUInteger idx, BOOL *stop) {
+        if(obj.pdf == pdf){
+            indexOfPDF = idx;
+            stop[0] = YES;
+        }
+    }];
+    if(indexOfPDF < [pdfList count]){
+        currentAlbum = [self albumAtIndex:indexOfPDF];
+        photoListScrollView.contentOffset = CGPointZero;
+        
+        [photoListScrollView reloadData];
+        
+        albumListScrollView.alpha = 0;
+        photoListScrollView.alpha = 1;
+        albumListScrollView.hidden = YES;
+    }
+}
+
+#pragma mark - MMAbstractSidebarContentView
+
+-(void) reset:(BOOL)animated{
+    [pdfList removeAllObjects];
+    NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
+    for (int i=0; i<count; i++) {
+        MMPDF* pdf = [[MMInboxManager sharedInstance] pdfItemAtIndex:i];
+        [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:pdf]];
+    }
+    [albumListScrollView reloadData];
+    [super reset:animated];
+}
+
+-(UICollectionViewLayout*) albumsLayout{
+    return [[MMPDFListLayout alloc] init];
 }
 
 
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    if(album.type == ALAssetsGroupAlbum){
-        return [[[MMPhotoManager sharedInstance] albums] indexOfObject:album];
-    }
-    return -1;
+    return [pdfList indexOfObject:album];
 }
 
 -(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    if(index < [[[MMPhotoManager sharedInstance] albums] count]){
-        return [[[MMPhotoManager sharedInstance] albums] objectAtIndex:index];
-    }
-    return nil;
+    return [pdfList objectAtIndex:index];
 }
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
--(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    if(scrollView == albumListScrollView){
-        return [[[MMPhotoManager sharedInstance] albums] count];
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if(collectionView == albumListScrollView){
+        return [[MMInboxManager sharedInstance] itemsInInboxCount];
     }else{
-        return ceilf(currentAlbum.numberOfPhotos / 2.0);
+        return [super collectionView:collectionView numberOfItemsInSection:section];
     }
 }
 
--(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super prepareRowForReuse:aRow forScrollView:scrollView];
-}
-
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
+-(UICollectionViewCell*) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    
+    MMDisplayAssetGroupCell* cell;
+    if(collectionView == albumListScrollView){
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPDFAssetGroupCell" forIndexPath:indexPath];
+        cell.album = [self albumAtIndex:indexPath.row];
+    }else{
+        cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    }
+    
+    cell.delegate = self;
+    if(collectionView == albumListScrollView){
+        [cell resetDeleteAdjustment];
+    }
+    return cell;
 }
 
 
@@ -61,5 +136,122 @@
 
 -(NSString*) description{
     return @"PDF Inbox";
+}
+
+#pragma mark - Delete Inbox Items
+
+-(void) deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender{
+    CGPoint p = [sender locationInView:albumListScrollView];
+    
+    if(sender.state == UIGestureRecognizerStateBegan){
+        NSLog(@"start delete gesture: %f %f", p.x, p.y);
+        NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
+        swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
+        initialAdjustment = swipeToDeleteCell.squishFactor;
+    }else if(sender.state == UIGestureRecognizerStateChanged){
+        CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
+        [swipeToDeleteCell adjustForDelete:initialAdjustment + amount/100.0];
+    }else if(sender.state == UIGestureRecognizerStateEnded ||
+             sender.state == UIGestureRecognizerStateCancelled){
+        recentDeleteSwipe = [NSDate date];
+        NSLog(@"swipe gesture state: %d", (int) sender.state);
+        if([swipeToDeleteCell finishSwipeToDelete]){
+            NSLog(@"delete immediately");
+            
+            [self deleteButtonWasTappedForCell:swipeToDeleteCell];
+            
+        }else{
+            NSLog(@"don't delete, wait for tap");
+        }
+    }
+}
+
+#pragma mark - MMDisplayAssetGroupCellDelegate
+
+-(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell *)cell{
+    NSIndexPath* pathToDelete = [albumListScrollView indexPathForCell:swipeToDeleteCell];
+    MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) swipeToDeleteCell.album;
+    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^(BOOL hasErr){
+        if(hasErr){
+            NSLog(@"Error deleting PDF: %@", pdfAlbum.pdf.urlOnDisk);
+            @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf"] userInfo:nil];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [albumListScrollView performBatchUpdates:^{
+                [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];
+            } completion:^(BOOL finished) {
+                swipeToDeleteCell = nil;
+                recentDeleteSwipe = nil;
+            }];
+        });
+    }];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    if(recentDeleteSwipe && [recentDeleteSwipe timeIntervalSinceNow] > -0.3){
+        // if we just did a swipe to delete, then don't select
+        // that row
+        return NO;
+    }
+    return YES;
+}
+
+#pragma mark - UICollectionViewDelegate
+
+-(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    if(collectionView == albumListScrollView){
+        MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:indexPath.row];
+        if(pdfAlbum.pdf.isEncrypted){
+            decryptingIndexPath = indexPath;
+            // ask for password
+            UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"PDF is Encrypted" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
+            alertViewChangeName.delegate = self;
+            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            [alertViewChangeName show];
+            
+        }else{
+            [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+        }
+    }
+}
+
+#pragma mark - UIAlertViewDelete
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if(buttonIndex == 1){
+        NSString* password = [[alertView textFieldAtIndex:0] text];
+        NSLog(@"password: %@", password);
+        
+        MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:decryptingIndexPath.row];
+        if([pdfAlbum.pdf attemptToDecrypt:password]){
+            NSLog(@"congrats");
+            
+            if([[albumListScrollView indexPathsForVisibleItems] containsObject:decryptingIndexPath]){
+                // if the cell is already visible, then animate that cell to non-decrypted
+                // otherwise nothing
+                MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                    UICollectionViewCell* cell = evaluatedObject;
+                    return [[albumListScrollView indexPathForCell:cell] isEqual:decryptingIndexPath];
+                }]] firstObject];
+                [UIView animateWithDuration:.3 animations:^{
+                    cell.album = cell.album; // refresh
+                }];
+            }
+        }else{
+            UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"Incorrect Password" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
+            alertViewChangeName.delegate = self;
+            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            [alertViewChangeName show];
+        }
+        
+    }
+    decryptingIndexPath = nil;
 }
 @end
