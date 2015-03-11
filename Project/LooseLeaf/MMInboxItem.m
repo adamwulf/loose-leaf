@@ -35,9 +35,14 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 #pragma mark - Init
 
 -(id) initWithURL:(NSURL *)_itemURL{
+    @throw kAbstractMethodException;
+}
+
+-(id) initWithURL:(NSURL *)_itemURL andInitBlock:(void(^)())block{
     if(self = [super init]){
         itemURL = _itemURL;
         pageSizeCache = [NSMutableDictionary dictionary];
+        if(block) block();
         [self generatePageThumbnailCache];
     }
     return self;

@@ -12,6 +12,8 @@
 
 +(dispatch_queue_t) assetQueue;
 
+-(id) initWithURL:(NSURL*)itemURL andInitBlock:(void(^)())block;
+
 -(void) generatePageThumbnailCache;
 
 -(CGSize) calculateSizeForPage:(NSUInteger)page;

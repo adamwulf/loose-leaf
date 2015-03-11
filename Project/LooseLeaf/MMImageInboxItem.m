@@ -14,6 +14,13 @@
     CGSize cachedSize;
 }
 
+-(id) initWithURL:(NSURL *)itemURL{
+    if(self = [super initWithURL:itemURL andInitBlock:nil]){
+        cachedSize = CGSizeZero;
+    }
+    return self;
+}
+
 -(NSUInteger) pageCount{
     return 1;
 }

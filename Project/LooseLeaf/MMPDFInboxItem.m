@@ -21,18 +21,18 @@
 #pragma mark - Init
 
 -(id) initWithURL:(NSURL*)pdfURL{
-    // fetch page count
-    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-    
-    NSUInteger _pageCount = CGPDFDocumentGetNumberOfPages( pdf );
-    BOOL _isEncrypted = CGPDFDocumentIsEncrypted(pdf);
-    
-    CGPDFDocumentRelease( pdf );
-
-    
-    if(self = [super initWithURL:pdfURL]){
-        pageCount = _pageCount;
-        isEncrypted = _isEncrypted;
+    if(self = [super initWithURL:pdfURL andInitBlock:^{
+        // initialize anything that could be affected by
+        // race condition generating thumbnails
+        // fetch page count
+        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
+        
+        pageCount = CGPDFDocumentGetNumberOfPages( pdf );
+        isEncrypted = CGPDFDocumentIsEncrypted(pdf);
+        
+        CGPDFDocumentRelease( pdf );
+    }]){
+        // noop
     }
     return self;
 }
