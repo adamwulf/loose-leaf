@@ -126,7 +126,7 @@
     
     cell.delegate = self;
     if(collectionView == albumListScrollView){
-        [cell resetDeleteAdjustment];
+        [cell resetDeleteAdjustment:NO];
     }
     return cell;
 }
@@ -148,6 +148,11 @@
         NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
         swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
         initialAdjustment = swipeToDeleteCell.squishFactor;
+        [[albumListScrollView visibleCells] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if(obj != swipeToDeleteCell){
+                [obj resetDeleteAdjustment:YES];
+            }
+        }];
     }else if(sender.state == UIGestureRecognizerStateChanged){
         CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
         [swipeToDeleteCell adjustForDelete:initialAdjustment + amount/100.0];

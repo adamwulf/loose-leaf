@@ -29,7 +29,7 @@
 
 -(void) updatePhotoRotation;
 
--(void) resetDeleteAdjustment;
+-(void) resetDeleteAdjustment:(BOOL)animated;
 
 -(void) adjustForDelete:(CGFloat)adjustment;
 

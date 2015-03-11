@@ -172,9 +172,24 @@
     }
 }
 
--(void) resetDeleteAdjustment{
-    [self adjustForDelete:0];
-    [self.layer removeAllAnimations];
+-(void) resetDeleteAdjustment:(BOOL)animated{
+    if(animated){
+        if(squishFactor != 0){
+            squishFactor = .8; // for bounce
+            [UIView animateWithDuration:.2 animations:^{
+                CGFloat bounce = ABS(squishFactor * .2);
+                [self adjustForDelete:(squishFactor < 0) ? bounce : -bounce];
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:.1 animations:^{
+                    [self adjustForDelete:0];
+                    deleteButton.alpha = 0;
+                }];
+            }];
+        }
+    }else{
+        [self adjustForDelete:0];
+        [self.layer removeAllAnimations];
+    }
 }
 
 -(void) adjustForDelete:(CGFloat)adjustment{
