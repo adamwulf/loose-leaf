@@ -379,6 +379,10 @@
                 UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:600];
                 [self didProcessIncomingImage:pageImage fromURL:pdfDoc.urlOnDisk fromApp:sourceApplication];
             }];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // make sure PDF sidebar shows refreshed data
+                [importImageSidebar refreshPDF];
+            });
         }];
     }else{
         // automatically open to the PDF in the import sidebar

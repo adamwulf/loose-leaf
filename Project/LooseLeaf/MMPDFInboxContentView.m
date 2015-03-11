@@ -225,7 +225,6 @@
             [alertViewChangeName show];
         }else if(pdfAlbum.pdf.pageCount == 1){
             
-            
             MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                 UICollectionViewCell* cell = evaluatedObject;
                 return [[albumListScrollView indexPathForCell:cell] isEqual:indexPath];

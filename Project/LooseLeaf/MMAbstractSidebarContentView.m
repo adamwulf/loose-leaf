@@ -122,6 +122,7 @@
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
+    [albumListScrollView reloadData];
     albumListScrollView.contentOffset = lastAlbumScrollOffset;
 }
 
