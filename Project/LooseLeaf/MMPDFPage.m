@@ -69,6 +69,12 @@ static UIImage* lockThumbnail;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         CGRect imageBounds = [[UIScreen mainScreen] bounds];
+        if(imageBounds.size.width > imageBounds.size.height){
+            // force portrait for lock page
+            CGFloat oldW = imageBounds.size.width;
+            imageBounds.size.width = imageBounds.size.height;
+            imageBounds.size.height = oldW;
+        }
         UIGraphicsBeginImageContextWithOptions(imageBounds.size, NO, 1);
         CGContextRef cgContext = UIGraphicsGetCurrentContext();
         [[UIColor whiteColor] setFill];

@@ -62,7 +62,7 @@
             CGFloat extra = i == 0 ? 0 : RandomMod(i, 9)-4;
             imgView.center = CGPointMake(halfWidth + kBounceWidth + extra, maxDim/2);
             initialX[5-i-1] = imgView.center.x;
-            finalX[5-i-1] = halfWidth - 80;
+            finalX[5-i-1] = halfWidth - 60;
             initRot[5-i-1] = randRot;
             rotAdj[5-i-1] = RandomPhotoRotation(i+1);
             adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
