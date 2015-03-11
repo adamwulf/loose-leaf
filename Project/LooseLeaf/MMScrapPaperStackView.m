@@ -273,21 +273,21 @@
     [[NSThread mainThread] performBlock:^{
 //        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
-        if([self imageMatchesPaperDimensions:scrapBacking]){
-            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-            page.isBrandNewPage = YES;
-            page.delegate = self;
-            [page setPageBackgroundTexture:scrapBacking];
-            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-            [page updateThumbnailVisibility];
-            [hiddenStackHolder pushSubview:page];
-            [[visibleStackHolder peekSubview] enableAllGestures];
-            [self popTopPageOfHiddenStack];
-            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-
-            return;
-        }
+//        if([self imageMatchesPaperDimensions:scrapBacking]){
+//            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+//            page.isBrandNewPage = YES;
+//            page.delegate = self;
+//            [page setPageBackgroundTexture:scrapBacking];
+//            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+//            [page updateThumbnailVisibility];
+//            [hiddenStackHolder pushSubview:page];
+//            [[visibleStackHolder peekSubview] enableAllGestures];
+//            [self popTopPageOfHiddenStack];
+//            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+//            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+//
+//            return;
+//        }
         
         MMVector* up = [[MMRotationManager sharedInstance] upVector];
         MMVector* perp = [[up perpendicular] normal];
