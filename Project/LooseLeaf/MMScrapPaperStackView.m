@@ -289,7 +289,9 @@
 //            return;
 //        }
         
-        [self importImageAsNewScrap:scrapBacking];
+        [importImageSidebar hide:NO onComplete:^(BOOL finished) {
+            [self importImageAsNewScrap:scrapBacking];
+        }];
         
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
