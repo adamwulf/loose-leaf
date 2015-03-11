@@ -87,6 +87,8 @@
     CGRect buttonBounds = buttonView.bounds;
     buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height + kWidthOfSidebarButtonBuffer;
     buttonBounds.size.height = buttonWidth + kWidthOfSidebarButtonBuffer; // includes spacing buffer
+    buttonBounds.origin.x += 2*kWidthOfSidebarButtonBuffer;
+    buttonBounds.size.width -= 2*kWidthOfSidebarButtonBuffer;
     return buttonBounds;
 }
 
