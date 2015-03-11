@@ -226,6 +226,12 @@
     [emptyView updatePhotoRotation:animated];
 }
 
+-(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [[albumListScrollView visibleCells] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [obj resetDeleteAdjustment:YES];
+    }];
+}
+
 -(NSString*) description{
     @throw kAbstractMethodException;
 }

@@ -153,11 +153,14 @@
                 [obj resetDeleteAdjustment:YES];
             }
         }];
+        // don't let the user swipe and scroll at the same time
+        albumListScrollView.scrollEnabled = NO;
     }else if(sender.state == UIGestureRecognizerStateChanged){
         CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
         [swipeToDeleteCell adjustForDelete:initialAdjustment + amount/100.0];
     }else if(sender.state == UIGestureRecognizerStateEnded ||
              sender.state == UIGestureRecognizerStateCancelled){
+        albumListScrollView.scrollEnabled = YES;
         recentDeleteSwipe = [NSDate date];
         NSLog(@"swipe gesture state: %d", (int) sender.state);
         if([swipeToDeleteCell finishSwipeToDelete]){
