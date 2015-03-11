@@ -21,12 +21,16 @@
 }
 
 -(void) reset:(BOOL)animated{
-    if([MMPhotoManager hasPhotosPermission]){
+    if([self hasPermission]){
         [super reset:animated];
     }else{
         albumListScrollView.alpha = 0;
         photoListScrollView.alpha = 1;
     }
+}
+
+-(BOOL) hasPermission{
+    return [MMPhotoManager hasPhotosPermission];
 }
 
 #pragma mark - Row Management

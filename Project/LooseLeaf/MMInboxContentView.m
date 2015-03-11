@@ -77,8 +77,13 @@
 -(void) reset:(BOOL)animated{
     NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
     NSMutableArray* allSeenURLs = [NSMutableArray array];
+    NSMutableArray* changedIndexPaths = [NSMutableArray array];
     for (int i=0; i<count; i++) {
         MMInboxItem* inboxItem = [[MMInboxManager sharedInstance] itemAtIndex:i];
+        if(![albumForInboxItem objectForKey:inboxItem.urlOnDisk]){
+            // that index was added
+            [changedIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
         [self albumAtIndex:i];
         [allSeenURLs addObject:inboxItem.urlOnDisk];
     }
@@ -90,6 +95,7 @@
         NSLog(@"why do i need to remove objects from cache? this should've been done when the item was deleted.... %d", (int)[unseenURLs count]);
     }
     
+    [albumListScrollView reloadData];
     [super reset:animated];
 }
 
@@ -217,6 +223,7 @@
             } completion:^(BOOL finished) {
                 swipeToDeleteCell = nil;
                 recentDeleteSwipe = nil;
+                [self reset:NO];
             }];
         });
     }];

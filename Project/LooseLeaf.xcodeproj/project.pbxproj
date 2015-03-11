@@ -2196,7 +2196,7 @@
 			isa = PBXGroup;
 			children = (
 				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
-				667D98B4192FBF0C00625879 /* PDFs */,
+				667D98B4192FBF0C00625879 /* Inbox Content */,
 				667D98B3192FBEEF00625879 /* Photo Library */,
 			);
 			name = "Content Views";
@@ -2221,7 +2221,7 @@
 			name = "Photo Library";
 			sourceTree = "<group>";
 		};
-		667D98B4192FBF0C00625879 /* PDFs */ = {
+		667D98B4192FBF0C00625879 /* Inbox Content */ = {
 			isa = PBXGroup;
 			children = (
 				662280701AAF56EB00DAB609 /* MMPDFAssetGroupCell */,
@@ -2232,7 +2232,7 @@
 				662280751AAF9FFF00DAB609 /* MMInboxListLayout.h */,
 				662280761AAF9FFF00DAB609 /* MMInboxListLayout.m */,
 			);
-			name = PDFs;
+			name = "Inbox Content";
 			sourceTree = "<group>";
 		};
 		668D19D319F772AA00A65DCF /* Tutorial Pages */ = {

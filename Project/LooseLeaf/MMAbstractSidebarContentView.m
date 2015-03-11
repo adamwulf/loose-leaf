@@ -97,8 +97,12 @@
     return ceilf(self.bounds.size.width / 2);
 }
 
+-(BOOL) hasPermission{
+    return YES;
+}
+
 -(void) updateEmptyErrorMessage{
-    if(isShowing && ![self collectionView:albumListScrollView numberOfItemsInSection:0] && [MMPhotoManager hasPhotosPermission]){
+    if(isShowing && ![self collectionView:albumListScrollView numberOfItemsInSection:0] && [self hasPermission]){
         if(!emptyView){
             emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
         }
@@ -119,10 +123,10 @@
 
 -(void) show:(BOOL)animated{
     BOOL needsReload = !isShowing;
-    [self updateEmptyErrorMessage];
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
+    [self updateEmptyErrorMessage];
     if(needsReload){
         [albumListScrollView reloadData];
         albumListScrollView.contentOffset = lastAlbumScrollOffset;
@@ -253,7 +257,7 @@
         return 0;
     }else{
         // we're only working with the photoListScrollView. there's no albums here
-        if([MMPhotoManager hasPhotosPermission]){
+        if([self hasPermission]){
             return currentAlbum.numberOfPhotos;
         }else{
             return 1;
@@ -271,7 +275,7 @@
         albumCell.album = [self albumAtIndex:indexPath.row];
         return albumCell;
     }else{
-        if([MMPhotoManager hasPhotosPermission]){
+        if([self hasPermission]){
             MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
             [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
             photoCell.delegate = self;

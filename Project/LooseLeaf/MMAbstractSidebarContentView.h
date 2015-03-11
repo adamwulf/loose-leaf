@@ -47,4 +47,6 @@
 
 -(UICollectionViewLayout*) photosLayout;
 
+-(BOOL) hasPermission;
+
 @end

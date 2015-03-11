@@ -97,6 +97,10 @@
     }
 }
 
+-(BOOL) hasPermission{
+    return [MMPhotoManager hasPhotosPermission];
+}
+
 -(void) updateEmptyErrorMessage{
     // noop
 }
@@ -139,7 +143,7 @@
     if(section == 0){
         return 1;
     }else{
-        if([MMPhotoManager hasPhotosPermission]){
+        if([self hasPermission]){
             return currentAlbum.numberOfPhotos;
         }else{
             return 1;
@@ -150,7 +154,7 @@
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     // 1 section for camera row, and 1 section for camera roll photos
     if(isShowing && !([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) &&
-       ![MMPhotoManager hasPhotosPermission]){
+       ![self hasPermission]){
         return 1;
     }
     NSInteger ret = isShowing ? 2 : 0;
@@ -167,7 +171,7 @@
                 cachedCameraCell.delegate = self;
                 return cachedCameraCell;
             }
-        }else if([MMPhotoManager hasPhotosPermission]){
+        }else if([self hasPermission]){
             MMPhotosPermissionCell* cell =  [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotosPermissionCell" forIndexPath:indexPath];
             [cell showCameraSteps];
             return cell;
@@ -176,7 +180,7 @@
                                                              forIndexPath:indexPath];
         }
     }
-    if([MMPhotoManager hasPhotosPermission]){
+    if([self hasPermission]){
         MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
         [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
         photoCell.delegate = self;
