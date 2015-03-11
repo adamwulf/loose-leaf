@@ -22,15 +22,20 @@
 
 -(id) initWithURL:(NSURL*)pdfURL{
     if(self = [super initWithURL:pdfURL andInitBlock:^{
-        // initialize anything that could be affected by
-        // race condition generating thumbnails
-        // fetch page count
-        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-        
-        pageCount = CGPDFDocumentGetNumberOfPages( pdf );
-        isEncrypted = CGPDFDocumentIsEncrypted(pdf);
-        
-        CGPDFDocumentRelease( pdf );
+        @try {
+            // initialize anything that could be affected by
+            // race condition generating thumbnails
+            // fetch page count
+            CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
+            
+            pageCount = CGPDFDocumentGetNumberOfPages( pdf );
+            isEncrypted = CGPDFDocumentIsEncrypted(pdf);
+            
+            CGPDFDocumentRelease( pdf );
+        }
+        @catch (NSException *exception) {
+            isEncrypted = YES;
+        }
     }]){
         // noop
     }
