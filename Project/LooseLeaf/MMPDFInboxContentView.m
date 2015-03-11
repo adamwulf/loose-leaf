@@ -223,7 +223,7 @@
             alertViewChangeName.delegate = self;
             alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
             [alertViewChangeName show];
-        }if(pdfAlbum.pdf.pageCount == 1){
+        }else if(pdfAlbum.pdf.pageCount == 1){
             
             
             MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
