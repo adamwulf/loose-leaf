@@ -190,6 +190,7 @@
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [albumListScrollView performBatchUpdates:^{
+                [pdfList removeObject:pdfAlbum];
                 [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];
             } completion:^(BOOL finished) {
                 swipeToDeleteCell = nil;
