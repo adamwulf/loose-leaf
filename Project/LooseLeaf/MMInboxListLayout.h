@@ -8,6 +8,6 @@
 
 #import "MMAlbumListLayout.h"
 
-@interface MMPDFListLayout : MMAlbumListLayout
+@interface MMInboxListLayout : MMAlbumListLayout
 
 @end

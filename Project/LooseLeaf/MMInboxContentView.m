@@ -14,7 +14,7 @@
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
 #import "MMPDFAssetGroupCell.h"
-#import "MMPDFListLayout.h"
+#import "MMInboxListLayout.h"
 
 @interface MMInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
@@ -90,7 +90,7 @@
 }
 
 -(UICollectionViewLayout*) albumsLayout{
-    return [[MMPDFListLayout alloc] init];
+    return [[MMInboxListLayout alloc] init];
 }
 
 

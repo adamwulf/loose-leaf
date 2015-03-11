@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPDFListLayout.h"
+#import "MMInboxListLayout.h"
 
-@implementation MMPDFListLayout
+@implementation MMInboxListLayout
 
 -(CGFloat) albumRowHeight{
     return self.collectionView.bounds.size.width * 4 / 7;
