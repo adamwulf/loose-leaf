@@ -280,7 +280,7 @@
 		667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */ = {isa = PBXBuildFile; fileRef = 667D98A9192D010900625879 /* Loose-Leaf_76.png */; };
 		667D98AC192D4B7A00625879 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667D98AB192D4B7A00625879 /* ImageIO.framework */; };
 		667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98AE192D5D8200625879 /* MMInboxManager.m */; };
-		667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */; };
+		667D98B7192FBF2400625879 /* MMInboxContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B6192FBF2400625879 /* MMInboxContentView.m */; };
 		667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98B9192FC22A00625879 /* MMPDFButton.m */; };
 		667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98BD192FD37500625879 /* NSURL+UTI.m */; };
 		667D98C2192FD87400625879 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C1192FD87400625879 /* MMPDF.m */; };
@@ -936,8 +936,8 @@
 		667D98AB192D4B7A00625879 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		667D98AD192D5D8200625879 /* MMInboxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxManager.h; sourceTree = "<group>"; };
 		667D98AE192D5D8200625879 /* MMInboxManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxManager.m; sourceTree = "<group>"; };
-		667D98B5192FBF2400625879 /* MMPDFInboxContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFInboxContentView.h; sourceTree = "<group>"; };
-		667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFInboxContentView.m; sourceTree = "<group>"; };
+		667D98B5192FBF2400625879 /* MMInboxContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxContentView.h; sourceTree = "<group>"; };
+		667D98B6192FBF2400625879 /* MMInboxContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxContentView.m; sourceTree = "<group>"; };
 		667D98B8192FC22A00625879 /* MMPDFButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFButton.h; sourceTree = "<group>"; };
 		667D98B9192FC22A00625879 /* MMPDFButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFButton.m; sourceTree = "<group>"; };
 		667D98BB192FCE3900625879 /* MMInboxManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMInboxManagerDelegate.h; sourceTree = "<group>"; };
@@ -2172,8 +2172,8 @@
 			isa = PBXGroup;
 			children = (
 				662280701AAF56EB00DAB609 /* MMPDFAssetGroupCell */,
-				667D98B5192FBF2400625879 /* MMPDFInboxContentView.h */,
-				667D98B6192FBF2400625879 /* MMPDFInboxContentView.m */,
+				667D98B5192FBF2400625879 /* MMInboxContentView.h */,
+				667D98B6192FBF2400625879 /* MMInboxContentView.m */,
 				6610D0961AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.h */,
 				6610D0971AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m */,
 				662280751AAF9FFF00DAB609 /* MMPDFListLayout.h */,
@@ -3410,7 +3410,7 @@
 				66EC2FEF19DD11E0008F2BB6 /* MMJotViewNilState.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
 				6652457A1996EA6500C36609 /* MMReachabilityManager.m in Sources */,
-				667D98B7192FBF2400625879 /* MMPDFInboxContentView.m in Sources */,
+				667D98B7192FBF2400625879 /* MMInboxContentView.m in Sources */,
 				66AC8D9218E8A90900A65036 /* MMBufferedImageView.m in Sources */,
 				6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */,
 				66627F871A02582F0064FAD3 /* MPCGSizeToNSDictionaryValueTransformer.m in Sources */,

@@ -11,7 +11,7 @@
 #import "MMFaceSidebarContentView.h"
 #import "MMEventSidebarContentView.h"
 #import "MMCameraSidebarContentView.h"
-#import "MMPDFInboxContentView.h"
+#import "MMInboxContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageViewButton.h"
 #import "MMFaceButton.h"
@@ -28,7 +28,7 @@
     MMAlbumSidebarContentView* albumListContentView;
     MMFaceSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
-    MMPDFInboxContentView* inboxListContent;
+    MMInboxContentView* inboxListContent;
     
     NSArray* allListContentViews;
     
@@ -81,7 +81,7 @@
         [slidingSidebarView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
         
-        inboxListContent = [[MMPDFInboxContentView alloc] initWithFrame:contentBounds];
+        inboxListContent = [[MMInboxContentView alloc] initWithFrame:contentBounds];
         inboxListContent.delegate = self;
         [slidingSidebarView addSubview:inboxListContent];
         inboxListContent.hidden = YES;

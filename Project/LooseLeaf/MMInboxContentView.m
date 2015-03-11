@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPDFInboxContentView.h"
+#import "MMInboxContentView.h"
 #import "MMDisplayAssetGroupCell.h"
 #import "MMContinuousSwipeGestureRecognizer.h"
 #import "MMDisplayAssetGroupCellDelegate.h"
@@ -16,11 +16,11 @@
 #import "MMPDFAssetGroupCell.h"
 #import "MMPDFListLayout.h"
 
-@interface MMPDFInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
+@interface MMInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
 @end
 
-@implementation MMPDFInboxContentView{
+@implementation MMInboxContentView{
     NSMutableArray* pdfList;
     MMContinuousSwipeGestureRecognizer* deleteGesture;
     

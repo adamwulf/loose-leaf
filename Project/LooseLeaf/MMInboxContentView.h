@@ -9,7 +9,7 @@
 #import "MMAbstractSidebarContentView.h"
 #import "MMPDF.h"
 
-@interface MMPDFInboxContentView : MMAbstractSidebarContentView
+@interface MMInboxContentView : MMAbstractSidebarContentView
 
 -(void) switchToPDFView:(MMPDF*)pdf;
 
