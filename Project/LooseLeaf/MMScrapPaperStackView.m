@@ -267,7 +267,7 @@
 }
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    [super didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
+    [self transitionFromListToNewBlankPageIfInPageView];
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
@@ -289,68 +289,8 @@
 //            return;
 //        }
         
-        MMVector* up = [[MMRotationManager sharedInstance] upVector];
-        MMVector* perp = [[up perpendicular] normal];
-        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
-                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
-        // start the photo "up" and have it drop down into the center ish of the page
-        center = [up pointFromPoint:center distance:80];
-        // randomize it a bit
-        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+        [self importImageAsNewScrap:scrapBacking];
         
-        
-        // subtract 1px from the border so that the background is clipped nicely around the edge
-        CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
-        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
-        
-        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
-        [scrapContainer addSubview:scrap];
-        
-        // background fills the entire scrap
-        [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
-        
-
-        // prep the scrap to fade in while it drops on screen
-        scrap.alpha = .3;
-        scrap.scale = 1.2;
-        
-        // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
-
-        // animate the scrap dropping and bouncing on the page
-        [UIView animateWithDuration:.2
-                              delay:.1
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             // doesn't need to land exactly center. this way
-                             // multiple imports of multiple photos won't all
-                             // land exactly on top of each other. looks nicer.
-                             MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-                             CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
-                             // scale the center point to 1.0 scale
-                             center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
-                             // at this point, we have the true center of the page,
-                             // now add a bit of random to it to give it some variance
-                             center.x += random() % 14 - 7;
-                             center.y += random() % 14 - 7;
-                             scrap.center = center;
-                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
-                             scrap.alpha = .72;
-                         }
-                         completion:^(BOOL finished){
-                             [UIView animateWithDuration:.1
-                                                   delay:0
-                                                 options:UIViewAnimationOptionCurveEaseIn
-                                              animations:^{
-                                                  [scrap setScale:1];
-                                                  scrap.alpha = 1.0;
-                                              }
-                                              completion:^(BOOL finished){
-                                                  [topPage.scrapsOnPaperState showScrap:scrap];
-                                                  [topPage saveToDisk:nil];
-                                              }];
-                         }];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{kMPEventImportPropFileExt : [url fileExtension],
@@ -361,40 +301,44 @@
 }
 
 -(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    if(pdfDoc.isEncrypted){
-        // show PDF sidebar
-        [[MMPhotoManager sharedInstance] bypassAuthRequirement];
-        [self cancelAllGestures];
-        [[visibleStackHolder peekSubview] cancelAllGestures];
-        [self setButtonsVisible:NO withDuration:0.15];
-        [importImageSidebar refreshPDF];
-        [importImageSidebar show:YES];
-    }else if(pdfDoc.pageCount == 1){
-        [importImageSidebar hide:NO onComplete:^(BOOL finished) {
-            // create a UIImage from teh PDF and add it like normal above
-            // immediately import that single page
-            MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithPDF:pdfDoc];
-            NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
-            [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
-                UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:600];
-                [self didProcessIncomingImage:pageImage fromURL:pdfDoc.urlOnDisk fromApp:sourceApplication];
+    [self transitionFromListToNewBlankPageIfInPageView];
+    [[NSThread mainThread] performBlock:^{
+        if(pdfDoc.isEncrypted){
+            // show PDF sidebar
+            [[MMPhotoManager sharedInstance] bypassAuthRequirement];
+            [self cancelAllGestures];
+            [[visibleStackHolder peekSubview] cancelAllGestures];
+            [self setButtonsVisible:NO withDuration:0.15];
+            [importImageSidebar refreshPDF];
+            [importImageSidebar show:YES];
+        }else if(pdfDoc.pageCount == 1){
+            [importImageSidebar hide:NO onComplete:^(BOOL finished) {
+                // create a UIImage from teh PDF and add it like normal above
+                // immediately import that single page
+                MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithPDF:pdfDoc];
+                NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
+                [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
+                    UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:600];
+                    [self importImageAsNewScrap:pageImage];
+                }];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    // make sure PDF sidebar shows refreshed data
+                    [importImageSidebar refreshPDF];
+                });
             }];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                // make sure PDF sidebar shows refreshed data
-                [importImageSidebar refreshPDF];
-            });
-        }];
-    }else{
-        // automatically open to the PDF in the import sidebar
-        [[MMPhotoManager sharedInstance] bypassAuthRequirement];
-        [self cancelAllGestures];
-        [[visibleStackHolder peekSubview] cancelAllGestures];
-        [self setButtonsVisible:NO withDuration:0.15];
-        [importImageSidebar show:YES];
+        }else{
+            // automatically open to the PDF in the import sidebar
+            [[MMPhotoManager sharedInstance] bypassAuthRequirement];
+            [self cancelAllGestures];
+            [[visibleStackHolder peekSubview] cancelAllGestures];
+            [self setButtonsVisible:NO withDuration:0.15];
+            [importImageSidebar show:YES];
 
-        // show show the PDF content in the sidebar
-        [importImageSidebar showPDF:pdfDoc];
-    }
+            // show show the PDF content in the sidebar
+            [importImageSidebar showPDF:pdfDoc];
+        }
+    } afterDelay:.15];
+
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
@@ -403,6 +347,78 @@
                                                                       kMPEventImportPropSource : kMPEventImportPropSourceApplication,
                                                                       kMPEventImportPropPDFPageCount : @(pdfDoc.pageCount),
                                                                       kMPEventImportPropReferApp : sourceApplication}];
+}
+
+//
+// adds the incoming image as a new scrap to the top page
+// throws exception if in list view
+-(void) importImageAsNewScrap:(UIImage*)scrapBacking{
+    if(![self isShowingPageView]){
+        @throw [NSException exceptionWithName:@"ImageImportException" reason:@"cannot import image when showing list view" userInfo:nil];
+    }
+    
+    MMVector* up = [[MMRotationManager sharedInstance] upVector];
+    MMVector* perp = [[up perpendicular] normal];
+    CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                 ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+    // start the photo "up" and have it drop down into the center ish of the page
+    center = [up pointFromPoint:center distance:80];
+    // randomize it a bit
+    center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+    
+    
+    // subtract 1px from the border so that the background is clipped nicely around the edge
+    CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
+    
+    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
+    [scrapContainer addSubview:scrap];
+    
+    // background fills the entire scrap
+    [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
+    
+    
+    // prep the scrap to fade in while it drops on screen
+    scrap.alpha = .3;
+    scrap.scale = 1.2;
+    
+    // bounce by 20px (10 on each side)
+    CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
+    
+    // animate the scrap dropping and bouncing on the page
+    [UIView animateWithDuration:.2
+                          delay:.1
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         // doesn't need to land exactly center. this way
+                         // multiple imports of multiple photos won't all
+                         // land exactly on top of each other. looks nicer.
+                         MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+                         CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
+                         // scale the center point to 1.0 scale
+                         center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+                         // at this point, we have the true center of the page,
+                         // now add a bit of random to it to give it some variance
+                         center.x += random() % 14 - 7;
+                         center.y += random() % 14 - 7;
+                         scrap.center = center;
+                         [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
+                         scrap.alpha = .72;
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:.1
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [scrap setScale:1];
+                                              scrap.alpha = 1.0;
+                                          }
+                                          completion:^(BOOL finished){
+                                              [topPage.scrapsOnPaperState showScrap:scrap];
+                                              [topPage saveToDisk:nil];
+                                          }];
+                     }];
 }
 
 
