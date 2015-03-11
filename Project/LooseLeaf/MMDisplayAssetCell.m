@@ -64,6 +64,7 @@
             [[NSNotificationCenter defaultCenter] removeObserver:self];
             if(result){
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetUpdated:) name:kDisplayAssetThumbnailGenerated object:result];
+                [bufferedImage setPreferredAspectRatioForEmptyImage:result.fullResolutionSize];
                 bufferedImage.image = result.aspectRatioThumbnail;
                 bufferedImage.rotation = RandomPhotoRotation(photoIndex);
             }else{

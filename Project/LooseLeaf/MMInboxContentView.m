@@ -55,7 +55,7 @@
 // this is useful when a user has just
 // imported a PDF and we want to show the
 // sidebar immediately w/o any animation
--(void) switchToPDFView:(MMPDF*)pdf{
+-(void) switchToPDFView:(MMInboxItem*)pdf{
     __block NSInteger indexOfPDF = NSIntegerMax;
     
     [pdfList enumerateObjectsUsingBlock:^(MMPDFAlbum* obj, NSUInteger idx, BOOL *stop) {
@@ -82,8 +82,12 @@
     [pdfList removeAllObjects];
     NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
     for (int i=0; i<count; i++) {
-        MMPDF* pdf = [[MMInboxManager sharedInstance] pdfItemAtIndex:i];
-        [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:pdf]];
+        MMInboxItem* pdf = [[MMInboxManager sharedInstance] itemAtIndex:i];
+        if([pdf isKindOfClass:[MMPDFInboxItem class]]){
+            [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:(MMPDFInboxItem*)pdf]];
+        }else if([pdf isKindOfClass:[MMInboxItem class]]){
+            [pdfList addObject:[[MMInboxItem alloc] init]];
+        }
     }
     [albumListScrollView reloadData];
     [super reset:animated];

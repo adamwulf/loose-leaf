@@ -10,7 +10,7 @@
 #import <ImageIO/ImageIO.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "NSURL+UTI.h"
-#import "MMPDF.h"
+#import "MMPDFInboxItem.h"
 #import "NSString+UUID.h"
 #import "Constants.h"
 #import "NSFileManager+DirectoryOptimizations.h"
@@ -71,6 +71,10 @@ static dispatch_queue_t fileSystemQueue;
     if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)){
         UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
         if(importedImage){
+            MMPDFInboxItem* pdf = [[MMPDFInboxItem alloc] initWithURL:importedImage];
+            @synchronized(self){
+                [contents insertObject:pdf atIndex:0];
+            }
             [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
             [self removeInboxItem:itemURL onComplete:nil];
             return;
@@ -85,7 +89,7 @@ static dispatch_queue_t fileSystemQueue;
         NSError* err = nil;
         [[NSFileManager defaultManager] moveItemAtURL:itemURL toURL:ourInboxURL error:&err];
         
-        MMPDF* pdf = [[MMPDF alloc] initWithURL:ourInboxURL];
+        MMPDFInboxItem* pdf = [[MMPDFInboxItem alloc] initWithURL:ourInboxURL];
         @synchronized(self){
             [contents insertObject:pdf atIndex:0];
         }
@@ -107,18 +111,18 @@ static dispatch_queue_t fileSystemQueue;
     dispatch_async([MMInboxManager fileSystemQueue], ^{
         @autoreleasepool {
             //Clean up the inbox once the file has been processed
-            __block MMPDF* pdfToRemove = nil;
+            __block MMInboxItem* inboxItemToRemove = nil;
             [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                MMPDF* pdf = obj;
-                if([[pdf urlOnDisk] isEqual:itemURL]){
-                    pdfToRemove = pdf;
+                MMInboxItem* inboxItem = obj;
+                if([[inboxItem urlOnDisk] isEqual:itemURL]){
+                    inboxItemToRemove = inboxItem;
                 }
             }];
             BOOL error = NO;
-            if(pdfToRemove){
+            if(inboxItemToRemove){
                 @synchronized(self){
-                    error = [pdfToRemove deleteAssets];
-                    [contents removeObject:pdfToRemove];
+                    error = [inboxItemToRemove deleteAssets];
+                    [contents removeObject:inboxItemToRemove];
                 }
             }
             if(onComplete){
@@ -202,7 +206,7 @@ static dispatch_queue_t fileSystemQueue;
         
         
         for (NSURL* url in [dir allObjects]) {
-            [contents addObject:[[MMPDF alloc] initWithURL:url]];
+            [contents addObject:[[MMPDFInboxItem alloc] initWithURL:url]];
         }
         [contents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             NSDate* dt1 = nil;
@@ -218,7 +222,7 @@ static dispatch_queue_t fileSystemQueue;
     return [contents count];
 }
 
--(MMPDF*) pdfItemAtIndex:(NSInteger)idx{
+-(MMInboxItem*) itemAtIndex:(NSInteger)idx{
     return [contents objectAtIndex:idx];
 }
 

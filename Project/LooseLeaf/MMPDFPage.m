@@ -7,19 +7,19 @@
 //
 
 #import "MMPDFPage.h"
-#import "MMPDF.h"
+#import "MMPDFInboxItem.h"
 #import <JotUI/UIImage+Resize.h>
 #import "Constants.h"
 
 @implementation MMPDFPage{
-    MMPDF* pdf;
+    MMPDFInboxItem* pdf;
     NSInteger pageNumber;
     UIImage* thumb;
 }
 
 static UIImage* lockThumbnail;
 
--(id) initWithPDF:(MMPDF*)_pdf andPage:(NSInteger)_pageNum{
+-(id) initWithPDF:(MMPDFInboxItem*)_pdf andPage:(NSInteger)_pageNum{
     if(self = [super init]){
         pdf = _pdf;
         pageNumber = _pageNum;
@@ -41,15 +41,15 @@ static UIImage* lockThumbnail;
 }
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
-    return [pdf imageForPage:pageNumber withMaxDim:maxDim];
-}
-
--(NSURL*) fullResolutionURL{
-    return [pdf thumbnailURLForPage:pageNumber];
+    return [pdf imageForPage:pageNumber forMaxDim:maxDim];
 }
 
 -(CGSize) fullResolutionSize{
     return [pdf sizeForPage:pageNumber];
+}
+
+-(NSURL*) fullResolutionURL{
+    return [NSURL fileURLWithPath:[pdf pathForPage:pageNumber forMaxDim:kThumbnailMaxDim]];
 }
 
 #pragma mark - Notification

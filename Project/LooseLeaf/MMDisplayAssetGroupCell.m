@@ -102,6 +102,7 @@
         }
         MMBufferedImageView* v = [bufferedImageViews objectAtIndex:i];
         if(img){
+            [v setPreferredAspectRatioForEmptyImage:img.fullResolutionSize];
             [v setImage:img.aspectRatioThumbnail];
             v.hidden = NO;
         }else{

@@ -11,14 +11,14 @@
 #import "MMPDFPage.h"
 
 @implementation MMPDFAlbum{
-    MMPDF* pdf;
+    MMPDFInboxItem* pdf;
     NSArray* previewPhotos;
     NSMutableDictionary* cachedPages;
 }
 
 @synthesize pdf;
 
--(id) initWithPDF:(MMPDF *)_pdf{
+-(id) initWithPDF:(MMPDFInboxItem *)_pdf{
     if(self = [super init]){
         pdf = _pdf;
         [self loadPreviewPhotos];

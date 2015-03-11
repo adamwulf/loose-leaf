@@ -10,7 +10,7 @@
 #import "MMImageSidebarContainerViewDelegate.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAbstractSidebarContentView.h"
-#import "MMPDF.h"
+#import "MMPDFInboxItem.h"
 
 @interface MMImageSidebarContainerView : MMFullScreenSidebarContainingView<MMPhotoManagerDelegate>
 
@@ -25,7 +25,7 @@
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
--(void) showPDF:(MMPDF*)pdf;
+-(void) showPDF:(MMInboxItem*)pdf;
 
 -(void) refreshPDF;
 

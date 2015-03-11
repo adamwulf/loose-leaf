@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMPDF.h"
+#import "MMPDFInboxItem.h"
 
 @protocol MMInboxManagerDelegate <NSObject>
 
 -(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
--(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
+-(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 -(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
 

@@ -63,26 +63,34 @@ CGFloat buffer = 2;
     [CATransaction setDisableActions:YES];
     
     if(image){
-        CGRect fr = CGRectInset(self.bounds, 8, 8);
-        CGSize scaledImageSize = image.size;
-
-        CGFloat maxImageDim = MAX(scaledImageSize.width, scaledImageSize.height);
-        CGFloat minFrDim = MIN(fr.size.width, fr.size.height);
-        
-        scaledImageSize.width = (scaledImageSize.width / maxImageDim) * minFrDim;
-        scaledImageSize.height = (scaledImageSize.height / maxImageDim) * minFrDim;
-        
-        fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
-        fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
-        fr.size = scaledImageSize;
-        layer.frame = fr;
-        
-        CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
-        whiteBorderLayer.frame = whiteFrame;
+        [self setPreferredAspectRatioForEmptyImage:image.size];
     }
     
     [self updateLayerContentsWith:image.CGImage];
     
+    [CATransaction commit];
+}
+
+-(void) setPreferredAspectRatioForEmptyImage:(CGSize)preferredSize{
+    [CATransaction begin]; // prevent CALayer animation
+    [CATransaction setDisableActions:YES];
+    
+    CGRect fr = CGRectInset(self.bounds, 8, 8);
+    CGSize scaledImageSize = preferredSize;
+    
+    CGFloat maxImageDim = MAX(scaledImageSize.width, scaledImageSize.height);
+    CGFloat minFrDim = MIN(fr.size.width, fr.size.height);
+    
+    scaledImageSize.width = (scaledImageSize.width / maxImageDim) * minFrDim;
+    scaledImageSize.height = (scaledImageSize.height / maxImageDim) * minFrDim;
+    
+    fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
+    fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
+    fr.size = scaledImageSize;
+    layer.frame = fr;
+    
+    CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
+    whiteBorderLayer.frame = whiteFrame;
     [CATransaction commit];
 }
 

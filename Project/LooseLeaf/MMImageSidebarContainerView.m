@@ -234,7 +234,7 @@
     [self highlightButton:button];
 }
 
--(void) showPDF:(MMPDF*)pdf{
+-(void) showPDF:(MMInboxItem*)pdf{
     [self switchToListView:inboxListContent];
     [inboxListContent switchToPDFView:pdf];
     [self highlightButton:inboxButton];

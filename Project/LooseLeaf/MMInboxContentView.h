@@ -7,10 +7,10 @@
 //
 
 #import "MMAbstractSidebarContentView.h"
-#import "MMPDF.h"
+#import "MMPDFInboxItem.h"
 
 @interface MMInboxContentView : MMAbstractSidebarContentView
 
--(void) switchToPDFView:(MMPDF*)pdf;
+-(void) switchToPDFView:(MMInboxItem*)pdf;
 
 @end

@@ -7,12 +7,14 @@
 //
 
 #import "MMDisplayAssetGroup.h"
-#import "MMPDF.h"
+#import "MMPDFInboxItem.h"
 
 @interface MMPDFAlbum : MMDisplayAssetGroup
 
--(id) initWithPDF:(MMPDF*)pdf;
+-(id) init NS_UNAVAILABLE;
 
-@property (readonly) MMPDF* pdf;
+-(id) initWithPDF:(MMPDFInboxItem*)pdf;
+
+@property (readonly) MMPDFInboxItem* pdf;
 
 @end

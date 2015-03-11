@@ -21,6 +21,6 @@
 
 -(NSInteger) itemsInInboxCount;
 
--(MMPDF*) pdfItemAtIndex:(NSInteger)idx;
+-(MMInboxItem*) itemAtIndex:(NSInteger)idx;
 
 @end

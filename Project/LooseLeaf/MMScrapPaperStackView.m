@@ -302,7 +302,7 @@
     } afterDelay:.15];
 }
 
--(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+-(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
     [self transitionFromListToNewBlankPageIfInPageView];
     [[NSThread mainThread] performBlock:^{
         if(pdfDoc.isEncrypted){
