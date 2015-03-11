@@ -21,15 +21,18 @@
 #pragma mark - Init
 
 -(id) initWithURL:(NSURL*)pdfURL{
+    // fetch page count
+    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
+    
+    NSUInteger _pageCount = CGPDFDocumentGetNumberOfPages( pdf );
+    BOOL _isEncrypted = CGPDFDocumentIsEncrypted(pdf);
+    
+    CGPDFDocumentRelease( pdf );
+
+    
     if(self = [super initWithURL:pdfURL]){
-
-        // fetch page count
-        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-
-        pageCount = CGPDFDocumentGetNumberOfPages( pdf );
-        isEncrypted = CGPDFDocumentIsEncrypted(pdf);
-
-        CGPDFDocumentRelease( pdf );
+        pageCount = _pageCount;
+        isEncrypted = _isEncrypted;
     }
     return self;
 }
@@ -61,6 +64,7 @@
 #pragma mark - Override
 
 -(NSUInteger) pageCount{
+    
     return pageCount;
 }
 

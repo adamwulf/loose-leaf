@@ -21,13 +21,14 @@
 #pragma mark - Queues
 
 static dispatch_queue_t assetQueue;
-static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
+static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifier;
 
 +(dispatch_queue_t) assetQueue{
-    if(!assetQueue){
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         assetQueue = dispatch_queue_create("com.milestonemade.looseleaf.inboxAssetQueue", DISPATCH_QUEUE_CONCURRENT);
-        dispatch_queue_set_specific(assetQueue, kPDFAssetQueueIdentifier, (void *)kPDFAssetQueueIdentifier, NULL);
-    }
+        dispatch_queue_set_specific(assetQueue, kInboxAssetQueueIdentifier, (void *)kInboxAssetQueueIdentifier, NULL);
+    });
     return assetQueue;
 }
 
@@ -72,6 +73,7 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
     if(!pageThumb){
         @autoreleasepool {
             pageThumb = [self generateImageForPage:pageNumber withMaxDim:maxDim];
+            NSLog(@"generated page %d image: %p", (int) pageNumber, pageThumb);
             BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
             if(!success){
                 NSLog(@"generating thumbnail failed");
@@ -128,12 +130,14 @@ static const void *const kPDFAssetQueueIdentifier = &kPDFAssetQueueIdentifier;
         @synchronized(self){
             [pageSizeCache removeAllObjects];
         }
+        NSLog(@"generating page thumbnails: %d",(int) [self pageCount]);
         for(int pageNumber=0;pageNumber<[self pageCount];pageNumber++){
             [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
             @synchronized(self){
                 [pageSizeCache setObject:[NSValue valueWithCGSize:[self sizeForPage:pageNumber]] forKey:@(pageNumber)];
             }
             [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
+            NSLog(@"notify generated page: %d", (int) pageNumber);
         }
     });
 }
