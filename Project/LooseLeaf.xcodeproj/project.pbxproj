@@ -52,7 +52,7 @@
 		661C4B281A83F8D00014DB20 /* pinterest.png in Resources */ = {isa = PBXBuildFile; fileRef = 661C4B271A83F8D00014DB20 /* pinterest.png */; };
 		661C4B2A1A83F8D50014DB20 /* pinterest@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 661C4B291A83F8D50014DB20 /* pinterest@2x.png */; };
 		661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 661EBA56182AF1AD00893274 /* MMScissorTool.m */; };
-		662280731AAF570A00DAB609 /* MMPDFAssetGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 662280721AAF570A00DAB609 /* MMPDFAssetGroupCell.m */; };
+		662280731AAF570A00DAB609 /* MMInboxAssetGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 662280721AAF570A00DAB609 /* MMInboxAssetGroupCell.m */; };
 		662280771AAF9FFF00DAB609 /* MMInboxListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 662280761AAF9FFF00DAB609 /* MMInboxListLayout.m */; };
 		662370DA1A9E90B200B62F69 /* MMBackgroundedPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */; };
 		66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CAD1A65145100A009BC /* Fabric.framework */; };
@@ -547,8 +547,8 @@
 		661EBA56182AF1AD00893274 /* MMScissorTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorTool.m; sourceTree = "<group>"; };
 		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
 		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
-		662280711AAF570A00DAB609 /* MMPDFAssetGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFAssetGroupCell.h; sourceTree = "<group>"; };
-		662280721AAF570A00DAB609 /* MMPDFAssetGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAssetGroupCell.m; sourceTree = "<group>"; };
+		662280711AAF570A00DAB609 /* MMInboxAssetGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxAssetGroupCell.h; sourceTree = "<group>"; };
+		662280721AAF570A00DAB609 /* MMInboxAssetGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxAssetGroupCell.m; sourceTree = "<group>"; };
 		662280741AAF75BC00DAB609 /* AuthConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthConstants.h; sourceTree = "<group>"; };
 		662280751AAF9FFF00DAB609 /* MMInboxListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxListLayout.h; sourceTree = "<group>"; };
 		662280761AAF9FFF00DAB609 /* MMInboxListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxListLayout.m; sourceTree = "<group>"; };
@@ -1595,8 +1595,8 @@
 		662280701AAF56EB00DAB609 /* MMPDFAssetGroupCell */ = {
 			isa = PBXGroup;
 			children = (
-				662280711AAF570A00DAB609 /* MMPDFAssetGroupCell.h */,
-				662280721AAF570A00DAB609 /* MMPDFAssetGroupCell.m */,
+				662280711AAF570A00DAB609 /* MMInboxAssetGroupCell.h */,
+				662280721AAF570A00DAB609 /* MMInboxAssetGroupCell.m */,
 			);
 			name = MMPDFAssetGroupCell;
 			sourceTree = "<group>";
@@ -3280,7 +3280,7 @@
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
 				66627F821A02582F0064FAD3 /* MPCATransform3DToNSDictionaryValueTransformer.m in Sources */,
 				66C3CBE11A29046200D7EE42 /* MMRulerAdjustment.m in Sources */,
-				662280731AAF570A00DAB609 /* MMPDFAssetGroupCell.m in Sources */,
+				662280731AAF570A00DAB609 /* MMInboxAssetGroupCell.m in Sources */,
 				66627F9D1A02582F0064FAD3 /* MPSurveyQuestionViewController.m in Sources */,
 				6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */,
 				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,

@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPDFAssetGroupCell.h"
+#import "MMInboxAssetGroupCell.h"
 #import "MMPDFAlbum.h"
 #import "MMBufferedImageView.h"
 #import "Constants.h"
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation MMPDFAssetGroupCell
+@implementation MMInboxAssetGroupCell
 
 -(MMBufferedImageView*) firstImageView{
     return [[self.subviews filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {

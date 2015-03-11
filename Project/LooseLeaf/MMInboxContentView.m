@@ -13,7 +13,7 @@
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
-#import "MMPDFAssetGroupCell.h"
+#import "MMInboxAssetGroupCell.h"
 #import "MMInboxListLayout.h"
 
 @interface MMInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
@@ -39,7 +39,7 @@
         // Initialization code
         pdfList = [NSMutableArray array];
         
-        [albumListScrollView registerClass:[MMPDFAssetGroupCell class] forCellWithReuseIdentifier:@"MMPDFAssetGroupCell"];
+        [albumListScrollView registerClass:[MMInboxAssetGroupCell class] forCellWithReuseIdentifier:@"MMPDFAssetGroupCell"];
 
         deleteGesture = [[MMContinuousSwipeGestureRecognizer alloc] initWithTarget:self action:@selector(deleteGesture:)];
         deleteGesture.delegate = self;
@@ -225,7 +225,7 @@
             [alertViewChangeName show];
         }else if(pdfAlbum.pdf.pageCount == 1){
             
-            MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            MMInboxAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                 UICollectionViewCell* cell = evaluatedObject;
                 return [[albumListScrollView indexPathForCell:cell] isEqual:indexPath];
             }]] firstObject];
@@ -255,7 +255,7 @@
             if([[albumListScrollView indexPathsForVisibleItems] containsObject:decryptingIndexPath]){
                 // if the cell is already visible, then animate that cell to non-decrypted
                 // otherwise nothing
-                MMPDFAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+                MMInboxAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                     UICollectionViewCell* cell = evaluatedObject;
                     return [[albumListScrollView indexPathForCell:cell] isEqual:decryptingIndexPath];
                 }]] firstObject];

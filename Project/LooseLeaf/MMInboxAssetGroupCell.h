@@ -10,7 +10,7 @@
 #import "MMBufferedImageView.h"
 
 
-@interface MMPDFAssetGroupCell : MMDisplayAssetGroupCell
+@interface MMInboxAssetGroupCell : MMDisplayAssetGroupCell
 
 -(MMBufferedImageView*) firstImageView;
 
