@@ -27,16 +27,16 @@
 }
 
 -(void) setAlbum:(MMDisplayAssetGroup *)_album{
+    if(album && ![album isKindOfClass:[MMInboxAssetGroup class]]){
+        @throw [NSException exceptionWithName:@"InboxAssetGroupCellException" reason:@"Cell can only show inbox items" userInfo:nil];
+    }
     if(album){
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kPDFThumbnailGenerated object:album];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kInboxItemThumbnailGenerated object:album];
     }
     [super setAlbum:_album];
-    if(![_album isKindOfClass:[MMPDFAlbum class]]){
-        @throw [NSException exceptionWithName:@"PDFAssetGroupCellException" reason:@"Cell can only show PDFs" userInfo:nil];
-    }
     [self initializePositionsForPreviewPhotos];
-    MMPDFAlbum* pdfAlbum = (MMPDFAlbum*)album;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewUpdated:) name:kPDFThumbnailGenerated object:pdfAlbum.pdf];
+    MMInboxAssetGroup* inboxAlbum = (MMPDFAlbum*)album;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewUpdated:) name:kInboxItemThumbnailGenerated object:inboxAlbum.inboxItem];
 }
 
 -(void) previewUpdated:(NSNotification*) note{
@@ -48,25 +48,31 @@
 }
 
 -(void) initializePositionsForPreviewPhotos{
-    MMPDFAlbum* pdfAlbum = (MMPDFAlbum*)self.album;
-    if(pdfAlbum.pdf.isEncrypted){
-        // center views in cell
-        CGFloat halfWidth = self.bounds.size.width/2;
-        CGFloat maxDim = self.bounds.size.height;
-        for(int i=0;i<5;i++){
-            MMBufferedImageView* imgView = [self previewViewForImage:i];
-            imgView.bounds = CGRectMake(0, 0, maxDim, maxDim);
-
-            CGFloat randRot = RandomPhotoRotation(i);
-            imgView.rotation = visiblePhotoRotation + randRot;
-            CGFloat extra = i == 0 ? 0 : RandomMod(i, 9)-4;
-            imgView.center = CGPointMake(halfWidth + kBounceWidth + extra, maxDim/2);
-            initialX[5-i-1] = imgView.center.x;
-            finalX[5-i-1] = halfWidth - 60;
-            initRot[5-i-1] = randRot;
-            rotAdj[5-i-1] = RandomPhotoRotation(i+1);
-            adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
-            
+    MMInboxAssetGroup* inboxAlbum = (MMPDFAlbum*)album;
+    if([inboxAlbum.inboxItem isKindOfClass:[MMPDFInboxItem class]]){
+        MMPDFInboxItem* pdfInboxItem = (MMPDFInboxItem*) inboxAlbum.inboxItem;
+        if(pdfInboxItem.isEncrypted){
+            // center views in cell
+            CGFloat halfWidth = self.bounds.size.width/2;
+            CGFloat maxDim = self.bounds.size.height;
+            for(int i=0;i<5;i++){
+                MMBufferedImageView* imgView = [self previewViewForImage:i];
+                imgView.bounds = CGRectMake(0, 0, maxDim, maxDim);
+                
+                CGFloat randRot = RandomPhotoRotation(i);
+                imgView.rotation = visiblePhotoRotation + randRot;
+                CGFloat extra = i == 0 ? 0 : RandomMod(i, 9)-4;
+                imgView.center = CGPointMake(halfWidth + kBounceWidth + extra, maxDim/2);
+                initialX[5-i-1] = imgView.center.x;
+                finalX[5-i-1] = halfWidth - 60;
+                initRot[5-i-1] = randRot;
+                rotAdj[5-i-1] = RandomPhotoRotation(i+1);
+                adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
+                
+            }
+        }else{
+            // spread out preview images
+            [super initializePositionsForPreviewPhotos];
         }
     }else{
         // spread out preview images

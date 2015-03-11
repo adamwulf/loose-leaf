@@ -141,7 +141,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
             @synchronized(self){
                 [pageSizeCache setObject:[NSValue valueWithCGSize:[self sizeForPage:pageNumber]] forKey:@(pageNumber)];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:kPDFThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kInboxItemThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
             NSLog(@"notify generated page: %d", (int) pageNumber);
         }
     });
@@ -153,6 +153,19 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
     NSError* errorURL = nil;
     [[NSFileManager defaultManager] removeItemAtPath:[self.urlOnDisk path] error:&errorURL];
     
+    dispatch_async([MMInboxItem assetQueue], ^{
+        // delete cached assets on background queue
+        // since there might be a lot of them
+        NSError* errorCache = nil;
+        [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
+        
+        if(errorCache){
+            if(errorCache){
+                NSLog(@"delete PDF cache erorr: %@", errorCache);
+            }
+        }
+    });
+
     if(errorURL){
         NSLog(@"delete InboxItem erorr: %@", errorURL);
         return YES;

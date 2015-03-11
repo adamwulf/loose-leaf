@@ -23,4 +23,6 @@
 
 -(MMInboxItem*) itemAtIndex:(NSInteger)idx;
 
+-(NSInteger) indexOfItem:(MMInboxItem*)item;
+
 @end

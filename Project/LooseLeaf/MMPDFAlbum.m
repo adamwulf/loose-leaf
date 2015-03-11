@@ -11,36 +11,16 @@
 #import "MMPDFPage.h"
 
 @implementation MMPDFAlbum{
-    MMPDFInboxItem* pdf;
     NSArray* previewPhotos;
     NSMutableDictionary* cachedPages;
 }
 
-@synthesize pdf;
-
--(id) initWithPDF:(MMPDFInboxItem *)_pdf{
-    if(self = [super init]){
-        pdf = _pdf;
+-(id) initWithInboxItem:(MMPDFInboxItem *)_pdf{
+    if(self = [super initWithInboxItem:_pdf]){
         [self loadPreviewPhotos];
         cachedPages = [NSMutableDictionary dictionary];
     }
     return self;
-}
-
--(NSURL*) assetURL{
-    return [pdf urlOnDisk];
-}
-
--(NSString*) name{
-    return [[pdf urlOnDisk] lastPathComponent];
-}
-
--(NSString*) persistentId{
-    return [[pdf urlOnDisk] path];
-}
-
--(NSInteger) numberOfPhotos{
-    return [pdf pageCount];
 }
 
 -(NSArray*) previewPhotos{
@@ -58,7 +38,7 @@
 -(MMPDFPage*) pdfPageForIndex:(NSInteger)idx{
     MMPDFPage* page = [cachedPages objectForKey:@(idx)];
     if(!page){
-        page = [[MMPDFPage alloc] initWithPDF:pdf andPage:idx];
+        page = [[MMPDFPage alloc] initWithPDF:(MMPDFInboxItem*)self.inboxItem andPage:idx];
         [cachedPages setObject:page forKey:@(idx)];
     }
     return page;
@@ -66,7 +46,7 @@
 
 -(void) loadPreviewPhotos{
     previewPhotos = @[];
-    for (int idx=0; idx<5 && idx < [pdf pageCount]; idx++) {
+    for (int idx=0; idx<5 && idx < [self.inboxItem pageCount]; idx++) {
         MMPDFPage* page = [self pdfPageForIndex:idx];
         previewPhotos = [previewPhotos arrayByAddingObject:page];
     }

@@ -37,6 +37,7 @@
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMPDFAlbum.h"
 #import "MMPDFPage.h"
+#import "MMImageInboxItem.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -266,7 +267,7 @@
     return NO;
 }
 
--(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+-(void) didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
     [self transitionFromListToNewBlankPageIfInPageView];
     // import after slight delay so the transition from the other app
     // can complete nicely
@@ -290,7 +291,8 @@
 //        }
         
         [importImageSidebar hide:NO onComplete:^(BOOL finished) {
-            [self importImageAsNewScrap:scrapBacking];
+            [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:600]];
+            [importImageSidebar refreshPDF];
         }];
         
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -317,7 +319,7 @@
             [importImageSidebar hide:NO onComplete:^(BOOL finished) {
                 // create a UIImage from teh PDF and add it like normal above
                 // immediately import that single page
-                MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithPDF:pdfDoc];
+                MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithInboxItem:pdfDoc];
                 NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
                 [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
                     UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:600];

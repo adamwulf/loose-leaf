@@ -7,29 +7,39 @@
 //
 
 #import "MMInboxImageAlbum.h"
+#import "MMInboxImage.h"
 #import "Constants.h"
 
 @implementation MMInboxImageAlbum{
-    NSURL* imageURL;
+    MMInboxImage* cachedImageAsset;
 }
 
--(id) initWithImageAtURL:(NSURL*)_imageURL{
-    if(self = [super init]){
-        imageURL = _imageURL;
+-(id) initWithInboxItem:(MMInboxItem*)_inboxItem{
+    if(self = [super initWithInboxItem:_inboxItem]){
+        // noop
     }
     return self;
 }
 
+-(short) numberOfPreviewPhotos{
+    return cachedImageAsset ? 1 : 0;
+}
+
+-(NSArray*) previewPhotos{
+    return cachedImageAsset ? @[cachedImageAsset] : @[];
+}
+
 -(void) loadPreviewPhotos{
-    @throw kAbstractMethodException;
+    cachedImageAsset = [[MMInboxImage alloc] initWithImageItem:self.inboxItem];
 }
 
 -(void) unloadPreviewPhotos{
-    @throw kAbstractMethodException;
+    cachedImageAsset = nil;
 }
 
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
-    @throw kAbstractMethodException;
+    BOOL stop;
+    enumerationBlock(cachedImageAsset, 0, &stop);
 }
 
 @end

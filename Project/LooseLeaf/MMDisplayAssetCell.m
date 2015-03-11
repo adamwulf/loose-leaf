@@ -13,7 +13,7 @@
 @implementation MMDisplayAssetCell{
     MMBufferedImageView* bufferedImage;
     NSInteger index;
-    MMPhotoAlbum* album;
+    MMDisplayAssetGroup* album;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -55,7 +55,7 @@
 
 #pragma mark - Properties
 
--(void) loadPhotoFromAlbum:(MMPhotoAlbum*)_album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
+-(void) loadPhotoFromAlbum:(MMDisplayAssetGroup*)_album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex{
     @try {
         album = _album;
         index = visibleIndex;

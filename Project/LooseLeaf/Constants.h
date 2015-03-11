@@ -40,7 +40,7 @@ _Pragma("clang diagnostic pop") \
 
 // Display Assets
 #define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
-#define kPDFThumbnailGenerated @"kPDFThumbnailGenerated"
+#define kInboxItemThumbnailGenerated @"kInboxItemThumbnailGenerated"
 #define kBounceWidth 10.0
 
 

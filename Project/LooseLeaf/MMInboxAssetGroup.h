@@ -1,17 +1,17 @@
 //
-//  MMInboxImageAlbum.h
+//  MMInboxAssetGroup.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 3/11/15.
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMInboxAssetGroup.h"
+#import "MMDisplayAssetGroup.h"
 #import "MMInboxItem.h"
 
-@interface MMInboxImageAlbum : MMInboxAssetGroup
+@interface MMInboxAssetGroup : MMDisplayAssetGroup
 
--(id) init NS_UNAVAILABLE;
+@property (readonly) MMInboxItem* inboxItem;
 
 -(id) initWithInboxItem:(MMInboxItem*)inboxItem;
 

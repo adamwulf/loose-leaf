@@ -167,28 +167,6 @@
     }
 }
 
-#pragma mark - Dealloc and Delete
-
--(BOOL) deleteAssets{
-    BOOL ret = [super deleteAssets];
-
-    dispatch_async([MMInboxItem assetQueue], ^{
-        // delete cached assets on background queue
-        // since there might be a lot of them
-        NSError* errorCache = nil;
-        [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
-        
-        if(errorCache){
-            if(errorCache){
-                NSLog(@"delete PDF cache erorr: %@", errorCache);
-            }
-        }
-    });
-    
-    return ret;
-}
-
-
 
 
 

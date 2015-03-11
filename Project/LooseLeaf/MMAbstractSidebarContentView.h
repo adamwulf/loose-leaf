@@ -11,13 +11,14 @@
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 #import "MMSinglePhotoCollectionViewCellDelegate.h"
+#import "MMDisplayAssetGroup.h"
 
 #define kTopBottomMargin 20
 
 @class MMImageSidebarContainerView;
 
 @interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,UICollectionViewDelegate>{
-    MMPhotoAlbum* currentAlbum;
+    MMDisplayAssetGroup* currentAlbum;
     UICollectionView* albumListScrollView;
     UICollectionView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
@@ -40,9 +41,9 @@
 
 // abstract
 
--(NSInteger) indexForAlbum:(MMPhotoAlbum*)album;
+-(NSInteger) indexForAlbum:(MMDisplayAssetGroup*)album;
 
--(MMPhotoAlbum*) albumAtIndex:(NSInteger)index;
+-(MMDisplayAssetGroup*) albumAtIndex:(NSInteger)index;
 
 -(UICollectionViewLayout*) photosLayout;
 

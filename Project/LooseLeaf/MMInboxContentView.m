@@ -13,15 +13,17 @@
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
 #import "MMPDFAlbum.h"
+#import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
 #import "MMInboxListLayout.h"
+#import "NSArray+Extras.h"
 
 @interface MMInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
 @end
 
 @implementation MMInboxContentView{
-    NSMutableArray* pdfList;
+    NSMutableDictionary* albumForInboxItem;
     MMContinuousSwipeGestureRecognizer* deleteGesture;
     
     CGFloat initialAdjustment;
@@ -37,7 +39,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        pdfList = [NSMutableArray array];
+        albumForInboxItem = [NSMutableDictionary dictionary];
         
         [albumListScrollView registerClass:[MMInboxAssetGroupCell class] forCellWithReuseIdentifier:@"MMPDFAssetGroupCell"];
 
@@ -56,15 +58,9 @@
 // imported a PDF and we want to show the
 // sidebar immediately w/o any animation
 -(void) switchToPDFView:(MMInboxItem*)pdf{
-    __block NSInteger indexOfPDF = NSIntegerMax;
-    
-    [pdfList enumerateObjectsUsingBlock:^(MMPDFAlbum* obj, NSUInteger idx, BOOL *stop) {
-        if(obj.pdf == pdf){
-            indexOfPDF = idx;
-            stop[0] = YES;
-        }
-    }];
-    if(indexOfPDF < [pdfList count]){
+    __block NSInteger indexOfPDF = [[MMInboxManager sharedInstance] indexOfItem:pdf];
+
+    if(indexOfPDF != NSNotFound){
         currentAlbum = [self albumAtIndex:indexOfPDF];
         photoListScrollView.contentOffset = CGPointZero;
         
@@ -79,17 +75,21 @@
 #pragma mark - MMAbstractSidebarContentView
 
 -(void) reset:(BOOL)animated{
-    [pdfList removeAllObjects];
     NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
+    NSMutableArray* allSeenURLs = [NSMutableArray array];
     for (int i=0; i<count; i++) {
-        MMInboxItem* pdf = [[MMInboxManager sharedInstance] itemAtIndex:i];
-        if([pdf isKindOfClass:[MMPDFInboxItem class]]){
-            [pdfList addObject:[[MMPDFAlbum alloc] initWithPDF:(MMPDFInboxItem*)pdf]];
-        }else if([pdf isKindOfClass:[MMInboxItem class]]){
-            [pdfList addObject:[[MMInboxItem alloc] init]];
-        }
+        MMInboxItem* inboxItem = [[MMInboxManager sharedInstance] itemAtIndex:i];
+        [self albumAtIndex:i];
+        [allSeenURLs addObject:inboxItem.urlOnDisk];
     }
-    [albumListScrollView reloadData];
+    
+    // remove any old objects from the cache
+    NSArray* unseenURLs = [[albumForInboxItem allKeys] arrayByRemovingObjectsInArray:allSeenURLs];
+    [albumForInboxItem removeObjectsForKeys:unseenURLs];
+    if([unseenURLs count]){
+        NSLog(@"why do i need to remove objects from cache? this should've been done when the item was deleted.... %d", (int)[unseenURLs count]);
+    }
+    
     [super reset:animated];
 }
 
@@ -100,12 +100,34 @@
 
 #pragma mark - Row Management
 
--(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
-    return [pdfList indexOfObject:album];
+-(NSInteger) indexForAlbum:(MMDisplayAssetGroup*)album{
+    MMInboxAssetGroup* inboxGroup = (MMInboxAssetGroup*) album;
+    NSInteger count = [[MMInboxManager sharedInstance] itemsInInboxCount];
+    for (NSInteger i=0; i<count; i++) {
+        MMInboxItem* inboxItem = [[MMInboxManager sharedInstance] itemAtIndex:i];
+        if([inboxItem.urlOnDisk isEqual:inboxGroup.inboxItem.urlOnDisk]){
+            return i;
+        }
+    }
+    @throw [NSException exceptionWithName:@"InternalInconsistencyException" reason:@"asking for inbox item that does not exist" userInfo:nil];
 }
 
--(MMPhotoAlbum*) albumAtIndex:(NSInteger)index{
-    return [pdfList objectAtIndex:index];
+-(MMDisplayAssetGroup*) albumAtIndex:(NSInteger)index{
+    MMInboxItem* inboxItem = [[MMInboxManager sharedInstance] itemAtIndex:index];
+    MMInboxAssetGroup* assetGroup = [albumForInboxItem objectForKey:inboxItem.urlOnDisk];
+    if(!assetGroup){
+        // asset is not in cache, create it
+        if([inboxItem isKindOfClass:[MMPDFInboxItem class]]){
+            assetGroup = [[MMPDFAlbum alloc] initWithInboxItem:(MMPDFInboxItem*)inboxItem];
+        }else if([inboxItem isKindOfClass:[MMInboxItem class]]){
+            assetGroup = [[MMInboxImageAlbum alloc] initWithInboxItem:inboxItem];
+        }
+        if(assetGroup){
+            [albumForInboxItem setObject:assetGroup forKey:inboxItem.urlOnDisk];
+        }
+    }
+    
+    return assetGroup;
 }
 
 #pragma mark - MMCachedRowsScrollViewDataSource
@@ -182,15 +204,15 @@
 
 -(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell *)cell{
     NSIndexPath* pathToDelete = [albumListScrollView indexPathForCell:swipeToDeleteCell];
-    MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) swipeToDeleteCell.album;
-    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.pdf.urlOnDisk onComplete:^(BOOL hasErr){
+    MMInboxAssetGroup* pdfAlbum = (MMInboxAssetGroup*) swipeToDeleteCell.album;
+    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.inboxItem.urlOnDisk onComplete:^(BOOL hasErr){
         if(hasErr){
-            NSLog(@"Error deleting PDF: %@", pdfAlbum.pdf.urlOnDisk);
+            NSLog(@"Error deleting PDF: %@", pdfAlbum.inboxItem.urlOnDisk);
             @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf"] userInfo:nil];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [albumListScrollView performBatchUpdates:^{
-                [pdfList removeObject:pdfAlbum];
+                [albumForInboxItem removeObjectForKey:pdfAlbum.inboxItem.urlOnDisk];
                 [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];
             } completion:^(BOOL finished) {
                 swipeToDeleteCell = nil;
@@ -227,15 +249,16 @@
 
 -(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == albumListScrollView){
-        MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:indexPath.row];
-        if(pdfAlbum.pdf.isEncrypted){
+        MMInboxAssetGroup* pdfAlbum = (MMInboxAssetGroup*) [self albumAtIndex:indexPath.row];
+        MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAlbum class]] ? pdfAlbum.inboxItem : nil);
+        if([pdfItem isEncrypted]){
             decryptingIndexPath = indexPath;
             // ask for password
             UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"PDF is Encrypted" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
             alertViewChangeName.delegate = self;
             alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
             [alertViewChangeName show];
-        }else if(pdfAlbum.pdf.pageCount == 1){
+        }else if(pdfAlbum.inboxItem.pageCount == 1){
             
             MMInboxAssetGroupCell* cell = [self visibleCellAtIndexPath:indexPath];
             
@@ -263,7 +286,8 @@
         NSLog(@"password: %@", password);
         
         MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:decryptingIndexPath.row];
-        if([pdfAlbum.pdf attemptToDecrypt:password]){
+        MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAlbum class]] ? pdfAlbum.inboxItem : nil);
+        if([pdfItem attemptToDecrypt:password]){
             NSLog(@"congrats");
             
             if([[albumListScrollView indexPathsForVisibleItems] containsObject:decryptingIndexPath]){

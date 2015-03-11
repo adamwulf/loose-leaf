@@ -6,15 +6,13 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMDisplayAssetGroup.h"
+#import "MMInboxAssetGroup.h"
 #import "MMPDFInboxItem.h"
 
-@interface MMPDFAlbum : MMDisplayAssetGroup
+@interface MMPDFAlbum : MMInboxAssetGroup
 
 -(id) init NS_UNAVAILABLE;
 
--(id) initWithPDF:(MMPDFInboxItem*)pdf;
-
-@property (readonly) MMPDFInboxItem* pdf;
+-(id) initWithInboxItem:(MMPDFInboxItem*)pdf;
 
 @end

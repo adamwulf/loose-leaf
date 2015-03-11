@@ -11,6 +11,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "NSURL+UTI.h"
 #import "MMPDFInboxItem.h"
+#import "MMImageInboxItem.h"
 #import "NSString+UUID.h"
 #import "Constants.h"
 #import "NSFileManager+DirectoryOptimizations.h"
@@ -62,6 +63,16 @@ static dispatch_queue_t fileSystemQueue;
 
 #pragma mark - Public Methods
 
+-(NSURL*) moveURLIntoInbox:(NSURL*)itemURL{
+    NSString* ourInbox = [self pdfInboxFolderPath];
+    NSString* itemName = [[NSString createStringUUID] stringByAppendingPathExtension:[itemURL pathExtension]];
+    ourInbox = [ourInbox stringByAppendingPathComponent:itemName];
+    NSURL* ourInboxURL = [[NSURL alloc] initFileURLWithPath:ourInbox];
+    
+    NSError* err = nil;
+    [[NSFileManager defaultManager] moveItemAtURL:itemURL toURL:ourInboxURL error:&err];
+    return ourInboxURL;
+}
 
 // process the item, and then remove it from disk
 // if appropriate
@@ -69,41 +80,24 @@ static dispatch_queue_t fileSystemQueue;
     NSString* uti = [itemURL universalTypeID];
     
     if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)){
-        UIImage* importedImage = [self imageForURL:itemURL maxDim:600];
-        if(importedImage){
-            MMPDFInboxItem* pdf = [[MMPDFInboxItem alloc] initWithURL:importedImage];
-            @synchronized(self){
-                [contents insertObject:pdf atIndex:0];
-            }
-            [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
-            [self removeInboxItem:itemURL onComplete:nil];
-            return;
+        NSURL* ourInboxURL = [self moveURLIntoInbox:itemURL];
+        MMImageInboxItem* importedImage = [[MMImageInboxItem alloc] initWithURL:ourInboxURL];
+        @synchronized(self){
+            [contents insertObject:importedImage atIndex:0];
         }
+        [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
     }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
         DebugLog(@"PDF!");
-        NSString* ourInbox = [self pdfInboxFolderPath];
-        NSString* pdfName = [[NSString createStringUUID] stringByAppendingPathExtension:[itemURL pathExtension]];
-        ourInbox = [ourInbox stringByAppendingPathComponent:pdfName];
-        NSURL* ourInboxURL = [[NSURL alloc] initFileURLWithPath:ourInbox];
+        NSURL* ourInboxURL = [self moveURLIntoInbox:itemURL];
         
-        NSError* err = nil;
-        [[NSFileManager defaultManager] moveItemAtURL:itemURL toURL:ourInboxURL error:&err];
-        
-        MMPDFInboxItem* pdf = [[MMPDFInboxItem alloc] initWithURL:ourInboxURL];
+        MMPDFInboxItem* importedPDF = [[MMPDFInboxItem alloc] initWithURL:ourInboxURL];
         @synchronized(self){
-            [contents insertObject:pdf atIndex:0];
+            [contents insertObject:importedPDF atIndex:0];
         }
-        [self.delegate didProcessIncomingPDF:pdf fromURL:ourInboxURL fromApp:sourceApplication];
-        
-//        if([pdf pageCount] == 1){
-//            [self removeInboxItem:itemURL];
-//            return;
-//        }
-        return;
+        [self.delegate didProcessIncomingPDF:importedPDF fromURL:ourInboxURL fromApp:sourceApplication];
+    }else{
+        [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
     }
-    
-    [self.delegate failedToProcessIncomingURL:itemURL fromApp:sourceApplication];
-    
 }
 
 // remove the item from disk on our disk queue
@@ -132,65 +126,6 @@ static dispatch_queue_t fileSystemQueue;
     });
 }
 
-#pragma mark - Private Helpers
-
--(UIImage*) imageForURL:(NSURL*)url maxDim:(int)maxDim{
-    
-    if([[url fileExtension] isEqualToString:@"icns"]){
-        CFBooleanRef b = (__bridge CFBooleanRef)([NSNumber numberWithBool:YES]);
-        NSDictionary * sourceDict = [NSDictionary dictionaryWithObjectsAndKeys:(id)kUTTypeAppleICNS, kCGImageSourceTypeIdentifierHint,
-                                     b, kCGImageSourceShouldAllowFloat, nil];
-//        DebugLog(@"url of image: %@", url);
-//        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, (__bridge CFDictionaryRef)(sourceDict));
-        
-//        NSString* type = (__bridge NSString *)(CGImageSourceGetType (imageSource));
-//        DebugLog(@"input type: %p %@", imageSource, type);
-        
-//        CGImageSourceStatus status = CGImageSourceGetStatus (imageSource);
-//        DebugLog(@"status: %d", status);
-        
-//        size_t foo = CGImageSourceGetCount (imageSource);
-//        DebugLog(@"size: %zu", foo);
-        
-        [NSDictionary dictionaryWithDictionary:sourceDict];
-        
-    }
-    
-//    DebugLog(@"url of image: %@", url);
-    CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, nil);
-    
-    CGSize fullScale;
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithBool:NO], (NSString *)kCGImageSourceShouldCache, nil];
-    CFDictionaryRef imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, (__bridge CFDictionaryRef)options);
-    if (imageProperties) {
-        NSNumber *width = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
-        NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
-        fullScale.width = [width floatValue];
-        fullScale.height = [height floatValue];
-//        DebugLog(@"Image dimensions: %@ x %@ px", width, height);
-        CFRelease(imageProperties);
-        maxDim = MIN(MAX(fullScale.width, fullScale.height), maxDim);
-    }
-    
-//    DebugLog(@"found max dimension: %d", maxDim);
-    
-    NSDictionary* d = @{(id)kCGImageSourceShouldAllowFloat: (id)kCFBooleanTrue,
-                        (id)kCGImageSourceCreateThumbnailWithTransform: (id)kCFBooleanTrue,
-                        (id)kCGImageSourceCreateThumbnailFromImageAlways: (id)kCFBooleanTrue,
-                        (id)kCGImageSourceThumbnailMaxPixelSize: @(maxDim)};
-    CGImageRef imref = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (__bridge CFDictionaryRef)d);
-    UIImage* scrapBacking = nil;
-    
-    if(imref){
-        // need to always import images at 1.0x scale
-        scrapBacking = [UIImage imageWithCGImage:imref scale:1.0 orientation:UIImageOrientationUp];
-        CFRelease(imref);
-    }
-    CFRelease(imageSource);
-    
-    return scrapBacking;
-}
-
 
 #pragma mark - Inbox items
 
@@ -206,7 +141,12 @@ static dispatch_queue_t fileSystemQueue;
         
         
         for (NSURL* url in [dir allObjects]) {
-            [contents addObject:[[MMPDFInboxItem alloc] initWithURL:url]];
+            NSString* uti = [url universalTypeID];
+            if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)){
+                [contents addObject:[[MMImageInboxItem alloc] initWithURL:url]];
+            }else if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)){
+                [contents addObject:[[MMPDFInboxItem alloc] initWithURL:url]];
+            }
         }
         [contents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             NSDate* dt1 = nil;
@@ -224,6 +164,10 @@ static dispatch_queue_t fileSystemQueue;
 
 -(MMInboxItem*) itemAtIndex:(NSInteger)idx{
     return [contents objectAtIndex:idx];
+}
+
+-(NSInteger) indexOfItem:(MMInboxItem*)item{
+    return [contents indexOfObject:item];
 }
 
 @end

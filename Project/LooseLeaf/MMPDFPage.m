@@ -23,7 +23,7 @@ static UIImage* lockThumbnail;
     if(self = [super init]){
         pdf = _pdf;
         pageNumber = _pageNum;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfThumbnailGenerated:) name:kPDFThumbnailGenerated object:pdf];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfThumbnailGenerated:) name:kInboxItemThumbnailGenerated object:pdf];
         
         [self generateLockIcon];
     }
@@ -45,7 +45,11 @@ static UIImage* lockThumbnail;
 }
 
 -(CGSize) fullResolutionSize{
-    return [pdf sizeForPage:pageNumber];
+    if([pdf isEncrypted]){
+        return lockThumbnail.size;
+    }else{
+        return [pdf sizeForPage:pageNumber];
+    }
 }
 
 -(NSURL*) fullResolutionURL{

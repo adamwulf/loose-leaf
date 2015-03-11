@@ -118,12 +118,15 @@
 }
 
 -(void) show:(BOOL)animated{
+    BOOL needsReload = !isShowing;
     [self updateEmptyErrorMessage];
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
-    [albumListScrollView reloadData];
-    albumListScrollView.contentOffset = lastAlbumScrollOffset;
+    if(needsReload){
+        [albumListScrollView reloadData];
+        albumListScrollView.contentOffset = lastAlbumScrollOffset;
+    }
 }
 
 -(void) hide:(BOOL)animated{
@@ -148,8 +151,12 @@
 -(void) doneLoadingPhotoAlbums{
     [self updateEmptyErrorMessage];
     if(albumListScrollView.alpha){
-        [albumListScrollView reloadData];
-        photoListScrollView.contentOffset = lastAlbumScrollOffset;
+        [albumListScrollView.visibleCells enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            MMDisplayAssetGroupCell* groupCell = obj;
+            [groupCell loadedPreviewPhotos];
+        }];
+//        [albumListScrollView reloadData];
+//        albumListScrollView.contentOffset = lastAlbumScrollOffset;
     }
     if(photoListScrollView.alpha){
         [photoListScrollView reloadData];

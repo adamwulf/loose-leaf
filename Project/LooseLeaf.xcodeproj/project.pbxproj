@@ -55,6 +55,8 @@
 		662280731AAF570A00DAB609 /* MMInboxAssetGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 662280721AAF570A00DAB609 /* MMInboxAssetGroupCell.m */; };
 		662280771AAF9FFF00DAB609 /* MMInboxListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 662280761AAF9FFF00DAB609 /* MMInboxListLayout.m */; };
 		662370DA1A9E90B200B62F69 /* MMBackgroundedPaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */; };
+		6623C7F01AB0D3A600192F95 /* MMInboxImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6623C7EF1AB0D3A600192F95 /* MMInboxImage.m */; };
+		6623C7F41AB0D65A00192F95 /* MMInboxAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6623C7F31AB0D65A00192F95 /* MMInboxAssetGroup.m */; };
 		66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CAD1A65145100A009BC /* Fabric.framework */; };
 		66277C9F192BC99D003E97C0 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9C192BC99D003E97C0 /* SSKeychain.m */; };
 		66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 66277C9E192BC99D003E97C0 /* SSKeychainQuery.m */; };
@@ -557,6 +559,10 @@
 		662280761AAF9FFF00DAB609 /* MMInboxListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxListLayout.m; sourceTree = "<group>"; };
 		662370D81A9E90B200B62F69 /* MMBackgroundedPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundedPaperView.h; sourceTree = "<group>"; };
 		662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundedPaperView.m; sourceTree = "<group>"; };
+		6623C7EE1AB0D3A600192F95 /* MMInboxImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxImage.h; sourceTree = "<group>"; };
+		6623C7EF1AB0D3A600192F95 /* MMInboxImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxImage.m; sourceTree = "<group>"; };
+		6623C7F21AB0D65A00192F95 /* MMInboxAssetGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInboxAssetGroup.h; sourceTree = "<group>"; };
+		6623C7F31AB0D65A00192F95 /* MMInboxAssetGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInboxAssetGroup.m; sourceTree = "<group>"; };
 		662441E4187BC68700011A54 /* Pomax.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pomax.license; sourceTree = "<group>"; };
 		66244CAD1A65145100A009BC /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = ../Frameworks/Fabric.framework; sourceTree = "<group>"; };
 		66277C9B192BC99D003E97C0 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
@@ -1467,6 +1473,7 @@
 				6610D0891AA8F50B0019C2FB /* MMDisplayAssetGroup.m */,
 				6610D0831AA8F4A20019C2FB /* MMDisplayAsset.h */,
 				6610D0841AA8F4A20019C2FB /* MMDisplayAsset.m */,
+				6623C7F11AB0D64100192F95 /* Inbox Assets */,
 				663326C71AB09B81003915E6 /* InboxImage */,
 				6610D0871AA8F4C20019C2FB /* PDFs */,
 				6610D0861AA8F4B70019C2FB /* Photos */,
@@ -1611,6 +1618,15 @@
 				662280721AAF570A00DAB609 /* MMInboxAssetGroupCell.m */,
 			);
 			name = MMPDFAssetGroupCell;
+			sourceTree = "<group>";
+		};
+		6623C7F11AB0D64100192F95 /* Inbox Assets */ = {
+			isa = PBXGroup;
+			children = (
+				6623C7F21AB0D65A00192F95 /* MMInboxAssetGroup.h */,
+				6623C7F31AB0D65A00192F95 /* MMInboxAssetGroup.m */,
+			);
+			name = "Inbox Assets";
 			sourceTree = "<group>";
 		};
 		66277C9A192BC97E003E97C0 /* SSKeychain */ = {
@@ -1784,6 +1800,8 @@
 			children = (
 				663326C81AB09BA7003915E6 /* MMInboxImageAlbum.h */,
 				663326C91AB09BA7003915E6 /* MMInboxImageAlbum.m */,
+				6623C7EE1AB0D3A600192F95 /* MMInboxImage.h */,
+				6623C7EF1AB0D3A600192F95 /* MMInboxImage.m */,
 			);
 			name = InboxImage;
 			sourceTree = "<group>";
@@ -3474,8 +3492,10 @@
 				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,
 				6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */,
 				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
+				6623C7F41AB0D65A00192F95 /* MMInboxAssetGroup.m in Sources */,
 				6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */,
 				66F968B119C3940400C1F696 /* MMCloudKitNoAccountHelpView.m in Sources */,
+				6623C7F01AB0D3A600192F95 /* MMInboxImage.m in Sources */,
 				66627FAA1A02582F0064FAD3 /* NSInvocation+MPHelpers.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
 				661C4B241A830F740014DB20 /* MMPinterestShareItem.m in Sources */,
