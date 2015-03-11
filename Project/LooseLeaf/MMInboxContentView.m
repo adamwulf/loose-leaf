@@ -217,6 +217,13 @@
 
 #pragma mark - UICollectionViewDelegate
 
+-(MMInboxAssetGroupCell*) visibleCellAtIndexPath:(NSIndexPath*)indexPath{
+    return [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        UICollectionViewCell* cell = evaluatedObject;
+        return [[albumListScrollView indexPathForCell:cell] isEqual:indexPath];
+    }]] firstObject];
+}
+
 -(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == albumListScrollView){
         MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:indexPath.row];
@@ -229,18 +236,20 @@
             [alertViewChangeName show];
         }else if(pdfAlbum.pdf.pageCount == 1){
             
-            MMInboxAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-                UICollectionViewCell* cell = evaluatedObject;
-                return [[albumListScrollView indexPathForCell:cell] isEqual:indexPath];
-            }]] firstObject];
-            
+            MMInboxAssetGroupCell* cell = [self visibleCellAtIndexPath:indexPath];
             
             NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
             [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
                 [self photoWasTapped:result fromView:cell.firstImageView withRotation:0];
             }];
         }else{
-            [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+            MMInboxAssetGroupCell* cell = [self visibleCellAtIndexPath:indexPath];
+            
+            if(cell.squishFactor){
+                [cell resetDeleteAdjustment:YES];
+            }else{
+                [super collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+            }
         }
     }
 }
@@ -259,10 +268,7 @@
             if([[albumListScrollView indexPathsForVisibleItems] containsObject:decryptingIndexPath]){
                 // if the cell is already visible, then animate that cell to non-decrypted
                 // otherwise nothing
-                MMInboxAssetGroupCell* cell = [[albumListScrollView.visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-                    UICollectionViewCell* cell = evaluatedObject;
-                    return [[albumListScrollView indexPathForCell:cell] isEqual:decryptingIndexPath];
-                }]] firstObject];
+                MMInboxAssetGroupCell* cell = [self visibleCellAtIndexPath:decryptingIndexPath];
                 [UIView animateWithDuration:.3 animations:^{
                     cell.album = cell.album; // refresh
                 }];
