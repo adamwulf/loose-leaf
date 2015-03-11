@@ -66,6 +66,11 @@
 		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
 		6630F4CF1AA532EE004F2FDC /* MMAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */; };
 		6630F4D21AA534CF004F2FDC /* MMDisplayAssetGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */; };
+		663326BA1AAFE409003915E6 /* MMAbstractShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326B91AAFE409003915E6 /* MMAbstractShareItem.m */; };
+		663326BC1AAFE819003915E6 /* photos-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 663326BB1AAFE819003915E6 /* photos-icon.png */; };
+		663326BE1AAFE81E003915E6 /* photos-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 663326BD1AAFE81E003915E6 /* photos-icon@2x.png */; };
+		663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 663326BF1AAFE9F9003915E6 /* clipboard-icon.png */; };
+		663326C21AAFE9F9003915E6 /* clipboard-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 663326C01AAFE9F9003915E6 /* clipboard-icon@2x.png */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -542,9 +547,9 @@
 		661EBA56182AF1AD00893274 /* MMScissorTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorTool.m; sourceTree = "<group>"; };
 		66220FC819DFAF1C0039DA46 /* MMScrapCollectionStateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapCollectionStateDelegate.h; sourceTree = "<group>"; };
 		66220FC919DFB4BB0039DA46 /* MMScrapCollectionState+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMScrapCollectionState+Private.h"; sourceTree = "<group>"; };
-		662280741AAF75BC00DAB609 /* AuthConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthConstants.h; sourceTree = "<group>"; };
 		662280711AAF570A00DAB609 /* MMPDFAssetGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFAssetGroupCell.h; sourceTree = "<group>"; };
 		662280721AAF570A00DAB609 /* MMPDFAssetGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAssetGroupCell.m; sourceTree = "<group>"; };
+		662280741AAF75BC00DAB609 /* AuthConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AuthConstants.h; sourceTree = "<group>"; };
 		662280751AAF9FFF00DAB609 /* MMPDFListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFListLayout.h; sourceTree = "<group>"; };
 		662280761AAF9FFF00DAB609 /* MMPDFListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFListLayout.m; sourceTree = "<group>"; };
 		662370D81A9E90B200B62F69 /* MMBackgroundedPaperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundedPaperView.h; sourceTree = "<group>"; };
@@ -574,6 +579,12 @@
 		6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlbumListLayout.m; sourceTree = "<group>"; };
 		6630F4D01AA534CF004F2FDC /* MMDisplayAssetGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetGroupCell.h; sourceTree = "<group>"; };
 		6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDisplayAssetGroupCell.m; sourceTree = "<group>"; };
+		663326B81AAFE409003915E6 /* MMAbstractShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAbstractShareItem.h; sourceTree = "<group>"; };
+		663326B91AAFE409003915E6 /* MMAbstractShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAbstractShareItem.m; sourceTree = "<group>"; };
+		663326BB1AAFE819003915E6 /* photos-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photos-icon.png"; sourceTree = "<group>"; };
+		663326BD1AAFE81E003915E6 /* photos-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photos-icon@2x.png"; sourceTree = "<group>"; };
+		663326BF1AAFE9F9003915E6 /* clipboard-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clipboard-icon.png"; sourceTree = "<group>"; };
+		663326C01AAFE9F9003915E6 /* clipboard-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clipboard-icon@2x.png"; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1860,6 +1871,10 @@
 		6650DD1018F4842E00ADF591 /* Icon Images */ = {
 			isa = PBXGroup;
 			children = (
+				663326BF1AAFE9F9003915E6 /* clipboard-icon.png */,
+				663326C01AAFE9F9003915E6 /* clipboard-icon@2x.png */,
+				663326BB1AAFE819003915E6 /* photos-icon.png */,
+				663326BD1AAFE81E003915E6 /* photos-icon@2x.png */,
 				667EF0C619A54F2100B1A38D /* icloud-share.png */,
 				667EF0C819A54F2500B1A38D /* icloud-share@2x.png */,
 				667C6365199FF25C00E93CD6 /* print@2x.png */,
@@ -2826,9 +2841,11 @@
 			isa = PBXGroup;
 			children = (
 				66524506199573B100C36609 /* MMShareItem.h */,
+				665245051995721C00C36609 /* MMShareItemDelegate.h */,
+				663326B81AAFE409003915E6 /* MMAbstractShareItem.h */,
+				663326B91AAFE409003915E6 /* MMAbstractShareItem.m */,
 				66A7AF1B19A53AF400E0AA29 /* MMCloudKitShareItem.h */,
 				66A7AF1C19A53AF400E0AA29 /* MMCloudKitShareItem.m */,
-				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 				6652450119956DFA00C36609 /* MMEmailShareItem.h */,
 				6652450219956DFA00C36609 /* MMEmailShareItem.m */,
 				66524507199575A900C36609 /* MMTextShareItem.h */,
@@ -3075,6 +3092,7 @@
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
+				663326BE1AAFE81E003915E6 /* photos-icon@2x.png in Resources */,
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
@@ -3088,6 +3106,7 @@
 				66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
+				663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
@@ -3097,6 +3116,7 @@
 				66684B46182DACAE005A27B4 /* DrawKit.license in Resources */,
 				660E9DCB19183032000A392A /* blackblur.png in Resources */,
 				66627FAB1A02582F0064FAD3 /* snapshot_config.json in Resources */,
+				663326BC1AAFE819003915E6 /* photos-icon.png in Resources */,
 				66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */,
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
@@ -3110,6 +3130,7 @@
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6634856519DB41F000B5CF2D /* Crumple.license in Resources */,
+				663326C21AAFE9F9003915E6 /* clipboard-icon@2x.png in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
 				66627F891A02582F0064FAD3 /* MPCloseBtn.png in Resources */,
 				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
@@ -3409,6 +3430,7 @@
 				66627F9C1A02582F0064FAD3 /* MPSurveyQuestion.m in Sources */,
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
+				663326BA1AAFE409003915E6 /* MMAbstractShareItem.m in Sources */,
 				660116F219ABB1A50065C1B4 /* MMCloudKitDeclinedPermissionState.m in Sources */,
 				66277CA0192BC99D003E97C0 /* SSKeychainQuery.m in Sources */,
 				660116E619ABAAFC0065C1B4 /* MMCloudKitBaseState.m in Sources */,
