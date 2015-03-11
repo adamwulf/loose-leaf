@@ -58,7 +58,7 @@
             imgView.bounds = CGRectMake(0, 0, maxDim, maxDim);
 
             CGFloat randRot = RandomPhotoRotation(i);
-            imgView.rotation = randRot;
+            imgView.rotation = visiblePhotoRotation + randRot;
             CGFloat extra = i == 0 ? 0 : RandomMod(i, 9)-4;
             imgView.center = CGPointMake(halfWidth + kBounceWidth + extra, maxDim/2);
             initialX[5-i-1] = imgView.center.x;

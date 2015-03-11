@@ -17,6 +17,7 @@
     CGFloat initRot[5];
     CGFloat rotAdj[5];
     CGFloat adjY[5];
+    CGFloat visiblePhotoRotation;
 }
 
 @property (nonatomic, strong) MMDisplayAssetGroup* album;

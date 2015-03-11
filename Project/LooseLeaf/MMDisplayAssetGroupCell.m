@@ -16,7 +16,6 @@
     MMDeleteButton* deleteButton;
     UILabel* name;
     NSArray* bufferedImageViews;
-    CGFloat visiblePhotoRotation;
 }
 
 @synthesize album;
@@ -66,11 +65,12 @@
     for(int i=0;i<5;i++){
         MMBufferedImageView* imgView = [self previewViewForImage:i];
         imgView.bounds = CGRectMake(0, 0, maxDim, maxDim);
-        imgView.rotation = RandomPhotoRotation(i);
+        CGFloat rot = RandomPhotoRotation(i);
+        imgView.rotation = visiblePhotoRotation + rot;
         imgView.center = CGPointMake(currX + maxDim/2, maxDim/2);
         initialX[5-i-1] = imgView.center.x;
         finalX[5-i-1] = imgView.center.x - (i+1)*stepX/2;
-        initRot[5-i-1] = imgView.rotation;
+        initRot[5-i-1] = rot;
         rotAdj[5-i-1] = RandomPhotoRotation(i+1);
         adjY[5-i-1] = (4 + rand()%4) * (i%2 ? 1 : -1);
         currX += stepX;
@@ -202,7 +202,7 @@
         c.y = self.bounds.size.height/2 + adjY[i]*squishFactor;
         imgView.center = c;
         
-        imgView.rotation = initRot[i] + squishFactor*rotAdj[i];
+        imgView.rotation = visiblePhotoRotation + initRot[i] + squishFactor*rotAdj[i];
     }
 
 }
