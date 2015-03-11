@@ -12,4 +12,6 @@
 
 -(void) updatePhotoRotation:(BOOL)animated;
 
+-(void) setText:(NSString*)text;
+
 @end

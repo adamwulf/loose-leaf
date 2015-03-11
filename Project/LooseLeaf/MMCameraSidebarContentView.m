@@ -109,6 +109,10 @@
     return [[MMCameraListLayout alloc] initForRotation:[self idealRotationForOrientation]];
 }
 
+-(NSString*) messageTextWhenEmpty{
+    return @"Camera roll is empty";
+}
+
 #pragma mark - MMPhotoManagerDelegate
 
 -(void) doneLoadingPhotoAlbums{

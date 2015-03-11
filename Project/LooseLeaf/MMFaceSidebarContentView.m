@@ -33,6 +33,10 @@
     return [MMPhotoManager hasPhotosPermission];
 }
 
+-(NSString*) messageTextWhenEmpty{
+    return @"No Faces to show";
+}
+
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{

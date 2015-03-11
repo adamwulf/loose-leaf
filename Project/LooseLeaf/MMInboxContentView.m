@@ -103,6 +103,10 @@
     return [[MMInboxListLayout alloc] init];
 }
 
+-(NSString*) messageTextWhenEmpty{
+    return @"Import PDFs and Images from other apps";
+}
+
 
 #pragma mark - Row Management
 

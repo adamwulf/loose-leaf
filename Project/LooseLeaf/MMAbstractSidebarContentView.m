@@ -101,11 +101,16 @@
     return YES;
 }
 
+-(NSString*) messageTextWhenEmpty{
+    return @"Nothing to show";
+}
+
 -(void) updateEmptyErrorMessage{
     if(isShowing && ![self collectionView:albumListScrollView numberOfItemsInSection:0] && [self hasPermission]){
         if(!emptyView){
             emptyView = [[MMEmptyCollectionViewCell alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width)];
         }
+        [emptyView setText:[self messageTextWhenEmpty]];
         [self addSubview:emptyView];
         [emptyView updatePhotoRotation:NO];
     }else if(emptyView){

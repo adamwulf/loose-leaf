@@ -33,6 +33,10 @@
     return [MMPhotoManager hasPhotosPermission];
 }
 
+-(NSString*) messageTextWhenEmpty{
+    return @"No Albums to show";
+}
+
 #pragma mark - Row Management
 
 -(NSInteger) indexForAlbum:(MMPhotoAlbum*)album{
