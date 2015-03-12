@@ -203,5 +203,19 @@
     }
 }
 
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTappedDown object:[[event allTouches] anyObject]];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
+    [super touchesEnded:touches withEvent:event];
+}
+
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
+    [super touchesCancelled:touches withEvent:event];
+}
 
 @end
