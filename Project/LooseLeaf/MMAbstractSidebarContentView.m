@@ -216,7 +216,6 @@
 }
 
 -(void) updatePhotoRotation:(BOOL)animated{
-    NSLog(@"updatePhotoRotation: %@", NSStringFromClass([self class]));
     void(^updateVisibleRowsWithRotation)() = ^{
         if(albumListScrollView.alpha){
             [albumListScrollView.visibleCells enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {

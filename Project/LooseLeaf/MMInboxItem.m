@@ -78,10 +78,9 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
     if(!pageThumb){
         @autoreleasepool {
             pageThumb = [self generateImageForPage:pageNumber withMaxDim:maxDim];
-            NSLog(@"generated page %d image: %p", (int) pageNumber, pageThumb);
             BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
             if(!success){
-                NSLog(@"generating thumbnail failed");
+                NSLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
             }
             if(cachedImagePath){
                 [[MMLoadImageCache sharedInstance] updateCacheForPath:cachedImagePath toImage:pageThumb];
@@ -142,7 +141,6 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
                 [pageSizeCache setObject:[NSValue valueWithCGSize:[self sizeForPage:pageNumber]] forKey:@(pageNumber)];
             }
             [[NSNotificationCenter defaultCenter] postNotificationName:kInboxItemThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
-            NSLog(@"notify generated page: %d", (int) pageNumber);
         }
     });
 }
@@ -160,9 +158,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
         [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
         
         if(errorCache){
-            if(errorCache){
-                NSLog(@"delete PDF cache erorr: %@", errorCache);
-            }
+            NSLog(@"delete PDF cache erorr: %@", errorCache);
         }
     });
 

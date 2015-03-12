@@ -291,7 +291,7 @@
 //        }
         
         [importImageSidebar hide:NO onComplete:^(BOOL finished) {
-            [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:600]];
+            [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:kPhotoImportMaxDim]];
             [importImageSidebar refreshPDF];
         }];
         
@@ -322,7 +322,7 @@
                 MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithInboxItem:pdfDoc];
                 NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
                 [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
-                    UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:600];
+                    UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:kPDFImportMaxDim];
                     [self importImageAsNewScrap:pageImage];
                 }];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -589,7 +589,7 @@
     
     
     // max image size in any direction is 300pts
-    CGFloat maxDim = 600;
+    CGFloat maxDim = [photo preferredImportMaxDim];
     
     if(fullScaleSize.width >= fullScaleSize.height && fullScaleSize.width > maxDim){
         fullScaleSize.height = fullScaleSize.height / fullScaleSize.width * maxDim;

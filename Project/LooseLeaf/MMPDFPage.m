@@ -56,6 +56,10 @@ static UIImage* lockThumbnail;
     return [NSURL fileURLWithPath:[pdf pathForPage:pageNumber forMaxDim:kThumbnailMaxDim]];
 }
 
+-(CGFloat) preferredImportMaxDim{
+    return kPDFImportMaxDim;
+}
+
 #pragma mark - Notification
 
 -(void) pdfThumbnailGenerated:(NSNotification*)obj{

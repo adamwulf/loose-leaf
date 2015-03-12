@@ -27,4 +27,8 @@
     @throw kAbstractMethodException;
 }
 
+-(CGFloat) preferredImportMaxDim{
+    return kPhotoImportMaxDim;
+}
+
 @end

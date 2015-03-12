@@ -186,6 +186,8 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 #define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
+#define kPhotoImportMaxDim 600
+#define kPDFImportMaxDim 800
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"

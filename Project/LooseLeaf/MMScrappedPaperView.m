@@ -980,9 +980,6 @@
             thumbnail = scrap.state.activeThumbnailImage;
             if(!thumbnail){
                 thumbnail = [scrap.state oneOffLoadedThumbnailImage];
-                DebugLog(@"loaded thumbnail: %p", thumbnail);
-            }else{
-                DebugLog(@"had thumbnail: %p", thumbnail);
             }
         }
         
@@ -1044,7 +1041,6 @@
 
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
-        NSLog(@"updating thumb for: %@", self.uuid);
         UIImage* thumb = [self synchronouslyLoadInkPreview];
         CGSize thumbSize = [self thumbnailSize];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
@@ -1060,7 +1056,6 @@
         [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
         
         for(MMScrapView* scrap in immutableScrapState.scraps){
-            NSLog(@"drawing scrap: %@", scrap.uuid);
             [self drawScrap:scrap intoContext:context withSize:thumbSize];
         }
         

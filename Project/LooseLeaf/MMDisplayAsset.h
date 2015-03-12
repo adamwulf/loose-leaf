@@ -18,4 +18,6 @@
 
 -(CGSize) fullResolutionSize;
 
+-(CGFloat) preferredImportMaxDim;
+
 @end
