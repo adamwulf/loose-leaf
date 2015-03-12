@@ -23,7 +23,7 @@
 -(void) endPanningObject:(id)obj;
 
 // drawing
--(void) startDrawingAtTouch:(UITouch*)touch;
+-(void) startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately;
 -(void) continueDrawingAtTouch:(UITouch*)touch;
 -(void) endDrawingAtTouch:(UITouch*)touch;
 

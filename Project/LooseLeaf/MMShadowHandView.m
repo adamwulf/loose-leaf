@@ -122,11 +122,11 @@
 
 #pragma mark - Drawing Events
 
--(void) startDrawingAtTouch:(UITouch*)touch{
+-(void) startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately{
     if(!rightHand.isActive){
-        [rightHand startDrawingAtTouch:touch];
+        [rightHand startDrawingAtTouch:touch immediately:immediately];
     }else{
-        [leftHand startDrawingAtTouch:touch];
+        [leftHand startDrawingAtTouch:touch immediately:immediately];
     }
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{

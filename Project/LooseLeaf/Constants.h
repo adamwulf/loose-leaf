@@ -11,6 +11,11 @@
 
 #import "AuthConstants.h"
 
+#define kDeletingInboxItemGesture @"kDeletingInboxItemGesture"
+#define kDeletingInboxItemTapped @"kDeletingInboxItemTapped"
+#define kDeletingInboxItemTappedDown @"kDeletingInboxItemTappedDown"
+
+
 #define kCrashlyticsAPIKey @"9e59cb6d909c971a2db30c84cb9be7f37273a7af"
 
 #define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)

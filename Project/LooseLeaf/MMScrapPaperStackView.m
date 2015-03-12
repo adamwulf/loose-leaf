@@ -38,6 +38,7 @@
 #import "MMPDFAlbum.h"
 #import "MMPDFPage.h"
 #import "MMImageInboxItem.h"
+#import "MMContinuousSwipeGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -194,6 +195,10 @@
 //        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
 //        [testImageView showDebugBorder];
 //        [self addSubview:testImageView];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletingInboxItemGesture:) name:kDeletingInboxItemGesture object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteInboxItemTapped:) name:kDeletingInboxItemTapped object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteInboxItemTappedDown:) name:kDeletingInboxItemTappedDown object:nil];
     }
     return self;
 }
@@ -1681,7 +1686,7 @@ int skipAll = NO;
         }
     }else{
         if(gesture.state == UIGestureRecognizerStateBegan){
-            [silhouette startDrawingAtTouch:[gesture.validTouches firstObject]];
+            [silhouette startDrawingAtTouch:[gesture.validTouches firstObject] immediately:NO];
         }else if(gesture.state == UIGestureRecognizerStateChanged){
             [silhouette continueDrawingAtTouch:[gesture.validTouches firstObject]];
         }else if(gesture.state == UIGestureRecognizerStateEnded ||
@@ -1691,12 +1696,36 @@ int skipAll = NO;
     }
 }
 
+#pragma mark - Deleting Inbox Item
+
+-(void) deletingInboxItemGesture:(NSNotification*) note{
+    MMContinuousSwipeGestureRecognizer* gesture = note.object;
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        [silhouette startDrawingAtTouch:gesture.touch immediately:NO];
+    }else if(gesture.state == UIGestureRecognizerStateChanged){
+        [silhouette continueDrawingAtTouch:gesture.touch];
+    }else if(gesture.state == UIGestureRecognizerStateCancelled ||
+             gesture.state == UIGestureRecognizerStateEnded){
+        [silhouette endDrawingAtTouch:gesture.touch];
+    }
+}
+
+-(void) deleteInboxItemTapped:(NSNotification*) note{
+    [[NSThread mainThread] performBlock:^{
+        [silhouette endDrawingAtTouch:note.object];
+    } afterDelay:.1];
+}
+
+-(void) deleteInboxItemTappedDown:(NSNotification*) note{
+    [silhouette startDrawingAtTouch:note.object immediately:NO];
+}
+
 
 #pragma mark - PolygonToolDelegate
 
 -(void) beginShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
     [super beginShapeWithTouch:touch withTool:tool];
-    [silhouette startDrawingAtTouch:touch];
+    [silhouette startDrawingAtTouch:touch immediately:NO];
 }
 
 -(void) continueShapeWithTouch:(UITouch *)touch withTool:(PolygonTool *)tool{
@@ -2230,7 +2259,7 @@ int skipAll = NO;
     BOOL ret = [super willBeginStrokeWithTouch:touch];
     if(ret){
         if(!scissorButton.selected){
-            [silhouette startDrawingAtTouch:touch.touch];
+            [silhouette startDrawingAtTouch:touch.touch immediately:NO];
         }
     }
     return ret;

@@ -100,6 +100,10 @@
     }
 }
 
+-(UITouch*) touch{
+    return currTouch;
+}
+
 -(void) reset{
     [super reset];
     currTouch = nil;

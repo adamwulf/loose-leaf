@@ -193,6 +193,7 @@
         }];
         // don't let the user swipe and scroll at the same time
         albumListScrollView.scrollEnabled = NO;
+        
     }else if(sender.state == UIGestureRecognizerStateChanged){
         CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
         [swipeToDeleteCell adjustForDelete:initialAdjustment + amount/100.0];
@@ -210,6 +211,7 @@
             NSLog(@"don't delete, wait for tap");
         }
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemGesture object:sender];
 }
 
 #pragma mark - MMDisplayAssetGroupCellDelegate

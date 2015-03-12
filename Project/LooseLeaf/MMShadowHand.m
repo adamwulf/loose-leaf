@@ -234,16 +234,22 @@
 
 #pragma mark - Drawing Events
 
--(void) startDrawingAtTouch:(UITouch*)touch{
+-(void) startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately{
     isDrawing = YES;
     activeTouches = [NSSet setWithObject:touch];
     [self continueDrawingAtTouch:touch];
-    layer.opacity = .5;
+    if(immediately){
+        [self preventCALayerImplicitAnimation:^{
+            layer.opacity = .5;
+        }];
+    }else{
+        layer.opacity = .5;
+    }
     [self continueDrawingAtTouch:touch];
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{
     if(!isDrawing){
-        [self startDrawingAtTouch:touch];
+        [self startDrawingAtTouch:touch immediately:NO];
     }
     [self preventCALayerImplicitAnimation:^{
         layer.path = [pointerFingerHelper pathForTouch:touch].CGPath;

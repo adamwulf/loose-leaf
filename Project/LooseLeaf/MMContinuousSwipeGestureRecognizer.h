@@ -14,5 +14,6 @@
 
 -(CGPoint) distanceSinceBegin;
 
+-(UITouch*) touch;
 
 @end

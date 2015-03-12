@@ -10,6 +10,7 @@
 #import "MMBufferedImageView.h"
 #import "MMRotationManager.h"
 #import "MMDeleteButton.h"
+#import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
 @implementation MMDisplayAssetGroupCell{
@@ -31,7 +32,8 @@
         CGFloat deleteButtonWidth = 80;
         CGRect deleteRect = CGRectMake(self.bounds.size.width - 80 - kBounceWidth, (self.bounds.size.height - deleteButtonWidth)/2, deleteButtonWidth, deleteButtonWidth);
         deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
-        [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [deleteButton addTarget:self action:@selector(deleteButtonTappedDown:forEvent:) forControlEvents:UIControlEventTouchDown];
+        [deleteButton addTarget:self action:@selector(deleteButtonTapped:forEvent:) forControlEvents:UIControlEventTouchUpInside];
         deleteButton.rotation = M_PI/4;
         deleteButton.transform = [deleteButton rotationTransform];
         deleteButton.alpha = 0;
@@ -77,7 +79,16 @@
     }
 }
 
--(void) deleteButtonTapped:(id)sender{
+-(void) deleteButtonTapped:(id)sender forEvent:(UIEvent*)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTappedDown object:[[event touchesForView:sender] anyObject]];
+    [[NSThread mainThread] performBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event touchesForView:sender] anyObject]];
+        [[NSThread mainThread] performBlock:^{
+            [self.delegate deleteButtonWasTappedForCell:self];
+        } afterDelay:.2];
+    } afterDelay:.2];
+}
+-(void) deleteButtonTappedDown:(id)sender forEvent:(UIEvent*)event{
     [self.delegate deleteButtonWasTappedForCell:self];
 }
 
@@ -221,6 +232,22 @@
         imgView.rotation = visiblePhotoRotation + initRot[i] + squishFactor*rotAdj[i];
     }
 
+}
+
+
+-(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTappedDown object:[[event allTouches] anyObject]];
+    [super touchesBegan:touches withEvent:event];
+}
+
+-(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
+    [super touchesEnded:touches withEvent:event];
+}
+
+-(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
+    [super touchesCancelled:touches withEvent:event];
 }
 
 @end
