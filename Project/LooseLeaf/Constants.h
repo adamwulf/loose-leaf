@@ -9,14 +9,7 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
-
-#define FACEBOOK_APP_ID @"YOUR_FACEBOOK_APP_ID"
-
-#ifdef DEBUG
-#define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
-#else
-#define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
-#endif
+#import "AuthConstants.h"
 
 #define kCrashlyticsAPIKey @"9e59cb6d909c971a2db30c84cb9be7f37273a7af"
 
@@ -45,17 +38,16 @@ _Pragma("clang diagnostic pop") \
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
-#define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
-
 #define kAnimationDelay 0.05
+
+// Display Assets
+#define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
+#define kInboxItemThumbnailGenerated @"kInboxItemThumbnailGenerated"
+#define kBounceWidth 10.0
+
 
 // CloudKit Import
 #define kCloudKitMaxVisibleImports 5
-
-// Imgur
-#define kImgurClientID @"84d82da68fd2438"
-#define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
-#define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
 
 // Ruler
 #define kWidthOfRuler 70
@@ -195,11 +187,16 @@ _Pragma("clang diagnostic pop") \
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20
+#define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
+#define kPhotoImportMaxDim 600
+#define kPDFImportMaxDim 800
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
 
 #define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
+
+#define RandomMod(a,b) (^float(NSInteger seed, int mod){srand((unsigned)seed); int output = (rand() % mod); srand((unsigned)time(NULL)); return output;})(a, b)
 
 // cache sizes
 #define kMMLoadImageCacheSize 10

@@ -117,48 +117,6 @@
 }
 
 
--(void) animateLinkTo:(NSString*) linkURL{
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = linkURL;
-    
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
-    imgView.image = [UIImage imageNamed:@"link"];
-    
-    UILabel* labelForLink = [[UILabel alloc] initWithFrame:CGRectZero];
-    labelForLink.alpha = 0;
-    labelForLink.text = @"       link copied to clipboard";
-    labelForLink.font = [UIFont boldSystemFontOfSize:16];
-    labelForLink.textAlignment = NSTextAlignmentCenter;
-    labelForLink.textColor = [UIColor whiteColor];
-    labelForLink.clipsToBounds = YES;
-    labelForLink.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.75];
-    labelForLink.layer.borderColor = [UIColor whiteColor].CGColor;
-    labelForLink.layer.borderWidth = 1.0;
-    labelForLink.layer.cornerRadius = 20;
-    [labelForLink sizeToFit];
-    CGRect winFr = self.button.window.bounds;
-    CGRect fr = labelForLink.frame;
-    fr.size.height = 40;
-    fr.size.width += 40;
-    fr.origin.x = (winFr.size.width - fr.size.width) / 2;
-    fr.origin.y = 40;
-    labelForLink.frame = fr;
-    [labelForLink addSubview:imgView];
-    [self.button.window addSubview:labelForLink];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        labelForLink.alpha = 1;
-    }completion:^(BOOL finished){
-        [[NSThread mainThread] performBlock:^{
-            [UIView animateWithDuration:.3 animations:^{
-                labelForLink.alpha = 0;
-            }completion:^(BOOL finished){
-                [labelForLink removeFromSuperview];
-            }];
-        } afterDelay:2.2];
-    }];
-    
-}
 
 -(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded{
     targetProgress = progress;
@@ -215,7 +173,9 @@
                 [path moveToPoint:start];
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
-                [self animateLinkTo:lastLinkURL];
+                UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                pasteboard.string = lastLinkURL;
+                [self animateCompletionText:@"link copied to clipboard" withImage:[UIImage imageNamed:@"link"]];
             }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable &&
                      reason.code != NSURLErrorNotConnectedToInternet){
                 path = [UIBezierPath bezierPath];

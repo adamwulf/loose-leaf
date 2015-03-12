@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPhotosPermissionCell.h"
 #import "UIView+Animations.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIDevice+PPI.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
 
-@implementation MMPermissionPhotosCollectionViewCell{
+@implementation MMPhotosPermissionCell{
     CAShapeLayer* topArrow;
     UIView* line;
     UIImageView* settingsCamera;

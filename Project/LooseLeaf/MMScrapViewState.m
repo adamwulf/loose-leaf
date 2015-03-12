@@ -290,6 +290,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                             thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
                         }
                         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self]];
+                    }else{
+                        NSLog(@"target was unloaded afterall %@", self.uuid);
                     }
                 }
             }
@@ -314,7 +316,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
-    DebugLog(@"unload thumb for %@", self.uuid);
     @synchronized(thumbnailView){
         if(!targetIsLoadedThumbnail){
             // already unloaded
@@ -322,6 +323,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         }
         targetIsLoadedThumbnail = NO;
         if(activeThumbnailImage){
+            DebugLog(@"unload thumb for %@", self.uuid);
             [activeThumbnailImage cancel];
             activeThumbnailImage = nil;
         }

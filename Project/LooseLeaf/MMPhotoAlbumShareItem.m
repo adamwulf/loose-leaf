@@ -126,6 +126,8 @@
             checkMarkOrXLayer.bounds = button.bounds;
             UIBezierPath* path = [UIBezierPath bezierPath];
             if(targetSuccess){
+                // success
+                [self animateCompletionText:@"page saved to camera roll" withImage:[UIImage imageNamed:@"photos-icon"]];
                 CGPoint start = CGPointMake(drawableFrame.origin.x + (drawableFrame.size.width - 20)/2,drawableFrame.origin.y + (drawableFrame.size.height - 14)/2 + 8);
                 CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
                 CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
@@ -133,6 +135,7 @@
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
             }else{
+                // fail
                 CGFloat size = 14;
                 CGPoint start = CGPointMake(drawableFrame.origin.x + (drawableFrame.size.width - size)/2,drawableFrame.origin.y + (drawableFrame.size.height - size)/2);
                 CGPoint end = CGPointMake(start.x + size, start.y + size);
