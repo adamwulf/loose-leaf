@@ -63,9 +63,8 @@
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
+		662F06D51AB1F09300862E9C /* MMPhotosPermissionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6634855B19DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */; };
-		6634855C19DA2C7D00B5CF2D /* MMTouchDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */; };
 		6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */; };
 		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
 		6630F4CF1AA532EE004F2FDC /* MMAlbumListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4CE1AA532EE004F2FDC /* MMAlbumListLayout.m */; };
@@ -78,6 +77,8 @@
 		663326C61AB09881003915E6 /* MMInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326C51AB09881003915E6 /* MMInboxItem.m */; };
 		663326CA1AB09BA7003915E6 /* MMInboxImageAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326C91AB09BA7003915E6 /* MMInboxImageAlbum.m */; };
 		663326CD1AB09CD9003915E6 /* MMImageInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326CC1AB09CD9003915E6 /* MMImageInboxItem.m */; };
+		6634855B19DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */; };
+		6634855C19DA2C7D00B5CF2D /* MMTouchDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -432,7 +433,6 @@
 		66E2240419D633E6000FCA96 /* ios8-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */; };
 		66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240519D637AD000FCA96 /* ios7-settings-camera.png */; };
 		66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */; };
-		66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */; };
 		66E2240D19D645BD000FCA96 /* ios8-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240C19D645BD000FCA96 /* ios8-settings-photos.png */; };
 		66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */; };
 		66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2241019D6463F000FCA96 /* ios7-settings-photos.png */; };
@@ -589,11 +589,6 @@
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
-		6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
-		6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
-		6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizerDelegate.h; sourceTree = "<group>"; };
-		6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotView.h; sourceTree = "<group>"; };
-		6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotView.m; sourceTree = "<group>"; };
 		6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFAlbum.h; sourceTree = "<group>"; };
 		6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAlbum.m; sourceTree = "<group>"; };
 		6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFPage.h; sourceTree = "<group>"; };
@@ -615,6 +610,11 @@
 		663326CB1AB09CD9003915E6 /* MMImageInboxItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageInboxItem.h; sourceTree = "<group>"; };
 		663326CC1AB09CD9003915E6 /* MMImageInboxItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageInboxItem.m; sourceTree = "<group>"; };
 		663326CE1AB0A636003915E6 /* MMInboxItem+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMInboxItem+Protected.h"; sourceTree = "<group>"; };
+		6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
+		6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
+		6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotView.h; sourceTree = "<group>"; };
+		6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotView.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1801,18 +1801,6 @@
 			name = Trackers;
 			sourceTree = "<group>";
 		};
-		6634855519DA2C5F00B5CF2D /* MMTouchDotView */ = {
-			isa = PBXGroup;
-			children = (
-				6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */,
-				6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */,
-				6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */,
-				6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */,
-				6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */,
-			);
-			name = MMTouchDotView;
-                        sourceTree = "<group>";
-                };
 		6630F4CC1AA532CF004F2FDC /* AlbumsSection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1848,6 +1836,18 @@
 				6623C7EF1AB0D3A600192F95 /* MMInboxImage.m */,
 			);
 			name = InboxImage;
+			sourceTree = "<group>";
+		};
+		6634855519DA2C5F00B5CF2D /* MMTouchDotView */ = {
+			isa = PBXGroup;
+			children = (
+				6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */,
+				6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */,
+				6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */,
+				6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */,
+				6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */,
+			);
+			name = MMTouchDotView;
 			sourceTree = "<group>";
 		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
@@ -3359,6 +3359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				665245671996DAB800C36609 /* AFURLConnectionOperation.m in Sources */,
+				662F06D51AB1F09300862E9C /* MMPhotosPermissionCell.m in Sources */,
 				66A790B9196898A90037F01A /* MMUndoRedoGroupItem.m in Sources */,
 				66EC2FEC19DD06F6008F2BB6 /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
@@ -3485,8 +3486,6 @@
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
 				6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */,
 				66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanShadow.m in Sources */,
-				66E2240B19D63B8B000FCA96 /* MMPermissionPhotosCollectionViewCell.m in Sources */,
-				66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,

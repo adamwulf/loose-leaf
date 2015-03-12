@@ -57,11 +57,11 @@
     if(animated){
         [UIView animateWithDuration:.2 animations:^{
             icon.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-            label.transform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, -80), [self sidebarButtonRotation]), 0, 80);
+            label.transform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, -110), [self sidebarButtonRotation]), 0, 110);
         }];
     }else{
         icon.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        label.transform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, -80), [self sidebarButtonRotation]), 0, 80);
+        label.transform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(0, -110), [self sidebarButtonRotation]), 0, 110);
     }
 }
 
