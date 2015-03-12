@@ -16,7 +16,9 @@
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
 #import "MMInboxListLayout.h"
+#import "MMDisplayAssetCell.h"
 #import "NSArray+Extras.h"
+#import "Constants.h"
 
 @interface MMInboxContentView ()<UIGestureRecognizerDelegate,MMDisplayAssetGroupCellDelegate>
 
@@ -157,7 +159,7 @@
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPDFAssetGroupCell" forIndexPath:indexPath];
         cell.album = [self albumAtIndex:indexPath.row];
     }else{
-        cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+        cell = (MMDisplayAssetCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     }
     
     cell.delegate = self;
@@ -215,22 +217,22 @@
 -(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell *)cell{
     NSIndexPath* pathToDelete = [albumListScrollView indexPathForCell:swipeToDeleteCell];
     MMInboxAssetGroup* pdfAlbum = (MMInboxAssetGroup*) swipeToDeleteCell.album;
-    [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.inboxItem.urlOnDisk onComplete:^(BOOL hasErr){
-        if(hasErr){
-            NSLog(@"Error deleting PDF: %@", pdfAlbum.inboxItem.urlOnDisk);
-            @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf"] userInfo:nil];
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [albumListScrollView performBatchUpdates:^{
-                [albumForInboxItem removeObjectForKey:pdfAlbum.inboxItem.urlOnDisk];
-                [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];
-            } completion:^(BOOL finished) {
-                swipeToDeleteCell = nil;
-                recentDeleteSwipe = nil;
-                [self reset:NO];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [albumListScrollView performBatchUpdates:^{
+            [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.inboxItem.urlOnDisk onComplete:^(BOOL hasErr){
+                if(hasErr){
+                    NSLog(@"Error deleting PDF: %@", pdfAlbum.inboxItem.urlOnDisk);
+                    @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf"] userInfo:nil];
+                }
             }];
-        });
-    }];
+            [albumForInboxItem removeObjectForKey:pdfAlbum.inboxItem.urlOnDisk];
+            [albumListScrollView deleteItemsAtIndexPaths:@[pathToDelete]];
+        } completion:^(BOOL finished) {
+            swipeToDeleteCell = nil;
+            recentDeleteSwipe = nil;
+            [self reset:NO];
+        }];
+    });
 }
 
 #pragma mark - UIGestureRecognizerDelegate

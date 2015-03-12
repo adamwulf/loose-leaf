@@ -34,7 +34,6 @@ static MMInboxManager* _instance = nil;
 
 -(id) init{
     if(self = [super init]){
-        contents = [NSMutableArray array];
         [self loadContents];
     }
     return self;
@@ -102,21 +101,22 @@ static dispatch_queue_t fileSystemQueue;
 
 // remove the item from disk on our disk queue
 - (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)(BOOL err))onComplete{
+    __block MMInboxItem* inboxItemToRemove = nil;
+    [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        MMInboxItem* inboxItem = obj;
+        if([[inboxItem urlOnDisk] isEqual:itemURL]){
+            inboxItemToRemove = inboxItem;
+        }
+    }];
+    [contents removeObject:inboxItemToRemove];
+    NSLog(@"removing inbox item: %@ contents now has %d items", inboxItemToRemove, (int) [contents count]);
     dispatch_async([MMInboxManager fileSystemQueue], ^{
         @autoreleasepool {
             //Clean up the inbox once the file has been processed
-            __block MMInboxItem* inboxItemToRemove = nil;
-            [contents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                MMInboxItem* inboxItem = obj;
-                if([[inboxItem urlOnDisk] isEqual:itemURL]){
-                    inboxItemToRemove = inboxItem;
-                }
-            }];
             BOOL error = NO;
             if(inboxItemToRemove){
                 @synchronized(self){
                     error = [inboxItemToRemove deleteAssets];
-                    [contents removeObject:inboxItemToRemove];
                 }
             }
             if(onComplete){
@@ -131,7 +131,10 @@ static dispatch_queue_t fileSystemQueue;
 
 -(void) loadContents{
     @synchronized(self){
-        [contents removeAllObjects];
+        if(contents){
+            @throw [NSException exceptionWithName:@"InboxManagerException" reason:@"contents cannot load twice" userInfo:nil];
+        }
+        contents = [NSMutableArray array];
         
         NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
         NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
