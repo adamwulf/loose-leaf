@@ -60,7 +60,7 @@
     // noop
 }
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMPhotoGroupEnumerationResultsBlock)enumerationBlock{
+-(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
     NSArray* arr = [photos subarrayWithIndexes:indexSet];
     
     NSMutableArray* allIndexes = [NSMutableArray array];

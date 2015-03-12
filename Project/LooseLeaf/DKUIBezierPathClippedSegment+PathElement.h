@@ -9,6 +9,7 @@
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <ClippingBezier/ClippingBezier.h>
 
 @interface DKUIBezierPathClippedSegment (PathElement)
 

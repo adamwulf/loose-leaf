@@ -21,12 +21,20 @@
 }
 
 -(void) reset:(BOOL)animated{
-    if([MMPhotoManager hasPhotosPermission]){
+    if([self hasPermission]){
         [super reset:animated];
     }else{
         albumListScrollView.alpha = 0;
         photoListScrollView.alpha = 1;
     }
+}
+
+-(BOOL) hasPermission{
+    return [MMPhotoManager hasPhotosPermission];
+}
+
+-(NSString*) messageTextWhenEmpty{
+    return @"No Albums to show";
 }
 
 #pragma mark - Row Management
@@ -47,16 +55,12 @@
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
--(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    return [[[MMPhotoManager sharedInstance] albums] count];
-}
-
--(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super prepareRowForReuse:aRow forScrollView:scrollView];
-}
-
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if(collectionView == albumListScrollView){
+        return [[[MMPhotoManager sharedInstance] albums] count];
+    }else{
+        return [super collectionView:collectionView numberOfItemsInSection:section];
+    }
 }
 
 

@@ -22,6 +22,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 
 @implementation MMAppDelegate{
@@ -54,9 +55,12 @@
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
                                                         [MMAppDelegate userID], kMPID, nil]];
     
-    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [[Crashlytics sharedInstance] setDelegate:self];
+    [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
+    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    [FBAppEvents activateApp];
+    
     [[NSThread mainThread] performBlock:^{
         [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
         [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
@@ -79,12 +83,6 @@
 
     // setup the timer that will help log session duration
     [self setupTimer];
-    
-    NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-    if(url){
-        NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
-        [self importFileFrom:url fromApp:sourceApplication];
-    }
 
     if (launchOptions != nil)
     {
@@ -103,6 +101,14 @@
             [self trackDidCrashFromMemoryForDate:dateOfCrash];
         }
     } afterDelay:5];
+    
+    return YES;
+}
+
+// Handle deeplinking back to app from Pinterest
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    NSLog(@"Opened by handling url: %@", [url absoluteString]);
     
     return YES;
 }

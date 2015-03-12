@@ -9,6 +9,8 @@
 #import "MMShapeBuilderView.h"
 #import <TouchShape/TouchShape.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <ClippingBezier/ClippingBezier.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 
@@ -100,7 +102,7 @@ static MMShapeBuilderView* staticShapeBuilder = nil;
          * that the user drew, and will check to see if it
          * intersects any of the other line segments
          */
-        [dottedPath iteratePathWithBlock:[^(CGPathElement element){
+        [dottedPath iteratePathWithBlock:^(CGPathElement element, NSUInteger idx){
             // track the point from the previous element
             // and look to see if it intersects with the
             // last drawn element.
@@ -125,7 +127,7 @@ static MMShapeBuilderView* staticShapeBuilder = nil;
                 }
             }
             p3 = p4;
-        } copy]];
+        }];
         
         distTravelled = MIN(DistanceBetweenTwoPoints(lastTouchPoint, point), 50);
         if(distTravelled > 2 || ![touches count]){
@@ -217,9 +219,8 @@ static MMShapeBuilderView* staticShapeBuilder = nil;
     for(UIBezierPath* singlePath in pathsFromIntersectingTouches){
         TCShapeController* shapeMaker = [[TCShapeController alloc] init];
         __block CGPoint prevPoint = CGPointZero;
-        __block NSInteger index = 0;
         NSInteger count = [singlePath elementCount];
-        [singlePath iteratePathWithBlock:[^(CGPathElement element){
+        [singlePath iteratePathWithBlock:^(CGPathElement element, NSUInteger index){
             // our path is only made of line-to segments
             if(element.type == kCGPathElementAddLineToPoint){
                 if(index == count - 1){
@@ -234,8 +235,7 @@ static MMShapeBuilderView* staticShapeBuilder = nil;
                 }
             }
             prevPoint = element.points[0];
-            index++;
-        } copy]];
+        }];
         // the shape controller knows about all the points in this subpath,
         // so see if it can recognize a shape
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:kShapeTolerance andContinuity:kShapeContinuity forceOpen:NO];

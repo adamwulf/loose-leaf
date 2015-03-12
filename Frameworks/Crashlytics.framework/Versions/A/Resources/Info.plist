@@ -4,10 +4,10 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Crashlytics</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Crashlytics Framework</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.crashlytics.ios</string>
+	<string>com.twitter.crashlytics.ios</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -15,16 +15,16 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2.5</string>
+	<string>2.2.9+kit</string>
 	<key>CFBundleSupportedPlatforms</key>
 	<array>
 		<string>iPhoneOS</string>
+		<string>iPhoneSimulator</string>
+		<string>MacOSX</string>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>40</string>
-	<key>DTPlatformName</key>
-	<string>iphoneos</string>
-	<key>MinimumOSVersion</key>
-	<string>4.0</string>
+	<string>44</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright 2014 Twitter Inc.</string>
 </dict>
 </plist>

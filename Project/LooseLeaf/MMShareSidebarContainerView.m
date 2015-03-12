@@ -20,6 +20,7 @@
 #import "MMPrintShareItem.h"
 #import "MMOpenInAppShareItem.h"
 #import "MMCopyShareItem.h"
+#import "MMPinterestShareItem.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMShareOptionsView.h"
 #import "MMRotationManager.h"
@@ -45,12 +46,12 @@
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
         CGRect scrollViewBounds = self.bounds;
-        scrollViewBounds.size.width = [sidebarContentView contentBounds].origin.x + [sidebarContentView contentBounds].size.width;
+        scrollViewBounds.size.width = [slidingSidebarView contentBounds].origin.x + [slidingSidebarView contentBounds].size.width;
         sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
-        buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        buttonView = [[UIView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         [sharingContentView addSubview:buttonView];
-        [sidebarContentView addSubview:sharingContentView];
+        [slidingSidebarView addSubview:sharingContentView];
         
         cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
         
@@ -63,6 +64,7 @@
         [shareItems addObject:[[MMTencentWeiboShareItem alloc] init]];
         [shareItems addObject:[[MMTwitterShareItem alloc] init]];
         [shareItems addObject:[[MMFacebookShareItem alloc] init]];
+        [shareItems addObject:[[MMPinterestShareItem alloc] init]];
         [shareItems addObject:[[MMImgurShareItem alloc] init]];
         [shareItems addObject:[[MMPrintShareItem alloc] init]];
         [shareItems addObject:[[MMCopyShareItem alloc] init]];
@@ -85,6 +87,8 @@
     CGRect buttonBounds = buttonView.bounds;
     buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height + kWidthOfSidebarButtonBuffer;
     buttonBounds.size.height = buttonWidth + kWidthOfSidebarButtonBuffer; // includes spacing buffer
+    buttonBounds.origin.x += 2*kWidthOfSidebarButtonBuffer;
+    buttonBounds.size.width -= 2*kWidthOfSidebarButtonBuffer;
     return buttonBounds;
 }
 

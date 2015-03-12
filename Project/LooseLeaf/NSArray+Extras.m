@@ -24,6 +24,14 @@
     return ret;
 }
 
+-(NSArray*) arrayByRemovingObjectsInArray:(NSArray*)arr{
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
+    for(NSObject* obj in arr){
+        [ret removeObject:obj];
+    }
+    return ret;
+}
+
 -(NSArray*) shuffledArray{
     NSMutableArray *temp = [[NSMutableArray alloc] initWithArray:self];
     for(NSUInteger i = [self count]; i > 1; i--) {
