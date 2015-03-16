@@ -58,17 +58,23 @@
 /* Retry button text */
 "BUTTON_RETRY" = "Retry";
 
+/* Not now button text */
+"BUTTON_NOT_NOW" = "Not now";
+
+/* Okay button text */
+"BUTTON_OKAY" = "OK";
+
 /* Large label when we couldn't confirm a user's number */
 "LABEL_UNABLE_TO_CONFIRM_NUMBER" = "Unable to confirm your phone number";
 
 /* Text explaining why we couldn't confirm a user's number */
 "LABEL_UNABLE_TO_CONFIRM_NUMBER_EXPLANATION" = "Sorry, we are having trouble sending you a confirmation code.";
 
-/* Large label displayed when we the phone number is already associated with a Twitter account */
-"LABEL_PLEASE_USE_TWITTER" = "Please sign in with Twitter";
+/* Title for description explaining what the find your friends feature does */
+"LABEL_FIND_YOUR_FRIENDS_TITLE" = "Find your friends";
 
-/* Text explaining why we're asking to sign in with Twitter */
-"LABEL_PLEASE_USE_TWITTER_EXPLANATION" = "Your number is already associated with a Twitter account. Please sign in with Twitter below.";
+/* Text explaining why we're asking to upload the user's address book */
+"LABEL_EXPLAIN_FIND_YOUR_FRIENDS" = "We use Digits by Twitter to find more of your friends who use this app. When you tap Ok, we'll upload your address book to Digits by Twitter so that we can help you find users of %@ that you know or help other users of %@ find you.";
 
 /* Button text for signing in with a Twitter account */
 "BUTTON_SIGN_IN_WITH_TWITTER" = "Sign in with Twitter";
