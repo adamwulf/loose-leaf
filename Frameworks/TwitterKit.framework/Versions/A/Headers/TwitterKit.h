@@ -5,12 +5,14 @@
 //
 
 #if __has_feature(modules)
+@import AddressBook;
 @import Accounts;
 @import CoreData;
 @import Foundation;
 @import Social;
 @import UIKit;
 #else
+#import <AddressBook/AddressBook.h>
 #import <Accounts/Accounts.h>
 #import <CoreData/CoreData.h>
 #import <Foundation/Foundation.h>
@@ -19,6 +21,10 @@
 #endif
 
 #import "Digits.h"
+#import "DGTUser.h"
+#import "DGTContacts.h"
+#import "DGTContactsUploadResult.h"
+#import "DGTErrors.h"
 #import "Twitter.h"
 #import "TWTRAPIClient.h"
 #import "TWTRAPIErrorCode.h"
