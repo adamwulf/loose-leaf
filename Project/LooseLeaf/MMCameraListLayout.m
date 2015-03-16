@@ -30,7 +30,7 @@
 }
 
 -(BOOL) hasPermission{
-    return [MMPhotoManager hasPhotosPermission] || [self hasCameraPermission];
+    return [super hasPermission] || [self hasCameraPermission];
 }
 
 -(CGFloat) photoRowHeight{
@@ -61,12 +61,19 @@
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    CGFloat width = self.collectionView.bounds.size.width;
     
-    if(indexPath.section == 0 && [self hasPermission]){
-        // camera
+    if(indexPath.section == 0 && [self hasCameraPermission]){
+        // show camera
+        CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
         ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
-        ret.center = CGPointMake(width/2, [self cameraRowHeight]/2);
+        ret.center = CGPointMake(self.collectionView.bounds.size.width/2, [self cameraRowHeight]/2);
+        ret.transform = CGAffineTransformIdentity;
+        return ret;
+    }else if(indexPath.section == 0 && ![self hasCameraPermission]){
+        CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
+        // don't have camera permissions
+        ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
+        ret.center = CGPointMake(self.collectionView.bounds.size.width/2 + kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
         ret.transform = CGAffineTransformIdentity;
         return ret;
     }

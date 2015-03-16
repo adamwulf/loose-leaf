@@ -8,6 +8,8 @@
 
 #import "MMAlbumSidebarContentView.h"
 #import "MMPhotoManager.h"
+#import "MMAlbumGroupListLayout.h"
+#import "MMPhotosListLayout.h"
 
 @implementation MMAlbumSidebarContentView
 
@@ -31,6 +33,14 @@
 
 -(BOOL) hasPermission{
     return [MMPhotoManager hasPhotosPermission];
+}
+
+-(UICollectionViewLayout*) albumsLayout{
+    return [[MMAlbumGroupListLayout alloc] init];
+}
+
+-(UICollectionViewLayout*) photosLayout{
+    return [[MMPhotosListLayout alloc] initForRotation:[self idealRotationForOrientation]];
 }
 
 -(NSString*) messageTextWhenEmpty{

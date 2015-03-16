@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMAlbumListLayout.h"
+#import "MMAssetGroupListLayout.h"
 
-@implementation MMAlbumListLayout{
+@implementation MMAssetGroupListLayout{
     NSMutableArray* deleteIndexPaths;
     NSMutableArray* insertIndexPaths;
 }
@@ -21,7 +21,7 @@
 }
 
 -(CGFloat) albumRowHeight{
-    return self.collectionView.bounds.size.width * 2 / 5;
+    return self.collectionView.bounds.size.width * 4 / 7;
 }
 
 -(CGSize)collectionViewContentSize{

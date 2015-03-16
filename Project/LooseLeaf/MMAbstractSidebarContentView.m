@@ -15,8 +15,8 @@
 #import "MMPhotosPermissionCell.h"
 #import "MMEmptyCollectionViewCell.h"
 #import "MMDisplayAssetGroupCell.h"
-#import "MMAlbumListLayout.h"
-#import "MMPhotoAlbumListLayout.h"
+#import "MMAssetGroupListLayout.h"
+#import "MMAssetListLayout.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
@@ -86,11 +86,11 @@
 }
 
 -(UICollectionViewLayout*) albumsLayout{
-    return [[MMAlbumListLayout alloc] init];
+    return [[MMAssetGroupListLayout alloc] init];
 }
 
 -(UICollectionViewLayout*) photosLayout{
-    return [[MMPhotoAlbumListLayout alloc] initForRotation:[self idealRotationForOrientation]];
+    return [[MMAssetListLayout alloc] initForRotation:[self idealRotationForOrientation]];
 }
 
 -(CGFloat) rowHeight{
@@ -183,7 +183,7 @@
         return NO;
     }]];
     if(visibleItems){
-        NSLog(@"update album row: %@", visibleItems);
+//        NSLog(@"update album row: %@", visibleItems);
     }
 }
 
@@ -302,7 +302,7 @@
 -(void) photoWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation{
-    MMPhotoAlbumListLayout* layout = (MMPhotoAlbumListLayout*) photoListScrollView.collectionViewLayout;
+    MMAssetListLayout* layout = (MMAssetListLayout*) photoListScrollView.collectionViewLayout;
     [delegate photoWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
 }
 

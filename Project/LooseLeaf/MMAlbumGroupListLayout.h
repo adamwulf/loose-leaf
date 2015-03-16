@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMAlbumListLayout.h"
+#import "MMAssetGroupListLayout.h"
 
-@interface MMInboxListLayout : MMAlbumListLayout
+@interface MMAlbumGroupListLayout : MMAssetGroupListLayout
 
 @end

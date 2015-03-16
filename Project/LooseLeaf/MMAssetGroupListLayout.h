@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMAlbumListLayout : UICollectionViewLayout
+@interface MMAssetGroupListLayout : UICollectionViewLayout
 
 -(CGFloat) albumRowHeight;
 

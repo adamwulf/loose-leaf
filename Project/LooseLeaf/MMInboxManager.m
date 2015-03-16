@@ -154,8 +154,8 @@ static dispatch_queue_t fileSystemQueue;
         [contents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             NSDate* dt1 = nil;
             NSDate* dt2 = nil;
-            [[obj1 urlOnDisk] getResourceValue:&dt1 forKey:NSURLAddedToDirectoryDateKey error:nil];
-            [[obj2 urlOnDisk] getResourceValue:&dt2 forKey:NSURLAddedToDirectoryDateKey error:nil];
+            [[obj1 urlOnDisk] getResourceValue:&dt1 forKey:kURLAddedToDirectoryKey error:nil];
+            [[obj2 urlOnDisk] getResourceValue:&dt2 forKey:kURLAddedToDirectoryKey error:nil];
             return [dt2 compare:dt1];
         }];
     }

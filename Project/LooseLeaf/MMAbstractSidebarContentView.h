@@ -39,6 +39,8 @@
 
 -(void) updatePhotoRotation:(BOOL)animated;
 
+-(CGFloat) idealRotationForOrientation;
+
 // abstract
 
 -(NSInteger) indexForAlbum:(MMDisplayAssetGroup*)album;

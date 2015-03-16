@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMPhotoAlbumListLayout : UICollectionViewLayout
+@interface MMAssetListLayout : UICollectionViewLayout
 
 -(id) init NS_UNAVAILABLE;
 
@@ -20,5 +20,7 @@
 // protected
 
 -(CGFloat) cameraRowHeight;
+
+-(CGFloat) photoRowHeight;
 
 @end
