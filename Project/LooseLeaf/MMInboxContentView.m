@@ -269,7 +269,7 @@
             // ask for password
             UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"PDF is Encrypted" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
             alertViewChangeName.delegate = self;
-            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            alertViewChangeName.alertViewStyle=UIAlertViewStyleSecureTextInput;
             [alertViewChangeName show];
         }else if(pdfAlbum.inboxItem.pageCount == 1){
             
@@ -314,10 +314,9 @@
         }else{
             UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"Incorrect Password" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
             alertViewChangeName.delegate = self;
-            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            alertViewChangeName.alertViewStyle=UIAlertViewStyleSecureTextInput;
             [alertViewChangeName show];
         }
-        
     }
     decryptingIndexPath = nil;
 }
