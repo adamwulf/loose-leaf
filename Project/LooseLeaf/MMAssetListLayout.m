@@ -34,9 +34,6 @@
 }
 
 -(CGFloat) cameraRowHeight{
-    if(![MMPhotoManager hasPhotosPermission]){
-        return [self photoRowHeight] * [MMPhotosPermissionCell idealPhotoRowHeight] + kCameraMargin;
-    }
     return 0;
 }
 
@@ -44,9 +41,6 @@
     NSInteger numSections = self.collectionView.numberOfSections;
     if(!numSections){
         return CGSizeZero;
-    }
-    if(![MMPhotoManager hasPhotosPermission]){
-        return CGSizeMake(self.collectionView.bounds.size.width, [self cameraRowHeight]);
     }
     NSInteger numberOfPhotos = [self.collectionView numberOfItemsInSection:self.sectionIndexForPhotos];
     return CGSizeMake(self.collectionView.bounds.size.width, ceil(numberOfPhotos/2.0) * [self photoRowHeight]);
@@ -56,14 +50,6 @@
     UICollectionViewLayoutAttributes* ret = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
     CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
-
-    if(![MMPhotoManager hasPhotosPermission]){
-        // don't have photo permissions
-        ret.bounds = CGRectMake(0, 0, width, [self cameraRowHeight]);
-        ret.center = CGPointMake(width/2 + 2*kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer + [self cameraRowHeight]/2);
-        ret.transform = CGAffineTransformIdentity;
-        return ret;
-    }
 
     NSInteger indexOfPhoto = indexPath.row;
 

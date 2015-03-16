@@ -183,7 +183,7 @@
         return NO;
     }]];
     if(visibleItems){
-        NSLog(@"update album row: %@", visibleItems);
+//        NSLog(@"update album row: %@", visibleItems);
     }
 }
 

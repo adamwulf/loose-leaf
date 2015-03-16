@@ -15,7 +15,7 @@
 #import "MMPDFAlbum.h"
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
-#import "MMInboxGroupListLayout.h"
+#import "MMAlbumGroupListLayout.h"
 #import "MMDisplayAssetCell.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
@@ -99,10 +99,6 @@
     
     [albumListScrollView reloadData];
     [super reset:animated];
-}
-
--(UICollectionViewLayout*) albumsLayout{
-    return [[MMInboxGroupListLayout alloc] init];
 }
 
 -(NSString*) messageTextWhenEmpty{

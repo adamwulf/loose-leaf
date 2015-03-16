@@ -8,6 +8,6 @@
 
 #import "MMAssetGroupListLayout.h"
 
-@interface MMInboxGroupListLayout : MMAssetGroupListLayout
+@interface MMAlbumGroupListLayout : MMAssetGroupListLayout
 
 @end

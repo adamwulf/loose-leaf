@@ -21,4 +21,6 @@
 
 -(CGFloat) cameraRowHeight;
 
+-(CGFloat) photoRowHeight;
+
 @end

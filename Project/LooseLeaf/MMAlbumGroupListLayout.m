@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMInboxGroupListLayout.h"
+#import "MMAlbumGroupListLayout.h"
 
-@implementation MMInboxGroupListLayout
+@implementation MMAlbumGroupListLayout
 
 -(CGFloat) albumRowHeight{
-    return self.collectionView.bounds.size.width * 4 / 7;
+    return self.collectionView.bounds.size.width * 2 / 5;
 }
 
 

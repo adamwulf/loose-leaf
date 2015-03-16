@@ -21,7 +21,7 @@
 }
 
 -(CGFloat) albumRowHeight{
-    return self.collectionView.bounds.size.width * 2 / 5;
+    return self.collectionView.bounds.size.width * 4 / 7;
 }
 
 -(CGSize)collectionViewContentSize{
