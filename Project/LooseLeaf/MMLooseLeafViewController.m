@@ -15,7 +15,6 @@
 #import "Mixpanel.h"
 #import "MMMemoryManager.h"
 #import "MMTouchVelocityGestureRecognizer.h"
-#import "TestFlight.h"
 #import "MMDeletePageSidebarController.h"
 #import "MMPhotoManager.h"
 #import "MMCloudKitImportExportView.h"
@@ -29,15 +28,6 @@
 - (id)init{
     if(self = [super init]){
         
-        [NSThread performBlockInBackground:^{
-            [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-            [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-            [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-            [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-            [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-            [TestFlight takeOff:kTestflightAppToken];
-        }];
-
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
