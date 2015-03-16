@@ -117,6 +117,11 @@
 }
 
 
+-(void) animateLinkTo:(NSString*)linkURL{
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = lastLinkURL;
+    [self animateCompletionText:@"Link copied to clipboard" withImage:[UIImage imageNamed:@"link"]];
+}
 
 -(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded{
     targetProgress = progress;
@@ -174,9 +179,7 @@
                 [path moveToPoint:start];
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
-                UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-                pasteboard.string = lastLinkURL;
-                [self animateCompletionText:@"link copied to clipboard" withImage:[UIImage imageNamed:@"link"]];
+                [self animateLinkTo:lastLinkURL];
             }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable &&
                      reason.code != NSURLErrorNotConnectedToInternet){
                 path = [UIBezierPath bezierPath];
