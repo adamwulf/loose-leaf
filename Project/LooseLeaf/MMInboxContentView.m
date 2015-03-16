@@ -166,7 +166,9 @@
     if(collectionView == albumListScrollView){
         [cell resetDeleteAdjustment:NO];
     }
-    [cell updatePhotoRotation];
+    if([cell respondsToSelector:@selector(updatePhotoRotation)]){
+        [cell updatePhotoRotation];
+    }
     return cell;
 }
 
