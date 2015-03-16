@@ -159,13 +159,14 @@
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPDFAssetGroupCell" forIndexPath:indexPath];
         cell.album = [self albumAtIndex:indexPath.row];
     }else{
-        cell = (MMDisplayAssetCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+        cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     }
     
     cell.delegate = self;
     if(collectionView == albumListScrollView){
         [cell resetDeleteAdjustment:NO];
     }
+    [cell updatePhotoRotation];
     return cell;
 }
 
