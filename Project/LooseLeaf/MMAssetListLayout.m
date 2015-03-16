@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPhotoAlbumListLayout.h"
+#import "MMAssetListLayout.h"
 #import "CaptureSessionManager.h"
 #import "MMPhotosPermissionCell.h"
 #import "MMPhotoManager.h"
 #import "Constants.h"
 
-@implementation MMPhotoAlbumListLayout{
+@implementation MMAssetListLayout{
     CGFloat rotation;
 }
 

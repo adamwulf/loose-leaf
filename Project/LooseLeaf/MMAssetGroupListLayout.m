@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMAlbumListLayout.h"
+#import "MMAssetGroupListLayout.h"
 
-@implementation MMAlbumListLayout{
+@implementation MMAssetGroupListLayout{
     NSMutableArray* deleteIndexPaths;
     NSMutableArray* insertIndexPaths;
 }

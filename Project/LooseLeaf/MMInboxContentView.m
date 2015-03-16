@@ -15,7 +15,7 @@
 #import "MMPDFAlbum.h"
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
-#import "MMInboxListLayout.h"
+#import "MMInboxGroupListLayout.h"
 #import "MMDisplayAssetCell.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
@@ -102,7 +102,7 @@
 }
 
 -(UICollectionViewLayout*) albumsLayout{
-    return [[MMInboxListLayout alloc] init];
+    return [[MMInboxGroupListLayout alloc] init];
 }
 
 -(NSString*) messageTextWhenEmpty{
