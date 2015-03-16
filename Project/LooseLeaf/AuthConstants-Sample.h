@@ -17,8 +17,6 @@
 #define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
-#define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
-
 // Imgur
 #define kImgurClientID @"YOUR_IMGUR_CLIENT_ID"
 #define kImgurClientSecret @"YOUR_IMGUR_CLIENT_SECRET"

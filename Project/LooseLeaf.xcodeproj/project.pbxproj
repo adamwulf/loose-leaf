@@ -38,7 +38,6 @@
 		6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88A1964C401003A9575 /* MMUndoRedoBlockItem.m */; };
 		6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */; };
 		6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */; };
-		661507641783338E00B181F3 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6615075E1783338E00B181F3 /* libTestFlight.a */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
 		6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
@@ -524,13 +523,7 @@
 		6612C8911964CDB1003A9575 /* MMEditablePaperView+UndoRedo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMEditablePaperView+UndoRedo.h"; sourceTree = "<group>"; };
 		6614DCC419CBE04100AF5D3D /* NSIndexSet+Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexSet+Map.h"; sourceTree = "<group>"; };
 		6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexSet+Map.m"; sourceTree = "<group>"; };
-		6615075E1783338E00B181F3 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		6615075F1783338E00B181F3 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		661507601783338E00B181F3 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		661507631783338E00B181F3 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 		66150768178333D500B181F3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
-		6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		6616CCD018B6AE9700CAD0F3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		661708E41981B434006A73EF /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
 		661708E51981B434006A73EF /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
@@ -1353,7 +1346,6 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
-				661507641783338E00B181F3 /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1536,21 +1528,6 @@
 				6635BE9F197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m */,
 			);
 			name = Items;
-			sourceTree = "<group>";
-		};
-		6615075D1783338E00B181F3 /* TestFlightSDK */ = {
-			isa = PBXGroup;
-			children = (
-				66150768178333D500B181F3 /* libz.dylib */,
-				6615075E1783338E00B181F3 /* libTestFlight.a */,
-				6615075F1783338E00B181F3 /* README.md */,
-				661507601783338E00B181F3 /* release_notes.md */,
-				6615076A178338AF00B181F3 /* TestFlight+AsyncLogging.h */,
-				6615076B178338AF00B181F3 /* TestFlight+ManualSessions.h */,
-				661507631783338E00B181F3 /* TestFlight.h */,
-			);
-			name = TestFlightSDK;
-			path = External/TestFlightSDK;
 			sourceTree = "<group>";
 		};
 		661708E31981B434006A73EF /* FXBlurView */ = {
@@ -2352,7 +2329,6 @@
 				66CA1A8B185E77F50013505A /* libc++.dylib */,
 				666F099A185E62A80074CE6B /* libstdc++.dylib */,
 				665C592F17BD7697006DECBF /* TouchShape */,
-				6615075D1783338E00B181F3 /* TestFlightSDK */,
 				6695B6E1175008530069E61F /* JotUI */,
 				6695B6E41750086D0069E61F /* JotTouchSDK */,
 				66BD6E981593E9C300D4544C /* CoreText.framework */,
@@ -2675,6 +2651,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66150768178333D500B181F3 /* libz.dylib */,
 				66AFAD7D1A8DE8BB00FD0263 /* PerformanceBezier.framework */,
 				66AFAD7B1A8DE85900FD0263 /* DrawKit-iOS.framework */,
 				6682FEF31A8DB41700187325 /* SimpleCloudKitManager.framework */,
@@ -3746,10 +3723,6 @@
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/External/TestFlightSDK\"",
-				);
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -3779,10 +3752,6 @@
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/External/TestFlightSDK\"",
-				);
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
