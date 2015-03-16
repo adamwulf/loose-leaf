@@ -11,6 +11,8 @@
 
 #import "AuthConstants.h"
 
+#define kURLAddedToDirectoryKey (&NSURLAddedToDirectoryDateKey ? NSURLAddedToDirectoryDateKey : NSURLCreationDateKey)
+
 #define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 #define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
