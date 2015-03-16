@@ -138,7 +138,7 @@ static dispatch_queue_t fileSystemQueue;
         
         NSURL* pdfInboxFolder = [[NSURL alloc] initFileURLWithPath:[self pdfInboxFolderPath]];
         NSDirectoryEnumerator* dir = [[NSFileManager defaultManager] enumeratorAtURL:pdfInboxFolder
-                                                          includingPropertiesForKeys:@[NSURLPathKey,NSURLAddedToDirectoryDateKey]
+                                                          includingPropertiesForKeys:@[NSURLPathKey,kURLAddedToDirectoryKey]
                                                                              options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
                                                                         errorHandler:nil];
         
