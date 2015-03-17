@@ -14,7 +14,6 @@
 @implementation MMPDFPage{
     MMPDFInboxItem* pdf;
     NSInteger pageNumber;
-    UIImage* thumb;
 }
 
 static UIImage* lockThumbnail;
@@ -34,10 +33,7 @@ static UIImage* lockThumbnail;
     if(pdf.isEncrypted){
         return lockThumbnail;
     }
-    if(!thumb) {
-        thumb = [pdf thumbnailForPage:pageNumber];
-    }
-    return thumb;
+    return [pdf thumbnailForPage:pageNumber];
 }
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{

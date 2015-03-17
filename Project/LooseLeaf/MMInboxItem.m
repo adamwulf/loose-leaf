@@ -27,6 +27,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         assetQueue = dispatch_queue_create("com.milestonemade.looseleaf.inboxAssetQueue", DISPATCH_QUEUE_CONCURRENT);
+        dispatch_set_target_queue(assetQueue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0));
         dispatch_queue_set_specific(assetQueue, kInboxAssetQueueIdentifier, (void *)kInboxAssetQueueIdentifier, NULL);
     });
     return assetQueue;
@@ -131,16 +132,18 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 
 -(void) generatePageThumbnailCache{
     dispatch_async([MMInboxItem assetQueue], ^{
-        @synchronized(self){
-            [pageSizeCache removeAllObjects];
-        }
-        NSLog(@"generating page thumbnails: %d",(int) [self pageCount]);
-        for(int pageNumber=0;pageNumber<[self pageCount];pageNumber++){
-            [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
+        @autoreleasepool {
             @synchronized(self){
-                [pageSizeCache setObject:[NSValue valueWithCGSize:[self sizeForPage:pageNumber]] forKey:@(pageNumber)];
+                [pageSizeCache removeAllObjects];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:kInboxItemThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
+            NSLog(@"generating page thumbnails: %d",(int) [self pageCount]);
+            for(int pageNumber=0;pageNumber<[self pageCount];pageNumber++){
+                [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
+                @synchronized(self){
+                    [pageSizeCache setObject:[NSValue valueWithCGSize:[self sizeForPage:pageNumber]] forKey:@(pageNumber)];
+                }
+                [[NSNotificationCenter defaultCenter] postNotificationName:kInboxItemThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
+            }
         }
     });
 }
