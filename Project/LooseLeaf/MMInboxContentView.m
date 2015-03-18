@@ -15,7 +15,7 @@
 #import "MMPDFAlbum.h"
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
-#import "MMInboxListLayout.h"
+#import "MMAlbumGroupListLayout.h"
 #import "MMDisplayAssetCell.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
@@ -101,10 +101,6 @@
     [super reset:animated];
 }
 
--(UICollectionViewLayout*) albumsLayout{
-    return [[MMInboxListLayout alloc] init];
-}
-
 -(NSString*) messageTextWhenEmpty{
     return @"Import PDFs and Images from other apps";
 }
@@ -159,12 +155,15 @@
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPDFAssetGroupCell" forIndexPath:indexPath];
         cell.album = [self albumAtIndex:indexPath.row];
     }else{
-        cell = (MMDisplayAssetCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+        cell = (MMDisplayAssetGroupCell*)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     }
     
     cell.delegate = self;
     if(collectionView == albumListScrollView){
         [cell resetDeleteAdjustment:NO];
+    }
+    if([cell respondsToSelector:@selector(updatePhotoRotation)]){
+        [cell updatePhotoRotation];
     }
     return cell;
 }
@@ -271,7 +270,7 @@
             // ask for password
             UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"PDF is Encrypted" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
             alertViewChangeName.delegate = self;
-            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            alertViewChangeName.alertViewStyle=UIAlertViewStyleSecureTextInput;
             [alertViewChangeName show];
         }else if(pdfAlbum.inboxItem.pageCount == 1){
             
@@ -316,10 +315,9 @@
         }else{
             UIAlertView *alertViewChangeName=[[UIAlertView alloc]initWithTitle:@"Incorrect Password" message:@"Please enter the password to view the PDF:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK",nil];
             alertViewChangeName.delegate = self;
-            alertViewChangeName.alertViewStyle=UIAlertViewStylePlainTextInput;
+            alertViewChangeName.alertViewStyle=UIAlertViewStyleSecureTextInput;
             [alertViewChangeName show];
         }
-        
     }
     decryptingIndexPath = nil;
 }

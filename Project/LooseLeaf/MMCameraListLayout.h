@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMPhotoAlbumListLayout.h"
+#import "MMPhotosListLayout.h"
 
-@interface MMCameraListLayout : MMPhotoAlbumListLayout
+@interface MMCameraListLayout : MMPhotosListLayout
 
 -(id) init NS_UNAVAILABLE;
 

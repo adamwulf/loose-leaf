@@ -127,7 +127,7 @@
             UIBezierPath* path = [UIBezierPath bezierPath];
             if(targetSuccess){
                 // success
-                [self animateCompletionText:@"page saved to camera roll" withImage:[UIImage imageNamed:@"photos-icon"]];
+                [self animateCompletionText:@"Page saved to camera roll" withImage:[UIImage imageNamed:@"photos-icon"]];
                 CGPoint start = CGPointMake(drawableFrame.origin.x + (drawableFrame.size.width - 20)/2,drawableFrame.origin.y + (drawableFrame.size.height - 14)/2 + 8);
                 CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
                 CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);

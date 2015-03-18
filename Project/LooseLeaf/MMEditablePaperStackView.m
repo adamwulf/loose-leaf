@@ -580,7 +580,6 @@ struct SidebarButton{
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
-//    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
@@ -609,7 +608,6 @@ struct SidebarButton{
         [editablePage setEditable:NO];
         [editablePage updateThumbnailVisibility];
     }
-//    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 #pragma mark = Saving and Editing

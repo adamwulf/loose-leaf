@@ -15,8 +15,7 @@
 #define kDeletingInboxItemTapped @"kDeletingInboxItemTapped"
 #define kDeletingInboxItemTappedDown @"kDeletingInboxItemTappedDown"
 
-
-#define kCrashlyticsAPIKey @"9e59cb6d909c971a2db30c84cb9be7f37273a7af"
+#define kURLAddedToDirectoryKey (&NSURLAddedToDirectoryDateKey ? NSURLAddedToDirectoryDateKey : NSURLCreationDateKey)
 
 #define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
@@ -160,7 +159,6 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
 #define kMPEventGestureBug @"Gesture Bug"
-#define kMPSaveFailedNeedsRetry @"Save Failed Will Retry"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
@@ -193,8 +191,8 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 #define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
-#define kPhotoImportMaxDim 600
-#define kPDFImportMaxDim 800
+#define kPhotoImportMaxDim (300 * [[UIScreen mainScreen] scale])
+#define kPDFImportMaxDim (400 * [[UIScreen mainScreen] scale])
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"

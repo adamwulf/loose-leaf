@@ -18,6 +18,7 @@
 #import "MMDisplayAssetCell.h"
 #import "MMCameraListLayout.h"
 #import "UIView+Debug.h"
+#import "MMAlbumGroupListLayout.h"
 #import "Constants.h"
 
 @interface MMAbstractSidebarContentView (Protected)
@@ -101,12 +102,16 @@
     return [MMPhotoManager hasPhotosPermission];
 }
 
--(void) updateEmptyErrorMessage{
-    // noop
+-(UICollectionViewLayout*) albumsLayout{
+    return [[MMAlbumGroupListLayout alloc] init];
 }
 
 -(UICollectionViewLayout*) photosLayout{
     return [[MMCameraListLayout alloc] initForRotation:[self idealRotationForOrientation]];
+}
+
+-(void) updateEmptyErrorMessage{
+    // noop
 }
 
 -(NSString*) messageTextWhenEmpty{
