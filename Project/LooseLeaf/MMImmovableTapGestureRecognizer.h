@@ -19,4 +19,6 @@
  */
 @interface MMImmovableTapGestureRecognizer : UITapGestureRecognizer<UIGestureRecognizerDelegate>
 
+-(NSSet*) touches;
+
 @end

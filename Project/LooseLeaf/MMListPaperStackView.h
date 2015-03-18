@@ -16,6 +16,7 @@
 #import "MMPageCacheManagerDelegate.h"
 #import "MMDeletePageSidebarController.h"
 #import "MMInboxManagerDelegate.h"
+#import "MMShadowHandView.h"
 
 @interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate>{
     //
@@ -56,6 +57,7 @@
 // returns yes if the imported page was handled
 -(BOOL) importAndShowPage:(MMExportablePaperView*)page;
 
+-(MMShadowHandView*) silhouette;
 
 // protected
 

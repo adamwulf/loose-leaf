@@ -7,6 +7,7 @@
 //
 
 #import "MMImmovableTapGestureRecognizer.h"
+#import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
 
@@ -14,6 +15,7 @@
 
 @implementation MMImmovableTapGestureRecognizer{
     NSMutableDictionary* touchLocations;
+    NSMutableSet* allTouches;
 }
 
 #pragma mark - Properties
@@ -23,6 +25,13 @@
         touchLocations = [[NSMutableDictionary alloc] init];
     }
     return touchLocations;
+}
+
+-(NSMutableSet*) touches{
+    if(!allTouches){
+        allTouches = [[NSMutableSet alloc] init];
+    }
+    return allTouches;
 }
 
 
@@ -45,6 +54,8 @@
 #pragma mark - Touch Methods
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self touches];
+    [allTouches unionSet:touches];
     [super touchesBegan:touches withEvent:event];
     for(UITouch* touch in touches){
         [self.touchLocations setObject:[NSValue valueWithCGPoint:[touch locationInView:self.view]]
@@ -75,6 +86,10 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
+    NSSet* endedTouches = [NSSet setWithSet:touches];
+    [[NSThread mainThread] performBlock:^{
+        [allTouches minusSet:endedTouches];
+    } afterDelay:.3];
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
@@ -82,6 +97,18 @@
     for(UITouch* touch in touches){
         [self.touchLocations removeObjectForKey:[NSNumber numberWithInteger:[touch hash]]];
     }
+    NSSet* endedTouches = [NSSet setWithSet:touches];
+    [[NSThread mainThread] performBlock:^{
+        [allTouches minusSet:endedTouches];
+    } afterDelay:.3];
+}
+
+-(void) ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
+    [[NSThread mainThread] performBlock:^{
+        if([allTouches containsObject:touch]){
+            [allTouches removeObject:touch];
+        }
+    } afterDelay:.3];
 }
 
 #pragma mark - UIGestureRecognizer Subclass

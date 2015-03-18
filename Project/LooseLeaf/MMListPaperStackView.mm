@@ -790,19 +790,28 @@
         // first, we should find which page the user tapped
         CGPoint locationOfTap = [_tapGesture locationInView:self];
         
-        MMPaperView* thePageThatWasTapped = nil;
-        for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
-            CGRect frameOfPage = [self frameForListViewForPage:aPage];
-            if(CGRectContainsPoint(frameOfPage, locationOfTap)){
-                thePageThatWasTapped = aPage;
+        UITouch* touch = [tapGesture.touches anyObject];
+        [self.silhouette startDrawingAtTouch:touch immediately:NO];
+        
+        [[NSThread mainThread] performBlock:^{
+            [self.silhouette endDrawingAtTouch:touch];
+
+            MMPaperView* thePageThatWasTapped = nil;
+            for(MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]){
+                CGRect frameOfPage = [self frameForListViewForPage:aPage];
+                if(CGRectContainsPoint(frameOfPage, locationOfTap)){
+                    thePageThatWasTapped = aPage;
+                }
             }
-        }
-        if(!thePageThatWasTapped) return;
+            if(!thePageThatWasTapped) return;
+            
+            
+            [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
+            
+            [self immediatelyAnimateFromListViewToFullScreenView];
         
         
-        [self ensurePageIsAtTopOfVisibleStack:thePageThatWasTapped];
-        
-        [self immediatelyAnimateFromListViewToFullScreenView];
+        } afterDelay:.2];
     }
 }
 
