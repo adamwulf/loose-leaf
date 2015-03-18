@@ -115,6 +115,8 @@ struct SidebarButton{
         [self addSubview:scissorButton];
         buttons[4].button = (__bridge void *)(scissorButton);
         buttons[4].originalRect = scissorButton.frame;
+        
+        scissorButton.hidden = YES;
 
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
@@ -122,10 +124,10 @@ struct SidebarButton{
         buttons[5].button = (__bridge void *)(insertImageButton);
         buttons[5].originalRect = insertImageButton.frame;
 
+        insertImageButton.hidden = YES;
         
         
-        
-        CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5 - 176, kWidthOfSidebarButton, kWidthOfSidebarButton);
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
         handButton.delegate = self;
         [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -133,7 +135,7 @@ struct SidebarButton{
         buttons[6].button = (__bridge void *)(handButton);
         buttons[6].originalRect = handButton.frame;
 
-        CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 6.5 - 176, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -146,7 +148,7 @@ struct SidebarButton{
         
         
         
-        undoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        undoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 60 - 300, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         undoButton.delegate = self;
         [undoButton addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
         undoButton.reverseArrow = YES;
@@ -154,7 +156,7 @@ struct SidebarButton{
         buttons[8].button = (__bridge void *)(undoButton);
         buttons[8].originalRect = CGRectInset(undoButton.frame, -(kWidthOfSidebar - kWidthOfSidebarButton)/2, 0) ;
 
-        redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        redoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 300, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         redoButton.delegate = self;
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:redoButton];
@@ -1042,7 +1044,7 @@ struct SidebarButton{
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
     if([self shouldPrioritizeSidebarButtonsForTaps]){
         for(int i=0;i<10;i++){
-            if(CGRectContainsPoint(buttons[i].originalRect, point)){
+            if(CGRectContainsPoint(buttons[i].originalRect, point) && ![((__bridge UIView*)buttons[i].button) isHidden]){
                 return (__bridge UIView*) buttons[i].button;
             }
         }
