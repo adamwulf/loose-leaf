@@ -11,23 +11,24 @@
 #import "MMFaceSidebarContentView.h"
 #import "MMEventSidebarContentView.h"
 #import "MMCameraSidebarContentView.h"
-#import "MMPDFInboxContentView.h"
+#import "MMInboxContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageViewButton.h"
 #import "MMFaceButton.h"
 #import "MMPalmTreeButton.h"
-#import "MMPDFButton.h"
+#import "MMInboxButton.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIView+Debug.h"
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
     MMAlbumSidebarContentView* albumListContentView;
     MMFaceSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
-    MMPDFInboxContentView* pdfListContentView;
+    MMInboxContentView* inboxListContent;
     
     NSArray* allListContentViews;
     
@@ -35,7 +36,7 @@
     MMImageViewButton* iPhotoAlbumButton;
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
-//    MMPDFButton* pdfInboxButton;
+    MMInboxButton* inboxButton;
 }
 
 @dynamic delegate;
@@ -44,14 +45,14 @@
     self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
         
-        CGRect contentBounds = [sidebarContentView contentBounds];
+        CGRect contentBounds = [slidingSidebarView contentBounds];
         
         [MMPhotoManager sharedInstance].delegate = self;
         
         CGRect buttonBounds = CGRectZero;
         buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
-        buttonBounds.size.width = kWidthOfSidebarButton * 4;
+        buttonBounds.size.width = kWidthOfSidebarButton * 5;
         buttonBounds.origin.x = (contentBounds.size.width - buttonBounds.size.width)/2 + 10;
         
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
@@ -63,32 +64,32 @@
         
         cameraListContentView = [[MMCameraSidebarContentView alloc] initWithFrame:contentBounds];
         cameraListContentView.delegate = self;
-        [sidebarContentView addSubview:cameraListContentView];
+        [slidingSidebarView addSubview:cameraListContentView];
         
         albumListContentView = [[MMAlbumSidebarContentView alloc] initWithFrame:contentBounds];
         albumListContentView.delegate = self;
-        [sidebarContentView addSubview:albumListContentView];
+        [slidingSidebarView addSubview:albumListContentView];
         albumListContentView.hidden = YES;
         
         faceListContentView = [[MMFaceSidebarContentView alloc] initWithFrame:contentBounds];
         faceListContentView.delegate = self;
-        [sidebarContentView addSubview:faceListContentView];
+        [slidingSidebarView addSubview:faceListContentView];
         faceListContentView.hidden = YES;
         
         eventListContentView = [[MMEventSidebarContentView alloc] initWithFrame:contentBounds];
         eventListContentView.delegate = self;
-        [sidebarContentView addSubview:eventListContentView];
+        [slidingSidebarView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
         
-        pdfListContentView = [[MMPDFInboxContentView alloc] initWithFrame:contentBounds];
-        pdfListContentView.delegate = self;
-        [sidebarContentView addSubview:pdfListContentView];
-        pdfListContentView.hidden = YES;
+        inboxListContent = [[MMInboxContentView alloc] initWithFrame:contentBounds];
+        inboxListContent.delegate = self;
+        [slidingSidebarView addSubview:inboxListContent];
+        inboxListContent.hidden = YES;
         
         
         allListContentViews = [NSArray arrayWithObjects:cameraListContentView,
                                albumListContentView, faceListContentView, eventListContentView,
-                               pdfListContentView, nil];
+                               inboxListContent, nil];
         //////////////////////////////////////////
         // buttons
         
@@ -98,7 +99,7 @@
         cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         cameraAlbumButton.shadowInset = -1;
         [cameraAlbumButton addTarget:self action:@selector(cameraButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [sidebarContentView addSubview:cameraAlbumButton];
+        [slidingSidebarView addSubview:cameraAlbumButton];
         
         // albums
         iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -107,7 +108,7 @@
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoAlbumButton.shadowInset = -1;
-        [sidebarContentView addSubview:iPhotoAlbumButton];
+        [slidingSidebarView addSubview:iPhotoAlbumButton];
         
         // faces button
         iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -115,7 +116,7 @@
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoFacesButton.shadowInset = -1;
-        [sidebarContentView addSubview:iPhotoFacesButton];
+        [slidingSidebarView addSubview:iPhotoFacesButton];
         
         // event button
         iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
@@ -123,14 +124,14 @@
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoEventsButton.shadowInset = -1;
-        [sidebarContentView addSubview:iPhotoEventsButton];
+        [slidingSidebarView addSubview:iPhotoEventsButton];
         
-        //        pdfInboxButton = [[MMPDFButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
-        //                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        //        [pdfInboxButton addTarget:self action:@selector(pdfButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        //        pdfInboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-        //        pdfInboxButton.shadowInset = -1;
-        //        [sidebarContentView addSubview:pdfInboxButton];
+        inboxButton = [[MMInboxButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+                                                                                kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        [inboxButton addTarget:self action:@selector(inboxButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        inboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        inboxButton.shadowInset = -1;
+        [slidingSidebarView addSubview:inboxButton];
         
         [self highlightButton:cameraAlbumButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
@@ -158,8 +159,8 @@
     if(!eventListContentView.hidden){
         [eventListContentView show:animated];
     }
-    if(!pdfListContentView.hidden){
-        [pdfListContentView show:animated];
+    if(!inboxListContent.hidden){
+        [inboxListContent show:animated];
     }
     [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
@@ -170,7 +171,7 @@
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
-        [pdfListContentView hide:animated];
+        [inboxListContent hide:animated];
         
         if(onComplete){
             onComplete(finished);
@@ -182,7 +183,7 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(MMPhoto *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
+-(void) photoWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
     [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
 }
 
@@ -200,11 +201,11 @@
 }
 
 -(void) highlightButton:(MMSidebarButton*)button{
-//    pdfInboxButton.selected = NO;
     iPhotoAlbumButton.selected = NO;
     iPhotoEventsButton.selected = NO;
     iPhotoFacesButton.selected = NO;
     cameraAlbumButton.selected = NO;
+    inboxButton.selected = NO;
     button.selected = YES;
 }
 
@@ -228,9 +229,19 @@
     [self highlightButton:button];
 }
 
--(void) pdfButtonTapped:(MMSidebarButton*)button{
-    [self switchToListView:pdfListContentView];
+-(void) inboxButtonTapped:(MMSidebarButton*)button{
+    [self switchToListView:inboxListContent];
     [self highlightButton:button];
+}
+
+-(void) showPDF:(MMInboxItem*)pdf{
+    [self switchToListView:inboxListContent];
+    [inboxListContent switchToPDFView:pdf];
+    [self highlightButton:inboxButton];
+}
+
+-(void) refreshPDF{
+    [inboxListContent reset:NO];
 }
 
 #pragma mark - MMPhotoManagerDelegate
@@ -286,8 +297,8 @@
         [faceListContentView updatePhotoRotation:animated];
     }else if(!eventListContentView.hidden){
         [eventListContentView updatePhotoRotation:animated];
-    }else if(!pdfListContentView.hidden){
-        [pdfListContentView updatePhotoRotation:animated];
+    }else if(!inboxListContent.hidden){
+        [inboxListContent updatePhotoRotation:animated];
     }
     
     void(^animations)() = ^{
@@ -304,8 +315,8 @@
         iPhotoEventsButton.rotation = [self sidebarButtonRotation];
         iPhotoEventsButton.transform = rotationTransform;
         
-//        pdfInboxButton.rotation = [self sidebarButtonRotation];
-//        pdfInboxButton.transform = rotationTransform;
+        inboxButton.rotation = [self sidebarButtonRotation];
+        inboxButton.transform = rotationTransform;
     };
     
     [[NSThread mainThread] performBlock:^{
@@ -326,7 +337,7 @@
         [albumListContentView killMemory];
         [faceListContentView killMemory];
         [eventListContentView killMemory];
-        [pdfListContentView killMemory];
+        [inboxListContent killMemory];
     }
 }
 

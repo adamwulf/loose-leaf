@@ -6,22 +6,27 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSlidingSidebarContainerView.h"
+#import "MMFullScreenSidebarContainingView.h"
 #import "MMImageSidebarContainerViewDelegate.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAbstractSidebarContentView.h"
+#import "MMPDFInboxItem.h"
 
-@interface MMImageSidebarContainerView : MMSlidingSidebarContainerView<MMPhotoManagerDelegate>
+@interface MMImageSidebarContainerView : MMFullScreenSidebarContainingView<MMPhotoManagerDelegate>
 
 @property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
 
--(void) photoWasTapped:(MMPhoto *)asset
+-(void) photoWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation
          fromContainer:(MMAbstractSidebarContentView*)container;
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
+
+-(void) showPDF:(MMInboxItem*)pdf;
+
+-(void) refreshPDF;
 
 @end

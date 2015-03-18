@@ -8,23 +8,9 @@ FOUNDATION_EXPORT NSString * const TWTRTweetsNotLoadedKey;
 
 @class TWTRUser;
 @class TWTRTweet;
-
-/**
- *  Client for consuming the Twitter REST API. Provides methods for common API requests, as well as the ability to create and send custom requests.
- */
-@interface TWTRAPIClient : NSObject
-
-/**
- *  @name Initialization
- */
-
-/**
- *  Designated initializer.
- *
- *  @param consumerKey    The consumer key of the Twitter application.
- *  @param consumerSecret The consumer secret of the Twitter application.
- */
-- (instancetype)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret;
+@class TWTRAuthConfig;
+@class TWTRGuestSession;
+@protocol TWTRAuthSession;
 
 /**
  *  @name Completion Block Types
@@ -64,6 +50,22 @@ typedef void (^TWTRLoadTweetsCompletion)(NSArray *tweets, NSError *error);
 typedef void (^TWTRNetworkCompletion)(NSURLResponse *response, NSData *data, NSError *connectionError);
 
 /**
+ *  Client for consuming the Twitter REST API. Provides methods for common API requests, as well as the ability to create and send custom requests.
+ */
+@interface TWTRAPIClient : NSObject
+
+/**
+ *  @name Initialization
+ */
+
+- (instancetype)init __attribute__((unavailable(("Use one of the other `-init...` methods that allow you to provide signing parameters"))));
+
+/**
+ *  This method is deprecated since TwitterKit v1.4.0. To get an API client, use the one provided by the `Twitter` class.
+ */
+- (instancetype)initWithConsumerKey:(NSString *)consumerKey consumerSecret:(NSString *)consumerSecret __attribute__((deprecated));
+
+/**
  *  @name Making Requests
  */
 
@@ -80,7 +82,7 @@ typedef void (^TWTRNetworkCompletion)(NSURLResponse *response, NSData *data, NSE
 /**
  *  Sends a Twitter request.
  *
- *  @param request    The Twitter user ID of the desired user.
+ *  @param request    The request that will be sent asynchronously.
  *  @param completion Completion block to be called on response. Called on main queue.
  */
 - (void)sendTwitterRequest:(NSURLRequest *)request completion:(TWTRNetworkCompletion)completion;

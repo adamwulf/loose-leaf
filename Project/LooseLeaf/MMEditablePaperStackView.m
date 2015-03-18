@@ -571,7 +571,6 @@
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
-//    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{

@@ -16,7 +16,6 @@
 #import "Mixpanel.h"
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
-#import "TestFlight.h"
 #import "MMPresentationWindow.h"
 #import "UIDevice+PPI.h"
 #import "UIApplication+Version.h"
@@ -61,15 +60,6 @@
     [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
     [FBAppEvents activateApp];
     
-    [[NSThread mainThread] performBlock:^{
-        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-        [TestFlight takeOff:kTestflightAppToken];
-    } afterDelay:3];
-    
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [presentationWindow makeKeyAndVisible];
 
@@ -83,12 +73,6 @@
 
     // setup the timer that will help log session duration
     [self setupTimer];
-    
-    NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-    NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
-    if(url){
-        [self importFileFrom:url fromApp:sourceApplication];
-    }
 
     if (launchOptions != nil)
     {

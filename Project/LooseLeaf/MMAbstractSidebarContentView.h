@@ -8,19 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
-#import "MMCachedRowsScrollViewDataSource.h"
-#import "MMCachedRowsScrollView.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
 #import "MMSinglePhotoCollectionViewCellDelegate.h"
+#import "MMDisplayAssetGroup.h"
 
 #define kTopBottomMargin 20
 
 @class MMImageSidebarContainerView;
 
-@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,MMAlbumRowViewDelegate,MMCachedRowsScrollViewDataSource>{
-    MMPhotoAlbum* currentAlbum;
-    MMCachedRowsScrollView* albumListScrollView;
+@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,UICollectionViewDelegate>{
+    MMDisplayAssetGroup* currentAlbum;
+    UICollectionView* albumListScrollView;
     UICollectionView* photoListScrollView;
     __weak MMImageSidebarContainerView* delegate;
     BOOL isShowing;
@@ -40,12 +39,16 @@
 
 -(void) updatePhotoRotation:(BOOL)animated;
 
+-(CGFloat) idealRotationForOrientation;
+
 // abstract
 
--(NSInteger) indexForAlbum:(MMPhotoAlbum*)album;
+-(NSInteger) indexForAlbum:(MMDisplayAssetGroup*)album;
 
--(MMPhotoAlbum*) albumAtIndex:(NSInteger)index;
+-(MMDisplayAssetGroup*) albumAtIndex:(NSInteger)index;
 
 -(UICollectionViewLayout*) photosLayout;
+
+-(BOOL) hasPermission;
 
 @end

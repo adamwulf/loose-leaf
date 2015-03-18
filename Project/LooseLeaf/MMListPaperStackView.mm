@@ -1704,9 +1704,9 @@
     // we can forget about the original frame locations
 }
 
-#pragma mark - MMInboxManagerDelegate
+#pragma mark - MMInboxManagerDelegate Helper
 
--(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+-(void) transitionFromListToNewBlankPageIfInPageView{
     if(!isShowingPageView){
         // if we're in list mode, then we need
         // to move into page mode with a new blank page
@@ -1743,15 +1743,6 @@
         [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
     }
 }
-
--(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    @throw kAbstractMethodException;
-}
-
--(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    @throw kAbstractMethodException;
-}
-
 
 
 #pragma mark - MMPageCacheManagerDelegate

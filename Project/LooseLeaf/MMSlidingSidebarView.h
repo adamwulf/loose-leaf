@@ -9,15 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "MMSidebarButton.h"
 
-#define kBounceWidth 10.0
-
-@class MMSlidingSidebarContainerView;
+@class MMFullScreenSidebarContainingView;
 
 @interface MMSlidingSidebarView : UIView{
-    __weak MMSlidingSidebarContainerView* delegate;
+    __weak MMFullScreenSidebarContainingView* delegate;
 }
 
-@property (nonatomic, weak) MMSlidingSidebarContainerView* delegate;
+@property (nonatomic, weak) MMFullScreenSidebarContainingView* delegate;
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 

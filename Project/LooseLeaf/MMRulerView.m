@@ -223,16 +223,18 @@ static NSDate* lastRender;
                         addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar], pointAndVector.vector, 10);
                     }
                     if(drawnTickLengthSoFar - unitLength / 2 < lengthOfRuler / 2){
-                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 2], pointAndVector.vector, 7);
-                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 2], pointAndVector.vector, 7);
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 2], pointAndVector.vector, [UIDevice isMetric] ? 5 : 7);
+                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 2], pointAndVector.vector, [UIDevice isMetric] ? 5 : 7);
                     }
-                    if(drawnTickLengthSoFar - unitLength / 4 < lengthOfRuler / 2){
-                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 4], pointAndVector.vector, 5);
-                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 4], pointAndVector.vector, 5);
-                    }
-                    if(drawnTickLengthSoFar - unitLength * 3 / 4 < lengthOfRuler / 2){
-                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength * 3 / 4], pointAndVector.vector, 5);
-                        addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength * 3 / 4], pointAndVector.vector, 5);
+                    if(![UIDevice isMetric]){
+                        if(drawnTickLengthSoFar - unitLength / 4 < lengthOfRuler / 2){
+                            addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength / 4], pointAndVector.vector, 5);
+                            addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength / 4], pointAndVector.vector, 5);
+                        }
+                        if(drawnTickLengthSoFar - unitLength * 3 / 4 < lengthOfRuler / 2){
+                            addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:drawnTickLengthSoFar - unitLength * 3 / 4], pointAndVector.vector, 5);
+                            addTick(ticks, [normal pointFromPoint:pointAndVector.point distance:-drawnTickLengthSoFar + unitLength * 3 / 4], pointAndVector.vector, 5);
+                        }
                     }
                 }
                 drawnTickLengthSoFar += unitLength;
@@ -429,34 +431,36 @@ static NSDate* lastRender;
                 nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 2] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
                 [tickMarks moveToPoint:nextPoint];
-                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:[UIDevice isMetric] ? 5 : 7]];
                 
                 nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 2] normal];
                 nextPoint = [nextVector pointFromPoint:center distance:radius];
                 [tickMarks moveToPoint:nextPoint];
-                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:7]];
+                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:[UIDevice isMetric] ? 5 : 7]];
             }
-            if(drawnLength - unitLength / 4 < arcLength / 2){
-                nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 4] normal];
-                nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [tickMarks moveToPoint:nextPoint];
-                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
-                
-                nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 4] normal];
-                nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [tickMarks moveToPoint:nextPoint];
-                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
-            }
-            if(drawnLength - unitLength * 3 / 4 < arcLength / 2){
-                nextVector = [[midVector rotateBy:rotatedAngle - unitAngle * 3 / 4] normal];
-                nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [tickMarks moveToPoint:nextPoint];
-                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
-                
-                nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle * 3 / 4] normal];
-                nextPoint = [nextVector pointFromPoint:center distance:radius];
-                [tickMarks moveToPoint:nextPoint];
-                [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+            if(![UIDevice isMetric]){
+                if(drawnLength - unitLength / 4 < arcLength / 2){
+                    nextVector = [[midVector rotateBy:rotatedAngle - unitAngle / 4] normal];
+                    nextPoint = [nextVector pointFromPoint:center distance:radius];
+                    [tickMarks moveToPoint:nextPoint];
+                    [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                    
+                    nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle / 4] normal];
+                    nextPoint = [nextVector pointFromPoint:center distance:radius];
+                    [tickMarks moveToPoint:nextPoint];
+                    [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                }
+                if(drawnLength - unitLength * 3 / 4 < arcLength / 2){
+                    nextVector = [[midVector rotateBy:rotatedAngle - unitAngle * 3 / 4] normal];
+                    nextPoint = [nextVector pointFromPoint:center distance:radius];
+                    [tickMarks moveToPoint:nextPoint];
+                    [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                    
+                    nextVector = [[midVector rotateBy:-rotatedAngle + unitAngle * 3 / 4] normal];
+                    nextPoint = [nextVector pointFromPoint:center distance:radius];
+                    [tickMarks moveToPoint:nextPoint];
+                    [tickMarks addLineToPoint:[[nextVector flip] pointFromPoint:nextPoint distance:5]];
+                }
             }
         }while(drawnLength < arcLength / 2 + unitLength);
     }
@@ -532,41 +536,43 @@ static NSDate* lastRender;
                 MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
                 
                 [tickMarks moveToPoint:[trimmed lastPoint]];
-                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:7]];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:[UIDevice isMetric] ? 5 : 7]];
                 
                 CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
                 tickVector = [[tickVector mirrorAround:centerTickVector] flip];
                 
                 [tickMarks moveToPoint:lastPointPrime];
-                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:7]];
+                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:[UIDevice isMetric] ? 5 : 7]];
             }
-            if(lengthOfPath / 2 > drawnLength - unitLength / 4){
-                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 4 withMaximumError:.5];
-                CGFloat startTangent = [trimmed tangentAtEnd];
-                MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
-                
-                [tickMarks moveToPoint:[trimmed lastPoint]];
-                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
-                
-                CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
-                tickVector = [[tickVector mirrorAround:centerTickVector] flip];
-                
-                [tickMarks moveToPoint:lastPointPrime];
-                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
-            }
-            if(lengthOfPath / 2 > drawnLength - unitLength * 3 / 4){
-                UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength * 3 / 4 withMaximumError:.5];
-                CGFloat startTangent = [trimmed tangentAtEnd];
-                MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
-                
-                [tickMarks moveToPoint:[trimmed lastPoint]];
-                [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
-                
-                CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
-                tickVector = [[tickVector mirrorAround:centerTickVector] flip];
-                
-                [tickMarks moveToPoint:lastPointPrime];
-                [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
+            if(![UIDevice isMetric]){
+                if(lengthOfPath / 2 > drawnLength - unitLength / 4){
+                    UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength / 4 withMaximumError:.5];
+                    CGFloat startTangent = [trimmed tangentAtEnd];
+                    MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
+                    
+                    [tickMarks moveToPoint:[trimmed lastPoint]];
+                    [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
+                    
+                    CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
+                    tickVector = [[tickVector mirrorAround:centerTickVector] flip];
+                    
+                    [tickMarks moveToPoint:lastPointPrime];
+                    [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
+                }
+                if(lengthOfPath / 2 > drawnLength - unitLength * 3 / 4){
+                    UIBezierPath* trimmed = [pathFromMidPoint bezierPathByTrimmingToLength:drawnLength - unitLength * 3 / 4 withMaximumError:.5];
+                    CGFloat startTangent = [trimmed tangentAtEnd];
+                    MMVector* tickVector = [[[[MMVector vectorWithAngle:startTangent] perpendicular] normal] flip];
+                    
+                    [tickMarks moveToPoint:[trimmed lastPoint]];
+                    [tickMarks addLineToPoint:[tickVector pointFromPoint:[trimmed lastPoint] distance:5]];
+                    
+                    CGPoint lastPointPrime = [centerTickVector mirrorPoint:[trimmed lastPoint] aroundPoint:center];
+                    tickVector = [[tickVector mirrorAround:centerTickVector] flip];
+                    
+                    [tickMarks moveToPoint:lastPointPrime];
+                    [tickMarks addLineToPoint:[tickVector pointFromPoint:lastPointPrime distance:5]];
+                }
             }
         }while(drawnLength < lengthOfPath / 2 + unitLength);
     }

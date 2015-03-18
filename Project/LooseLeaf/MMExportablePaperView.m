@@ -41,7 +41,6 @@
                     [strongSelf saveToDisk:^(BOOL didSaveEdits){
                         if([self hasEditsToSave]){
                             // save failed, try again
-                            [[Mixpanel sharedInstance] track:kMPSaveFailedNeedsRetry];
                             NSLog(@"====================== kMPSaveFailedNeedsRetry");
                             waitingForSave = YES;
                             [strongSelf retrySaveOrExport];
