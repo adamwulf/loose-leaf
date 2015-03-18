@@ -933,20 +933,21 @@ int skipAll = NO;
 }
 
 -(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
-    if(bezelGesture.subState != UIGestureRecognizerStatePossible &&
-       bezelGesture.subState != UIGestureRecognizerStateFailed){
-        [self forceScrapToScrapContainerDuringGesture];
-        [super isBezelingInLeftWithGesture:bezelGesture];
-    }
-    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
-        [silhouette startBezelingInFromRight:NO withTouches:bezelGesture.touches];
-    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged){
-        [silhouette continueBezelingInFromRight:NO withTouches:bezelGesture.touches];
-    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
-             bezelGesture.subState == UIGestureRecognizerStateCancelled ||
-             bezelGesture.subState == UIGestureRecognizerStateFailed){
-        [silhouette endBezelingInFromRight:NO withTouches:bezelGesture.touches];
-    }
+//    if(bezelGesture.subState != UIGestureRecognizerStatePossible &&
+//       bezelGesture.subState != UIGestureRecognizerStateFailed){
+//        [self forceScrapToScrapContainerDuringGesture];
+//        [super isBezelingInLeftWithGesture:bezelGesture];
+//    }
+//    if(bezelGesture.subState == UIGestureRecognizerStateBegan){
+//        [silhouette startBezelingInFromRight:NO withTouches:bezelGesture.touches];
+//    }else if(bezelGesture.subState == UIGestureRecognizerStateChanged){
+//        [silhouette continueBezelingInFromRight:NO withTouches:bezelGesture.touches];
+//    }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
+//             bezelGesture.subState == UIGestureRecognizerStateCancelled ||
+//             bezelGesture.subState == UIGestureRecognizerStateFailed ||
+//             bezelGesture.state == UIGestureRecognizerStateEnded){
+//        [silhouette endBezelingInFromRight:NO withTouches:bezelGesture.touches];
+//    }
 }
 
 -(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer *)bezelGesture{
@@ -961,7 +962,8 @@ int skipAll = NO;
         [silhouette continueBezelingInFromRight:YES withTouches:bezelGesture.touches];
     }else if(bezelGesture.subState == UIGestureRecognizerStateEnded ||
              bezelGesture.subState == UIGestureRecognizerStateCancelled ||
-             bezelGesture.subState == UIGestureRecognizerStateFailed){
+             bezelGesture.subState == UIGestureRecognizerStateFailed ||
+             bezelGesture.state == UIGestureRecognizerStateEnded){
         [silhouette endBezelingInFromRight:YES withTouches:bezelGesture.touches];
     }
 }

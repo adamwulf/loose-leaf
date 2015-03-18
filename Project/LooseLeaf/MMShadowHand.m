@@ -120,7 +120,7 @@
 
 -(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
     if(isBezeling){
-        if([activeTouches isEqualToSet:[touches asSet]]){
+        if(![touches count] || [activeTouches isEqualToSet:[touches asSet]]){
             activeTouches = nil;
             layer.opacity = 0;
             isBezeling = NO;
