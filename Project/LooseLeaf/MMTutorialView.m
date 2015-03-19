@@ -169,11 +169,11 @@
 
 -(void) loadTutorials{
     NSArray* tutorials = @[@{
-        @"title":@"Draw a Circle",
-        @"video":@"ruler-circle.mov"
+        @"title":@"Draw and Erase",
+        @"video":@"silly-face.mov"
     },@{
-        @"title":@"Clone a Photo",
-        @"video":@"stretch-in-app-alt-2.mov"
+        @"title":@"Move Between Pages",
+        @"video":@"space-navigation.mov"
     },@{
         @"title":@"Draw a Curve",
         @"video":@"ruler-for-curve-2.mov"
