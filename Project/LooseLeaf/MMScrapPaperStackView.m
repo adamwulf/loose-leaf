@@ -1715,7 +1715,7 @@ int skipAll = NO;
 -(void) deleteInboxItemTapped:(NSNotification*) note{
     [[NSThread mainThread] performBlock:^{
         [silhouette endDrawingAtTouch:note.object];
-    } afterDelay:.1];
+    } afterDelay:.25];
 }
 
 -(void) deleteInboxItemTappedDown:(NSNotification*) note{
