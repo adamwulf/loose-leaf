@@ -469,6 +469,7 @@
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FC3BB91ABA631B00F2DE37 /* space-navigation.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */; };
+		66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1326,6 +1327,7 @@
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 		66FC3BB61ABA631B00F2DE37 /* silly-face.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "silly-face.mov"; sourceTree = "<group>"; };
 		66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "space-navigation.mov"; sourceTree = "<group>"; };
+		66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hello.mov; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1643,6 +1645,7 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */,
 				66FC3BB61ABA631B00F2DE37 /* silly-face.mov */,
 				66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */,
 				662809001A9BB97500CA3F9A /* white-arrow.png */,
@@ -3220,6 +3223,7 @@
 				6652452F1996D1E500C36609 /* imgur@2x.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
+				66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */,
 				6672EFEA19C3A71E0076009F /* CloudKitLookUp@2x.png in Resources */,
 				665245141995844D00C36609 /* twitterLarge.png in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,

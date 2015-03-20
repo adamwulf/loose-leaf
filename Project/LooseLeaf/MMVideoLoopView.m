@@ -16,6 +16,11 @@
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
+    id playerTimer;
+    
+    
+    
+    UIView* durationBar;
 }
 
 -(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title{
@@ -49,8 +54,17 @@
         [self addSubview:titleLabel];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        
+        durationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 40)];
+        durationBar.backgroundColor = [UIColor blueColor];
+        [self addSubview:durationBar];
     }
     return self;
+}
+
+-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
+    
 }
 
 -(void) didBecomeActive{
@@ -77,6 +91,19 @@
             avPlayerLayer.frame = self.layer.bounds;
             [videoHolder.layer addSublayer: avPlayerLayer];
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+            
+            CGFloat maxWidth = self.bounds.size.width;
+            __weak UIView* weakDurationBar = durationBar;
+            __weak AVPlayer* weakPlayer = avPlayer;
+            playerTimer = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
+                                                 queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+                                                     CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
+                                                     CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
+                                                     CGRect fr = weakDurationBar.frame;
+                                                     CGFloat percentDur = MAX(0, (currTime / duration));
+                                                     fr.size.width = maxWidth * percentDur;
+                                                     weakDurationBar.frame = fr;
+                                                 }];
         }
         [avPlayer play];
     }
@@ -93,6 +120,7 @@
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
+        [playerTimer removeTimeObserver:playerTimer];
         avPlayer = nil;
     }
 }

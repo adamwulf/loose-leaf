@@ -170,7 +170,7 @@
 -(void) loadTutorials{
     NSArray* tutorials = @[@{
         @"title":@"Draw and Erase",
-        @"video":@"silly-face.mov"
+        @"video":@"hello.mov"
     },@{
         @"title":@"Move Between Pages",
         @"video":@"space-navigation.mov"
