@@ -8,6 +8,7 @@
 
 #import "MMVideoLoopView.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIColor+Shadow.h"
 #import <AVFoundation/AVFoundation.h>
 
 @implementation MMVideoLoopView{
@@ -57,7 +58,7 @@
         
         
         durationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 40)];
-        durationBar.backgroundColor = [UIColor blueColor];
+        durationBar.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
         [self addSubview:durationBar];
     }
     return self;
