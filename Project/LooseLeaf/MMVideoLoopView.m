@@ -17,7 +17,8 @@
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
-    id playerTimer;
+    id rateObserver;
+    id timeObserver;
     
     
     
@@ -93,11 +94,20 @@
             [videoHolder.layer addSublayer: avPlayerLayer];
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
             
+            
+            // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(itemDidFinishPlaying:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:avPlayer.currentItem];
+
+            
             CGFloat maxWidth = self.bounds.size.width;
             __weak UIView* weakDurationBar = durationBar;
             __weak AVPlayer* weakPlayer = avPlayer;
-            playerTimer = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
-                                                 queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+            rateObserver = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
+                                                                  queue:dispatch_get_main_queue()
+                                                             usingBlock:^(CMTime time) {
                                                      CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
                                                      CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
                                                      CGRect fr = weakDurationBar.frame;
@@ -108,6 +118,10 @@
         }
         [avPlayer play];
     }
+}
+
+-(void) itemDidFinishPlaying:(NSNotification*) note{
+    NSLog(@"done playing!");
 }
 
 -(void) pauseAnimating{
@@ -121,8 +135,9 @@
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
-        [playerTimer removeTimeObserver:playerTimer];
+        [avPlayer removeTimeObserver:rateObserver];
         avPlayer = nil;
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
 }
 
