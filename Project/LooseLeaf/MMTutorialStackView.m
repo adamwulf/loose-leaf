@@ -32,22 +32,30 @@
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [self startTutorial];
         }
+        
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
+        
     }
     return self;
 }
 
-#pragma mark - Restart Tutorial
+
+#pragma mark - Private Helpers
 
 -(BOOL) isShowingTutorial{
-    return tutorialView != nil;
+    return tutorialView != nil || tutorialView.alpha;
 }
 
--(void) startTutorial{
+#pragma mark - Tutorial Notifications
+
+-(void) tutorialShouldOpen:(NSNotification*)note{
     if([self isShowingTutorial]){
+        // tutorial is already showing, just return
         return;
     }
-    [[MMTutorialManager sharedInstance] startWatchingTutorial];
-    
     backdrop = [[UIView alloc] initWithFrame:self.bounds];
     backdrop.backgroundColor = [UIColor whiteColor];
     backdrop.alpha = 0;
@@ -64,19 +72,11 @@
     }];
 }
 
-#pragma mark - MMTutorialViewDelegate
-
--(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    NSLog(@"user is watching %d", (int) stepNum);
-    
-    
-}
-
--(void) didFinishTutorial{
-    if(![[MMTutorialManager sharedInstance] isWatchingTutorial]){
+-(void) tutorialShouldClose:(NSNotification*)note{
+    if(![self isShowingTutorial]){
+        // tutorial is already hidden, just return
         return;
     }
-    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 0;
         tutorialView.alpha = 0;
@@ -87,6 +87,17 @@
         tutorialView = nil;
         [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
     }];
+}
+
+
+#pragma mark - MMTutorialViewDelegate
+
+-(void) userIsViewingTutorialStep:(NSInteger)stepNum{
+    NSLog(@"user is watching %d", (int) stepNum);
+}
+
+-(void) didFinishTutorial{
+    [self tutorialShouldClose:nil];
 }
 
 @end

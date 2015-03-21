@@ -51,6 +51,7 @@ static MMTutorialManager* _instance = nil;
 
 -(void) startWatchingTutorial{
     [stopwatch start];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStartedNotification object:self];
 }
 
 -(void) pauseWatchingTutorial{
@@ -63,7 +64,7 @@ static MMTutorialManager* _instance = nil;
     [self pauseWatchingTutorial];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasFinishedTutorial];
     [[[Mixpanel sharedInstance] people] set:kMPHasFinishedTutorial to:@(YES)];
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialClosedNotification object:self];
 }
 
 

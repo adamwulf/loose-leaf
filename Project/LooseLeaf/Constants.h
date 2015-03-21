@@ -40,6 +40,11 @@ _Pragma("clang diagnostic pop") \
 
 #define kAnimationDelay 0.05
 
+// Tutorial Notifications
+#define kTutorialStartedNotification @"kTutorialStartedNotification"
+#define kTutorialClosedNotification @"kTutorialClosedNotification"
+
+
 // Display Assets
 #define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
 #define kInboxItemThumbnailGenerated @"kInboxItemThumbnailGenerated"
