@@ -10,22 +10,16 @@
 #import "MMTutorialView.h"
 #import "MMStopWatch.h"
 #import "Mixpanel.h"
+#import "MMTutorialManager.h"
 
 @implementation MMTutorialStackView{
     UIView* backdrop;
     MMTutorialView* tutorialView;
     MMTextButton* helpButton;
-    MMStopWatch* stopwatch;
 }
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        
-        BOOL hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
-        CGFloat timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
-
-        stopwatch = [[MMStopWatch alloc] initWithDuration:timeSpentInTutorial];
-
         helpButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont fontWithName:@"AvenirNext-Regular" size:24] andLetter:@"?" andXOffset:0 andYOffset:0];
         helpButton.inverted = YES;
         helpButton.delegate = self;
@@ -35,25 +29,12 @@
         buttons[numberOfButtons].originalRect = helpButton.frame;
         numberOfButtons++;
         
-        if(!hasFinishedTutorial){
+        if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [self startTutorial];
         }
-
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return self;
 }
-
-#pragma mark - Notifications
-
--(void) didEnterBackground{
-    [self stopTheWatch];
-}
-
--(void) dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 
 #pragma mark - Restart Tutorial
 
@@ -65,7 +46,8 @@
     if([self isShowingTutorial]){
         return;
     }
-    [stopwatch start];
+    [[MMTutorialManager sharedInstance] startWatchingTutorial];
+    
     backdrop = [[UIView alloc] initWithFrame:self.bounds];
     backdrop.backgroundColor = [UIColor whiteColor];
     backdrop.alpha = 0;
@@ -90,17 +72,11 @@
     
 }
 
--(void) stopTheWatch{
-    CGFloat timeSpentInTutorial = [stopwatch stop];
-    [[[Mixpanel sharedInstance] people] set:kMPDurationWatchingTutorial to:@(timeSpentInTutorial)];
-    [[NSUserDefaults standardUserDefaults] setFloat:timeSpentInTutorial forKey:kMPDurationWatchingTutorial];
-}
-
 -(void) didFinishTutorial{
-    if(![stopwatch isRunning]){
+    if(![[MMTutorialManager sharedInstance] isWatchingTutorial]){
         return;
     }
-    [self stopTheWatch];
+    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 0;
         tutorialView.alpha = 0;
@@ -111,9 +87,6 @@
         tutorialView = nil;
         [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
     }];
-    
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasFinishedTutorial];
-    [[[Mixpanel sharedInstance] people] set:kMPHasFinishedTutorial to:@(YES)];
 }
 
 @end

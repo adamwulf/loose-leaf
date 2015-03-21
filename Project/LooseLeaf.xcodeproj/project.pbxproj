@@ -411,6 +411,7 @@
 		66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D4FE6818DCA6950010CCBF /* Crashlytics.framework */; };
 		66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D6E2371AB74C0D00510CA3 /* MMPhotosListLayout.m */; };
 		66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */; };
+		66DA827F1ABE18CD00E3314A /* MMTutorialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DA827E1ABE18CD00E3314A /* MMTutorialManager.m */; };
 		66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8A1581BCEF00B4918C /* UIKit.framework */; };
 		66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8C1581BCEF00B4918C /* Foundation.framework */; };
 		66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */; };
@@ -1228,6 +1229,8 @@
 		66D6E2371AB74C0D00510CA3 /* MMPhotosListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPhotosListLayout.m; sourceTree = "<group>"; };
 		66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDrawingTouchGestureRecognizer.h; sourceTree = "<group>"; };
 		66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDrawingTouchGestureRecognizer.m; sourceTree = "<group>"; };
+		66DA827D1ABE18CD00E3314A /* MMTutorialManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialManager.h; sourceTree = "<group>"; };
+		66DA827E1ABE18CD00E3314A /* MMTutorialManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialManager.m; sourceTree = "<group>"; };
 		66DCFB861581BCEF00B4918C /* LooseLeaf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LooseLeaf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCFB8A1581BCEF00B4918C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		66DCFB8C1581BCEF00B4918C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -2270,6 +2273,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				66DA827C1ABE18BE00E3314A /* Tutorial Manager */,
 				6610D0821AA8F4920019C2FB /* Display Asset */,
 				66EC7B7219ABD06100406D97 /* CloudKit Manager */,
 				665245771996EA5100C36609 /* ReachabilityManager */,
@@ -2674,6 +2678,15 @@
 				66CE11FF17D2772400882275 /* MMScrapBorderView.m */,
 			);
 			name = "Scrap Bubble";
+			sourceTree = "<group>";
+		};
+		66DA827C1ABE18BE00E3314A /* Tutorial Manager */ = {
+			isa = PBXGroup;
+			children = (
+				66DA827D1ABE18CD00E3314A /* MMTutorialManager.h */,
+				66DA827E1ABE18CD00E3314A /* MMTutorialManager.m */,
+			);
+			name = "Tutorial Manager";
 			sourceTree = "<group>";
 		};
 		66DCFB7B1581BCED00B4918C = {
@@ -3338,6 +3351,7 @@
 				667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */,
+				66DA827F1ABE18CD00E3314A /* MMTutorialManager.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
 				6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */,
 				667AE6AB19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m in Sources */,
