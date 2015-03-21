@@ -23,21 +23,18 @@
         helpButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont fontWithName:@"AvenirNext-Regular" size:24] andLetter:@"?" andXOffset:0 andYOffset:0];
         helpButton.inverted = YES;
         helpButton.delegate = self;
-        [helpButton addTarget:self action:@selector(startTutorial) forControlEvents:UIControlEventTouchUpInside];
+        [helpButton addTarget:[MMTutorialManager sharedInstance] action:@selector(startWatchingTutorial) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:helpButton];
         buttons[numberOfButtons].button = (__bridge void *)(helpButton);
         buttons[numberOfButtons].originalRect = helpButton.frame;
         numberOfButtons++;
         
-        if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
-            [self startTutorial];
-        }
-        
-        
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
         
+        if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
+            [[MMTutorialManager sharedInstance] startWatchingTutorial];
+        }
     }
     return self;
 }

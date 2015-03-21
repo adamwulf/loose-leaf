@@ -10,25 +10,22 @@
 #import "NSThread+BlockAdditions.h"
 #import "UIColor+Shadow.h"
 #import <AVFoundation/AVFoundation.h>
+#import "MMTutorialManager.h"
 
 @implementation MMVideoLoopView{
     NSURL* videoURL;
     NSString* title;
+    NSString* videoId;
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
-    id rateObserver;
-    id timeObserver;
-    
-    
-    
-    UIView* durationBar;
 }
 
--(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title{
+-(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forVideoId:(NSString*)tutorialId{
     if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
         title = _title;
         videoURL = _videoURL;
+        videoId = tutorialId;
         
         self.backgroundColor = [UIColor whiteColor];
 
@@ -44,29 +41,22 @@
         UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
         imageView.image = image;
 
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(playerItemDidReachEnd:)
-                                                     name:AVPlayerItemDidPlayToEndTimeNotification
-                                                   object:[avPlayer currentItem]];
-        
         UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 50)];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.text = _title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:titleLabel];
 
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerItemDidReachEnd:)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                   object:[avPlayer currentItem]];
         
-        durationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 40)];
-        durationBar.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
-        [self addSubview:durationBar];
     }
     return self;
-}
-
--(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
-    
 }
 
 -(void) didBecomeActive{
@@ -94,27 +84,11 @@
             [videoHolder.layer addSublayer: avPlayerLayer];
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
             
-            
             // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(itemDidFinishPlaying:)
                                                          name:AVPlayerItemDidPlayToEndTimeNotification
                                                        object:avPlayer.currentItem];
-
-            
-            CGFloat maxWidth = self.bounds.size.width;
-            __weak UIView* weakDurationBar = durationBar;
-            __weak AVPlayer* weakPlayer = avPlayer;
-            rateObserver = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
-                                                                  queue:dispatch_get_main_queue()
-                                                             usingBlock:^(CMTime time) {
-                                                     CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
-                                                     CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
-                                                     CGRect fr = weakDurationBar.frame;
-                                                     CGFloat percentDur = MAX(0, (currTime / duration));
-                                                     fr.size.width = maxWidth * percentDur;
-                                                     weakDurationBar.frame = fr;
-                                                 }];
         }
         [avPlayer play];
     }
@@ -122,6 +96,7 @@
 
 -(void) itemDidFinishPlaying:(NSNotification*) note{
     NSLog(@"done playing!");
+    [[MMTutorialManager sharedInstance] didCompleteStep:videoId];
 }
 
 -(void) pauseAnimating{
@@ -135,7 +110,6 @@
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
-        [avPlayer removeTimeObserver:rateObserver];
         avPlayer = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }

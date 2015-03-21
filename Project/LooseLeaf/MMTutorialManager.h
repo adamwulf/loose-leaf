@@ -15,6 +15,12 @@
 
 +(MMTutorialManager*) sharedInstance;
 
+-(NSArray*) tutorialSteps;
+
+-(BOOL) hasCompletedStep:(NSString*)stepID;
+
+-(void) didCompleteStep:(NSString*)stepID;
+
 -(void) startWatchingTutorial;
 
 -(void) pauseWatchingTutorial;

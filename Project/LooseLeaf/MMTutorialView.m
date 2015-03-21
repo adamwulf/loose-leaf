@@ -8,6 +8,7 @@
 
 #import "MMTutorialView.h"
 #import "MMVideoLoopView.h"
+#import "MMTutorialManager.h"
 #import "AVHexColor.h"
 #import "UIColor+Shadow.h"
 
@@ -168,25 +169,14 @@
 #pragma mark - Tutorial Loading
 
 -(void) loadTutorials{
-    NSArray* tutorials = @[@{
-        @"title":@"Draw and Erase",
-        @"video":@"hello.mov"
-    },@{
-        @"title":@"Move Between Pages",
-        @"video":@"space-navigation.mov"
-    },@{
-        @"title":@"Draw a Curve",
-        @"video":@"ruler-for-curve-2.mov"
-    },@{
-        @"title":@"Draw on your Photos",
-        @"video":@"draw-clip-2-2.mov"
-    }];
+    NSArray* tutorials = [[MMTutorialManager sharedInstance] tutorialSteps];
     
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString* videoURL = [obj objectForKey:@"video"];
         NSString* videoTitle = [obj objectForKey:@"title"];
+        NSString* videoId = [obj objectForKey:@"id"];
         NSURL* tutorialMov = [[NSBundle mainBundle] URLForResource:videoURL withExtension:nil];
-        MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov withTitle:videoTitle];
+        MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov withTitle:videoTitle forVideoId:videoId];
         [scrollView addSubview:tutorial];
 
         CGRect fr = scrollView.bounds;

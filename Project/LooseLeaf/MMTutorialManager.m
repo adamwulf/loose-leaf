@@ -15,6 +15,7 @@
     MMStopWatch* stopwatch;
     BOOL hasFinishedTutorial;
     CGFloat timeSpentInTutorial;
+    NSInteger currentTutorialStep;
 }
 
 @synthesize hasFinishedTutorial;
@@ -28,22 +29,51 @@ static MMTutorialManager* _instance = nil;
     if((self = [super init])){
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
+        currentTutorialStep = [[NSUserDefaults standardUserDefaults] integerForKey:kCurrentTutorialStep];
         stopwatch = [[MMStopWatch alloc] initWithDuration:timeSpentInTutorial];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
-    return _instance;
+    return self;
 }
 
 +(MMTutorialManager*) sharedInstance{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [[MMTutorialManager alloc]init];
+        _instance = [[MMTutorialManager alloc] init];
     });
     return _instance;
 }
 
 #pragma mark - Public API
+
+-(BOOL) hasCompletedStep:(NSString*)stepID{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:[kCurrentTutorialStep stringByAppendingString:stepID]];
+}
+
+-(void) didCompleteStep:(NSString*)stepID{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[kCurrentTutorialStep stringByAppendingString:stepID]];
+}
+
+-(NSArray*) tutorialSteps{
+    return @[@{
+                 @"id":@"pen",
+                 @"title":@"Draw and Erase",
+                 @"video":@"hello.mov"
+                 },@{
+                 @"id":@"nav",
+                 @"title":@"Move Between Pages",
+                 @"video":@"space-navigation.mov"
+                 },@{
+                 @"id":@"ruler",
+                 @"title":@"Draw a Curve",
+                 @"video":@"ruler-for-curve-2.mov"
+                 },@{
+                 @"id":@"clip",
+                 @"title":@"Draw on your Photos",
+                 @"video":@"draw-clip-2-2.mov"
+                 }];
+}
 
 -(BOOL) isWatchingTutorial{
     return [stopwatch isRunning];
