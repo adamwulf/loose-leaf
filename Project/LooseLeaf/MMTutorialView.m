@@ -121,6 +121,10 @@
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) setDelegate:(NSObject<MMTutorialViewDelegate> *)_delegate{
     delegate = _delegate;
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
