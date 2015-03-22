@@ -203,9 +203,6 @@
     pageControl.numberOfPages = [tutorials count];
     pageControl.currentPage = 0;
     
-    
-    
-
     CGFloat widthForButtonCenters = rotateableTutorialSquare.bounds.size.width;
     CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
     widthForButtonCenters = widthForButtonCenters - 2 * buttonBuffer;
@@ -216,9 +213,11 @@
     
     tutorialButtons = [NSMutableArray array];
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSDictionary* tutorial = [tutorials objectAtIndex:idx];
         MMTutorialButton* button = [[MMTutorialButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)
                                                              forStepNumber:idx+1];
         button.tag = idx;
+        button.finished = [[MMTutorialManager sharedInstance] hasCompletedStep:[tutorial objectForKey:@"id"]];
         CGPoint center = CGPointMake(startX + stepForEachButton * idx, kWidthOfSidebarButton / 2 + kWidthOfSidebarButtonBuffer);
         button.center = center;
         
