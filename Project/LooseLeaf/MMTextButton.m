@@ -65,14 +65,26 @@
     [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer,
                                                                (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer)];
     
+
+    
+    
     //// Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
     [ovalPath appendPath:glyphPath];
     [ovalPath closePath];
     [halfGreyFill setFill];
     [ovalPath fill];
-    [darkerGreyBorder setStroke];
+    
+    
+    
+    [self drawDropshadowIfSelected];
+    
     ovalPath.lineWidth = 1;
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setStroke];
+    [ovalPath stroke];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    [darkerGreyBorder setStroke];
     [ovalPath stroke];
 
     
@@ -102,6 +114,7 @@
     
     CGContextRestoreGState(context);
     
+    [super drawRect:rect];
 }
 
 

@@ -11,14 +11,15 @@
 #import "MMTutorialManager.h"
 #import "MMRotationManager.h"
 #import "AVHexColor.h"
-#import "MMTextButton.h"
+#import "MMTutorialButton.h"
 #import "UIColor+Shadow.h"
+#import "NSArray+Extras.h"
 #import "Constants.h"
 
 @implementation MMTutorialView{
     
     UIView* rotateableTutorialSquare;
-    
+    NSMutableArray* tutorialButtons;
     
     UIPageControl* pageControl;
     UIView* fadedBackground;
@@ -51,8 +52,6 @@
                                                                             (self.bounds.size.height - widthOfRotateableContainer) / 2,
                                                                             widthOfRotateableContainer,
                                                                             widthOfRotateableContainer)];
-        rotateableTutorialSquare.layer.borderColor = [UIColor redColor].CGColor;
-        rotateableTutorialSquare.layer.borderWidth = 1;
         [self addSubview:rotateableTutorialSquare];
         
         
@@ -146,6 +145,13 @@
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
     pageControl.currentPage = MAX(0, MIN(idx, pageControl.numberOfPages-1));
     
+    UIButton* button = [tutorialButtons objectAtIndex:MAX(0, MIN([tutorialButtons count] - 1, pageControl.currentPage))];
+    button.selected = YES;
+    [[tutorialButtons arrayByRemovingObject:button] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [obj setSelected:NO];
+    }];
+    
+    
     int location = scrollView.bounds.size.width - (int)scrollView.contentOffset.x % (int)scrollView.bounds.size.width;
     CGRect fr = separator.frame;
     fr.origin.x = location;
@@ -198,12 +204,30 @@
     
     
     
+
+    CGFloat widthForButtonCenters = rotateableTutorialSquare.bounds.size.width;
+    CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
+    widthForButtonCenters = widthForButtonCenters - 2 * buttonBuffer;
+    widthForButtonCenters = widthForButtonCenters - kWidthOfSidebarButton;
+    widthForButtonCenters -= 100;
+    CGFloat stepForEachButton = widthForButtonCenters / ([tutorials count] - 1);
+    CGFloat startX = (rotateableTutorialSquare.bounds.size.width - widthForButtonCenters) / 2;
+    
+    tutorialButtons = [NSMutableArray array];
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        MMTextButton* button = [[MMTextButton alloc] initWithFrame:CGRectMake(100, kWidthOfSidebarButtonBuffer, kWidthOfSidebarButton, kWidthOfSidebarButton)
-                                                           andFont:[UIFont systemFontOfSize:12]
-                                                         andLetter:[NSString stringWithFormat:@"%d", (int) idx+1]
-                                                        andXOffset:0
-                                                        andYOffset:0];
+        MMTutorialButton* button = [[MMTutorialButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)
+                                                             forStepNumber:idx+1];
+        button.tag = idx;
+        CGPoint center = CGPointMake(startX + stepForEachButton * idx, kWidthOfSidebarButton / 2 + kWidthOfSidebarButtonBuffer);
+        button.center = center;
+        
+        if(idx == 0){
+            button.selected = YES;
+        }
+        
+        [button addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [tutorialButtons addObject:button];
         [rotateableTutorialSquare addSubview:button];
     }];
 }
@@ -234,6 +258,17 @@
         }
     });
 }
+
+#pragma mark - Button Helpers
+
+-(void) didTapToChangeToTutorial:(MMTutorialButton*)button{
+    NSInteger tutorialIndex = button.tag;
+
+    CGRect squareOfTutorial = CGRectMake(tutorialIndex * scrollView.bounds.size.width, 0, scrollView.bounds.size.width, scrollView.bounds.size.height);
+    [scrollView scrollRectToVisible:squareOfTutorial animated:YES];
+}
+
+
 
 #pragma mark - Private Helpers
 

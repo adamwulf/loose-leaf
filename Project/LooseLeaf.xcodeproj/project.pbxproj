@@ -79,6 +79,7 @@
 		663326C61AB09881003915E6 /* MMInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326C51AB09881003915E6 /* MMInboxItem.m */; };
 		663326CA1AB09BA7003915E6 /* MMInboxImageAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326C91AB09BA7003915E6 /* MMInboxImageAlbum.m */; };
 		663326CD1AB09CD9003915E6 /* MMImageInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326CC1AB09CD9003915E6 /* MMImageInboxItem.m */; };
+		66343C061ABE45CF00801962 /* MMTutorialButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C051ABE45CF00801962 /* MMTutorialButton.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -611,6 +612,8 @@
 		663326CB1AB09CD9003915E6 /* MMImageInboxItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageInboxItem.h; sourceTree = "<group>"; };
 		663326CC1AB09CD9003915E6 /* MMImageInboxItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageInboxItem.m; sourceTree = "<group>"; };
 		663326CE1AB0A636003915E6 /* MMInboxItem+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMInboxItem+Protected.h"; sourceTree = "<group>"; };
+		66343C041ABE45CF00801962 /* MMTutorialButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialButton.h; sourceTree = "<group>"; };
+		66343C051ABE45CF00801962 /* MMTutorialButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialButton.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1824,6 +1827,15 @@
 			name = InboxImage;
 			sourceTree = "<group>";
 		};
+		66343C031ABE45AD00801962 /* Tutorial */ = {
+			isa = PBXGroup;
+			children = (
+				66343C041ABE45CF00801962 /* MMTutorialButton.h */,
+				66343C051ABE45CF00801962 /* MMTutorialButton.m */,
+			);
+			name = Tutorial;
+			sourceTree = "<group>";
+		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2479,6 +2491,7 @@
 				661885D218F9AED50016A333 /* MMDarkSidebarButton.h */,
 				661885D318F9AED50016A333 /* MMDarkSidebarButton.m */,
 				66BD6E8B1593C3FF00D4544C /* MMSidebarButtonDelegate.h */,
+				66343C031ABE45AD00801962 /* Tutorial */,
 				66EDE42419AE761500A5623B /* List View */,
 				66EDE42319AE75F500A5623B /* Tool Sidebar */,
 				66EDE42219AE75EF00A5623B /* Share Sidebar */,
@@ -3370,6 +3383,7 @@
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
 				66627F961A02582F0064FAD3 /* MPPassThroughValueTransformer.m in Sources */,
 				66627F801A02582F0064FAD3 /* MPApplicationStateSerializer.m in Sources */,
+				66343C061ABE45CF00801962 /* MMTutorialButton.m in Sources */,
 				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
 				66627FAE1A02582F0064FAD3 /* UIImage+MPAverageColor.m in Sources */,
 				66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */,
