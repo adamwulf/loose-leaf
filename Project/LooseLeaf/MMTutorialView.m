@@ -235,8 +235,10 @@
     MMCheckButton* checkButton = [[MMCheckButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
     CGPoint center = CGPointMake(startX + widthForButtonCenters, kWidthOfSidebarButton / 2 + kWidthOfSidebarButtonBuffer);
     checkButton.center = center;
+    checkButton.tag = NSIntegerMax;
     [tutorialButtons addObject:checkButton];
     [rotateableTutorialSquare addSubview:checkButton];
+    [checkButton addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 
@@ -270,7 +272,11 @@
 
 -(void) didTapToChangeToTutorial:(MMTutorialButton*)button{
     NSInteger tutorialIndex = button.tag;
-
+    if(tutorialIndex == NSIntegerMax){
+        // end the tutorial
+        [self.delegate didFinishTutorial];
+        return;
+    }
     CGRect squareOfTutorial = CGRectMake(tutorialIndex * scrollView.bounds.size.width, 0, scrollView.bounds.size.width, scrollView.bounds.size.height);
     [scrollView scrollRectToVisible:squareOfTutorial animated:YES];
 }
