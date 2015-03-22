@@ -42,6 +42,7 @@ _Pragma("clang diagnostic pop") \
 
 // Tutorial Notifications
 #define kTutorialStartedNotification @"kTutorialStartedNotification"
+#define kTutorialStepCompleteNotification @"kTutorialStepCompleteNotification"
 #define kTutorialClosedNotification @"kTutorialClosedNotification"
 
 

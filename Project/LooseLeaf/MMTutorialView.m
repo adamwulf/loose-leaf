@@ -113,6 +113,10 @@
         rotateableTutorialSquare.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
 
         [self loadTutorials];
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialStepFinished:) name:kTutorialStepCompleteNotification object:nil];
+        
     }
     return self;
 }
@@ -121,6 +125,19 @@
     delegate = _delegate;
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     [self.delegate userIsViewingTutorialStep:idx];
+}
+
+#pragma mark - Notifications
+
+-(void) tutorialStepFinished:(NSNotification*)note{
+    NSString* tutorialId = note.object;
+    NSArray* tutorials = [[MMTutorialManager sharedInstance] tutorialSteps];
+    NSUInteger index = [tutorials indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        return [[obj objectForKey:@"id"] isEqualToString:tutorialId];
+    }];
+    index = MAX(0, MIN(index, pageControl.numberOfPages-1));
+    [[tutorialButtons objectAtIndex:index] setFinished:YES];
+    [[tutorialButtons objectAtIndex:index] bounceButton];
 }
 
 #pragma mark - Actions

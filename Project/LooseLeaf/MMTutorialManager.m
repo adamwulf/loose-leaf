@@ -33,6 +33,12 @@ static MMTutorialManager* _instance = nil;
         stopwatch = [[MMStopWatch alloc] initWithDuration:timeSpentInTutorial];
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        
+#ifdef DEBUG
+        for (NSDictionary* tutorial in [self tutorialSteps]) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
+        }
+#endif
     }
     return self;
 }
@@ -53,6 +59,7 @@ static MMTutorialManager* _instance = nil;
 
 -(void) didCompleteStep:(NSString*)stepID{
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[kCurrentTutorialStep stringByAppendingString:stepID]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStepCompleteNotification object:stepID];
 }
 
 -(NSArray*) tutorialSteps{
