@@ -16,6 +16,7 @@
     NSURL* videoURL;
     NSString* title;
     NSString* videoId;
+    
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
@@ -54,7 +55,6 @@
                                                  selector:@selector(playerItemDidReachEnd:)
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
                                                    object:[avPlayer currentItem]];
-        
     }
     return self;
 }
@@ -95,8 +95,10 @@
 }
 
 -(void) itemDidFinishPlaying:(NSNotification*) note{
-    NSLog(@"done playing!");
-    [[MMTutorialManager sharedInstance] didCompleteStep:videoId];
+    if(![[MMTutorialManager sharedInstance] hasCompletedStep:videoId]){
+        NSLog(@"done playing!");
+        [[MMTutorialManager sharedInstance] didCompleteStep:videoId];
+    }
 }
 
 -(void) pauseAnimating{

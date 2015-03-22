@@ -97,4 +97,12 @@
     [self tutorialShouldClose:nil];
 }
 
+
+#pragma mark - Rotation Manager Delegate
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    [super didRotateToIdealOrientation:orientation];
+    [tutorialView didRotateToIdealOrientation:orientation];
+}
+
 @end

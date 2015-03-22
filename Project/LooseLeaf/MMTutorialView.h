@@ -13,4 +13,6 @@
 
 @property (nonatomic, weak) NSObject<MMTutorialViewDelegate>* delegate;
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
+
 @end

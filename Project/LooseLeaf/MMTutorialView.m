@@ -9,10 +9,17 @@
 #import "MMTutorialView.h"
 #import "MMVideoLoopView.h"
 #import "MMTutorialManager.h"
+#import "MMRotationManager.h"
 #import "AVHexColor.h"
+#import "MMTextButton.h"
 #import "UIColor+Shadow.h"
+#import "Constants.h"
 
 @implementation MMTutorialView{
+    
+    UIView* rotateableTutorialSquare;
+    
+    
     UIPageControl* pageControl;
     UIView* fadedBackground;
     UIScrollView* scrollView;
@@ -28,33 +35,31 @@
     if(self = [super initWithFrame:frame]){
         // 10% buffer
         CGFloat boxSize = 600;
-        UIBezierPath* box = [self boxPathForWidth:boxSize];
+        CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
         
         //
         // faded background
         
         fadedBackground = [[UIView alloc] initWithFrame:self.bounds];
+        fadedBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
         
-        CAShapeLayer* shapeLayer = [CAShapeLayer layer];
-        shapeLayer.bounds = self.bounds;
-        shapeLayer.position = self.center;
-        shapeLayer.path = box.CGPath;
-        shapeLayer.fillRule = kCAFillRuleEvenOdd;
-        shapeLayer.backgroundColor = [UIColor clearColor].CGColor;
-        shapeLayer.fillColor = [UIColor blackColor].CGColor;
-
-        CALayer* greyBackground = [CALayer layer];
-        greyBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
-        greyBackground.bounds = self.bounds;
-        greyBackground.position = self.center;
-        greyBackground.mask = shapeLayer;
-        [fadedBackground.layer addSublayer:greyBackground];
         [self addSubview:fadedBackground];
+        
+        
+        CGFloat widthOfRotateableContainer = boxSize + 2 * buttonBuffer;
+        rotateableTutorialSquare = [[UIView alloc] initWithFrame:CGRectMake((self.bounds.size.width - widthOfRotateableContainer) / 2,
+                                                                            (self.bounds.size.height - widthOfRotateableContainer) / 2,
+                                                                            widthOfRotateableContainer,
+                                                                            widthOfRotateableContainer)];
+        rotateableTutorialSquare.layer.borderColor = [UIColor redColor].CGColor;
+        rotateableTutorialSquare.layer.borderWidth = 1;
+        [self addSubview:rotateableTutorialSquare];
+        
         
         //
         // scrollview
         
-        CGPoint boxOrigin = [self topLeftCornerForBoxSize:boxSize];
+        CGPoint boxOrigin = CGPointMake(buttonBuffer, buttonBuffer);
         UIView* maskedScrollContainer = [[UIView alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y, boxSize, boxSize)];
         
         CAShapeLayer* scrollMaskLayer = [CAShapeLayer layer];
@@ -72,21 +77,19 @@
         scrollView.alwaysBounceVertical = NO;
         
         [maskedScrollContainer addSubview:scrollView];
-        [self addSubview:maskedScrollContainer];
+        [rotateableTutorialSquare addSubview:maskedScrollContainer];
         
         pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y + boxSize-40, boxSize, 40)];
         pageControl.pageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
         pageControl.userInteractionEnabled = NO;
         pageControl.currentPageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
-        [self addSubview:pageControl];
+        [rotateableTutorialSquare addSubview:pageControl];
 
         
         separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
         [maskedScrollContainer addSubview:separator];
 
-        
-        
         CGFloat buttonWidth = 160;
         CGFloat buttonHeight = 70;
         CGFloat adjust = .35;
@@ -107,6 +110,8 @@
         
         [maskedScrollContainer addSubview:nextButton];
         
+        rotateableTutorialSquare.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
+
         [self loadTutorials];
     }
     return self;
@@ -190,9 +195,45 @@
     
     pageControl.numberOfPages = [tutorials count];
     pageControl.currentPage = 0;
+    
+    
+    
+    [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        MMTextButton* button = [[MMTextButton alloc] initWithFrame:CGRectMake(100, kWidthOfSidebarButtonBuffer, kWidthOfSidebarButton, kWidthOfSidebarButton)
+                                                           andFont:[UIFont systemFontOfSize:12]
+                                                         andLetter:[NSString stringWithFormat:@"%d", (int) idx+1]
+                                                        andXOffset:0
+                                                        andYOffset:0];
+        [rotateableTutorialSquare addSubview:button];
+    }];
 }
 
 
+#pragma mark - Rotation
+
+-(CGFloat) interfaceRotationAngle{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
+
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @autoreleasepool {
+            [UIView animateWithDuration:.2 animations:^{
+                rotateableTutorialSquare.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
+            }];
+        }
+    });
+}
 
 #pragma mark - Private Helpers
 
@@ -206,12 +247,5 @@
                                 cornerRadii:CGSizeMake(width/10, width/10)];
 }
 
--(UIBezierPath*) boxPathForWidth:(CGFloat)width{
-    UIBezierPath* path = [UIBezierPath bezierPathWithRect:self.bounds];
-    CGPoint boxOrigin = [self topLeftCornerForBoxSize:width];
-    [path appendPath:[self roundedRectPathForBoxSize:width withOrigin:boxOrigin]];
-    path.usesEvenOddFillRule = YES;
-    return path;
-}
 
 @end
