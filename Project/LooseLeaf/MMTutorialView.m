@@ -12,6 +12,7 @@
 #import "MMRotationManager.h"
 #import "AVHexColor.h"
 #import "MMTutorialButton.h"
+#import "MMCheckButton.h"
 #import "UIColor+Shadow.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
@@ -210,7 +211,7 @@
     widthForButtonCenters = widthForButtonCenters - 2 * buttonBuffer;
     widthForButtonCenters = widthForButtonCenters - kWidthOfSidebarButton;
     widthForButtonCenters -= 100;
-    CGFloat stepForEachButton = widthForButtonCenters / ([tutorials count] - 1);
+    CGFloat stepForEachButton = widthForButtonCenters / [tutorials count];
     CGFloat startX = (rotateableTutorialSquare.bounds.size.width - widthForButtonCenters) / 2;
     
     tutorialButtons = [NSMutableArray array];
@@ -230,6 +231,12 @@
         [tutorialButtons addObject:button];
         [rotateableTutorialSquare addSubview:button];
     }];
+    
+    MMCheckButton* checkButton = [[MMCheckButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+    CGPoint center = CGPointMake(startX + widthForButtonCenters, kWidthOfSidebarButton / 2 + kWidthOfSidebarButtonBuffer);
+    checkButton.center = center;
+    [tutorialButtons addObject:checkButton];
+    [rotateableTutorialSquare addSubview:checkButton];
 }
 
 
