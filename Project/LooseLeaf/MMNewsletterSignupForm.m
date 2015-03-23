@@ -202,7 +202,7 @@
                                          NSMatchingFlags flags, BOOL *stop){
                                 NSUInteger loc = [result.URL.absoluteString rangeOfString:@"mailto:"].location;
                                 if(loc != NSNotFound){
-                                    matchedEmail = [result.URL.absoluteString substringFromIndex:loc];
+                                    matchedEmail = [result.URL.absoluteString substringFromIndex:[@"mailto:" length]];
                                     NSLog(@"Match: %@", matchedEmail);
                                 }
                             }];
