@@ -71,6 +71,7 @@
         maskedScrollContainer.layer.mask = scrollMaskLayer;
 
         scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, boxSize, boxSize)];
+        scrollView.delaysContentTouches = NO;
         scrollView.delegate = self;
         scrollView.pagingEnabled = YES;
         scrollView.backgroundColor = [UIColor whiteColor];

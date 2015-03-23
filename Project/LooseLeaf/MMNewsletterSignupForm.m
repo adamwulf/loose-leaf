@@ -7,6 +7,7 @@
 //
 
 #import "MMNewsletterSignupForm.h"
+#import "MMRoundedButton.h"
 
 @implementation MMNewsletterSignupForm{
     UITextField* emailInput;
@@ -20,7 +21,7 @@
         [self addSubview:newsletter];
         
         
-        emailInput = [[UITextField alloc] initWithFrame:CGRectMake(300, 100, 200, 60)];
+        emailInput = [[UITextField alloc] initWithFrame:CGRectMake(300, 200, 200, 60)];
         emailInput.keyboardType = UIKeyboardTypeEmailAddress;
         emailInput.autocapitalizationType = UITextAutocapitalizationTypeNone;
         emailInput.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -30,6 +31,21 @@
         [self addSubview:emailInput];
         
         
+        MMRoundedButton* signUpButton = [[MMRoundedButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        [signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+        signUpButton.center = CGPointMake(300, 100);
+        [self addSubview:signUpButton];
+
+        UIButton* noThanksButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
+        [noThanksButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [noThanksButton sizeToFit];
+        CGRect b = noThanksButton.bounds;
+        b.size.width += 20;
+        b.size.height += 8;
+        noThanksButton.bounds = b;
+        noThanksButton.center = CGPointMake(440, 100);
+        [self addSubview:noThanksButton];
     }
     return self;
 }

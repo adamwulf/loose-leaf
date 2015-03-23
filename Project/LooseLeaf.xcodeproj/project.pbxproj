@@ -83,6 +83,7 @@
 		66343C4D1ABF66F600801962 /* MMCheckButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C4C1ABF66F600801962 /* MMCheckButton.m */; };
 		66343C501ABF8CD000801962 /* MMTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */; };
 		66343C531ABF950E00801962 /* MMNewsletterSignupForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */; };
+		66343C571ABF9FCA00801962 /* MMRoundedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C561ABF9FCA00801962 /* MMRoundedButton.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -623,6 +624,8 @@
 		66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialSidebarButton.m; sourceTree = "<group>"; };
 		66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMNewsletterSignupForm.h; sourceTree = "<group>"; };
 		66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMNewsletterSignupForm.m; sourceTree = "<group>"; };
+		66343C551ABF9FCA00801962 /* MMRoundedButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedButton.h; sourceTree = "<group>"; };
+		66343C561ABF9FCA00801962 /* MMRoundedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedButton.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1847,6 +1850,15 @@
 			name = Tutorial;
 			sourceTree = "<group>";
 		};
+		66343C541ABF9FB600801962 /* RoundedButton */ = {
+			isa = PBXGroup;
+			children = (
+				66343C551ABF9FCA00801962 /* MMRoundedButton.h */,
+				66343C561ABF9FCA00801962 /* MMRoundedButton.m */,
+			);
+			name = RoundedButton;
+			sourceTree = "<group>";
+		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
 			isa = PBXGroup;
 			children = (
@@ -2283,6 +2295,7 @@
 		6688D1E11A994E7500EB17EC /* TutorialView */ = {
 			isa = PBXGroup;
 			children = (
+				66343C541ABF9FB600801962 /* RoundedButton */,
 				662809021A9BBF2000CA3F9A /* assets */,
 				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
 				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
@@ -3438,6 +3451,7 @@
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
 				660116FB19ABBA7E0065C1B4 /* MMCloudKitFetchFriendsState.m in Sources */,
 				66AC8D7D18E754FE00A65036 /* MMAbstractSidebarContentView.m in Sources */,
+				66343C571ABF9FCA00801962 /* MMRoundedButton.m in Sources */,
 				666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */,
 				66627F8F1A02582F0064FAD3 /* MPNSAttributedStringToNSDictionaryValueTransformer.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
