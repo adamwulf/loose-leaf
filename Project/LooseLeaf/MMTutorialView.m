@@ -179,6 +179,10 @@
     }];
 }
 
+-(void) scrollViewWillBeginDecelerating:(UIScrollView *)scrollView{
+    
+}
+
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)_scrollView{
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
@@ -196,6 +200,9 @@
         // ok, now tell us to start animating
         [visible startAnimating];
     }
+    [UIView animateWithDuration:.3 animations:^{
+        nextButton.alpha = [visible wantsNextButton] ? 1 : 0;
+    }];
     if(idx < [[[MMTutorialManager sharedInstance] tutorialSteps] count]){
         // notify, but only if its a proper tutorial
         [self.delegate userIsViewingTutorialStep:idx];

@@ -17,6 +17,7 @@
 -(id) initForVideo:(NSURL*)videoURL withTitle:(NSString*)_title forVideoId:(NSString*)tutorialId;
 
 
+-(BOOL) wantsNextButton;
 -(BOOL) isBuffered;
 -(BOOL) isAnimating;
 -(void) startAnimating;

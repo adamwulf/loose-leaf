@@ -31,8 +31,8 @@
     [super setTitle:title forState:state];
     [self sizeToFit];
     CGRect b = self.bounds;
-    b.size.width += 60;
-    b.size.height += 20;
+    b.size.width += 40;
+    b.size.height += 12;
     self.bounds = b;
 }
 

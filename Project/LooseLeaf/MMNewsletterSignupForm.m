@@ -8,50 +8,52 @@
 
 #import "MMNewsletterSignupForm.h"
 #import "MMRoundedButton.h"
+#import "MMEmailInputField.h"
 
 @implementation MMNewsletterSignupForm{
-    UITextField* emailInput;
+    MMEmailInputField* emailInput;
 }
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        UILabel* newsletter = [[UILabel alloc] initWithFrame:self.bounds];
-        newsletter.textAlignment = NSTextAlignmentCenter;
-        newsletter.text = @"sign up!";
-        [self addSubview:newsletter];
-        
-        
-        emailInput = [[UITextField alloc] initWithFrame:CGRectMake(300, 200, 200, 60)];
-        emailInput.keyboardType = UIKeyboardTypeEmailAddress;
-        emailInput.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        emailInput.autocorrectionType = UITextAutocorrectionTypeNo;
-        emailInput.spellCheckingType = UITextSpellCheckingTypeNo;
-        emailInput.enablesReturnKeyAutomatically = YES;
-        emailInput.returnKeyType = UIReturnKeyDone;
-        [self addSubview:emailInput];
-        
-        
         MMRoundedButton* signUpButton = [[MMRoundedButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         [signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
-        signUpButton.center = CGPointMake(300, 100);
         [self addSubview:signUpButton];
 
         UIButton* noThanksButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
-        [noThanksButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [noThanksButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [noThanksButton sizeToFit];
         CGRect b = noThanksButton.bounds;
         b.size.width += 20;
         b.size.height += 8;
         noThanksButton.bounds = b;
-        noThanksButton.center = CGPointMake(440, 100);
         [self addSubview:noThanksButton];
+        
+        CGFloat widthOfButtons = signUpButton.bounds.size.width + noThanksButton.bounds.size.width + 20;
+        CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
+        
+        signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width/2, 300);
+        noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width/2, 300);
+
+        signUpButton.center = CGPointMake(self.bounds.size.width/2, 300);
+        noThanksButton.center = CGPointMake(self.bounds.size.width/2, 450);
+        
+        emailInput = [[MMEmailInputField alloc] initWithFrame:CGRectMake(0, 200, 300, 30)];
+        emailInput.center = CGPointMake(self.bounds.size.width/2, 230);
+        [self addSubview:emailInput];
+        
+        
     }
     return self;
 }
 
+-(BOOL) wantsNextButton{
+    return NO;
+}
+
 -(BOOL) isBuffered{
-    return YES;
+    return NO;
 }
 
 -(BOOL) isAnimating{

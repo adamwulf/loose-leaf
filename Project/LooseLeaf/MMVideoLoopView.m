@@ -101,6 +101,10 @@
     }
 }
 
+-(BOOL) wantsNextButton{
+    return YES;
+}
+
 -(void) pauseAnimating{
     if([self isAnimating]){
         [avPlayer pause];

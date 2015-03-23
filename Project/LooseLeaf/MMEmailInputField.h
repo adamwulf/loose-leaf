@@ -1,5 +1,5 @@
 //
-//  MMNewsletterSignupForm.h
+//  MMEmailInputField.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 3/22/15.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMNewsletterSignupForm : UIView
-
--(BOOL) wantsNextButton;
+@interface MMEmailInputField : UITextField
 
 @end
