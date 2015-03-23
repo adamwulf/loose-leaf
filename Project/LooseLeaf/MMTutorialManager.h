@@ -12,6 +12,7 @@
 
 @property (readonly) BOOL isWatchingTutorial;
 @property (readonly) BOOL hasFinishedTutorial;
+@property (readonly) BOOL hasSignedUpForNewsletter;
 
 +(MMTutorialManager*) sharedInstance;
 

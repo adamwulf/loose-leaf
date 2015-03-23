@@ -82,6 +82,7 @@
 		66343C061ABE45CF00801962 /* MMTutorialButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C051ABE45CF00801962 /* MMTutorialButton.m */; };
 		66343C4D1ABF66F600801962 /* MMCheckButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C4C1ABF66F600801962 /* MMCheckButton.m */; };
 		66343C501ABF8CD000801962 /* MMTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */; };
+		66343C531ABF950E00801962 /* MMNewsletterSignupForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -620,6 +621,8 @@
 		66343C4C1ABF66F600801962 /* MMCheckButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCheckButton.m; sourceTree = "<group>"; };
 		66343C4E1ABF8CD000801962 /* MMTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialSidebarButton.h; sourceTree = "<group>"; };
 		66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialSidebarButton.m; sourceTree = "<group>"; };
+		66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMNewsletterSignupForm.h; sourceTree = "<group>"; };
+		66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMNewsletterSignupForm.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -2286,6 +2289,8 @@
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
 				6688D1E81A99508700EB17EC /* MMTutorialView.m */,
 				662809031A9BC16C00CA3F9A /* MMTutorialViewDelegate.h */,
+				66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */,
+				66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */,
 			);
 			name = TutorialView;
 			sourceTree = "<group>";
@@ -3372,6 +3377,7 @@
 				66B8A4C9196E43C300E80009 /* MMScrapContainerView.m in Sources */,
 				66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */,
 				667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */,
+				66343C531ABF950E00801962 /* MMNewsletterSignupForm.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */,
 				66DA827F1ABE18CD00E3314A /* MMTutorialManager.m in Sources */,

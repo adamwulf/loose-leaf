@@ -12,6 +12,7 @@
 #import "MMRotationManager.h"
 #import "AVHexColor.h"
 #import "MMTutorialButton.h"
+#import "MMNewsletterSignupForm.h"
 #import "MMCheckButton.h"
 #import "UIColor+Shadow.h"
 #import "NSArray+Extras.h"
@@ -29,6 +30,8 @@
     UIButton* nextButton;
     
     __weak NSObject<MMTutorialViewDelegate>* delegate;
+    
+    MMNewsletterSignupForm* newsletterSignupForm;
 }
 
 @synthesize delegate;
@@ -58,7 +61,6 @@
         
         //
         // scrollview
-        
         CGPoint boxOrigin = CGPointMake(buttonBuffer, buttonBuffer);
         UIView* maskedScrollContainer = [[UIView alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y, boxSize, boxSize)];
         
@@ -139,26 +141,11 @@
     NSUInteger index = [tutorials indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         return [[obj objectForKey:@"id"] isEqualToString:tutorialId];
     }];
+    
     index = MAX(0, MIN(index, pageControl.numberOfPages-1));
     [[tutorialButtons objectAtIndex:index] setFinished:YES];
     [[tutorialButtons objectAtIndex:index] bounceButton];
 }
-
-#pragma mark - Actions
-
--(void) nextPressed:(UIButton*)_button{
-    CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
-    NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
-    if(idx == [scrollView.subviews count]-1){
-        // they're already on the last step,
-        // and are finishing the tutorial
-        [self.delegate didFinishTutorial];
-    }
-    idx = MIN(idx+1, [scrollView.subviews count]-1);
-    CGFloat x = idx*scrollView.bounds.size.width;
-    [scrollView scrollRectToVisible:CGRectMake(x, 0, scrollView.bounds.size.width, scrollView.bounds.size.height) animated:YES];
-}
-
 
 #pragma mark - UIScrollViewDelegate
 
@@ -167,7 +154,8 @@
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
     pageControl.currentPage = MAX(0, MIN(idx, pageControl.numberOfPages-1));
     
-    UIButton* button = [tutorialButtons objectAtIndex:MAX(0, MIN([tutorialButtons count] - 1, pageControl.currentPage))];
+    idx =  MAX(0, MIN(idx, [tutorialButtons count]-1));
+    UIButton* button = [tutorialButtons objectAtIndex:idx];
     button.selected = YES;
     [[tutorialButtons arrayByRemovingObject:button] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj setSelected:NO];
@@ -176,22 +164,32 @@
     
     int location = scrollView.bounds.size.width - (int)scrollView.contentOffset.x % (int)scrollView.bounds.size.width;
     CGRect fr = separator.frame;
-    fr.origin.x = location;
+    fr.origin.x = scrollView.contentOffset.x < 0 ? ABS(scrollView.contentOffset.x) : location;
     separator.frame = fr;
 }
 
 -(void) scrollViewWillBeginDragging:(UIScrollView *)_scrollView{
-    [scrollView.subviews makeObjectsPerformSelector:@selector(pauseAnimating)];
+    [scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if([obj respondsToSelector:@selector(pauseAnimating)]){
+            [obj pauseAnimating];
+        }
+    }];
 }
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)_scrollView{
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
-    MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
-    if(![visible isBuffered]){
-        [scrollView.subviews makeObjectsPerformSelector:@selector(stopAnimating)];
+    if(idx < [[[MMTutorialManager sharedInstance] tutorialSteps] count]){
+        MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
+        if(![visible isBuffered]){
+            [scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                if([obj respondsToSelector:@selector(stopAnimating)]){
+                    [obj stopAnimating];
+                }
+            }];
+        }
+        [visible startAnimating];
+        [self.delegate userIsViewingTutorialStep:idx];
     }
-    [visible startAnimating];
-    [self.delegate userIsViewingTutorialStep:idx];
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)_scrollView{
@@ -219,6 +217,19 @@
     }];
     
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width * [tutorials count], scrollView.bounds.size.height);
+
+    if(![[MMTutorialManager sharedInstance] hasSignedUpForNewsletter]){
+        // add the newsletter form
+        newsletterSignupForm = [[MMNewsletterSignupForm alloc] initWithFrame:scrollView.bounds];
+        CGRect fr = scrollView.bounds;
+        fr.origin.x = [tutorials count] * fr.size.width;
+        newsletterSignupForm.frame = fr;
+        [scrollView addSubview:newsletterSignupForm];
+
+        // add width for the newsletter signup
+        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + scrollView.bounds.size.width, scrollView.contentSize.height);
+    }
+    
     [(MMVideoLoopView*)scrollView.subviews.firstObject startAnimating];
     
     pageControl.numberOfPages = [tutorials count];
@@ -290,11 +301,29 @@
 
 #pragma mark - Button Helpers
 
+-(void) nextPressed:(UIButton*)_button{
+    CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
+    NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
+    if(idx == [scrollView.subviews count]-1){
+        // they're already on the last step,
+        // and are finishing the tutorial
+        [self didTapToChangeToTutorial:[tutorialButtons lastObject]];
+        return;
+    }
+    idx = MIN(idx+1, [scrollView.subviews count]-1);
+    CGFloat x = idx*scrollView.bounds.size.width;
+    [scrollView scrollRectToVisible:CGRectMake(x, 0, scrollView.bounds.size.width, scrollView.bounds.size.height) animated:YES];
+}
+
 -(void) didTapToChangeToTutorial:(MMTutorialButton*)button{
     NSInteger tutorialIndex = button.tag;
     if(tutorialIndex == NSIntegerMax){
         // end the tutorial
-        [self.delegate didFinishTutorial];
+        if(newsletterSignupForm){
+            [scrollView scrollRectToVisible:newsletterSignupForm.frame animated:YES];
+        }else{
+            [self.delegate didFinishTutorial];
+        }
         return;
     }
     CGRect squareOfTutorial = CGRectMake(tutorialIndex * scrollView.bounds.size.width, 0, scrollView.bounds.size.width, scrollView.bounds.size.height);

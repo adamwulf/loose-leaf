@@ -73,6 +73,11 @@ static MMTutorialManager* _instance = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStepCompleteNotification object:stepID];
 }
 
+-(BOOL) hasSignedUpForNewsletter{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasSignedUpForNewsletter] ||
+            [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasIgnoredNewsletter];
+}
+
 -(NSArray*) tutorialSteps{
     return @[@{
                  @"id":@"pen",
