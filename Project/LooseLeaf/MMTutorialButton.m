@@ -39,7 +39,6 @@
 
         //// Color Declarations
         UIColor* darkerGreyBorder = [self borderColor];
-        UIColor* halfGreyFill = [self backgroundColor];
         
         
         //// Oval
@@ -49,10 +48,6 @@
 //        [ovalPath fill];
 //        [[[AVHexColor colorWithHexString:@"3C7BFF"] colorWithAlphaComponent:.4] setFill];
 //        [ovalPath fill];
-        
-        
-        
-        
         
         UIColor* lightBlue = [AVHexColor colorWithHexString:@"0E94FB"];
         UIColor* lighterBlue = [AVHexColor colorWithHexString:@"84C7fA"];

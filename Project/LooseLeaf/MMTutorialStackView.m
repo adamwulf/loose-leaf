@@ -9,6 +9,7 @@
 #import "MMTutorialStackView.h"
 #import "MMTutorialView.h"
 #import "MMStopWatch.h"
+#import "MMTutorialSidebarButton.h"
 #import "Mixpanel.h"
 #import "MMTutorialManager.h"
 
@@ -20,8 +21,7 @@
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        helpButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont fontWithName:@"AvenirNext-Regular" size:24] andLetter:@"?" andXOffset:0 andYOffset:0];
-        helpButton.inverted = YES;
+        helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         helpButton.delegate = self;
         [helpButton addTarget:[MMTutorialManager sharedInstance] action:@selector(startWatchingTutorial) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:helpButton];
@@ -82,7 +82,9 @@
         backdrop = nil;
         [tutorialView removeFromSuperview];
         tutorialView = nil;
-        [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
+        if([[MMTutorialManager sharedInstance] numberOfPendingTutorials]){
+            [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
+        }
     }];
 }
 

@@ -53,6 +53,17 @@ static MMTutorialManager* _instance = nil;
 
 #pragma mark - Public API
 
+-(NSInteger) numberOfPendingTutorials{
+    NSArray* allTutorials = [self tutorialSteps];
+    __block NSInteger numCompleted = 0;
+    
+    [allTutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        numCompleted += [self hasCompletedStep:[obj objectForKey:@"id"]] ? 1 : 0;
+    }];
+    
+    return [allTutorials count] - numCompleted;
+}
+
 -(BOOL) hasCompletedStep:(NSString*)stepID{
     return [[NSUserDefaults standardUserDefaults] boolForKey:[kCurrentTutorialStep stringByAppendingString:stepID]];
 }

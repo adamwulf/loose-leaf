@@ -27,4 +27,6 @@
 
 -(void) finishWatchingTutorial;
 
+-(NSInteger) numberOfPendingTutorials;
+
 @end
