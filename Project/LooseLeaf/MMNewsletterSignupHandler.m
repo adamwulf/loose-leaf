@@ -92,27 +92,26 @@ static MMNewsletterSignupHandler* _instance = nil;
                             NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*) response;
                             if(httpResponse.statusCode == 200){
                                 NSString* dataStr = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-                                NSLog(@"data: %@", dataStr);
-                                if([dataStr containsString:@"Subscribed"]){
-                                    NSLog(@"Connection Successful: %@", dataStr);
+                                if([[dataStr lowercaseString] containsString:@"subscribed"]){
+                                    NSLog(@" - Connection Successful: %@", dataStr);
                                     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
                                 }else{
-                                    NSLog(@"Invalid response: %@", dataStr);
+                                    NSLog(@" - Invalid response: %@", dataStr);
                                 }
                             }else{
-                                NSLog(@"wrong http code: %d",(int) httpResponse.statusCode);
+                                NSLog(@" - wrong http code: %d",(int) httpResponse.statusCode);
                             }
                         }else{
-                            NSLog(@"invalid response: %@", response);
+                            NSLog(@" - invalid response: %@", response);
                         }
                     } else {
-                        NSLog(@"Connection could not be made: %@", err);
+                        NSLog(@" - Connection could not be made: %@", err);
                     }
                 }else{
-                    NSLog(@"Can't save email address, internet is unreachable");
+                    NSLog(@" - Can't save email address, internet is unreachable");
                 }
             }else{
-                NSLog(@"There is no email to subscribe to the newsletter");
+                NSLog(@" - There is no email to subscribe to the newsletter");
             }
         }
     });
