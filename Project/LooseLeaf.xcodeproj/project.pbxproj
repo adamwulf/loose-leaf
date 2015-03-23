@@ -85,6 +85,9 @@
 		66343C531ABF950E00801962 /* MMNewsletterSignupForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */; };
 		66343C571ABF9FCA00801962 /* MMRoundedButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C561ABF9FCA00801962 /* MMRoundedButton.m */; };
 		66343C5A1ABFA8FC00801962 /* MMEmailInputField.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C591ABFA8FC00801962 /* MMEmailInputField.m */; };
+		66343C5E1AC06FDA00801962 /* MMLoopIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C5D1AC06FDA00801962 /* MMLoopIcon.m */; };
+		66343C631AC0755D00801962 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 66343C611AC0748400801962 /* Lato-Bold.ttf */; };
+		66343C641AC0755F00801962 /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 66343C621AC0748400801962 /* Lato-Semibold.ttf */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -630,6 +633,10 @@
 		66343C581ABFA8FC00801962 /* MMEmailInputField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmailInputField.h; sourceTree = "<group>"; };
 		66343C591ABFA8FC00801962 /* MMEmailInputField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmailInputField.m; sourceTree = "<group>"; };
 		66343C5B1AC066C900801962 /* MMNewsletterSignupFormDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMNewsletterSignupFormDelegate.h; sourceTree = "<group>"; };
+		66343C5C1AC06FDA00801962 /* MMLoopIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopIcon.h; sourceTree = "<group>"; };
+		66343C5D1AC06FDA00801962 /* MMLoopIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopIcon.m; sourceTree = "<group>"; };
+		66343C611AC0748400801962 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		66343C621AC0748400801962 /* Lato-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Semibold.ttf"; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1501,6 +1508,8 @@
 				664F413F15906628006F8B09 /* MMLeftArrow.m */,
 				66BEBFF519BC10450032D30C /* MMOfflineIconView.h */,
 				66BEBFF619BC10450032D30C /* MMOfflineIconView.m */,
+				66343C5C1AC06FDA00801962 /* MMLoopIcon.h */,
+				66343C5D1AC06FDA00801962 /* MMLoopIcon.m */,
 			);
 			name = Icons;
 			sourceTree = "<group>";
@@ -1863,6 +1872,15 @@
 				66343C591ABFA8FC00801962 /* MMEmailInputField.m */,
 			);
 			name = RoundedButton;
+			sourceTree = "<group>";
+		};
+		66343C601AC0747900801962 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				66343C611AC0748400801962 /* Lato-Bold.ttf */,
+				66343C621AC0748400801962 /* Lato-Semibold.ttf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
@@ -2301,6 +2319,7 @@
 		6688D1E11A994E7500EB17EC /* TutorialView */ = {
 			isa = PBXGroup;
 			children = (
+				66343C601AC0747900801962 /* Fonts */,
 				66343C541ABF9FB600801962 /* RoundedButton */,
 				662809021A9BBF2000CA3F9A /* assets */,
 				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
@@ -3211,6 +3230,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66343C631AC0755D00801962 /* Lato-Bold.ttf in Resources */,
+				66343C641AC0755F00801962 /* Lato-Semibold.ttf in Resources */,
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
 				665245311996D1E800C36609 /* imgur.png in Resources */,
@@ -3703,6 +3724,7 @@
 				6693C94C18E4E7860054FF41 /* MMFullScreenSidebarContainingView.m in Sources */,
 				66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */,
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
+				66343C5E1AC06FDA00801962 /* MMLoopIcon.m in Sources */,
 				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,

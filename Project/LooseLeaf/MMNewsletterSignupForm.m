@@ -11,18 +11,51 @@
 #import "MMEmailInputField.h"
 #import "MMTutorialManager.h"
 #import "MMRotationManager.h"
+#import "MMLoopIcon.h"
 #import "Constants.h"
 
 @implementation MMNewsletterSignupForm{
     MMEmailInputField* emailInput;
     UIButton* noThanksButton;
     MMRoundedButton* signUpButton;
+    UILabel* pitchLbl;
 }
 
 @synthesize delegate;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
+        
+        CGFloat scale = .3;
+        MMLoopIcon* loop = [[MMLoopIcon alloc] initWithFrame:CGRectMake(0, 0, 500*scale, 360*scale)];
+        loop.center = CGPointMake(self.bounds.size.width/2 + 50, 105);
+        [self addSubview:loop];
+        
+        NSLog (@"Font families: %@", [UIFont familyNames]);
+        
+        UILabel* stay = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        stay.center = CGPointMake(self.bounds.size.width/2 - 45, 80);
+        stay.text = @"Stay";
+        stay.font = [UIFont fontWithName:@"Lato-Bold" size:36];
+        [self addSubview:stay];
+        
+        UILabel* inLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        inLbl.center = CGPointMake(self.bounds.size.width/2 - 45, 110);
+        inLbl.text = @"in the";
+        inLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:20];
+        [self addSubview:inLbl];
+        
+        pitchLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
+        pitchLbl.text = @"Tips, features, and offers to get the most out of Loose Leaf.";
+        pitchLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
+        pitchLbl.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:pitchLbl];
+        
+
+        // form
+        emailInput = [[MMEmailInputField alloc] initWithFrame:CGRectMake(0, 200, 300, 30)];
+        [self addSubview:emailInput];
+        
         signUpButton = [[MMRoundedButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         [signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
         [self addSubview:signUpButton];
@@ -40,9 +73,6 @@
 
         [self didRotateToIdealOrientation:[[MMRotationManager sharedInstance] currentInterfaceOrientation] animated:NO];
         
-        emailInput = [[MMEmailInputField alloc] initWithFrame:CGRectMake(0, 200, 300, 30)];
-        emailInput.center = CGPointMake(self.bounds.size.width/2, 230);
-        [self addSubview:emailInput];
         
         
     }
@@ -97,11 +127,15 @@
         
         if(orientation == UIInterfaceOrientationPortrait ||
            orientation == UIInterfaceOrientationPortraitUpsideDown){
-            signUpButton.center = CGPointMake(self.bounds.size.width/2, 300);
-            noThanksButton.center = CGPointMake(self.bounds.size.width/2, 450);
+            emailInput.center = CGPointMake(self.bounds.size.width/2, 250);
+            signUpButton.center = CGPointMake(self.bounds.size.width/2, 320);
+            noThanksButton.center = CGPointMake(self.bounds.size.width/2, 480);
+            pitchLbl.center = CGPointMake(self.bounds.size.width/2, 195);
         }else{
+            emailInput.center = CGPointMake(self.bounds.size.width/2, 220);
             signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width/2, 300);
             noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width/2, 300);
+            pitchLbl.center = CGPointMake(self.bounds.size.width/2, 180);
         }
     };
     
