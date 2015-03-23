@@ -39,7 +39,10 @@ static MMTutorialManager* _instance = nil;
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
         }
         
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasIgnoredNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+        
 #endif
     }
     return self;
@@ -122,14 +125,20 @@ static MMTutorialManager* _instance = nil;
 
 
 -(BOOL) hasSignedUpForNewsletter{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasSignedUpForNewsletter] ||
-    [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasIgnoredNewsletter];
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kHasSignedUpForNewsletter] ||
+    [[NSUserDefaults standardUserDefaults] boolForKey:kHasIgnoredNewsletter];
 }
 
 
--(void) optOutOfNewsLetter{
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasIgnoredNewsletter];
+-(void) optOutOfNewsletter{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasIgnoredNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Opt Out"];
+}
+
+-(void) signUpForNewsletter:(NSString*)email{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
+    [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
+    [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];
 }
 
 

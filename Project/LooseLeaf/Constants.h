@@ -150,8 +150,9 @@ _Pragma("clang diagnostic pop") \
 
 // tutorial
 #define kMPHasFinishedTutorial @"Has Finished Tutorial"
-#define kMPHasSignedUpForNewsletter @"kMPHasSignedUpForNewsletter"
-#define kMPHasIgnoredNewsletter @"kMPHasIgnoredNewsletter"
+#define kHasSignedUpForNewsletter @"kHasSignedUpForNewsletter"
+#define kPendingEmailToSubscribe @"kPendingEmailToSubscribe"
+#define kHasIgnoredNewsletter @"kHasIgnoredNewsletter"
 #define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"

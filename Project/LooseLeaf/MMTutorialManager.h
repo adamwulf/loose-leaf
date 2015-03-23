@@ -30,6 +30,8 @@
 
 -(NSInteger) numberOfPendingTutorials;
 
--(void) optOutOfNewsLetter;
+-(void) optOutOfNewsletter;
+
+-(void) signUpForNewsletter:(NSString*)email;
 
 @end
