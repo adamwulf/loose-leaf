@@ -15,4 +15,6 @@
 
 -(BOOL) wantsNextButton;
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
+
 @end

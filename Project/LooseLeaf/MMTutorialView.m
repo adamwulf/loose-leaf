@@ -319,6 +319,7 @@
                 rotateableTutorialSquare.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
             }];
         }
+        [newsletterSignupForm didRotateToIdealOrientation:orientation];
     });
 }
 
