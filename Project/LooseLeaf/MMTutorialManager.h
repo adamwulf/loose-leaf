@@ -30,4 +30,6 @@
 
 -(NSInteger) numberOfPendingTutorials;
 
+-(void) optOutOfNewsLetter;
+
 @end

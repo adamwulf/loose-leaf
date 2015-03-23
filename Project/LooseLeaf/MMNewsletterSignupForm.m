@@ -9,10 +9,13 @@
 #import "MMNewsletterSignupForm.h"
 #import "MMRoundedButton.h"
 #import "MMEmailInputField.h"
+#import "MMTutorialManager.h"
 
 @implementation MMNewsletterSignupForm{
     MMEmailInputField* emailInput;
 }
+
+@synthesize delegate;
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -24,6 +27,7 @@
         [noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
         [noThanksButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [noThanksButton sizeToFit];
+        [noThanksButton addTarget:self action:@selector(noThanksButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         CGRect b = noThanksButton.bounds;
         b.size.width += 20;
         b.size.height += 8;
@@ -47,6 +51,15 @@
     }
     return self;
 }
+
+#pragma mark - Actions
+
+-(void) noThanksButtonTapped:(id)button{
+    [[MMTutorialManager sharedInstance] optOutOfNewsLetter];
+    [self.delegate didCompleteNewsletterStep];
+}
+
+#pragma mark - Tutorial View Protocol
 
 -(BOOL) wantsNextButton{
     return NO;

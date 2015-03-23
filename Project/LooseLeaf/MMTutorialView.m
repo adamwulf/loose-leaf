@@ -14,9 +14,14 @@
 #import "MMTutorialButton.h"
 #import "MMNewsletterSignupForm.h"
 #import "MMCheckButton.h"
+#import "MMNewsletterSignupFormDelegate.h"
 #import "UIColor+Shadow.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
+
+@interface MMTutorialView ()<MMNewsletterSignupFormDelegate>
+
+@end
 
 @implementation MMTutorialView{
     
@@ -238,6 +243,7 @@
     if(![[MMTutorialManager sharedInstance] hasSignedUpForNewsletter]){
         // add the newsletter form
         newsletterSignupForm = [[MMNewsletterSignupForm alloc] initWithFrame:scrollView.bounds];
+        newsletterSignupForm.delegate = self;
         CGRect fr = scrollView.bounds;
         fr.origin.x = [tutorials count] * fr.size.width;
         newsletterSignupForm.frame = fr;
@@ -347,6 +353,12 @@
     [scrollView scrollRectToVisible:squareOfTutorial animated:YES];
 }
 
+
+#pragma mark - MMNewsletterSignupFormDelegate
+
+-(void) didCompleteNewsletterStep{
+    [self.delegate didFinishTutorial];
+}
 
 
 #pragma mark - Private Helpers

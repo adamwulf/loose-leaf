@@ -154,6 +154,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPHasIgnoredNewsletter @"kMPHasIgnoredNewsletter"
 #define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
+#define kMPNewsletterStatus @"Signed Up For Newsletter"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"

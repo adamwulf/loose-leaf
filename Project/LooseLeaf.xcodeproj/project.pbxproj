@@ -629,6 +629,7 @@
 		66343C561ABF9FCA00801962 /* MMRoundedButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedButton.m; sourceTree = "<group>"; };
 		66343C581ABFA8FC00801962 /* MMEmailInputField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmailInputField.h; sourceTree = "<group>"; };
 		66343C591ABFA8FC00801962 /* MMEmailInputField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmailInputField.m; sourceTree = "<group>"; };
+		66343C5B1AC066C900801962 /* MMNewsletterSignupFormDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMNewsletterSignupFormDelegate.h; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -2306,6 +2307,7 @@
 				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
 				66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */,
 				66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */,
+				66343C5B1AC066C900801962 /* MMNewsletterSignupFormDelegate.h */,
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
 				6688D1E81A99508700EB17EC /* MMTutorialView.m */,
 				662809031A9BC16C00CA3F9A /* MMTutorialViewDelegate.h */,

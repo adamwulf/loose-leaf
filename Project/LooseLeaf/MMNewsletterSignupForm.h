@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMNewsletterSignupFormDelegate.h"
 
 @interface MMNewsletterSignupForm : UIView
+
+@property (nonatomic) NSObject<MMNewsletterSignupFormDelegate>* delegate;
 
 -(BOOL) wantsNextButton;
 

@@ -38,6 +38,8 @@ static MMTutorialManager* _instance = nil;
         for (NSDictionary* tutorial in [self tutorialSteps]) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
         }
+        
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasIgnoredNewsletter];
 #endif
     }
     return self;
@@ -71,11 +73,6 @@ static MMTutorialManager* _instance = nil;
 -(void) didCompleteStep:(NSString*)stepID{
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[kCurrentTutorialStep stringByAppendingString:stepID]];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStepCompleteNotification object:stepID];
-}
-
--(BOOL) hasSignedUpForNewsletter{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasSignedUpForNewsletter] ||
-            [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasIgnoredNewsletter];
 }
 
 -(NSArray*) tutorialSteps{
@@ -118,6 +115,21 @@ static MMTutorialManager* _instance = nil;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasFinishedTutorial];
     [[[Mixpanel sharedInstance] people] set:kMPHasFinishedTutorial to:@(YES)];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialClosedNotification object:self];
+}
+
+
+#pragma mark - Newsletter
+
+
+-(BOOL) hasSignedUpForNewsletter{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasSignedUpForNewsletter] ||
+    [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasIgnoredNewsletter];
+}
+
+
+-(void) optOutOfNewsLetter{
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasIgnoredNewsletter];
+    [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Opt Out"];
 }
 
 
