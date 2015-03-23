@@ -169,6 +169,8 @@
 }
 
 -(void) scrollViewWillBeginDragging:(UIScrollView *)_scrollView{
+    // as the user is dragging and scrolling the tutorial view,
+    // just don't animate any tutorials
     [scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if([obj respondsToSelector:@selector(pauseAnimating)]){
             [obj pauseAnimating];
@@ -178,16 +180,23 @@
 
 -(void) scrollViewDidEndDecelerating:(UIScrollView *)_scrollView{
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
-    if(idx < [[[MMTutorialManager sharedInstance] tutorialSteps] count]){
-        MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
-        if(![visible isBuffered]){
-            [scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                if([obj respondsToSelector:@selector(stopAnimating)]){
-                    [obj stopAnimating];
-                }
-            }];
-        }
+    MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
+    if(![visible isBuffered]){
+        // a different view was animating, but we just
+        // started showing a new tutorial. tell
+        // all the others to stop animating
+        [scrollView.subviews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            if([obj respondsToSelector:@selector(stopAnimating)]){
+                [obj stopAnimating];
+            }
+        }];
+    }
+    if([visible respondsToSelector:@selector(startAnimating)]){
+        // ok, now tell us to start animating
         [visible startAnimating];
+    }
+    if(idx < [[[MMTutorialManager sharedInstance] tutorialSteps] count]){
+        // notify, but only if its a proper tutorial
         [self.delegate userIsViewingTutorialStep:idx];
     }
 }

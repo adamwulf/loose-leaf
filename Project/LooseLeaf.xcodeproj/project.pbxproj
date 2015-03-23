@@ -2286,11 +2286,11 @@
 				662809021A9BBF2000CA3F9A /* assets */,
 				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
 				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
+				66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */,
+				66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */,
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
 				6688D1E81A99508700EB17EC /* MMTutorialView.m */,
 				662809031A9BC16C00CA3F9A /* MMTutorialViewDelegate.h */,
-				66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */,
-				66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */,
 			);
 			name = TutorialView;
 			sourceTree = "<group>";
