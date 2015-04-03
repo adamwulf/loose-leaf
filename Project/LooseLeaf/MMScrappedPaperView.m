@@ -20,9 +20,9 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import <JotUI/UIColor+JotHelper.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "UIBezierPath+PathElement.h"
-#import "UIBezierPath+Description.h"
 #import "MMVector.h"
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"
@@ -121,54 +121,68 @@
         // then we know it was it's prepped and ready to show valid ink
         if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
             // page is editable and ready for work
-//            NSLog(@"page %@ is editing, so nil thumb", self.uuid);
+//            DebugLog(@"page %@ is editing, so nil thumb", self.uuid);
             [self setThumbnailTo:nil];
             scrapsOnPaperState.scrapContainerView.hidden = NO;
             drawableView.hidden = NO;
             shapeBuilderView.hidden = NO;
             cachedImgView.hidden = YES;
+            [self isShowingDrawableView:YES andIsShowingThumbnail:NO];
         }else if([self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
-//            NSLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
+//            DebugLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
             [self setThumbnailTo:[self cachedImgViewImage]];
             scrapsOnPaperState.scrapContainerView.hidden = NO;
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
             cachedImgView.hidden = NO;
+            [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }else{
             // scrap state isn't loaded, so show
             // our thumbnail
-//            NSLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
+//            DebugLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
             [self setThumbnailTo:scrappedImgViewImage.image];
             scrapsOnPaperState.scrapContainerView.hidden = YES;
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
             cachedImgView.hidden = NO;
+            [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
-//        NSLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
+//        DebugLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
         [self setThumbnailTo:[self cachedImgViewImage]];
         scrapsOnPaperState.scrapContainerView.hidden = NO;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }else if(!isAskedToLoadThumbnail){
-//        NSLog(@"default thumb for %@, HIDING thumb", self.uuid);
+//        DebugLog(@"default thumb for %@, HIDING thumb", self.uuid);
         [self setThumbnailTo:nil];
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:NO];
     }else{
-//        NSLog(@"default thumb for %@, SHOWING thumb", self.uuid);
-//        NSLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
+//        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
+//        DebugLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
         [self setThumbnailTo:scrappedImgViewImage.image];
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }
 }
+
+#pragma mark - Thumbnail helpers
+
+-(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail{
+    // noop
+}
+
+#pragma mark - Undo Redo
 
 -(void) undo{
     if(scrapsOnPaperState){
@@ -212,6 +226,7 @@
     CGFloat initialSize = pathBounds.size.width * pathBounds.size.height;
     CGFloat lastBestSize = initialSize;
     CGFloat lastBestRotation = 0;
+    CGRect lastBestBounds = pathBounds;
     
     // now copy the path, and we'll rotate this to
     // find the best rotation that'll give us the
@@ -235,18 +250,46 @@
         if(rotatedPxSize < lastBestSize){
             lastBestRotation = currentStepRotation;
             lastBestSize = rotatedPxSize;
+            lastBestBounds = rotatedPathBounds;
         }
     }
     
-//    debug_NSLog(@"memory savings of: %f", (1 - lastBestSize / initialSize));
+    if(lastBestBounds.size.width > lastBestBounds.size.height){
+        // scraps will always use textures the size of the portrait
+        // screen when they export, so we need to ensure that
+        // the scrap is always taller than it is wide. otherwise,
+        // the scrap's width might be wider than our screen texture
+        lastBestRotation -= M_PI / 2;
+    }
+    
+//    DebugLog(@"memory savings of: %f", (1 - lastBestSize / initialSize));
     
     if(lastBestRotation){
         [path rotateAndAlignCenter:lastBestRotation];
     }
+    
+    CGFloat maxScrapHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat scaleUpForScrap = scale;
+    if(path.bounds.size.height > maxScrapHeight){
+        CGFloat scaleDownForPath = maxScrapHeight / path.bounds.size.height;
+        scaleUpForScrap = 1 / scaleDownForPath;
+        [path scaleAndPreserveCenter:scaleDownForPath];
+
+        // if the user cuts a very long scrap diagonally on the page, then
+        // it's 1.0 scale size will be taller than the screen-sized texture
+        // that we'll use when exporting. so we're going to create a smaller
+        // scrap that would fit within that area, and then scale it up to
+        // fit back where the user actually cut it.
+//        DebugLog(@"scale scrap to %f fit in %f maxdim texture",scaleUpForScrap, maxScrapHeight);
+    }
 
     // now add the scrap, and rotate it to counter-act
     // the rotation we added to the path itself
-    return [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
+    MMScrapView* addedScrap = [self addScrapWithPath:path andRotation:-lastBestRotation andScale:scale];
+    if(scaleUpForScrap != 1.0){
+        [addedScrap setScale:scaleUpForScrap];
+    }
+    return addedScrap;
 }
 
 
@@ -379,7 +422,7 @@
 // adds an undo level to the drawable views and maintains
 // any alive strokes
 -(void) addUndoLevelAndContinueStroke{
-    NSLog(@"adding undo level");
+//    DebugLog(@"adding undo level");
     [self.drawableView addUndoLevelAndContinueStroke];
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap.state.drawableView addUndoLevelAndContinueStroke];
@@ -426,6 +469,7 @@
     }
     
     if(shouldAddUndoLevel){
+        DebugLog(@"should add undo level!");
         // if we land in here, then that means that either our
         // drawable view, or one of our scraps, would exceed the max
         // byte size for a stroke. so we should add an undo level
@@ -488,7 +532,7 @@
                     redAndBlueSegments = [UIBezierPath redAndGreenAndBlueSegmentsCreatedFrom:scrapClippingPath bySlicingWithPath:strokePath andNumberOfBlueShellSegments:nil];
                 }@catch (id exc) {
                     //        NSAssert(NO, @"need to log this");
-                    debug_NSLog(@"need to mail the paths");
+                    DebugLog(@"need to mail the paths");
 
                     //
                     // TODO: https://github.com/adamwulf/loose-leaf/issues/664
@@ -569,7 +613,7 @@
     
     
     if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
-//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+//        DebugLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
         [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
         [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
     }
@@ -626,7 +670,7 @@
     // the drawn polygon and reset.
     if(shapeBuilderView){
         [shapeBuilderView clear];
-        NSLog(@"cancelling scissors");
+//        DebugLog(@"cancelling scissors");
     }
 }
 
@@ -763,7 +807,7 @@
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
-            debug_NSLog(@"didn't cut any scraps, so make one");
+            DebugLog(@"didn't cut any scraps, so make one");
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             if([subshapes count] >= 1){
                 scissorPath = [[[subshapes firstObject] fullPath] copy];
@@ -856,7 +900,7 @@
     
 
     if([UIBezierPath segmentTestCount] || [UIBezierPath segmentCompareCount]){
-//        NSLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
+//        DebugLog(@"segment counts: %d %d", (int)[UIBezierPath segmentTestCount], (int)[UIBezierPath segmentCompareCount]);
         [[MMStatTracker trackerWithName:kMPStatSegmentTestCount andTargetCount:100] trackValue:[UIBezierPath segmentTestCount]];
         [[MMStatTracker trackerWithName:kMPStatSegmentCompareCount andTargetCount:100] trackValue:[UIBezierPath segmentCompareCount]];
     }
@@ -930,6 +974,15 @@
         [[UIColor whiteColor] setFill];
         [path fill];
         
+        
+        UIImage* thumbnail = nil;
+        @synchronized(scrap.state){
+            thumbnail = scrap.state.activeThumbnailImage;
+            if(!thumbnail){
+                thumbnail = [scrap.state oneOffLoadedThumbnailImage];
+            }
+        }
+        
         // background
         //
         // draw the scrap's background, if it has an image background
@@ -954,10 +1007,10 @@
         // ink
         //
         // draw the scrap's strokes
-        if(scrap.state.activeThumbnailImage){
-            [scrap.state.activeThumbnailImage drawInRect:scrap.bounds];
+        if(thumbnail){
+            [thumbnail drawInRect:scrap.bounds];
         }
-        
+
         // restore the state, no more clip
         CGContextRestoreGState(context);
         
@@ -981,6 +1034,11 @@
     return thumbSize;
 }
 
+-(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize{
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+}
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
         UIImage* thumb = [self synchronouslyLoadInkPreview];
@@ -989,9 +1047,8 @@
         
         // get context
         CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        [[UIColor whiteColor] setFill];
-        CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+
+        [self drawPageBackgroundInContext:context forThumbnailSize:thumbSize];
         
         // drawing code comes here- look at CGContext reference
         // for available operations
@@ -1005,7 +1062,9 @@
         // get a UIImage from the image context- enjoy!!!
         UIImage* generatedScrappedThumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
         scrappedImgViewImage = [[MMDecompressImagePromise alloc] initForDecompressedImage:generatedScrappedThumbnailImage andDelegate:self];
-        [UIImagePNGRepresentation(scrappedImgViewImage.image) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+        
+        [[JotDiskAssetManager sharedManager] writeImage:scrappedImgViewImage.image toPath:self.scrappedThumbnailPath];
+        
         [[MMLoadImageCache sharedInstance] updateCacheForPath:[self scrappedThumbnailPath] toImage:scrappedImgViewImage.image];
         [[NSThread mainThread] performBlock:^{
             [self didDecompressImage:scrappedImgViewImage];
@@ -1044,16 +1103,16 @@
 -(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete{
     [self saveToDiskHelper:^(BOOL hadEditsToSave){
         if(hadEditsToSave){
-//            NSLog(@"saved edits for %@", self);
+//            DebugLog(@"saved edits for %@", self);
         }else{
-//            NSLog(@"didn't save any edits for %@", self);
+//            DebugLog(@"didn't save any edits for %@", self);
         }
         if(onComplete) onComplete(hadEditsToSave);
     }];
 }
 
 -(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
-//    debug_NSLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
+//    DebugLog(@"asking %@ to save to disk at %lu", self.uuid, (unsigned long)self.drawableView.undoHash);
     //
     // for now, I will always save the entire page to disk.
     // the JotView will optimize its part away, but the
@@ -1076,7 +1135,7 @@
     
     @synchronized(self){
         hasPendingScrappedIconUpdate++;
-//        NSLog(@"%@ starting save! %d, hasPenOrScrapChanges: %d", self.uuid, hasPendingScrappedIconUpdate, [self hasPenOrScrapEditsToSave]);
+//        DebugLog(@"%@ starting save! %d, hasPenOrScrapChanges: %d", self.uuid, hasPendingScrappedIconUpdate, [self hasPenOrScrapEditsToSave]);
     }
     
     __block BOOL pageHadBeenChanged = NO;
@@ -1094,7 +1153,7 @@
         // happening right before us. so if we check lastSavedUndoHash
         // after the signals, it'll be properly updated.
         pageHadBeenChanged = hadEditsToSave;
-//        NSLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
+//        DebugLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
         dispatch_semaphore_signal(sema1);
     }];
     
@@ -1107,7 +1166,7 @@
                 immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
                 lastSavedScrapStateHash = immutableScrapState.undoHash;
-                //            NSLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
+                //            DebugLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
                 dispatch_semaphore_signal(sema2);
             }
         });
@@ -1122,21 +1181,21 @@
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
             @synchronized(self){
                 hasPendingScrappedIconUpdate--;
-//                NSLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                DebugLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }
             lastSavedPaperStateHash = paperState.lastSavedUndoHash;
 
             BOOL needsThumbnailUpdateSinceLastSave = NO;
-//            NSLog(@"checking need for thumbnail? %lu == %lu ? %lu == %lu ?", (unsigned long)lastSavedPaperStateHash,
+//            DebugLog(@"checking need for thumbnail? %lu == %lu ? %lu == %lu ?", (unsigned long)lastSavedPaperStateHash,
 //                  (unsigned long)lastSavedPaperStateHashForGeneratedThumbnail,
 //                  (unsigned long)lastSavedScrapStateHash,
 //                  (unsigned long)lastSavedScrapStateHashForGeneratedThumbnail);
             if(lastSavedPaperStateHash != lastSavedPaperStateHashForGeneratedThumbnail ||
                lastSavedScrapStateHash != lastSavedScrapStateHashForGeneratedThumbnail){
                 needsThumbnailUpdateSinceLastSave = YES;
-//                NSLog(@"%@ needs thumbnail update since last generation", self);
+//                DebugLog(@"%@ needs thumbnail update since last generation", self);
             }else{
-//                NSLog(@"%@ doesn't need thumbnail update since last generation", self);
+//                DebugLog(@"%@ doesn't need thumbnail update since last generation", self);
             }
             
             // NOTE:
@@ -1145,20 +1204,20 @@
             // when we shouldn't (since undoManager will aways save after us
             if([self hasPenOrScrapEditsToSave] || self.paperState.isForgetful){
                 if(self.paperState.isForgetful){
-                    NSLog(@"forget: page is forgetful, bailing save early");
+                    DebugLog(@"forget: page is forgetful, bailing save early");
                 }
-//                NSLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
+//                DebugLog(@"i have more edits to save for %@ (now %lu). bailing. %d %d %d",self.uuid, (unsigned long) immutableScrapState.undoHash, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave);
                 // our save failed. this may happen if we
                 // call [saveToDisk] in very quick succession
                 // so that the 1st call is still saving, and the
                 // 2nd ends early b/c it knows the 1st is still going
-//                NSLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
+//                DebugLog(@"saved %@ but still have edits to save: saved at %lu but is now %lu",self.uuid, (unsigned long)immutableScrapState.undoHash,
 //                      (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash);
-//                NSLog(@"%@ needs save at %lu: %d %d",self, (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
+//                DebugLog(@"%@ needs save at %lu: %d %d",self, (unsigned long)[self.scrapsOnPaperState immutableStateForPath:nil].undoHash, [super hasEditsToSave], [scrapsOnPaperState hasEditsToSave]);
                 if(onComplete) onComplete(NO);
                 return;
             }else{
-//                NSLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
+//                DebugLog(@"finished save for %@ %d %d %d (at %lu)", self.uuid, pageHadBeenChanged, scrapsHadBeenChanged, needsThumbnailUpdateSinceLastSave, (unsigned long) immutableScrapState.undoHash);
             }
             
             if(!hasPendingScrappedIconUpdate && (needsThumbnailUpdateSinceLastSave || pageHadBeenChanged || scrapsHadBeenChanged)){
@@ -1169,26 +1228,26 @@
                     // we actually generate the thumbnail.
                     lastSavedPaperStateHashForGeneratedThumbnail = lastSavedPaperStateHash;
                     lastSavedScrapStateHashForGeneratedThumbnail = lastSavedScrapStateHash;
-//                    NSLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                    DebugLog(@"generating thumbnail for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                     // only save a new thumbnail if we have our state loaded
                     [self updateFullPageThumbnail:immutableScrapState];
                 }else{
-//                    NSLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                    DebugLog(@"can't generating thumbnail without immutableScrapState for %@ (at %lu) with %d saves in progress",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
                 }
-//                NSLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                DebugLog(@"done generating thumbnail (at %lu) with %d saves in progress", (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else if(hasPendingScrappedIconUpdate){
-//                NSLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
+//                DebugLog(@"%@ skipped generating thumbnail (at %lu) because of %d pending saves",self, (unsigned long) immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
             }else{
-//                NSLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
+//                DebugLog(@"%@ skipped generating thumbnail (at %lu) because page and scraps hadn't changed",self, (unsigned long) immutableScrapState.undoHash);
             }
 
             [NSThread performBlockOnMainThread:^{
-//                NSLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
+//                DebugLog(@"done saving page (at %lu)", (unsigned long) immutableScrapState.undoHash);
                 // reset canvas visibility
                 if(!self.paperState.isForgetful){
                     [self updateThumbnailVisibility];
                 }else{
-                    NSLog(@"forget: skipping thumbnail update");
+                    DebugLog(@"forget: skipping thumbnail update");
                 }
                 [self.delegate didSavePage:self];
                 if(onComplete) onComplete(YES);
@@ -1199,7 +1258,7 @@
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePixelSize andScale:(CGFloat)scale andContext:(JotGLContext*)context{
     CheckMainThread;
-//    debug_NSLog(@"asking %@ to load state", self.uuid);
+//    DebugLog(@"asking %@ to load state", self.uuid);
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
     if([[NSFileManager defaultManager] fileExistsAtPath:self.scrapIDsPath]){
         [scrapsOnPaperState loadStateAsynchronously:async atPath:self.scrapIDsPath andMakeEditable:YES];
@@ -1212,7 +1271,7 @@
 
 -(void) unloadState{
     CheckMainThread;
-//    debug_NSLog(@"asking %@ to unload", self.uuid);
+//    DebugLog(@"asking %@ to unload", self.uuid);
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
     dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
@@ -1339,9 +1398,6 @@
 
 -(void) unloadCachedPreview{
     @autoreleasepool {
-        if(self == [[MMPageCacheManager sharedInstance] currentEditablePage]){
-            NSLog(@"what12");
-        }
         @synchronized(self){
             isAskedToLoadThumbnail = NO;
         }
@@ -1431,10 +1487,14 @@
 #pragma mark - dealloc
 
 -(void) dealloc{
+    CheckMainThread;
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.scrappedThumbnailPath];
+    [[MMLoadImageCache sharedInstance] clearCacheForPath:self.bundledScrappedThumbnailPath];
     if(!scrappedImgViewImage.isDecompressed){
         [scrappedImgViewImage cancel];
-        scrappedImgViewImage = nil;
     }
+    [self setThumbnailTo:nil];
+    scrappedImgViewImage = nil;
     [cachedImgView removeFromSuperview];
     cachedImgView = nil;
 }

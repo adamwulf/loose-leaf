@@ -59,27 +59,38 @@ CGFloat buffer = 2;
 -(void) setImage:(UIImage *)_image{
     image = _image;
     
-    [CATransaction begin];
+    [CATransaction begin]; // prevent CALayer animation
     [CATransaction setDisableActions:YES];
     
     if(image){
-        CGRect fr = CGRectInset(self.bounds, 8, 8);
-        CGSize scaledImageSize = image.size;
-        CGFloat maxDim = MAX(scaledImageSize.width, scaledImageSize.height);
-        scaledImageSize.width = scaledImageSize.width / maxDim * fr.size.width;
-        scaledImageSize.height = scaledImageSize.height / maxDim * fr.size.height;
-        
-        fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
-        fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
-        fr.size = scaledImageSize;
-        layer.frame = fr;
-        
-        CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
-        whiteBorderLayer.frame = whiteFrame;
+        [self setPreferredAspectRatioForEmptyImage:image.size];
     }
     
     [self updateLayerContentsWith:image.CGImage];
     
+    [CATransaction commit];
+}
+
+-(void) setPreferredAspectRatioForEmptyImage:(CGSize)preferredSize{
+    [CATransaction begin]; // prevent CALayer animation
+    [CATransaction setDisableActions:YES];
+    
+    CGRect fr = CGRectInset(self.bounds, 8, 8);
+    CGSize scaledImageSize = preferredSize;
+    
+    CGFloat maxImageDim = MAX(scaledImageSize.width, scaledImageSize.height);
+    CGFloat minFrDim = MIN(fr.size.width, fr.size.height);
+    
+    scaledImageSize.width = (scaledImageSize.width / maxImageDim) * minFrDim;
+    scaledImageSize.height = (scaledImageSize.height / maxImageDim) * minFrDim;
+    
+    fr.origin.x += (fr.size.width - scaledImageSize.width) / 2;
+    fr.origin.y += (fr.size.height - scaledImageSize.height) / 2;
+    fr.size = scaledImageSize;
+    layer.frame = fr;
+    
+    CGRect whiteFrame = CGRectInset(layer.frame, 1, 1);
+    whiteBorderLayer.frame = whiteFrame;
     [CATransaction commit];
 }
 
@@ -89,6 +100,7 @@ CGFloat buffer = 2;
     }
     CGImageRef oldImageRef = (__bridge CGImageRef)(layer.contents);
     // bridge, so ARC doesn't own the object, i'll manage retains myself
+    // http://stackoverflow.com/questions/8577894/setting-the-contents-of-a-calayer-to-a-cgimageref-on-ios-with-arc-on
     layer.contents = (__bridge id)(imageRef);
     if(oldImageRef){
         CFRelease(oldImageRef);

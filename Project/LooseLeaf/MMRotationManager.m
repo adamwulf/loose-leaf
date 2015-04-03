@@ -50,6 +50,10 @@ static MMRotationManager* _instance = nil;
     return _instance;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) startAccelNotifications{
     
     [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
@@ -73,7 +77,7 @@ static MMRotationManager* _instance = nil;
         accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
         accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
         //            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
-        //            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
+        //            DebugLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
         currentTrust += (goalTrust - currentTrust) / 10.0;
         currentTrust = goalTrust;
         
@@ -85,7 +89,7 @@ static MMRotationManager* _instance = nil;
             CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
             
             CGFloat diffCombined = currentTrust * diffActual + (1-currentTrust)*diffOrient;
-//            NSLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
+//            DebugLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
             // now tone it down so that we don't jump around too much, make
             // sure it only changes by max of 5 degrees
             if(ABS(diffCombined) > .05 || isFirstReading){
@@ -146,14 +150,14 @@ static BOOL ignoredFirstRotateNotification = NO;
 
 - (void)didRotate:(NSNotification *)notification {
     CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
-    //            debug_NSLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
+    //            DebugLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
     UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     if(orientation == UIDeviceOrientationPortrait ||
        orientation == UIDeviceOrientationPortraitUpsideDown ||
        orientation == UIDeviceOrientationLandscapeLeft ||
        orientation == UIDeviceOrientationLandscapeRight){
         if(absZ < 0.95){
-//            NSLog(@"rotated ok");
+//            DebugLog(@"rotated ok");
         }else{
             // we got a rotation even when our accelerometers
             // are telling us that we're definitely faceup/down
@@ -168,11 +172,11 @@ static BOOL ignoredFirstRotateNotification = NO;
     }
     
     if(shouldIgnoreEvents){
-        NSLog(@"ignoring rotation event");
+        DebugLog(@"ignoring rotation event");
         return;
     }
     if(!ignoredFirstRotateNotification){
-        NSLog(@"ignoring first rotation event");
+        DebugLog(@"ignoring first rotation event");
         ignoredFirstRotateNotification = YES;
         return;
     }
@@ -184,7 +188,7 @@ static BOOL ignoredFirstRotateNotification = NO;
     }else{
         goalTrust = 0.0;
     }
-//    NSLog(@"resetting goal trust to: %f %d", goalTrust, orientation);
+//    DebugLog(@"resetting goal trust to: %f %d", goalTrust, orientation);
     currentOrientation = orientation;
     
     if(orientation == UIDeviceOrientationUnknown ||
@@ -236,7 +240,7 @@ static BOOL ignoredFirstRotateNotification = NO;
 }
 
 -(void) didBecomeActive{
-//    NSLog(@"rotation manager active");
+//    DebugLog(@"rotation manager active");
     shouldIgnoreEvents = NO;
     ignoredFirstRotateNotification = YES;
     [self startAccelNotifications];

@@ -27,8 +27,16 @@
 
 - (id)init{
     if(self = [super init]){
-        [[Crashlytics sharedInstance] setDelegate:self];
-
+#ifdef DEBUG
+#ifdef DEBUGUSERDEFAULTS
+#if DEBUGUSERDEFAULTS
+        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
+        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+#endif
+#endif
+#endif
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
@@ -73,6 +81,11 @@
         [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
+                                                      kMPHasReorderedPage : @(NO),
+                                                      kMPHasSeenCKTutorial : @(NO),
+                                                      kMPHasBookTurnedPage : @(NO),
+                                                      kMPHasShakeToReorder : @(NO),
+                                                      kMPHasBezelledScrap : @(NO),
                                                       kMPNumberOfPenUses : @(0),
                                                       kMPNumberOfEraserUses : @(0),
                                                       kMPNumberOfScissorUses : @(0),
@@ -88,6 +101,7 @@
                                                       kMPDistanceDrawn : @(0.0),
                                                       kMPDistanceErased : @(0.0),
                                                       kMPNumberOfClippingExceptions : @(0.0),
+                                                      kMPShareStatusCloudKit : kMPShareStatusUnknown,
                                                       kMPShareStatusFacebook : kMPShareStatusUnknown,
                                                       kMPShareStatusTwitter : kMPShareStatusUnknown,
                                                       kMPShareStatusEmail : kMPShareStatusUnknown,
@@ -113,9 +127,10 @@
     return self;
 }
 
--(void) viewWillAppear:(BOOL)animated{
-    
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 
 -(void) pageCacheManagerDidLoadPage{
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
@@ -139,9 +154,9 @@
             [self printKeys:obj atlevel:level+1];
         }else{
             if([obj isKindOfClass:[NSArray class]]){
-                debug_NSLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
+                DebugLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
             }else{
-                debug_NSLog(@"%@ %@ - %@", space, key, [obj class]);
+                DebugLog(@"%@ %@ - %@", space, key, [obj class]);
             }
         }
     }
@@ -162,37 +177,10 @@
 }
 
 
-#pragma mark - Crashlytics reporting
-
--(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
-    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
-    
-    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
-    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
-    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
-    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
-    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
-    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
-    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
-    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
-    
-    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
-    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
-    }];
-    
-    @try{
-        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
-    }@catch(id e){
-        // noop
-    }
-
-}
-
 #pragma mark - application state
 
 -(void) willResignActive{
-    debug_NSLog(@"telling stack to cancel all gestures");
+    DebugLog(@"telling stack to cancel all gestures");
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
@@ -200,12 +188,12 @@
 
 -(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
     [super dismissViewControllerAnimated:flag completion:completion];
-//    NSLog(@"dismissing view controller");
+//    DebugLog(@"dismissing view controller");
 }
 
 -(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
-//    NSLog(@"presenting view controller");
+//    DebugLog(@"presenting view controller");
 }
 
 @end

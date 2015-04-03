@@ -13,6 +13,8 @@
 
 @interface UIBezierPath (PathElement)
 
+-(void) scaleAndPreserveCenter:(CGFloat)scale;
+
 -(void) rotateAndAlignCenter:(CGFloat)rotation;
 
 -(NSArray*) convertToPathElementsFromTValue:(CGFloat)fromTValue

@@ -76,18 +76,46 @@
 // will return points per in/cm depending
 // on user's locale
 +(CGFloat) idealUnitLength{
-    NSLocale *locale = [NSLocale currentLocale];
-    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
-    if(isMetric){
+    if([UIDevice isMetric]){
         return [self ppc];
     }else{
         return [self ppi];
     }
 }
 
+static BOOL isMetric;
++(BOOL) isMetric{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSLocale *locale = [NSLocale currentLocale];
+        isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
+    });
+    return isMetric;
+}
+
 +(NSInteger) majorVersion{
     NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
     return [[vComp objectAtIndex:0] integerValue];
+}
+
++(NSString*) buildVersion{
+    int mib[2] = {CTL_KERN, KERN_OSVERSION};
+    u_int namelen = sizeof(mib) / sizeof(mib[0]);
+    size_t bufferSize = 0;
+    
+    NSString *osBuildVersion = nil;
+    
+    // Get the size for the buffer
+    sysctl(mib, namelen, NULL, &bufferSize, NULL, 0);
+    
+    u_char buildBuffer[bufferSize];
+    int result = sysctl(mib, namelen, buildBuffer, &bufferSize, NULL, 0);
+    
+    if (result >= 0) {
+        osBuildVersion = [[NSString alloc] initWithBytes:buildBuffer length:bufferSize encoding:NSUTF8StringEncoding];
+    }
+    
+    return osBuildVersion;   
 }
 
 @end

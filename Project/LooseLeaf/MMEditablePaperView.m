@@ -133,8 +133,8 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) setEditable:(BOOL)isEditable{
-    if(isEditable && (!drawableView || drawableView.hidden)){
-        debug_NSLog(@"setting editable w/o canvas");
+    if(isEditable && !drawableView){
+        DebugLog(@"setting editable w/o canvas");
     }
     if(isEditable){
         drawableView.userInteractionEnabled = YES;
@@ -148,23 +148,19 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 -(void) generateDebugView:(BOOL)create{
+    CheckMainThread;
     if(create){
+//        DebugLog(@"MMEditablePaperView: CREATE shape view for %@", self.uuid);
         CGFloat scale = [[UIScreen mainScreen] scale];
         CGRect boundsForShapeBuilder = self.contentView.bounds;
         boundsForShapeBuilder = CGRectApplyAffineTransform(boundsForShapeBuilder, CGAffineTransformMakeScale(1/scale, 1/scale));
-        shapeBuilderView = [[MMShapeBuilderView alloc] initWithFrame:boundsForShapeBuilder];
-        shapeBuilderView.transform = CGAffineTransformMakeScale(scale, scale);
-        //        polygonDebugView.layer.borderColor = [UIColor redColor].CGColor;
-        //        polygonDebugView.layer.borderWidth = 10;
-        shapeBuilderView.frame = self.contentView.bounds;
-        shapeBuilderView.contentMode = UIViewContentModeScaleAspectFill;
-        shapeBuilderView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        shapeBuilderView.clipsToBounds = YES;
-        shapeBuilderView.opaque = NO;
-        shapeBuilderView.backgroundColor = [UIColor clearColor];
+        shapeBuilderView = [MMShapeBuilderView staticShapeBuilderViewWithFrame:boundsForShapeBuilder andScale:scale];
         [self.contentView addSubview:shapeBuilderView];
     }else{
-        [shapeBuilderView removeFromSuperview];
+//        DebugLog(@"MMEditablePaperView: DESTROY shape view for %@", self.uuid);
+        if(shapeBuilderView.superview == self.contentView){
+            [shapeBuilderView removeFromSuperview];
+        }
         shapeBuilderView = nil;
     }
 }
@@ -178,8 +174,9 @@ dispatch_queue_t importThumbnailQueue;
 -(void) setDrawableView:(JotView *)_drawableView{
     CheckMainThread;
     if(_drawableView && ![self isStateLoaded]){
-        NSLog(@"oh no3");
+        DebugLog(@"oh no3");
     }
+//    DebugLog(@"page %@ set drawable view to %p", self.uuid, _drawableView);
     if(drawableView != _drawableView){
         if(!_drawableView && drawableView){
             [drawableView removeFromSuperview];
@@ -260,7 +257,7 @@ dispatch_queue_t importThumbnailQueue;
     
     // find out what our current undo state looks like.
     if([self hasEditsToSave] && ![paperState hasEditsToSave]){
-//        NSLog(@"saved excess");
+//        DebugLog(@"saved excess");
     }
     if([paperState hasEditsToSave]){
         // something has changed since the last time we saved,
@@ -269,6 +266,7 @@ dispatch_queue_t importThumbnailQueue;
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
+                     withThumbnailScale:0.5
                              onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState){
                                  if(immutableState){
                                      // sometimes, if we try to export multiple times
@@ -283,14 +281,14 @@ dispatch_queue_t importThumbnailQueue;
                                      [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                      cachedImgViewImage = thumbnail;
                                      onComplete(YES);
-//                                     NSLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+//                                     DebugLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }else{
                                      // NOTE!
                                      // https://github.com/adamwulf/loose-leaf/issues/658
                                      // it's important to anyone listening to us that they potentially
                                      // wait for a pending save
                                      onComplete(NO);
-//                                     NSLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+//                                     DebugLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }
                              }];
         }else{
@@ -481,7 +479,7 @@ static int count = 0;
                 // below.
                 //
                 // true fix is filed in https://github.com/adamwulf/loose-leaf/issues/562
-                NSLog(@"unable to generate red/green/blue segments");
+                DebugLog(@"unable to generate red/green/blue segments");
                 [[[Mixpanel sharedInstance] people] increment:kMPNumberOfClippingExceptions by:@(1)];
             }
             NSArray* redSegments = [redAndBlueSegments firstObject];
@@ -516,14 +514,24 @@ static int count = 0;
 
 
 -(void) jotSuggestsToDisableGestures{
-    debug_NSLog(@"disable gestures!");
+    DebugLog(@"disable gestures!");
 }
 
 -(void) jotSuggestsToEnableGestures{
-    debug_NSLog(@"enable gestures!");
+    DebugLog(@"enable gestures!");
 }
 
 #pragma mark - File Paths
+
++(NSString*) pagesPathForUUID:(NSString*)uuidOfPage{
+    NSString* documentsPath = [NSFileManager documentsPath];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:uuidOfPage];
+}
+
++(NSString*) bundledPagesPathForUUID:(NSString*)uuidOfPage{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:uuidOfPage];
+}
 
 -(NSString*) pagesPath{
     if(!pagesPath){

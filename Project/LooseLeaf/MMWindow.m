@@ -12,7 +12,7 @@
 
 //-(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
 //    UIView* ret = [super hitTest:point withEvent:event];
-//    NSLog(@"window hit test: %@", NSStringFromClass([ret class]));
+//    DebugLog(@"window hit test: %@", NSStringFromClass([ret class]));
 //    return ret;
 //}
 

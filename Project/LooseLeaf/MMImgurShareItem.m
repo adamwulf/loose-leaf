@@ -18,7 +18,6 @@
 #import "MMOfflineIconView.h"
 
 @implementation MMImgurShareItem{
-    MMImageViewButton* button;
     AFURLConnectionOperation* conn;
     NSString* lastLinkURL;
     CGFloat lastProgress;
@@ -53,6 +52,14 @@
     return button;
 }
 
+-(NSString*) exportDestinationName{
+    return @"Imgur";
+}
+
+-(NSString*) exportDestinationResult{
+    return @"Success";
+}
+
 -(void) performShareAction{
     if(targetProgress){
         // only try to share if not already sharing
@@ -64,93 +71,56 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIImage* image = self.delegate.imageToShare;
-        if(image && !conn){
-            lastProgress = 0;
-            targetSuccess = 0;
-            targetProgress = 0;
-            reason = nil;
-            [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
-                progress *= .55; // leave last 10 % for when we get the URL
-                if(progress > targetProgress){
-                    targetProgress = progress;
-                }
-                targetSuccess = YES;
-            } completionBlock:^(NSString *result) {
-                lastLinkURL = result;
-                targetProgress = 1.0;
-                targetSuccess = YES;
-                conn = nil;
+        @autoreleasepool {
+            UIImage* image = self.delegate.imageToShare;
+            if(image && !conn){
+                lastProgress = 0;
+                targetSuccess = 0;
+                targetProgress = 0;
                 reason = nil;
-                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
-                                                                             kMPEventExportPropResult : @"Success"}];
-            } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
-                lastLinkURL = nil;
-                targetProgress = 1.0;
-                targetSuccess = NO;
-                reason = error;
-                conn = nil;
-                
-                NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
-                if(failedReason){
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
-                                                                                 kMPEventExportPropResult : @"Failed",
-                                                                                 kMPEventExportPropReason : failedReason}];
-                }else{
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Imgur",
-                                                                                 kMPEventExportPropResult : @"Failed"}];
-                }
-            }];
-            [self animateToPercent:.1 success:YES];
+                [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
+                    progress *= .55; // leave last 10 % for when we get the URL
+                    if(progress > targetProgress){
+                        targetProgress = progress;
+                    }
+                    targetSuccess = YES;
+                } completionBlock:^(NSString *result) {
+                    lastLinkURL = result;
+                    targetProgress = 1.0;
+                    targetSuccess = YES;
+                    conn = nil;
+                    reason = nil;
+                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                 kMPEventExportPropResult : [self exportDestinationResult]}];
+                } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
+                    lastLinkURL = nil;
+                    targetProgress = 1.0;
+                    targetSuccess = NO;
+                    reason = error;
+                    conn = nil;
+                    
+                    NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
+                    if(failedReason){
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                     kMPEventExportPropResult : @"Failed",
+                                                                                     kMPEventExportPropReason : failedReason}];
+                    }else{
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                     kMPEventExportPropResult : @"Failed"}];
+                    }
+                }];
+                [self animateToPercent:.1 success:YES];
+            }
         }
     });
 }
 
 
--(void) animateLinkTo:(NSString*) linkURL{
+-(void) animateLinkTo:(NSString*)linkURL{
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = linkURL;
-    
-    linkURL = [@"        " stringByAppendingString:linkURL];
-    
-    UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
-    imgView.image = [UIImage imageNamed:@"link"];
-    
-    UILabel* labelForLink = [[UILabel alloc] initWithFrame:CGRectZero];
-    labelForLink.alpha = 0;
-    labelForLink.text = linkURL;
-    labelForLink.font = [UIFont boldSystemFontOfSize:16];
-    labelForLink.textAlignment = NSTextAlignmentCenter;
-    labelForLink.textColor = [UIColor whiteColor];
-    labelForLink.clipsToBounds = YES;
-    labelForLink.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.75];
-    labelForLink.layer.borderColor = [UIColor whiteColor].CGColor;
-    labelForLink.layer.borderWidth = 1.0;
-    labelForLink.layer.cornerRadius = 20;
-    [labelForLink sizeToFit];
-    CGRect winFr = self.button.window.bounds;
-    CGRect fr = labelForLink.frame;
-    fr.size.height = 40;
-    fr.size.width += 40;
-    fr.origin.x = (winFr.size.width - fr.size.width) / 2;
-    fr.origin.y = 40;
-    labelForLink.frame = fr;
-    [labelForLink addSubview:imgView];
-    [self.button.window addSubview:labelForLink];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        labelForLink.alpha = 1;
-    }completion:^(BOOL finished){
-        [[NSThread mainThread] performBlock:^{
-            [UIView animateWithDuration:.3 animations:^{
-                labelForLink.alpha = 0;
-            }completion:^(BOOL finished){
-                [labelForLink removeFromSuperview];
-            }];
-        } afterDelay:1.2];
-    }];
-    
+    pasteboard.string = lastLinkURL;
+    [self animateCompletionText:@"Link copied to clipboard" withImage:[UIImage imageNamed:@"link"]];
 }
 
 -(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded{
@@ -164,7 +134,11 @@
         }
     }
 
+    
     CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
+    if(button.contentScaleFactor == 2){
+        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    }
 
     CGFloat radius = button.drawableFrame.size.width / 2;
     CAShapeLayer *circle;
@@ -177,7 +151,7 @@
         circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
         circle.lineWidth=radius*2;
         CAShapeLayer *mask=[CAShapeLayer layer];
-        mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.mask = mask;
         [button.layer addSublayer:circle];
     }
@@ -186,7 +160,7 @@
     
     if(lastProgress >= 1.0){
         CAShapeLayer *mask2=[CAShapeLayer layer];
-        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         
         UIView* checkOrXView = [[UIView alloc] initWithFrame:button.bounds];
         checkOrXView.backgroundColor = [UIColor whiteColor];

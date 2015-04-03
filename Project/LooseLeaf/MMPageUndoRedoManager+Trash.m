@@ -7,7 +7,7 @@
 //
 
 #import "MMPageUndoRedoManager+Trash.h"
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 #import <objc/runtime.h>
 
 static char SHOULD_FORGET;

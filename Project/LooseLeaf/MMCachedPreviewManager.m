@@ -25,7 +25,7 @@
 }
 
 -(void) setHidden:(BOOL)hidden{
-//    NSLog(@"setting %p hidden: %d", self, hidden);
+//    DebugLog(@"setting %p hidden: %d", self, hidden);
     [super setHidden:hidden];
 }
 

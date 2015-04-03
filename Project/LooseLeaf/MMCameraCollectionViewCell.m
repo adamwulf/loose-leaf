@@ -12,7 +12,7 @@
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
-#import "UIScreen+PortraitBounds.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMCameraCollectionViewCell{
     CGFloat rowHeight;
@@ -27,7 +27,6 @@
     CGRect cameraViewFr = CGRectZero;
     cameraViewFr.size.width = ratio * (rowHeight - kCameraMargin) * 2;
     cameraViewFr.size.height = (rowHeight - kCameraMargin) * 2;
-    NSLog(@"cameraViewFr: %f %f %f %f", cameraViewFr.origin.x, cameraViewFr.origin.y, cameraViewFr.size.width, cameraViewFr.size.height);
     return cameraViewFr;
 }
 
@@ -41,9 +40,9 @@
         cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr andCameraPosition:preferredPosition];
         cameraRow.delegate = self;
         cameraRow.rotation = RandomPhotoRotation(0)/2;
-        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2, kCameraMargin + cameraRow.bounds.size.height/2);
+        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2 + kCameraMargin, kCameraMargin + cameraRow.bounds.size.height/2);
 
-        flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer,
+        flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer + kCameraMargin,
                                                                           floorf((cameraViewFr.size.height - kWidthOfSidebarButton) / 2),
                                                                           kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [flipButton addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
@@ -64,7 +63,7 @@
 #pragma mark - MMCamViewDelegate
 
 -(void) didTakePicture:(UIImage*)img{
-    NSLog(@"took picture!");
+    DebugLog(@"took picture!");
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 

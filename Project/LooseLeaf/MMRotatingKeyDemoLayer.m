@@ -9,6 +9,7 @@
 #import "MMRotatingKeyDemoLayer.h"
 #import "MMCloudKeyIconLayer.h"
 #import "MMCloudLoadingIconLayer.h"
+#import "Constants.h"
 
 @implementation MMRotatingKeyDemoLayer{
     MMCloudKeyIconLayer* keyLayer;
@@ -176,7 +177,7 @@
 }
 
 -(void) animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
-    NSLog(@"animation stopped");
+    DebugLog(@"animation stopped");
 }
 
 

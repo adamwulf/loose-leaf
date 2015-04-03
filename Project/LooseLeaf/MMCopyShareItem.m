@@ -59,6 +59,10 @@
 
 -(void) animateToSuccess:(BOOL)succeeded{
     CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
+    if(button.contentScaleFactor == 2){
+        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
+    }
+    
     
     CAShapeLayer *circle=[CAShapeLayer layer];
     CGFloat radius = button.drawableFrame.size.width / 2;
@@ -70,10 +74,10 @@
     
     
     CAShapeLayer *mask=[CAShapeLayer layer];
-    mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+    mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     
     CAShapeLayer *mask2=[CAShapeLayer layer];
-    mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+    mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     
     circle.mask = mask;
     
@@ -104,6 +108,7 @@
             [path moveToPoint:start];
             [path addLineToPoint:corner];
             [path addLineToPoint:end];
+            [self animateCompletionText:@"Page copied to clipboard" withImage:[UIImage imageNamed:@"clipboard-icon"]];
         }else{
             CGFloat size = 14;
             CGPoint start = CGPointMake(31, 31);

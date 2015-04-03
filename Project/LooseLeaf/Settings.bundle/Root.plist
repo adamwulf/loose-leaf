@@ -44,6 +44,22 @@
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 		</dict>
+		<dict>
+			<key>Title</key>
+			<string>Support</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>unknown</string>
+			<key>Key</key>
+			<string>mixpanel_uuid</string>
+			<key>Title</key>
+			<string>Identifier</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

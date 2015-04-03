@@ -21,6 +21,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSArray+Extras.h"
 #import <ZipArchive/ZipArchive.h>
+#import "Constants.h"
 
 #define kMessagesSinceLastFetchKey @"messagesSinceLastFetch"
 
@@ -31,6 +32,7 @@
     NSMutableDictionary* incomingMessageState;
     
     BOOL needsBootstrap;
+    CKModifyBadgeOperation * lastBadgeOp;
 }
 
 @synthesize delegate;
@@ -78,16 +80,22 @@ static NSString* cloudKitFilesPath;
         currentState = [[MMCloudKitBaseState alloc] init];
         
         dispatch_async([MMCloudKitManager messageQueue], ^{
-            incomingMessageState = [NSMutableDictionary dictionaryWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
-            if(!incomingMessageState){
-                incomingMessageState = [NSMutableDictionary dictionary];
-                [incomingMessageState setObject:@[] forKey:kMessagesSinceLastFetchKey];
+            @autoreleasepool {
+                incomingMessageState = [NSMutableDictionary dictionaryWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
+                if(!incomingMessageState){
+                    incomingMessageState = [NSMutableDictionary dictionary];
+                    [incomingMessageState setObject:@[] forKey:kMessagesSinceLastFetchKey];
+                }
             }
         });
         
         // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
     }
     return self;
+}
+
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(NSString*) cachePath{
@@ -122,12 +130,12 @@ static NSString* cloudKitFilesPath;
         needsBootstrap = NO;
         [currentState runState];
     }
-    [self resetBadgeCountTo:0];
 }
 
 -(void) fetchAllNewMessages{
     [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesAndMarkAsReadWithCompletionHandler:^(NSArray *messages, NSError *error) {
         if(!error){
+            DebugLog(@"CloudKit fetched all new messages: %d", (int) [messages count]);
             for(SPRMessage* message in messages){
                 [self processIncomingMessage:message];
             }
@@ -136,8 +144,10 @@ static NSString* cloudKitFilesPath;
             // clear out any messages that we're tracking
             // since our last fetch-all-notifications
             dispatch_async([MMCloudKitManager messageQueue], ^{
-                @synchronized(incomingMessageState){
-                    [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+                @autoreleasepool {
+                    @synchronized(incomingMessageState){
+                        [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
+                    }
                 }
             });
         }else{
@@ -155,13 +165,15 @@ static NSString* cloudKitFilesPath;
     // this message yet. if we have, then we should just
     // bail out here.
     dispatch_async([MMCloudKitManager messageQueue], ^{
-        @synchronized(incomingMessageState){
-            NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
-            hadAlreadyProcessedThisMessage = [messagesSinceLastFetch containsObject:unprocessedMessage];
-            if(!hadAlreadyProcessedThisMessage){
-                // if we haven't processed it yet, then go ahead
-                // and mark it as processed
-                [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
+        @autoreleasepool {
+            @synchronized(incomingMessageState){
+                NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
+                hadAlreadyProcessedThisMessage = [messagesSinceLastFetch containsObject:unprocessedMessage];
+                if(!hadAlreadyProcessedThisMessage){
+                    // if we haven't processed it yet, then go ahead
+                    // and mark it as processed
+                    [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
+                }
             }
         }
         dispatch_semaphore_signal(sema1);
@@ -201,7 +213,8 @@ static NSString* cloudKitFilesPath;
 }
 
 -(void) changeToStateBasedOnError:(NSError*)err{
-    NSLog(@"changeToStateBasedOnError");
+    DebugLog(@"changeToStateBasedOnError: %@", err);
+    [MMCloudKitBaseState clearCache];
     switch (err.code) {
         case SPRSimpleCloudMessengerErrorNetwork:
         case SPRSimpleCloudMessengerErrorServiceUnavailable:
@@ -234,9 +247,10 @@ static NSString* cloudKitFilesPath;
 }
 
 -(void) applicationWillEnterForeground{
-    NSLog(@"applicationWillEnterForeground - cloudkit manager");
+    DebugLog(@"applicationWillEnterForeground - cloudkit manager");
     [MMCloudKitBaseState clearCache];
     [self changeToState:[[MMCloudKitBaseState alloc] initWithCachedFriendList:currentState.friendList]];
+    [self fetchAllNewMessages];
 }
 
 -(void) reachabilityDidChange{
@@ -252,20 +266,24 @@ static NSString* cloudKitFilesPath;
     }];
     [self.currentState cloudKitDidRecievePush];
     [self fetchAllNewMessages];
-    [[MMCloudKitManager sharedManager] resetBadgeCountTo:0];
 }
 
 -(void) resetBadgeCountTo:(NSUInteger)number{
-    CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
-    oper.modifyBadgeCompletionBlock = ^(NSError* err){
-        if(!err){
-            UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-            if (notificationSettings.types & UIUserNotificationTypeBadge){
-                [UIApplication sharedApplication].applicationIconBadgeNumber = number;
+    if(!lastBadgeOp){
+        CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
+        oper.modifyBadgeCompletionBlock = ^(NSError* err){
+            lastBadgeOp = nil;
+            if(!err){
+                UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+                if (notificationSettings.types & UIUserNotificationTypeBadge){
+                    [UIApplication sharedApplication].applicationIconBadgeNumber = number;
+                    DebugLog(@"reset badge count to: %d", (int) number);
+                    [self.delegate didResetBadgeCountTo:number];
+                }
             }
-        }
-    };
-    [[CKContainer defaultContainer] addOperation:oper];
+        };
+        [[CKContainer defaultContainer] addOperation:oper];
+    }
 }
 
 #pragma mark - Description

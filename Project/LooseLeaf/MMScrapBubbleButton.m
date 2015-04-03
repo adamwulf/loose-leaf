@@ -9,6 +9,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBorderView.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "Constants.h"
 
 @implementation MMScrapBubbleButton{
@@ -76,10 +77,12 @@
 }
 
 -(void) setScrap:(MMScrapView *)_scrap{
-    if(!_scrap){
-        debug_NSLog(@"what: setting nil scrap");
-    }
+    
     scrap = _scrap;
+    if(!_scrap){
+//        DebugLog(@"killing scrap bubble, setting to nil scrap");
+        return;
+    }
     rotationAdjustment = self.rotation;
     
     // force transform update

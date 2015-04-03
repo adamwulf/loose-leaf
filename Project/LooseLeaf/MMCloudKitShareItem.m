@@ -73,7 +73,7 @@
         // so we need to add our next steps /after that/
         // so we need to dispatch async too
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"should update cloudkit options view");
+            DebugLog(@"should update cloudkit options view %@", [MMCloudKitManager sharedManager].currentState);
         });
     }
 }
@@ -167,7 +167,7 @@
         strResult = @"Failed";
     }else if(result == MFMailComposeResultSaved){
         strResult = @"Saved";
-    }else if(result == MFMailComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){
@@ -188,7 +188,7 @@
         strResult = @"Cancelled";
     }else if(result == MessageComposeResultFailed){
         strResult = @"Failed";
-    }else if(result == MessageComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MessageComposeResultSent){

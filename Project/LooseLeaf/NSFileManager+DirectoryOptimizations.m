@@ -8,8 +8,9 @@
 
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 #import "NSMutableSet+Extras.h"
+#import <JotUI/JotUI.h>
 
 @implementation NSFileManager (DirectoryOptimizations)
 
@@ -45,6 +46,7 @@ static NSMutableSet* pathCacheDictionary;
 }
 
 -(BOOL) swizzle_removeItemAtPath:(NSString *)path error:(NSError *__autoreleasing *)error{
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForPath:path];
     @synchronized(pathCacheDictionary){
         [pathCacheDictionary removeObject:path];
         [pathCacheDictionary filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
@@ -56,6 +58,7 @@ static NSMutableSet* pathCacheDictionary;
 
 
 -(void) preCacheDirectoryListingAt:(NSString*)directoryToScan{
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:directoryToScan];
     [NSFileManager makePathCacheDictionary];
     NSArray* dirContents = [self contentsOfDirectoryAtPath:directoryToScan error:nil];
     @synchronized(pathCacheDictionary){
@@ -77,7 +80,8 @@ static NSArray* userDocumentsPaths;
 
 
 - (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly{
-    
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:directoryPath];
+
     NSMutableArray *filePaths = [[NSMutableArray alloc] init];
     
     // Enumerators are recursive
@@ -102,6 +106,7 @@ static NSArray* userDocumentsPaths;
 }
 
 -(NSString*) humanReadableSizeForItemAtPath:(NSString *)path{
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForPath:path];
     NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
     if (attribs) {
         return [NSByteCountFormatter stringFromByteCount:[attribs fileSize] countStyle:NSByteCountFormatterCountStyleFile];
@@ -110,6 +115,7 @@ static NSArray* userDocumentsPaths;
 }
 
 -(unsigned long long) sizeForItemAtPath:(NSString *)path{
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForPath:path];
     NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
     if (attribs) {
         return [attribs fileSize];
@@ -117,12 +123,27 @@ static NSArray* userDocumentsPaths;
     return 0;
 }
 
+-(BOOL) swizzle_fileExistsAtPath:(NSString *)path{
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForPath:path];
+    return [self swizzle_fileExistsAtPath:path];
+}
+
+-(BOOL) swizzle_fileExistsAtPath:(NSString *)path isDirectory:(BOOL *)isDirectory{
+    [[JotDiskAssetManager sharedManager] blockUntilCompletedForPath:path];
+    return [self swizzle_fileExistsAtPath:path isDirectory:isDirectory];
+}
 
 
 +(void)load{
     NSError *error = nil;
     [NSFileManager jr_swizzleMethod:@selector(removeItemAtPath:error:)
                          withMethod:@selector(swizzle_removeItemAtPath:error:)
+                              error:&error];
+    [NSFileManager jr_swizzleMethod:@selector(fileExistsAtPath:)
+                         withMethod:@selector(swizzle_fileExistsAtPath:)
+                              error:&error];
+    [NSFileManager jr_swizzleMethod:@selector(fileExistsAtPath:isDirectory:)
+                         withMethod:@selector(swizzle_fileExistsAtPath:isDirectory:)
                               error:&error];
 }
 

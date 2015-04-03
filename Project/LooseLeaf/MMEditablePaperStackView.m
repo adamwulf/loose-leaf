@@ -27,6 +27,13 @@ struct SidebarButton{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
     struct SidebarButton buttons[10];
+    
+    // this tracks how many times the user has
+    // used two fingers with the ruler gesture in
+    // a row but didn't actually draw.
+    // this way we can bounce the hand button, they're
+    // probably trying to use hands.
+    NSInteger numberOfRulerGesturesWithoutStroke;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -231,6 +238,10 @@ struct SidebarButton{
     return self;
 }
 
+-(void) dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 -(void) setMemoryView:(MMMemoryProfileView*)_memoryView{
     memoryView = _memoryView;
 }
@@ -339,7 +350,30 @@ struct SidebarButton{
     rulerButton.selected = NO;
 }
 
+-(void) bounceHandButton{
+    CheckMainThread;
+    CGPoint onscreen = handButton.center;
+    
+    [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
+        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
+            handButton.center = CGPointMake(onscreen.x+12, onscreen.y);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
+            handButton.center = onscreen;
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
+            handButton.center = CGPointMake(onscreen.x + 8, onscreen.y);
+        }];
+        [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
+            handButton.center = onscreen;
+        }];
+    } completion:nil];
+}
+
 -(void) rulerTapped:(UIButton*)_button{
+    if(!rulerButton.selected){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
     [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
@@ -378,7 +412,7 @@ struct SidebarButton{
 }
 
 -(void) tempButtonTapped:(UIButton*)_button{
-    debug_NSLog(@"temp button");
+    DebugLog(@"temp button");
 }
 
 -(void) setButtonsVisible:(BOOL)visible{
@@ -532,10 +566,10 @@ struct SidebarButton{
     if([page isKindOfClass:[MMEditablePaperView class]]){
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:NO];
-//        debug_NSLog(@"page %@ isn't editable", pageToSave.uuid);
+//        DebugLog(@"page %@ isn't editable", pageToSave.uuid);
         [[visibleStackHolder peekSubview] saveToDisk:nil];
     }else{
-        debug_NSLog(@"would save, but can't b/c its readonly page");
+        DebugLog(@"would save, but can't b/c its readonly page");
     }
     // update UI for scaling small into list view
     [self setButtonsVisible:NO];
@@ -546,7 +580,6 @@ struct SidebarButton{
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
-//    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
@@ -561,7 +594,7 @@ struct SidebarButton{
             [pageToSave setEditable:YES];
         }
         [pageToSave updateThumbnailVisibility];
-//        debug_NSLog(@"page %@ is editable", pageToSave.uuid);
+//        DebugLog(@"page %@ is editable", pageToSave.uuid);
     }
     [rulerView setHidden:NO];
 }
@@ -575,7 +608,6 @@ struct SidebarButton{
         [editablePage setEditable:NO];
         [editablePage updateThumbnailVisibility];
     }
-//    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 #pragma mark = Saving and Editing
@@ -585,12 +617,12 @@ struct SidebarButton{
         if([page isKindOfClass:[MMEditablePaperView class]]){
             MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
             if([editablePage hasEditsToSave]){
-//                debug_NSLog(@"page still has edits to save...");
+//                DebugLog(@"page still has edits to save...");
             }else{
-//                debug_NSLog(@"page is done saving...");
+//                DebugLog(@"page is done saving...");
                 [(MMEditablePaperView*)page setEditable:NO];
                 [(MMEditablePaperView*)page updateThumbnailVisibility];
-//                debug_NSLog(@"thumb for %@ is visible", page.uuid);
+//                DebugLog(@"thumb for %@ is visible", page.uuid);
             }
         }
     }else{
@@ -639,7 +671,14 @@ struct SidebarButton{
 }
 
 -(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
-    [rulerView liftRuler];
+    if(rulerView.rulerIsVisible){
+        [rulerView liftRuler];
+        numberOfRulerGesturesWithoutStroke++;
+        NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
+        if(numberOfRulerGesturesWithoutStroke > 2){
+            [self bounceHandButton];
+        }
+    }
 }
 
 #pragma mark - MMGestureTouchOwnershipDelegate
@@ -653,7 +692,7 @@ struct SidebarButton{
             [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }else{
             if([fromLeftBezelGesture isActivelyBezeling]){
-                NSLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
+                DebugLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
             }
             [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }
@@ -766,10 +805,9 @@ struct SidebarButton{
         }
     }
     
-    
-    
     if([self hasPages]){
         // load the state for the top page in the visible stack
+        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
         [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
                                                          withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
                                                          andScale:[MMPageCacheManager sharedInstance].drawableView.scale
@@ -805,7 +843,7 @@ struct SidebarButton{
 -(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0){
-//        debug_NSLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
+//        DebugLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
         return NO;
     }
     if([MMPageCacheManager sharedInstance].drawableView.state.currentStroke){
@@ -872,7 +910,13 @@ struct SidebarButton{
 }
 
 -(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    return [rulerView willAddElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+
+    if(adjustments.didAdjust){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
+    
+    return adjustments.elements;
 }
 
 #pragma mark - PolygonToolDelegate
@@ -912,35 +956,35 @@ struct SidebarButton{
 #pragma mark - JotStylusManager Connection Notification
 
 -(void)connectionChange:(NSNotification *) note{
-    NSString *text;
+//    NSString *text;
     switch([[JotStylusManager sharedInstance] connectionStatus])
     {
         case JotConnectionStatusOff:
-            text = @"Off";
+//            text = @"Off";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusScanning:
-            text = @"Scanning";
+//            text = @"Scanning";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusPairing:
-            text = @"Pairing";
+//            text = @"Pairing";
             settingsButton.selected = NO;
             break;
         case JotConnectionStatusConnected:
-            text = @"Connected";
+//            text = @"Connected";
             settingsButton.selected = YES;
             break;
         case JotConnectionStatusDisconnected:
-            text = @"Disconnected";
+//            text = @"Disconnected";
             settingsButton.selected = NO;
             break;
         default:
-            text = @"";
+//            text = @"";
             settingsButton.selected = NO;
             break;
     }
-//    debug_NSLog(@"jot status: %@", text);
+//    DebugLog(@"jot status: %@", text);
 }
 
 

@@ -11,6 +11,7 @@
 #import "MMScrapViewState.h"
 #import "UIImage+Memory.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import "Constants.h"
 
 static int totalBackgroundBytes;
 
@@ -67,12 +68,12 @@ static int totalBackgroundBytes;
                                                                self.bounds.size.height/2 + self.backgroundOffset.y);
     self.backingContentView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
     self.backingViewHasChanged = YES;
-    [self setNeedsDisplay];
 }
 
 #pragma mark - Properties
 
 -(void) setBackingImage:(UIImage*)img{
+    CheckMainThread;
     @synchronized([MMScrapBackgroundView class]){
         totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
         totalBackgroundBytes += [img uncompressedByteSize];
@@ -180,10 +181,10 @@ static int totalBackgroundBytes;
        [[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
         NSData* imageData = [NSData dataWithContentsOfFile:self.backgroundJPGFile];
         if(!imageData){
-            NSLog(@"can't get background!");
+            DebugLog(@"can't get background!");
             imageData = [NSData dataWithContentsOfFile:self.bundledBackgroundJPGFile];
             if(!imageData){
-                NSLog(@"can't get background!");
+                DebugLog(@"can't get background!");
             }
         }
         UIImage* image = [UIImage imageWithData:imageData];

@@ -171,7 +171,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        debug_NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

@@ -46,25 +46,27 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        composer = [[MFMailComposeViewController alloc] init];
-        [composer setMailComposeDelegate:self];
-        if([MFMailComposeViewController canSendMail]) {
-            [composer setSubject:@"Quick sketch from Loose Leaf"];
-            [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-            
-            NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-            [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-            
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
-                NSLog(@"done");
-            }];
-        }else{
-            composer = nil;
+        @autoreleasepool {
+            composer = [[MFMailComposeViewController alloc] init];
+            [composer setMailComposeDelegate:self];
+            if([MFMailComposeViewController canSendMail]) {
+                [composer setSubject:@"Quick sketch from Loose Leaf"];
+                [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+                [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+                
+                NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
+                [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+                
+                [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
+                    DebugLog(@"done");
+                }];
+            }else{
+                composer = nil;
+            }
+            [delegate didShare:self];
         }
-        [delegate didShare:self];
     });
 }
 
@@ -99,7 +101,7 @@
         strResult = @"Failed";
     }else if(result == MFMailComposeResultSaved){
         strResult = @"Saved";
-    }else if(result == MFMailComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){

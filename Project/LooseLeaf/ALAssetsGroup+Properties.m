@@ -7,7 +7,7 @@
 //
 
 #import "ALAssetsGroup+Properties.h"
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 
 @implementation ALAssetsGroup (Properties)
 

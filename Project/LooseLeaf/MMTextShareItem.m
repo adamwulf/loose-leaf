@@ -45,23 +45,25 @@
     // so we need to add our next steps /after that/
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
-        MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
-        [composer setMessageComposeDelegate:self];
-        if([MFMessageComposeViewController canSendText]) {
-            if([MFMessageComposeViewController canSendSubject]){
-                [composer setSubject:@"Quick sketch from Loose Leaf"];
+        @autoreleasepool {
+            MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
+            [composer setMessageComposeDelegate:self];
+            if([MFMessageComposeViewController canSendText]) {
+                if([MFMessageComposeViewController canSendSubject]){
+                    [composer setSubject:@"Quick sketch from Loose Leaf"];
+                }
+                [composer setBody:@"\nDrawn with Loose Leaf. http://getlooseleaf.com"];
+                [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+                
+                NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
+                [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
+                
+                [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
             }
-            [composer setBody:@"\nDrawn with Loose Leaf. http://getlooseleaf.com"];
-            [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-            
-            NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-            [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
-            
-            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-            [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
+            [delegate didShare:self];
         }
-        [delegate didShare:self];
     });
 }
 
@@ -102,7 +104,7 @@
         strResult = @"Cancelled";
     }else if(result == MessageComposeResultFailed){
         strResult = @"Failed";
-    }else if(result == MessageComposeResultSent){
+    }else{
         strResult = @"Sent";
     }
     if(result == MessageComposeResultSent){

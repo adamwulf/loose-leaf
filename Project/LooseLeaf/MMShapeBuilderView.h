@@ -10,6 +10,8 @@
 
 @interface MMShapeBuilderView : UIView
 
++(MMShapeBuilderView*) staticShapeBuilderViewWithFrame:(CGRect)frame andScale:(CGFloat)scale;
+
 -(BOOL) addTouchPoint:(CGPoint)point;
 
 -(void) clear;

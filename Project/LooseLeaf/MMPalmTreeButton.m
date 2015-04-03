@@ -178,5 +178,8 @@
     [self drawDropshadowIfSelected];
     
     [super drawRect:rect];
+    CGColorSpaceRelease(colorSpace);
+    CGGradientRelease(backgroundGradient);
+    CGGradientRelease(treehighlightfill);
 }
 @end

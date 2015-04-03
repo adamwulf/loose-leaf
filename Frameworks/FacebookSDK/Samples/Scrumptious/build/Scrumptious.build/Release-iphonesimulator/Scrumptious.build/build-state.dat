@@ -1,0 +1,1100 @@
+TScrumptious
+v6
+r1
+cCheck dependencies
+cProcessPCH /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch Scrumptious/Scrumptious-Prefix.pch normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cLd /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious normal i386
+cCopyStringsFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/InfoPlist.strings Scrumptious/en.lproj/InfoPlist.strings
+cCompileStoryboard /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMain.storyboard
+cCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig
+cCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig
+cCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig build/Release-iphonesimulator/Scrumptious.app/Application.xcconfig
+cCopyStringsFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/Scrumptious.strings scrumptious/en.lproj/Scrumptious.strings
+cCopyStringsFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/he.lproj/Scrumptious.strings scrumptious/he.lproj/Scrumptious.strings
+cCpResource /Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle
+cCpResource ReadMe.txt build/Release-iphonesimulator/Scrumptious.app/ReadMe.txt
+cCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig
+cCpResource scrumptious/FacebookSDKOverrides.bundle build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle
+cCompileAssetCatalog /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Images.xcassets
+cProcessInfoPlistFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Info.plist /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist
+cGenerateDSYMFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious
+cTouch /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk
+c0000000053119F8A0000000000000198
+t1393663882
+s408
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/SDKSettings.plist
+c00000000537CE25D00000000000003B4
+t1400693341
+s948
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/CoreServices/SystemVersion.plist
+c00000000537CE263000000000000019E
+t1400693347
+s414
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/AddressBook.framework/AddressBook
+c00000000537CE264000000000019D2D0
+t1400693348
+s1692368
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
+c00000000537CE2650000000000446820
+t1400693349
+s4483104
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/CoreLocation.framework/CoreLocation
+c00000000537CE26500000000000F1A80
+t1400693349
+s989824
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/Foundation.framework/Foundation
+c00000000537CE266000000000088D8C0
+t1400693350
+s8968384
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/QuartzCore.framework/QuartzCore
+c00000000537CE267000000000048F720
+t1400693351
+s4781856
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/UIKit.framework/UIKit
+c00000000537CE2690000000001F1DE10
+t1400693353
+s32628240
+
+N/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/FacebookSDK
+c0000000053C6E44E0000000001AF8E74
+t1405543502
+s28282484
+
+N/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle
+c0000000053C6E44E0000000000000088
+t1405543502
+s136
+
+N/Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig
+c00000000537E7EE70000000000000322
+t1400798951
+s802
+
+N/Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig
+c00000000537E7EE70000000000000336
+t1400798951
+s822
+
+N/Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig
+c00000000537E7EE70000000000000350
+t1400798951
+s848
+
+N/Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig
+c0000000053B1CCB500000000000007C4
+t1404161205
+s1988
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/ReadMe.txt
+c0000000053BC38E00000000000000788
+t1404844256
+s1928
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Images.xcassets
+c00000000537E7EE70000000000000154
+t1400798951
+s340
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m
+c0000000053B49A5B0000000000000F48
+t1404344923
+s3912
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist
+c0000000053ADE39F0000000000000666
+t1403904927
+s1638
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Prefix.pch
+c00000000537E7EE70000000000000310
+t1400798951
+s784
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/en.lproj/InfoPlist.strings
+c00000000537E7EE7000000000000002D
+t1400798951
+s45
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m
+c00000000537E7EE70000000000000350
+t1400798951
+s848
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app
+t1405544181
+s1768
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM
+t2
+s0
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Application.xcconfig
+t1405544177
+s802
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle
+t1405544177
+s136
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle
+t1405544177
+s170
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Info.plist
+t1405544181
+s1698
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/PkgInfo
+t1405544181
+s8
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig
+t1405544177
+s822
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig
+t1405544177
+s848
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig
+t1405544177
+s1988
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/ReadMe.txt
+t1405544177
+s1928
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/SCMain.storyboardc
+t1405544181
+s374
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious
+t1405544177
+s2003584
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/InfoPlist.strings
+t1405544177
+s42
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/Scrumptious.strings
+t1405544177
+s42
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/he.lproj/Scrumptious.strings
+t1405544177
+s42
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o
+t1405544176
+s70032
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o
+t1405544176
+s6320
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o
+t1405544176
+s66320
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o
+t1405544176
+s58364
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o
+t1405544176
+s125596
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o
+t1405544176
+s63712
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o
+t1405544176
+s48848
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o
+t1405544176
+s10792
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o
+t1405544176
+s88628
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o
+t1405544176
+s70852
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/Scrumptious.LinkFileList
+c0000000053C6E6EF0000000000000686
+t1405544175
+s1670
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o
+t1405544176
+s3176
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_dependencies.txt
+t1405544178
+s4438
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_generated_info.plist
+t1405544178
+s1846
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/FacebookSDKOverrides.bundle
+c00000000537E7EE700000000000000AA
+t1400798951
+s170
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m
+c00000000537E7EE70000000000000D1D
+t1400798951
+s3357
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m
+c00000000537E7EE7000000000000163F
+t1400798951
+s5695
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m
+c0000000053ADE39F0000000000000B99
+t1403904927
+s2969
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMain.storyboard
+c0000000053BC38E00000000000008968
+t1404844256
+s35176
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m
+c0000000053C0EEFC00000000000039F5
+t1405153020
+s14837
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m
+c00000000537E7EE700000000000010B5
+t1400798951
+s4277
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m
+c00000000537E7EE700000000000006C8
+t1400798951
+s1736
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m
+c00000000537E7EE70000000000000530
+t1400798951
+s1328
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m
+c0000000053C6E4130000000000004493
+t1405543443
+s17555
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m
+c0000000053BC38E00000000000000F19
+t1404844256
+s3865
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/en.lproj/Scrumptious.strings
+c00000000537E7EE70000000000000023
+t1400798951
+s35
+
+N/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/he.lproj/Scrumptious.strings
+c00000000537E7EE70000000000000023
+t1400798951
+s35
+
+N/var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch
+t1405544176
+s5379220
+
+CCheck dependencies
+r0
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependencies28d49f6f1e77b941^f964dd6f1e77b941^---0#1#1#--18"Check dependencies36"252FF065-FA03-4889-8667-E17E1B75CFED-
+
+CCompileAssetCatalog /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Images.xcassets
+s427236977.056975
+e427236978.109764
+r1
+xCompileAssetCatalog
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Images.xcassets
+o/* com.apple.actool.compilation-results */
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon40x40@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon57x57.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon57x57@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon60x60@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon40x40~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon40x40@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon50x50~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon50x50@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon72x72~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon72x72@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon76x76~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon76x76@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700-568h@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700-Portrait~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700-Portrait@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-568h@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-Portrait~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-Portrait@2x~ipad.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-large.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-large@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-small.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-small@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-friends.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-friends@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-location.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-location@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-meal.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-meal@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-photo.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-photo@2x.png
+o/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_generated_info.plist
+o
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection109"[1mCompileAssetCatalog[0m build/Release-iphonesimulator/Scrumptious.app [1mScrumptious/Images.xcassets[0m109"[1mCompileAssetCatalog[0m build/Release-iphonesimulator/Scrumptious.app [1mScrumptious/Images.xcassets[0m9faa0e711e77b941^b1191c721e77b941^-4431"/* com.apple.actool.compilation-results *//Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon40x40@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon57x57.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon57x57@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon60x60@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon29x29@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon40x40~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon40x40@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon50x50~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon50x50@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon72x72~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon72x72@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon76x76~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/AppIcon76x76@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700-568h@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700-Portrait~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-700-Portrait@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-568h@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-Portrait~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/LaunchImage-Portrait@2x~ipad.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-large.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-large@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-small.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/logo-small@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-friends.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-friends@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-location.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-location@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-meal.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-meal@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-photo.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/pick-photo@2x.png/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_generated_info.plist-0#0#1#-19%DVTDocumentLocation2@82"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Images.xcassets/0000000000000000^1906"[1mCompileAssetCatalog[0m build/Release-iphonesimulator/Scrumptious.app [1mScrumptious/Images.xcassets[0m    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/actool --output-format human-readable-text --notices --warnings --export-dependency-info /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_dependencies.txt --output-partial-info-plist /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_generated_info.plist --app-icon AppIcon --launch-image LaunchImage --platform iphonesimulator --minimum-deployment-target 6.0 --target-device iphone --target-device ipad --compress-pngs --compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Images.xcassets36"FB5CCDB1-6274-4681-98CA-B9CDF0E3378A-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.408675
+e427236976.700053
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCErrorHandler.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCSettings.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m222"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o [1mScrumptious/SCAppDelegate.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler10c968701e77b941^ba4eb3701e77b941^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m0000000000000000^4525"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o [1mScrumptious/SCAppDelegate.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o36"E986D77B-3B55-4CB8-9CF8-D886D33CE0C6-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.691260
+e427236976.754988
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCErrorHandler.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m224"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o [1mscrumptious/SCErrorHandler.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler0c3ab1701e77b941^6748c1701e77b941^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m0000000000000000^4531"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o [1mscrumptious/SCErrorHandler.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCErrorHandler.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o36"6AD8BC70-9126-44C6-BB3D-AEE03EA0A930-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.409113
+e427236976.705176
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCImagePicker.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection82"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m222"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o [1mscrumptious/SCImagePicker.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compilerb2f168701e77b941^db87b4701e77b941^---0#0#1#-19%DVTDocumentLocation2@81"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m0000000000000000^4525"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o [1mscrumptious/SCImagePicker.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCImagePicker.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o36"05649663-82D2-48DA-ADFB-1B13CFB16A74-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.407545
+e427236976.693473
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCLoginViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCErrorHandler.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCSettings.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection90"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m238"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o [1mscrumptious/SCLoginViewController.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compilere27268701e77b941^2c9bb1701e77b941^---0#0#1#-19%DVTDocumentLocation2@89"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m0000000000000000^4573"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o [1mscrumptious/SCLoginViewController.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCLoginViewController.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o36"2AFCAFA3-5D0F-4392-9516-9C4266584FCA-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.408268
+e427236976.763385
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCMainViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCProfilePictureButton.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCErrorHandler.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCImagePicker.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCMealPicker.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCSettings.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCShareUtility.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCTaggableFriendsViewController.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m236"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o [1mscrumptious/SCMainViewController.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler07b468701e77b941^986dc3701e77b941^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m0000000000000000^4567"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o [1mscrumptious/SCMainViewController.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMainViewController.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o36"05155C10-ED17-4187-BF16-28DD342B1A02-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.680144
+e427236976.779538
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCMealPicker.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection81"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m220"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o [1mscrumptious/SCMealPicker.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler2447ae701e77b941^4390c7701e77b941^---0#0#1#-19%DVTDocumentLocation2@80"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m0000000000000000^4519"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o [1mscrumptious/SCMealPicker.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMealPicker.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o36"D82AA2B4-DF26-4246-9A20-75B982FC00B8-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.407854
+e427236976.690950
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCProfilePictureButton.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection91"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m240"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o [1mscrumptious/SCProfilePictureButton.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler429768701e77b941^8a06b1701e77b941^---0#0#1#-19%DVTDocumentLocation2@90"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m0000000000000000^4579"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o [1mscrumptious/SCProfilePictureButton.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCProfilePictureButton.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o36"4FD6374A-D667-4E28-80B3-EF4F414A1862-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.693752
+e427236976.731457
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCSettings.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection79"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m216"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o [1mscrumptious/SCSettings.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler6abfb1701e77b941^d540bb701e77b941^---0#0#1#-19%DVTDocumentLocation2@78"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m0000000000000000^4507"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o [1mscrumptious/SCSettings.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCSettings.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o36"C2D56AEC-75E3-4EFF-B15D-FB9EC6EA4456-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.409904
+e427236976.746190
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCShareUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCProtocols.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection83"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m224"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o [1mscrumptious/SCShareUtility.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compilerc42369701e77b941^a306bf701e77b941^---0#0#1#-19%DVTDocumentLocation2@82"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m0000000000000000^4531"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o [1mscrumptious/SCShareUtility.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCShareUtility.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o36"7181A4D6-4C8D-4D0D-A3BD-3B0787D7868D-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.410679
+e427236976.706783
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCTaggableFriendsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FacebookSDK.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAccessTokenData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSession.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSDKMacros.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppCall.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppLinkData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsData.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBAppEvents.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBCacheDescriptor.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLinkShareParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBDialogsParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphAction.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBError.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBErrorUtility.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFrictionlessRecipientCache.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequest.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphObject.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBRequestConnection.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBWebDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBFriendPickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphUser.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphPlace.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBGraphLocation.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBInsights.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLikeControl.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBLoginView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBTooltipView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBNativeDialogs.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBOpenGraphActionShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBPlacePickerViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBProfilePictureView.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSessionTokenCachingStrategy.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBSettings.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBShareDialogPhotoParams.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/FBUserSettingsViewController.h
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Headers/NSError+FBError.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection100"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m258"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o [1mscrumptious/SCTaggableFriendsViewController.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler914269701e77b941^41f0b4701e77b941^---0#0#1#-19%DVTDocumentLocation2@99"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m0000000000000000^4633"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o [1mscrumptious/SCTaggableFriendsViewController.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCTaggableFriendsViewController.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o36"7A19D9D6-31B6-42A6-A398-8F87DB05AE47-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileC build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236976.407361
+e427236976.679189
+r1
+xCompileC
+xbuild/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/SCAppDelegate.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection73"Compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m204"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o [1mScrumptious/main.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compilere56268701e77b941^dfdead701e77b941^---0#0#1#-19%DVTDocumentLocation2@72"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m0000000000000000^4471"[1mCompileC[0m build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o [1mScrumptious/main.m[0m normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 -include /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch -MMD -MT dependencies -MF /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.d --serialize-diagnostics /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.dia -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/main.m -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o36"D7DEEEBA-D5E5-4C93-94D2-01F8EB263A3A-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCompileStoryboard /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMain.storyboard
+s427236977.047022
+e427236981.843656
+r1
+xCompileStoryboard
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMain.storyboard
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection63"[1mCompileStoryboard[0m [1mscrumptious/SCMain.storyboard[0m63"[1mCompileStoryboard[0m [1mscrumptious/SCMain.storyboard[0meb1f0c711e77b941^4cfad7751e77b941^---0#0#1#-19%DVTDocumentLocation2@83"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMain.storyboard0000000000000000^1554"[1mCompileStoryboard[0m [1mscrumptious/SCMain.storyboard[0m    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export IBSC_MINIMUM_COMPATIBILITY_VERSION=6.0    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    export XCODE_DEVELOPER_USR_PATH=/Applications/Xcode.app/Contents/Developer/usr/bin/..    /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/ibtool --errors --warnings --notices --minimum-deployment-target 6.0 --output-format human-readable-text --compile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/SCMain.storyboardc /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/SCMain.storyboard36"B2A5DCB4-7AE7-4DC8-9891-0A429DBCF047-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCopyStringsFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/InfoPlist.strings Scrumptious/en.lproj/InfoPlist.strings
+s427236977.046809
+e427236977.054744
+r1
+xCopyStringsFile
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/InfoPlist.strings
+xScrumptious/en.lproj/InfoPlist.strings
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection43"Copy Scrumptious/en.lproj/InfoPlist.strings135"[1mCopyStringsFile[0m build/Release-iphonesimulator/Scrumptious.app/en.lproj/InfoPlist.strings Scrumptious/en.lproj/InfoPlist.strings30100c711e77b941^740a0e711e77b941^---0#0#1#-19%DVTDocumentLocation2@92"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/en.lproj/InfoPlist.strings0000000000000000^1316"[1mCopyStringsFile[0m build/Release-iphonesimulator/Scrumptious.app/en.lproj/InfoPlist.strings Scrumptious/en.lproj/InfoPlist.strings    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copyStrings --validate --inputencoding utf-8 --outputencoding binary --outdir /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj -- Scrumptious/en.lproj/InfoPlist.strings36"11E3FD97-35AB-4A47-9410-3C3319CF9A83-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCopyStringsFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/Scrumptious.strings scrumptious/en.lproj/Scrumptious.strings
+s427236977.048026
+e427236977.054505
+r1
+xCopyStringsFile
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj/Scrumptious.strings
+xscrumptious/en.lproj/Scrumptious.strings
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection45"Copy scrumptious/en.lproj/Scrumptious.strings139"[1mCopyStringsFile[0m build/Release-iphonesimulator/Scrumptious.app/en.lproj/Scrumptious.strings scrumptious/en.lproj/Scrumptious.strings21740c711e77b941^2cf00d711e77b941^---0#0#1#-19%DVTDocumentLocation2@94"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/en.lproj/Scrumptious.strings0000000000000000^1322"[1mCopyStringsFile[0m build/Release-iphonesimulator/Scrumptious.app/en.lproj/Scrumptious.strings scrumptious/en.lproj/Scrumptious.strings    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copyStrings --validate --inputencoding utf-8 --outputencoding binary --outdir /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/en.lproj -- scrumptious/en.lproj/Scrumptious.strings36"0DF1A1A3-6512-4FB5-8C61-BA3A82DCD17D-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCopyStringsFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/he.lproj/Scrumptious.strings scrumptious/he.lproj/Scrumptious.strings
+s427236977.048269
+e427236977.054518
+r1
+xCopyStringsFile
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/he.lproj/Scrumptious.strings
+xscrumptious/he.lproj/Scrumptious.strings
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection45"Copy scrumptious/he.lproj/Scrumptious.strings139"[1mCopyStringsFile[0m build/Release-iphonesimulator/Scrumptious.app/he.lproj/Scrumptious.strings scrumptious/he.lproj/Scrumptious.strings41800c711e77b941^43020e711e77b941^---0#0#1#-19%DVTDocumentLocation2@94"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/he.lproj/Scrumptious.strings0000000000000000^1322"[1mCopyStringsFile[0m build/Release-iphonesimulator/Scrumptious.app/he.lproj/Scrumptious.strings scrumptious/he.lproj/Scrumptious.strings    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copyStrings --validate --inputencoding utf-8 --outputencoding binary --outdir /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/he.lproj -- scrumptious/he.lproj/Scrumptious.strings36"4A7D96AE-5FF4-43C9-8CFE-3AFF98CB6A80-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource /Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle
+s427236977.048732
+e427236977.077430
+r1
+xCpResource
+x/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle
+xbuild/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection85"Copy build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle210"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle9f910c711e77b941^3dd313711e77b941^---0#0#1#-19%DVTDocumentLocation2@134"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle00348039deffdf42^1599"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle build/Release-iphonesimulator/Scrumptious.app/FBUserSettingsViewResources.bundle    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"3A12778E-BEF1-4563-A0ED-0E9FD2941F7A-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig build/Release-iphonesimulator/Scrumptious.app/Application.xcconfig
+s427236977.047729
+e427236977.053030
+r1
+xCpResource
+x/Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig
+xbuild/Release-iphonesimulator/Scrumptious.app/Application.xcconfig
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection71"Copy build/Release-iphonesimulator/Scrumptious.app/Application.xcconfig156"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig build/Release-iphonesimulator/Scrumptious.app/Application.xcconfigc5560c711e77b941^a4a60d711e77b941^---0#0#1#-19%DVTDocumentLocation2@120"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Application.xcconfig00348039deffdf42^1505"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig build/Release-iphonesimulator/Scrumptious.app/Application.xcconfig    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/samples/Configurations/Application.xcconfig /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"5E9C3BA1-2C9C-49C1-A603-ED84C26D21FF-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig
+s427236977.053179
+e427236977.054782
+r1
+xCpResource
+x/Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig
+xbuild/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection73"Copy build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig160"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfige1d20d711e77b941^091b0e711e77b941^---0#0#1#-19%DVTDocumentLocation2@122"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig00348039deffdf42^1511"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Debug.xcconfig    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Debug.xcconfig /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"81344B91-5B73-46B2-9B5D-7A3D3E2A4CC6-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig
+s427236977.047230
+e427236977.048398
+r1
+xCpResource
+x/Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig
+xbuild/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection75"Copy build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig164"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfigf4340c711e77b941^7c630c711e77b941^---0#0#1#-19%DVTDocumentLocation2@124"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig00348039deffdf42^1517"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project-Release.xcconfig    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/samples/Configurations/Project-Release.xcconfig /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"8C38EE20-B2A5-4CA6-81F8-0DDF8C91856E-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource /Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig
+s427236977.047484
+e427236977.052992
+r1
+xCpResource
+x/Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig
+xbuild/Release-iphonesimulator/Scrumptious.app/Project.xcconfig
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection67"Copy build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig148"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig844a0c711e77b941^36b00d711e77b941^---0#0#1#-19%DVTDocumentLocation2@116"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig00348039deffdf42^1493"[1mCpResource[0m /Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig build/Release-iphonesimulator/Scrumptious.app/Project.xcconfig    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/samples/Configurations/Project.xcconfig /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"232746D5-C7FD-410D-8363-FE0CA23F2C55-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource ReadMe.txt build/Release-iphonesimulator/Scrumptious.app/ReadMe.txt
+s427236977.049088
+e427236977.052968
+r1
+xCpResource
+xReadMe.txt
+xbuild/Release-iphonesimulator/Scrumptious.app/ReadMe.txt
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Copy build/Release-iphonesimulator/Scrumptious.app/ReadMe.txt86"[1mCpResource[0m ReadMe.txt build/Release-iphonesimulator/Scrumptious.app/ReadMe.txtf9a30c711e77b941^14950d711e77b941^---0#0#1#-19%DVTDocumentLocation2@110"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/ReadMe.txt00348039deffdf42^1422"[1mCpResource[0m ReadMe.txt build/Release-iphonesimulator/Scrumptious.app/ReadMe.txt    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/samples/Scrumptious/ReadMe.txt /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"EB36AE16-EDDD-431D-8198-F8C4686568D8-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CCpResource scrumptious/FacebookSDKOverrides.bundle build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle
+s427236977.053841
+e427236977.056897
+r1
+xCpResource
+xscrumptious/FacebookSDKOverrides.bundle
+xbuild/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection78"Copy build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle132"[1mCpResource[0m scrumptious/FacebookSDKOverrides.bundle build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundlec9e70d711e77b941^b8910e711e77b941^---0#0#1#-19%DVTDocumentLocation2@127"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle00348039deffdf42^1497"[1mCpResource[0m scrumptious/FacebookSDKOverrides.bundle build/Release-iphonesimulator/Scrumptious.app/FacebookSDKOverrides.bundle    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -strip-debug-symbols -strip-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -resolve-src-symlinks /Users/chrisp/src/ios-sdk2/samples/Scrumptious/scrumptious/FacebookSDKOverrides.bundle /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app36"1924C0D7-7064-40BA-BF2E-038DE7C9574D-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CGenerateDSYMFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious
+s427236981.851101
+e427236982.001327
+r1
+xGenerateDSYMFile
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection106"Generate /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM141"[1mGenerateDSYMFile[0m [1mbuild/Release-iphonesimulator/Scrumptious.app.dSYM[0m build/Release-iphonesimulator/Scrumptious.app/Scrumptiousedf2d9751e77b941^c15700761e77b941^---0#0#1#-19%DVTDocumentLocation2@104"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM00348039deffdf42^1394"[1mGenerateDSYMFile[0m [1mbuild/Release-iphonesimulator/Scrumptious.app.dSYM[0m build/Release-iphonesimulator/Scrumptious.app/Scrumptious    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app.dSYM36"9E15DD1F-BB61-483D-8029-E5E7139BB4FE-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CLd /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious normal i386
+s427236976.780871
+e427236977.046098
+r1
+xLd
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious
+xnormal
+xi386
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/Scrumptious.LinkFileList
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/crt1.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/main.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCLoginViewController.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCProfilePictureButton.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMainViewController.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCAppDelegate.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCImagePicker.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCShareUtility.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCTaggableFriendsViewController.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCMealPicker.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCErrorHandler.o
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/SCSettings.o
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/QuartzCore.framework/QuartzCore
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/CoreLocation.framework/CoreLocation
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/UIKit.framework/UIKit
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/Foundation.framework/Foundation
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/AddressBook.framework/AddressBook
+d/Users/chrisp/src/ios-sdk2/build/FacebookSDK.framework/FacebookSDK
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/libobjc.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/libSystem.dylib
+d/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/5.1/lib/darwin/libclang_rt.ios.a
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_override.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libcache_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libcommonCrypto_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libcorecrypto_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libcompiler_rt_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libcopyfile_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libdispatch.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libdyld_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libmacho_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libnotify_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libremovefile_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_blocks.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_c.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_dnssd.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_info.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_m.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_network.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libunwind_sim.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libxpc.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_configuration.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/libsystem_sim_asl.dylib
+d/usr/lib/libSystem.B.dylib
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/PrivateFrameworks/UIFoundation.framework/UIFoundation
+d/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/usr/lib/system/host/libdyld.dylib
+d/usr/lib/system/libcache.dylib
+d/usr/lib/system/libcommonCrypto.dylib
+d/usr/lib/system/libcompiler_rt.dylib
+d/usr/lib/system/libcopyfile.dylib
+d/usr/lib/system/libcorecrypto.dylib
+d/usr/lib/system/libkeymgr.dylib
+d/usr/lib/system/liblaunch.dylib
+d/usr/lib/system/libmacho.dylib
+d/usr/lib/system/libquarantine.dylib
+d/usr/lib/system/libremovefile.dylib
+d/usr/lib/system/libsystem_asl.dylib
+d/usr/lib/system/libsystem_blocks.dylib
+d/usr/lib/system/libsystem_c.dylib
+d/usr/lib/system/libsystem_configuration.dylib
+d/usr/lib/system/libsystem_dnssd.dylib
+d/usr/lib/system/libsystem_info.dylib
+d/usr/lib/system/libsystem_kernel.dylib
+d/usr/lib/system/libsystem_m.dylib
+d/usr/lib/system/libsystem_malloc.dylib
+d/usr/lib/system/libsystem_notify.dylib
+d/usr/lib/system/libsystem_platform.dylib
+d/usr/lib/system/libsystem_pthread.dylib
+d/usr/lib/system/libsystem_sandbox.dylib
+d/usr/lib/system/libunc.dylib
+d/usr/lib/system/libunwind.dylib
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection109"Link /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious80"[1mLd[0m build/Release-iphonesimulator/Scrumptious.app/Scrumptious normal i38601fcc7701e77b941^8acd0b711e77b941^---0#0#1#--2402"[1mLd[0m build/Release-iphonesimulator/Scrumptious.app/Scrumptious normal i386    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export IPHONEOS_DEPLOYMENT_TARGET=6.0    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -L/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -filelist /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/Scrumptious.LinkFileList -Xlinker -objc_abi_version -Xlinker 2 -ObjC -fobjc-arc -fobjc-link-runtime -Xlinker -no_implicit_dylibs -mios-simulator-version-min=6.0 -framework QuartzCore -framework CoreLocation -framework UIKit -framework Foundation -framework CoreGraphics -framework AddressBook -framework FacebookSDK -Xlinker -dependency_info -Xlinker /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Objects-normal/i386/Scrumptious_dependency_info.dat -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Scrumptious36"B431F3D8-7DF1-42CC-940F-6273F9E0EFE2-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CProcessInfoPlistFile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Info.plist /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist
+s427236981.845776
+e427236981.850736
+r1
+xProcessInfoPlistFile
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Info.plist
+x/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection89"Process /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist128"[1mProcessInfoPlistFile[0m build/Release-iphonesimulator/Scrumptious.app/Info.plist [1mScrumptious/Scrumptious-Info.plist[0md124d9751e77b941^3acad9751e77b941^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist0000000000000000^1638"[1mProcessInfoPlistFile[0m build/Release-iphonesimulator/Scrumptious.app/Info.plist [1mScrumptious/Scrumptious-Info.plist[0m    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    builtin-infoPlistUtility /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Info.plist -genpkginfo /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -additionalcontentfile /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/assetcatalog_generated_info.plist -o /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app/Info.plist36"2FA7AA3F-74C2-4BFD-A8C5-E2C5ECF527DD-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CProcessPCH /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch Scrumptious/Scrumptious-Prefix.pch normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s427236975.868341
+e427236976.406772
+r1
+xProcessPCH
+x/var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch
+xScrumptious/Scrumptious-Prefix.pch
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Prefix.pch
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection45"Precompile Scrumptious/Scrumptious-Prefix.pch314"[1mProcessPCH[0m /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch Scrumptious/Scrumptious-Prefix.pch normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler47afde6f1e77b941^e22168701e77b941^---0#0#1#-19%DVTDocumentLocation2@88"file:///Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Prefix.pch0000000000000000^4561"[1mProcessPCH[0m /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch Scrumptious/Scrumptious-Prefix.pch normal i386 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/chrisp/src/ios-sdk2/samples/Scrumptious    export LANG=en_US.US-ASCII    export PATH="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Applications/Xcode.app/Contents/Developer/usr/bin:/Users/chrisp/local/Android/android-ndk-r8:/Users/chrisp/local/Android/android-sdk-macosx/platform-tools:/Users/chrisp/local/Android/android-sdk-macosx/tools:/usr/local/git/bin:/Users/chrisp/bin:/opt/facebook/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/chrisp/devtools/buck/bin:/usr/local/git/bin:/usr/local/ant/bin:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/tools:/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools:/Users/chrisp/android-sdk-macosx/tools:/Users/chrisp/android-sdk-macosx/platform-tools"    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c-header -arch i386 -fmessage-length=194 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -fcolor-diagnostics -std=gnu99 -fobjc-arc -Wno-trigraphs -fpascal-strings -Os -Werror -Wno-missing-field-initializers -Wmissing-prototypes -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-arc-repeated-use-of-weak -Wduplicate-method-match -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wshadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wundeclared-selector -Wno-deprecated-implementations -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk -fexceptions -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -g -Wno-sign-conversion -fobjc-abi-version=2 -fobjc-legacy-dispatch -mios-simulator-version-min=6.0 -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-generated-files.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-own-target-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-all-target-headers.hmap -iquote /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/Scrumptious-project-headers.hmap -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources/i386 -I/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Scrumptious.build/Release-iphonesimulator/Scrumptious.build/DerivedSources -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../build -F/Users/chrisp/src/ios-sdk2/samples/Scrumptious/../../Bolts-IOS/build/ios -F/Users/chrisp/Documents/FacebookSDK -DNS_BLOCK_ASSERTIONS=1 --serialize-diagnostics /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.dia -MMD -MT dependencies -MF /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.d -c /Users/chrisp/src/ios-sdk2/samples/Scrumptious/Scrumptious/Scrumptious-Prefix.pch -o /var/folders/9j/vw2bf7xn53g9ms_nnp0sct9167gh9d/C/com.apple.DeveloperTools/5.1.1-5B1008/Xcode/SharedPrecompiledHeaders/Scrumptious-Prefix-clgkjkyzlitoludcilibppizfspq/Scrumptious-Prefix.pch.pch36"A7C5AAA4-9D72-40E2-8E99-7DC970F593B7-
+b2E3801C9-094D-43D4-B4A1-B56B84D189E2
+
+CTouch /Users/chrisp/src/ios-sdk2/samples/Scrumptious/build/Release-iphonesimulator/Scrumptious.app
+r0
+

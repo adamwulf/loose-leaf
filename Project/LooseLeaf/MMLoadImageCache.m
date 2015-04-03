@@ -9,6 +9,7 @@
 #import "MMLoadImageCache.h"
 #import "UIImage+Memory.h"
 #import "Constants.h"
+#import <JotUI/JotUI.h>
 
 // TODO: possibly use this tutorial for threadsafe cache
 // https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
@@ -57,36 +58,38 @@ static MMLoadImageCache* _instance = nil;
 
 static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
-    UIImage* cachedImage = nil;
-    @synchronized(self){
-        cachedImage = [loadedImages objectForKey:path];
-    }
-    if(!cachedImage){
+    @autoreleasepool {
+        UIImage* cachedImage = nil;
         @synchronized(self){
-            if([orderedKeys containsObject:path]){
-                // we don't have an image, but our path is
-                // in cache. this means there was nothing on disk
-                return nil;
+            cachedImage = [loadedImages objectForKey:path];
+        }
+        if(!cachedImage){
+            @synchronized(self){
+                if([orderedKeys containsObject:path]){
+                    // we don't have an image, but our path is
+                    // in cache. this means there was nothing on disk
+                    return nil;
+                }
+            }
+            cachedImage = [JotDiskAssetManager imageWithContentsOfFile:path];
+            count++;
+            @synchronized(self){
+                if(cachedImage){
+                    [loadedImages setObject:cachedImage forKey:path];
+                }
+                if(path){
+                    [orderedKeys removeObject:path];
+                    [orderedKeys insertObject:path atIndex:0];
+                }else{
+                    DebugLog(@"how did we get nil path?");
+                }
+                [self ensureCacheSize];
+                
+                loadedBytes += [cachedImage uncompressedByteSize];
             }
         }
-        cachedImage = [UIImage imageWithContentsOfFile:path];
-        count++;
-        @synchronized(self){
-            if(cachedImage){
-                [loadedImages setObject:cachedImage forKey:path];
-            }
-            if(path){
-                [orderedKeys removeObject:path];
-                [orderedKeys insertObject:path atIndex:0];
-            }else{
-                NSLog(@"how did we get nil path?");
-            }
-            [self ensureCacheSize];
-            
-            loadedBytes += [cachedImage uncompressedByteSize];
-        }
+        return cachedImage;
     }
-    return cachedImage;
 }
 
 -(void) ensureCacheSize{
@@ -98,36 +101,40 @@ static int count = 0;
 }
 
 -(void) clearCacheForPath:(NSString*)path{
-    if(!path) return;
-    @synchronized(self){
-        UIImage* cachedImage = [loadedImages objectForKey:path];
-        if(cachedImage){
-            loadedBytes -= [cachedImage uncompressedByteSize];
-        }
-        [loadedImages removeObjectForKey:path];
-        [orderedKeys removeObject:path];
-    }
-}
-
--(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image{
-    @synchronized(self){
-        [self clearCacheForPath:path];
-        if(image){
-            UIImage* cachedImage = [loadedImages objectForKey:path];
-            if(cachedImage){
-                loadedBytes -= [cachedImage uncompressedByteSize];
-            }
-            [loadedImages setObject:image forKey:path];
-            loadedBytes += [image uncompressedByteSize];
-        }else{
+    @autoreleasepool {
+        if(!path) return;
+        @synchronized(self){
             UIImage* cachedImage = [loadedImages objectForKey:path];
             if(cachedImage){
                 loadedBytes -= [cachedImage uncompressedByteSize];
             }
             [loadedImages removeObjectForKey:path];
+            [orderedKeys removeObject:path];
         }
-        [orderedKeys insertObject:path atIndex:0];
-        [self ensureCacheSize];
+    }
+}
+
+-(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image{
+    @synchronized(self){
+        @autoreleasepool {
+            [self clearCacheForPath:path];
+            if(image){
+                UIImage* cachedImage = [loadedImages objectForKey:path];
+                if(cachedImage){
+                    loadedBytes -= [cachedImage uncompressedByteSize];
+                }
+                [loadedImages setObject:image forKey:path];
+                loadedBytes += [image uncompressedByteSize];
+            }else{
+                UIImage* cachedImage = [loadedImages objectForKey:path];
+                if(cachedImage){
+                    loadedBytes -= [cachedImage uncompressedByteSize];
+                }
+                [loadedImages removeObjectForKey:path];
+            }
+            [orderedKeys insertObject:path atIndex:0];
+            [self ensureCacheSize];
+        }
     }
 }
 

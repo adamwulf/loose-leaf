@@ -320,6 +320,7 @@
     [longPressGesture setEnabled:YES];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
     [self moveAddButtonToTop];
+    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasZoomedToList];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasZoomedToList : @(YES)}];
     // set the top visible page to thumbnail view only
     [self didChangeTopPageTo:nil];
@@ -330,6 +331,9 @@
  * transition into page view from the transition state
  */
 -(void) finishUITransitionToPageView{
+    if([[NSUserDefaults standardUserDefaults] objectForKey:kMPHasZoomedToList]){
+        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasZoomedToPage];
+    }
     @synchronized(self){
         isShowingPageView = YES;
     }
@@ -457,7 +461,7 @@
         // the cancelled state will be caught in MMPaperStackView, so
         // the frame is not adjusted after we animate the page to
         // it's resting place
-//        NSLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
+//        DebugLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
         if([visibleStackHolder peekSubview].scale < kZoomToListPageZoom){
             [[visibleStackHolder peekSubview] cancelAllGestures];
             return fromFrame;
@@ -534,7 +538,7 @@
     [super finishedScalingReallySmall:page];
     //
     // clean up gesture state
-//    NSLog(@"removing1 %p", page);
+//    DebugLog(@"removing1 %p", page);
     [setOfPagesBeingPanned removeObject:page];
 
     CGFloat duration = 0.3;
@@ -811,13 +815,15 @@
         nextTopPage = [hiddenStackHolder peekSubview];
     }
     if(!nextTopPage){
-        NSLog(@"hrmph. out of pages...");
+        DebugLog(@"hrmph. out of pages...");
     }
     [deleteSidebar deletePage:page];
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
     [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
     [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
     [self saveStacksToDisk];
+    
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasDeletedPage : @(YES)}];
 }
 
 -(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture{
@@ -879,13 +885,13 @@
         [self updatePageFrameForGestureHelper:gesture];
     }
     if(gesture.state == UIGestureRecognizerStateCancelled){
-        NSLog(@"cancelled pinch");
+        DebugLog(@"cancelled pinch");
         // we cancelled, so just send the page back to its default
         // space in the list
         realizedThatPageIsBeingDragged = NO;
         pageBeingDragged = nil;
         if(gesture.pinchedPage){
-            NSLog(@"animating to list view");
+            DebugLog(@"animating to list view");
             CGRect frameOfPage = [self frameForListViewForPage:gesture.pinchedPage];
             [UIView animateWithDuration:.15
                                   delay:0
@@ -1170,7 +1176,9 @@
     pageBeingDragged = gestureAsLongPress.pinchedPage;
     CGPoint locatinInScrollView = [gesture locationInView:self];
     NSInteger indexOfGesture = [self indexForPointInList:locatinInScrollView];
-    [self ensurePage:pageBeingDragged isAtIndex:indexOfGesture];
+    if([self ensurePage:pageBeingDragged isAtIndex:indexOfGesture]){
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasReorderedPage : @(YES)}];
+    }
     //
     // scroll update for drag
     lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
@@ -1225,8 +1233,11 @@
  *
  * this will also trigger animations for all the pages that will
  * be affected by this change
+ * 
+ * @returns YES if the page's index needed to be updated, false if
+ * it already matched
  */
--(void) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex{
+-(BOOL) ensurePage:(MMPaperView*)thePage isAtIndex:(NSInteger)newIndex{
     // find out where it currently is
     NSInteger currentIndex = [self indexOfPageInCompleteStack:thePage];
     [self ensurePageIsAtTopOfVisibleStack:thePage];
@@ -1269,6 +1280,7 @@
         [self realignPagesInListView:pagesToAnimate animated:YES];
         [self saveStacksToDisk];
     }
+    return currentIndex != newIndex;
 }
 
 
@@ -1392,7 +1404,7 @@
         }
         NSInteger endIndex = endRow * kNumberOfColumnsInListView;
 
-        NSInteger actualStart = -1;
+//        NSInteger actualStart = -1;
         NSInteger actualEnd = -1;
 
         // iterate over the visible indexes in the list
@@ -1431,7 +1443,7 @@
                     if(actualEnd == -1){
                         actualEnd = indexInList;
                     }
-                    actualStart = indexInList;
+//                    actualStart = indexInList;
                 }
             }
         }
@@ -1692,9 +1704,9 @@
     // we can forget about the original frame locations
 }
 
-#pragma mark - MMInboxManagerDelegate
+#pragma mark - MMInboxManagerDelegate Helper
 
--(void) didProcessIncomingImage:(UIImage*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+-(void) transitionFromListToNewBlankPageIfInPageView{
     if(!isShowingPageView){
         // if we're in list mode, then we need
         // to move into page mode with a new blank page
@@ -1731,15 +1743,6 @@
         [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
     }
 }
-
--(void) didProcessIncomingPDF:(MMPDF*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    @throw kAbstractMethodException;
-}
-
--(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    @throw kAbstractMethodException;
-}
-
 
 
 #pragma mark - MMPageCacheManagerDelegate

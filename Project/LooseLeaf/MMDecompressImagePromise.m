@@ -9,6 +9,7 @@
 #import "MMDecompressImagePromise.h"
 #import "MMBlockOperation.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 NSOperationQueue* decompressImageQueue;
 
@@ -49,17 +50,44 @@ NSOperationQueue* decompressImageQueue;
         
         decompressBlock = [[MMBlockOperation alloc] initWithBlock:^{
             @autoreleasepool {
+                CheckAnyThreadExcept([NSThread isMainThread]);
                 // this isn't that important since you just want UIImage to decompress the image data before switching back to main thread
                 MMDecompressImagePromise* strongContextSelf = weakSelf;
                 if(strongContextSelf){
                     @synchronized(strongContextSelf){
                         if(strongContextSelf){
-                            UIGraphicsBeginImageContext(CGSizeMake(1, 1));
-                            [strongContextSelf.image drawAtPoint:CGPointZero];
-                            UIGraphicsEndImageContext();
-                        }
-                        if(notifyDelegateBlock){
-                            dispatch_async(dispatch_get_main_queue(), notifyDelegateBlock);
+                            
+                            
+//                            if(strongContextSelf.image){
+//                                size_t width = 1;
+//                                size_t height = 1;
+//                                
+//                                CGImageRef compressedImage = strongContextSelf.image.CGImage;
+//                                
+//                                CGContextRef context = CGBitmapContextCreate(
+//                                                                             NULL,
+//                                                                             width,
+//                                                                             height,
+//                                                                             CGImageGetBitsPerComponent(compressedImage),
+//                                                                             CGImageGetBytesPerRow(compressedImage),
+//                                                                             CGImageGetColorSpace(compressedImage),
+//                                                                             CGImageGetBitmapInfo(compressedImage)
+//                                                                             );
+//                                if(context){
+//                                    CGContextDrawImage(context, CGRectMake(0, 0, width, height), compressedImage);
+//                                    CGBitmapContextCreateImage(context);
+//                                    CFRelease(context);
+//                                }
+//                            }
+
+                            if(strongContextSelf.image){
+                                UIGraphicsBeginImageContext(CGSizeMake(1, 1));
+                                [strongContextSelf.image drawAtPoint:CGPointZero];
+                                UIGraphicsEndImageContext();
+                            }
+                            if(notifyDelegateBlock){
+                                dispatch_async(dispatch_get_main_queue(), notifyDelegateBlock);
+                            }
                         }
                     }
                 }

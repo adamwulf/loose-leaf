@@ -10,10 +10,24 @@
 #import <JotUI/UIColor+JotHelper.h>
 #import "Mixpanel.h"
 #import "Constants.h"
+#import <PerformanceBezier/PerformanceBezier.h>
 
 @implementation UIBezierPath (PathElement)
 
 
+-(void) scaleAndPreserveCenter:(CGFloat)scale{
+    // ok, we have a rotation that'll give us a smaller square pixels
+    // for the scrap's backing texture. make sure to rotate the
+    // scrap around its center.
+    CGPoint pathCenter = self.center;
+    // first, translate to the center,
+    CGAffineTransform scaleAroundCenterTransform = CGAffineTransformMakeTranslation(-pathCenter.x, -pathCenter.y);
+    // then scale,
+    scaleAroundCenterTransform = CGAffineTransformConcat(scaleAroundCenterTransform, CGAffineTransformMakeScale(scale, scale));
+    // then translate back to its position
+    scaleAroundCenterTransform = CGAffineTransformConcat(scaleAroundCenterTransform, CGAffineTransformMakeTranslation(pathCenter.x, pathCenter.y));
+    [self applyTransform:scaleAroundCenterTransform];
+}
 
 
 -(void) rotateAndAlignCenter:(CGFloat)rotation{
@@ -94,7 +108,7 @@
         colorDiff[2] = elementColor[2] - prevColor[2];
         colorDiff[3] = elementColor[3] - prevColor[3];
         
-        [pathSegment iteratePathWithBlock:[^(CGPathElement pathEle){
+        [pathSegment iteratePathWithBlock:^(CGPathElement pathEle, NSUInteger idx){
             CGFloat tValueAtEndPoint;
             AbstractBezierPathElement* newElement = nil;
             if(pathEle.type == kCGPathElementAddCurveToPoint){
@@ -129,7 +143,7 @@
                 newElement.width /= scale;
                 [convertedElements addObject:newElement];
             }
-        } copy]];
+        }];
     }@catch(NSException* e){
         NSString* pathCannotBeIterated = [pathSegment description];
         [[Mixpanel sharedInstance] track:kMPPathIterationException properties:@{@"Path" : pathCannotBeIterated}];

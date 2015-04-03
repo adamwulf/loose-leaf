@@ -81,7 +81,7 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     if([validTouches count] == 2 && self.state != UIGestureRecognizerStateBegan){
-//        debug_NSLog(@"touchesMoved");
+//        DebugLog(@"touchesMoved");
         CGFloat newScale = initialPageScale * [self distanceBetweenTouches:validTouches] / initialDistance;
         if(newScale > scale){
             scaleDirection = MMScaleDirectionLarger;
@@ -116,7 +116,7 @@
 }
 
 - (void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-//    debug_NSLog(@"ignoreTouch");
+//    DebugLog(@"ignoreTouch");
     [super ignoreTouch:touch forEvent:event];
 }
 
@@ -163,7 +163,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

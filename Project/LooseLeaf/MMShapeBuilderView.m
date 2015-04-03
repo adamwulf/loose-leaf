@@ -9,6 +9,8 @@
 #import "MMShapeBuilderView.h"
 #import <TouchShape/TouchShape.h>
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <ClippingBezier/ClippingBezier.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "SYShape+Bezier.h"
 #import "Constants.h"
 
@@ -28,6 +30,24 @@
     // start, so that it looks like it's
     // following your finger
     CGFloat phase;
+}
+
+
+static MMShapeBuilderView* staticShapeBuilder = nil;
+
++(MMShapeBuilderView*) staticShapeBuilderViewWithFrame:(CGRect)frame andScale:(CGFloat)scale{
+    CGRect scaledFrame = CGRectMake(0, 0, frame.size.width*scale, frame.size.height*scale);
+    if(!staticShapeBuilder){
+        staticShapeBuilder = [[MMShapeBuilderView alloc] initWithFrame:frame];
+        staticShapeBuilder.transform = CGAffineTransformMakeScale(scale, scale);
+        staticShapeBuilder.contentMode = UIViewContentModeScaleAspectFill;
+        staticShapeBuilder.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        staticShapeBuilder.clipsToBounds = YES;
+        staticShapeBuilder.opaque = NO;
+        staticShapeBuilder.backgroundColor = [UIColor clearColor];
+    }
+    staticShapeBuilder.frame = scaledFrame;
+    return staticShapeBuilder;
 }
 
 - (id)initWithFrame:(CGRect)frame
@@ -82,7 +102,7 @@
          * that the user drew, and will check to see if it
          * intersects any of the other line segments
          */
-        [dottedPath iteratePathWithBlock:[^(CGPathElement element){
+        [dottedPath iteratePathWithBlock:^(CGPathElement element, NSUInteger idx){
             // track the point from the previous element
             // and look to see if it intersects with the
             // last drawn element.
@@ -107,7 +127,7 @@
                 }
             }
             p3 = p4;
-        } copy]];
+        }];
         
         distTravelled = MIN(DistanceBetweenTwoPoints(lastTouchPoint, point), 50);
         if(distTravelled > 2 || ![touches count]){
@@ -199,9 +219,8 @@
     for(UIBezierPath* singlePath in pathsFromIntersectingTouches){
         TCShapeController* shapeMaker = [[TCShapeController alloc] init];
         __block CGPoint prevPoint = CGPointZero;
-        __block NSInteger index = 0;
         NSInteger count = [singlePath elementCount];
-        [singlePath iteratePathWithBlock:[^(CGPathElement element){
+        [singlePath iteratePathWithBlock:^(CGPathElement element, NSUInteger index){
             // our path is only made of line-to segments
             if(element.type == kCGPathElementAddLineToPoint){
                 if(index == count - 1){
@@ -216,8 +235,7 @@
                 }
             }
             prevPoint = element.points[0];
-            index++;
-        } copy]];
+        }];
         // the shape controller knows about all the points in this subpath,
         // so see if it can recognize a shape
         SYShape* shape = [shapeMaker getFigurePaintedWithTolerance:kShapeTolerance andContinuity:kShapeContinuity forceOpen:NO];

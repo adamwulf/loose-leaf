@@ -3,7 +3,7 @@
 //  ShapeShifter
 //
 //  Created by Adam Wulf on 2/21/14.
-//  Copyright (c) 2014 Adam Wulf. All rights reserved.
+//  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
 #import "MMStretchScrapGestureRecognizer.h"
@@ -517,7 +517,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        NSLog(@"ignore touch in %@", NSStringFromClass([self class]));
+//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

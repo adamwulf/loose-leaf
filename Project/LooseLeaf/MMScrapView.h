@@ -59,11 +59,12 @@
 -(void) loadScrapStateAsynchronously:(BOOL)async;
 
 -(void) unloadState;
+-(void) unloadStateButKeepThumbnailIfAny;
 
 -(CGAffineTransform) pageToScrapTransformWithPageOriginalUnscaledBounds:(CGRect)originalUnscaledBounds;
 
 
--(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4;
+-(void) drawTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 withTextureSize:(CGSize)textureSize;
 
 
 -(MMScrapBackgroundView*) backgroundView;

@@ -293,8 +293,12 @@
     }
     
     CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    if(self.contentScaleFactor == 2){
+        center = CGPointMake(self.bounds.size.width/2-.5, self.bounds.size.height/2-.5);
+    }
     
-    CGFloat radius = self.drawableFrame.size.width / 2 - 1;
+    
+    CGFloat radius = self.drawableFrame.size.width / 2;
     CAShapeLayer *circle;
     if([self.layer.sublayers count]){
         circle = [self.layer.sublayers firstObject];
@@ -310,14 +314,14 @@
         lastRadius = radius;
         circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         circle.lineWidth=radius*2;
-        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     }
     
     circle.strokeEnd = lastProgress;
     
     if(lastProgress >= 1.0){
         CAShapeLayer *mask2=[CAShapeLayer layer];
-        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
         
         UIView* checkOrXView = [[UIView alloc] initWithFrame:self.bounds];
         checkOrXView.backgroundColor = [UIColor whiteColor];
@@ -354,9 +358,9 @@
             checkMarkOrXLayer.strokeEnd = 1;
             checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
             checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
+            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
             
             checkOrXView.alpha = 0;
-            [checkOrXView.layer addSublayer:checkMarkOrXLayer];
             [self addSubview:checkOrXView];
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;

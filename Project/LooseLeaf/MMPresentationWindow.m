@@ -11,6 +11,7 @@
 #import "UIView+Debug.h"
 #import "MMRotateViewController.h"
 #import "NSThread+BlockAdditions.h"
+#import "Constants.h"
 
 @implementation MMPresentationWindow
 
@@ -30,22 +31,20 @@
 
 -(void) makeKeyAndVisible{
     if(shouldRespectKeyWindowRequest){
-        NSLog(@"presentation window is key");
+        DebugLog(@"presentation window is key");
         [super makeKeyAndVisible];
         self.alpha = 1;
     }else{
-        NSLog(@"presentation window ignored key window request");
+        DebugLog(@"presentation window ignored key window request");
     }
 }
 
 -(void) resignKeyWindow{
-    NSLog(@"presentation window resigned");
+    DebugLog(@"presentation window resigned");
     self.alpha = 0;
 }
 
 -(void) didAddSubview:(UIView *)subview{
-    NSLog(@"adding subview: %@", subview);
-    NSLog(@" with subviews: %@", subview.subviews);
     [super didAddSubview:subview];
     if([self.subviews count] > 1){
         [self makeKeyAndVisible];
@@ -59,7 +58,9 @@
     // popover has been dismissed. close out the window
     if([self.subviews count] - 1 == 1){
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self killPresentationWindow];
+            @autoreleasepool {
+                [self killPresentationWindow];
+            }
         });
     }
 }
@@ -67,7 +68,7 @@
 -(void) killPresentationWindow{
     if([self.subviews count] == 1){
         if([UIApplication sharedApplication].keyWindow == self){
-            NSLog(@"killing presentation window");
+            DebugLog(@"killing presentation window");
             MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
             [appDelegate.window makeKeyAndVisible];
         }
@@ -75,7 +76,7 @@
 }
 
 -(void) dealloc{
-    NSLog(@"dealloc window");
+    DebugLog(@"dealloc presentation window");
 }
 
 @end

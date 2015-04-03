@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMSlidingSidebarContainerViewDelegate.h"
-#import "MMPhoto.h"
+#import "MMDisplayAsset.h"
 
 @class MMBufferedImageView;
 @class MMBorderedCamView;
@@ -17,6 +17,6 @@
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
 
--(void) photoWasTapped:(MMPhoto *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription;
+-(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription;
 
 @end

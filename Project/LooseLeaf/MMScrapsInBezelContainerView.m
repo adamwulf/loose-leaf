@@ -18,8 +18,6 @@
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
 
-#define kMaxScrapsInBezel 6
-
 @interface MMSidebarButtonTapGestureRecognizer : UITapGestureRecognizer
 
 @end
@@ -55,9 +53,9 @@
         targetAlpha = 1;
         bubbleForScrap = [NSMutableDictionary dictionary];
         
-        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
-        [sidebarContentView addSubview:contentView];
+        [slidingSidebarView addSubview:contentView];
 
         countButton = _countButton;
         countButton.delegate = self;
@@ -181,7 +179,8 @@
             // allow adding to 6 in the sidebar, otherwise
             // we need to pull them all into 1 button w/
             // a menu
-            
+            [scrap.state loadCachedScrapPreview];
+
             [self.bubbleDelegate willAddScrapToBezelSidebar:scrap];
             
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -235,6 +234,7 @@
                     if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                         bubble.alpha = 0;
                         bubble.center = countButton.center;
+                        [bubble.scrap.state unloadCachedScrapPreview];
                     }
                 }
                 scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
@@ -263,6 +263,7 @@
         }
     }else{
         if([sidebarScrapState.allLoadedScraps count] <= kMaxScrapsInBezel){
+            [scrap.state loadCachedScrapPreview];
             bubble.alpha = 1;
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
@@ -280,6 +281,7 @@
                 if([bubble isKindOfClass:[MMScrapBubbleButton class]]){
                     bubble.alpha = 0;
                     bubble.center = countButton.center;
+                    [bubble.scrap.state unloadCachedScrapPreview];
                 }
             }
             scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
@@ -315,8 +317,11 @@
         scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-        [self insertSubview:scrap atIndex:0];
-        
+        [self addSubview:scrap];
+
+        // set the bubble to nil its scrap so it'll be known dead
+        // if we need to realign buttons during this animation
+        bubble.scrap = nil;
         [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
         
         [bubbleForScrap removeObjectForKey:scrap.uuid];
@@ -342,7 +347,9 @@
 }
 
 -(void) animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties{
+    CheckMainThread;
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
+    
     [scrap loadScrapStateAsynchronously:YES];
     
     scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
@@ -371,10 +378,10 @@
         MMUndoablePaperView* page = [self.bubbleDelegate didAddScrapBackToPage:scrap atIndex:index];
         [scrap blockToFireWhenStateLoads:^{
             if(!hadProperties){
-                NSLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
+                DebugLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
                 [page addUndoItemForMostRecentAddedScrapFromBezelFromScrap:scrap];
             }else{
-                NSLog(@"scrap added from undo item, don't add new undo item");
+                DebugLog(@"scrap added from undo item, don't add new undo item");
             }
         }];
     }];
@@ -382,12 +389,13 @@
         bubble.alpha = 0;
         for(MMScrapBubbleButton* otherBubble in self.subviews){
             if(otherBubble != countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
-                if(otherBubble != bubble){
+                if(otherBubble.scrap && otherBubble != bubble){
                     int index = (int) [sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.scrap];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     if([sidebarScrapState.allLoadedScraps count] <= kMaxScrapsInBezel){
                         otherBubble.scrap = otherBubble.scrap; // reset it
                         otherBubble.alpha = 1;
+                        [otherBubble.scrap.state loadCachedScrapPreview];
                     }
                 }
             }
@@ -542,5 +550,16 @@ static NSString* bezelStatePath;
 -(MMScrapsOnPaperState*) paperStateForPageUUID:(NSString*)uuidOfPage{
     return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
 }
+
+
+-(void) sidebarCloseButtonWasTapped{
+    if([self isVisible]){
+        [self hide:YES onComplete:^(BOOL finished){
+            [contentView viewDidHide];
+        }];
+        [self.delegate sidebarCloseButtonWasTapped];
+    }
+}
+
 
 @end

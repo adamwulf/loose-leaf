@@ -47,6 +47,8 @@ typedef enum{
 @property (readonly) NSArray* allLoadedScraps;
 @property (readonly) NSUInteger lastSavedUndoHash;
 @property (readonly) NSUInteger countOfAllLoadedScraps;
+@property (nonatomic, assign) BOOL isForgetful;
+
 
 #pragma mark - Manage Scraps
 

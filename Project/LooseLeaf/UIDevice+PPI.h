@@ -10,6 +10,8 @@
 
 @interface UIDevice (PPI)
 
++(BOOL) isMetric;
+
 +(CGFloat) ppi;
 
 +(CGFloat) ppc;
@@ -17,5 +19,7 @@
 +(CGFloat) idealUnitLength;
 
 +(NSInteger) majorVersion;
+
++(NSString*) buildVersion;
 
 @end

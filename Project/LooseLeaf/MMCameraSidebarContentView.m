@@ -9,16 +9,23 @@
 #import "MMCameraSidebarContentView.h"
 #import "MMPhotoManager.h"
 #import "MMImageSidebarContainerView.h"
-#import "MMPermissionPhotosCollectionViewCell.h"
+#import "MMPhotosPermissionCell.h"
 #import "MMPermissionCameraPhotosCollectionViewCell.h"
 #import "NSThread+BlockAdditions.h"
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "MMCameraCollectionViewCell.h"
-#import "MMSinglePhotoCollectionViewCell.h"
-#import "MMPhotoAlbumListLayout.h"
+#import "MMDisplayAssetCell.h"
+#import "MMCameraListLayout.h"
 #import "UIView+Debug.h"
+#import "MMAlbumGroupListLayout.h"
 #import "Constants.h"
+
+@interface MMAbstractSidebarContentView (Protected)
+
+-(CGFloat) idealRotationForOrientation;
+
+@end
 
 @implementation MMCameraSidebarContentView{
     MMCameraCollectionViewCell * cachedCameraCell;
@@ -37,7 +44,7 @@
         currentAlbum = [[MMPhotoManager sharedInstance] cameraRoll];
         
         [photoListScrollView registerClass:[MMCameraCollectionViewCell class] forCellWithReuseIdentifier:@"MMCameraCollectionViewCell"];
-        [photoListScrollView registerClass:[MMPermissionPhotosCollectionViewCell class] forCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell"];
+        [photoListScrollView registerClass:[MMPhotosPermissionCell class] forCellWithReuseIdentifier:@"MMPhotosPermissionCell"];
         [photoListScrollView registerClass:[MMPermissionCameraPhotosCollectionViewCell class]
                 forCellWithReuseIdentifier:@"MMPermissionCameraPhotosCollectionViewCell"];
     }
@@ -66,7 +73,9 @@
     if([CaptureSessionManager hasCamera] && ![CaptureSessionManager hasCameraPermission]){
         [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self doneLoadingPhotoAlbums];
+                @autoreleasepool {
+                    [self doneLoadingPhotoAlbums];
+                }
             });
         }];
     }
@@ -89,8 +98,24 @@
     }
 }
 
+-(BOOL) hasPermission{
+    return [MMPhotoManager hasPhotosPermission];
+}
+
+-(UICollectionViewLayout*) albumsLayout{
+    return [[MMAlbumGroupListLayout alloc] init];
+}
+
+-(UICollectionViewLayout*) photosLayout{
+    return [[MMCameraListLayout alloc] initForRotation:[self idealRotationForOrientation]];
+}
+
 -(void) updateEmptyErrorMessage{
     // noop
+}
+
+-(NSString*) messageTextWhenEmpty{
+    return @"Camera roll is empty";
 }
 
 #pragma mark - MMPhotoManagerDelegate
@@ -100,7 +125,9 @@
     if(self.isShowing && photoListScrollView.alpha){
         [photoListScrollView reloadData];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [photoListScrollView setContentOffset:lastCameraRollOffset animated:NO];
+            @autoreleasepool {
+                [photoListScrollView setContentOffset:lastCameraRollOffset animated:NO];
+            }
         });
     }
 }
@@ -125,7 +152,7 @@
     if(section == 0){
         return 1;
     }else{
-        if([MMPhotoManager hasPhotosPermission]){
+        if([self hasPermission]){
             return currentAlbum.numberOfPhotos;
         }else{
             return 1;
@@ -136,7 +163,7 @@
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     // 1 section for camera row, and 1 section for camera roll photos
     if(isShowing && !([CaptureSessionManager hasCamera] && [CaptureSessionManager hasCameraPermission]) &&
-       ![MMPhotoManager hasPhotosPermission]){
+       ![self hasPermission]){
         return 1;
     }
     NSInteger ret = isShowing ? 2 : 0;
@@ -153,8 +180,8 @@
                 cachedCameraCell.delegate = self;
                 return cachedCameraCell;
             }
-        }else if([MMPhotoManager hasPhotosPermission]){
-            MMPermissionPhotosCollectionViewCell* cell =  [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+        }else if([self hasPermission]){
+            MMPhotosPermissionCell* cell =  [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotosPermissionCell" forIndexPath:indexPath];
             [cell showCameraSteps];
             return cell;
         }else{
@@ -162,13 +189,13 @@
                                                              forIndexPath:indexPath];
         }
     }
-    if([MMPhotoManager hasPhotosPermission]){
-        MMSinglePhotoCollectionViewCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMSinglePhotoCollectionViewCell" forIndexPath:indexPath];
+    if([self hasPermission]){
+        MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
         [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
         photoCell.delegate = self;
         return photoCell;
     }else{
-        MMPermissionPhotosCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPermissionPhotosCollectionViewCell" forIndexPath:indexPath];
+        MMPhotosPermissionCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotosPermissionCell" forIndexPath:indexPath];
         [cell showPhotosSteps];
         return cell;
     }
