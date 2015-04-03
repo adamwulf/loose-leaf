@@ -7,6 +7,8 @@
 //
 
 #import "MMEventSidebarContentView.h"
+#import "MMAlbumGroupListLayout.h"
+#import "MMPhotosListLayout.h"
 #import "MMPhotoManager.h"
 
 @implementation MMEventSidebarContentView
@@ -21,12 +23,28 @@
 }
 
 -(void) reset:(BOOL)animated{
-    if([MMPhotoManager hasPhotosPermission]){
+    if([self hasPermission]){
         [super reset:animated];
     }else{
         albumListScrollView.alpha = 0;
         photoListScrollView.alpha = 1;
     }
+}
+
+-(BOOL) hasPermission{
+    return [MMPhotoManager hasPhotosPermission];
+}
+
+-(UICollectionViewLayout*) albumsLayout{
+    return [[MMAlbumGroupListLayout alloc] init];
+}
+
+-(UICollectionViewLayout*) photosLayout{
+    return [[MMPhotosListLayout alloc] initForRotation:[self idealRotationForOrientation]];
+}
+
+-(NSString*) messageTextWhenEmpty{
+    return @"No Events to show";
 }
 
 #pragma mark - Row Management
@@ -47,16 +65,12 @@
 
 #pragma mark - MMCachedRowsScrollViewDataSource
 
--(NSInteger) numberOfRowsFor:(MMCachedRowsScrollView*)scrollView{
-    return [[[MMPhotoManager sharedInstance] events] count];
-}
-
--(BOOL) prepareRowForReuse:(UIView*)aRow forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super prepareRowForReuse:aRow forScrollView:scrollView];
-}
-
--(UIView*) updateRow:(UIView*)currentRow atIndex:(NSInteger)index forFrame:(CGRect)frame forScrollView:(MMCachedRowsScrollView*)scrollView{
-    return [super updateRow:currentRow atIndex:index forFrame:frame forScrollView:scrollView];
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if(collectionView == albumListScrollView){
+        return [[[MMPhotoManager sharedInstance] events] count];
+    }else{
+        return [super collectionView:collectionView numberOfItemsInSection:section];
+    }
 }
 
 #pragma mark - Description

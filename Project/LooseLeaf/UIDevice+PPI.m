@@ -76,13 +76,21 @@
 // will return points per in/cm depending
 // on user's locale
 +(CGFloat) idealUnitLength{
-    NSLocale *locale = [NSLocale currentLocale];
-    BOOL isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
-    if(isMetric){
+    if([UIDevice isMetric]){
         return [self ppc];
     }else{
         return [self ppi];
     }
+}
+
+static BOOL isMetric;
++(BOOL) isMetric{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSLocale *locale = [NSLocale currentLocale];
+        isMetric = [[locale objectForKey:NSLocaleUsesMetricSystem] boolValue];
+    });
+    return isMetric;
 }
 
 +(NSInteger) majorVersion{

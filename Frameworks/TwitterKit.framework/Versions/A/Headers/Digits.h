@@ -5,8 +5,9 @@
 //
 
 #import "DGTAppearance.h"
-#import "DGTSession.h"
 #import "DGTAuthenticateButton.h"
+#import "DGTContactAccessAuthorizationStatus.h"
+#import "DGTSession.h"
 
 @class UIViewController;
 
@@ -23,6 +24,12 @@
  *  @return The Digits singleton.
  */
 + (Digits *)sharedInstance;
+
+/**
+ *
+ *  @return The Digits user session or nil if there's no authenticated user.
+ */
+- (DGTSession *)session;
 
 /**
  *  Starts the authentication flow UI with the standard appearance. The UI is presented as a modal off of the top-most view controller. The modal title is the application name.

@@ -14,6 +14,8 @@
 
 -(NSArray*) arrayByRemovingObject:(id)obj;
 
+-(NSArray*) arrayByRemovingObjectsInArray:(NSArray*)arr;
+
 -(NSArray*) shuffledArray;
 
 -(NSSet*) asSet;

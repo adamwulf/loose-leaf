@@ -7,14 +7,14 @@
 //
 
 #include <UIKit/UIKit.h>
-#import "MMPhoto.h"
+#import "MMDisplayAsset.h"
 #include "MMBufferedImageView.h"
 
 @protocol MMSinglePhotoCollectionViewCellDelegate <NSObject>
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(UIView*)cameraView;
 
--(void) photoWasTapped:(MMPhoto *)photo
+-(void) photoWasTapped:(MMDisplayAsset *)photo
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation;
 
