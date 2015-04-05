@@ -253,7 +253,6 @@ dispatch_queue_t importThumbnailQueue;
  * state to disk, and notify our delegate when done
  */
 -(void) saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete{
-    
     // Sanity checks to generate our directory structure if needed
     [self pagesPath];
     
@@ -262,9 +261,11 @@ dispatch_queue_t importThumbnailQueue;
 //        DebugLog(@"saved excess");
     }
     if([paperState hasEditsToSave]){
+        NSLog(@"======== hasEditsToSave %@", self.uuid);
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         if(drawableView){
+            NSLog(@"======== drawableview %@", self.uuid);
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
@@ -294,9 +295,11 @@ dispatch_queue_t importThumbnailQueue;
                                  }
                              }];
         }else{
+            NSLog(@"======== !drawableview %@", self.uuid);
             onComplete(NO);
         }
     }else{
+        NSLog(@"======== !hasEditsToSave %@", self.uuid);
         // already saved, but don't need to write
         // anything new to disk
         onComplete(NO);
