@@ -1127,6 +1127,11 @@
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     // track if all of our scraps have saved
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
+    
+    if(!sema1 || !sema2){
+        NSLog(@"what");
+        @throw [NSException exceptionWithName:@"SemaphoreException" reason:@"could not allocate semaphore" userInfo:nil];
+    }
 
     [self updateThumbnailVisibility];
     
@@ -1141,6 +1146,7 @@
     __block BOOL pageHadBeenChanged = NO;
     __block BOOL scrapsHadBeenChanged = NO;
     
+    NSLog(@"==== starting to save %@", self.uuid);
     // save our backing page
     [super saveToDiskHelper:^(BOOL hadEditsToSave){
         // NOTE!
@@ -1154,6 +1160,7 @@
         // after the signals, it'll be properly updated.
         pageHadBeenChanged = hadEditsToSave;
 //        DebugLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
+        NSLog(@"====== signaled page's drawable view saved for %@", self.uuid);
         dispatch_semaphore_signal(sema1);
     }];
     
@@ -1167,6 +1174,7 @@
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
                 lastSavedScrapStateHash = immutableScrapState.undoHash;
                 //            DebugLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
+                NSLog(@"====== signaled scrap collection saved for %@", self.uuid);
                 dispatch_semaphore_signal(sema2);
             }
         });
@@ -1177,8 +1185,10 @@
 
     dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
+            NSLog(@"====== waiting on %@ to save", self.uuid);
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+            NSLog(@"==== done waiting on %@ to save", self.uuid);
             @synchronized(self){
                 hasPendingScrappedIconUpdate--;
 //                DebugLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);
