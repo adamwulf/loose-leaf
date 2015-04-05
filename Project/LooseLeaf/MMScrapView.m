@@ -524,6 +524,10 @@
         NSLog(@"********************************************************");
         NSLog(@"********************************************************");
         NSLog(@"********************************************************");
+        @throw [NSException exceptionWithName:@"ScrapSaveException" reason:@"saving scrap without a state" userInfo:nil];
+        //
+        // i think the right answer here is to just call the doneSavingBlock()
+        // but i'm having trouble reproducing this code path.
 //        doneSavingBlock(NO);
     }
 }
