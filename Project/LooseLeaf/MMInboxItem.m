@@ -63,7 +63,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
                                                                                 options:NSCaseInsensitiveSearch
                                                                                   range:NSMakeRange(0, [relativeToDocuments length])];
         NSString* pdfHash = [relativeToDocuments MD5Hash];
-        NSLog(@"generating path: %@ to %@", relativeToDocuments, pdfHash);
+//        NSLog(@"generating path: %@ to %@", relativeToDocuments, pdfHash);
         cachedAssetsPath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"] stringByAppendingPathComponent:pdfHash];
         [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];
     }
@@ -136,7 +136,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
             @synchronized(self){
                 [pageSizeCache removeAllObjects];
             }
-            NSLog(@"generating page thumbnails: %d",(int) [self pageCount]);
+//            NSLog(@"generating page thumbnails: %d",(int) [self pageCount]);
             for(int pageNumber=0;pageNumber<[self pageCount];pageNumber++){
                 [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
                 @synchronized(self){

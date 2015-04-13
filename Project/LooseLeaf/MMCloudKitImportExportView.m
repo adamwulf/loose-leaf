@@ -90,7 +90,7 @@
     @synchronized(activeImports){
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
-        DebugLog(@"loaded %d pages from disk for import", (int) [imported count]);
+//        DebugLog(@"loaded %d pages from disk for import", (int) [imported count]);
 
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
             // need to set the import/export view after loading
