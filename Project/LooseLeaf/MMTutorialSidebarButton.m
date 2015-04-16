@@ -52,6 +52,7 @@
         // draw red circle of how many tutorials the user has left
         CGRect drawableFrame = [self drawableFrame];
         CGFloat sizeOfCircle = drawableFrame.size.width / 2;
+        sizeOfCircle = MIN(24, MAX(sizeOfCircle, 20));
         CGRect circleFrame = CGRectMake(drawableFrame.size.width + drawableFrame.origin.x - sizeOfCircle, drawableFrame.origin.y, sizeOfCircle, sizeOfCircle);
         circleFrame.origin.x += circleFrame.size.width / 6;
         circleFrame.origin.y -= circleFrame.size.width / 6;
@@ -79,7 +80,8 @@
         // draw and center text of the number
         NSString* numberOfTutorials = [NSString stringWithFormat:@"%d", (int) numPendingTutorials];
         
-        NSDictionary* textAttrs = @{ NSForegroundColorAttributeName : [UIColor whiteColor] };
+        NSDictionary* textAttrs = @{ NSForegroundColorAttributeName : [UIColor whiteColor],
+                                     NSFontAttributeName : [UIFont systemFontOfSize:ceilf(sizeOfCircle * 2 / 3)]};
         
         CGSize renderedSize = [numberOfTutorials sizeWithAttributes:textAttrs];
         
