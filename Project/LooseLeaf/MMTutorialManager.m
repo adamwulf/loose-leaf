@@ -16,6 +16,7 @@
     BOOL hasFinishedTutorial;
     CGFloat timeSpentInTutorial;
     NSInteger currentTutorialStep;
+    NSOperationQueue* subscriptionOpQueue;
 }
 
 @synthesize hasFinishedTutorial;
@@ -31,6 +32,8 @@ static MMTutorialManager* _instance = nil;
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
         currentTutorialStep = [[NSUserDefaults standardUserDefaults] integerForKey:kCurrentTutorialStep];
         stopwatch = [[MMStopWatch alloc] initWithDuration:timeSpentInTutorial];
+        subscriptionOpQueue = [[NSOperationQueue alloc] init];
+        subscriptionOpQueue.maxConcurrentOperationCount = 1;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         

@@ -15,6 +15,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMEditablePaperView.h"
 #import "Constants.h"
+#import "MMUnknownObject.h"
 #import "Mixpanel.h"
 
 @implementation MMCloudKitImportExportView{
@@ -90,6 +91,9 @@
     @synchronized(activeImports){
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
+        [activeImports filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return ![evaluatedObject isKindOfClass:[MMUnknownObject class]];
+        }]];
 //        DebugLog(@"loaded %d pages from disk for import", (int) [imported count]);
 
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {

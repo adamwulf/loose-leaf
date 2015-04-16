@@ -482,6 +482,7 @@
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FC3BB91ABA631B00F2DE37 /* space-navigation.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */; };
 		66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */; };
+		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1363,6 +1364,8 @@
 		66FC3BB61ABA631B00F2DE37 /* silly-face.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "silly-face.mov"; sourceTree = "<group>"; };
 		66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "space-navigation.mov"; sourceTree = "<group>"; };
 		66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hello.mov; sourceTree = "<group>"; };
+		66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUnknownObject.h; sourceTree = "<group>"; };
+		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2824,6 +2827,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				66FD31E71AE035AF00EDD1D5 /* Archiving Help */,
 				66343C681AC085F900801962 /* Newsletter */,
 				6688D1E11A994E7500EB17EC /* TutorialView */,
 				662B7D1C19E7A54C00C5529B /* Trackers */,
@@ -3157,6 +3161,15 @@
 				66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */,
 			);
 			name = SpinningKeyView;
+			sourceTree = "<group>";
+		};
+		66FD31E71AE035AF00EDD1D5 /* Archiving Help */ = {
+			isa = PBXGroup;
+			children = (
+				66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */,
+				66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */,
+			);
+			name = "Archiving Help";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3612,6 +3625,7 @@
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
 				662280771AAF9FFF00DAB609 /* MMAlbumGroupListLayout.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
+				66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
 				6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */,
 				66343C671AC085D600801962 /* MMNewsletterSignupHandler.m in Sources */,

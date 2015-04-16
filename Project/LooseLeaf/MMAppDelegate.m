@@ -22,6 +22,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
 #import <FacebookSDK/FacebookSDK.h>
+#import "MMUnknownObject.h"
 
 
 @implementation MMAppDelegate{
@@ -37,6 +38,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // support old archives
+    [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
+
+    
+    
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
