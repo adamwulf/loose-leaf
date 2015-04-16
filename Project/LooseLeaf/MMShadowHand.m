@@ -249,6 +249,7 @@
 }
 -(void) continueDrawingAtTouch:(UITouch*)touch{
     if(!isDrawing){
+        return;
         [self startDrawingAtTouch:touch immediately:NO];
     }
     [self preventCALayerImplicitAnimation:^{

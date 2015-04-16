@@ -79,10 +79,11 @@
 
 -(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
     if(!leftHand.isActive){
-//        [leftHand startPinchingObject:obj withTouches:touches];
         [leftHand startPanningObject:obj withTouches:touches];
+//        [leftHand startPinchingObject:obj withTouches:touches];
     }else{
         [rightHand startPanningObject:obj withTouches:touches];
+//        [rightHand startPinchingObject:obj withTouches:touches];
     }
 }
 
@@ -95,12 +96,12 @@
 //        [rightHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(2, 2)]];
 //    }else{
     
-        if(leftHand.heldObject == obj ||
-           (rightHand.heldObject !=obj && leftHand.heldObject == nil)){
-//            [leftHand continuePinchingObject:obj withTouches:touches];
+        if(leftHand.heldObject == obj){
             [leftHand continuePanningObject:obj withTouches:touches];
-        }else{
+//            [leftHand continuePinchingObject:obj withTouches:touches];
+        }else if(rightHand.heldObject == obj){
             [rightHand continuePanningObject:obj withTouches:touches];
+//            [rightHand continuePinchingObject:obj withTouches:touches];
         }
 //    }
 }
@@ -113,6 +114,7 @@
     }
     if(rightHand.heldObject == obj){
         NSLog(@"ending right pan");
+//        [rightHand endPinchingObject:obj];
         [rightHand endPanningObject:obj];
     }
 }
