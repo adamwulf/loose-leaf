@@ -186,6 +186,39 @@
 
 #pragma mark - UITextFieldDelegate
 
+-(void) bounceEmailInput{
+    [UIView animateWithDuration:1.0 animations:^{
+        validateInputRed.alpha = 0;
+    }];
+    
+    emailInput.layer.borderWidth = 1;
+    emailInput.layer.borderColor = [UIColor lightGrayColor].CGColor;
+
+    CGColorRef originalColor = emailInput.layer.borderColor;
+    CGFloat originalWidth = emailInput.layer.borderWidth;
+    
+    CABasicAnimation *color = [CABasicAnimation animationWithKeyPath:@"borderColor"];
+    // animate from red to blue border ...
+    color.fromValue = (id)[UIColor redColor].CGColor;
+    color.toValue   = (__bridge id)originalColor;
+    
+    CABasicAnimation *width = [CABasicAnimation animationWithKeyPath:@"borderWidth"];
+    // animate from 2pt to 4pt wide border ...
+    width.fromValue = @3;
+    width.toValue   = @(originalWidth);
+    
+    CAAnimationGroup *both = [CAAnimationGroup animation];
+    // animate both as a group
+    both.duration   = .75;
+    both.animations = @[color, width];
+    both.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    both.removedOnCompletion = YES;
+    
+    [emailInput.layer addAnimation:both forKey:@"color and width"];
+
+}
+
+
 // email validation from:
 // http://stackoverflow.com/questions/9305373/validating-the-email-address-in-uitextfield
 -(NSString*) validateInput{
@@ -211,9 +244,7 @@
     validateInputRed.hidden = (matchedEmail != nil);
     validateInputRed.alpha = 1;
     if(!matchedEmail){
-        [UIView animateWithDuration:1.0 animations:^{
-            validateInputRed.alpha = 0;
-        }];
+        [self bounceEmailInput];
     }
     return matchedEmail;
 }
