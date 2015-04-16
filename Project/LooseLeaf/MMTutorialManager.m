@@ -88,15 +88,15 @@ static MMTutorialManager* _instance = nil;
                  @"video":@"hello.mov"
                  },@{
                  @"id":@"nav",
-                 @"title":@"Move Between Pages",
+                 @"title":@"Pinch to See Your Pages",
                  @"video":@"space-navigation.mov"
                  },@{
                  @"id":@"ruler",
-                 @"title":@"Draw a Curve",
+                 @"title":@"Import Your Photos",
                  @"video":@"ruler-for-curve-2.mov"
                  },@{
                  @"id":@"clip",
-                 @"title":@"Draw on your Photos",
+                 @"title":@"Export Your Pages",
                  @"video":@"draw-clip-2-2.mov"
                  }];
 }

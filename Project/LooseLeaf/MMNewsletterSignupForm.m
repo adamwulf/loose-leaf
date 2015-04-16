@@ -215,7 +215,6 @@
     both.removedOnCompletion = YES;
     
     [emailInput.layer addAnimation:both forKey:@"color and width"];
-
 }
 
 
