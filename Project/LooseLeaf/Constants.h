@@ -85,6 +85,8 @@ _Pragma("clang diagnostic pop") \
 #define kShadowBend 3
 #define kBezelInGestureWidth 40
 #define kUndoLimit 10 // TODO: make sure this defines the jot undo level
+#define kMaxButtonBounceHeight .4
+#define kMinButtonBounceHeight -.2
 
 // Camera
 #define kCameraMargin 10

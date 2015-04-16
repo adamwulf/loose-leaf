@@ -12,11 +12,13 @@
 #import "MMTutorialSidebarButton.h"
 #import "Mixpanel.h"
 #import "MMTutorialManager.h"
+#import "MMExportTutorialButton.h"
 
 @implementation MMTutorialStackView{
     UIView* backdrop;
     MMTutorialView* tutorialView;
     MMTextButton* helpButton;
+    MMExportTutorialButton* listViewTutorialButton;
 }
 
 -(id) initWithFrame:(CGRect)frame{
@@ -35,6 +37,12 @@
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [[MMTutorialManager sharedInstance] startWatchingTutorial];
         }
+        
+        
+        CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
+        listViewTutorialButton = [[MMExportTutorialButton alloc] initWithFrame:typicalBounds];
+        listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height - 100);
+        [self moveAddButtonToBottom];
     }
     return self;
 }
@@ -105,6 +113,26 @@
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
     [tutorialView didRotateToIdealOrientation:orientation];
+}
+
+#pragma mark - List View Tutorial
+
+-(CGFloat) contentHeightForAllPages{
+    return [super contentHeightForAllPages] + 140;
+}
+
+-(void) moveAddButtonToBottom{
+    [super moveAddButtonToBottom];
+    [self insertSubview:listViewTutorialButton atIndex:0];
+    listViewTutorialButton.alpha = 0;
+}
+
+-(void) moveAddButtonToTop{
+    [super moveAddButtonToTop];
+    [self addSubview:listViewTutorialButton];
+    listViewTutorialButton.alpha = 1;
+    
+    listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 70);
 }
 
 @end
