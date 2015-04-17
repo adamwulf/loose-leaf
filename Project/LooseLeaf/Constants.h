@@ -44,6 +44,12 @@ _Pragma("clang diagnostic pop") \
 
 #define kAnimationDelay 0.05
 
+// Tutorial Notifications
+#define kTutorialStartedNotification @"kTutorialStartedNotification"
+#define kTutorialStepCompleteNotification @"kTutorialStepCompleteNotification"
+#define kTutorialClosedNotification @"kTutorialClosedNotification"
+
+
 // Display Assets
 #define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
 #define kInboxItemThumbnailGenerated @"kInboxItemThumbnailGenerated"
@@ -83,6 +89,8 @@ _Pragma("clang diagnostic pop") \
 #define kShadowBend 3
 #define kBezelInGestureWidth 40
 #define kUndoLimit 10 // TODO: make sure this defines the jot undo level
+#define kMaxButtonBounceHeight .4
+#define kMinButtonBounceHeight -.2
 
 // Camera
 #define kCameraMargin 10
@@ -146,9 +154,14 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 
-// cloudkit tutorial
-#define kMPCloudKitTutorialUUID @"2E73BFF3-843D-417F-A8FA-71C6E9783D67"
-#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
+// tutorial
+#define kMPHasFinishedTutorial @"Has Finished Tutorial"
+#define kHasSignedUpForNewsletter @"kHasSignedUpForNewsletter"
+#define kPendingEmailToSubscribe @"kPendingEmailToSubscribe"
+#define kHasIgnoredNewsletter @"kHasIgnoredNewsletter"
+#define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
+#define kCurrentTutorialStep @"kCurrentTutorialStep"
+#define kMPNewsletterStatus @"Signed Up For Newsletter"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"

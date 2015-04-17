@@ -25,6 +25,7 @@
 #import <JotUI/JotUI.h>
 #import <FacebookSDK/FacebookSDK.h>
 #import "MMShadowHandView.h"
+#import "MMUnknownObject.h"
 #import "Constants.h"
 
 
@@ -41,6 +42,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // support old archives
+    [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
+
+    
+    
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];

@@ -142,6 +142,10 @@ static MMRotationManager* _instance = nil;
     return [[UIDevice currentDevice] orientation];
 }
 
+-(UIInterfaceOrientation) currentInterfaceOrientation{
+    return lastBestOrientation;
+}
+
 -(UIInterfaceOrientation) currentStatusbarOrientation{
     return [[UIApplication sharedApplication] statusBarOrientation];
 }

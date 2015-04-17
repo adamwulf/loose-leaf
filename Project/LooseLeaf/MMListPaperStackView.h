@@ -77,4 +77,10 @@
 
 -(void) transitionFromListToNewBlankPageIfInPageView;
 
+-(CGFloat) contentHeightForAllPages;
+
+-(void) moveAddButtonToBottom;
+
+-(void) moveAddButtonToTop;
+
 @end
