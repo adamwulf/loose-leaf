@@ -38,7 +38,7 @@ static MMTutorialManager* _instance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
 #ifdef DEBUG
-        for (NSDictionary* tutorial in [self appIntroTutorialSteps]) {
+        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
         }
         
@@ -82,19 +82,19 @@ static MMTutorialManager* _instance = nil;
 
 -(NSArray*) appIntroTutorialSteps{
     return @[@{
-                 @"id":@"pen",
+                 @"id":@"app-intro-pen",
                  @"title":@"Draw and Erase",
                  @"video":@"hello.mov"
                  },@{
-                 @"id":@"nav",
+                 @"id":@"app-intro-pinch",
                  @"title":@"Pinch to See Your Pages",
                  @"video":@"pinch-to-list.mov"
                  },@{
-                 @"id":@"ruler",
+                 @"id":@"app-intro-import-scissor",
                  @"title":@"Import and Crop Your Photos",
                  @"video":@"import-and-scissor.mov"
                  },@{
-                 @"id":@"clip",
+                 @"id":@"app-intro-export",
                  @"title":@"Export Your Pages",
                  @"video":@"export-to-facebook.mov"
                  }];
@@ -102,11 +102,11 @@ static MMTutorialManager* _instance = nil;
 
 -(NSArray*) listViewTutorialSteps{
     return @[@{
-                 @"id":@"reorder-pages",
+                 @"id":@"list-view-reorder-pages",
                  @"title":@"Organize Your Pages",
                  @"video":@"list-view-reorder-pages.mov"
                  },@{
-                 @"id":@"nav",
+                 @"id":@"list-view-delete-page",
                  @"title":@"Delete a Page",
                  @"video":@"list-view-delete-page.mov"
                  }];
