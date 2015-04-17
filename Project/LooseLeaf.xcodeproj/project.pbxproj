@@ -181,6 +181,9 @@
 		665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593617BD7CD3006DECBF /* PolygonTool.m */; };
 		665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC1C17B578B0000BD505 /* MMColorButton.m */; };
 		665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */; };
+		665F7F591AE0894900635D56 /* pinch-to-list.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F581AE0894900635D56 /* pinch-to-list.mov */; };
+		665F7F5B1AE08B8600635D56 /* import-and-scissor.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */; };
+		665F7F5D1AE08D2B00635D56 /* export-to-facebook.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */; };
 		66627F701A02582F0064FAD3 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */; };
 		66627F711A02582F0064FAD3 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66627F011A02582E0064FAD3 /* Media.xcassets */; };
 		66627F721A02582F0064FAD3 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F031A02582E0064FAD3 /* Mixpanel.m */; };
@@ -480,7 +483,6 @@
 		66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
-		66FC3BB91ABA631B00F2DE37 /* space-navigation.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */; };
 		66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMExportTutorialButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMExportTutorialButton.m */; };
@@ -802,6 +804,9 @@
 		665CAC1F17B57B0B000BD505 /* MMPencilAndPaletteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteView.h; sourceTree = "<group>"; };
 		665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilAndPaletteView.m; sourceTree = "<group>"; };
 		665CAC2217B5803B000BD505 /* MMPencilAndPaletteViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteViewDelegate.h; sourceTree = "<group>"; };
+		665F7F581AE0894900635D56 /* pinch-to-list.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "pinch-to-list.mov"; sourceTree = "<group>"; };
+		665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "import-and-scissor.mov"; sourceTree = "<group>"; };
+		665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "export-to-facebook.mov"; sourceTree = "<group>"; };
 		66627EFF1A02582E0064FAD3 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _MPTweakBindObserver.h; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.h; sourceTree = "<group>"; };
 		66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _MPTweakBindObserver.m; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.m; sourceTree = "<group>"; };
 		66627F011A02582E0064FAD3 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
@@ -1363,7 +1368,6 @@
 		66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBrokenCloudLayer.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 		66FC3BB61ABA631B00F2DE37 /* silly-face.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "silly-face.mov"; sourceTree = "<group>"; };
-		66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "space-navigation.mov"; sourceTree = "<group>"; };
 		66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hello.mov; sourceTree = "<group>"; };
 		66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUnknownObject.h; sourceTree = "<group>"; };
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
@@ -1690,10 +1694,12 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				662809001A9BB97500CA3F9A /* white-arrow.png */,
+				665F7F581AE0894900635D56 /* pinch-to-list.mov */,
+				665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */,
+				665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */,
 				66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */,
 				66FC3BB61ABA631B00F2DE37 /* silly-face.mov */,
-				66FC3BB71ABA631B00F2DE37 /* space-navigation.mov */,
-				662809001A9BB97500CA3F9A /* white-arrow.png */,
 				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
 				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
 			);
@@ -3289,6 +3295,7 @@
 				663326BE1AAFE81E003915E6 /* photos-icon@2x.png in Resources */,
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
+				665F7F591AE0894900635D56 /* pinch-to-list.mov in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
@@ -3296,6 +3303,7 @@
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */,
 				667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */,
+				665F7F5D1AE08D2B00635D56 /* export-to-facebook.mov in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
@@ -3304,7 +3312,6 @@
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
-				66FC3BB91ABA631B00F2DE37 /* space-navigation.mov in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
 				665245271996AA7B00C36609 /* FXBlurView.license in Resources */,
 				661C4B281A83F8D00014DB20 /* pinterest.png in Resources */,
@@ -3324,6 +3331,7 @@
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */,
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
+				665F7F5B1AE08B8600635D56 /* import-and-scissor.mov in Resources */,
 				662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				6634856519DB41F000B5CF2D /* Crumple.license in Resources */,

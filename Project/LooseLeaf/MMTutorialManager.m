@@ -89,15 +89,15 @@ static MMTutorialManager* _instance = nil;
                  },@{
                  @"id":@"nav",
                  @"title":@"Pinch to See Your Pages",
-                 @"video":@"space-navigation.mov"
+                 @"video":@"pinch-to-list.mov"
                  },@{
                  @"id":@"ruler",
-                 @"title":@"Import Your Photos",
-                 @"video":@"ruler-for-curve-2.mov"
+                 @"title":@"Import and Crop Your Photos",
+                 @"video":@"import-and-scissor.mov"
                  },@{
                  @"id":@"clip",
                  @"title":@"Export Your Pages",
-                 @"video":@"draw-clip-2-2.mov"
+                 @"video":@"export-to-facebook.mov"
                  }];
 }
 
