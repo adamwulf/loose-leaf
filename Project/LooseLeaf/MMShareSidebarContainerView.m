@@ -26,7 +26,8 @@
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
-#import "MMExportTutorialButton.h"
+#import "MMLargeTutorialSidebarButton.h"
+#import "MMTutorialManager.h"
 
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
@@ -75,7 +76,9 @@
         
         
         CGRect typicalBounds = [[shareItems lastObject] button].bounds;
-        MMExportTutorialButton* button = [[MMExportTutorialButton alloc] initWithFrame:typicalBounds];
+        MMLargeTutorialSidebarButton* button = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray *{
+            return [[MMTutorialManager sharedInstance] shareTutorialSteps];
+        }];
         button.center = CGPointMake(sharingContentView.bounds.size.width/2, sharingContentView.bounds.size.height - 100);
         [sharingContentView addSubview:button];
         

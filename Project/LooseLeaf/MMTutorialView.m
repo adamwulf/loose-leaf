@@ -37,12 +37,17 @@
     __weak NSObject<MMTutorialViewDelegate>* delegate;
     
     MMNewsletterSignupForm* newsletterSignupForm;
+    
+    NSArray* tutorialList;
 }
 
 @synthesize delegate;
 
--(id) initWithFrame:(CGRect)frame{
+-(id) initWithFrame:(CGRect)frame andTutorials:(NSArray*)_tutorialList{
     if(self = [super initWithFrame:frame]){
+        
+        tutorialList = _tutorialList;
+        
         // 10% buffer
         CGFloat boxSize = 600;
         CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
@@ -143,10 +148,13 @@
 
 -(void) tutorialStepFinished:(NSNotification*)note{
     NSString* tutorialId = note.object;
-    NSArray* tutorials = [[MMTutorialManager sharedInstance] tutorialSteps];
+    NSArray* tutorials = tutorialList;
     NSUInteger index = [tutorials indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
         return [[obj objectForKey:@"id"] isEqualToString:tutorialId];
     }];
+    if(index == NSNotFound){
+        return;
+    }
     
     index = MAX(0, MIN(index, pageControl.numberOfPages-1));
     [[tutorialButtons objectAtIndex:index] setFinished:YES];
@@ -208,7 +216,7 @@
     [UIView animateWithDuration:.3 animations:^{
         nextButton.alpha = [visible wantsNextButton] ? 1 : 0;
     }];
-    if(idx < [[[MMTutorialManager sharedInstance] tutorialSteps] count]){
+    if(idx < [tutorialList count]){
         // notify, but only if its a proper tutorial
         [self.delegate userIsViewingTutorialStep:idx];
     }
@@ -222,7 +230,7 @@
 #pragma mark - Tutorial Loading
 
 -(void) loadTutorials{
-    NSArray* tutorials = [[MMTutorialManager sharedInstance] tutorialSteps];
+    NSArray* tutorials = tutorialList;
     
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString* videoURL = [obj objectForKey:@"video"];

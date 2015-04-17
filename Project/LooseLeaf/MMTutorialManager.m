@@ -38,7 +38,7 @@ static MMTutorialManager* _instance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
 #ifdef DEBUG
-        for (NSDictionary* tutorial in [self tutorialSteps]) {
+        for (NSDictionary* tutorial in [self appIntroTutorialSteps]) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
         }
         
@@ -61,17 +61,6 @@ static MMTutorialManager* _instance = nil;
 
 #pragma mark - Public API
 
--(NSInteger) numberOfPendingTutorials{
-    NSArray* allTutorials = [self tutorialSteps];
-    __block NSInteger numCompleted = 0;
-    
-    [allTutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        numCompleted += [self hasCompletedStep:[obj objectForKey:@"id"]] ? 1 : 0;
-    }];
-    
-    return [allTutorials count] - numCompleted;
-}
-
 -(BOOL) hasCompletedStep:(NSString*)stepID{
     return [[NSUserDefaults standardUserDefaults] boolForKey:[kCurrentTutorialStep stringByAppendingString:stepID]];
 }
@@ -81,7 +70,49 @@ static MMTutorialManager* _instance = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStepCompleteNotification object:stepID];
 }
 
--(NSArray*) tutorialSteps{
+-(NSInteger) numberOfPendingTutorials:(NSArray*)possiblyPendingTutorials{
+    __block NSInteger numCompleted = 0;
+    
+    [possiblyPendingTutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        numCompleted += [self hasCompletedStep:[obj objectForKey:@"id"]] ? 1 : 0;
+    }];
+    
+    return [possiblyPendingTutorials count] - numCompleted;
+}
+
+-(NSArray*) appIntroTutorialSteps{
+    return @[@{
+                 @"id":@"pen",
+                 @"title":@"Draw and Erase",
+                 @"video":@"hello.mov"
+                 },@{
+                 @"id":@"nav",
+                 @"title":@"Pinch to See Your Pages",
+                 @"video":@"pinch-to-list.mov"
+                 },@{
+                 @"id":@"ruler",
+                 @"title":@"Import and Crop Your Photos",
+                 @"video":@"import-and-scissor.mov"
+                 },@{
+                 @"id":@"clip",
+                 @"title":@"Export Your Pages",
+                 @"video":@"export-to-facebook.mov"
+                 }];
+}
+
+-(NSArray*) listViewTutorialSteps{
+    return @[@{
+                 @"id":@"reorder-pages",
+                 @"title":@"Organize Your Pages",
+                 @"video":@"list-view-reorder-pages.mov"
+                 },@{
+                 @"id":@"nav",
+                 @"title":@"Delete a Page",
+                 @"video":@"list-view-delete-page.mov"
+                 }];
+}
+
+-(NSArray*) shareTutorialSteps{
     return @[@{
                  @"id":@"pen",
                  @"title":@"Draw and Erase",
@@ -105,9 +136,9 @@ static MMTutorialManager* _instance = nil;
     return [stopwatch isRunning];
 }
 
--(void) startWatchingTutorial{
+-(void) startWatchingTutorials:(NSArray*)tutorialList{
     [stopwatch start];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStartedNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialStartedNotification object:self userInfo:@{@"tutorialList" : tutorialList}];
 }
 
 -(void) pauseWatchingTutorial{

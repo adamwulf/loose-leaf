@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMExportTutorialButton.h"
+#import "MMLargeTutorialSidebarButton.h"
 #import "UIView+Animations.h"
 #import "Constants.h"
 
-@implementation MMExportTutorialButton
+@implementation MMLargeTutorialSidebarButton
 
 -(void) bounceButton:(id)sender{
     if(self.enabled){

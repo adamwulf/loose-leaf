@@ -184,6 +184,8 @@
 		665F7F591AE0894900635D56 /* pinch-to-list.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F581AE0894900635D56 /* pinch-to-list.mov */; };
 		665F7F5B1AE08B8600635D56 /* import-and-scissor.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */; };
 		665F7F5D1AE08D2B00635D56 /* export-to-facebook.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */; };
+		665F7F621AE096D000635D56 /* list-view-delete-page.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F611AE096D000635D56 /* list-view-delete-page.mov */; };
+		665F7F641AE096D500635D56 /* list-view-reorder-pages.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */; };
 		66627F701A02582F0064FAD3 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */; };
 		66627F711A02582F0064FAD3 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66627F011A02582E0064FAD3 /* Media.xcassets */; };
 		66627F721A02582F0064FAD3 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F031A02582E0064FAD3 /* Mixpanel.m */; };
@@ -485,7 +487,7 @@
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
-		66FD31ED1AE0442400EDD1D5 /* MMExportTutorialButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMExportTutorialButton.m */; };
+		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -807,6 +809,8 @@
 		665F7F581AE0894900635D56 /* pinch-to-list.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "pinch-to-list.mov"; sourceTree = "<group>"; };
 		665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "import-and-scissor.mov"; sourceTree = "<group>"; };
 		665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "export-to-facebook.mov"; sourceTree = "<group>"; };
+		665F7F611AE096D000635D56 /* list-view-delete-page.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "list-view-delete-page.mov"; sourceTree = "<group>"; };
+		665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "list-view-reorder-pages.mov"; sourceTree = "<group>"; };
 		66627EFF1A02582E0064FAD3 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _MPTweakBindObserver.h; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.h; sourceTree = "<group>"; };
 		66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _MPTweakBindObserver.m; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.m; sourceTree = "<group>"; };
 		66627F011A02582E0064FAD3 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
@@ -1371,8 +1375,8 @@
 		66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hello.mov; sourceTree = "<group>"; };
 		66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUnknownObject.h; sourceTree = "<group>"; };
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
-		66FD31EB1AE0442400EDD1D5 /* MMExportTutorialButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMExportTutorialButton.h; sourceTree = "<group>"; };
-		66FD31EC1AE0442400EDD1D5 /* MMExportTutorialButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMExportTutorialButton.m; sourceTree = "<group>"; };
+		66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLargeTutorialSidebarButton.h; sourceTree = "<group>"; };
+		66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLargeTutorialSidebarButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1694,14 +1698,10 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				665F7F601AE096C900635D56 /* list-view */,
+				665F7F5F1AE096BF00635D56 /* un-used */,
+				665F7F5E1AE096B400635D56 /* app-intro */,
 				662809001A9BB97500CA3F9A /* white-arrow.png */,
-				665F7F581AE0894900635D56 /* pinch-to-list.mov */,
-				665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */,
-				665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */,
-				66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */,
-				66FC3BB61ABA631B00F2DE37 /* silly-face.mov */,
-				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
-				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
 			);
 			name = assets;
 			sourceTree = "<group>";
@@ -2177,6 +2177,47 @@
 			name = Pencil;
 			sourceTree = "<group>";
 		};
+		665F7F5E1AE096B400635D56 /* app-intro */ = {
+			isa = PBXGroup;
+			children = (
+				665F7F581AE0894900635D56 /* pinch-to-list.mov */,
+				665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */,
+				665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */,
+				66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */,
+			);
+			name = "app-intro";
+			sourceTree = "<group>";
+		};
+		665F7F5F1AE096BF00635D56 /* un-used */ = {
+			isa = PBXGroup;
+			children = (
+				66FC3BB61ABA631B00F2DE37 /* silly-face.mov */,
+				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
+				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
+			);
+			name = "un-used";
+			sourceTree = "<group>";
+		};
+		665F7F601AE096C900635D56 /* list-view */ = {
+			isa = PBXGroup;
+			children = (
+				665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */,
+				665F7F611AE096D000635D56 /* list-view-delete-page.mov */,
+			);
+			name = "list-view";
+			sourceTree = "<group>";
+		};
+		665F7F651AE0979200635D56 /* Tutorial Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				66343C4E1ABF8CD000801962 /* MMTutorialSidebarButton.h */,
+				66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */,
+				66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */,
+				66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */,
+			);
+			name = "Tutorial Sidebar";
+			sourceTree = "<group>";
+		};
 		66684B2F182D8869005A27B4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -2565,6 +2606,7 @@
 		66A74630176B860900466AA4 /* Used */ = {
 			isa = PBXGroup;
 			children = (
+				665F7F651AE0979200635D56 /* Tutorial Sidebar */,
 				66CE120117D3AD7C00882275 /* MMBounceButton.h */,
 				66CE120217D3AD7C00882275 /* MMBounceButton.m */,
 				66BD6E7E1593AF4100D4544C /* MMSidebarButton.h */,
@@ -3062,8 +3104,6 @@
 		66EDE42219AE75EF00A5623B /* Share Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				66FD31EB1AE0442400EDD1D5 /* MMExportTutorialButton.h */,
-				66FD31EC1AE0442400EDD1D5 /* MMExportTutorialButton.m */,
 				66BEBFFE19BE55C30032D30C /* MMInviteUserButton.h */,
 				66BEBFFF19BE55C30032D30C /* MMInviteUserButton.m */,
 				66EDE42519AE765000A5623B /* MMAvatarButton.h */,
@@ -3116,8 +3156,6 @@
 				66BE6CA119D67BC100A5F650 /* MMPolaroidView.m */,
 				667AA41D19E33342006549EE /* MMPolaroidsView.h */,
 				667AA41E19E33342006549EE /* MMPolaroidsView.m */,
-				66343C4E1ABF8CD000801962 /* MMTutorialSidebarButton.h */,
-				66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */,
 			);
 			name = "Tool Sidebar";
 			sourceTree = "<group>";
@@ -3352,6 +3390,7 @@
 				66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */,
 				6672EFEA19C3A71E0076009F /* CloudKitLookUp@2x.png in Resources */,
 				665245141995844D00C36609 /* twitterLarge.png in Resources */,
+				665F7F641AE096D500635D56 /* list-view-reorder-pages.mov in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
 				66627F711A02582F0064FAD3 /* Media.xcassets in Resources */,
 				66627F9A1A02582F0064FAD3 /* MPSurvey.storyboard in Resources */,
@@ -3365,6 +3404,7 @@
 				66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */,
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
 				66E2240D19D645BD000FCA96 /* ios8-settings-photos.png in Resources */,
+				665F7F621AE096D000635D56 /* list-view-delete-page.mov in Resources */,
 				667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */,
 				666E253E18F5E19100C17295 /* clearcamera.png in Resources */,
 				66E2240419D633E6000FCA96 /* ios8-settings-camera@2x.png in Resources */,
@@ -3682,7 +3722,7 @@
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
-				66FD31ED1AE0442400EDD1D5 /* MMExportTutorialButton.m in Sources */,
+				66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */,
