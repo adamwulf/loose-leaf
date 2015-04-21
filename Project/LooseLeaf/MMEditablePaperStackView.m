@@ -914,14 +914,18 @@
 
 -(void) beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page beginScissorAtPoint:adjustedPoint];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    BOOL didAdjust = NO;
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:&didAdjust];
+    if(didAdjust){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     if(![page continueScissorAtPoint:adjustedPoint]){
@@ -930,14 +934,14 @@
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page finishScissorAtPoint:adjustedPoint];
 }
 
 -(void) cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page cancelScissorAtPoint:adjustedPoint];
