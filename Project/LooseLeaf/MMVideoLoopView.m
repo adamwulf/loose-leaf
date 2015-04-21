@@ -20,6 +20,12 @@
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
+    id rateObserver;
+    id timeObserver;
+    
+    
+    
+    UIView* durationBar;
 }
 
 -(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forVideoId:(NSString*)tutorialId{
@@ -41,8 +47,8 @@
         AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
         imageView.image = image;
-
-        UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 50)];
+        
+        UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.text = _title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -55,6 +61,19 @@
                                                  selector:@selector(playerItemDidReachEnd:)
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
                                                    object:[avPlayer currentItem]];
+        
+        UILabel* durationTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];
+        durationTitleLabel.backgroundColor = [UIColor clearColor];
+        durationTitleLabel.textColor = [UIColor whiteColor];
+        durationTitleLabel.text = _title;
+        durationTitleLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:titleLabel];
+        durationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 4)];
+        durationBar.clipsToBounds = YES;
+        durationBar.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
+        [durationBar addSubview:durationTitleLabel];
+        [self addSubview:durationBar];
+
     }
     return self;
 }
@@ -89,6 +108,24 @@
                                                      selector:@selector(itemDidFinishPlaying:)
                                                          name:AVPlayerItemDidPlayToEndTimeNotification
                                                        object:avPlayer.currentItem];
+
+            
+            CGFloat maxWidth = self.bounds.size.width;
+            __weak UIView* weakDurationBar = durationBar;
+            __weak AVPlayer* weakPlayer = avPlayer;
+            NSString* _videoId = videoId;
+            rateObserver = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
+                                                                  queue:dispatch_get_main_queue()
+                                                             usingBlock:^(CMTime time) {
+                                                     CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
+                                                     CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
+                                                     CGRect fr = weakDurationBar.frame;
+                                                     CGFloat percentDur = MAX(0, (currTime / duration));
+                                                     fr.size.width = maxWidth * percentDur;
+                                                     if(![[MMTutorialManager sharedInstance] hasCompletedStep:_videoId]){
+                                                         weakDurationBar.frame = fr;
+                                                     }
+                                                 }];
         }
         [avPlayer play];
     }
@@ -98,6 +135,9 @@
     if(![[MMTutorialManager sharedInstance] hasCompletedStep:videoId]){
         NSLog(@"done playing!");
         [[MMTutorialManager sharedInstance] didCompleteStep:videoId];
+        [UIView animateWithDuration:.3 animations:^{
+            durationBar.alpha = 0;
+        }];
     }
 }
 
@@ -116,6 +156,7 @@
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
+        [avPlayer removeTimeObserver:rateObserver];
         avPlayer = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }
