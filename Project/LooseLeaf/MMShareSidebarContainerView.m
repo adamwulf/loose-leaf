@@ -36,6 +36,8 @@
     NSMutableArray* shareItems;
     
     MMCloudKitShareItem* cloudKitShareItem;
+    
+    MMLargeTutorialSidebarButton* tutorialButton;
 }
 
 @synthesize shareDelegate;
@@ -76,14 +78,19 @@
         
         
         CGRect typicalBounds = [[shareItems lastObject] button].bounds;
-        MMLargeTutorialSidebarButton* button = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray *{
+        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray *{
             return [[MMTutorialManager sharedInstance] shareTutorialSteps];
         }];
-        button.center = CGPointMake(sharingContentView.bounds.size.width/2, sharingContentView.bounds.size.height - 100);
-        [sharingContentView addSubview:button];
+        tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width/2, sharingContentView.bounds.size.height - 100);
+        [tutorialButton addTarget:self action:@selector(startWatchingExportTutorials) forControlEvents:UIControlEventTouchUpInside];
+        [sharingContentView addSubview:tutorialButton];
         
     }
     return self;
+}
+
+-(void) startWatchingExportTutorials{
+    [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
 }
 
 -(CGFloat) buttonWidth{

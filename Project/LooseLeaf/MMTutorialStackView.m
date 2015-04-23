@@ -100,6 +100,7 @@
     } completion:^(BOOL finished) {
         [backdrop removeFromSuperview];
         backdrop = nil;
+        [tutorialView unloadTutorials];
         [tutorialView removeFromSuperview];
         tutorialView = nil;
         NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];

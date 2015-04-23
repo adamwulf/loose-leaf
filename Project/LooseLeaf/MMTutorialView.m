@@ -8,6 +8,7 @@
 
 #import "MMTutorialView.h"
 #import "MMVideoLoopView.h"
+#import "MMImageLoopView.h"
 #import "MMTutorialManager.h"
 #import "MMRotationManager.h"
 #import "AVHexColor.h"
@@ -18,6 +19,7 @@
 #import "UIColor+Shadow.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
+#import "NSURL+UTI.h"
 
 @interface MMTutorialView ()<MMNewsletterSignupFormDelegate>
 
@@ -229,6 +231,15 @@
 
 #pragma mark - Tutorial Loading
 
+
+-(void) unloadTutorials{
+    for(UIView* tutorialView in scrollView.subviews){
+        if([tutorialView respondsToSelector:@selector(stopAnimating)]){
+            [tutorialView performSelector:@selector(stopAnimating)];
+        }
+    }
+}
+
 -(void) loadTutorials{
     NSArray* tutorials = tutorialList;
     
@@ -236,21 +247,31 @@
         NSString* videoURL = [obj objectForKey:@"video"];
         NSString* videoTitle = [obj objectForKey:@"title"];
         NSString* videoId = [obj objectForKey:@"id"];
-        NSURL* tutorialMov = [[NSBundle mainBundle] URLForResource:videoURL withExtension:nil];
-        MMVideoLoopView* tutorial = [[MMVideoLoopView alloc] initForVideo:tutorialMov withTitle:videoTitle forVideoId:videoId];
-        [scrollView addSubview:tutorial];
+        NSURL* tutorialURL = [[NSBundle mainBundle] URLForResource:videoURL withExtension:nil];
+        MMLoopView* tutorialView = nil;
+        if([MMVideoLoopView supportsURL:tutorialURL]){
+            MMVideoLoopView* videoView = [[MMVideoLoopView alloc] initForVideo:tutorialURL withTitle:videoTitle forTutorialId:videoId];
+            [scrollView addSubview:videoView];
+            tutorialView = videoView;
+        }else if([MMImageLoopView supportsURL:tutorialURL]){
+            MMImageLoopView* imgView = [[MMImageLoopView alloc] initForImage:tutorialURL withTitle:videoTitle forTutorialId:videoId];
+            [scrollView addSubview:imgView];
+            tutorialView = imgView;
+        }else{
+            NSLog(@"failed: %@", tutorialURL);
+        }
 
         CGRect fr = scrollView.bounds;
         fr.origin.x = idx * fr.size.width;
-        tutorial.frame = fr;
-        [tutorial stopAnimating];
+        tutorialView.frame = fr;
+        [tutorialView stopAnimating];
     }];
     
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width * [tutorials count], scrollView.bounds.size.height);
 
     if(![[MMTutorialManager sharedInstance] hasSignedUpForNewsletter]){
         // add the newsletter form
-        newsletterSignupForm = [[MMNewsletterSignupForm alloc] initWithFrame:scrollView.bounds];
+        newsletterSignupForm = [[MMNewsletterSignupForm alloc] initForm];
         newsletterSignupForm.delegate = self;
         CGRect fr = scrollView.bounds;
         fr.origin.x = [tutorials count] * fr.size.width;
@@ -361,7 +382,6 @@
     CGRect squareOfTutorial = CGRectMake(tutorialIndex * scrollView.bounds.size.width, 0, scrollView.bounds.size.width, scrollView.bounds.size.height);
     [scrollView scrollRectToVisible:squareOfTutorial animated:YES];
 }
-
 
 #pragma mark - MMNewsletterSignupFormDelegate
 

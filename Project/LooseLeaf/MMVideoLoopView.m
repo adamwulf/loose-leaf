@@ -11,49 +11,41 @@
 #import "UIColor+Shadow.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MMTutorialManager.h"
+#import "NSURL+UTI.h"
 
 @implementation MMVideoLoopView{
     NSURL* videoURL;
-    NSString* title;
-    NSString* videoId;
     
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
     id rateObserver;
     id timeObserver;
-    
-    
-    
-    UIView* durationBar;
 }
 
--(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forVideoId:(NSString*)tutorialId{
-    if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
-        title = _title;
++(BOOL) supportsURL:(NSURL*)url{
+    NSString* uti = [url universalTypeID];
+    return UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeVideo) ||
+        UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeMovie);
+}
+
+-(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId{
+    if(self = [super initWithTitle:_title forTutorialId:_tutorialId]){
         videoURL = _videoURL;
-        videoId = tutorialId;
         
         self.backgroundColor = [UIColor whiteColor];
 
         UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        [self addSubview:imageView];
+        [self insertSubview:imageView atIndex:0];
         
         videoHolder = [[UIView alloc] initWithFrame:self.bounds];
         videoHolder.backgroundColor = [UIColor clearColor];
-        [self addSubview:videoHolder];
+        [self insertSubview:videoHolder atIndex:1];
 
         AVURLAsset* asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
         AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
         imageView.image = image;
-        
-        UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];
-        titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.text = _title;
-        titleLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:titleLabel];
-
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         
@@ -62,17 +54,7 @@
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
                                                    object:[avPlayer currentItem]];
         
-        UILabel* durationTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];
-        durationTitleLabel.backgroundColor = [UIColor clearColor];
-        durationTitleLabel.textColor = [UIColor whiteColor];
-        durationTitleLabel.text = _title;
-        durationTitleLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:titleLabel];
-        durationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 4)];
-        durationBar.clipsToBounds = YES;
-        durationBar.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
-        [durationBar addSubview:durationTitleLabel];
-        [self addSubview:durationBar];
+
 
     }
     return self;
@@ -110,21 +92,15 @@
                                                        object:avPlayer.currentItem];
 
             
-            CGFloat maxWidth = self.bounds.size.width;
-            __weak UIView* weakDurationBar = durationBar;
             __weak AVPlayer* weakPlayer = avPlayer;
-            NSString* _videoId = videoId;
+            __weak MMVideoLoopView* weakSelf = self;
             rateObserver = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
                                                                   queue:dispatch_get_main_queue()
                                                              usingBlock:^(CMTime time) {
-                                                     CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
-                                                     CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
-                                                     CGRect fr = weakDurationBar.frame;
-                                                     CGFloat percentDur = MAX(0, (currTime / duration));
-                                                     fr.size.width = maxWidth * percentDur;
-                                                     if(![[MMTutorialManager sharedInstance] hasCompletedStep:_videoId]){
-                                                         weakDurationBar.frame = fr;
-                                                     }
+                                                                 CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
+                                                                 CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
+                                                                 CGFloat percentDur = MAX(0, (currTime / duration));
+                                                                 [weakSelf setDuration:percentDur];
                                                  }];
         }
         [avPlayer play];
@@ -132,12 +108,10 @@
 }
 
 -(void) itemDidFinishPlaying:(NSNotification*) note{
-    if(![[MMTutorialManager sharedInstance] hasCompletedStep:videoId]){
+    if(![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]){
         NSLog(@"done playing!");
-        [[MMTutorialManager sharedInstance] didCompleteStep:videoId];
-        [UIView animateWithDuration:.3 animations:^{
-            durationBar.alpha = 0;
-        }];
+        [[MMTutorialManager sharedInstance] didCompleteStep:self.tutorialId];
+        [self fadeDurationBar];
     }
 }
 

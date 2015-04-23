@@ -115,8 +115,8 @@ static MMTutorialManager* _instance = nil;
 -(NSArray*) shareTutorialSteps{
     return @[@{
                  @"id":@"pen",
-                 @"title":@"Draw and Erase",
-                 @"video":@"hello.mov"
+                 @"title":@"Test Image Tutorial",
+                 @"video":@"test-tutorial.png"
                  },@{
                  @"id":@"nav",
                  @"title":@"Pinch to See Your Pages",

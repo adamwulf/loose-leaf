@@ -7,21 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMLoopView.h"
 
-@interface MMVideoLoopView : UIView
+@interface MMVideoLoopView : MMLoopView
 
-- (instancetype)init NS_UNAVAILABLE;
-- (instancetype) initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
-- (instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
-
--(id) initForVideo:(NSURL*)videoURL withTitle:(NSString*)_title forVideoId:(NSString*)tutorialId;
-
-
--(BOOL) wantsNextButton;
--(BOOL) isBuffered;
--(BOOL) isAnimating;
--(void) startAnimating;
--(void) pauseAnimating;
--(void) stopAnimating;
+-(id) initForVideo:(NSURL*)videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)tutorialId;
 
 @end

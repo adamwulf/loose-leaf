@@ -323,6 +323,9 @@
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
+		669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115A71AE8811C00C4FC89 /* MMLoopView.m */; };
+		669115AA1AE8826700C4FC89 /* test-tutorial.png in Resources */ = {isa = PBXBuildFile; fileRef = 669115A91AE8826700C4FC89 /* test-tutorial.png */; };
+		669115AD1AE8828500C4FC89 /* MMImageLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115AC1AE8828500C4FC89 /* MMImageLoopView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
 		6693296A1595A87E0033E557 /* MMMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MMMapButton.m */; };
@@ -1038,6 +1041,11 @@
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
 		6690EF1617CC6F710009A0AC /* MMDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDotView.m; sourceTree = "<group>"; };
+		669115A61AE8811C00C4FC89 /* MMLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopView.h; sourceTree = "<group>"; };
+		669115A71AE8811C00C4FC89 /* MMLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopView.m; sourceTree = "<group>"; };
+		669115A91AE8826700C4FC89 /* test-tutorial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "test-tutorial.png"; sourceTree = "<group>"; };
+		669115AB1AE8828500C4FC89 /* MMImageLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageLoopView.h; sourceTree = "<group>"; };
+		669115AC1AE8828500C4FC89 /* MMImageLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageLoopView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
 		6693295915958A950033E557 /* MMShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowManager.m; sourceTree = "<group>"; };
 		66932963159593C00033E557 /* MMRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotationManager.h; sourceTree = "<group>"; };
@@ -2389,19 +2397,32 @@
 		6688D1E11A994E7500EB17EC /* TutorialView */ = {
 			isa = PBXGroup;
 			children = (
+				669115A21AE87E5800C4FC89 /* MMLoopView */,
 				66343C601AC0747900801962 /* Fonts */,
 				66343C541ABF9FB600801962 /* RoundedButton */,
 				662809021A9BBF2000CA3F9A /* assets */,
-				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
-				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
-				66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */,
-				66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */,
 				66343C5B1AC066C900801962 /* MMNewsletterSignupFormDelegate.h */,
 				6688D1E71A99508700EB17EC /* MMTutorialView.h */,
 				6688D1E81A99508700EB17EC /* MMTutorialView.m */,
 				662809031A9BC16C00CA3F9A /* MMTutorialViewDelegate.h */,
 			);
 			name = TutorialView;
+			sourceTree = "<group>";
+		};
+		669115A21AE87E5800C4FC89 /* MMLoopView */ = {
+			isa = PBXGroup;
+			children = (
+				669115A91AE8826700C4FC89 /* test-tutorial.png */,
+				669115A61AE8811C00C4FC89 /* MMLoopView.h */,
+				669115A71AE8811C00C4FC89 /* MMLoopView.m */,
+				669115AB1AE8828500C4FC89 /* MMImageLoopView.h */,
+				669115AC1AE8828500C4FC89 /* MMImageLoopView.m */,
+				6688D1E21A994EA300EB17EC /* MMVideoLoopView.h */,
+				6688D1E31A994EA300EB17EC /* MMVideoLoopView.m */,
+				66343C511ABF950E00801962 /* MMNewsletterSignupForm.h */,
+				66343C521ABF950E00801962 /* MMNewsletterSignupForm.m */,
+			);
+			name = MMLoopView;
 			sourceTree = "<group>";
 		};
 		6693295715958A890033E557 /* Managers */ = {
@@ -3327,6 +3348,7 @@
 				6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */,
+				669115AA1AE8826700C4FC89 /* test-tutorial.png in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
@@ -3698,6 +3720,7 @@
 				66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */,
 				66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m in Sources */,
 				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,
+				669115AD1AE8828500C4FC89 /* MMImageLoopView.m in Sources */,
 				6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */,
 				667D98BE192FD37500625879 /* NSURL+UTI.m in Sources */,
 				6623C7F41AB0D65A00192F95 /* MMInboxAssetGroup.m in Sources */,
@@ -3753,6 +3776,7 @@
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMStackManager.m in Sources */,
+				669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */,
 				66627F8C1A02582F0064FAD3 /* MPNotification.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
 				668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */,

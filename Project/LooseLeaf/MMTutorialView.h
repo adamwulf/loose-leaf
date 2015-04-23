@@ -17,4 +17,6 @@
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
+-(void) unloadTutorials;
+
 @end
