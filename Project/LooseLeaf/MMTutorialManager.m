@@ -114,21 +114,21 @@ static MMTutorialManager* _instance = nil;
 
 -(NSArray*) shareTutorialSteps{
     return @[@{
-                 @"id":@"pen",
-                 @"title":@"Test Image Tutorial",
-                 @"video":@"test-tutorial.png"
+                 @"id":@"share-social",
+                 @"title":@"Share to Your Social Networks",
+                 @"video":@"share-tutorials-social.png"
                  },@{
-                 @"id":@"nav",
-                 @"title":@"Pinch to See Your Pages",
-                 @"video":@"pinch-to-list.mov"
+                 @"id":@"share-contact",
+                 @"title":@"Share Your Pages with Your Contacts",
+                 @"video":@"share-tutorials-contacts.png"
                  },@{
-                 @"id":@"ruler",
-                 @"title":@"Import and Crop Your Photos",
-                 @"video":@"import-and-scissor.mov"
+                 @"id":@"share-export",
+                 @"title":@"Export Your Pages to Anywhere",
+                 @"video":@"share-tutorials-export.png"
                  },@{
-                 @"id":@"clip",
-                 @"title":@"Export Your Pages",
-                 @"video":@"export-to-facebook.mov"
+                 @"id":@"share-cloudkit",
+                 @"title":@"Send a page to a friend with CloudKit",
+                 @"video":@"share-tutorials-cloudkit.png"
                  }];
 }
 

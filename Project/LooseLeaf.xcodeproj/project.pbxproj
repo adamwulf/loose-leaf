@@ -324,7 +324,6 @@
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115A71AE8811C00C4FC89 /* MMLoopView.m */; };
-		669115AA1AE8826700C4FC89 /* test-tutorial.png in Resources */ = {isa = PBXBuildFile; fileRef = 669115A91AE8826700C4FC89 /* test-tutorial.png */; };
 		669115AD1AE8828500C4FC89 /* MMImageLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115AC1AE8828500C4FC89 /* MMImageLoopView.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
@@ -421,6 +420,10 @@
 		66C3CBE11A29046200D7EE42 /* MMRulerAdjustment.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C3CBE01A29046200D7EE42 /* MMRulerAdjustment.m */; };
 		66C4734F19CB999000505BC0 /* MMAssetListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66C4734E19CB999000505BC0 /* MMAssetListLayout.m */; };
 		66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66CA1A8B185E77F50013505A /* libc++.dylib */; };
+		66CC2A941AEAEA9F00C6A3F9 /* share-tutorials-cloudkit.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A901AEAEA9F00C6A3F9 /* share-tutorials-cloudkit.png */; };
+		66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A911AEAEA9F00C6A3F9 /* share-tutorials-contacts.png */; };
+		66CC2A961AEAEA9F00C6A3F9 /* share-tutorials-export.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A921AEAEA9F00C6A3F9 /* share-tutorials-export.png */; };
+		66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A931AEAEA9F00C6A3F9 /* share-tutorials-social.png */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
 		66CE11FD17D2700E00882275 /* MMScrapsInBezelContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapsInBezelContainerView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
@@ -1043,7 +1046,6 @@
 		6690EF1617CC6F710009A0AC /* MMDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDotView.m; sourceTree = "<group>"; };
 		669115A61AE8811C00C4FC89 /* MMLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopView.h; sourceTree = "<group>"; };
 		669115A71AE8811C00C4FC89 /* MMLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopView.m; sourceTree = "<group>"; };
-		669115A91AE8826700C4FC89 /* test-tutorial.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "test-tutorial.png"; sourceTree = "<group>"; };
 		669115AB1AE8828500C4FC89 /* MMImageLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageLoopView.h; sourceTree = "<group>"; };
 		669115AC1AE8828500C4FC89 /* MMImageLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageLoopView.m; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
@@ -1261,6 +1263,10 @@
 		66CAF8181A1EA9810033E07B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66CAF8191A1EA9860033E07B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66CAF81A1A1EA98F0033E07B /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66CC2A901AEAEA9F00C6A3F9 /* share-tutorials-cloudkit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-cloudkit.png"; sourceTree = "<group>"; };
+		66CC2A911AEAEA9F00C6A3F9 /* share-tutorials-contacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-contacts.png"; sourceTree = "<group>"; };
+		66CC2A921AEAEA9F00C6A3F9 /* share-tutorials-export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-export.png"; sourceTree = "<group>"; };
+		66CC2A931AEAEA9F00C6A3F9 /* share-tutorials-social.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-social.png"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
 		66CE11FB17D2700E00882275 /* MMScrapsInBezelContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsInBezelContainerView.h; sourceTree = "<group>"; };
@@ -1706,6 +1712,7 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				66CC2A8F1AEAEA6900C6A3F9 /* share */,
 				665F7F601AE096C900635D56 /* list-view */,
 				665F7F5F1AE096BF00635D56 /* un-used */,
 				665F7F5E1AE096B400635D56 /* app-intro */,
@@ -2412,7 +2419,6 @@
 		669115A21AE87E5800C4FC89 /* MMLoopView */ = {
 			isa = PBXGroup;
 			children = (
-				669115A91AE8826700C4FC89 /* test-tutorial.png */,
 				669115A61AE8811C00C4FC89 /* MMLoopView.h */,
 				669115A71AE8811C00C4FC89 /* MMLoopView.m */,
 				669115AB1AE8828500C4FC89 /* MMImageLoopView.h */,
@@ -2807,6 +2813,17 @@
 				6690EF1617CC6F710009A0AC /* MMDotView.m */,
 			);
 			name = Tools;
+			sourceTree = "<group>";
+		};
+		66CC2A8F1AEAEA6900C6A3F9 /* share */ = {
+			isa = PBXGroup;
+			children = (
+				66CC2A901AEAEA9F00C6A3F9 /* share-tutorials-cloudkit.png */,
+				66CC2A911AEAEA9F00C6A3F9 /* share-tutorials-contacts.png */,
+				66CC2A921AEAEA9F00C6A3F9 /* share-tutorials-export.png */,
+				66CC2A931AEAEA9F00C6A3F9 /* share-tutorials-social.png */,
+			);
+			name = share;
 			sourceTree = "<group>";
 		};
 		66CE120417D3B6A400882275 /* Scrap Sidebar */ = {
@@ -3345,18 +3362,21 @@
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
+				66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */,
 				6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */,
-				669115AA1AE8826700C4FC89 /* test-tutorial.png in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
+				66CC2A961AEAEA9F00C6A3F9 /* share-tutorials-export.png in Resources */,
 				663326BE1AAFE81E003915E6 /* photos-icon@2x.png in Resources */,
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
+				66CC2A941AEAEA9F00C6A3F9 /* share-tutorials-cloudkit.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
 				665F7F591AE0894900635D56 /* pinch-to-list.mov in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
+				66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
 				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
