@@ -258,6 +258,8 @@
         CGPoint offset = [pointerFingerHelper locationOfIndexFingerInPathBoundsForTouch:touch];
         CGPoint finalLocation = CGPointMake(locationOfTouch.x - offset.x, locationOfTouch.y - offset.y);
         layer.position = finalLocation;
+        CGFloat theta = (M_PI / 8);
+        layer.affineTransform = CGAffineTransformTranslate(CGAffineTransformRotate(CGAffineTransformMakeTranslation(offset.x, offset.y), theta), -offset.x, -offset.y);
     }];
 }
 -(void) endDrawingAtTouch:(UITouch*)touch{

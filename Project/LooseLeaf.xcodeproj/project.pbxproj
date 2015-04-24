@@ -80,8 +80,6 @@
 		663326C61AB09881003915E6 /* MMInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326C51AB09881003915E6 /* MMInboxItem.m */; };
 		663326CA1AB09BA7003915E6 /* MMInboxImageAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326C91AB09BA7003915E6 /* MMInboxImageAlbum.m */; };
 		663326CD1AB09CD9003915E6 /* MMImageInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326CC1AB09CD9003915E6 /* MMImageInboxItem.m */; };
-		6634855B19DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */; };
-		6634855C19DA2C7D00B5CF2D /* MMTouchDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */; };
 		66343C061ABE45CF00801962 /* MMTutorialButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C051ABE45CF00801962 /* MMTutorialButton.m */; };
 		66343C4D1ABF66F600801962 /* MMCheckButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C4C1ABF66F600801962 /* MMCheckButton.m */; };
 		66343C501ABF8CD000801962 /* MMTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C4F1ABF8CD000801962 /* MMTutorialSidebarButton.m */; };
@@ -93,6 +91,8 @@
 		66343C641AC0755F00801962 /* Lato-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 66343C621AC0748400801962 /* Lato-Semibold.ttf */; };
 		66343C671AC085D600801962 /* MMNewsletterSignupHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C661AC085D600801962 /* MMNewsletterSignupHandler.m */; };
 		66343C6B1AC088D300801962 /* NSString+URLEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 66343C6A1AC088D300801962 /* NSString+URLEncode.m */; };
+		6634855B19DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */; };
+		6634855C19DA2C7D00B5CF2D /* MMTouchDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */; };
 		6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */; };
 		6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6634856119DB3ED000B5CF2D /* crumple.jpg */; };
 		6634856519DB41F000B5CF2D /* Crumple.license in Resources */ = {isa = PBXBuildFile; fileRef = 6634856319DB41F000B5CF2D /* Crumple.license */; };
@@ -328,9 +328,9 @@
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
-		6692B8A51A74606800CE73EF /* NSSet+Array.m in Sources */ = {isa = PBXBuildFile; fileRef = 6692B8A41A74606800CE73EF /* NSSet+Array.m */; };
 		669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115A71AE8811C00C4FC89 /* MMLoopView.m */; };
 		669115AD1AE8828500C4FC89 /* MMImageLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115AC1AE8828500C4FC89 /* MMImageLoopView.m */; };
+		6692B8A51A74606800CE73EF /* NSSet+Array.m in Sources */ = {isa = PBXBuildFile; fileRef = 6692B8A41A74606800CE73EF /* NSSet+Array.m */; };
 		6693295A15958A950033E557 /* MMShadowManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6693295915958A950033E557 /* MMShadowManager.m */; };
 		66932965159593C00033E557 /* MMRotationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66932964159593C00033E557 /* MMRotationManager.m */; };
 		6693296A1595A87E0033E557 /* MMMapButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 669329691595A87E0033E557 /* MMMapButton.m */; };
@@ -430,6 +430,7 @@
 		66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A911AEAEA9F00C6A3F9 /* share-tutorials-contacts.png */; };
 		66CC2A961AEAEA9F00C6A3F9 /* share-tutorials-export.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A921AEAEA9F00C6A3F9 /* share-tutorials-export.png */; };
 		66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A931AEAEA9F00C6A3F9 /* share-tutorials-social.png */; };
+		66CC2A991AEB01F900C6A3F9 /* scrap-to-sidebar.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66CC2A981AEB01F900C6A3F9 /* scrap-to-sidebar.mov */; };
 		66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */; };
 		66CE11FD17D2700E00882275 /* MMScrapsInBezelContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FC17D2700E00882275 /* MMScrapsInBezelContainerView.m */; };
 		66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE11FF17D2772400882275 /* MMScrapBorderView.m */; };
@@ -498,9 +499,9 @@
 		66FA03A219BFE68000AF0DC4 /* MMCloudKeyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A119BFE68000AF0DC4 /* MMCloudKeyButton.m */; };
 		66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
-		66FD2E991A76C7B100ED7DFA /* MMThumbAndIndexShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */; };
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FC3BBB1ABCC2CF00F2DE37 /* hello.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */; };
+		66FD2E991A76C7B100ED7DFA /* MMThumbAndIndexShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
 /* End PBXBuildFile section */
@@ -643,11 +644,6 @@
 		663326CB1AB09CD9003915E6 /* MMImageInboxItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageInboxItem.h; sourceTree = "<group>"; };
 		663326CC1AB09CD9003915E6 /* MMImageInboxItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageInboxItem.m; sourceTree = "<group>"; };
 		663326CE1AB0A636003915E6 /* MMInboxItem+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MMInboxItem+Protected.h"; sourceTree = "<group>"; };
-		6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
-		6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
-		6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizerDelegate.h; sourceTree = "<group>"; };
-		6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotView.h; sourceTree = "<group>"; };
-		6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotView.m; sourceTree = "<group>"; };
 		66343C041ABE45CF00801962 /* MMTutorialButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialButton.h; sourceTree = "<group>"; };
 		66343C051ABE45CF00801962 /* MMTutorialButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialButton.m; sourceTree = "<group>"; };
 		66343C4B1ABF66F600801962 /* MMCheckButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCheckButton.h; sourceTree = "<group>"; };
@@ -669,6 +665,11 @@
 		66343C661AC085D600801962 /* MMNewsletterSignupHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMNewsletterSignupHandler.m; sourceTree = "<group>"; };
 		66343C691AC088D300801962 /* NSString+URLEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncode.h"; sourceTree = "<group>"; };
 		66343C6A1AC088D300801962 /* NSString+URLEncode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncode.m"; sourceTree = "<group>"; };
+		6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizer.h; sourceTree = "<group>"; };
+		6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotGestureRecognizer.m; sourceTree = "<group>"; };
+		6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotGestureRecognizerDelegate.h; sourceTree = "<group>"; };
+		6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTouchDotView.h; sourceTree = "<group>"; };
+		6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTouchDotView.m; sourceTree = "<group>"; };
 		6634855E19DA2E5F00B5CF2D /* MMDeletePageSidebarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeletePageSidebarController.h; sourceTree = "<group>"; };
 		6634855F19DA2E5F00B5CF2D /* MMDeletePageSidebarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDeletePageSidebarController.m; sourceTree = "<group>"; };
 		6634856119DB3ED000B5CF2D /* crumple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = crumple.jpg; sourceTree = "<group>"; };
@@ -1062,12 +1063,12 @@
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
 		6690EF1617CC6F710009A0AC /* MMDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDotView.m; sourceTree = "<group>"; };
-		6692B8A31A74606800CE73EF /* NSSet+Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+Array.h"; sourceTree = "<group>"; };
-		6692B8A41A74606800CE73EF /* NSSet+Array.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+Array.m"; sourceTree = "<group>"; };
 		669115A61AE8811C00C4FC89 /* MMLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopView.h; sourceTree = "<group>"; };
 		669115A71AE8811C00C4FC89 /* MMLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopView.m; sourceTree = "<group>"; };
 		669115AB1AE8828500C4FC89 /* MMImageLoopView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImageLoopView.h; sourceTree = "<group>"; };
 		669115AC1AE8828500C4FC89 /* MMImageLoopView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImageLoopView.m; sourceTree = "<group>"; };
+		6692B8A31A74606800CE73EF /* NSSet+Array.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSet+Array.h"; sourceTree = "<group>"; };
+		6692B8A41A74606800CE73EF /* NSSet+Array.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSet+Array.m"; sourceTree = "<group>"; };
 		6693295815958A950033E557 /* MMShadowManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShadowManager.h; sourceTree = "<group>"; };
 		6693295915958A950033E557 /* MMShadowManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShadowManager.m; sourceTree = "<group>"; };
 		66932963159593C00033E557 /* MMRotationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotationManager.h; sourceTree = "<group>"; };
@@ -1287,6 +1288,7 @@
 		66CC2A911AEAEA9F00C6A3F9 /* share-tutorials-contacts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-contacts.png"; sourceTree = "<group>"; };
 		66CC2A921AEAEA9F00C6A3F9 /* share-tutorials-export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-export.png"; sourceTree = "<group>"; };
 		66CC2A931AEAEA9F00C6A3F9 /* share-tutorials-social.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share-tutorials-social.png"; sourceTree = "<group>"; };
+		66CC2A981AEB01F900C6A3F9 /* scrap-to-sidebar.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "scrap-to-sidebar.mov"; sourceTree = "<group>"; };
 		66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapPaperStackView.h; sourceTree = "<group>"; };
 		66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapPaperStackView.m; sourceTree = "<group>"; };
 		66CE11FB17D2700E00882275 /* MMScrapsInBezelContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsInBezelContainerView.h; sourceTree = "<group>"; };
@@ -1411,10 +1413,10 @@
 		66FA03A319BFFB7900AF0DC4 /* MMBrokenCloudLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBrokenCloudLayer.h; sourceTree = "<group>"; };
 		66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBrokenCloudLayer.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
-		66FD2E971A76C7B100ED7DFA /* MMThumbAndIndexShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMThumbAndIndexShadow.h; sourceTree = "<group>"; };
-		66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMThumbAndIndexShadow.m; sourceTree = "<group>"; };
 		66FC3BB61ABA631B00F2DE37 /* silly-face.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "silly-face.mov"; sourceTree = "<group>"; };
 		66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hello.mov; sourceTree = "<group>"; };
+		66FD2E971A76C7B100ED7DFA /* MMThumbAndIndexShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMThumbAndIndexShadow.h; sourceTree = "<group>"; };
+		66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMThumbAndIndexShadow.m; sourceTree = "<group>"; };
 		66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUnknownObject.h; sourceTree = "<group>"; };
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
 		66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLargeTutorialSidebarButton.h; sourceTree = "<group>"; };
@@ -1919,19 +1921,6 @@
 			name = InboxImage;
 			sourceTree = "<group>";
 		};
-		6634855519DA2C5F00B5CF2D /* MMTouchDotView */ = {
-			isa = PBXGroup;
-			children = (
-				6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */,
-				6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */,
-				6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */,
-				6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */,
-				6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */,
-			);
-			name = MMTouchDotView;
-                        sourceTree = "<group>";
-                };
-
 		66343C031ABE45AD00801962 /* Tutorial */ = {
 			isa = PBXGroup;
 			children = (
@@ -1970,6 +1959,18 @@
 				66343C661AC085D600801962 /* MMNewsletterSignupHandler.m */,
 			);
 			name = Newsletter;
+			sourceTree = "<group>";
+		};
+		6634855519DA2C5F00B5CF2D /* MMTouchDotView */ = {
+			isa = PBXGroup;
+			children = (
+				6634855619DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.h */,
+				6634855719DA2C7D00B5CF2D /* MMTouchDotGestureRecognizer.m */,
+				6634855819DA2C7D00B5CF2D /* MMTouchDotGestureRecognizerDelegate.h */,
+				6634855919DA2C7D00B5CF2D /* MMTouchDotView.h */,
+				6634855A19DA2C7D00B5CF2D /* MMTouchDotView.m */,
+			);
+			name = MMTouchDotView;
 			sourceTree = "<group>";
 		};
 		6634855D19DA2E4200B5CF2D /* Delete Sidebar */ = {
@@ -2240,6 +2241,7 @@
 		665F7F5E1AE096B400635D56 /* app-intro */ = {
 			isa = PBXGroup;
 			children = (
+				66CC2A981AEB01F900C6A3F9 /* scrap-to-sidebar.mov */,
 				665F7F581AE0894900635D56 /* pinch-to-list.mov */,
 				665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */,
 				665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */,
@@ -2922,8 +2924,8 @@
 				66D0A8C41A6454030003BBF7 /* MMShadowHandView.m */,
 			);
 			name = "Hand Shadow";
-                        sourceTree = "<group>";
-                };
+			sourceTree = "<group>";
+		};
 		66DA827C1ABE18BE00E3314A /* Tutorial Manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -3038,9 +3040,7 @@
 			isa = PBXGroup;
 			children = (
 				66D0A8C21A6453E80003BBF7 /* Hand Shadow */,
-				668D19D319F772AA00A65DCF /* Tutorial Pages */,
 				66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
 				66B42FBD19955A2C005D8214 /* Share Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
@@ -3510,6 +3510,7 @@
 				665244FF1995673900C36609 /* email.png in Resources */,
 				66627F711A02582F0064FAD3 /* Media.xcassets in Resources */,
 				66627F9A1A02582F0064FAD3 /* MPSurvey.storyboard in Resources */,
+				66CC2A991AEB01F900C6A3F9 /* scrap-to-sidebar.mov in Resources */,
 				66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */,
 				6672EFE619C3A61E0076009F /* iCloudDrive@2x.png in Resources */,
 				661C4B2A1A83F8D50014DB20 /* pinterest@2x.png in Resources */,
