@@ -8,35 +8,5 @@
 		<key>uuid</key>
 		<string>80EEA5F7-9CB4-4587-BB53-B267BFA85BCC</string>
 	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMExportablePaperView</string>
-		<key>uuid</key>
-		<string>9699D80C-9058-4D6D-8818-DC40FF38A40C</string>
-	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMExportablePaperView</string>
-		<key>uuid</key>
-		<string>0BE5AC85-010B-4CAB-B80E-05652B182316</string>
-	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMExportablePaperView</string>
-		<key>uuid</key>
-		<string>E45D102C-6CBD-48C4-9C38-1301ABA0E707</string>
-	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMExportablePaperView</string>
-		<key>uuid</key>
-		<string>C9570C85-BEC9-4320-B6AD-751CD0E9B5D5</string>
-	</dict>
-	<dict>
-		<key>class</key>
-		<string>MMExportablePaperView</string>
-		<key>uuid</key>
-		<string>CD3CD453-A80C-419E-9ED9-F335BF1356E8</string>
-	</dict>
 </array>
 </plist>

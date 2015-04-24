@@ -26,6 +26,8 @@
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
+#import "MMLargeTutorialSidebarButton.h"
+#import "MMTutorialManager.h"
 
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
@@ -34,6 +36,8 @@
     NSMutableArray* shareItems;
     
     MMCloudKitShareItem* cloudKitShareItem;
+    
+    MMLargeTutorialSidebarButton* tutorialButton;
 }
 
 @synthesize shareDelegate;
@@ -72,8 +76,21 @@
 
         [self updateShareOptions];
         
+        
+        CGRect typicalBounds = [[shareItems lastObject] button].bounds;
+        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray *{
+            return [[MMTutorialManager sharedInstance] shareTutorialSteps];
+        }];
+        tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width/2, sharingContentView.bounds.size.height - 100);
+        [tutorialButton addTarget:self action:@selector(startWatchingExportTutorials) forControlEvents:UIControlEventTouchUpInside];
+        [sharingContentView addSubview:tutorialButton];
+        
     }
     return self;
+}
+
+-(void) startWatchingExportTutorials{
+    [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
 }
 
 -(CGFloat) buttonWidth{

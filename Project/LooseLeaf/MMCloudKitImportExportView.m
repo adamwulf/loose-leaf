@@ -13,9 +13,9 @@
 #import "MMCloudKitImportCoordinator.h"
 #import "MMScrapPaperStackView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMCloudKitTutorialImportCoordinator.h"
 #import "MMEditablePaperView.h"
 #import "Constants.h"
+#import "MMUnknownObject.h"
 #import "Mixpanel.h"
 
 @implementation MMCloudKitImportExportView{
@@ -91,45 +91,15 @@
     @synchronized(activeImports){
         NSArray* imported = [NSKeyedUnarchiver unarchiveObjectWithFile:[outputPath stringByAppendingPathComponent:@"imports.data"]];
         activeImports = [NSMutableArray arrayWithArray:imported];
+        [activeImports filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return ![evaluatedObject isKindOfClass:[MMUnknownObject class]];
+        }]];
 //        DebugLog(@"loaded %d pages from disk for import", (int) [imported count]);
 
-        BOOL alreadyHaveActiveTutorialImport = NO;
         for (MMCloudKitImportCoordinator* coordinator in activeImports) {
             // need to set the import/export view after loading
             coordinator.importExportView = self;
             [coordinator begin];
-            
-            if([coordinator isKindOfClass:[MMCloudKitTutorialImportCoordinator class]]){
-                alreadyHaveActiveTutorialImport = YES;
-            }
-        }
-        
-        if([MMCloudKitManager isCloudKitAvailable]){
-            // add the cloudkit tutorial page import if we still need it
-            if(!alreadyHaveActiveTutorialImport && [MMCloudKitTutorialImportCoordinator shouldShowTutorialImport]){
-                DebugLog(@"hasn't seen CloudKit Tutorial page yet, creating import");
-                MMCloudKitImportCoordinator* coordinator = [[MMCloudKitTutorialImportCoordinator alloc] initWithImport:nil forImportExportView:self];
-                
-                NSString* locationOfImportedPage = [MMEditablePaperView pagesPathForUUID:coordinator.uuidOfIncomingPage];
-                NSString* bundledLocationOfImportedPage = [MMEditablePaperView bundledPagesPathForUUID:coordinator.uuidOfIncomingPage];
-                if([[NSFileManager defaultManager] fileExistsAtPath:locationOfImportedPage] ||
-                   [[NSFileManager defaultManager] fileExistsAtPath:bundledLocationOfImportedPage]){
-                    // make sure to only create import when the page
-                    // also exists on disk. this is an extra safe
-                    // sanity check. maybe somebody's imported the page,
-                    // but reset their user defaults, so the data isn't
-                    // on disk any more
-                    @synchronized(activeImports){
-                        [activeImports addObject:coordinator];
-                        [self saveToDiskOffMainThread];
-                    }
-                    [coordinator begin];
-                }else{
-                    DebugLog(@"importable tutorial page doens't exist for uuid: %@", coordinator.uuidOfIncomingPage);
-                }
-            }else{
-                DebugLog(@"has already seen CloudKit Tutorial page");
-            }
         }
         
         [self verifyBadgeCount];
