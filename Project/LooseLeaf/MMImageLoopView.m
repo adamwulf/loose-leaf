@@ -22,7 +22,7 @@
         
         UIImageView* imgView = [[UIImageView alloc] initWithFrame:self.bounds];
         imgView.image = img;
-        [self addSubview:imgView];
+        [self insertSubview:imgView atIndex:0];
     }
     return self;
 }
@@ -41,7 +41,7 @@
 #pragma mark - MMLoopView
 
 -(BOOL) wantsNextButton{
-    return NO;
+    return YES;
 }
 
 -(BOOL) isBuffered{
