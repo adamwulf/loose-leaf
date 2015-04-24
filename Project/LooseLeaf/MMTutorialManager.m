@@ -94,6 +94,14 @@ static MMTutorialManager* _instance = nil;
                  @"title":@"Import and Crop Your Photos",
                  @"video":@"import-and-scissor.mov"
                  },@{
+                 @"id":@"app-intro-scrap-sidebar",
+                 @"title":@"Move Scraps Between Pages",
+                 @"video":@"scrap-to-sidebar.mov"
+                 },@{
+                 @"id":@"app-intro-scrap-reorder",
+                 @"title":@"Shake a Scrap to Reorder",
+                 @"video":@"shake-to-reorder.mov"
+                 },@{
                  @"id":@"app-intro-export",
                  @"title":@"Export Your Pages",
                  @"video":@"export-to-facebook.mov"
