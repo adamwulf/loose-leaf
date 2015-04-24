@@ -722,7 +722,7 @@ static NSDate* lastRender;
 /**
  * this will adjust points in core graphics space
  */
--(CGPoint) adjustPoint:(CGPoint)inputPoint{
+-(CGPoint) adjustPoint:(CGPoint)inputPoint andDidAdjust:(BOOL*)didAdjust{
     UIBezierPath* closestPath = nil;
     if(path1 && !CGPointEqualToPoint(mostRecentTouchPointInOpenGLCoord, CGPointZero)){
         // the ruler is down and ready to adjust points
@@ -731,8 +731,14 @@ static NSDate* lastRender;
         }else{
             closestPath = path2Full;
         }
+        if(didAdjust){
+            didAdjust[0] = YES;
+        }
 
         return  [closestPath closestPointOnPathTo:inputPoint];
+    }
+    if(didAdjust){
+        didAdjust[0] = NO;
     }
     
     return  inputPoint;

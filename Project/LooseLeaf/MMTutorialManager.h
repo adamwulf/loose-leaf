@@ -16,19 +16,23 @@
 
 +(MMTutorialManager*) sharedInstance;
 
--(NSArray*) tutorialSteps;
+-(NSArray*) appIntroTutorialSteps;
+
+-(NSArray*) shareTutorialSteps;
+
+-(NSArray*) listViewTutorialSteps;
 
 -(BOOL) hasCompletedStep:(NSString*)stepID;
 
 -(void) didCompleteStep:(NSString*)stepID;
 
--(void) startWatchingTutorial;
+-(void) startWatchingTutorials:(NSArray*)tutorialList;
 
 -(void) pauseWatchingTutorial;
 
 -(void) finishWatchingTutorial;
 
--(NSInteger) numberOfPendingTutorials;
+-(NSInteger) numberOfPendingTutorials:(NSArray*)possiblyPendingTutorials;
 
 -(void) optOutOfNewsletter;
 

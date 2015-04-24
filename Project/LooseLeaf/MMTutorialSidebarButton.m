@@ -10,16 +10,23 @@
 #import "MMTutorialManager.h"
 #import "Constants.h"
 
-@implementation MMTutorialSidebarButton
+@implementation MMTutorialSidebarButton{
+    NSArray*(^tutorialListFunc)();
+}
 
--(id) initWithFrame:(CGRect)frame{
+-(id) initWithFrame:(CGRect)frame andTutorialList:(NSArray*(^)())_tutorialListFunc{
     if(self = [super initWithFrame:frame andFont:[UIFont fontWithName:@"AvenirNext-Regular" size:24] andLetter:@"?" andXOffset:0 andYOffset:0]){
         self.inverted = YES;
+        tutorialListFunc = _tutorialListFunc;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialStepFinished:) name:kTutorialStepCompleteNotification object:nil];
         
     }
    return self;
+}
+
+-(NSArray*) tutorialList{
+    return tutorialListFunc();
 }
 
 #pragma mark - Dealloc
@@ -43,7 +50,7 @@
     
     [super drawRect:rect];
     
-    NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials];
+    NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:tutorialListFunc()];
     
     if(numPendingTutorials){
         UIColor* darkerGreyBorder = [self borderColor];

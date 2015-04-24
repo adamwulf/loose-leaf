@@ -11,43 +11,41 @@
 #import "UIColor+Shadow.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MMTutorialManager.h"
+#import "NSURL+UTI.h"
 
 @implementation MMVideoLoopView{
     NSURL* videoURL;
-    NSString* title;
-    NSString* videoId;
     
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
+    id rateObserver;
+    id timeObserver;
 }
 
--(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forVideoId:(NSString*)tutorialId{
-    if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
-        title = _title;
++(BOOL) supportsURL:(NSURL*)url{
+    NSString* uti = [url universalTypeID];
+    return UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeVideo) ||
+        UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeMovie);
+}
+
+-(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId{
+    if(self = [super initWithTitle:_title forTutorialId:_tutorialId]){
         videoURL = _videoURL;
-        videoId = tutorialId;
         
         self.backgroundColor = [UIColor whiteColor];
 
         UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        [self addSubview:imageView];
+        [self insertSubview:imageView atIndex:0];
         
         videoHolder = [[UIView alloc] initWithFrame:self.bounds];
         videoHolder.backgroundColor = [UIColor clearColor];
-        [self addSubview:videoHolder];
+        [self insertSubview:videoHolder atIndex:1];
 
         AVURLAsset* asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
         AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
         imageView.image = image;
-
-        UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 50)];
-        titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.text = _title;
-        titleLabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:titleLabel];
-
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         
@@ -55,6 +53,9 @@
                                                  selector:@selector(playerItemDidReachEnd:)
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
                                                    object:[avPlayer currentItem]];
+        
+
+
     }
     return self;
 }
@@ -89,15 +90,28 @@
                                                      selector:@selector(itemDidFinishPlaying:)
                                                          name:AVPlayerItemDidPlayToEndTimeNotification
                                                        object:avPlayer.currentItem];
+
+            
+            __weak AVPlayer* weakPlayer = avPlayer;
+            __weak MMVideoLoopView* weakSelf = self;
+            rateObserver = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
+                                                                  queue:dispatch_get_main_queue()
+                                                             usingBlock:^(CMTime time) {
+                                                                 CGFloat currTime = CMTimeGetSeconds(weakPlayer.currentTime);
+                                                                 CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
+                                                                 CGFloat percentDur = MAX(0, (currTime / duration));
+                                                                 [weakSelf setDuration:percentDur];
+                                                 }];
         }
         [avPlayer play];
     }
 }
 
 -(void) itemDidFinishPlaying:(NSNotification*) note{
-    if(![[MMTutorialManager sharedInstance] hasCompletedStep:videoId]){
+    if(![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]){
         NSLog(@"done playing!");
-        [[MMTutorialManager sharedInstance] didCompleteStep:videoId];
+        [[MMTutorialManager sharedInstance] didCompleteStep:self.tutorialId];
+        [self fadeDurationBar];
     }
 }
 
@@ -116,6 +130,7 @@
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
+        [avPlayer removeTimeObserver:rateObserver];
         avPlayer = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self];
     }

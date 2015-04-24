@@ -32,8 +32,12 @@
 
 @synthesize delegate;
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
++(BOOL) supportsURL:(NSURL*)url{
+    return NO;
+}
+
+-(id) initForm{
+    if(self = [super initWithTitle:nil forTutorialId:nil]){
         
         CGFloat scale = .3;
         MMLoopIcon* loop = [[MMLoopIcon alloc] initWithFrame:CGRectMake(0, 0, 500*scale, 360*scale)];
@@ -120,7 +124,7 @@
     [self.delegate didCompleteNewsletterStep];
 }
 
-#pragma mark - Tutorial View Protocol
+#pragma mark - MMLoopView
 
 -(BOOL) wantsNextButton{
     return NO;

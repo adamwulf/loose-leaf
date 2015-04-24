@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMNewsletterSignupFormDelegate.h"
+#import "MMLoopView.h"
 
-@interface MMNewsletterSignupForm : UIView
+@interface MMNewsletterSignupForm : MMLoopView
 
 @property (nonatomic) NSObject<MMNewsletterSignupFormDelegate>* delegate;
 
--(BOOL) wantsNextButton;
+-(id) initForm;
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
