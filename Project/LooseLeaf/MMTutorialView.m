@@ -60,6 +60,11 @@
         fadedBackground = [[UIView alloc] initWithFrame:self.bounds];
         fadedBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
         
+        UIButton* backgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        backgroundButton.bounds = fadedBackground.bounds;
+        [backgroundButton addTarget:self action:@selector(tapToClose) forControlEvents:UIControlEventTouchUpInside];
+        [fadedBackground addSubview:backgroundButton];
+        
         [self addSubview:fadedBackground];
         
         
@@ -144,6 +149,10 @@
     delegate = _delegate;
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     [self.delegate userIsViewingTutorialStep:idx];
+}
+
+-(void) tapToClose{
+    [self didTapToChangeToTutorial:[tutorialButtons lastObject]];
 }
 
 #pragma mark - Notifications

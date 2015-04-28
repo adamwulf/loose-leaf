@@ -87,6 +87,8 @@
         backdrop.alpha = 1;
         tutorialView.alpha = 1;
     }];
+    
+    self.scrollEnabled = NO;
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
@@ -108,6 +110,10 @@
             [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
         }
     }];
+    
+    if(!self.isShowingPageView){
+        self.scrollEnabled = YES;
+    }
 }
 
 
