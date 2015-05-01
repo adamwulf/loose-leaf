@@ -268,6 +268,7 @@
 		66684B46182DACAE005A27B4 /* DrawKit.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B45182DACAE005A27B4 /* DrawKit.license */; };
 		66684B48182DAD05005A27B4 /* 2Geom.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B47182DAD05005A27B4 /* 2Geom.license */; };
 		66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */ = {isa = PBXBuildFile; fileRef = 66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */; };
+		666D0F2A1AF4210F00AF44F7 /* CRAccessoryKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 666D0F291AF4210F00AF44F7 /* CRAccessoryKit.framework */; };
 		666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E252F18F5D9F100C17295 /* MMFaceButton.m */; };
 		666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253118F5DDF100C17295 /* clearphotoalbum.png */; };
 		666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 666E253318F5DDFD00C17295 /* clearphotoalbum@2x.png */; };
@@ -955,6 +956,7 @@
 		66684B45182DACAE005A27B4 /* DrawKit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrawKit.license; sourceTree = "<group>"; };
 		66684B47182DAD05005A27B4 /* 2Geom.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2Geom.license; sourceTree = "<group>"; };
 		66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImageRoundedCorner.license; sourceTree = "<group>"; };
+		666D0F291AF4210F00AF44F7 /* CRAccessoryKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CRAccessoryKit.framework; path = ../Submodules/iPen/CRAccessoryKit.framework; sourceTree = "<group>"; };
 		666E252E18F5D9F100C17295 /* MMFaceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFaceButton.h; sourceTree = "<group>"; };
 		666E252F18F5D9F100C17295 /* MMFaceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFaceButton.m; sourceTree = "<group>"; };
 		666E253118F5DDF100C17295 /* clearphotoalbum.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clearphotoalbum.png; sourceTree = "<group>"; };
@@ -1402,6 +1404,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				666D0F2A1AF4210F00AF44F7 /* CRAccessoryKit.framework in Frameworks */,
 				66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */,
 				6682FEF41A8DB41700187325 /* SimpleCloudKitManager.framework in Frameworks */,
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
@@ -2889,6 +2892,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				666D0F291AF4210F00AF44F7 /* CRAccessoryKit.framework */,
 				66150768178333D500B181F3 /* libz.dylib */,
 				66AFAD7D1A8DE8BB00FD0263 /* PerformanceBezier.framework */,
 				66AFAD7B1A8DE85900FD0263 /* DrawKit-iOS.framework */,
@@ -4001,6 +4005,7 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/iPen",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -4038,6 +4043,7 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/iPen",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
