@@ -151,7 +151,7 @@
     [activeOptionsView reset];
     [activeOptionsView show];
     // hide tutorial if we have an options view visible
-    tutorialButton.hidden = activeOptionsView;
+    tutorialButton.hidden = (BOOL)activeOptionsView;
     [super show:animated];
 }
 
