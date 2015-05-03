@@ -89,6 +89,7 @@
     }];
     
     self.scrollEnabled = NO;
+    [self disableAllGesturesForPageView];
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
@@ -113,6 +114,8 @@
     
     if(!self.isShowingPageView){
         self.scrollEnabled = YES;
+    }else{
+        [self enableAllGesturesForPageView];
     }
 }
 
