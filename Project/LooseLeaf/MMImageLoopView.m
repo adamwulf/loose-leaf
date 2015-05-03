@@ -55,7 +55,7 @@
 -(void) startAnimating{
     isAnimating = YES;
     if(!timer){
-        timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(userFinishedImageTutorial) userInfo:nil repeats:NO];
+        timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(userFinishedImageTutorial) userInfo:nil repeats:NO];
     }
 }
 
