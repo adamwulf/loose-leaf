@@ -38,7 +38,7 @@
     int offset = 4 - numItems%4;
     if(offset == 4) offset = 0;
     numItems += offset;
-    return CGSizeMake(self.collectionView.bounds.size.width, numItems * [self buttonWidth]);
+    return CGSizeMake(self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer, numItems * [self buttonWidth]);
 }
 
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -64,7 +64,7 @@
 
     CGFloat contactHeight = [self buttonWidth];
     CGFloat cellHeight = isLastCell ? 150.0 : contactHeight;
-    CGFloat width = self.collectionView.bounds.size.width;
+    CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
     ret.bounds = CGRectMake(0, 0, width, cellHeight);
     ret.center = CGPointMake(width/2, trueIndexInList * contactHeight + cellHeight/2);
 
@@ -110,7 +110,7 @@
         }
         ret.transform = CGAffineTransformMakeRotation(-M_PI_2);
     }
-    ret.center = CGPointMake(ret.center.x + translate.x, ret.center.y + translate.y);
+    ret.center = CGPointMake(ret.center.x + translate.x + kWidthOfSidebarButtonBuffer, ret.center.y + translate.y);
     return ret;
 }
 
