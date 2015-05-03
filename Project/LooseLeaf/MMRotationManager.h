@@ -33,6 +33,8 @@
 
 +(MMRotationManager*) sharedInstance;
 
+-(UIInterfaceOrientation) currentInterfaceOrientation;
+
 -(UIDeviceOrientation) currentDeviceOrientation;
 
 -(MMVector*) upVector;

@@ -9,6 +9,7 @@
 #import "UIView+Animations.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MMShadowedView.h"
+#import "Constants.h"
 
 @implementation UIView (Animations)
 
@@ -54,6 +55,10 @@
     position.y -= oldPoint.y;
     position.y += newPoint.y;
     
+    if(isnan(position.x) || isnan(position.y)){
+        position = CGPointZero;
+    }
+    
     view.layer.position = position;
     view.layer.anchorPoint = anchorPoint;
 }
@@ -96,7 +101,7 @@
 }
 
 -(void) bounceWithTransform:(CGAffineTransform)transform{
-    [self bounceWithTransform:transform stepOne:.4 stepTwo:-.2];
+    [self bounceWithTransform:transform stepOne:kMaxButtonBounceHeight stepTwo:kMinButtonBounceHeight];
 }
 
 -(void) bounce{

@@ -80,7 +80,7 @@
     NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPath]];
     NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self hiddenPlistPath]];
     
-    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
+//    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
 
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
@@ -133,7 +133,7 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
     }
     
-    DebugLog(@"loaded %d and %d",(int) [visiblePages count],(int) [hiddenPages count]);
+//    DebugLog(@"loaded %d and %d",(int) [visiblePages count],(int) [hiddenPages count]);
 
 //#ifdef DEBUG
 //    [visiblePages shuffle];

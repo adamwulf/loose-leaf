@@ -8,7 +8,7 @@
 
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 #import "NSMutableSet+Extras.h"
 #import <JotUI/JotUI.h>
 

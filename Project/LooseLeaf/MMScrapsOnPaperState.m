@@ -17,7 +17,7 @@
 #import "MMPageCacheManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
-#import <Crashlytics/Crashlytics.h>
+#import <Fabric/Fabric.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
 

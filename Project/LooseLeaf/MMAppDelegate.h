@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Crashlytics/Crashlytics.h>
+#import <Fabric/Fabric.h>
+#import <TwitterKit/TwitterKit.h>
 
 @class MMLooseLeafViewController, MMPresentationWindow;
 
-@interface MMAppDelegate : UIResponder <UIApplicationDelegate,CrashlyticsDelegate>
+@interface MMAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

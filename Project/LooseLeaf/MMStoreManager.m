@@ -9,10 +9,30 @@
 #import "MMStoreManager.h"
 #import "RMStore.h"
 #import "RMAppReceipt.h"
+#import "RMStoreAppReceiptVerificator.h"
+#import "RMStoreTransactionReceiptVerificator.h"
 
-@implementation MMStoreManager
+@implementation MMStoreManager{
+    RMStoreAppReceiptVerificator* receiptVerificator;
+}
 
 static MMStoreManager* _instance = nil;
+
+-(id) init{
+    if(self = [super init]){
+        receiptVerificator = [[RMStoreAppReceiptVerificator alloc] init];
+        [RMStore defaultStore].receiptVerificator = receiptVerificator;
+        
+        if([receiptVerificator verifyAppReceipt]){
+            NSLog(@"MMStoreManager: valid");
+        }else if([[NSFileManager defaultManager] fileExistsAtPath:[[RMStore receiptURL] path]]){
+            NSLog(@"MMStoreManager: invalid");
+        }else{
+            NSLog(@"MMStoreManager: doesn't exist");
+        }
+    }
+    return self;
+}
 
 +(MMStoreManager*) sharedManager{
     if(!_instance){

@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMScrapPaperStackView.h"
-#import <Crashlytics/Crashlytics.h>
+#import "MMTutorialStackView.h"
+#import <Fabric/Fabric.h>
 
 @interface MMLooseLeafViewController : UIViewController{
-    MMScrapPaperStackView* stackView;
+    MMTutorialStackView* stackView;
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;

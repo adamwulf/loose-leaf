@@ -121,7 +121,7 @@ static MMPhotoManager* _instance = nil;
 
 -(void) libraryChanged:(NSNotification*)note{
     NSDictionary* info = [note userInfo];
-    DebugLog(@"library changed: %@", info);
+//    DebugLog(@"library changed: %@", info);
     NSSet *updatedAssetGroup = [info objectForKey:ALAssetLibraryUpdatedAssetGroupsKey];
     NSSet *deletedAssetGroup = [info objectForKey:ALAssetLibraryDeletedAssetGroupsKey];
     NSSet *insertedAssetGroup = [info objectForKey:ALAssetLibraryInsertedAssetGroupsKey];
