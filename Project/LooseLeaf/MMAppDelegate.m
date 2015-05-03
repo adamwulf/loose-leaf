@@ -23,7 +23,7 @@
 #import <JotUI/JotUI.h>
 #import <FacebookSDK/FacebookSDK.h>
 #import "MMUnknownObject.h"
-
+#import <CRAccessoryKit/CRAccessoryKit.h>
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
@@ -41,8 +41,6 @@
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
 
-    
-    
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
@@ -116,6 +114,7 @@
     DebugLog(@"WILL RESIGN ACTIVE");
     [self.viewController willResignActive];
     [[MMRotationManager sharedInstance] willResignActive];
+    [CRAccessoryKit stop];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -140,6 +139,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [CRAccessoryKit start:nil];
     [self setupTimer];
     if((CFAbsoluteTimeGetCurrent() - resignedActiveAtStamp) / 60.0 > 5){
         // they resigned active over 5 minutes ago, treat this

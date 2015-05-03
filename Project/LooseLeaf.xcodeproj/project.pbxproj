@@ -97,6 +97,7 @@
 		6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 6634856819DB551B00B5CF2D /* MMTrashIcon.m */; };
 		663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523E419A7E32000A26B88 /* MMShareOptionsView.m */; };
 		663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 663523EB19A8401100A26B88 /* MMCloudKitManager.m */; };
+		663584E91AF5CD8E007478FD /* JotView+Cregle.m in Sources */ = {isa = PBXBuildFile; fileRef = 663584E81AF5CD8E007478FD /* JotView+Cregle.m */; };
 		6635BE9619748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */; };
 		6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9819749BD600DFCBBA /* MMScrapsInSidebarState.m */; };
 		6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6635BE9C19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m */; };
@@ -670,6 +671,8 @@
 		663523EA19A8401100A26B88 /* MMCloudKitManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitManager.h; sourceTree = "<group>"; };
 		663523EB19A8401100A26B88 /* MMCloudKitManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitManager.m; sourceTree = "<group>"; };
 		663523ED19A8402000A26B88 /* MMCloudKitManagerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMCloudKitManagerDelegate.h; sourceTree = "<group>"; };
+		663584E71AF5CD8E007478FD /* JotView+Cregle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JotView+Cregle.h"; sourceTree = "<group>"; };
+		663584E81AF5CD8E007478FD /* JotView+Cregle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JotView+Cregle.m"; sourceTree = "<group>"; };
 		6635BE9419748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoBezeledScrapItem.h; sourceTree = "<group>"; };
 		6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoBezeledScrapItem.m; sourceTree = "<group>"; };
 		6635BE9719749BD600DFCBBA /* MMScrapsInSidebarState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapsInSidebarState.h; sourceTree = "<group>"; };
@@ -1946,6 +1949,15 @@
 			name = "Delete Sidebar";
 			sourceTree = "<group>";
 		};
+		663584E61AF5CD76007478FD /* JotView+Cregle */ = {
+			isa = PBXGroup;
+			children = (
+				663584E71AF5CD8E007478FD /* JotView+Cregle.h */,
+				663584E81AF5CD8E007478FD /* JotView+Cregle.m */,
+			);
+			name = "JotView+Cregle";
+			sourceTree = "<group>";
+		};
 		66381F5A19CB965D0014796F /* PhotosSection */ = {
 			isa = PBXGroup;
 			children = (
@@ -2926,6 +2938,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				663584E61AF5CD76007478FD /* JotView+Cregle */,
 				66FD31E71AE035AF00EDD1D5 /* Archiving Help */,
 				66343C681AC085F900801962 /* Newsletter */,
 				6688D1E11A994E7500EB17EC /* TutorialView */,
@@ -3740,6 +3753,7 @@
 				66627F751A02582F0064FAD3 /* MPABTestDesignerChangeResponseMessage.m in Sources */,
 				66627F771A02582F0064FAD3 /* MPABTestDesignerClearResponseMessage.m in Sources */,
 				661708EE19841988006A73EF /* MMTrashManager.m in Sources */,
+				663584E91AF5CD8E007478FD /* JotView+Cregle.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				66627F9C1A02582F0064FAD3 /* MPSurveyQuestion.m in Sources */,
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,
