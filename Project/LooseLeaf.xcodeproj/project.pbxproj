@@ -175,6 +175,13 @@
 		6652457A1996EA6500C36609 /* MMReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 665245791996EA6500C36609 /* MMReachabilityManager.m */; };
 		6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
+		6655735A1AF6D43000969E63 /* MPDesignerEventBindingRequestMesssage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655734F1AF6D43000969E63 /* MPDesignerEventBindingRequestMesssage.m */; };
+		6655735B1AF6D43000969E63 /* MPDesignerEventBindingResponseMesssage.m in Sources */ = {isa = PBXBuildFile; fileRef = 665573501AF6D43000969E63 /* MPDesignerEventBindingResponseMesssage.m */; };
+		6655735C1AF6D43000969E63 /* MPDesignerTrackMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 665573521AF6D43000969E63 /* MPDesignerTrackMessage.m */; };
+		6655735D1AF6D43000969E63 /* MPEventBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 665573541AF6D43000969E63 /* MPEventBinding.m */; };
+		6655735E1AF6D43000969E63 /* MPUIControlBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 665573571AF6D43000969E63 /* MPUIControlBinding.m */; };
+		6655735F1AF6D43000969E63 /* MPUITableViewBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 665573591AF6D43000969E63 /* MPUITableViewBinding.m */; };
+		665573611AF6D45000969E63 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 665573601AF6D45000969E63 /* Media.xcassets */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
@@ -187,7 +194,6 @@
 		665F7F621AE096D000635D56 /* list-view-delete-page.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F611AE096D000635D56 /* list-view-delete-page.mov */; };
 		665F7F641AE096D500635D56 /* list-view-reorder-pages.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */; };
 		66627F701A02582F0064FAD3 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */; };
-		66627F711A02582F0064FAD3 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66627F011A02582E0064FAD3 /* Media.xcassets */; };
 		66627F721A02582F0064FAD3 /* Mixpanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F031A02582E0064FAD3 /* Mixpanel.m */; };
 		66627F731A02582F0064FAD3 /* MPAbstractABTestDesignerMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F051A02582E0064FAD3 /* MPAbstractABTestDesignerMessage.m */; };
 		66627F741A02582F0064FAD3 /* MPABTestDesignerChangeRequestMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F071A02582E0064FAD3 /* MPABTestDesignerChangeRequestMessage.m */; };
@@ -250,7 +256,6 @@
 		66627FAD1A02582F0064FAD3 /* UIColor+MPColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F691A02582F0064FAD3 /* UIColor+MPColor.m */; };
 		66627FAE1A02582F0064FAD3 /* UIImage+MPAverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F6B1A02582F0064FAD3 /* UIImage+MPAverageColor.m */; };
 		66627FAF1A02582F0064FAD3 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F6D1A02582F0064FAD3 /* UIImage+MPImageEffects.m */; };
-		66627FB01A02582F0064FAD3 /* UIView+MPSnapshotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 66627F6F1A02582F0064FAD3 /* UIView+MPSnapshotImage.m */; };
 		66627FB21A0258D10064FAD3 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66627FB11A0258D10064FAD3 /* libicucore.dylib */; };
 		6663CC4A19DFC2280084F9FF /* MMImmutableScrapCollectionState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6663CC4919DFC2280084F9FF /* MMImmutableScrapCollectionState.m */; };
 		666425BA18CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 666425B918CBC20000A306C1 /* MMStretchScrapGestureRecognizer.mm */; };
@@ -803,6 +808,20 @@
 		6652457B1996ECF900C36609 /* MMOpenInAppShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMOpenInAppShareItem.h; sourceTree = "<group>"; };
 		6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMOpenInAppShareItem.m; sourceTree = "<group>"; };
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
+		6655734D1AF6D43000969E63 /* MPCategoryHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPCategoryHelpers.h; path = ../../Submodules/mixpanel/Mixpanel/MPCategoryHelpers.h; sourceTree = "<group>"; };
+		6655734E1AF6D43000969E63 /* MPDesignerEventBindingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDesignerEventBindingMessage.h; path = ../../Submodules/mixpanel/Mixpanel/MPDesignerEventBindingMessage.h; sourceTree = "<group>"; };
+		6655734F1AF6D43000969E63 /* MPDesignerEventBindingRequestMesssage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPDesignerEventBindingRequestMesssage.m; path = ../../Submodules/mixpanel/Mixpanel/MPDesignerEventBindingRequestMesssage.m; sourceTree = "<group>"; };
+		665573501AF6D43000969E63 /* MPDesignerEventBindingResponseMesssage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPDesignerEventBindingResponseMesssage.m; path = ../../Submodules/mixpanel/Mixpanel/MPDesignerEventBindingResponseMesssage.m; sourceTree = "<group>"; };
+		665573511AF6D43000969E63 /* MPDesignerSessionCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDesignerSessionCollection.h; path = ../../Submodules/mixpanel/Mixpanel/MPDesignerSessionCollection.h; sourceTree = "<group>"; };
+		665573521AF6D43000969E63 /* MPDesignerTrackMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPDesignerTrackMessage.m; path = ../../Submodules/mixpanel/Mixpanel/MPDesignerTrackMessage.m; sourceTree = "<group>"; };
+		665573531AF6D43000969E63 /* MPEventBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEventBinding.h; path = ../../Submodules/mixpanel/Mixpanel/MPEventBinding.h; sourceTree = "<group>"; };
+		665573541AF6D43000969E63 /* MPEventBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPEventBinding.m; path = ../../Submodules/mixpanel/Mixpanel/MPEventBinding.m; sourceTree = "<group>"; };
+		665573551AF6D43000969E63 /* MPLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPLogger.h; path = ../../Submodules/mixpanel/Mixpanel/MPLogger.h; sourceTree = "<group>"; };
+		665573561AF6D43000969E63 /* MPUIControlBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPUIControlBinding.h; path = ../../Submodules/mixpanel/Mixpanel/MPUIControlBinding.h; sourceTree = "<group>"; };
+		665573571AF6D43000969E63 /* MPUIControlBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPUIControlBinding.m; path = ../../Submodules/mixpanel/Mixpanel/MPUIControlBinding.m; sourceTree = "<group>"; };
+		665573581AF6D43000969E63 /* MPUITableViewBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPUITableViewBinding.h; path = ../../Submodules/mixpanel/Mixpanel/MPUITableViewBinding.h; sourceTree = "<group>"; };
+		665573591AF6D43000969E63 /* MPUITableViewBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MPUITableViewBinding.m; path = ../../Submodules/mixpanel/Mixpanel/MPUITableViewBinding.m; sourceTree = "<group>"; };
+		665573601AF6D45000969E63 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
 		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -822,7 +841,6 @@
 		665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "list-view-reorder-pages.mov"; sourceTree = "<group>"; };
 		66627EFF1A02582E0064FAD3 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _MPTweakBindObserver.h; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.h; sourceTree = "<group>"; };
 		66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _MPTweakBindObserver.m; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.m; sourceTree = "<group>"; };
-		66627F011A02582E0064FAD3 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
 		66627F021A02582E0064FAD3 /* Mixpanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mixpanel.h; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.h; sourceTree = "<group>"; };
 		66627F031A02582E0064FAD3 /* Mixpanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Mixpanel.m; path = ../../Submodules/mixpanel/Mixpanel/Mixpanel.m; sourceTree = "<group>"; };
 		66627F041A02582E0064FAD3 /* MPAbstractABTestDesignerMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAbstractABTestDesignerMessage.h; path = ../../Submodules/mixpanel/Mixpanel/MPAbstractABTestDesignerMessage.h; sourceTree = "<group>"; };
@@ -931,8 +949,6 @@
 		66627F6B1A02582F0064FAD3 /* UIImage+MPAverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MPAverageColor.m"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPAverageColor.m"; sourceTree = "<group>"; };
 		66627F6C1A02582F0064FAD3 /* UIImage+MPImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+MPImageEffects.h"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPImageEffects.h"; sourceTree = "<group>"; };
 		66627F6D1A02582F0064FAD3 /* UIImage+MPImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+MPImageEffects.m"; path = "../../Submodules/mixpanel/Mixpanel/UIImage+MPImageEffects.m"; sourceTree = "<group>"; };
-		66627F6E1A02582F0064FAD3 /* UIView+MPSnapshotImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+MPSnapshotImage.h"; path = "../../Submodules/mixpanel/Mixpanel/UIView+MPSnapshotImage.h"; sourceTree = "<group>"; };
-		66627F6F1A02582F0064FAD3 /* UIView+MPSnapshotImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+MPSnapshotImage.m"; path = "../../Submodules/mixpanel/Mixpanel/UIView+MPSnapshotImage.m"; sourceTree = "<group>"; };
 		66627FB11A0258D10064FAD3 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		6663CC4819DFC2280084F9FF /* MMImmutableScrapCollectionState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapCollectionState.h; sourceTree = "<group>"; };
 		6663CC4919DFC2280084F9FF /* MMImmutableScrapCollectionState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapCollectionState.m; sourceTree = "<group>"; };
@@ -1732,9 +1748,22 @@
 		662A21B8191D66FF00AD9E31 /* MixPanel */ = {
 			isa = PBXGroup;
 			children = (
+				665573601AF6D45000969E63 /* Media.xcassets */,
+				6655734D1AF6D43000969E63 /* MPCategoryHelpers.h */,
+				6655734E1AF6D43000969E63 /* MPDesignerEventBindingMessage.h */,
+				6655734F1AF6D43000969E63 /* MPDesignerEventBindingRequestMesssage.m */,
+				665573501AF6D43000969E63 /* MPDesignerEventBindingResponseMesssage.m */,
+				665573511AF6D43000969E63 /* MPDesignerSessionCollection.h */,
+				665573521AF6D43000969E63 /* MPDesignerTrackMessage.m */,
+				665573531AF6D43000969E63 /* MPEventBinding.h */,
+				665573541AF6D43000969E63 /* MPEventBinding.m */,
+				665573551AF6D43000969E63 /* MPLogger.h */,
+				665573561AF6D43000969E63 /* MPUIControlBinding.h */,
+				665573571AF6D43000969E63 /* MPUIControlBinding.m */,
+				665573581AF6D43000969E63 /* MPUITableViewBinding.h */,
+				665573591AF6D43000969E63 /* MPUITableViewBinding.m */,
 				66627EFF1A02582E0064FAD3 /* _MPTweakBindObserver.h */,
 				66627F001A02582E0064FAD3 /* _MPTweakBindObserver.m */,
-				66627F011A02582E0064FAD3 /* Media.xcassets */,
 				66627F021A02582E0064FAD3 /* Mixpanel.h */,
 				66627F031A02582E0064FAD3 /* Mixpanel.m */,
 				66627F041A02582E0064FAD3 /* MPAbstractABTestDesignerMessage.h */,
@@ -1843,8 +1872,6 @@
 				66627F6B1A02582F0064FAD3 /* UIImage+MPAverageColor.m */,
 				66627F6C1A02582F0064FAD3 /* UIImage+MPImageEffects.h */,
 				66627F6D1A02582F0064FAD3 /* UIImage+MPImageEffects.m */,
-				66627F6E1A02582F0064FAD3 /* UIView+MPSnapshotImage.h */,
-				66627F6F1A02582F0064FAD3 /* UIView+MPSnapshotImage.m */,
 			);
 			name = MixPanel;
 			sourceTree = "<group>";
@@ -3459,6 +3486,7 @@
 				66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */,
 				66627F8A1A02582F0064FAD3 /* MPCloseBtn@2x.png in Resources */,
 				66CC2A9B1AEB05C300C6A3F9 /* shake-to-reorder.mov in Resources */,
+				665573611AF6D45000969E63 /* Media.xcassets in Resources */,
 				6652452F1996D1E500C36609 /* imgur@2x.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
@@ -3467,7 +3495,6 @@
 				665245141995844D00C36609 /* twitterLarge.png in Resources */,
 				665F7F641AE096D500635D56 /* list-view-reorder-pages.mov in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
-				66627F711A02582F0064FAD3 /* Media.xcassets in Resources */,
 				66627F9A1A02582F0064FAD3 /* MPSurvey.storyboard in Resources */,
 				66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */,
 				6672EFE619C3A61E0076009F /* iCloudDrive@2x.png in Resources */,
@@ -3582,6 +3609,7 @@
 				66EC2FEC19DD06F6008F2BB6 /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
+				6655735A1AF6D43000969E63 /* MPDesignerEventBindingRequestMesssage.m in Sources */,
 				66DCFB9B1581BCEF00B4918C /* MMAppDelegate.m in Sources */,
 				6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */,
 				66627F7A1A02582F0064FAD3 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,
@@ -3621,6 +3649,7 @@
 				66343C061ABE45CF00801962 /* MMTutorialButton.m in Sources */,
 				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
 				66627FAE1A02582F0064FAD3 /* UIImage+MPAverageColor.m in Sources */,
+				6655735D1AF6D43000969E63 /* MPEventBinding.m in Sources */,
 				66FA039F19BFAF3600AF0DC4 /* MMRotatingKeyDemoLayer.m in Sources */,
 				66627F9E1A02582F0064FAD3 /* MPSwizzler.m in Sources */,
 				660E1DAC158FC65C0001DA12 /* NSMutableArray+StackAdditions.m in Sources */,
@@ -3698,7 +3727,6 @@
 				66627FA81A02582F0064FAD3 /* MPWebSocket.m in Sources */,
 				6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */,
 				66EDE42019AE736E00A5623B /* MMCloudKitImportExportView.m in Sources */,
-				66627FB01A02582F0064FAD3 /* UIView+MPSnapshotImage.m in Sources */,
 				66627F911A02582F0064FAD3 /* MPObjectIdentityProvider.m in Sources */,
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
 				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,
@@ -3769,6 +3797,7 @@
 				66627F701A02582F0064FAD3 /* _MPTweakBindObserver.m in Sources */,
 				66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */,
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
+				6655735B1AF6D43000969E63 /* MPDesignerEventBindingResponseMesssage.m in Sources */,
 				662280771AAF9FFF00DAB609 /* MMAlbumGroupListLayout.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
 				66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */,
@@ -3780,6 +3809,7 @@
 				66627F771A02582F0064FAD3 /* MPABTestDesignerClearResponseMessage.m in Sources */,
 				661708EE19841988006A73EF /* MMTrashManager.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
+				6655735F1AF6D43000969E63 /* MPUITableViewBinding.m in Sources */,
 				66627F9C1A02582F0064FAD3 /* MPSurveyQuestion.m in Sources */,
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
@@ -3879,6 +3909,7 @@
 				66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
+				6655735E1AF6D43000969E63 /* MPUIControlBinding.m in Sources */,
 				66627F971A02582F0064FAD3 /* MPPropertyDescription.m in Sources */,
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
 				66627F791A02582F0064FAD3 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,
@@ -3909,6 +3940,7 @@
 				66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */,
 				66343C5E1AC06FDA00801962 /* MMLoopIcon.m in Sources */,
 				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,
+				6655735C1AF6D43000969E63 /* MPDesignerTrackMessage.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
