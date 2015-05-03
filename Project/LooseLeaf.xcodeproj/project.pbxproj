@@ -2198,27 +2198,6 @@
 			name = Pencil;
 			sourceTree = "<group>";
 		};
-		66651BC61A567CA00065EEBE /* App Info */ = {
-			isa = PBXGroup;
-			children = (
-				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
-				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
-				667D98A9192D010900625879 /* Loose-Leaf_76.png */,
-				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
-				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
-				660E9DCA19183032000A392A /* blackblur.png */,
-			);
-			name = "App Info";
-			sourceTree = "<group>";
-		};
-		66651BDB1A567F140065EEBE /* Launch Images */ = {
-			isa = PBXGroup;
-			children = (
-				66651BDC1A567F200065EEBE /* blank-loose-leaf.png */,
-			);
-			name = "Launch Images";
-                        sourceTree = "<group>";
-                };
 		665F7F5E1AE096B400635D56 /* app-intro */ = {
 			isa = PBXGroup;
 			children = (
@@ -2260,6 +2239,27 @@
 				66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */,
 			);
 			name = "Tutorial Sidebar";
+			sourceTree = "<group>";
+		};
+		66651BC61A567CA00065EEBE /* App Info */ = {
+			isa = PBXGroup;
+			children = (
+				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
+				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
+				667D98A9192D010900625879 /* Loose-Leaf_76.png */,
+				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
+				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
+				660E9DCA19183032000A392A /* blackblur.png */,
+			);
+			name = "App Info";
+			sourceTree = "<group>";
+		};
+		66651BDB1A567F140065EEBE /* Launch Images */ = {
+			isa = PBXGroup;
+			children = (
+				66651BDC1A567F200065EEBE /* blank-loose-leaf.png */,
+			);
+			name = "Launch Images";
 			sourceTree = "<group>";
 		};
 		66684B2F182D8869005A27B4 /* Settings */ = {

@@ -88,8 +88,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>0.1</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -115,7 +113,6 @@
 			</dict>
 		</array>
 	</dict>
->>>>>>> edge
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>
@@ -135,6 +132,10 @@
 	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
