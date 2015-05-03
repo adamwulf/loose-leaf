@@ -150,6 +150,8 @@
     }
     [activeOptionsView reset];
     [activeOptionsView show];
+    // hide tutorial if we have an options view visible
+    tutorialButton.hidden = activeOptionsView;
     [super show:animated];
 }
 
@@ -180,6 +182,8 @@
     if(activeOptionsView){
         [activeOptionsView removeFromSuperview];
         [activeOptionsView reset];
+        activeOptionsView = nil;
+        tutorialButton.hidden = NO;
     }
     NSObject<MMShareItem>*shareItemForButton = nil;
     for (NSObject<MMShareItem>*shareItem in shareItems) {
@@ -252,13 +256,24 @@
                     shareItem.isShowingOptionsView = YES;
                 }
                 [sharingContentView addSubview:activeOptionsView];
+                tutorialButton.hidden = YES;
             }else{
                 activeOptionsView = nil;
+                tutorialButton.hidden = NO;
             }
             
             [shareDelegate mayShare:shareItem];
         }
     });
+}
+
+// called when a may share is cancelled
+-(void) wontShare:(NSObject<MMShareItem>*)shareItem{
+    // close out all of our sharing options views,
+    // if any
+    [self closeActiveSharingOptionsForButton:nil];
+    activeOptionsView = nil;
+    tutorialButton.hidden = NO;
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
