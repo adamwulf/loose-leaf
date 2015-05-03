@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MMTutorialStackView.h"
 #import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
 @interface MMLooseLeafViewController : UIViewController{
     MMTutorialStackView* stackView;

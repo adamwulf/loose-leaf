@@ -64,6 +64,7 @@
         backgroundButton.bounds = fadedBackground.bounds;
         [backgroundButton addTarget:self action:@selector(tapToClose) forControlEvents:UIControlEventTouchUpInside];
         [fadedBackground addSubview:backgroundButton];
+        backgroundButton.center = fadedBackground.center;
         
         [self addSubview:fadedBackground];
         

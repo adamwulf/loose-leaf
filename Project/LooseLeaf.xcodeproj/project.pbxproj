@@ -321,6 +321,8 @@
 		6688D1E91A99508700EB17EC /* MMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6688D1E81A99508700EB17EC /* MMTutorialView.m */; };
 		668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */; };
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
+		668DAF1A1AF6BADE0061BC1D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 668DAF161AF6BABB0061BC1D /* HockeySDK.framework */; };
+		668DAF1B1AF6BAE90061BC1D /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 668DAF191AF6BABB0061BC1D /* HockeySDKResources.bundle */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115A71AE8811C00C4FC89 /* MMLoopView.m */; };
@@ -432,7 +434,6 @@
 		66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66CE120217D3AD7C00882275 /* MMBounceButton.m */; };
 		66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0905515F70810004D2CAF /* MMListAddPageButton.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
-		66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D4FE6818DCA6950010CCBF /* Crashlytics.framework */; };
 		66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D6E2371AB74C0D00510CA3 /* MMPhotosListLayout.m */; };
 		66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */; };
 		66DA827F1ABE18CD00E3314A /* MMTutorialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DA827E1ABE18CD00E3314A /* MMTutorialManager.m */; };
@@ -1043,6 +1044,9 @@
 		668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudAvatarButton.m; sourceTree = "<group>"; };
 		668D19DA19F8572700A65DCF /* UIApplication+Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Version.h"; sourceTree = "<group>"; };
 		668D19DB19F8572700A65DCF /* UIApplication+Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Version.m"; sourceTree = "<group>"; };
+		668DAF161AF6BABB0061BC1D /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
+		668DAF181AF6BABB0061BC1D /* HockeySDK.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
+		668DAF191AF6BABB0061BC1D /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -1403,6 +1407,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				668DAF1A1AF6BADE0061BC1D /* HockeySDK.framework in Frameworks */,
 				66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */,
 				6682FEF41A8DB41700187325 /* SimpleCloudKitManager.framework in Frameworks */,
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
@@ -1424,7 +1429,6 @@
 				66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */,
 				665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */,
 				667EF0C519A5401400B1A38D /* CloudKit.framework in Frameworks */,
-				66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
@@ -2423,6 +2427,25 @@
 			name = TutorialView;
 			sourceTree = "<group>";
 		};
+		668DAF151AF6BABB0061BC1D /* HockeySDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				668DAF161AF6BABB0061BC1D /* HockeySDK.framework */,
+				668DAF171AF6BABB0061BC1D /* Resources */,
+			);
+			name = HockeySDK.embeddedframework;
+			path = "../Frameworks/HockeySDK-iOS/HockeySDK.embeddedframework";
+			sourceTree = "<group>";
+		};
+		668DAF171AF6BABB0061BC1D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				668DAF181AF6BABB0061BC1D /* HockeySDK.xcconfig */,
+				668DAF191AF6BABB0061BC1D /* HockeySDKResources.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		669115A21AE87E5800C4FC89 /* MMLoopView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2890,6 +2913,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				668DAF151AF6BABB0061BC1D /* HockeySDK.embeddedframework */,
 				66150768178333D500B181F3 /* libz.dylib */,
 				66AFAD7D1A8DE8BB00FD0263 /* PerformanceBezier.framework */,
 				66AFAD7B1A8DE85900FD0263 /* DrawKit-iOS.framework */,
@@ -3278,9 +3302,10 @@
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
-				66C0C9D217838C91009491B3 /* ShellScript */,
-				6673C684182E0EA0005CEFAF /* ShellScript */,
-				6616CCCD18B6AD7800CAD0F3 /* ShellScript */,
+				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
+				6673C684182E0EA0005CEFAF /* Version into Settings Bundle */,
+				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
+				668DAF0E1AF6B6F40061BC1D /* Hockey Script */,
 			);
 			buildRules = (
 			);
@@ -3469,6 +3494,7 @@
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
+				668DAF1B1AF6BAE90061BC1D /* HockeySDKResources.bundle in Resources */,
 				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3476,13 +3502,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6616CCCD18B6AD7800CAD0F3 /* ShellScript */ = {
+		6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Crashlytics Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3502,26 +3529,42 @@
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\n\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle/Root.plist\"\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle\"\n";
 		};
-		6673C684182E0EA0005CEFAF /* ShellScript */ = {
+		6673C684182E0EA0005CEFAF /* Version into Settings Bundle */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Version into Settings Bundle";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "GIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\nVERSION_FOR_SETTINGS=\"${GIT_RELEASE_SHORT_VERSION} (${GIT_RELEASE_VERSION})\"\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $VERSION_FOR_SETTINGS\"";
 		};
-		66C0C9D217838C91009491B3 /* ShellScript */ = {
+		668DAF0E1AF6B6F40061BC1D /* Hockey Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Hockey Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "FILE=\"${SRCROOT}/../Frameworks/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
+		};
+		66C0C9D217838C91009491B3 /* Git Version into Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Git Version into Info.plist";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4001,6 +4044,7 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -4035,6 +4079,7 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
+					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";

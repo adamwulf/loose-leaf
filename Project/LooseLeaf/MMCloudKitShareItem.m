@@ -75,6 +75,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             DebugLog(@"should update cloudkit options view %@", [MMCloudKitManager sharedManager].currentState);
         });
+    }else{
+        [delegate wontShare:self];
     }
 }
 
