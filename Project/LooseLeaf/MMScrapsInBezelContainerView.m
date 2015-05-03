@@ -53,9 +53,9 @@
         targetAlpha = 1;
         bubbleForScrap = [NSMutableDictionary dictionary];
         
-        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
-        [sidebarContentView addSubview:contentView];
+        [slidingSidebarView addSubview:contentView];
 
         countButton = _countButton;
         countButton.delegate = self;

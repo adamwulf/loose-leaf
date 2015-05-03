@@ -66,4 +66,8 @@
 
 -(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
+-(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail;
+
+-(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize;
+
 @end

@@ -16,12 +16,13 @@
 #import "Mixpanel.h"
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
-#import "TestFlight.h"
 #import "MMPresentationWindow.h"
 #import "UIDevice+PPI.h"
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
+#import <FacebookSDK/FacebookSDK.h>
+#import "MMUnknownObject.h"
 
 
 @implementation MMAppDelegate{
@@ -37,6 +38,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // support old archives
+    [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
+
+    
+    
     DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
@@ -54,17 +60,11 @@
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
                                                         [MMAppDelegate userID], kMPID, nil]];
     
-    [Crashlytics startWithAPIKey:@"9e59cb6d909c971a2db30c84cb9be7f37273a7af"];
     [[Crashlytics sharedInstance] setDelegate:self];
+    [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
-    [[NSThread mainThread] performBlock:^{
-        [TestFlight setOptions:@{ TFOptionReportCrashes : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToConsole : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogToSTDERR : @NO }];
-        [TestFlight setOptions:@{ TFOptionLogOnCheckpoint : @NO }];
-        [TestFlight setOptions:@{ TFOptionSessionKeepAliveTimeout : @60 }];
-        [TestFlight takeOff:kTestflightAppToken];
-    } afterDelay:3];
+    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    [FBAppEvents activateApp];
     
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [presentationWindow makeKeyAndVisible];
@@ -79,12 +79,6 @@
 
     // setup the timer that will help log session duration
     [self setupTimer];
-    
-    NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
-    NSString* sourceApplication = [launchOptions objectForKey:UIApplicationLaunchOptionsSourceApplicationKey];
-    if(url){
-        [self importFileFrom:url fromApp:sourceApplication];
-    }
 
     if (launchOptions != nil)
     {
@@ -103,6 +97,14 @@
             [self trackDidCrashFromMemoryForDate:dateOfCrash];
         }
     } afterDelay:5];
+    
+    return YES;
+}
+
+// Handle deeplinking back to app from Pinterest
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    NSLog(@"Opened by handling url: %@", [url absoluteString]);
     
     return YES;
 }

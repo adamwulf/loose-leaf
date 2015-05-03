@@ -17,4 +17,6 @@
 
 -(CGPoint) visibleImageOrigin;
 
+-(void) setPreferredAspectRatioForEmptyImage:(CGSize)size;
+
 @end

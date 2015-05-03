@@ -24,7 +24,7 @@
 
 -(void) willMoveStrokeAt:(CGPoint)point;
 
--(CGPoint) adjustPoint:(CGPoint)inputPoint;
+-(CGPoint) adjustPoint:(CGPoint)inputPoint andDidAdjust:(BOOL*)didAdjust;
 
 -(UIBezierPath*) findPathSegmentsWithNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd;
 

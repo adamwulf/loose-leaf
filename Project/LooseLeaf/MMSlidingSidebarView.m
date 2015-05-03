@@ -9,9 +9,9 @@
 #import "MMSlidingSidebarView.h"
 #import "MMLeftCloseButton.h"
 #import "UIView+Animations.h"
-#import "MMSlidingSidebarContainerView.h"
+#import "MMFullScreenSidebarContainingView.h"
 #import "FXBlurView.h"
-#import "UIView+Debug.h"
+#import "Constants.h"
 
 @implementation MMSlidingSidebarView{
     // this is the button that'll trigger the sidebar
@@ -84,20 +84,20 @@
             CGRect buttonRect = [self rectForButton];
             CGFloat radius = buttonRect.size.width / 2;
             CGPoint buttonCenter = CGPointMake(buttonRect.origin.x + radius, buttonRect.origin.y + radius);
-            CGFloat targetX = self.contentBounds.size.width + 3*kBounceWidth;
+            CGFloat targetX = self.maskBounds.size.width + 3*kBounceWidth;
             CGFloat angle = acos(-(targetX - buttonRect.origin.x) / radius);
             
             
             UIBezierPath* maskPath = [UIBezierPath bezierPath];
             [maskPath moveToPoint:CGPointZero];
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth, 0)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth, 0)];
             
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth, buttonRect.origin.y)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth, buttonRect.origin.y)];
             [maskPath addArcWithCenter:buttonCenter radius:radius startAngle:(2*M_PI - angle) endAngle:angle clockwise:NO];
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth, buttonRect.origin.y + buttonRect.size.height)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth, buttonRect.origin.y + buttonRect.size.height)];
             
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth, self.contentBounds.size.height)];
-            [maskPath addLineToPoint:CGPointMake(0, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth, self.maskBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(0, self.maskBounds.size.height)];
             [maskPath addLineToPoint:CGPointZero];
             [maskPath closePath];
             
@@ -105,18 +105,18 @@
             targetX = targetX - stripeWidth;
             angle = acos(-(targetX - buttonRect.origin.x) / (radius - stripeWidth));
             
-            [maskPath moveToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth, 0)];
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth, buttonRect.origin.y)];
+            [maskPath moveToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth + stripeWidth, 0)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth + stripeWidth, buttonRect.origin.y)];
             [maskPath addArcWithCenter:buttonCenter radius:radius - stripeWidth startAngle:(2*M_PI - angle) endAngle:angle clockwise:NO];
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth, buttonRect.origin.y + buttonRect.size.height)];
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth + stripeWidth, buttonRect.origin.y + buttonRect.size.height)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth + stripeWidth, self.maskBounds.size.height)];
             
             targetX = targetX - stripeWidth;
             angle = acos(-(targetX - buttonRect.origin.x) / (radius - stripeWidth*2));
             
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth*2, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth + stripeWidth*2, self.maskBounds.size.height)];
             [maskPath addArcWithCenter:buttonCenter radius:radius - stripeWidth*2 startAngle:angle endAngle:(2*M_PI - angle) clockwise:YES];
-            [maskPath addLineToPoint:CGPointMake(self.contentBounds.size.width + 3*kBounceWidth + stripeWidth*2, 0)];
+            [maskPath addLineToPoint:CGPointMake(self.maskBounds.size.width + 3*kBounceWidth + stripeWidth*2, 0)];
             [maskPath closePath];
             
             
@@ -142,9 +142,9 @@
             [maskPath addArcWithCenter:buttonCenter radius:radius startAngle:(2*M_PI - angle) endAngle:angle clockwise:YES];
 
             [maskPath addLineToPoint:CGPointMake(targetX, buttonRect.origin.y + buttonRect.size.height)];
-            [maskPath addLineToPoint:CGPointMake(targetX, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(targetX, self.maskBounds.size.height)];
             
-            [maskPath addLineToPoint:CGPointMake(blurContainerView.bounds.size.width + kBounceWidth, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(blurContainerView.bounds.size.width + kBounceWidth, self.maskBounds.size.height)];
             [maskPath addLineToPoint:CGPointMake(blurContainerView.bounds.size.width + kBounceWidth, 0)];
             [maskPath closePath];
             
@@ -158,12 +158,12 @@
             [maskPath addArcWithCenter:buttonCenter radius:radius - stripeWidth startAngle:(2*M_PI - angle) endAngle:angle clockwise:YES];
             
             [maskPath addLineToPoint:CGPointMake(targetX, buttonRect.origin.y + buttonRect.size.height)];
-            [maskPath addLineToPoint:CGPointMake(targetX, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(targetX, self.maskBounds.size.height)];
 
             targetX = targetX - stripeWidth;
             angle = acos((targetX - buttonCenter.x) / (radius - stripeWidth*2));
 
-            [maskPath addLineToPoint:CGPointMake(targetX, self.contentBounds.size.height)];
+            [maskPath addLineToPoint:CGPointMake(targetX, self.maskBounds.size.height)];
             [maskPath addArcWithCenter:buttonCenter radius:radius - stripeWidth*2 startAngle:angle endAngle:(2*M_PI - angle) clockwise:NO];
             [maskPath addLineToPoint:CGPointMake(targetX, 0)];
             [maskPath closePath];
@@ -190,7 +190,7 @@
     return self;
 }
 
--(void) setDelegate:(MMSlidingSidebarContainerView *)_delegate{
+-(void) setDelegate:(MMFullScreenSidebarContainingView *)_delegate{
     delegate = _delegate;
 }
 
@@ -286,15 +286,35 @@
 -(CGRect) contentBounds{
     CGRect contentBounds = self.bounds;
     contentBounds.size.width -= 2*kBounceWidth;
-    if(directionIsFromLeft){
-        contentBounds.origin.x = 2*kBounceWidth;
-    }else{
-        contentBounds.origin.x = kBounceWidth;
-        contentBounds.origin.x += referenceButton.frame.size.width;
-    }
-    contentBounds.size.width -= kBounceWidth;
     contentBounds.size.width -= referenceButton.frame.size.width;
-    return contentBounds;
+    if(directionIsFromLeft){
+        return contentBounds;
+    }else{
+        contentBounds.origin.x += 2*kBounceWidth;
+        contentBounds.origin.x += referenceButton.frame.size.width;
+        return contentBounds;
+    }
+}
+
+// the contentBounds defines what area inside of this view
+// is available for the content to be placed. placing content
+// outside of this view will probably look very awkward.
+//
+// the frame of this ContentView lies partially outside of
+// the parent view by 1*kBounceWidth. This CGRect calculates
+// an area 1*kBounceWidth margin inside of that for content.
+-(CGRect) maskBounds{
+    CGRect maskBounds = self.bounds;
+    maskBounds.size.width -= 2*kBounceWidth;
+    if(directionIsFromLeft){
+        maskBounds.origin.x = 2*kBounceWidth;
+    }else{
+        maskBounds.origin.x = kBounceWidth;
+        maskBounds.origin.x += referenceButton.frame.size.width;
+    }
+    maskBounds.size.width -= kBounceWidth;
+    maskBounds.size.width -= referenceButton.frame.size.width;
+    return maskBounds;
 }
 
 // the rectForButton defines where the frame of the button
@@ -303,10 +323,10 @@
 -(CGRect) rectForButton{
     CGRect fr = referenceButton.frame;
     if(directionIsFromLeft){
-        fr.origin.x = [self contentBounds].origin.x + [self contentBounds].size.width;
+        fr.origin.x = [self maskBounds].origin.x + [self maskBounds].size.width;
         fr.origin.x -= kBounceWidth / 2;
     }else{
-        fr.origin.x = [self contentBounds].origin.x - referenceButton.frame.size.width;
+        fr.origin.x = [self maskBounds].origin.x - referenceButton.frame.size.width;
         fr.origin.x += kBounceWidth / 2;
     }
     fr.origin.x = ceilf(fr.origin.x);

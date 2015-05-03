@@ -8,7 +8,7 @@
 
 #import "UIView+Debug.h"
 #import <QuartzCore/QuartzCore.h>
-#import <DrawKit-iOS/JRSwizzle.h>
+#import <ClippingBezier/JRSwizzle.h>
 #import <JotUI/JotUI.h>
 
 

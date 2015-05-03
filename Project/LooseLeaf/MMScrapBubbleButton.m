@@ -9,6 +9,7 @@
 #import "MMScrapBubbleButton.h"
 #import "MMScrapBorderView.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 #import "Constants.h"
 
 @implementation MMScrapBubbleButton{

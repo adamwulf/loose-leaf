@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <TouchShape/TouchShape.h>
-#import <DrawKit-iOS/DrawKit-iOS.h>
+#import <ClippingBezier/ClippingBezier.h>
 #import "MMFilledShapeView.h"
 #import <MessageUI/MFMailComposeViewController.h>
 

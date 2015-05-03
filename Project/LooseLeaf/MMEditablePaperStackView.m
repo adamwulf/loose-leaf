@@ -18,15 +18,9 @@
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
-struct SidebarButton{
-    void* button;
-    CGRect originalRect;
-} SidebarButton;
-
 @implementation MMEditablePaperStackView{
     UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
-    struct SidebarButton buttons[10];
     
     // this tracks how many times the user has
     // used two fingers with the ruler gesture in
@@ -41,6 +35,8 @@ struct SidebarButton{
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        
+        numberOfButtons = 10;
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
         
@@ -350,22 +346,22 @@ struct SidebarButton{
     rulerButton.selected = NO;
 }
 
--(void) bounceHandButton{
+-(void) bounceSidebarButton:(MMSidebarButton*)button{
     CheckMainThread;
-    CGPoint onscreen = handButton.center;
+    CGPoint onscreen = button.center;
     
     [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
         [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
-            handButton.center = CGPointMake(onscreen.x+12, onscreen.y);
+            button.center = CGPointMake(onscreen.x+12, onscreen.y);
         }];
-        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
-            handButton.center = onscreen;
+        [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.3 animations:^{
+            button.center = onscreen;
         }];
-        [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
-            handButton.center = CGPointMake(onscreen.x + 8, onscreen.y);
+        [UIView addKeyframeWithRelativeStartTime:.55 relativeDuration:.25 animations:^{
+            button.center = CGPointMake(onscreen.x + 8, onscreen.y);
         }];
-        [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
-            handButton.center = onscreen;
+        [UIView addKeyframeWithRelativeStartTime:.80 relativeDuration:.2 animations:^{
+            button.center = onscreen;
         }];
     } completion:nil];
 }
@@ -421,21 +417,17 @@ struct SidebarButton{
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration{
     [UIView animateWithDuration:duration animations:^{
-        addPageSidebarButton.alpha = visible;
+        
+        for(int i=0;i<numberOfButtons;i++){
+            [((__bridge UIButton*)buttons[i].button) setAlpha:visible];
+        }
+        
         documentBackgroundSidebarButton.alpha = visible;
         polylineButton.alpha = visible;
-        insertImageButton.alpha = visible;
         textButton.alpha = visible;
-        pencilTool.alpha = visible;
-        scissorButton.alpha = visible;
-        eraserButton.alpha = visible;
-        shareButton.alpha = visible;
         mapButton.alpha = visible;
-        redoButton.alpha = visible;
-        undoButton.alpha = visible;
-        rulerButton.alpha = visible;
-        handButton.alpha = visible;
         settingsButton.alpha = visible;
+        pencilTool.alpha = visible;
     }];
 }
 
@@ -580,7 +572,6 @@ struct SidebarButton{
 -(void) finishedScalingReallySmall:(MMPaperView *)page{
     [super finishedScalingReallySmall:page];
     [self saveStacksToDisk];
-//    [TestFlight passCheckpoint:@"NAV_TO_LIST_FROM_PAGE"];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
@@ -609,7 +600,6 @@ struct SidebarButton{
         [editablePage setEditable:NO];
         [editablePage updateThumbnailVisibility];
     }
-//    [TestFlight passCheckpoint:@"NAV_TO_PAGE_FROM_LIST"];
 }
 
 #pragma mark = Saving and Editing
@@ -678,7 +668,7 @@ struct SidebarButton{
         numberOfRulerGesturesWithoutStroke++;
         NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
         if(numberOfRulerGesturesWithoutStroke > 2){
-            [self bounceHandButton];
+            [self bounceSidebarButton:handButton];
         }
     }
 }
@@ -925,14 +915,18 @@ struct SidebarButton{
 
 -(void) beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page beginScissorAtPoint:adjustedPoint];
 }
 
 -(void) continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    BOOL didAdjust = NO;
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:&didAdjust];
+    if(didAdjust){
+        numberOfRulerGesturesWithoutStroke = 0;
+    }
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     if(![page continueScissorAtPoint:adjustedPoint]){
@@ -941,14 +935,14 @@ struct SidebarButton{
 }
 
 -(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page finishScissorAtPoint:adjustedPoint];
 }
 
 -(void) cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool{
-    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView]];
+    CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
     MMScrappedPaperView* page = [visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page cancelScissorAtPoint:adjustedPoint];
@@ -1042,7 +1036,7 @@ struct SidebarButton{
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
     if([self shouldPrioritizeSidebarButtonsForTaps]){
-        for(int i=0;i<10;i++){
+        for(int i=0;i<numberOfButtons;i++){
             if(CGRectContainsPoint(buttons[i].originalRect, point)){
                 return (__bridge UIView*) buttons[i].button;
             }

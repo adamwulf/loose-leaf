@@ -9,11 +9,9 @@
 #ifndef Paper_Stack_Contants_h
 #define Paper_Stack_Contants_h
 
-#ifdef DEBUG
-#define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
-#else
-#define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
-#endif
+#import "AuthConstants.h"
+
+#define kURLAddedToDirectoryKey (&NSURLAddedToDirectoryDateKey ? NSURLAddedToDirectoryDateKey : NSURLCreationDateKey)
 
 #define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
@@ -40,17 +38,22 @@ _Pragma("clang diagnostic pop") \
 
 #define kAbstractMethodException [NSException exceptionWithName:NSInternalInconsistencyException reason:[NSString stringWithFormat:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)] userInfo:nil]
 
-#define kTestflightAppToken @"7cad2371-d0e0-4524-a833-dbc6cbc7a870"
-
 #define kAnimationDelay 0.05
+
+// Tutorial Notifications
+#define kTutorialStartedNotification @"kTutorialStartedNotification"
+#define kTutorialStepCompleteNotification @"kTutorialStepCompleteNotification"
+#define kTutorialClosedNotification @"kTutorialClosedNotification"
+
+
+// Display Assets
+#define kDisplayAssetThumbnailGenerated @"kDisplayAssetThumbnailGenerated"
+#define kInboxItemThumbnailGenerated @"kInboxItemThumbnailGenerated"
+#define kBounceWidth 10.0
+
 
 // CloudKit Import
 #define kCloudKitMaxVisibleImports 5
-
-// Imgur
-#define kImgurClientID @"84d82da68fd2438"
-#define kImgurClientSecret @"9d527186fee2a9f9e7af7f5e9fbbab334a1ac1ce"
-#define kMashapeClientID @"YOUR_MASHAPE_CLIENT_ID"
 
 // Ruler
 #define kWidthOfRuler 70
@@ -82,6 +85,8 @@ _Pragma("clang diagnostic pop") \
 #define kShadowBend 3
 #define kBezelInGestureWidth 40
 #define kUndoLimit 10 // TODO: make sure this defines the jot undo level
+#define kMaxButtonBounceHeight .4
+#define kMinButtonBounceHeight -.2
 
 // Camera
 #define kCameraMargin 10
@@ -145,9 +150,14 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 
-// cloudkit tutorial
-#define kMPCloudKitTutorialUUID @"2E73BFF3-843D-417F-A8FA-71C6E9783D67"
-#define kMPHasSeenCKTutorial @"Has Seen CloudKit Tutorial"
+// tutorial
+#define kMPHasFinishedTutorial @"Has Finished Tutorial"
+#define kHasSignedUpForNewsletter @"kHasSignedUpForNewsletter"
+#define kPendingEmailToSubscribe @"kPendingEmailToSubscribe"
+#define kHasIgnoredNewsletter @"kHasIgnoredNewsletter"
+#define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
+#define kCurrentTutorialStep @"kCurrentTutorialStep"
+#define kMPNewsletterStatus @"Signed Up For Newsletter"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
@@ -158,7 +168,6 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
 #define kMPEventGestureBug @"Gesture Bug"
-#define kMPSaveFailedNeedsRetry @"Save Failed Will Retry"
 
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
@@ -190,11 +199,16 @@ _Pragma("clang diagnostic pop") \
 
 // photo album
 #define kMaxPhotoRotationInDegrees 20
+#define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
+#define kPhotoImportMaxDim (300 * [[UIScreen mainScreen] scale])
+#define kPDFImportMaxDim (400 * [[UIScreen mainScreen] scale])
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
 
 #define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
+
+#define RandomMod(a,b) (^float(NSInteger seed, int mod){srand((unsigned)seed); int output = (rand() % mod); srand((unsigned)time(NULL)); return output;})(a, b)
 
 // cache sizes
 #define kMMLoadImageCacheSize 10

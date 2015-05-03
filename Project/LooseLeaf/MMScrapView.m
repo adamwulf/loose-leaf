@@ -507,7 +507,29 @@
 
 -(void) saveScrapToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
 //    DebugLog(@"asking scrap %@ to save", scrapState.uuid);
-    [scrapState saveScrapStateToDisk:doneSavingBlock];
+    if(scrapState){
+        [scrapState saveScrapStateToDisk:doneSavingBlock];
+    }else{
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        NSLog(@"**********************************");
+        NSLog(@"**********************************");
+        NSLog(@"********************************** HANG!!!!!!!");
+        NSLog(@"**********************************");
+        NSLog(@"**********************************");
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        NSLog(@"********************************************************");
+        @throw [NSException exceptionWithName:@"ScrapSaveException" reason:@"saving scrap without a state" userInfo:nil];
+        //
+        // i think the right answer here is to just call the doneSavingBlock()
+        // but i'm having trouble reproducing this code path.
+//        doneSavingBlock(NO);
+    }
 }
 
 
@@ -559,62 +581,65 @@
     CGSize stampSize = otherDrawableView.pagePtSize;
     stampSize.width *= otherDrawableView.scale;
     stampSize.height *= otherDrawableView.scale;
-    [JotGLContext pushCurrentContext:otherDrawableView.context];
+    __block JotGLTexture* otherTexture = nil;
+    __block CGPoint p1 = CGPointZero;
+    __block CGPoint p2 = CGPointZero;
+    __block CGPoint p3 = CGPointZero;
+    __block CGPoint p4 = CGPointZero;
+    [otherDrawableView.context runBlock:^{
+        otherTexture = [otherDrawableView generateTexture];
+        
+        // opengl coordinates
+        // when a texture is drawn, it's drawn in these coordinates
+        // from coregraphics top left counter clockwise around.
+        //    { 0.0, fullPixelSize.height},
+        //    { fullPixelSize.width, fullPixelSize.height},
+        //    { 0.0, 0.0},
+        //    { fullPixelSize.width, 0.0}
+        //
+        // this is equivelant to starting in top left (0,0) in
+        // core graphics. and moving clockwise.
+        
+        // get the coordinates of the new scrap in the old
+        // scrap's coordinate space.
+        CGRect bounds = self.state.drawableView.bounds;
+        p1 = [otherDrawableView convertPoint:bounds.origin fromView:self.state.drawableView];
+        p2 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:self.state.drawableView];
+        p3 = [otherDrawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:self.state.drawableView];
+        p4 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:self.state.drawableView];
+        
+        // normalize the coordinates to get texture
+        // coordinate space of 0 to 1
+        p1.x /= otherDrawableView.bounds.size.width;
+        p2.x /= otherDrawableView.bounds.size.width;
+        p3.x /= otherDrawableView.bounds.size.width;
+        p4.x /= otherDrawableView.bounds.size.width;
+        p1.y /= otherDrawableView.bounds.size.height;
+        p2.y /= otherDrawableView.bounds.size.height;
+        p3.y /= otherDrawableView.bounds.size.height;
+        p4.y /= otherDrawableView.bounds.size.height;
+        
+        // now flip from core graphics to opengl coordinates
+        CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
+        p1 = CGPointApplyAffineTransform(p1, flipTransform);
+        p2 = CGPointApplyAffineTransform(p2, flipTransform);
+        p3 = CGPointApplyAffineTransform(p3, flipTransform);
+        p4 = CGPointApplyAffineTransform(p4, flipTransform);
+        
+        // now normalize from the drawable view size
+        // vs its texture backing size
+        CGFloat widthRatio = (stampSize.width / otherTexture.pixelSize.width);
+        CGFloat heightRatio = (stampSize.height / otherTexture.pixelSize.height);
+        p1.x *= widthRatio;
+        p1.y *= heightRatio;
+        p2.x *= widthRatio;
+        p2.y *= heightRatio;
+        p3.x *= widthRatio;
+        p3.y *= heightRatio;
+        p4.x *= widthRatio;
+        p4.y *= heightRatio;
+    }];
     
-    JotGLTexture* otherTexture = [otherDrawableView generateTexture];
-    
-    // opengl coordinates
-    // when a texture is drawn, it's drawn in these coordinates
-    // from coregraphics top left counter clockwise around.
-    //    { 0.0, fullPixelSize.height},
-    //    { fullPixelSize.width, fullPixelSize.height},
-    //    { 0.0, 0.0},
-    //    { fullPixelSize.width, 0.0}
-    //
-    // this is equivelant to starting in top left (0,0) in
-    // core graphics. and moving clockwise.
-    
-    // get the coordinates of the new scrap in the old
-    // scrap's coordinate space.
-    CGRect bounds = self.state.drawableView.bounds;
-    CGPoint p1 = [otherDrawableView convertPoint:bounds.origin fromView:self.state.drawableView];
-    CGPoint p2 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, 0) fromView:self.state.drawableView];
-    CGPoint p3 = [otherDrawableView convertPoint:CGPointMake(0, bounds.size.height) fromView:self.state.drawableView];
-    CGPoint p4 = [otherDrawableView convertPoint:CGPointMake(bounds.size.width, bounds.size.height) fromView:self.state.drawableView];
-    
-    // normalize the coordinates to get texture
-    // coordinate space of 0 to 1
-    p1.x /= otherDrawableView.bounds.size.width;
-    p2.x /= otherDrawableView.bounds.size.width;
-    p3.x /= otherDrawableView.bounds.size.width;
-    p4.x /= otherDrawableView.bounds.size.width;
-    p1.y /= otherDrawableView.bounds.size.height;
-    p2.y /= otherDrawableView.bounds.size.height;
-    p3.y /= otherDrawableView.bounds.size.height;
-    p4.y /= otherDrawableView.bounds.size.height;
-    
-    // now flip from core graphics to opengl coordinates
-    CGAffineTransform flipTransform = CGAffineTransformMake(1, 0, 0, -1, 0, 1.0);
-    p1 = CGPointApplyAffineTransform(p1, flipTransform);
-    p2 = CGPointApplyAffineTransform(p2, flipTransform);
-    p3 = CGPointApplyAffineTransform(p3, flipTransform);
-    p4 = CGPointApplyAffineTransform(p4, flipTransform);
-    
-    // now normalize from the drawable view size
-    // vs its texture backing size
-    CGFloat widthRatio = (stampSize.width / otherTexture.pixelSize.width);
-    CGFloat heightRatio = (stampSize.height / otherTexture.pixelSize.height);
-    p1.x *= widthRatio;
-    p1.y *= heightRatio;
-    p2.x *= widthRatio;
-    p2.y *= heightRatio;
-    p3.x *= widthRatio;
-    p3.y *= heightRatio;
-    p4.x *= widthRatio;
-    p4.y *= heightRatio;
-    
-    [JotGLContext popCurrentContext];
-
     // now stamp our texture onto the other scrap using these
     // texture coordinates
     [self drawTexture:otherTexture atP1:p1 andP2:p2 andP3:p3 andP4:p4 withTextureSize:stampSize];
