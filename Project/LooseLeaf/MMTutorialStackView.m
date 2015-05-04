@@ -124,7 +124,7 @@
 }
 
 -(void) didFinishTutorial{
-    [self tutorialShouldClose:nil];
+    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
 }
 
 
