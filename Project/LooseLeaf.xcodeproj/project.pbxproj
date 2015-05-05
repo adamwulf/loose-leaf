@@ -176,6 +176,7 @@
 		6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
+		665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 665ACB821AF84BCA00A53FCA /* NSString+Contains.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
 		665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593617BD7CD3006DECBF /* PolygonTool.m */; };
@@ -804,6 +805,8 @@
 		6653B8A8195CC7AD001C6E15 /* Documents */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Documents; path = "../../new-user-content.xcappdata/AppData/Documents"; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
+		665ACB811AF84BCA00A53FCA /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
+		665ACB821AF84BCA00A53FCA /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
 		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		665C593217BD7C42006DECBF /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
 		665C593317BD7C42006DECBF /* Tool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tool.m; sourceTree = "<group>"; };
@@ -1530,6 +1533,8 @@
 				668D19DB19F8572700A65DCF /* UIApplication+Version.m */,
 				66343C691AC088D300801962 /* NSString+URLEncode.h */,
 				66343C6A1AC088D300801962 /* NSString+URLEncode.m */,
+				665ACB811AF84BCA00A53FCA /* NSString+Contains.h */,
+				665ACB821AF84BCA00A53FCA /* NSString+Contains.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -3774,6 +3779,7 @@
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
+				665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
