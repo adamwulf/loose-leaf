@@ -147,6 +147,8 @@ dispatch_queue_t importThumbnailQueue;
     return drawableView.userInteractionEnabled;
 }
 
+
+    
 -(void) generateDebugView:(BOOL)create{
     CheckMainThread;
     if(create){

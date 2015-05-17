@@ -183,6 +183,7 @@
 		6655735F1AF6D43000969E63 /* MPUITableViewBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = 665573591AF6D43000969E63 /* MPUITableViewBinding.m */; };
 		665573611AF6D45000969E63 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 665573601AF6D45000969E63 /* Media.xcassets */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
+		665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 665ACB821AF84BCA00A53FCA /* NSString+Contains.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
 		665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593617BD7CD3006DECBF /* PolygonTool.m */; };
@@ -824,6 +825,8 @@
 		665573601AF6D45000969E63 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = ../../Submodules/mixpanel/Mixpanel/Media.xcassets; sourceTree = "<group>"; };
 		6655E924176291C800E4F36A /* MMScissorButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScissorButton.h; sourceTree = "<group>"; };
 		6655E925176291C800E4F36A /* MMScissorButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScissorButton.m; sourceTree = "<group>"; };
+		665ACB811AF84BCA00A53FCA /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
+		665ACB821AF84BCA00A53FCA /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
 		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		665C593217BD7C42006DECBF /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
 		665C593317BD7C42006DECBF /* Tool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tool.m; sourceTree = "<group>"; };
@@ -1047,6 +1050,7 @@
 		667EF0C819A54F2500B1A38D /* icloud-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icloud-share@2x.png"; sourceTree = "<group>"; };
 		667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitButton.h; sourceTree = "<group>"; };
 		667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitButton.m; sourceTree = "<group>"; };
+		667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Loose-Leaf-Icon7@2x.png"; sourceTree = SOURCE_ROOT; };
 		6682FEC11A8DB21800187325 /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/ClippingBezier-gcinlesstmdcbyecupfxufnlcfyq/Build/Products/Debug-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
 		6682FEF31A8DB41700187325 /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
 		6688D01D1A9BE5500084CA06 /* MMStopWatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStopWatch.h; sourceTree = "<group>"; };
@@ -1549,6 +1553,8 @@
 				668D19DB19F8572700A65DCF /* UIApplication+Version.m */,
 				66343C691AC088D300801962 /* NSString+URLEncode.h */,
 				66343C6A1AC088D300801962 /* NSString+URLEncode.m */,
+				665ACB811AF84BCA00A53FCA /* NSString+Contains.h */,
+				665ACB821AF84BCA00A53FCA /* NSString+Contains.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2997,6 +3003,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
 				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
 				665245321996D9E700C36609 /* AFNetworking */,
 				6653B8A7195CC79A001C6E15 /* Default user content */,
@@ -3566,7 +3573,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "GIT_RELEASE_VERSION=`git describe --tags`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $GIT_RELEASE_VERSION\"";
+			shellScript = "GIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\nVERSION_FOR_SETTINGS=\"${GIT_RELEASE_SHORT_VERSION} (${GIT_RELEASE_VERSION})\"\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $VERSION_FOR_SETTINGS\"";
 		};
 		668DAF0E1AF6B6F40061BC1D /* Hockey Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3594,7 +3601,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
+			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\n# GIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n# GIT_RELEASE_VERSION=`git rev-parse --short HEAD`\n# GIT_RELEASE_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3845,6 +3852,7 @@
 				667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
+				665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
@@ -4068,8 +4076,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/JotUI/JotTouchSDK",
@@ -4093,7 +4099,6 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
-				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -4106,8 +4111,6 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/JotUI/JotTouchSDK",
@@ -4125,7 +4128,6 @@
 					"-lstdc++",
 				);
 				PRODUCT_NAME = LooseLeaf;
-				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
