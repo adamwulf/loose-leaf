@@ -499,7 +499,7 @@
                             //
                             // now wait for the save + all blocks to complete
                             // and ensure no pending saves
-                            [[self.scrapsOnPaperState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
+//                            [[self.scrapsOnPaperState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
                         }else{
                             //                    DebugLog(@"disrespect to page state saves time");
                         }
@@ -520,13 +520,15 @@
                 // now that we've edited the scrap state
                 // of the page, we need to save it to disk
                 // if we respect it
-//                if(respectOthers){
-//                    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-//                    [self saveToDisk:^(BOOL didSaveEdits) {
-//                        dispatch_semaphore_signal(sema1);
-//                    }];
-//                    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-//                }
+                if(respectOthers){
+                    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self saveToDisk:^(BOOL didSaveEdits) {
+                            dispatch_semaphore_signal(sema1);
+                        }];
+                    });
+                    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+                }
             }
             
             

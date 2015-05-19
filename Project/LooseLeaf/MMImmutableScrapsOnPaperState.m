@@ -66,9 +66,6 @@
 //                hadAnyEditsToSaveAtAll = hadAnyEditsToSaveAtAll || hadEditsToSave;
                 if(savedScraps == [allScrapsForPage count]){
                     // just saved the last scrap, signal
-#ifdef DEBUG
-[NSThread sleepForTimeInterval:3];
-#endif
                     dispatch_semaphore_signal(sema1);
                 }
             };
