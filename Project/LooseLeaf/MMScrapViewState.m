@@ -406,21 +406,17 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     __block BOOL doneSavingBlockResult = YES;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
-                        NSLog(@"*** saving scrap view state on main thread %p", self);
                         @autoreleasepool {
                             if(self.isForgetful){
                                 DebugLog(@"forget: %@ skipping scrap state save2", self.uuid);
                                 doneSavingBlockResult = NO;
-                                NSLog(@"*** done1 %p", self);
                                 dispatch_semaphore_signal(sema1);
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
-                                NSLog(@"*** if1 %p", self);
 //                                DebugLog(@"(%@) saving edits2: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
 
                                 if([drawableViewState hasEditsToSave]){
-                                    NSLog(@"*** if2 %p", self);
 //                                    DebugLog(@"(%@) saving strokes: %d", uuid, [drawableViewState hasEditsToSave]);
                                     // now export the drawn content. this will create an immutable state
                                     // object and export in the background. this means that everything at this
@@ -448,7 +444,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                         dispatch_semaphore_signal(sema1);
                                     }];
                                 }else if(backingImageHolder.backingViewHasChanged){
-                                    NSLog(@"*** elseif2 %p", self);
 //                                    DebugLog(@"(%@) no stroke edits, only saving background view: %d", uuid, [drawableViewState hasEditsToSave]);
                                     // if we dont' have any pen edits in the drawableViewState,
                                     // but we do have background changes to save
@@ -456,13 +451,11 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                                     savePropertiesToDisk(lastSavedUndoHash, bezierPath, backingImageHolder, self.scrapPropertiesPlistPath);
                                     dispatch_semaphore_signal(sema1);
                                 }else{
-                                    NSLog(@"*** else2 %p", self);
                                     // nothing new to save
 //                                    DebugLog(@"(%@) nothing new to save: %d %d", uuid, drawableViewState.hasEditsToSave, backingImageHolder.backingViewHasChanged);
                                     dispatch_semaphore_signal(sema1);
                                 }
                             }else{
-                                NSLog(@"*** else1 %p", self);
                                 // nothing new to save
                                 if(!drawableView && ![drawableViewState hasEditsToSave]){
 //                                    DebugLog(@"(%@) no drawable view or edits", uuid);
@@ -478,7 +471,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                             }
                         }
                     }];
-                    NSLog(@"** waiting for scrap jotview to save %p", self);
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
 //                    dispatch_release(sema1); ARC handles this
 //                    DebugLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
