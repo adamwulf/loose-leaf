@@ -506,12 +506,27 @@
                     }
                 };
                 if([self.scrapsOnPaperState isStateLoaded]){
+                    //
+                    // if the state is already loaded, then we shouldn't force save it
+                    // to disk, b/c it'll be saving to disk anyways, we should ask it
+                    // to save to disk async
                     dispatch_sync([MMScrapCollectionState importExportStateQueue], removeFromScrapsOnPaperState);
                 }else{
                     [self performBlockForUnloadedScrapStateSynchronously:^{
                         dispatch_sync([MMScrapCollectionState importExportStateQueue], removeFromScrapsOnPaperState);
                     } andImmediatelyUnloadState:YES andSavePaperState:respectOthers];
                 }
+                //
+                // now that we've edited the scrap state
+                // of the page, we need to save it to disk
+                // if we respect it
+//                if(respectOthers){
+//                    dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
+//                    [self saveToDisk:^(BOOL didSaveEdits) {
+//                        dispatch_semaphore_signal(sema1);
+//                    }];
+//                    dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
+//                }
             }
             
             

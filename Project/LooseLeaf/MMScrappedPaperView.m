@@ -77,7 +77,7 @@
 
 -(dispatch_queue_t) serialBackgroundQueue{
     if(!serialBackgroundQueue){
-        serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
+        serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.serialBackgroundQueue", DISPATCH_QUEUE_SERIAL);
         dispatch_queue_set_specific(serialBackgroundQueue, kSerialQueueIdentifier, (void *)kSerialQueueIdentifier, NULL);
     }
     return serialBackgroundQueue;
