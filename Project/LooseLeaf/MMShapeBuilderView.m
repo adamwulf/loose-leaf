@@ -112,8 +112,8 @@ static MMShapeBuilderView* staticShapeBuilder = nil;
             
             if(!CGPointEqualToPoint(p3, CGPointZero)){
                 // we have a p3 and a p4
-                CGPoint result = Intersection3(p1,p2,p4,p3);
-                if(!CGPointEqualToPoint(result, CGNotFoundPoint)){
+                CGPoint result = lineSegmentIntersection(p1,p2,p4,p3);
+                if(!CGPointEqualToPoint(result, CGPointNotFound)){
                     if(CGPointEqualToPoint(result, p1) ||
                        CGPointEqualToPoint(result, p3)){
                         // noop

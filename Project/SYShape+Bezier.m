@@ -8,7 +8,6 @@
 
 #import "SYShape+Bezier.h"
 #import <ClippingBezier/ClippingBezier.h>
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 
 @implementation SYShape (Bezier)
