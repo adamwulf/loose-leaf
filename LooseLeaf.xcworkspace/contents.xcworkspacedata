@@ -20,9 +20,6 @@
       location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Submodules/ClippingBezier/ClippingBezier.xcodeproj">
    </FileRef>
    <FileRef

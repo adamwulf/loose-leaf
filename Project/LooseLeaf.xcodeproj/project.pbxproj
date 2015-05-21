@@ -386,7 +386,6 @@
 		66ACECE819D4D571000EA792 /* MMPhotoOnDisk.m in Sources */ = {isa = PBXBuildFile; fileRef = 66ACECE719D4D571000EA792 /* MMPhotoOnDisk.m */; };
 		66AE5AA817F4D064009F82B6 /* MMScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AE5AA717F4D064009F82B6 /* MMScrapsOnPaperState.m */; };
 		66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66AF94FC1905956C004818F8 /* MMPageCacheManager.m */; };
-		66AFAD7C1A8DE85900FD0263 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AFAD7B1A8DE85900FD0263 /* DrawKit-iOS.framework */; };
 		66AFAD7E1A8DE8BB00FD0263 /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AFAD7D1A8DE8BB00FD0263 /* PerformanceBezier.framework */; };
 		66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B0FA5F17FB68410079E7A3 /* MMScrapViewState.m */; };
 		66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66B21A55175AFCA70049F1AF /* MMHandButton.m */; };
@@ -1428,7 +1427,6 @@
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */,
 				6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */,
-				66AFAD7C1A8DE85900FD0263 /* DrawKit-iOS.framework in Frameworks */,
 				6682FEC21A8DB21800187325 /* ClippingBezier.framework in Frameworks */,
 				66AFAD7E1A8DE8BB00FD0263 /* PerformanceBezier.framework in Frameworks */,
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
