@@ -18,17 +18,46 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        [albumListScrollView removeFromSuperview];
+        albumListScrollView = nil;
+        
+        photoListScrollView.alpha = 1;
     }
     return self;
 }
 
 -(void) reset:(BOOL)animated{
-    if([self hasPermission]){
-        [super reset:animated];
-    }else{
-        albumListScrollView.alpha = 0;
-        photoListScrollView.alpha = 1;
+    // noop
+//    if([self hasPermission]){
+//        [super reset:animated];
+//    }else{
+//        albumListScrollView.alpha = 0;
+//        photoListScrollView.alpha = 1;
+//    }
+}
+
+-(void) show:(BOOL)animated{
+    if(isShowing){
+        [photoListScrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+        return;
     }
+    [super show:animated];
+    
+    albumListScrollView.alpha = 0;
+    photoListScrollView.alpha = 1;
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
+    
+    currentAlbum = [[[MMPhotoManager sharedInstance] albums] firstObject];
+    [self doneLoadingPhotoAlbums];
+    [self updatePhotoRotation:NO];
+}
+
+-(void) hide:(BOOL)animated{
+    [super hide:animated];
+    isShowing = NO;
+    
+    albumListScrollView.alpha = 0;
+    photoListScrollView.alpha = 1;
 }
 
 -(BOOL) hasPermission{

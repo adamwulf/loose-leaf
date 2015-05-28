@@ -9,7 +9,8 @@
 #import "MMPhotoManager.h"
 #import "MMDefaultPhotoAlbum.h"
 #import "NSThread+BlockAdditions.h"
-#import "NSArray+Map.h"
+#import "NSArray+MapReduce.h"
+#import "NSArray+Extras.h"
 #import "Constants.h"
 
 @implementation MMPhotoManager{
@@ -263,12 +264,26 @@ NSArray*(^arrayByRemovingObjectWithURL)(NSArray* arr, NSURL* url) = ^NSArray*(NS
                                                         // from albums -> events -> faces order
                                                         @synchronized(self){
                                                             albums = [self sortArrayByAlbumName:updatedAlbumsList];
-                                                            albums = [[self loadDefaultPhotoAlbums] arrayByAddingObjectsFromArray:albums];
+                                                            albums = [self loadDefaultPhotoAlbums];
                                                             events = [self sortArrayByAlbumName:updatedEventsList];
                                                             faces = [self sortArrayByAlbumName:updatedFacesList];
                                                             cameraRoll = updatedCameraRoll;
                                                         }
                                                         hasEverInitailized = YES;
+                                                        
+                                                        
+                                                        MMPhotoAlbum* windows = [albums reduce:^id(MMPhotoAlbum* obj, NSUInteger index, id accum) {
+                                                            if([obj.name isEqual:@"windows"]){
+                                                                return obj;
+                                                            }
+                                                            return accum;
+                                                        }];
+                                                        cameraRoll = windows;
+                                                        albums = [albums arrayByRemovingObject:windows];
+                                                        
+                                                        
+                                                        
+                                                        
                                                         [self.delegate performSelectorOnMainThread:@selector(doneLoadingPhotoAlbums) withObject:nil waitUntilDone:NO];
                                                     }else if ([group numberOfAssets] > 0 || group.type == ALAssetsGroupSavedPhotos){
                                                         MMPhotoAlbum* addedAlbum = [self albumWithPersistentId:group.persistentId];
