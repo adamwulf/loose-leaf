@@ -804,7 +804,7 @@
             // track if they cut existing scraps
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
         }
-        if(!hasBuiltAnyScraps && [scissorPath isClosed]){
+        if(NO && !hasBuiltAnyScraps && [scissorPath isClosed]){
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
             DebugLog(@"didn't cut any scraps, so make one");
