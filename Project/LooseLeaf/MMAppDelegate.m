@@ -51,7 +51,7 @@
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #else
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"54781a599e1488769e5d6df4c765311b"];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"LIVE_ID"];
     [[BITHockeyManager sharedHockeyManager] startManager];
 #endif
     [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
