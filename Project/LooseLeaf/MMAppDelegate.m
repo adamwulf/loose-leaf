@@ -23,7 +23,6 @@
 #import <JotUI/JotUI.h>
 #import <FacebookSDK/FacebookSDK.h>
 #import "MMUnknownObject.h"
-#import <HockeySDK/HockeySDK.h>
 
 
 @implementation MMAppDelegate{
@@ -41,12 +40,6 @@
 {
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
-
-    
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"8433a930fcfe664e2f7a87337f0c5cab"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-    [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
 
     
     
@@ -69,7 +62,7 @@
     
     [[Crashlytics sharedInstance] setDelegate:self];
     [Fabric with:@[CrashlyticsKit, TwitterKit]];
-    
+
     [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
     [FBAppEvents activateApp];
     
