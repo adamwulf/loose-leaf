@@ -36,13 +36,13 @@
 
 -(UIImage*) aspectRatioThumbnail{
     if(!thumb){
-        thumb = [self aspectThumbnailWithMaxPixelSize:100];
+        thumb = [self aspectThumbnailWithMaxPixelSize:250];
     }
     return thumb;
 }
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
-    return [[JotDiskAssetManager imageWithContentsOfFile:pathToPhoto] resizedImage:[self sizeForMaxDim:maxDim] interpolationQuality:kCGInterpolationMedium];
+    return [[JotDiskAssetManager imageWithContentsOfFile:pathToPhoto] resizedImage:[self sizeForMaxDim:maxDim] interpolationQuality:kCGInterpolationHigh];
 }
 
 -(NSURL*) fullResolutionURL{

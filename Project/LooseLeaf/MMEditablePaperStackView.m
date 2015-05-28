@@ -93,14 +93,14 @@
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         pencilTool.delegate = self;
-        [self addSubview:pencilTool];
+//        [self addSubview:pencilTool];
         buttons[2].button = (__bridge void *)(pencilTool.pencilButton);
         buttons[2].originalRect = [pencilTool convertRect:pencilTool.pencilButton.frame toView:self];
         
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
         [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:eraserButton];
+//        [self addSubview:eraserButton];
         buttons[3].button = (__bridge void *)(eraserButton);
         buttons[3].originalRect = eraserButton.frame;
         
@@ -125,7 +125,7 @@
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
         handButton.delegate = self;
         [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:handButton];
+//        [self addSubview:handButton];
         buttons[6].button = (__bridge void *)(handButton);
         buttons[6].originalRect = handButton.frame;
 
@@ -133,7 +133,7 @@
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:rulerButton];
+//        [self addSubview:rulerButton];
         buttons[7].button = (__bridge void *)(rulerButton);
         buttons[7].originalRect = rulerButton.frame;
 
