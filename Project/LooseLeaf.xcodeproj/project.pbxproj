@@ -302,6 +302,7 @@
 		6677C5911AAB778E00B2E46C /* MMCameraListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */; };
 		6677C5951AAB9A7000B2E46C /* MMDeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5941AAB9A7000B2E46C /* MMDeleteButton.m */; };
 		667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AA41E19E33342006549EE /* MMPolaroidsView.m */; };
+		667AB1281B17904F00319367 /* MMPhotosPermissionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */; };
 		667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A119E5C81B0063DD51 /* MMScrapViewState+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		667AE6A819E5D02A0063DD51 /* MMExportablePaperView+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6A719E5D02A0063DD51 /* MMExportablePaperView+Trash.m */; };
 		667AE6AB19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AE6AA19E5D0C50063DD51 /* MMPageUndoRedoManager+Trash.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -331,7 +332,6 @@
 		6688D1E91A99508700EB17EC /* MMTutorialView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6688D1E81A99508700EB17EC /* MMTutorialView.m */; };
 		668D19D919F781EB00A65DCF /* MMCloudAvatarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */; };
 		668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 668D19DB19F8572700A65DCF /* UIApplication+Version.m */; };
-		668DAF1B1AF6BAE90061BC1D /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 668DAF191AF6BABB0061BC1D /* HockeySDKResources.bundle */; };
 		6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */; };
 		6690EF1717CC6F710009A0AC /* MMDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6690EF1617CC6F710009A0AC /* MMDotView.m */; };
 		669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 669115A71AE8811C00C4FC89 /* MMLoopView.m */; };
@@ -447,6 +447,7 @@
 		66D0A8C81A6454600003BBF7 /* MMDrawingGestureShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8C71A6454600003BBF7 /* MMDrawingGestureShadow.m */; };
 		66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D0A8CA1A64684A0003BBF7 /* MMTwoFingerPanShadow.m */; };
 		66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D33F4B15A6408A0044C809 /* MMShadowedView.m */; };
+		66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66D4FE6818DCA6950010CCBF /* Crashlytics.framework */; };
 		66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D6E2371AB74C0D00510CA3 /* MMPhotosListLayout.m */; };
 		66D7496318A6DB010015650E /* MMDrawingTouchGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */; };
 		66DA827F1ABE18CD00E3314A /* MMTutorialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 66DA827E1ABE18CD00E3314A /* MMTutorialManager.m */; };
@@ -469,7 +470,6 @@
 		66E2240419D633E6000FCA96 /* ios8-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240319D633E6000FCA96 /* ios8-settings-camera@2x.png */; };
 		66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240519D637AD000FCA96 /* ios7-settings-camera.png */; };
 		66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240719D637B2000FCA96 /* ios7-settings-camera@2x.png */; };
-		66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 66E2240A19D63B8B000FCA96 /* MMPhotosPermissionCell.m */; };
 		66E2240D19D645BD000FCA96 /* ios8-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240C19D645BD000FCA96 /* ios8-settings-photos.png */; };
 		66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */; };
 		66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */ = {isa = PBXBuildFile; fileRef = 66E2241019D6463F000FCA96 /* ios7-settings-photos.png */; };
@@ -1080,9 +1080,6 @@
 		668D19D819F781EB00A65DCF /* MMCloudAvatarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudAvatarButton.m; sourceTree = "<group>"; };
 		668D19DA19F8572700A65DCF /* UIApplication+Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Version.h"; sourceTree = "<group>"; };
 		668D19DB19F8572700A65DCF /* UIApplication+Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Version.m"; sourceTree = "<group>"; };
-		668DAF161AF6BABB0061BC1D /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
-		668DAF181AF6BABB0061BC1D /* HockeySDK.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
-		668DAF191AF6BABB0061BC1D /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBubbleButton.h; sourceTree = "<group>"; };
 		6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBubbleButton.m; sourceTree = "<group>"; };
 		6690EF1517CC6F710009A0AC /* MMDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDotView.h; sourceTree = "<group>"; };
@@ -1474,6 +1471,7 @@
 				66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */,
 				665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */,
 				667EF0C519A5401400B1A38D /* CloudKit.framework in Frameworks */,
+				66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
 				6695B6E6175008840069E61F /* CoreBluetooth.framework in Frameworks */,
@@ -2514,25 +2512,6 @@
 			name = TutorialView;
 			sourceTree = "<group>";
 		};
-		668DAF151AF6BABB0061BC1D /* HockeySDK.embeddedframework */ = {
-			isa = PBXGroup;
-			children = (
-				668DAF161AF6BABB0061BC1D /* HockeySDK.framework */,
-				668DAF171AF6BABB0061BC1D /* Resources */,
-			);
-			name = HockeySDK.embeddedframework;
-			path = "../Frameworks/HockeySDK-iOS/HockeySDK.embeddedframework";
-			sourceTree = "<group>";
-		};
-		668DAF171AF6BABB0061BC1D /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				668DAF181AF6BABB0061BC1D /* HockeySDK.xcconfig */,
-				668DAF191AF6BABB0061BC1D /* HockeySDKResources.bundle */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
 		669115A21AE87E5800C4FC89 /* MMLoopView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3012,7 +2991,6 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				668DAF151AF6BABB0061BC1D /* HockeySDK.embeddedframework */,
 				66150768178333D500B181F3 /* libz.dylib */,
 				66AFAD7D1A8DE8BB00FD0263 /* PerformanceBezier.framework */,
 				66AFAD7B1A8DE85900FD0263 /* DrawKit-iOS.framework */,
@@ -3403,9 +3381,9 @@
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
-				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
-				6673C684182E0EA0005CEFAF /* Version into Settings Bundle */,
-				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
+				66C0C9D217838C91009491B3 /* ShellScript */,
+				6673C684182E0EA0005CEFAF /* ShellScript */,
+				6616CCCD18B6AD7800CAD0F3 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3594,7 +3572,6 @@
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
-				668DAF1B1AF6BAE90061BC1D /* HockeySDKResources.bundle in Resources */,
 				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3602,14 +3579,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */ = {
+		6616CCCD18B6AD7800CAD0F3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Crashlytics Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3629,28 +3605,26 @@
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\n\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle/Root.plist\"\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle\"\n";
 		};
-		6673C684182E0EA0005CEFAF /* Version into Settings Bundle */ = {
+		6673C684182E0EA0005CEFAF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Version into Settings Bundle";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "GIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\nVERSION_FOR_SETTINGS=\"${GIT_RELEASE_SHORT_VERSION} (${GIT_RELEASE_VERSION})\"\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $VERSION_FOR_SETTINGS\"";
 		};
-		66C0C9D217838C91009491B3 /* Git Version into Info.plist */ = {
+		66C0C9D217838C91009491B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Git Version into Info.plist";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3667,6 +3641,7 @@
 			files = (
 				665245671996DAB800C36609 /* AFURLConnectionOperation.m in Sources */,
 				66A790B9196898A90037F01A /* MMUndoRedoGroupItem.m in Sources */,
+				667AB1281B17904F00319367 /* MMPhotosPermissionCell.m in Sources */,
 				66EC2FEC19DD06F6008F2BB6 /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
 				66DCFB971581BCEF00B4918C /* main.m in Sources */,
@@ -3801,8 +3776,6 @@
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
 				6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */,
 				66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanShadow.m in Sources */,
-				66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */,
-				66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,
@@ -4146,7 +4119,6 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -4181,7 +4153,6 @@
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Project",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
 					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/FacebookSDK",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
