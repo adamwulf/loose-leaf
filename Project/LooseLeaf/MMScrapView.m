@@ -118,7 +118,7 @@
         backgroundColorLayer.fillColor = [UIColor whiteColor].CGColor;
         backgroundColorLayer.masksToBounds = YES;
         backgroundColorLayer.frame = self.layer.bounds;
-        [self.layer addSublayer:backgroundColorLayer];
+//        [self.layer addSublayer:backgroundColorLayer];
         
         
         // only the path contents are opaque, but outside the path needs to be transparent
@@ -137,7 +137,7 @@
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
         borderView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [borderView setBezierPath:self.bezierPath];
-        [self addSubview:borderView];
+//        [self addSubview:borderView];
         borderView.hidden = YES;
         
         // now we need to show our shadow.
@@ -198,10 +198,10 @@
  */
 -(void) setShouldShowShadow:(BOOL)shouldShowShadow{
     if(shouldShowShadow){
-        self.layer.shadowPath = scrapState.bezierPath.CGPath;
+//        self.layer.shadowPath = scrapState.bezierPath.CGPath;
         [self setSelected:selected]; // reset shadow
-        self.layer.shadowOpacity = .65;
-        self.layer.shadowOffset = CGSizeMake(0, 0);
+//        self.layer.shadowOpacity = .65;
+//        self.layer.shadowOffset = CGSizeMake(0, 0);
         borderView.hidden = YES;
     }else{
         self.layer.shadowPath = nil;

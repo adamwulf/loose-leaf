@@ -123,7 +123,7 @@
     [darkerGreyBorder setFill];
     [scissorsPath fill];
 
-    [self drawDropshadowIfSelected];
+//    [self drawDropshadowIfSelected];
 
     [super drawRect:rect];
 }
