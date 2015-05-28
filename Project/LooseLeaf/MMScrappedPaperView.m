@@ -77,7 +77,7 @@
 
 -(dispatch_queue_t) serialBackgroundQueue{
     if(!serialBackgroundQueue){
-        serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.concurrentBackgroundQueue", DISPATCH_QUEUE_SERIAL);
+        serialBackgroundQueue = dispatch_queue_create("com.milestonemade.looseleaf.scraps.serialBackgroundQueue", DISPATCH_QUEUE_SERIAL);
         dispatch_queue_set_specific(serialBackgroundQueue, kSerialQueueIdentifier, (void *)kSerialQueueIdentifier, NULL);
     }
     return serialBackgroundQueue;
@@ -127,6 +127,7 @@
             drawableView.hidden = NO;
             shapeBuilderView.hidden = NO;
             cachedImgView.hidden = YES;
+            [self isShowingDrawableView:YES andIsShowingThumbnail:NO];
         }else if([self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
@@ -136,6 +137,7 @@
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
             cachedImgView.hidden = NO;
+            [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }else{
             // scrap state isn't loaded, so show
             // our thumbnail
@@ -145,6 +147,7 @@
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
             cachedImgView.hidden = NO;
+            [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
 //        DebugLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
@@ -153,12 +156,14 @@
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }else if(!isAskedToLoadThumbnail){
 //        DebugLog(@"default thumb for %@, HIDING thumb", self.uuid);
         [self setThumbnailTo:nil];
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:NO];
     }else{
 //        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
 //        DebugLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
@@ -167,8 +172,17 @@
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }
 }
+
+#pragma mark - Thumbnail helpers
+
+-(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail{
+    // noop
+}
+
+#pragma mark - Undo Redo
 
 -(void) undo{
     if(scrapsOnPaperState){
@@ -966,9 +980,6 @@
             thumbnail = scrap.state.activeThumbnailImage;
             if(!thumbnail){
                 thumbnail = [scrap.state oneOffLoadedThumbnailImage];
-                DebugLog(@"loaded thumbnail: %p", thumbnail);
-            }else{
-                DebugLog(@"had thumbnail: %p", thumbnail);
             }
         }
         
@@ -1023,18 +1034,21 @@
     return thumbSize;
 }
 
+-(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize{
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+}
+
 -(void) updateFullPageThumbnail:(MMImmutableScrapsOnPaperState*)immutableScrapState{
     @autoreleasepool {
-        NSLog(@"updating thumb for: %@", self.uuid);
         UIImage* thumb = [self synchronouslyLoadInkPreview];
         CGSize thumbSize = [self thumbnailSize];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, 0.0);
         
         // get context
         CGContextRef context = UIGraphicsGetCurrentContext();
-        
-        [[UIColor whiteColor] setFill];
-        CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+
+        [self drawPageBackgroundInContext:context forThumbnailSize:thumbSize];
         
         // drawing code comes here- look at CGContext reference
         // for available operations
@@ -1042,7 +1056,6 @@
         [thumb drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
         
         for(MMScrapView* scrap in immutableScrapState.scraps){
-            NSLog(@"drawing scrap: %@", scrap.uuid);
             [self drawScrap:scrap intoContext:context withSize:thumbSize];
         }
         
@@ -1114,6 +1127,11 @@
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     // track if all of our scraps have saved
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
+    
+    if(!sema1 || !sema2){
+        NSLog(@"what");
+        @throw [NSException exceptionWithName:@"SemaphoreException" reason:@"could not allocate semaphore" userInfo:nil];
+    }
 
     [self updateThumbnailVisibility];
     
@@ -1128,6 +1146,7 @@
     __block BOOL pageHadBeenChanged = NO;
     __block BOOL scrapsHadBeenChanged = NO;
     
+    NSLog(@"==== starting to save %@", self.uuid);
     // save our backing page
     [super saveToDiskHelper:^(BOOL hadEditsToSave){
         // NOTE!
@@ -1141,6 +1160,7 @@
         // after the signals, it'll be properly updated.
         pageHadBeenChanged = hadEditsToSave;
 //        DebugLog(@"ScrapPage notified of page state save at %lu (success %d)", (unsigned long)lastSavedPaperStateHash, hadEditsToSave);
+        NSLog(@"====== signaled page's drawable view saved for %@", self.uuid);
         dispatch_semaphore_signal(sema1);
     }];
     
@@ -1154,6 +1174,7 @@
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
                 lastSavedScrapStateHash = immutableScrapState.undoHash;
                 //            DebugLog(@"scrapsHadBeenChanged %d %lu",scrapsHadBeenChanged, (unsigned long)immutableScrapState.undoHash);
+                NSLog(@"====== signaled scrap collection saved for %@", self.uuid);
                 dispatch_semaphore_signal(sema2);
             }
         });
@@ -1164,8 +1185,10 @@
 
     dispatch_async([self serialBackgroundQueue], ^(void) {
         @autoreleasepool {
+            NSLog(@"====== waiting on %@ to save", self.uuid);
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
+            NSLog(@"==== done waiting on %@ to save", self.uuid);
             @synchronized(self){
                 hasPendingScrappedIconUpdate--;
 //                DebugLog(@"%@ ending save pre icon at %lu with %d pending saves", self, (unsigned long)immutableScrapState.undoHash, hasPendingScrappedIconUpdate);

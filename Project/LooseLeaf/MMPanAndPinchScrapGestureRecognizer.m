@@ -345,8 +345,6 @@ struct TouchInterval{
         if([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)){
             // two+ possible touches match this scrap
             self.scrap = _scrap;
-            DebugLog(@"panning scrap: %@", _scrap.state.uuid);
-            DebugLog(@"panned scrap is loaded/ing %d %d", _scrap.state.isScrapStateLoaded, _scrap.state.isScrapStateLoading);
             [validTouches addObjectsInSet:touchesInScrap];
             [possibleTouches removeObjectsInSet:touchesInScrap];
             [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];

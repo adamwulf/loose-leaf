@@ -290,6 +290,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                             thumb = [[MMLoadImageCache sharedInstance] imageAtPath:self.bundledThumbImageFile];
                         }
                         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self]];
+                    }else{
+                        NSLog(@"target was unloaded afterall %@", self.uuid);
                     }
                 }
             }
@@ -314,7 +316,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 -(void) unloadCachedScrapPreview{
-    DebugLog(@"unload thumb for %@", self.uuid);
     @synchronized(thumbnailView){
         if(!targetIsLoadedThumbnail){
             // already unloaded
@@ -322,6 +323,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         }
         targetIsLoadedThumbnail = NO;
         if(activeThumbnailImage){
+            DebugLog(@"unload thumb for %@", self.uuid);
             [activeThumbnailImage cancel];
             activeThumbnailImage = nil;
         }
@@ -401,13 +403,14 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 //                DebugLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
                 [JotViewStateProxy shouldPrintHasEdits:NO];
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
+                    __block BOOL doneSavingBlockResult = YES;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         @autoreleasepool {
                             if(self.isForgetful){
-//                                DebugLog(@"forget: %@ skipping scrap state save2", self.uuid);
-                                doneSavingBlock(NO);
-                                [lock unlock];
+                                DebugLog(@"forget: %@ skipping scrap state save2", self.uuid);
+                                doneSavingBlockResult = NO;
+                                dispatch_semaphore_signal(sema1);
                                 return;
                             }
                             if(drawableView && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
@@ -471,7 +474,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
 //                    dispatch_release(sema1); ARC handles this
 //                    DebugLog(@"(%@) done saving scrap: %d", uuid, (int)drawableView);
-                    if(doneSavingBlock) doneSavingBlock(YES);
+                    if(doneSavingBlock) doneSavingBlock(doneSavingBlockResult);
                 }else{
                     // sometimes, this method is called in very quick succession.
                     // that means that the first time it runs and saves, it'll

@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSlidingSidebarContainerView.h"
+#import "MMFullScreenSidebarContainingView.h"
 #import "MMShareItemDelegate.h"
 #import "MMCloudKitManagerDelegate.h"
 #import "MMVector.h"
 
-@interface MMShareSidebarContainerView : MMSlidingSidebarContainerView<MMShareItemDelegate>
+@interface MMShareSidebarContainerView : MMFullScreenSidebarContainingView<MMShareItemDelegate>
 
 @property (weak) NSObject<MMShareItemDelegate>* shareDelegate;
 

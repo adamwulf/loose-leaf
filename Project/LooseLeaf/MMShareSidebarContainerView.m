@@ -26,6 +26,8 @@
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
+#import "MMLargeTutorialSidebarButton.h"
+#import "MMTutorialManager.h"
 
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
@@ -34,6 +36,8 @@
     NSMutableArray* shareItems;
     
     MMCloudKitShareItem* cloudKitShareItem;
+    
+    MMLargeTutorialSidebarButton* tutorialButton;
 }
 
 @synthesize shareDelegate;
@@ -46,12 +50,12 @@
                                                      name:UIApplicationDidBecomeActiveNotification object:nil];
         
         CGRect scrollViewBounds = self.bounds;
-        scrollViewBounds.size.width = [sidebarContentView contentBounds].origin.x + [sidebarContentView contentBounds].size.width;
+        scrollViewBounds.size.width = [slidingSidebarView contentBounds].origin.x + [slidingSidebarView contentBounds].size.width;
         sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
-        buttonView = [[UIView alloc] initWithFrame:[sidebarContentView contentBounds]];
+        buttonView = [[UIView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         [sharingContentView addSubview:buttonView];
-        [sidebarContentView addSubview:sharingContentView];
+        [slidingSidebarView addSubview:sharingContentView];
         
         cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
         
@@ -72,8 +76,21 @@
 
         [self updateShareOptions];
         
+        
+        CGRect typicalBounds = [[shareItems lastObject] button].bounds;
+        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray *{
+            return [[MMTutorialManager sharedInstance] shareTutorialSteps];
+        }];
+        tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width/2, sharingContentView.bounds.size.height - 100);
+        [tutorialButton addTarget:self action:@selector(startWatchingExportTutorials) forControlEvents:UIControlEventTouchUpInside];
+        [sharingContentView addSubview:tutorialButton];
+        
     }
     return self;
+}
+
+-(void) startWatchingExportTutorials{
+    [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
 }
 
 -(CGFloat) buttonWidth{
@@ -87,6 +104,8 @@
     CGRect buttonBounds = buttonView.bounds;
     buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height + kWidthOfSidebarButtonBuffer;
     buttonBounds.size.height = buttonWidth + kWidthOfSidebarButtonBuffer; // includes spacing buffer
+    buttonBounds.origin.x += 2*kWidthOfSidebarButtonBuffer;
+    buttonBounds.size.width -= 2*kWidthOfSidebarButtonBuffer;
     return buttonBounds;
 }
 
@@ -131,6 +150,8 @@
     }
     [activeOptionsView reset];
     [activeOptionsView show];
+    // hide tutorial if we have an options view visible
+    tutorialButton.hidden = (BOOL)activeOptionsView;
     [super show:animated];
 }
 
@@ -161,6 +182,8 @@
     if(activeOptionsView){
         [activeOptionsView removeFromSuperview];
         [activeOptionsView reset];
+        activeOptionsView = nil;
+        tutorialButton.hidden = NO;
     }
     NSObject<MMShareItem>*shareItemForButton = nil;
     for (NSObject<MMShareItem>*shareItem in shareItems) {
@@ -233,13 +256,24 @@
                     shareItem.isShowingOptionsView = YES;
                 }
                 [sharingContentView addSubview:activeOptionsView];
+                tutorialButton.hidden = YES;
             }else{
                 activeOptionsView = nil;
+                tutorialButton.hidden = NO;
             }
             
             [shareDelegate mayShare:shareItem];
         }
     });
+}
+
+// called when a may share is cancelled
+-(void) wontShare:(NSObject<MMShareItem>*)shareItem{
+    // close out all of our sharing options views,
+    // if any
+    [self closeActiveSharingOptionsForButton:nil];
+    activeOptionsView = nil;
+    tutorialButton.hidden = NO;
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{

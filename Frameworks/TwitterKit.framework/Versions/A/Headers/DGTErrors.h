@@ -39,5 +39,37 @@ typedef NS_ENUM(NSInteger, DGTErrorCode) {
     /**
      * User entered incorrect pin number too many times.
      */
-    DGTErrorCodeUnableToAuthenticatePin = 4
+    DGTErrorCodeUnableToAuthenticatePin = 4,
+    
+    /**
+     * User canceled find contacts flow.
+     */
+    DGTErrorCodeUserCanceledFindContacts = 5,
+    
+    /**
+     * User did not grant Digits access to their Address Book.
+     */
+    DGTErrorCodeUserDeniedAddressBookAccess = 6,
+    
+    /**
+     * Failure to read from the AddressBook. 
+     * When ABAddressBookCreateWithOptions fails to return a proper AddressBook.
+     */
+    DGTErrorCodeFailedToReadAddressBook = 7,
+    
+    /**
+     * Something went wrong while uploading contacts.
+     */
+    DGTErrorCodeUnableToUploadContacts = 8,
+    
+    /**
+     * Something went wrong while deleting contacts.
+     */
+    DGTErrorCodeUnableToDeleteContacts = 9,
+    
+    /**
+     * Something went wrong while looking up contact matches.
+     */
+    DGTErrorCodeUnableToLookupContactMatches = 10
+
 };

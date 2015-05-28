@@ -17,6 +17,7 @@
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMDeletePageSidebarController.h"
 #import "MMPhotoManager.h"
+#import "MMTutorialStackView.h"
 #import "MMCloudKitImportExportView.h"
 
 @implementation MMLooseLeafViewController{
@@ -29,15 +30,6 @@
 
 - (id)init{
     if(self = [super init]){
-#ifdef DEBUG
-#ifdef DEBUGUSERDEFAULTS
-#if DEBUGUSERDEFAULTS
-        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
-        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-#endif
-#endif
-#endif
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
@@ -53,7 +45,7 @@
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
-        stackView = [[MMScrapPaperStackView alloc] initWithFrame:self.view.bounds];
+        stackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
 //        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
@@ -80,11 +72,13 @@
         NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
                                              to:language];
-        [[[Mixpanel sharedInstance] people] setOnce:@{kMPFirstLaunchDate : [NSDate date],
+        [[[Mixpanel sharedInstance] people] setOnce:@{kMPNewsletterStatus : @"Unknown",
+                                                      kMPHasFinishedTutorial : @(NO),
+                                                      kMPDurationWatchingTutorial: @(0),
+                                                      kMPFirstLaunchDate : [NSDate date],
                                                       kMPHasAddedPage : @(NO),
                                                       kMPHasZoomedToList : @(NO),
                                                       kMPHasReorderedPage : @(NO),
-                                                      kMPHasSeenCKTutorial : @(NO),
                                                       kMPHasBookTurnedPage : @(NO),
                                                       kMPHasShakeToReorder : @(NO),
                                                       kMPHasBezelledScrap : @(NO),
