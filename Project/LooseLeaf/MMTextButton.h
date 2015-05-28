@@ -9,7 +9,7 @@
 #import "MMDarkSidebarButton.h"
 #import <CoreText/CoreText.h>
 
-@interface MMTextButton : MMDarkSidebarButton{
+@interface MMTextButton : MMSidebarButton{
     NSString* letter;
     CGFloat pointSize;
     CTFontSymbolicTraits traits;
@@ -17,6 +17,8 @@
     CGFloat yOffset;
     UIFont* font;
 }
+
+@property (assign) BOOL inverted;
 
 - (id)initWithFrame:(CGRect)_frame andFont:(UIFont*)_font andLetter:(NSString*)_letter andXOffset:(CGFloat)_xOffset andYOffset:(CGFloat)_yOffset;
 

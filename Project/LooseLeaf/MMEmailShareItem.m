@@ -49,7 +49,7 @@
         @autoreleasepool {
             composer = [[MFMailComposeViewController alloc] init];
             [composer setMailComposeDelegate:self];
-            if([MFMailComposeViewController canSendMail]) {
+            if([MFMailComposeViewController canSendMail] && composer) {
                 [composer setSubject:@"Quick sketch from Loose Leaf"];
                 [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
                 [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
@@ -84,7 +84,7 @@
     }
     [button setNeedsDisplay];
     
-    if([MFMailComposeViewController canSendMail]) {
+    if([MFMailComposeViewController canSendMail] && [MFMailComposeViewController class]) {
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusEmail to:kMPShareStatusAvailable];
     }else{
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusEmail to:kMPShareStatusUnavailable];

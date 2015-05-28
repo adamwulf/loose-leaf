@@ -22,6 +22,8 @@
 
 -(void) mayShare:(NSObject<MMShareItem>*)shareItem;
 
+-(void) wontShare:(NSObject<MMShareItem>*)shareItem;
+
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
 
 @end

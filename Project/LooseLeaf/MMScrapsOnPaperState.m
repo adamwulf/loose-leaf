@@ -18,7 +18,6 @@
 #import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
 #import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -95,9 +94,6 @@
                 if(self.isForgetful){
                     return;
                 }
-//#ifdef DEBUG
-//                [NSThread sleepForTimeInterval:5];
-//#endif
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
                         DebugLog(@"MMScrapsOnPaperState bailing early");

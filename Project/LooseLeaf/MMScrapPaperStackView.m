@@ -35,6 +35,7 @@
 #import "MMStatTracker.h"
 #import <DrawKit-iOS/DrawKit-iOS.h>
 #import <PerformanceBezier/PerformanceBezier.h>
+#import "MMTutorialView.h"
 #import "MMPDFAlbum.h"
 #import "MMPDFPage.h"
 #import "MMImageInboxItem.h"
@@ -181,7 +182,6 @@
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
 
-    
 //        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(380, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
 //        debugImgView.layer.borderWidth = 1;
 //        debugImgView.layer.borderColor = [UIColor redColor].CGColor;
@@ -562,9 +562,9 @@
     
     CGRect scrapRect = CGRectZero;
     CGSize buttonSize = [bufferedImage visibleImageSize];
-    NSLog(@"imported button ratio %f", buttonSize.width / buttonSize.height);
+//    NSLog(@"imported button ratio %f", buttonSize.width / buttonSize.height);
     CGSize fullScaleSize = photo.fullResolutionSize;
-    NSLog(@"imported photo ratio %f", fullScaleSize.width / fullScaleSize.height);
+//    NSLog(@"imported photo ratio %f", fullScaleSize.width / fullScaleSize.height);
 
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
@@ -2063,6 +2063,10 @@ int skipAll = NO;
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
 //    DebugLog(@"may share %@", NSStringFromClass([shareItem class]));
+}
+
+-(void) wontShare:(NSObject<MMShareItem> *)shareItem{
+    // noop
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
