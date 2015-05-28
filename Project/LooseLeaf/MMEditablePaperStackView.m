@@ -108,7 +108,7 @@
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:scissorButton];
+//        [self addSubview:scissorButton];
         buttons[4].button = (__bridge void *)(scissorButton);
         buttons[4].originalRect = scissorButton.frame;
 
@@ -207,7 +207,7 @@
         self.delaysContentTouches = NO;
         
         
-        pencilTool.selected = YES;
+        scissorButton.selected = YES;
         handButton.selected = YES;
         
         [NSThread performBlockInBackground:^{

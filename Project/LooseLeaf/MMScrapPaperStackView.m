@@ -459,29 +459,8 @@
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
-    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotosTaken by:@(1)];
-    [[Mixpanel sharedInstance] track:kMPEventTakePhoto];
-    CGRect scrapRect = CGRectZero;
-    scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
-    scrapRect.size = cameraView.bounds.size;
-    UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
     
-    //
-    // to exactly align the scrap with a rotation,
-    // i would need to rotate it around its top left corner
-    // this is because we're creating the rect to align
-    // with the point tl above, which when converted
-    // into our coordinate system accounts for the view's
-    // rotation.
-    //
-    // so at this moment, we have a squared off CGRect
-    // that aligns it's top left corner to the rotated
-    // bufferedImage's top left corner
-    
-    
-    // max image size in any direction is 300pts
-    CGFloat maxDim = 600;
-    
+    CGFloat maxDim = 1024;
     CGSize fullScale = img.size;
     if(fullScale.width >= fullScale.height && fullScale.width > maxDim){
         fullScale.height = fullScale.height / fullScale.width * maxDim;
@@ -491,64 +470,24 @@
         fullScale.height = maxDim;
     }
     
-    CGFloat startingScale = scrapRect.size.width / fullScale.width;
-    
     UIImage* scrapBacking = [img resizedImage:CGSizeMake(ceilf(fullScale.width/2), ceilf(fullScale.height/2)) interpolationQuality:kCGInterpolationMedium];
-    
-    MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
-    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
-    [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:scrap.bezierPath.elementCount];
-    [scrapContainer addSubview:scrap];
-    
-    CGSize fullScaleScrapSize = scrapRect.size;
-    fullScaleScrapSize.width /= startingScale;
-    fullScaleScrapSize.height /= startingScale;
-    
-    // zoom the background in an extra pixel
-    // so that the border of the image exceeds the
-    // path of the scrap. this'll give us a nice smooth
-    // edge from the mask of the CAShapeLayer
-    CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0/scrapBacking.size.width; // extra pixel
-    
-    // add the background, and scale it so it fills the scrap
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
-    backgroundView.backgroundScale = scaleUpOfImage;
-    [scrap setBackgroundView:backgroundView];
 
-    // center the scrap on top of the camera view
-    // so we can slide it onto the page
-    scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
-    scrap.rotation = cameraView.rotation;
     
+    MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    page.isBrandNewPage = YES;
+    page.delegate = self;
+    [page setPageBackgroundTexture:scrapBacking];
+    [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+    [page updateThumbnailVisibility];
+    [hiddenStackHolder pushSubview:page];
+    [[visibleStackHolder peekSubview] enableAllGestures];
+    [self popTopPageOfHiddenStack];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotosTaken by:@(1)];
+    [[Mixpanel sharedInstance] track:kMPEventTakePhoto];
+
     [importImageSidebar hide:YES onComplete:nil];
-    
-    // hide the photo in the row
-    cameraView.alpha = 0;
-    
-    // bounce by 20px (10 on each side)
-    CGFloat bounceScale = 20 / MAX(fullScale.width, fullScale.height);
-    
-    [UIView animateWithDuration:.2
-                          delay:.1
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         scrap.center = [visibleStackHolder peekSubview].center;
-                         [scrap setScale:(1+bounceScale) andRotation:RandomPhotoRotation(rand())];
-                     }
-                     completion:^(BOOL finished){
-                         [UIView animateWithDuration:.1
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseIn
-                                          animations:^{
-                                              [scrap setScale:1];
-                                          }
-                                          completion:^(BOOL finished){
-                                              cameraView.alpha = 1;
-                                              [topPage.scrapsOnPaperState showScrap:scrap];
-                                              [topPage addUndoItemForAddedScrap:scrap];
-                                              [topPage saveToDisk:nil];
-                                          }];
-                     }];
 }
 
 -(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{

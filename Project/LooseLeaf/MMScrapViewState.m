@@ -556,6 +556,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                         }else{
                             // add our drawable view to our contents
                             drawableView = [[JotView alloc] initWithFrame:drawableBounds];
+                            drawableView.alpha = 0;
                         }
                     }
                 }];

@@ -206,7 +206,7 @@ static int totalBackgroundBytes;
         if([[NSFileManager defaultManager] fileExistsAtPath:self.bundledBackgroundJPGFile]){
             [[NSFileManager defaultManager] copyItemAtPath:self.bundledBackgroundJPGFile toPath:self.backgroundJPGFile error:nil];
         }else if(self.backingContentView.image){
-            [UIImageJPEGRepresentation(self.backingContentView.image, .9) writeToFile:self.backgroundJPGFile atomically:YES];
+            [UIImagePNGRepresentation(self.backingContentView.image) writeToFile:self.backgroundJPGFile atomically:YES];
         }
         self.backingViewHasChanged = NO;
     }
