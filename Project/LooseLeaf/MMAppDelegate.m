@@ -25,9 +25,6 @@
 #import "MMUnknownObject.h"
 #import <HockeySDK/HockeySDK.h>
 
-@interface MMAppDelegate ()<BITCrashManagerDelegate>
-
-@end
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
@@ -46,14 +43,9 @@
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
 
     
-#ifdef DEBUG
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"8433a930fcfe664e2f7a87337f0c5cab"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-#else
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"LIVE_ID"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-#endif
     [[BITHockeyManager sharedHockeyManager].crashManager setCrashManagerStatus: BITCrashManagerStatusAutoSend];
 
     
@@ -75,7 +67,8 @@
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
                                                         [MMAppDelegate userID], kMPID, nil]];
     
-    [Fabric with:@[TwitterKit]];
+    [[Crashlytics sharedInstance] setDelegate:self];
+    [Fabric with:@[CrashlyticsKit, TwitterKit]];
     
     [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
     [FBAppEvents activateApp];
@@ -328,55 +321,15 @@
     [[NSFileManager defaultManager] removeItemAtPath:pathOfLifecycleTrackingFile error:nil];
 }
 
-//#pragma mark - Crashlytics reporting
-//
-//-(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
-//    didRecieveReportFromCrashlytics = YES;
-//    
-//    DebugLog(@"Did Track Crash from Exception");
-//    DebugLog(@"==============================");
-//    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
-//    
-//    NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
-//    [crashProperties setObject:@"Exception" forKey:@"Cause"];
-//
-//    // set default values
-//    if([UIApplication bundleVersion]) [crashProperties setObject:[UIApplication bundleVersion] forKey:@"bundleVersion"];
-//    if([UIApplication bundleShortVersionString]) [crashProperties setObject:[UIApplication bundleShortVersionString] forKey:@"bundleShortVersionString"];
-//    [crashProperties setObject:[NSDate date] forKey:@"crashedOnDate"];
-//    if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
-//    if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
-//    
-//    // set crash specific values
-//    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
-//    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
-//    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
-//    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
-//    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
-//    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
-//    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
-//    
-//    NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
-//    [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-//        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
-//    }];
-//    
-//    @try{
-//        [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
-//    }@catch(id e){
-//        // noop
-//    }
-//}
+#pragma mark - Crashlytics reporting
 
-- (void)crashManagerWillSendCrashReport:(BITCrashManager *)crashManager{
+-(void) crashlytics:(Crashlytics *)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash{
     didRecieveReportFromCrashlytics = YES;
-
-    BITCrashDetails* crashDetails = crashManager.lastSessionCrashDetails;
     
     DebugLog(@"Did Track Crash from Exception");
     DebugLog(@"==============================");
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfCrashes by:@(1)];
-
+    
     NSMutableDictionary* crashProperties = [NSMutableDictionary dictionary];
     [crashProperties setObject:@"Exception" forKey:@"Cause"];
 
@@ -386,30 +339,26 @@
     [crashProperties setObject:[NSDate date] forKey:@"crashedOnDate"];
     if([UIDevice majorVersion]) [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
     if([UIDevice buildVersion]) [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
-
+    
     // set crash specific values
-//    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
-    if(crashDetails.incidentIdentifier) [crashProperties setObject:crashDetails.incidentIdentifier forKey:@"identifier"];
-    if(crashDetails.appBuild) [crashProperties setObject:crashDetails.appBuild forKey:@"bundleVersion"];
-//    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
-    if(crashDetails.crashTime) [crashProperties setObject:crashDetails.crashTime forKey:@"crashedOnDate"];
+    if(crash.customKeys) [crashProperties addEntriesFromDictionary:crash.customKeys];
+    if(crash.identifier) [crashProperties setObject:crash.identifier forKey:@"identifier"];
+    if(crash.bundleVersion) [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
+    if(crash.bundleShortVersionString) [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
+    if(crash.crashedOnDate) [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
+    if(crash.OSVersion) [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
+    if(crash.OSBuildVersion) [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
     
-    
-    if(crashDetails.osVersion) [crashProperties setObject:crashDetails.osVersion forKey:@"OSVersion"];
-    if(crashDetails.osBuild) [crashProperties setObject:crashDetails.osBuild forKey:@"OSBuildVersion"];
-
     NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
     [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
     }];
-
+    
     @try{
         [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
     }@catch(id e){
         // noop
     }
 }
-
-
 
 @end
