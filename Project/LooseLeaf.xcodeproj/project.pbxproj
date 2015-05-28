@@ -967,7 +967,6 @@
 		66684B3D182DA177005A27B4 /* GPC.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPC.license; sourceTree = "<group>"; };
 		66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIColorWithHex.license; sourceTree = "<group>"; };
 		66684B43182DAC9B005A27B4 /* CurveFit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CurveFit.license; sourceTree = "<group>"; };
-		66684B45182DACAE005A27B4 /* DrawKit.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = DrawKit.license; sourceTree = "<group>"; };
 		66684B47182DAD05005A27B4 /* 2Geom.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 2Geom.license; sourceTree = "<group>"; };
 		66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImageRoundedCorner.license; sourceTree = "<group>"; };
 		666E252E18F5D9F100C17295 /* MMFaceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFaceButton.h; sourceTree = "<group>"; };
@@ -2291,7 +2290,6 @@
 				66684B3D182DA177005A27B4 /* GPC.license */,
 				66684B3F182DAAC0005A27B4 /* UIColorWithHex.license */,
 				66684B43182DAC9B005A27B4 /* CurveFit.license */,
-				66684B45182DACAE005A27B4 /* DrawKit.license */,
 				66684B47182DAD05005A27B4 /* 2Geom.license */,
 				66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */,
 				66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */,
