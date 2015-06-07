@@ -133,9 +133,32 @@
 
 #pragma mark - Rotation Manager Delegate
 
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
+    [NSThread performBlockOnMainThread:^{
+        CGFloat rotationValue = [self sidebarButtonRotation];
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
+        addPageSidebarButton.transform = rotationTransform;
+        documentBackgroundSidebarButton.transform = rotationTransform;
+        helpButton.transform = rotationTransform;
+        helpButton.rotation = rotationValue;
+
+        // this'll let super's call run entirely on the main thread,
+        // instead both us + them adding blocks to the main thread's
+        // queue
+        [super didUpdateAccelerometerWithReading:currentRawReading];
+    }];
+}
+
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
     [tutorialView didRotateToIdealOrientation:orientation];
+    
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+        listViewTutorialButton.rotation = [self sidebarButtonRotation];
+        listViewTutorialButton.transform = rotationTransform;
+    }];
+    
 }
 
 #pragma mark - List View Tutorial
