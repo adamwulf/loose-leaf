@@ -296,7 +296,9 @@
     if(!longPressGesture.pinchedPage){
         [longPressGesture setEnabled:NO];
     }
-    [self moveAddButtonToBottom];
+    [UIView animateWithDuration:.3 animations:^{
+        [self moveAddButtonToBottom];
+    }];
     [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
 }
 
