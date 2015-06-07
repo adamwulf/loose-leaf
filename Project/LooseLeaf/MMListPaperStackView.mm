@@ -520,6 +520,18 @@
 }
 
 
+-(void) subclassBeforeTransitionToListView{
+    CGRect fr = [self frameForAddPageButton];
+    fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    addPageButtonInListView.frame = fr;
+    addPageButtonInListView.alpha = 0;
+}
+
+-(void) subclassDuringTransitionToListView{
+    addPageButtonInListView.alpha = 1;
+}
+
+
 /**
  * the user has scaled small enough with the top page
  * that we can take over and just animate the rest.
@@ -608,10 +620,7 @@
                 [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             }
         }
-        CGRect fr = [self frameForAddPageButton];
-        fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
-        addPageButtonInListView.frame = fr;
-        addPageButtonInListView.alpha = 0;
+        [self subclassBeforeTransitionToListView];
     };
     
     //
@@ -638,7 +647,7 @@
             }
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
-        addPageButtonInListView.alpha = 1;
+        [self subclassDuringTransitionToListView];
     };
 
     //

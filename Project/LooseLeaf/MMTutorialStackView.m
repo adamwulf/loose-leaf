@@ -167,6 +167,22 @@
     return [super contentHeightForAllPages] + 140;
 }
 
+-(void) subclassBeforeTransitionToListView{
+    [super subclassBeforeTransitionToListView];
+
+    listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 70);
+    CGRect fr = listViewTutorialButton.frame;
+    fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    listViewTutorialButton.frame = fr;
+    listViewTutorialButton.alpha = 0;
+}
+
+-(void) subclassDuringTransitionToListView{
+    [super subclassDuringTransitionToListView];
+    listViewTutorialButton.alpha = 1;
+}
+
+
 -(void) moveAddButtonToBottom{
     [super moveAddButtonToBottom];
     [self insertSubview:listViewTutorialButton atIndex:0];
