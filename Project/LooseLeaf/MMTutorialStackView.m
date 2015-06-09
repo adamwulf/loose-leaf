@@ -149,16 +149,29 @@
     }];
 }
 
+-(CGFloat) listViewButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
     [tutorialView didRotateToIdealOrientation:orientation];
     
-    [UIView animateWithDuration:.3 animations:^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        listViewTutorialButton.rotation = [self sidebarButtonRotation];
-        listViewTutorialButton.transform = rotationTransform;
-    }];
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:.3 animations:^{
+            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
+            listViewTutorialButton.rotation = [self sidebarButtonRotation];
+            listViewTutorialButton.transform = rotationTransform;
+        }];
+    });
 }
 
 #pragma mark - List View Tutorial
@@ -167,10 +180,14 @@
     return [super contentHeightForAllPages] + 140;
 }
 
+-(CGPoint) locationForTutorialButtonInListView{
+    return CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 110);;
+}
+
 -(void) subclassBeforeTransitionToListView{
     [super subclassBeforeTransitionToListView];
 
-    listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 70);
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
     CGRect fr = listViewTutorialButton.frame;
     fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
     listViewTutorialButton.frame = fr;
@@ -194,7 +211,7 @@
     [self addSubview:listViewTutorialButton];
     listViewTutorialButton.alpha = 1;
     
-    listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 70);
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
 }
 
 @end
