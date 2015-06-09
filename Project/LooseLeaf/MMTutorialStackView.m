@@ -33,9 +33,6 @@
         buttons[numberOfButtons].originalRect = helpButton.frame;
         numberOfButtons++;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
-        
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
         }
@@ -67,6 +64,8 @@
 #pragma mark - Tutorial Notifications
 
 -(void) tutorialShouldOpen:(NSNotification*)note{
+    [super tutorialShouldOpen:note];
+    
     if([self isShowingTutorial]){
         // tutorial is already showing, just return
         return;
@@ -97,6 +96,9 @@
         // tutorial is already hidden, just return
         return;
     }
+
+    [super tutorialShouldClose:note];
+    
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 0;
         tutorialView.alpha = 0;
@@ -212,6 +214,15 @@
     listViewTutorialButton.alpha = 1;
     
     listViewTutorialButton.center = [self locationForTutorialButtonInListView];
+}
+
+#pragma mark - tap control
+
+-(BOOL) shouldPrioritizeSidebarButtonsForTaps{
+    if([self isShowingTutorial]){
+        return NO;
+    }
+    return [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 @end

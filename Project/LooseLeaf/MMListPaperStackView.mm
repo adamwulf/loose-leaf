@@ -48,6 +48,9 @@
         rowHeight = columnWidth * screenHeight / screenWidth;
         bufferWidth = columnWidth * kListPageZoom;
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
+        
         tapGesture = [[MMButtonAwareTapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
         [tapGesture setNumberOfTapsRequired:1];
         [tapGesture setNumberOfTouchesRequired:1];
@@ -1831,6 +1834,22 @@
         return YES;
     }
     return NO;
+}
+
+#pragma mark - Tutorial Notifications
+
+-(void) tutorialShouldOpen:(NSNotification*)note{
+    tapGesture.enabled = NO;
+    twoFingerTapGesture.enabled = NO;
+    longPressGesture.enabled = NO;
+}
+
+-(void) tutorialShouldClose:(NSNotification*)note{
+    if(![self isShowingPageView]){
+        tapGesture.enabled = YES;
+        twoFingerTapGesture.enabled = YES;
+        longPressGesture.enabled = YES;
+    }
 }
 
 @end
