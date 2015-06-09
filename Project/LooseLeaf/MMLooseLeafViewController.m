@@ -103,6 +103,7 @@
                                                       kMPShareStatusTencentWeibo : kMPShareStatusUnknown,
                                                       kMPShareStatusSinaWeibo : kMPShareStatusUnknown,
                                                       }];
+        [[Mixpanel sharedInstance] flush];
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         
