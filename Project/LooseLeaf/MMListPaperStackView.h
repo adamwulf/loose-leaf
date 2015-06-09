@@ -79,4 +79,8 @@
 
 -(void) moveAddButtonToTop;
 
+-(void) subclassBeforeTransitionToListView;
+
+-(void) subclassDuringTransitionToListView;
+
 @end

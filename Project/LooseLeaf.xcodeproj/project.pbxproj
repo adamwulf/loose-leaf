@@ -3306,13 +3306,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
-				66684B3C182DA0D3005A27B4 /* ShellScript */,
+				66684B3C182DA0D3005A27B4 /* Generate Licenses in Settings Bundle */,
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
-				66C0C9D217838C91009491B3 /* ShellScript */,
-				6673C684182E0EA0005CEFAF /* ShellScript */,
-				6616CCCD18B6AD7800CAD0F3 /* ShellScript */,
+				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
+				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
+				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
 			);
 			buildRules = (
 			);
@@ -3508,52 +3508,56 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6616CCCD18B6AD7800CAD0F3 /* ShellScript */ = {
+		6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Crashlytics Script";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./../Frameworks/Fabric.framework/run 9e59cb6d909c971a2db30c84cb9be7f37273a7af 0e5d6861b92a7859ecb87362f5b611251a8128c79cc2af6283e5e9ef13d1e59e";
 		};
-		66684B3C182DA0D3005A27B4 /* ShellScript */ = {
+		66684B3C182DA0D3005A27B4 /* Generate Licenses in Settings Bundle */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Generate Licenses in Settings Bundle";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateLicenses.pl\n\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle/Root.plist\"\ntouch \"$SRCROOT/LooseLeaf/Settings.bundle\"\n";
 		};
-		6673C684182E0EA0005CEFAF /* ShellScript */ = {
+		6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Git Version into Settings Bundle";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "GIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\nVERSION_FOR_SETTINGS=\"${GIT_RELEASE_SHORT_VERSION} (${GIT_RELEASE_VERSION})\"\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho \"configuration build dir/contents/settings/Root.plist\"\necho \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\"\n\n/usr/libexec/PlistBuddy \"$CONFIGURATION_BUILD_DIR/$CONTENTS_FOLDER_PATH/Settings.bundle/Root.plist\" -c \"set PreferenceSpecifiers:4:DefaultValue $VERSION_FOR_SETTINGS\"";
 		};
-		66C0C9D217838C91009491B3 /* ShellScript */ = {
+		66C0C9D217838C91009491B3 /* Git Version into Info.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Git Version into Info.plist";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;

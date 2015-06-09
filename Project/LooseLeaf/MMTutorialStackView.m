@@ -133,9 +133,45 @@
 
 #pragma mark - Rotation Manager Delegate
 
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
+    [NSThread performBlockOnMainThread:^{
+        CGFloat rotationValue = [self sidebarButtonRotation];
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
+        addPageSidebarButton.transform = rotationTransform;
+        documentBackgroundSidebarButton.transform = rotationTransform;
+        helpButton.transform = rotationTransform;
+        helpButton.rotation = rotationValue;
+
+        // this'll let super's call run entirely on the main thread,
+        // instead both us + them adding blocks to the main thread's
+        // queue
+        [super didUpdateAccelerometerWithReading:currentRawReading];
+    }];
+}
+
+-(CGFloat) listViewButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
     [tutorialView didRotateToIdealOrientation:orientation];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:.3 animations:^{
+            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
+            listViewTutorialButton.rotation = [self sidebarButtonRotation];
+            listViewTutorialButton.transform = rotationTransform;
+        }];
+    });
 }
 
 #pragma mark - List View Tutorial
@@ -143,6 +179,26 @@
 -(CGFloat) contentHeightForAllPages{
     return [super contentHeightForAllPages] + 140;
 }
+
+-(CGPoint) locationForTutorialButtonInListView{
+    return CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 110);;
+}
+
+-(void) subclassBeforeTransitionToListView{
+    [super subclassBeforeTransitionToListView];
+
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
+    CGRect fr = listViewTutorialButton.frame;
+    fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    listViewTutorialButton.frame = fr;
+    listViewTutorialButton.alpha = 0;
+}
+
+-(void) subclassDuringTransitionToListView{
+    [super subclassDuringTransitionToListView];
+    listViewTutorialButton.alpha = 1;
+}
+
 
 -(void) moveAddButtonToBottom{
     [super moveAddButtonToBottom];
@@ -155,7 +211,7 @@
     [self addSubview:listViewTutorialButton];
     listViewTutorialButton.alpha = 1;
     
-    listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 70);
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
 }
 
 @end
