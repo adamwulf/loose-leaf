@@ -33,9 +33,6 @@
         buttons[numberOfButtons].originalRect = helpButton.frame;
         numberOfButtons++;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
-        
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
         }
@@ -67,6 +64,8 @@
 #pragma mark - Tutorial Notifications
 
 -(void) tutorialShouldOpen:(NSNotification*)note{
+    [super tutorialShouldOpen:note];
+    
     if([self isShowingTutorial]){
         // tutorial is already showing, just return
         return;
@@ -87,6 +86,9 @@
         backdrop.alpha = 1;
         tutorialView.alpha = 1;
     }];
+    
+    self.scrollEnabled = NO;
+    [self disableAllGesturesForPageView];
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
@@ -94,6 +96,9 @@
         // tutorial is already hidden, just return
         return;
     }
+
+    [super tutorialShouldClose:note];
+    
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 0;
         tutorialView.alpha = 0;
@@ -108,6 +113,12 @@
             [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
         }
     }];
+    
+    if(!self.isShowingPageView){
+        self.scrollEnabled = YES;
+    }else{
+        [self enableAllGesturesForPageView];
+    }
 }
 
 
@@ -118,15 +129,51 @@
 }
 
 -(void) didFinishTutorial{
-    [self tutorialShouldClose:nil];
+    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
 }
 
 
 #pragma mark - Rotation Manager Delegate
 
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
+    [NSThread performBlockOnMainThread:^{
+        CGFloat rotationValue = [self sidebarButtonRotation];
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
+        addPageSidebarButton.transform = rotationTransform;
+        documentBackgroundSidebarButton.transform = rotationTransform;
+        helpButton.transform = rotationTransform;
+        helpButton.rotation = rotationValue;
+
+        // this'll let super's call run entirely on the main thread,
+        // instead both us + them adding blocks to the main thread's
+        // queue
+        [super didUpdateAccelerometerWithReading:currentRawReading];
+    }];
+}
+
+-(CGFloat) listViewButtonRotation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        return 0;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        return -M_PI_2;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        return M_PI_2;
+    }else{
+        return M_PI;
+    }
+}
+
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
     [tutorialView didRotateToIdealOrientation:orientation];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:.3 animations:^{
+            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
+            listViewTutorialButton.rotation = [self sidebarButtonRotation];
+            listViewTutorialButton.transform = rotationTransform;
+        }];
+    });
 }
 
 #pragma mark - List View Tutorial
@@ -134,6 +181,26 @@
 -(CGFloat) contentHeightForAllPages{
     return [super contentHeightForAllPages] + 140;
 }
+
+-(CGPoint) locationForTutorialButtonInListView{
+    return CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 110);;
+}
+
+-(void) subclassBeforeTransitionToListView{
+    [super subclassBeforeTransitionToListView];
+
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
+    CGRect fr = listViewTutorialButton.frame;
+    fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    listViewTutorialButton.frame = fr;
+    listViewTutorialButton.alpha = 0;
+}
+
+-(void) subclassDuringTransitionToListView{
+    [super subclassDuringTransitionToListView];
+    listViewTutorialButton.alpha = 1;
+}
+
 
 -(void) moveAddButtonToBottom{
     [super moveAddButtonToBottom];
@@ -146,7 +213,16 @@
     [self addSubview:listViewTutorialButton];
     listViewTutorialButton.alpha = 1;
     
-    listViewTutorialButton.center = CGPointMake(self.bounds.size.width/2, [self contentHeightForAllPages] - 70);
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
+}
+
+#pragma mark - tap control
+
+-(BOOL) shouldPrioritizeSidebarButtonsForTaps{
+    if([self isShowingTutorial]){
+        return NO;
+    }
+    return [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 @end

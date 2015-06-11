@@ -92,6 +92,7 @@
         listOfFriendsView.dataSource = self;
         listOfFriendsView.delegate = self;
         listOfFriendsView.delaysContentTouches = NO;
+        listOfFriendsView.contentInset = UIEdgeInsetsMake(0, kWidthOfSidebarButtonBuffer, 0, kWidthOfSidebarButtonBuffer);
         [self addSubview:listOfFriendsView];
 
         [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];

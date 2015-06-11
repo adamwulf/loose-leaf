@@ -427,6 +427,7 @@
         textButton.alpha = visible;
         mapButton.alpha = visible;
         settingsButton.alpha = visible;
+        pencilTool.alpha = visible;
     }];
 }
 

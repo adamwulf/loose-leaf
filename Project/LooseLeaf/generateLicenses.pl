@@ -26,7 +26,7 @@ for my $i (sort glob("*.license"))
     $value =~ s/\r//g;
     $value =~ s/\n/\r/g;
     $value =~ s/[\t]+\r/\r/g;
-    $value =~ s/\"/\'/g;
+    $value =~ s/\"/\\\"/g;
     my $key=$i;
     $key =~ s/\.license$//;
     

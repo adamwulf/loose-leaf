@@ -2205,6 +2205,10 @@ int skipAll = NO;
 //    DebugLog(@"may share %@", NSStringFromClass([shareItem class]));
 }
 
+-(void) wontShare:(NSObject<MMShareItem> *)shareItem{
+    // noop
+}
+
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
 //    DebugLog(@"did share %@", NSStringFromClass([shareItem class]));
     [sharePageSidebar hide:YES onComplete:nil];

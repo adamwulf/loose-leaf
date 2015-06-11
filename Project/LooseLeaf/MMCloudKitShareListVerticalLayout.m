@@ -37,7 +37,7 @@
     NSInteger numItems = [self entireRowCount];
     CGFloat sizeOfPeopleRows = (numItems - 1) * [self buttonWidth];
     CGFloat sizeOfInviteButton = 1 * 150;
-    return CGSizeMake(self.collectionView.bounds.size.width, sizeOfPeopleRows + sizeOfInviteButton);
+    return CGSizeMake(self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer, sizeOfPeopleRows + sizeOfInviteButton);
 }
 
 -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -47,7 +47,7 @@
                       indexPath.row == [self.collectionView numberOfItemsInSection:indexPath.section] - 1;
     
     CGFloat contactHeight = [self buttonWidth];
-    CGFloat width = self.collectionView.bounds.size.width;
+    CGFloat width = self.collectionView.bounds.size.width - 2*kWidthOfSidebarButtonBuffer;
     CGFloat cellHeight = isLastCell ? 150.0 : contactHeight;
     
     ret.bounds = CGRectMake(0, 0, width, isLastCell ? 150 : cellHeight);

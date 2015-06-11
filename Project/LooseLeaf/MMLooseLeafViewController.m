@@ -30,15 +30,6 @@
 
 - (id)init{
     if(self = [super init]){
-#ifdef DEBUG
-#ifdef DEBUGUSERDEFAULTS
-#if DEBUGUSERDEFAULTS
-        NSString *domainName = [[NSBundle mainBundle] bundleIdentifier];
-        [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:domainName];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-#endif
-#endif
-#endif
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
@@ -114,6 +105,7 @@
                                                       kMPShareStatusTencentWeibo : kMPShareStatusUnknown,
                                                       kMPShareStatusSinaWeibo : kMPShareStatusUnknown,
                                                       }];
+        [[Mixpanel sharedInstance] flush];
 
         [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
         

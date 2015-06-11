@@ -95,9 +95,6 @@
                 if(self.isForgetful){
                     return;
                 }
-//#ifdef DEBUG
-//                [NSThread sleepForTimeInterval:5];
-//#endif
                 @synchronized(self){
                     if(targetLoadedState == MMScrapCollectionStateTargetUnloaded){
                         DebugLog(@"MMScrapsOnPaperState bailing early");

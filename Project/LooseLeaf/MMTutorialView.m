@@ -16,6 +16,7 @@
 #import "MMNewsletterSignupForm.h"
 #import "MMCheckButton.h"
 #import "MMNewsletterSignupFormDelegate.h"
+#import "MMUntouchableTutorialView.h"
 #import "UIColor+Shadow.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
@@ -60,11 +61,17 @@
         fadedBackground = [[UIView alloc] initWithFrame:self.bounds];
         fadedBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
         
+        UIButton* backgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        backgroundButton.bounds = fadedBackground.bounds;
+        [backgroundButton addTarget:self action:@selector(tapToClose) forControlEvents:UIControlEventTouchUpInside];
+        [fadedBackground addSubview:backgroundButton];
+        backgroundButton.center = fadedBackground.center;
+        
         [self addSubview:fadedBackground];
         
         
         CGFloat widthOfRotateableContainer = boxSize + 2 * buttonBuffer;
-        rotateableTutorialSquare = [[UIView alloc] initWithFrame:CGRectMake((self.bounds.size.width - widthOfRotateableContainer) / 2,
+        rotateableTutorialSquare = [[MMUntouchableTutorialView alloc] initWithFrame:CGRectMake((self.bounds.size.width - widthOfRotateableContainer) / 2,
                                                                             (self.bounds.size.height - widthOfRotateableContainer) / 2,
                                                                             widthOfRotateableContainer,
                                                                             widthOfRotateableContainer)];
@@ -144,6 +151,10 @@
     delegate = _delegate;
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     [self.delegate userIsViewingTutorialStep:idx];
+}
+
+-(void) tapToClose{
+    [self didTapToChangeToTutorial:[tutorialButtons lastObject]];
 }
 
 #pragma mark - Notifications

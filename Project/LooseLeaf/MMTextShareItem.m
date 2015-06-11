@@ -48,7 +48,7 @@
         @autoreleasepool {
             MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
             [composer setMessageComposeDelegate:self];
-            if([MFMessageComposeViewController canSendText]) {
+            if([MFMessageComposeViewController canSendText] && composer) {
                 if([MFMessageComposeViewController canSendSubject]){
                     [composer setSubject:@"Quick sketch from Loose Leaf"];
                 }

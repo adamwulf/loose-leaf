@@ -20,5 +20,17 @@
 		<key>uuid</key>
 		<string>83DE59EA-7B1E-41EF-8F55-77A130013057</string>
 	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMExportablePaperView</string>
+		<key>uuid</key>
+		<string>8E1CC74B-398F-45CB-B3D6-6D2C28E51239</string>
+	</dict>
+	<dict>
+		<key>class</key>
+		<string>MMExportablePaperView</string>
+		<key>uuid</key>
+		<string>F29F16B9-C0F0-49BB-8B25-5FF86804D141</string>
+	</dict>
 </array>
 </plist>

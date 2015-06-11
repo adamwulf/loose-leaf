@@ -84,7 +84,7 @@ _Pragma("clang diagnostic pop") \
 #define kWidthOfSidebarButton 60.0
 #define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
-#define kMinScaleDelta .01
+#define kMinScaleDelta .0
 #define kShadowDepth 7
 #define kShadowBend 3
 #define kBezelInGestureWidth 40

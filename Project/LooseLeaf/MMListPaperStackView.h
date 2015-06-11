@@ -83,4 +83,12 @@
 
 -(void) moveAddButtonToTop;
 
+-(void) subclassBeforeTransitionToListView;
+
+-(void) subclassDuringTransitionToListView;
+
+-(void) tutorialShouldOpen:(NSNotification*)note;
+
+-(void) tutorialShouldClose:(NSNotification*)note;
+
 @end
