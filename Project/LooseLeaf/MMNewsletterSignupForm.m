@@ -169,8 +169,8 @@
            orientation == UIInterfaceOrientationPortraitUpsideDown){
             emailInput.center = CGPointMake(self.bounds.size.width/2, 250);
             validateInput.center = CGPointMake(self.bounds.size.width/2, 280);
-            signUpButton.center = CGPointMake(self.bounds.size.width/2, 330);
-            noThanksButton.center = CGPointMake(self.bounds.size.width/2, 480);
+            signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width/2, 330);
+            noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width/2, 330);
             pitchLbl.center = CGPointMake(self.bounds.size.width/2, 195);
         }else{
             emailInput.center = CGPointMake(self.bounds.size.width/2, 220);
