@@ -21,6 +21,7 @@
 #import "NSArray+Extras.h"
 #import "Constants.h"
 #import "NSURL+UTI.h"
+#import "Mixpanel.h"
 
 @interface MMTutorialView ()<MMNewsletterSignupFormDelegate>
 
@@ -138,6 +139,7 @@
         
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialStepFinished:) name:kTutorialStepCompleteNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
     }
     return self;
@@ -413,5 +415,23 @@
                                 cornerRadii:CGSizeMake(width/10, width/10)];
 }
 
+-(void) didEnterBackground{
+    CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
+    NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
+    
+    if(idx < [tutorialList count]){
+        NSString* tutorialId = [[tutorialList objectAtIndex:idx] objectForKey:@"id"];
+        if(tutorialId){
+            [[Mixpanel sharedInstance] track:kMPBackgroundDuringTutorial properties:@{@"Tutorial" : tutorialId}];
+        }else{
+            [[Mixpanel sharedInstance] track:kMPBackgroundDuringTutorial properties:@{@"Tutorial" : @"unknown"}];
+        }
+    }else{
+        [[Mixpanel sharedInstance] track:kMPBackgroundDuringTutorial properties:@{@"Tutorial" : @"newsletter"}];
+    }
+    
+    [[[Mixpanel sharedInstance] people] set:kMPDidBackgroundDuringTutorial to:@(YES)];
+    [[Mixpanel sharedInstance] flush];
+}
 
 @end

@@ -156,6 +156,8 @@ _Pragma("clang diagnostic pop") \
 #define kPendingEmailToSubscribe @"kPendingEmailToSubscribe"
 #define kHasIgnoredNewsletter @"kHasIgnoredNewsletter"
 #define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
+#define kMPDidBackgroundDuringTutorial @"Did Background During Tutorial"
+#define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
 
