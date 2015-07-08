@@ -215,7 +215,7 @@
     [activeOptionsView updateInterfaceTo:orientation];
     [UIView animateWithDuration:.3 animations:^{
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        for(MMBounceButton* button in buttonView.subviews){
+        for(MMBounceButton* button in [buttonView.subviews arrayByAddingObject:tutorialButton]){
             button.rotation = [self sidebarButtonRotation];
             button.transform = rotationTransform;
         }

@@ -48,6 +48,9 @@
         rowHeight = columnWidth * screenHeight / screenWidth;
         bufferWidth = columnWidth * kListPageZoom;
 
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
+        
         tapGesture = [[MMButtonAwareTapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScrollView:)];
         [tapGesture setNumberOfTapsRequired:1];
         [tapGesture setNumberOfTouchesRequired:1];
@@ -296,7 +299,9 @@
     if(!longPressGesture.pinchedPage){
         [longPressGesture setEnabled:NO];
     }
-    [self moveAddButtonToBottom];
+    [UIView animateWithDuration:.3 animations:^{
+        [self moveAddButtonToBottom];
+    }];
     [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
 }
 
@@ -520,6 +525,18 @@
 }
 
 
+-(void) subclassBeforeTransitionToListView{
+    CGRect fr = [self frameForAddPageButton];
+    fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    addPageButtonInListView.frame = fr;
+    addPageButtonInListView.alpha = 0;
+}
+
+-(void) subclassDuringTransitionToListView{
+    addPageButtonInListView.alpha = 1;
+}
+
+
 /**
  * the user has scaled small enough with the top page
  * that we can take over and just animate the rest.
@@ -608,10 +625,7 @@
                 [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             }
         }
-        CGRect fr = [self frameForAddPageButton];
-        fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
-        addPageButtonInListView.frame = fr;
-        addPageButtonInListView.alpha = 0;
+        [self subclassBeforeTransitionToListView];
     };
     
     //
@@ -638,7 +652,7 @@
             }
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
-        addPageButtonInListView.alpha = 1;
+        [self subclassDuringTransitionToListView];
     };
 
     //
@@ -1820,6 +1834,22 @@
         return YES;
     }
     return NO;
+}
+
+#pragma mark - Tutorial Notifications
+
+-(void) tutorialShouldOpen:(NSNotification*)note{
+    tapGesture.enabled = NO;
+    twoFingerTapGesture.enabled = NO;
+    longPressGesture.enabled = NO;
+}
+
+-(void) tutorialShouldClose:(NSNotification*)note{
+    if(![self isShowingPageView]){
+        tapGesture.enabled = YES;
+        twoFingerTapGesture.enabled = YES;
+        longPressGesture.enabled = YES;
+    }
 }
 
 @end

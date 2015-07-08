@@ -41,7 +41,7 @@
                     [strongSelf saveToDisk:^(BOOL didSaveEdits){
                         if([self hasEditsToSave]){
                             // save failed, try again
-                            NSLog(@"====================== kMPSaveFailedNeedsRetry");
+//                            NSLog(@"====================== kMPSaveFailedNeedsRetry");
                             waitingForSave = YES;
                             [strongSelf retrySaveOrExport];
                         }

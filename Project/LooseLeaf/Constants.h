@@ -80,7 +80,7 @@ _Pragma("clang diagnostic pop") \
 #define kWidthOfSidebarButton 60.0
 #define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
-#define kMinScaleDelta .01
+#define kMinScaleDelta .0
 #define kShadowDepth 7
 #define kShadowBend 3
 #define kBezelInGestureWidth 40
@@ -156,6 +156,8 @@ _Pragma("clang diagnostic pop") \
 #define kPendingEmailToSubscribe @"kPendingEmailToSubscribe"
 #define kHasIgnoredNewsletter @"kHasIgnoredNewsletter"
 #define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
+#define kMPDidBackgroundDuringTutorial @"Did Background During Tutorial"
+#define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
 

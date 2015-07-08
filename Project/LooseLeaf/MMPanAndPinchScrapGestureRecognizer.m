@@ -425,7 +425,7 @@ struct TouchInterval{
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [validTouches mutableCopy];
     [validTouchesCurrentlyMoving intersectSet:touches];
     [validTouchesCurrentlyMoving minusSet:ignoredTouches];
-    if([validTouchesCurrentlyMoving count] >= mmMinimumNumberOfScrapTouches){
+    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
         if(self.state == UIGestureRecognizerStateBegan){
             initialDistance = 0;
         }

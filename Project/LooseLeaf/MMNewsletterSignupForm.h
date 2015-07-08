@@ -12,7 +12,7 @@
 
 @interface MMNewsletterSignupForm : MMLoopView
 
-@property (nonatomic) NSObject<MMNewsletterSignupFormDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMNewsletterSignupFormDelegate>* delegate;
 
 -(id) initForm;
 
