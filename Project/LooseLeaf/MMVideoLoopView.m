@@ -78,20 +78,13 @@
 
 -(void) startAnimating{
     if(![self isAnimating]){
-        [self itemDidFinishPlaying:nil];
+        [self performSelector:@selector(itemDidFinishPlaying) withObject:nil afterDelay:1];
         if(!avPlayer){
             avPlayer = [AVPlayer playerWithURL:videoURL];
             avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
             avPlayerLayer.frame = self.layer.bounds;
             [videoHolder.layer addSublayer: avPlayerLayer];
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-            
-            // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
-            [[NSNotificationCenter defaultCenter] addObserver:self
-                                                     selector:@selector(itemDidFinishPlaying:)
-                                                         name:AVPlayerItemDidPlayToEndTimeNotification
-                                                       object:avPlayer.currentItem];
-
             
             __weak AVPlayer* weakPlayer = avPlayer;
             __weak MMVideoLoopView* weakSelf = self;
@@ -108,7 +101,7 @@
     }
 }
 
--(void) itemDidFinishPlaying:(NSNotification*) note{
+-(void) itemDidFinishPlaying{
     if(![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]){
         NSLog(@"done playing!");
         [[MMTutorialManager sharedInstance] didCompleteStep:self.tutorialId];

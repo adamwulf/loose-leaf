@@ -28,6 +28,21 @@ static MMTutorialManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((self = [super init])){
+#ifdef DEBUG
+        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
+        }
+        
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+#endif
+
+        
+        
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
         currentTutorialStep = [[NSUserDefaults standardUserDefaults] integerForKey:kCurrentTutorialStep];
@@ -37,16 +52,6 @@ static MMTutorialManager* _instance = nil;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
-#ifdef DEBUG
-        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
-        }
-        
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
-        
-#endif
     }
     return self;
 }
@@ -78,6 +83,10 @@ static MMTutorialManager* _instance = nil;
     }];
     
     return [possiblyPendingTutorials count] - numCompleted;
+}
+
+-(NSArray*) allTutorialStepsEver{
+    return [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]];
 }
 
 -(NSArray*) appIntroTutorialSteps{
