@@ -49,10 +49,6 @@
             MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
             [composer setMessageComposeDelegate:self];
             if([MFMessageComposeViewController canSendText] && composer) {
-                if([MFMessageComposeViewController canSendSubject]){
-                    [composer setSubject:@"Quick sketch from Loose Leaf"];
-                }
-                [composer setBody:@"\nDrawn with Loose Leaf. http://getlooseleaf.com"];
                 [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
                 
                 NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
