@@ -2054,7 +2054,32 @@ int skipAll = NO;
             UIGraphicsEndImageContext();
         }
     }
-    return retImage;
+
+    UIImage *rotatedImage;
+    @autoreleasepool {
+        UIImageOrientation orientation = UIImageOrientationUp;
+        
+        if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeLeft){
+            orientation = UIImageOrientationRight;
+        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeRight){
+            orientation = UIImageOrientationLeft;
+        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationMaskPortraitUpsideDown){
+            orientation = UIImageOrientationDown;
+        }
+        
+        // rotate it to match the ipad's current orientation
+        rotatedImage = [UIImage imageWithCGImage:[retImage CGImage] scale:retImage.scale orientation:orientation];
+        
+        if(!(rotatedImage.imageOrientation == UIImageOrientationUp || rotatedImage.imageOrientation == UIImageOrientationUpMirrored)){
+            CGSize imgsize = rotatedImage.size;
+            UIGraphicsBeginImageContext(imgsize);
+            [rotatedImage drawInRect:CGRectMake(0.0, 0.0, imgsize.width, imgsize.height)];
+            rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }
+    
+    return rotatedImage;
 }
 
 -(NSDictionary*) cloudKitSenderInfo{
