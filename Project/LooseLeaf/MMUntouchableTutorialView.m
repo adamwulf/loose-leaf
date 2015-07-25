@@ -16,7 +16,7 @@
 
     if(point.x < buttonBuffer){
         return NO;
-    }else if(point.y < buttonBuffer){
+    }else if(point.y < 0){
         return NO;
     }else if(point.x > self.bounds.size.width - buttonBuffer){
         return NO;
