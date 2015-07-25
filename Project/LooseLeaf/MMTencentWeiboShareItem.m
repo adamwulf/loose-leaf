@@ -58,7 +58,6 @@
             if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                 [fbSheet addImage:self.delegate.imageToShare];
-                [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
                 fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
                     NSString* strResult;
                     if(result == SLComposeViewControllerResultCancelled){
