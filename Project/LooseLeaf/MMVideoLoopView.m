@@ -78,6 +78,7 @@
 
 -(void) startAnimating{
     if(![self isAnimating]){
+        [self itemDidFinishPlaying:nil];
         if(!avPlayer){
             avPlayer = [AVPlayer playerWithURL:videoURL];
             avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
