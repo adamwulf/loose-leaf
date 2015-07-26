@@ -177,6 +177,7 @@
 
 -(void) willResignActive{
     DebugLog(@"telling stack to cancel all gestures");
+    [stackView willResignActive];
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }

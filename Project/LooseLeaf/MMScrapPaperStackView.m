@@ -2143,5 +2143,20 @@ int skipAll = NO;
     return YES;
 }
 
+#pragma mark - Resign Active
+
+-(void) willResignActive{
+    if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
+        NSLog(@"page needs save, crash is likely");
+        
+        while([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
+            NSLog(@"ran the loop");
+        }
+        NSLog(@"loop is done, still have edits? %d", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]);
+    }else{
+        NSLog(@"we're good");
+    }
+}
 
 @end
