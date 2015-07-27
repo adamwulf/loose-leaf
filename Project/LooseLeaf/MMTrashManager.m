@@ -62,11 +62,12 @@ static MMTrashManager* _instance = nil;
 #pragma mark - Public Methods
 
 -(void) deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState{
+    DebugLog(@"asking to delete scrap %@", scrapUUID);
     [self deleteScrap:scrapUUID inScrapCollectionState:scrapCollectionState shouldRespectOthers:YES];
 }
 
 -(void) deletePage:(MMExportablePaperView*)page{
-    DebugLog(@"asking to delete %@", page.uuid);
+    DebugLog(@"asking to delete page %@", page.uuid);
 
     NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;

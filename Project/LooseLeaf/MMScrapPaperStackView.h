@@ -24,4 +24,6 @@
 
 -(void) willResignActive;
 
+-(void) didEnterBackground;
+
 @end

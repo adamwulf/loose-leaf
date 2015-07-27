@@ -127,6 +127,7 @@
     [self stopTimer];
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
+    [self.viewController didEnterBackground];
     [[JotDiskAssetManager sharedManager] blockUntilAllWritesHaveFinished];
     DebugLog(@"DID ENTER BACKGROUND");
 }

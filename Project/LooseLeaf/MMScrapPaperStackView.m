@@ -109,7 +109,7 @@
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
-
+        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -2149,13 +2149,33 @@ int skipAll = NO;
     if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
         NSLog(@"page needs save, crash is likely");
         
+        NSDate* future = [NSDate distantFuture];
         while([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate date]];
-            NSLog(@"ran the loop");
+            @autoreleasepool {
+                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
+                NSLog(@"ran the loop");
+            }
         }
         NSLog(@"loop is done, still have edits? %d", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]);
     }else{
         NSLog(@"we're good");
+    }
+}
+
+-(void) didEnterBackground{
+    NSLog(@"stack: didEnterBackground");
+    if([[JotTrashManager sharedInstance] numberOfItemsInTrash]){
+        NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+        NSDate* future = [NSDate distantFuture];
+        while([[JotTrashManager sharedInstance] numberOfItemsInTrash]){
+            @autoreleasepool {
+                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
+                NSLog(@"ran the loop: %d", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+            }
+        }
+        NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+    }else{
+        NSLog(@"nothing in the trash");
     }
 }
 
