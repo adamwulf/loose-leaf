@@ -38,6 +38,7 @@
 #import "MMTutorialView.h"
 #import "MMPDFAlbum.h"
 #import "MMStopWatch.h"
+#import "MMAppDelegate.h"
 #import "MMPDFPage.h"
 #import "MMImageInboxItem.h"
 
@@ -2154,14 +2155,17 @@ int skipAll = NO;
         
         NSLog(@"page needs save, crash is likely");
         
+        MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
         NSDate* future = [NSDate distantFuture];
-        while([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] && [stopwatch read] < 5){
+        while([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] && [stopwatch read] < 5 && ![appDelegate isActive]){
             @autoreleasepool {
                 [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
                 NSLog(@"ran the loop: %.2f", [stopwatch read]);
             }
         }
         NSLog(@"loop is done, still have edits? %d", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]);
+        NSLog(@"app active? %d", [appDelegate isActive]);
     }else{
         NSLog(@"we're good");
     }
@@ -2173,9 +2177,11 @@ int skipAll = NO;
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
 
+        MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
+
         NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
         NSDate* future = [NSDate distantFuture];
-        while([[JotTrashManager sharedInstance] numberOfItemsInTrash] && [stopwatch read] < 5){
+        while([[JotTrashManager sharedInstance] numberOfItemsInTrash] && [stopwatch read] < 5 && ![appDelegate isActive]){
             @autoreleasepool {
                 [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
                 NSLog(@"ran the loop: %.2f - %d", [stopwatch read], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
