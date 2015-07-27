@@ -903,7 +903,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 -(void) dealloc{
     if(self.isScrapStateLoaded){
         if(drawableView){
-            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+            [drawableView invalidate];
         }
         if(drawableViewState){
             [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];

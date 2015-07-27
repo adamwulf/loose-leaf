@@ -37,6 +37,7 @@
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMTutorialView.h"
 #import "MMPDFAlbum.h"
+#import "MMStopWatch.h"
 #import "MMPDFPage.h"
 #import "MMImageInboxItem.h"
 
@@ -2147,13 +2148,17 @@ int skipAll = NO;
 
 -(void) willResignActive{
     if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
+        
+        MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
+        [stopwatch start];
+        
         NSLog(@"page needs save, crash is likely");
         
         NSDate* future = [NSDate distantFuture];
-        while([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
+        while([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] && [stopwatch read] < 5){
             @autoreleasepool {
                 [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
-                NSLog(@"ran the loop");
+                NSLog(@"ran the loop: %.2f", [stopwatch read]);
             }
         }
         NSLog(@"loop is done, still have edits? %d", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]);
@@ -2165,12 +2170,15 @@ int skipAll = NO;
 -(void) didEnterBackground{
     NSLog(@"stack: didEnterBackground");
     if([[JotTrashManager sharedInstance] numberOfItemsInTrash]){
+        MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
+        [stopwatch start];
+
         NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
         NSDate* future = [NSDate distantFuture];
-        while([[JotTrashManager sharedInstance] numberOfItemsInTrash]){
+        while([[JotTrashManager sharedInstance] numberOfItemsInTrash] && [stopwatch read] < 5){
             @autoreleasepool {
                 [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
-                NSLog(@"ran the loop: %d", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+                NSLog(@"ran the loop: %.2f - %d", [stopwatch read], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
             }
         }
         NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
