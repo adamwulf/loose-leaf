@@ -644,7 +644,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         [drawableView removeFromSuperview];
-                        [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                        [drawableView invalidate];
                         [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
                         drawableViewState = nil;
                         drawableView = nil;
@@ -840,7 +840,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                 [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
             }
             if(drawableView){
-                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                [drawableView invalidate];
             }
             drawableViewState = nil;
             drawableView = nil;
@@ -871,7 +871,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                             [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
                         }
                         if(drawableView){
-                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                            [drawableView invalidate];
                         }
                         drawableViewState = nil;
                         drawableView = nil;
