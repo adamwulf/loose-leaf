@@ -2159,18 +2159,17 @@ int skipAll = NO;
                [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 5){
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
             if([[MMMainOperationQueue sharedQueue] pendingBlockCount]){
-                NSLog(@"watch: %.2f  executing: %d operations", [stopwatch read], (int)[[NSOperationQueue mainQueue] operationCount]);
+                NSLog(@"watch: %.2f  executing: %d operations", [stopwatch read], (int)[[MMMainOperationQueue sharedQueue] pendingBlockCount]);
                 while ([[MMMainOperationQueue sharedQueue] pendingBlockCount]) {
                     [[MMMainOperationQueue sharedQueue] tick];
                 }
-                [[NSOperationQueue mainQueue] cancelAllOperations];
             }else{
-                NSLog(@"watch: %.2f    pending save: %d   trash size: %d", [stopwatch read], [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
-                [NSThread sleepForTimeInterval:.01];
+                NSLog(@"watch: %.2f    pending save? %d   trash size: %d", [stopwatch read], [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+                [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
         }
         
-        NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+        NSLog(@"pending save? %d   and %d items in the trash", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
     }else{
         NSLog(@"nothing in the trash");
     }
