@@ -423,7 +423,7 @@
         dispatch_async([self serialBackgroundQueue], ^{
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    DebugLog(@"only check this if our state is loaded");
+//                    DebugLog(@"only check this if our state is loaded");
                     existsOnItsPage = [[self.scrapsOnPaper filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                         return [[evaluatedObject uuid] isEqualToString:scrapUUID];
                     }]] count] > 0;

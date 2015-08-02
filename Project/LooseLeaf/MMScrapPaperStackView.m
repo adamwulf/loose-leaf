@@ -2152,7 +2152,7 @@ int skipAll = NO;
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
         
-        NSLog(@"Saving pages before background");
+        NSLog(@" - saving pages before background");
         while(([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] ||
                [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
