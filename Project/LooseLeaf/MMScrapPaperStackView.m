@@ -2156,7 +2156,7 @@ int skipAll = NO;
         NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
         
         while(([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] ||
-               [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 5){
+               [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
             if([[MMMainOperationQueue sharedQueue] pendingBlockCount]){
                 NSLog(@"watch: %.2f  executing: %d operations", [stopwatch read], (int)[[MMMainOperationQueue sharedQueue] pendingBlockCount]);
