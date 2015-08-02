@@ -93,7 +93,7 @@ static MMTutorialManager* _instance = nil;
     return @[@{
                  @"id":@"app-intro-pen",
                  @"title":@"Draw and Erase",
-                 @"video":@"hello.mov"
+                 @"video":@"hello.mp4"
                  },@{
                  @"id":@"app-intro-pinch",
                  @"title":@"Pinch to See Your Pages",
