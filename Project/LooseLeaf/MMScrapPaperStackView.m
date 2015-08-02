@@ -2148,56 +2148,29 @@ int skipAll = NO;
 #pragma mark - Resign Active
 
 -(void) willResignActive{
-    NSLog(@"stack: willResignActive begin");
     if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash]){
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
         
-        NSLog(@"%d items in the trash", (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
-        
+        NSLog(@"Saving pages before background");
         while(([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] ||
                [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
             if([[MMMainOperationQueue sharedQueue] pendingBlockCount]){
-                NSLog(@"watch: %.2f  executing: %d operations", [stopwatch read], (int)[[MMMainOperationQueue sharedQueue] pendingBlockCount]);
                 while ([[MMMainOperationQueue sharedQueue] pendingBlockCount]) {
                     [[MMMainOperationQueue sharedQueue] tick];
                 }
             }else{
-                NSLog(@"watch: %.2f    pending save? %d   trash size: %d", [stopwatch read], [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
                 [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
         }
-        
-        NSLog(@"pending save? %d   and %d items in the trash", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave], (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash]);
-    }else{
-        NSLog(@"nothing in the trash");
+        NSLog(@" - completed save in %.2fs", [stopwatch read]);
     }
     NSLog(@"stack: willResignActive end");
 }
 
 -(void) didEnterBackground{
-    //    if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]){
-    //
-    //        MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
-    //        [stopwatch start];
-    //
-    //        NSLog(@"page needs save, crash is likely");
-    //
-    //        MMAppDelegate* appDelegate = (MMAppDelegate*)[[UIApplication sharedApplication] delegate];
-    //
-    //        NSDate* future = [NSDate distantFuture];
-    //        while( && [stopwatch read] < 5 && ![appDelegate isActive]){
-    //            @autoreleasepool {
-    //                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:future];
-    //                NSLog(@"ran the loop: %.2f", [stopwatch read]);
-    //            }
-    //        }
-    //        NSLog(@"loop is done, still have edits? %d", [[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave]);
-    //        NSLog(@"app active? %d", [appDelegate isActive]);
-    //    }else{
-    //        NSLog(@"we're good");
-    //    }
+    // noop
 }
 
 @end
