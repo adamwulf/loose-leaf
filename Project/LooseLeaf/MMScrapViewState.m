@@ -323,7 +323,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         }
         targetIsLoadedThumbnail = NO;
         if(activeThumbnailImage){
-            DebugLog(@"unload thumb for %@", self.uuid);
+//            DebugLog(@"unload thumb for %@", self.uuid);
             [activeThumbnailImage cancel];
             activeThumbnailImage = nil;
         }

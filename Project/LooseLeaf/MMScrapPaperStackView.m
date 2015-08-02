@@ -2148,19 +2148,52 @@ int skipAll = NO;
 #pragma mark - Resign Active
 
 -(void) willResignActive{
-    if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash]){
+    MMUndoablePaperView* currentEditablePage = [[MMPageCacheManager sharedInstance] currentEditablePage];
+    
+    // introspect the page to see if it or any of its
+    // scraps are still loading OpenGL content
+    BOOL (^isPageLoadingHuh)(MMUndoablePaperView*) = ^(MMUndoablePaperView* page){
+        __block BOOL isAnyStateLoading = [currentEditablePage isStateLoading];
+        [[currentEditablePage scrapsOnPaper] enumerateObjectsUsingBlock:^(MMScrapView* obj, NSUInteger idx, BOOL *stop) {
+            isAnyStateLoading = isAnyStateLoading || [[obj state] isScrapStateLoading];
+        }];
+        return isAnyStateLoading;
+    };
+    
+    // we'll wait around if:
+    // 1. our top page has pending edits to save
+    // 2. our top page is still loading in content
+    // 3. there are ny OpenGL objects sitting in the trash
+    NSLog(@" - checking if page is ready to background: saving? %d  loading? %d  trash? %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+    
+    // we need to delay resigning active if our top page
+    // is loading or saving any OpenGL content. Once we
+    // leave this method, all our OpenGL calls will crash
+    // the app, so we need to try our best to wrap up before
+    // then.
+    if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage)){
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
         
-        NSLog(@" - saving pages before background");
-        while(([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] ||
-               [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
+        // if we're in here, then our page has to either load or save
+        // some content. We're going to use a custom MMMainOperationQueue
+        // that will let other threads send blocks to the main thread
+        // without enqueuing them into the dispatch_get_main_queue().
+        //
+        // regardless of what happens, we'll only wait here for 7 seconds
+        // to prevent us from being killed by the watchdog.
+        while(([currentEditablePage hasEditsToSave] || isPageLoadingHuh(currentEditablePage) || [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
+            // fire any timers that would've been triggered if this was a normal run loop
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
+            // now run any blocks that were sent to the main thread from background threads
             if([[MMMainOperationQueue sharedQueue] pendingBlockCount]){
                 while ([[MMMainOperationQueue sharedQueue] pendingBlockCount]) {
                     [[MMMainOperationQueue sharedQueue] tick];
                 }
             }else{
+                // we didn't have any blocks to run, so just
+                // wait here until either .2s is up or a background
+                // thread signals us with a new block to run
                 [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
         }

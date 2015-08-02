@@ -80,7 +80,7 @@ CGFloat BNRTimeBlock (void (^block)(void)) {
     }
     else
     {
-        dispatch_sync(dispatch_get_main_queue(), block);
+        [[MMMainOperationQueue sharedQueue] addOperationWithBlockAndWait:block];
     }
 }
 
