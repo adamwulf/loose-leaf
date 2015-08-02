@@ -8,6 +8,7 @@
 
 #import "NSThread+BlockAdditions.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
+#import <JotUI/JotUI.h>
 
 @interface NSThread (Private)
 
@@ -67,7 +68,7 @@ CGFloat BNRTimeBlock (void (^block)(void)) {
     }
     else
     {
-        dispatch_async(dispatch_get_main_queue(), block);
+        [[MMMainOperationQueue sharedQueue] addOperationWithBlock:block];
     }
 }
 

@@ -15,6 +15,7 @@
 
 @interface MMAppDelegate : UIResponder <UIApplicationDelegate,CrashlyticsDelegate>
 
+@property (readonly) BOOL isActive;
 @property (strong, nonatomic) UIWindow *window;
 
 @property (nonatomic, readonly) MMPresentationWindow *presentationWindow;

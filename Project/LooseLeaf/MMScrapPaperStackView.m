@@ -37,6 +37,8 @@
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMTutorialView.h"
 #import "MMPDFAlbum.h"
+#import "MMStopWatch.h"
+#import "MMAppDelegate.h"
 #import "MMPDFPage.h"
 #import "MMImageInboxItem.h"
 
@@ -109,7 +111,7 @@
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
-
+        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -2143,5 +2145,32 @@ int skipAll = NO;
     return YES;
 }
 
+#pragma mark - Resign Active
+
+-(void) willResignActive{
+    if([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash]){
+        MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
+        [stopwatch start];
+        
+        NSLog(@" - saving pages before background");
+        while(([[[MMPageCacheManager sharedInstance] currentEditablePage] hasEditsToSave] ||
+               [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
+            [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
+            if([[MMMainOperationQueue sharedQueue] pendingBlockCount]){
+                while ([[MMMainOperationQueue sharedQueue] pendingBlockCount]) {
+                    [[MMMainOperationQueue sharedQueue] tick];
+                }
+            }else{
+                [[MMMainOperationQueue sharedQueue] waitFor:0.2];
+            }
+        }
+        NSLog(@" - completed save in %.2fs", [stopwatch read]);
+    }
+    NSLog(@"stack: willResignActive end");
+}
+
+-(void) didEnterBackground{
+    // noop
+}
 
 @end

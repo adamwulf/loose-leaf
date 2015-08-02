@@ -62,11 +62,12 @@ static MMTrashManager* _instance = nil;
 #pragma mark - Public Methods
 
 -(void) deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState{
+    DebugLog(@"asking to delete scrap %@", scrapUUID);
     [self deleteScrap:scrapUUID inScrapCollectionState:scrapCollectionState shouldRespectOthers:YES];
 }
 
 -(void) deletePage:(MMExportablePaperView*)page{
-    DebugLog(@"asking to delete %@", page.uuid);
+    DebugLog(@"asking to delete page %@", page.uuid);
 
     NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;
@@ -82,7 +83,7 @@ static MMTrashManager* _instance = nil;
             while(page.hasEditsToSave || page.isStateLoading || page.isCurrentlySaving){
                 if(page.hasEditsToSave){
                     //                DebugLog(@"deleting a page with active edits");
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                         @autoreleasepool {
                             if(page.hasEditsToSave){
                                 [page saveToDisk:^(BOOL didSaveEdits) {
@@ -90,7 +91,7 @@ static MMTrashManager* _instance = nil;
                                 }];
                             }
                         }
-                    });
+                    }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                 }else if(page.isStateLoading){
                     //                DebugLog(@"waiting for page to finish loading before deleting...");
@@ -181,12 +182,12 @@ static MMTrashManager* _instance = nil;
                     }else{
                         //                DebugLog(@"path to delete doesn't exist %@", thisPagesPath);
                     }
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                         @autoreleasepool {
                             [page setDrawableView:nil];
                             [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
                         }
-                    });
+                    }];
                 }
             });
         }
