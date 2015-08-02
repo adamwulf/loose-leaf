@@ -18,6 +18,8 @@
 
 -(NSArray*) appIntroTutorialSteps;
 
+-(NSArray*) appHelpButtonTutorialSteps;
+
 -(NSArray*) shareTutorialSteps;
 
 -(NSArray*) listViewTutorialSteps;

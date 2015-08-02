@@ -24,7 +24,7 @@
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
-            return [[MMTutorialManager sharedInstance] appIntroTutorialSteps];
+            return [[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps];
         }];
         helpButton.delegate = self;
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -108,7 +108,7 @@
         [tutorialView unloadTutorials];
         [tutorialView removeFromSuperview];
         tutorialView = nil;
-        NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
+        NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps]];
         if(numPendingTutorials){
             [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
         }

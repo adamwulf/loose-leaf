@@ -28,7 +28,10 @@ static MMTutorialManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((self = [super init])){
+        
 #ifdef DEBUG
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
+
         for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
         }
@@ -88,11 +91,16 @@ static MMTutorialManager* _instance = nil;
 }
 
 -(NSArray*) appIntroTutorialSteps{
-    return @[@{
+    return [@[@{
                  @"id":@"app-welcome",
                  @"title":@"",
-                 @"video":@"new-user-intro.png"
-                 },@{
+                 @"video":@"new-user-intro.png",
+                 @"hide-buttons":@(YES)
+                 }] arrayByAddingObjectsFromArray:[self appHelpButtonTutorialSteps]];
+}
+
+-(NSArray*) appHelpButtonTutorialSteps{
+    return @[@{
                  @"id":@"app-intro-pen",
                  @"title":@"Draw and Erase",
                  @"video":@"hello.mp4"

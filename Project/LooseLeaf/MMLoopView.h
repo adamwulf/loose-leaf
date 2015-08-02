@@ -20,6 +20,7 @@
 
 @property (readonly) NSString* title;
 @property (readonly) NSString* tutorialId;
+@property (assign) BOOL wantsHiddenButtons;
 
 -(BOOL) wantsNextButton;
 -(BOOL) isBuffered;
