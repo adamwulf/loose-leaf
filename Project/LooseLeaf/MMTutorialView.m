@@ -99,6 +99,9 @@
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.alwaysBounceVertical = NO;
         
+        UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tutorialViewWasTapped:)];
+        [scrollView addGestureRecognizer:tapGesture];
+        
         [maskedScrollContainer addSubview:scrollView];
         [rotateableTutorialSquare addSubview:maskedScrollContainer];
         
@@ -154,6 +157,16 @@
 
 #pragma mark - Notifications
 
+-(void) tutorialViewWasTapped:(id)sender{
+    NSLog(@"tapped");
+    NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
+    idx = MAX(0, MIN(idx, [tutorialList count]));
+    
+    if([[tutorialList objectAtIndex:idx] objectForKey:@"hide-buttons"]){
+        [self didTapToChangeToTutorial:[tutorialButtons firstObject]];
+    }
+}
+
 -(void) tutorialStepFinished:(NSNotification*)note{
     NSString* tutorialId = note.object;
     NSArray* tutorials = tutorialList;
@@ -164,6 +177,8 @@
         return;
     }
     
+    MMLoopView* tutorialView = [scrollView.subviews objectAtIndex:index];
+    
     index = [[tutorialButtons reduce:^id(id obj, NSUInteger buttonIndex, id accum) {
         if([obj tag] == index){
             return @(buttonIndex);
@@ -173,6 +188,22 @@
     
     [[tutorialButtons objectAtIndex:index] setFinished:YES];
     [[tutorialButtons objectAtIndex:index] bounceButton];
+    
+    
+    if([tutorialView wantsNextButton] && [tutorialView wantsHiddenButtons]){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            CGPoint targetCenter = nextButton.center;
+            nextButton.center = CGPointMake(targetCenter.x, targetCenter.y + 20);
+            [UIView animateWithDuration:.2 animations:^{
+                nextButton.alpha = 1;
+                nextButton.center = CGPointMake(targetCenter.x, targetCenter.y - 8);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:.15 animations:^{
+                    nextButton.center = CGPointMake(targetCenter.x, targetCenter.y);
+                }];
+            }];
+        });
+    }
 }
 
 -(MMTutorialButton*) tutorialButtonForTutorialAtIndex:(NSInteger)tutorialIndex{
@@ -366,7 +397,7 @@
     [checkButton addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
     
     
-    nextButton.alpha = [firstTutorialView wantsNextButton] ? 1 : 0;
+    nextButton.alpha = [firstTutorialView wantsNextButton] && ![firstTutorialView wantsHiddenButtons] ? 1 : 0;
     [tutorialButtons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj setAlpha:[firstTutorialView wantsHiddenButtons] ? 0 : 1];
     }];
