@@ -32,7 +32,6 @@
     UIView* rotateableTutorialSquare;
     NSMutableArray* tutorialButtons;
     
-    UIPageControl* pageControl;
     UIView* fadedBackground;
     UIScrollView* scrollView;
     UIView* separator;
@@ -102,13 +101,6 @@
         [maskedScrollContainer addSubview:scrollView];
         [rotateableTutorialSquare addSubview:maskedScrollContainer];
         
-        pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y + boxSize-40, boxSize, 40)];
-        pageControl.pageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
-        pageControl.userInteractionEnabled = NO;
-        pageControl.currentPageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
-        [rotateableTutorialSquare addSubview:pageControl];
-
-        
         separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
         [maskedScrollContainer addSubview:separator];
@@ -171,7 +163,7 @@
         return;
     }
     
-    index = MAX(0, MIN(index, pageControl.numberOfPages-1));
+    index = MAX(0, MIN(index, [tutorialButtons count]-1));
     [[tutorialButtons objectAtIndex:index] setFinished:YES];
     [[tutorialButtons objectAtIndex:index] bounceButton];
 }
@@ -181,7 +173,6 @@
 -(void) scrollViewDidScroll:(UIScrollView *)_scrollView{
     CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
-    pageControl.currentPage = MAX(0, MIN(idx, pageControl.numberOfPages-1));
     
     idx =  MAX(0, MIN(idx, [tutorialButtons count]-1));
     UIButton* button = [tutorialButtons objectAtIndex:idx];
@@ -296,9 +287,6 @@
     }
     
     [(MMVideoLoopView*)scrollView.subviews.firstObject startAnimating];
-    
-    pageControl.numberOfPages = [tutorials count];
-    pageControl.currentPage = 0;
     
     CGFloat widthForButtonCenters = rotateableTutorialSquare.bounds.size.width;
     CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;

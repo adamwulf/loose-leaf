@@ -41,8 +41,6 @@ static MMTutorialManager* _instance = nil;
         
 #endif
 
-        
-        
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
         currentTutorialStep = [[NSUserDefaults standardUserDefaults] integerForKey:kCurrentTutorialStep];
@@ -91,6 +89,10 @@ static MMTutorialManager* _instance = nil;
 
 -(NSArray*) appIntroTutorialSteps{
     return @[@{
+                 @"id":@"app-welcome",
+                 @"title":@"",
+                 @"video":@"new-user-intro.png"
+                 },@{
                  @"id":@"app-intro-pen",
                  @"title":@"Draw and Erase",
                  @"video":@"hello.mp4"
