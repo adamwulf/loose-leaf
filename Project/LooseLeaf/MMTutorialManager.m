@@ -107,7 +107,7 @@ static MMTutorialManager* _instance = nil;
                  },@{
                  @"id":@"app-intro-pinch",
                  @"title":@"Pinch to See Your Pages",
-                 @"video":@"pinch-to-list.mov"
+                 @"video":@"pinch-to-list.mp4"
                  },@{
                  @"id":@"app-intro-import-scissor",
                  @"title":@"Import and Crop Your Photos",

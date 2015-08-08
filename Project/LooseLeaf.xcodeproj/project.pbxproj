@@ -115,6 +115,7 @@
 		66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66437C54199FDF55003389F0 /* airsharing@2x.png */; };
 		66437C57199FE0F2003389F0 /* airsharing.png in Resources */ = {isa = PBXBuildFile; fileRef = 66437C56199FE0F2003389F0 /* airsharing.png */; };
 		664516B9159030FC0012FACA /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 664516B8159030FC0012FACA /* Constants.m */; };
+		66468E561B75D1C600DD90B0 /* pinch-to-list.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 66468E551B75D1C600DD90B0 /* pinch-to-list.mp4 */; };
 		6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */; };
 		664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 664C62EF15A36DA40072736A /* MMListPaperStackView.mm */; };
 		664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = 664F4138159063F8006F8B09 /* MMPlusIcon.m */; };
@@ -186,12 +187,12 @@
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
 		665810891B6DAF0A00A2C603 /* hello.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 665810881B6DAF0A00A2C603 /* hello.mp4 */; };
 		665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 665ACB821AF84BCA00A53FCA /* NSString+Contains.m */; };
+		665B18201A68D7370000E548 /* UITouch+Distance.m in Sources */ = {isa = PBXBuildFile; fileRef = 665B181F1A68D7370000E548 /* UITouch+Distance.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
 		665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593617BD7CD3006DECBF /* PolygonTool.m */; };
 		665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC1C17B578B0000BD505 /* MMColorButton.m */; };
 		665CAC2117B57B0B000BD505 /* MMPencilAndPaletteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */; };
-		665F7F591AE0894900635D56 /* pinch-to-list.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F581AE0894900635D56 /* pinch-to-list.mov */; };
 		665F7F5B1AE08B8600635D56 /* import-and-scissor.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */; };
 		665F7F5D1AE08D2B00635D56 /* export-to-facebook.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */; };
 		665F7F621AE096D000635D56 /* list-view-delete-page.mov in Resources */ = {isa = PBXBuildFile; fileRef = 665F7F611AE096D000635D56 /* list-view-delete-page.mov */; };
@@ -712,6 +713,7 @@
 		66437C54199FDF55003389F0 /* airsharing@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airsharing@2x.png"; sourceTree = "<group>"; };
 		66437C56199FE0F2003389F0 /* airsharing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airsharing.png; sourceTree = "<group>"; };
 		664516B8159030FC0012FACA /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		66468E551B75D1C600DD90B0 /* pinch-to-list.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "pinch-to-list.mp4"; sourceTree = "<group>"; };
 		6648D21B178C9E5400BE3B37 /* UIColor+Shadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Shadow.h"; sourceTree = "<group>"; };
 		6648D21C178C9E5400BE3B37 /* UIColor+Shadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Shadow.m"; sourceTree = "<group>"; };
 		664C62EE15A36DA40072736A /* MMListPaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListPaperStackView.h; sourceTree = "<group>"; };
@@ -830,6 +832,8 @@
 		665810881B6DAF0A00A2C603 /* hello.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hello.mp4; sourceTree = "<group>"; };
 		665ACB811AF84BCA00A53FCA /* NSString+Contains.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Contains.h"; sourceTree = "<group>"; };
 		665ACB821AF84BCA00A53FCA /* NSString+Contains.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Contains.m"; sourceTree = "<group>"; };
+		665B181E1A68D7370000E548 /* UITouch+Distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITouch+Distance.h"; sourceTree = "<group>"; };
+		665B181F1A68D7370000E548 /* UITouch+Distance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITouch+Distance.m"; sourceTree = "<group>"; };
 		665C592D17BD7692006DECBF /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		665C593217BD7C42006DECBF /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
 		665C593317BD7C42006DECBF /* Tool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tool.m; sourceTree = "<group>"; };
@@ -840,7 +844,6 @@
 		665CAC1F17B57B0B000BD505 /* MMPencilAndPaletteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteView.h; sourceTree = "<group>"; };
 		665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPencilAndPaletteView.m; sourceTree = "<group>"; };
 		665CAC2217B5803B000BD505 /* MMPencilAndPaletteViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPencilAndPaletteViewDelegate.h; sourceTree = "<group>"; };
-		665F7F581AE0894900635D56 /* pinch-to-list.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "pinch-to-list.mov"; sourceTree = "<group>"; };
 		665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "import-and-scissor.mov"; sourceTree = "<group>"; };
 		665F7F5C1AE08D2B00635D56 /* export-to-facebook.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "export-to-facebook.mov"; sourceTree = "<group>"; };
 		665F7F611AE096D000635D56 /* list-view-delete-page.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "list-view-delete-page.mov"; sourceTree = "<group>"; };
@@ -2239,7 +2242,7 @@
 			children = (
 				6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */,
 				665810881B6DAF0A00A2C603 /* hello.mp4 */,
-				665F7F581AE0894900635D56 /* pinch-to-list.mov */,
+				66468E551B75D1C600DD90B0 /* pinch-to-list.mp4 */,
 				665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */,
 				66CC2A9C1AEC3EAD00C6A3F9 /* scrap-to-sidebar.mov */,
 				66CC2A9A1AEB05C300C6A3F9 /* shake-to-reorder.mov */,
@@ -3422,7 +3425,6 @@
 				667C6366199FF25C00E93CD6 /* print@2x.png in Resources */,
 				66CC2A941AEAEA9F00C6A3F9 /* share-tutorials-cloudkit.png in Resources */,
 				667C636A199FF28E00E93CD6 /* print.png in Resources */,
-				665F7F591AE0894900635D56 /* pinch-to-list.mov in Resources */,
 				6600BAA71B6DE4F400D8B2DB /* new-user-intro.png in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
 				66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */,
@@ -3470,6 +3472,7 @@
 				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				66CC2A9D1AEC3EAD00C6A3F9 /* scrap-to-sidebar.mov in Resources */,
+				66468E561B75D1C600DD90B0 /* pinch-to-list.mp4 in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				662808FD1A9BB6D500CA3F9A /* ruler-for-curve-2.mov in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
