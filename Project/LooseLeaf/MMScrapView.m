@@ -10,7 +10,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "UIColor+Shadow.h"
 #import "MMDebugDrawView.h"
 #import "NSString+UUID.h"
@@ -20,6 +19,8 @@
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <PerformanceBezier/PerformanceBezier.h>
+#import <ClippingBezier/ClippingBezier.h>
 
 @implementation MMScrapView{
     // **

@@ -21,7 +21,6 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 #import "MMStatTracker.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <ClippingBezier/ClippingBezier.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 

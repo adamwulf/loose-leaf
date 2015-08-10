@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
+#import <ClippingBezier/ClippingBezier.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 

@@ -10,7 +10,6 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMScrapViewState.h"
 #import "UIImage+Memory.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "Constants.h"
 
 static int totalBackgroundBytes;

@@ -9,7 +9,6 @@
 #import "MMScrapViewState.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMScrapBackgroundView.h"

@@ -9,7 +9,7 @@
 #import "MMPolygonButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Constants.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
 
 @implementation MMPolygonButton
 

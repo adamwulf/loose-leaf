@@ -9,13 +9,14 @@
 #import "MMRulerView.h"
 #import "Constants.h"
 #import "MMVector.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import <ClippingBezier/ClippingBezier.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "UIDevice+PPI.h"
 #import "UIColor+Shadow.h"
+#import <PerformanceBezier/PerformanceBezier.h>
+#import <ClippingBezier/ClippingBezier.h>
 
 @interface MMPointAndVector : NSObject
 @property (nonatomic) CGPoint point;

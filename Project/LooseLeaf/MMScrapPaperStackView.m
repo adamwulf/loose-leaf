@@ -33,7 +33,6 @@
 #import "MMPhotoManager.h"
 #import "NSArray+Extras.h"
 #import "MMStatTracker.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMTutorialView.h"
 #import "MMPDFAlbum.h"
