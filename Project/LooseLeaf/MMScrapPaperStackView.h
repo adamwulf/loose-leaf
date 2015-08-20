@@ -22,4 +22,8 @@
 
 @property (nonatomic, weak) MMCloudKitImportExportView* cloudKitExportView;
 
+-(void) willResignActive;
+
+-(void) didEnterBackground;
+
 @end

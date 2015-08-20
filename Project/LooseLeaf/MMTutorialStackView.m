@@ -23,12 +23,12 @@
 
 -(id) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
-        helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
-            return [[MMTutorialManager sharedInstance] appIntroTutorialSteps];
+        helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
+            return [[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps];
         }];
         helpButton.delegate = self;
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:helpButton];
+        [self insertSubview:helpButton aboveSubview:(__bridge UIView *)(buttons[numberOfButtons-1].button)];
         buttons[numberOfButtons].button = (__bridge void *)(helpButton);
         buttons[numberOfButtons].originalRect = helpButton.frame;
         numberOfButtons++;
@@ -108,7 +108,7 @@
         [tutorialView unloadTutorials];
         [tutorialView removeFromSuperview];
         tutorialView = nil;
-        NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
+        NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps]];
         if(numPendingTutorials){
             [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
         }

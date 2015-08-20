@@ -33,10 +33,11 @@
 #import "MMPhotoManager.h"
 #import "NSArray+Extras.h"
 #import "MMStatTracker.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMTutorialView.h"
 #import "MMPDFAlbum.h"
+#import "MMStopWatch.h"
+#import "MMAppDelegate.h"
 #import "MMPDFPage.h"
 #import "MMImageInboxItem.h"
 
@@ -109,7 +110,7 @@
 
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
-
+        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -357,72 +358,78 @@
 // adds the incoming image as a new scrap to the top page
 // throws exception if in list view
 -(void) importImageAsNewScrap:(UIImage*)scrapBacking{
-    if(![self isShowingPageView]){
-        @throw [NSException exceptionWithName:@"ImageImportException" reason:@"cannot import image when showing list view" userInfo:nil];
+    
+    void(^block)() = ^{
+        MMVector* up = [[MMRotationManager sharedInstance] upVector];
+        MMVector* perp = [[up perpendicular] normal];
+        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+        // start the photo "up" and have it drop down into the center ish of the page
+        center = [up pointFromPoint:center distance:80];
+        // randomize it a bit
+        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+        
+        
+        // subtract 1px from the border so that the background is clipped nicely around the edge
+        CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
+        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
+        
+        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
+        [scrapContainer addSubview:scrap];
+        
+        // background fills the entire scrap
+        [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
+        
+        
+        // prep the scrap to fade in while it drops on screen
+        scrap.alpha = .3;
+        scrap.scale = 1.2;
+        
+        // bounce by 20px (10 on each side)
+        CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
+        
+        // animate the scrap dropping and bouncing on the page
+        [UIView animateWithDuration:.2
+                              delay:.1
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             // doesn't need to land exactly center. this way
+                             // multiple imports of multiple photos won't all
+                             // land exactly on top of each other. looks nicer.
+                             MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+                             CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
+                             // scale the center point to 1.0 scale
+                             center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+                             // at this point, we have the true center of the page,
+                             // now add a bit of random to it to give it some variance
+                             center.x += random() % 14 - 7;
+                             center.y += random() % 14 - 7;
+                             scrap.center = center;
+                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
+                             scrap.alpha = .72;
+                         }
+                         completion:^(BOOL finished){
+                             [UIView animateWithDuration:.1
+                                                   delay:0
+                                                 options:UIViewAnimationOptionCurveEaseIn
+                                              animations:^{
+                                                  [scrap setScale:1];
+                                                  scrap.alpha = 1.0;
+                                              }
+                                              completion:^(BOOL finished){
+                                                  [topPage.scrapsOnPaperState showScrap:scrap];
+                                                  [topPage saveToDisk:nil];
+                                              }];
+                         }];
+    };
+    
+    if([self isShowingPageView]){
+        block();
+    }else{
+        [self transitionFromListToNewBlankPageIfInPageView];
+        [[NSThread mainThread] performBlock:block afterDelay:.2];
     }
-    
-    MMVector* up = [[MMRotationManager sharedInstance] upVector];
-    MMVector* perp = [[up perpendicular] normal];
-    CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
-                                 ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
-    // start the photo "up" and have it drop down into the center ish of the page
-    center = [up pointFromPoint:center distance:80];
-    // randomize it a bit
-    center = [perp pointFromPoint:center distance:(random() % 80) - 40];
-    
-    
-    // subtract 1px from the border so that the background is clipped nicely around the edge
-    CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
-    UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
-    
-    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
-    [scrapContainer addSubview:scrap];
-    
-    // background fills the entire scrap
-    [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
-    
-    
-    // prep the scrap to fade in while it drops on screen
-    scrap.alpha = .3;
-    scrap.scale = 1.2;
-    
-    // bounce by 20px (10 on each side)
-    CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
-    
-    // animate the scrap dropping and bouncing on the page
-    [UIView animateWithDuration:.2
-                          delay:.1
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         // doesn't need to land exactly center. this way
-                         // multiple imports of multiple photos won't all
-                         // land exactly on top of each other. looks nicer.
-                         MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-                         CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
-                         // scale the center point to 1.0 scale
-                         center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
-                         // at this point, we have the true center of the page,
-                         // now add a bit of random to it to give it some variance
-                         center.x += random() % 14 - 7;
-                         center.y += random() % 14 - 7;
-                         scrap.center = center;
-                         [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
-                         scrap.alpha = .72;
-                     }
-                     completion:^(BOOL finished){
-                         [UIView animateWithDuration:.1
-                                               delay:0
-                                             options:UIViewAnimationOptionCurveEaseIn
-                                          animations:^{
-                                              [scrap setScale:1];
-                                              scrap.alpha = 1.0;
-                                          }
-                                          completion:^(BOOL finished){
-                                              [topPage.scrapsOnPaperState showScrap:scrap];
-                                              [topPage saveToDisk:nil];
-                                          }];
-                     }];
 }
 
 
@@ -2054,7 +2061,32 @@ int skipAll = NO;
             UIGraphicsEndImageContext();
         }
     }
-    return retImage;
+
+    UIImage *rotatedImage;
+    @autoreleasepool {
+        UIImageOrientation orientation = UIImageOrientationUp;
+        
+        if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeLeft){
+            orientation = UIImageOrientationRight;
+        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeRight){
+            orientation = UIImageOrientationLeft;
+        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationMaskPortraitUpsideDown){
+            orientation = UIImageOrientationDown;
+        }
+        
+        // rotate it to match the ipad's current orientation
+        rotatedImage = [UIImage imageWithCGImage:[retImage CGImage] scale:retImage.scale orientation:orientation];
+        
+        if(!(rotatedImage.imageOrientation == UIImageOrientationUp || rotatedImage.imageOrientation == UIImageOrientationUpMirrored)){
+            CGSize imgsize = rotatedImage.size;
+            UIGraphicsBeginImageContext(imgsize);
+            [rotatedImage drawInRect:CGRectMake(0.0, 0.0, imgsize.width, imgsize.height)];
+            rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }
+    
+    return rotatedImage;
 }
 
 -(NSDictionary*) cloudKitSenderInfo{
@@ -2118,5 +2150,65 @@ int skipAll = NO;
     return YES;
 }
 
+#pragma mark - Resign Active
+
+-(void) willResignActive{
+    MMUndoablePaperView* currentEditablePage = [[MMPageCacheManager sharedInstance] currentEditablePage];
+    
+    // introspect the page to see if it or any of its
+    // scraps are still loading OpenGL content
+    BOOL (^isPageLoadingHuh)(MMUndoablePaperView*) = ^(MMUndoablePaperView* page){
+        __block BOOL isAnyStateLoading = [currentEditablePage isStateLoading];
+        [[currentEditablePage scrapsOnPaper] enumerateObjectsUsingBlock:^(MMScrapView* obj, NSUInteger idx, BOOL *stop) {
+            isAnyStateLoading = isAnyStateLoading || [[obj state] isScrapStateLoading];
+        }];
+        return isAnyStateLoading;
+    };
+    
+    // we'll wait around if:
+    // 1. our top page has pending edits to save
+    // 2. our top page is still loading in content
+    // 3. there are ny OpenGL objects sitting in the trash
+    NSLog(@" - checking if page is ready to background: saving? %d  loading? %d  trash? %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+    
+    // we need to delay resigning active if our top page
+    // is loading or saving any OpenGL content. Once we
+    // leave this method, all our OpenGL calls will crash
+    // the app, so we need to try our best to wrap up before
+    // then.
+    if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage)){
+        MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
+        [stopwatch start];
+        
+        // if we're in here, then our page has to either load or save
+        // some content. We're going to use a custom MMMainOperationQueue
+        // that will let other threads send blocks to the main thread
+        // without enqueuing them into the dispatch_get_main_queue().
+        //
+        // regardless of what happens, we'll only wait here for 7 seconds
+        // to prevent us from being killed by the watchdog.
+        while(([currentEditablePage hasEditsToSave] || isPageLoadingHuh(currentEditablePage) || [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
+            // fire any timers that would've been triggered if this was a normal run loop
+            [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
+            // now run any blocks that were sent to the main thread from background threads
+            if([[MMMainOperationQueue sharedQueue] pendingBlockCount]){
+                while ([[MMMainOperationQueue sharedQueue] pendingBlockCount]) {
+                    [[MMMainOperationQueue sharedQueue] tick];
+                }
+            }else{
+                // we didn't have any blocks to run, so just
+                // wait here until either .2s is up or a background
+                // thread signals us with a new block to run
+                [[MMMainOperationQueue sharedQueue] waitFor:0.2];
+            }
+        }
+        NSLog(@" - completed save in %.2fs", [stopwatch read]);
+    }
+    NSLog(@"stack: willResignActive end");
+}
+
+-(void) didEnterBackground{
+    // noop
+}
 
 @end

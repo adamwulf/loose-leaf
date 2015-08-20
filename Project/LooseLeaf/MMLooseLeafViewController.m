@@ -177,10 +177,16 @@
 
 -(void) willResignActive{
     DebugLog(@"telling stack to cancel all gestures");
+    NSLog(@"willResignActive");
+    [stackView willResignActive];
     [stackView cancelAllGestures];
     [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
+-(void) didEnterBackground{
+    NSLog(@"didEnterBackground");
+    [stackView didEnterBackground];
+}
 
 -(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
     [super dismissViewControllerAnimated:flag completion:completion];

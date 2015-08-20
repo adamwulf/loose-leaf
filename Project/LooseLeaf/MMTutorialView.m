@@ -22,6 +22,7 @@
 #import "Constants.h"
 #import "NSURL+UTI.h"
 #import "Mixpanel.h"
+#import "NSArray+MapReduce.h"
 
 @interface MMTutorialView ()<MMNewsletterSignupFormDelegate>
 
@@ -32,7 +33,6 @@
     UIView* rotateableTutorialSquare;
     NSMutableArray* tutorialButtons;
     
-    UIPageControl* pageControl;
     UIView* fadedBackground;
     UIScrollView* scrollView;
     UIView* separator;
@@ -99,15 +99,11 @@
         scrollView.showsHorizontalScrollIndicator = NO;
         scrollView.alwaysBounceVertical = NO;
         
+        UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tutorialViewWasTapped:)];
+        [scrollView addGestureRecognizer:tapGesture];
+        
         [maskedScrollContainer addSubview:scrollView];
         [rotateableTutorialSquare addSubview:maskedScrollContainer];
-        
-        pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y + boxSize-40, boxSize, 40)];
-        pageControl.pageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.4];
-        pageControl.userInteractionEnabled = NO;
-        pageControl.currentPageIndicatorTintColor = [[UIColor blackColor] colorWithAlphaComponent:.8];
-        [rotateableTutorialSquare addSubview:pageControl];
-
         
         separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
@@ -161,6 +157,16 @@
 
 #pragma mark - Notifications
 
+-(void) tutorialViewWasTapped:(id)sender{
+    NSLog(@"tapped");
+    NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
+    idx = MAX(0, MIN(idx, [tutorialList count]));
+    
+    if([[tutorialList objectAtIndex:idx] objectForKey:@"hide-buttons"]){
+        [self didTapToChangeToTutorial:[tutorialButtons firstObject]];
+    }
+}
+
 -(void) tutorialStepFinished:(NSNotification*)note{
     NSString* tutorialId = note.object;
     NSArray* tutorials = tutorialList;
@@ -171,9 +177,55 @@
         return;
     }
     
-    index = MAX(0, MIN(index, pageControl.numberOfPages-1));
+    MMLoopView* tutorialView = [scrollView.subviews objectAtIndex:index];
+    
+    index = [[tutorialButtons reduce:^id(id obj, NSUInteger buttonIndex, id accum) {
+        if([obj tag] == index){
+            return @(buttonIndex);
+        }
+        return accum;
+    }] unsignedIntegerValue];
+    
     [[tutorialButtons objectAtIndex:index] setFinished:YES];
     [[tutorialButtons objectAtIndex:index] bounceButton];
+    
+    
+    if([tutorialView wantsNextButton] && [tutorialView wantsHiddenButtons]){
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            CGPoint targetCenter = nextButton.center;
+            nextButton.center = CGPointMake(targetCenter.x, targetCenter.y + 20);
+            [UIView animateWithDuration:.2 animations:^{
+                nextButton.alpha = 1;
+                nextButton.center = CGPointMake(targetCenter.x, targetCenter.y - 8);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:.15 animations:^{
+                    nextButton.center = CGPointMake(targetCenter.x, targetCenter.y);
+                }];
+            }];
+        });
+    }
+}
+
+-(MMTutorialButton*) tutorialButtonForTutorialAtIndex:(NSInteger)tutorialIndex{
+    
+    if(tutorialIndex >= [tutorialList count]){
+        return [tutorialButtons lastObject];
+    }
+
+    __block NSInteger actualTutorialIndex = -1;
+    [tutorialList enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if(![[obj objectForKey:@"hide-buttons"] boolValue]){
+            actualTutorialIndex += 1;
+        }
+        if(idx == tutorialIndex){
+            *stop = YES;
+        }
+    }];
+    
+    if(actualTutorialIndex >= 0 && actualTutorialIndex < [tutorialButtons count]){
+        return [tutorialButtons objectAtIndex:actualTutorialIndex];
+    }
+    return [tutorialButtons lastObject];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -181,10 +233,8 @@
 -(void) scrollViewDidScroll:(UIScrollView *)_scrollView{
     CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;
     NSInteger idx = (NSInteger) floorf(currX / scrollView.bounds.size.width);
-    pageControl.currentPage = MAX(0, MIN(idx, pageControl.numberOfPages-1));
     
-    idx =  MAX(0, MIN(idx, [tutorialButtons count]-1));
-    UIButton* button = [tutorialButtons objectAtIndex:idx];
+    UIButton* button = [self tutorialButtonForTutorialAtIndex:idx];
     button.selected = YES;
     [[tutorialButtons arrayByRemovingObject:button] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [obj setSelected:NO];
@@ -230,6 +280,9 @@
     }
     [UIView animateWithDuration:.3 animations:^{
         nextButton.alpha = [visible wantsNextButton] ? 1 : 0;
+        [tutorialButtons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [obj setAlpha:[visible wantsHiddenButtons] ? 0 : 1];
+        }];
     }];
     if(idx < [tutorialList count]){
         // notify, but only if its a proper tutorial
@@ -255,6 +308,7 @@
 
 -(void) loadTutorials{
     NSArray* tutorials = tutorialList;
+    __block NSInteger numberOfTutorialButtons = 0;
     
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSString* videoURL = [obj objectForKey:@"video"];
@@ -273,7 +327,10 @@
         }else{
             NSLog(@"failed: %@", tutorialURL);
         }
-
+        tutorialView.wantsHiddenButtons = [[obj objectForKey:@"hide-buttons"] boolValue];
+        
+        numberOfTutorialButtons += !tutorialView.wantsHiddenButtons;
+        
         CGRect fr = scrollView.bounds;
         fr.origin.x = idx * fr.size.width;
         tutorialView.frame = fr;
@@ -295,37 +352,40 @@
         scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + scrollView.bounds.size.width, scrollView.contentSize.height);
     }
     
-    [(MMVideoLoopView*)scrollView.subviews.firstObject startAnimating];
+    MMLoopView* firstTutorialView = scrollView.subviews.firstObject;
     
-    pageControl.numberOfPages = [tutorials count];
-    pageControl.currentPage = 0;
+    [firstTutorialView startAnimating];
     
     CGFloat widthForButtonCenters = rotateableTutorialSquare.bounds.size.width;
     CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
     widthForButtonCenters = widthForButtonCenters - 2 * buttonBuffer;
     widthForButtonCenters = widthForButtonCenters - kWidthOfSidebarButton;
     widthForButtonCenters -= 100;
-    CGFloat stepForEachButton = widthForButtonCenters / [tutorials count];
+    CGFloat stepForEachButton = widthForButtonCenters / numberOfTutorialButtons;
     CGFloat startX = (rotateableTutorialSquare.bounds.size.width - widthForButtonCenters) / 2;
     
     tutorialButtons = [NSMutableArray array];
+    __block NSInteger buttonIndex = 0;
     [tutorials enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         NSDictionary* tutorial = [tutorials objectAtIndex:idx];
-        MMTutorialButton* button = [[MMTutorialButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)
-                                                             forStepNumber:idx+1];
-        button.tag = idx;
-        button.finished = [[MMTutorialManager sharedInstance] hasCompletedStep:[tutorial objectForKey:@"id"]];
-        CGPoint center = CGPointMake(startX + stepForEachButton * idx, kWidthOfSidebarButton / 2 + kWidthOfSidebarButtonBuffer);
-        button.center = center;
-        
-        if(idx == 0){
-            button.selected = YES;
+        if(![[obj objectForKey:@"hide-buttons"] boolValue]){
+            MMTutorialButton* button = [[MMTutorialButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)
+                                                                 forStepNumber:buttonIndex+1];
+            button.tag = idx;
+            button.finished = [[MMTutorialManager sharedInstance] hasCompletedStep:[tutorial objectForKey:@"id"]];
+            CGPoint center = CGPointMake(startX + stepForEachButton * buttonIndex, kWidthOfSidebarButton / 2 + kWidthOfSidebarButtonBuffer);
+            button.center = center;
+            
+            if(buttonIndex == 0){
+                button.selected = YES;
+            }
+            
+            [button addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [tutorialButtons addObject:button];
+            [rotateableTutorialSquare addSubview:button];
+            buttonIndex += 1;
         }
-        
-        [button addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [tutorialButtons addObject:button];
-        [rotateableTutorialSquare addSubview:button];
     }];
     
     MMCheckButton* checkButton = [[MMCheckButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -335,6 +395,13 @@
     [tutorialButtons addObject:checkButton];
     [rotateableTutorialSquare addSubview:checkButton];
     [checkButton addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    nextButton.alpha = [firstTutorialView wantsNextButton] && ![firstTutorialView wantsHiddenButtons] ? 1 : 0;
+    [tutorialButtons enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [obj setAlpha:[firstTutorialView wantsHiddenButtons] ? 0 : 1];
+    }];
+
 }
 
 

@@ -89,7 +89,7 @@
 
         noThanksButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
-        [noThanksButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [noThanksButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         [noThanksButton sizeToFit];
         [noThanksButton addTarget:self action:@selector(noThanksButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         CGRect b = noThanksButton.bounds;

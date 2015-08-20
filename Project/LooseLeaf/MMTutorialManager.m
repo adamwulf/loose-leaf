@@ -28,6 +28,22 @@ static MMTutorialManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((self = [super init])){
+        
+#ifdef DEBUG
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
+
+        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
+        }
+        
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+#endif
+
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
         currentTutorialStep = [[NSUserDefaults standardUserDefaults] integerForKey:kCurrentTutorialStep];
@@ -37,16 +53,6 @@ static MMTutorialManager* _instance = nil;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
-#ifdef DEBUG
-        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
-        }
-        
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
-        
-#endif
     }
     return self;
 }
@@ -80,15 +86,28 @@ static MMTutorialManager* _instance = nil;
     return [possiblyPendingTutorials count] - numCompleted;
 }
 
+-(NSArray*) allTutorialStepsEver{
+    return [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]];
+}
+
 -(NSArray*) appIntroTutorialSteps{
+    return [@[@{
+                 @"id":@"app-welcome",
+                 @"title":@"",
+                 @"video":@"new-user-intro.png",
+                 @"hide-buttons":@(YES)
+                 }] arrayByAddingObjectsFromArray:[self appHelpButtonTutorialSteps]];
+}
+
+-(NSArray*) appHelpButtonTutorialSteps{
     return @[@{
                  @"id":@"app-intro-pen",
                  @"title":@"Draw and Erase",
-                 @"video":@"hello.mov"
+                 @"video":@"hello.mp4"
                  },@{
                  @"id":@"app-intro-pinch",
                  @"title":@"Pinch to See Your Pages",
-                 @"video":@"pinch-to-list.mov"
+                 @"video":@"pinch-to-list.mp4"
                  },@{
                  @"id":@"app-intro-import-scissor",
                  @"title":@"Import and Crop Your Photos",
