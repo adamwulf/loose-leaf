@@ -160,7 +160,7 @@
 -(void) tutorialViewWasTapped:(id)sender{
     NSLog(@"tapped");
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
-    idx = MAX(0, MIN(idx, [tutorialList count]));
+    idx = MAX(0, MIN(idx, [tutorialList count] - 1));
     
     if([[tutorialList objectAtIndex:idx] objectForKey:@"hide-buttons"]){
         [self didTapToChangeToTutorial:[tutorialButtons firstObject]];
