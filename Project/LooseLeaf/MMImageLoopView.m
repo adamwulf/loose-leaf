@@ -13,7 +13,6 @@
 
 @implementation MMImageLoopView{
     BOOL isAnimating;
-    NSTimer* timer;
 }
 
 -(id) initForImage:(NSURL*)imageURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId{
@@ -54,9 +53,7 @@
 
 -(void) startAnimating{
     isAnimating = YES;
-    if(!timer){
-        timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(userFinishedImageTutorial) userInfo:nil repeats:NO];
-    }
+    [self performSelector:@selector(userFinishedImageTutorial) withObject:nil afterDelay:1];
 }
 
 -(void) pauseAnimating{
@@ -65,13 +62,6 @@
 
 -(void) stopAnimating{
     isAnimating = NO;
-    [timer invalidate];
-    timer = nil;
-}
-
--(void) dealloc{
-    [timer invalidate];
-    timer = nil;
 }
 
 @end
