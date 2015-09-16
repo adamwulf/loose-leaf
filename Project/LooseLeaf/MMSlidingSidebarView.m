@@ -44,33 +44,13 @@
 //        [blurView showDebugBorder];
 
         
-//        
-//        // blur view
-//        UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-//        UIVisualEffectView* background = [[UIVisualEffectView alloc] initWithEffect:blur];
-//        CGRect size = self.bounds;
-//        background.frame = size;
-//        background.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-//        [self addSubview:background];
-//        
-//        // rect for blur
-//        CGRect leftDarkArea = [self contentBounds];
-//        if(directionIsFromLeft){
-//            leftDarkArea.size.width += 3*kBounceWidth;
-//            leftDarkArea.origin.x = 0;
-//        }else{
-//            leftDarkArea.origin.x -= kBounceWidth;
-//            leftDarkArea.size.width += 3*kBounceWidth;
-//        }
-//
-
         // 2 points for the border size
         borderSize = 2;
         // store our direction and reference button
         directionIsFromLeft = fromLeft;
         referenceButton = _button;
         // make the button we'll use to close
-        closeButton = [[MMLeftCloseButton alloc] initWithFrame:referenceButton.frame];
+        closeButton = [[MMLeftCloseButton alloc] initWithFrame:referenceButton.bounds];
         closeButton.frame = [self rectForButton];
         [closeButton addTarget:self action:@selector(closeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         if(!directionIsFromLeft){
@@ -286,12 +266,12 @@
 -(CGRect) contentBounds{
     CGRect contentBounds = self.bounds;
     contentBounds.size.width -= 2*kBounceWidth;
-    contentBounds.size.width -= referenceButton.frame.size.width;
+    contentBounds.size.width -= referenceButton.bounds.size.width;
     if(directionIsFromLeft){
         return contentBounds;
     }else{
         contentBounds.origin.x += 2*kBounceWidth;
-        contentBounds.origin.x += referenceButton.frame.size.width;
+        contentBounds.origin.x += referenceButton.bounds.size.width;
         return contentBounds;
     }
 }
@@ -310,10 +290,10 @@
         maskBounds.origin.x = 2*kBounceWidth;
     }else{
         maskBounds.origin.x = kBounceWidth;
-        maskBounds.origin.x += referenceButton.frame.size.width;
+        maskBounds.origin.x += referenceButton.bounds.size.width;
     }
     maskBounds.size.width -= kBounceWidth;
-    maskBounds.size.width -= referenceButton.frame.size.width;
+    maskBounds.size.width -= referenceButton.bounds.size.width;
     return maskBounds;
 }
 
@@ -321,16 +301,16 @@
 // will be and is particularly helpful when drawing the
 // notch to fit the button in.
 -(CGRect) rectForButton{
-    CGRect fr = referenceButton.frame;
+    CGRect fr = referenceButton.bounds;
     if(directionIsFromLeft){
         fr.origin.x = [self maskBounds].origin.x + [self maskBounds].size.width;
         fr.origin.x -= kBounceWidth / 2;
     }else{
-        fr.origin.x = [self maskBounds].origin.x - referenceButton.frame.size.width;
+        fr.origin.x = [self maskBounds].origin.x - referenceButton.bounds.size.width;
         fr.origin.x += kBounceWidth / 2;
     }
     fr.origin.x = ceilf(fr.origin.x);
-    fr.origin.y = ceilf(fr.origin.y);
+    fr.origin.y = ceilf(referenceButton.center.y - fr.size.height / 2);
     return fr;
 }
 

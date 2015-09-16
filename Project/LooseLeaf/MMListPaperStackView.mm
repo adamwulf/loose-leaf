@@ -1842,6 +1842,8 @@
     tapGesture.enabled = NO;
     twoFingerTapGesture.enabled = NO;
     longPressGesture.enabled = NO;
+    pinchGesture.enabled = NO;
+    self.scrollEnabled = NO;
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
@@ -1849,6 +1851,8 @@
         tapGesture.enabled = YES;
         twoFingerTapGesture.enabled = YES;
         longPressGesture.enabled = YES;
+        pinchGesture.enabled = YES;
+        self.scrollEnabled = YES;
     }
 }
 
