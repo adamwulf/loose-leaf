@@ -40,36 +40,24 @@
 
 @class MMMemoryProfileView;
 
-struct SidebarButton{
-    void* button;
-    CGRect originalRect;
-} SidebarButton;
-
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
 @interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
     
-    NSUInteger numberOfButtons;
-    struct SidebarButton buttons[20];
-    
     // managers
     MMStackManager* stackManager;
     
     // toolbar
-    MMPaperButton* documentBackgroundSidebarButton;
     MMPlusButton* addPageSidebarButton;
-    MMPolylineButton* polylineButton;
     MMImageButton* insertImageButton;
     MMScissorButton* scissorButton;
-    MMTextButton* textButton;
     MMPencilAndPaletteView* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMTextButton* settingsButton;
-    MMMapButton* mapButton;
-    
+
     MMUndoRedoButton* undoButton;
     MMUndoRedoButton* redoButton;
 

@@ -28,10 +28,7 @@
         }];
         helpButton.delegate = self;
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.toolbar insertSubview:helpButton aboveSubview:(__bridge UIView *)(buttons[numberOfButtons-1].button)];
-        buttons[numberOfButtons].button = (__bridge void *)(helpButton);
-        buttons[numberOfButtons].originalRect = helpButton.frame;
-        numberOfButtons++;
+        [self.toolbar addButton:helpButton extendFrame:NO];
         
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
@@ -140,7 +137,6 @@
         CGFloat rotationValue = [self sidebarButtonRotation];
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
         addPageSidebarButton.transform = rotationTransform;
-        documentBackgroundSidebarButton.transform = rotationTransform;
         helpButton.transform = rotationTransform;
         helpButton.rotation = rotationValue;
 

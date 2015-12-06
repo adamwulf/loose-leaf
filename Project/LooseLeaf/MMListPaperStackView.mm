@@ -92,7 +92,7 @@
         addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
         addPageButtonInListView.delegate = self;
         addPageButtonInListView.alpha = 0;
-        [toolbar addSubview:addPageButtonInListView];
+        [self addSubview:addPageButtonInListView];
         
         pagesBeingAnimatedDuringDeleteGesture = [NSMutableSet set];
     }
