@@ -26,6 +26,7 @@
     BOOL isAnimatingTowardPageView;
 }
 
+@synthesize toolbar;
 @synthesize deleteSidebar;
 
 - (id)initWithFrame:(CGRect)frame
@@ -83,11 +84,15 @@
             }
         }];
 
+        toolbar = [[MMButtonToolbarView alloc] initWithFrame:self.bounds];
+        toolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self addSubview:toolbar];
+
         // init the add page button in top left of scrollview
         addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
         addPageButtonInListView.delegate = self;
         addPageButtonInListView.alpha = 0;
-        [self addSubview:addPageButtonInListView];
+        [toolbar addSubview:addPageButtonInListView];
         
         pagesBeingAnimatedDuringDeleteGesture = [NSMutableSet set];
     }

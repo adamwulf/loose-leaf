@@ -153,7 +153,7 @@
 //        drawLongElementButton.backgroundColor = [UIColor whiteColor];
 //        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
 //        drawLongElementButton.layer.borderWidth = 1;
-//        [self addSubview:drawLongElementButton];
+//        [self.toolbar addSubview:drawLongElementButton];
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 

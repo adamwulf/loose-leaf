@@ -28,7 +28,7 @@
         }];
         helpButton.delegate = self;
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self insertSubview:helpButton aboveSubview:(__bridge UIView *)(buttons[numberOfButtons-1].button)];
+        [self.toolbar insertSubview:helpButton aboveSubview:(__bridge UIView *)(buttons[numberOfButtons-1].button)];
         buttons[numberOfButtons].button = (__bridge void *)(helpButton);
         buttons[numberOfButtons].originalRect = helpButton.frame;
         numberOfButtons++;
