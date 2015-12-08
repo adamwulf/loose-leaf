@@ -216,7 +216,8 @@
 
 -(CGRect) defaultSidebarFrame{
     CGRect imagePickerBounds = self.bounds;
-    imagePickerBounds.size.width = ceilf(imagePickerBounds.size.width / 2) + 2*kBounceWidth;
+    CGFloat imagePickerWidth = MIN(CGRectGetWidth(imagePickerBounds), 768);
+    imagePickerBounds.size.width = ceilf(imagePickerWidth / 2) + 2*kBounceWidth;
     return imagePickerBounds;
 }
 
