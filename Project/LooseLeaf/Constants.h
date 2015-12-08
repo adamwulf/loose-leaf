@@ -62,8 +62,8 @@ _Pragma("clang diagnostic pop") \
 
 
 // List View
-#define kNumberOfColumnsInListView 3
-#define kListPageZoom .25
+#define kNumberOfColumnsInListView 4
+#define kListPageZoom (1.0 / (kNumberOfColumnsInListView + 1.0))
 
 // List View Gesture
 #define kZoomToListPageZoom .4

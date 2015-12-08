@@ -30,18 +30,18 @@ static MMTutorialManager* _instance = nil;
     if((self = [super init])){
         
 #ifdef DEBUG
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
+//
+//        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
+//            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
+//        }
+//        
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+//        
+//        [[NSUserDefaults standardUserDefaults] synchronize];
 
-        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
-        }
-        
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
-        
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
 #endif
 
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
