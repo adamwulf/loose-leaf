@@ -160,9 +160,9 @@
     // track scissor cuts:
     [[MMStatTracker trackerWithName:kMPStatScissorSegments] trackValue:[scissorPath elementCount]];
     
-    
+
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
-    
+
     if([result.addedScraps count] || [result.removedScraps count]){
         NSMutableArray* undoItems = [NSMutableArray array];
         if([result didAddFillStroke]){

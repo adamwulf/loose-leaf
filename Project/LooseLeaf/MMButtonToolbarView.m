@@ -19,6 +19,8 @@
     return self;
 }
 
+#pragma mark - Public Methods
+
 -(void) addButton:(UIView *)button extendFrame:(BOOL)extend{
     self.buttons[self.numberOfButtons].button = (__bridge void*)button;
     self.buttons[self.numberOfButtons].originalRect = button.frame;
@@ -44,6 +46,15 @@
     for(int i=0;i<self.numberOfButtons;i++){
         [((__bridge UIButton*)self.buttons[i].button) setAlpha:visible];
     }
+}
+
+#pragma mark - Private Methods
+
+-(CGRect) adjustFrame:(CGRect)inFrame{
+    if(CGRectGetHeight(self.bounds) > 1024){
+        NSLog(@"need to adjust the frame if on an iPad Pro");
+    }
+    return inFrame;
 }
 
 #pragma mark - Tap Handling

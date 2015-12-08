@@ -71,7 +71,8 @@
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [presentationWindow makeKeyAndVisible];
 
-    self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    self.window = [[MMWindow alloc] initWithFrame:screenBounds];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
     self.window.rootViewController = self.viewController;

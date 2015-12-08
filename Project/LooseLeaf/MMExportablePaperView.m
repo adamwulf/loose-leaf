@@ -592,7 +592,7 @@
                 if(isDirectory){
                     NSError* err = nil;
                     if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                        DebugLog(@"deleted scrap %@", scrapUUID);
+//                        DebugLog(@"deleted scrap %@", scrapUUID);
                     }
                     if(err){
                         //                    DebugLog(@"error deleting %@: %@", scrapPath, err);

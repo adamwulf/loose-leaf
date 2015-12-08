@@ -705,6 +705,11 @@
         
         CGAffineTransform verticalFlip = CGAffineTransformMake(1, 0, 0, -1, 0, self.originalUnscaledBounds.size.height);
 
+
+        CGFloat maxDist = 0;
+        NSMutableArray* vectorsForAnimation = [NSMutableArray array];
+        NSMutableArray* scrapsToAnimate = [NSMutableArray array];
+
         // iterate over the scraps from the visibly top scraps
         // to the bottom of the stack
         for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
@@ -722,7 +727,6 @@
             // to fix this, we need to scale this path to 1.0 scale so that our new
             // scrap is built with the correct initial resolution
             
-            CGFloat maxDist = 0;
             NSMutableArray* vectors = [NSMutableArray array];
             NSMutableArray* scraps = [NSMutableArray array];
             @autoreleasepool {
@@ -750,12 +754,13 @@
                         }
                         // and add the scrap so that it's scale matches the scrap that its built from
                         MMScrapView* addedScrap = [self addScrapWithPath:subshapePath andScale:scrap.scale];
+
                         // track the boundary of the scrap
                         [[MMStatTracker trackerWithName:kMPStatScrapPathSegments] trackValue:addedScrap.bezierPath.elementCount];
                         @synchronized(scrapsOnPaperState.scrapContainerView){
                             [scrapsOnPaperState.scrapContainerView insertSubview:addedScrap aboveSubview:scrap];
                         }
-                        
+
                         // stamp the background
                         if(scrap.backgroundView.backingImage){
                             [addedScrap setBackgroundView:[scrap.backgroundView stampBackgroundFor:addedScrap.state]];
@@ -763,7 +768,7 @@
                         
                         // stamp the contents
                         [addedScrap stampContentsFrom:scrap.state.drawableView];
-                        
+
                         // calculate vectors for pushing scraps apart
                         CGFloat addedScrapDist = distance(scrap.center, addedScrap.center);
                         if(addedScrapDist > maxDist){
@@ -786,19 +791,24 @@
             }
             if([scraps count]){
                 hasBuiltAnyScraps = YES;
-                [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                    for(int i=0;i<[vectors count];i++){
-                        MMVector* vector = [vectors objectAtIndex:i];
-                        vector = [vector normalizedTo:maxDist];
-                        MMScrapView* scrap = [scraps objectAtIndex:i];
-                        
-                        CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
-                        scrap.center = newC;
-                    }
-                } completion:nil];
+
+                [vectorsForAnimation addObjectsFromArray:vectors];
+                [scrapsToAnimate addObjectsFromArray:scraps];
             }
         }
-        
+
+        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            for(int i=0;i<[vectorsForAnimation count];i++){
+                MMVector* vector = [vectorsForAnimation objectAtIndex:i];
+                vector = [vector normalizedTo:maxDist];
+                MMScrapView* scrap = [scrapsToAnimate objectAtIndex:i];
+
+                CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+                scrap.center = newC;
+            }
+        } completion:nil];
+
+
         if(hasBuiltAnyScraps){
             // track if they cut existing scraps
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
@@ -806,7 +816,6 @@
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
-            DebugLog(@"didn't cut any scraps, so make one");
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];
             if([subshapes count] >= 1){
                 scissorPath = [[[subshapes firstObject] fullPath] copy];
@@ -870,6 +879,7 @@
         
         // clear the dotted line of the scissor
         [shapeBuilderView clear];
+
     }
     @catch (NSException *exception) {
         //

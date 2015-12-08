@@ -503,6 +503,7 @@
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
+		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1422,6 +1423,7 @@
 		66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLargeTutorialSidebarButton.m; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
 		C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonToolbarView.m; sourceTree = "<group>"; };
+		C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3009,6 +3011,7 @@
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
+				C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3486,6 +3489,7 @@
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */,
+				C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */,
 				66627F8A1A02582F0064FAD3 /* MPCloseBtn@2x.png in Resources */,
 				66CC2A9B1AEB05C300C6A3F9 /* shake-to-reorder.mov in Resources */,
 				665573611AF6D45000969E63 /* Media.xcassets in Resources */,
@@ -4058,7 +4062,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4077,7 +4080,7 @@
 					"DEBUGUSERDEFAULTS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -4093,7 +4096,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4107,7 +4109,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
