@@ -43,3 +43,6 @@
 [submodule "Submodules/NSString-MD5"]
 	path = Submodules/NSString-MD5
 	url = git@github.com:H2CO3/NSString-MD5.git
+[submodule "Submodules/chatty"]
+	path = Submodules/chatty
+	url = git@github.com:adamwulf/chatty.git
