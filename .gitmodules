@@ -46,3 +46,6 @@
 [submodule "Submodules/chatty"]
 	path = Submodules/chatty
 	url = git@github.com:adamwulf/chatty.git
+[submodule "loose-leaf-tv"]
+	path = loose-leaf-tv
+	url = git@github.com:adamwulf/loose-leaf-tv.git

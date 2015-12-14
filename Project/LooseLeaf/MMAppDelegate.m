@@ -23,6 +23,7 @@
 #import <JotUI/JotUI.h>
 #import <FacebookSDK/FacebookSDK.h>
 #import "MMUnknownObject.h"
+#import <ChattyiOS/ChattyiOS.h>
 
 
 @implementation MMAppDelegate{
