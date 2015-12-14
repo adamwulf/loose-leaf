@@ -862,6 +862,10 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                         // to load state, so notify our delegate
                         [self.delegate didLoadScrapViewState:self];
 //                        DebugLog(@"(%@) loaded scrap state", uuid);
+
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [drawableView performSelector:@selector(setNeedsPresentRenderBuffer)];
+                        });
                     }else{
                         // when loading state, we were actually
                         // told that we didn't really need the

@@ -76,6 +76,9 @@
  * returns a new and loaded scrap with the specified path at the specified scale and rotation.
  */
 -(id)initWithBezierPath:(UIBezierPath *)path andScale:(CGFloat)_scale andRotation:(CGFloat)_rotation andPaperState:(MMScrapCollectionState*)paperState{
+
+    CGFloat duration;
+
     // copy the path, otherwise any changes made to it outside
     // of this class would also be applied to our state.
     UIBezierPath* originalPath = [path copy];
@@ -90,7 +93,7 @@
     // for us, but if not, then go ahead and build one
     MMScrapViewState* _scrapState = [[MMScrapViewState alloc] initWithUUID:[NSString createStringUUID] andBezierPath:originalPath andPaperState:paperState];
     _scrapState.delegate = self;
-    
+
     if(self = [self initWithScrapViewState:_scrapState]){
         // when we create a scrap state, it adjusts the path to have its corner in (0,0), so
         // we need to set our center after we create the state

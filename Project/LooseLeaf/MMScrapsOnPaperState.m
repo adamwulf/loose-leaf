@@ -367,7 +367,18 @@
     if(![self isStateLoaded]){
         @throw [NSException exceptionWithName:@"ModifyingUnloadedScrapsOnPaperStateException" reason:@"cannot add scrap to unloaded ScrapsOnPaperState" userInfo:nil];
     }
-    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
+
+
+    __block MMScrapView* newScrap;
+
+    // timing start
+    CGFloat duration = [NSThread timeBlock:^{
+        newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
+    }];
+    NSLog(@"total = %f", duration);
+    // timing end
+
+
     @synchronized(allLoadedScraps){
         [allLoadedScraps addObject:newScrap];
     }
