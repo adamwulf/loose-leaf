@@ -29,9 +29,9 @@
       location = "group:Submodules/chatty/Chatty.xcodeproj">
    </FileRef>
    <FileRef
-      location = "container:Project/LooseLeaf.xcodeproj">
+      location = "group:loose-leaf-tv/loose-leaf-tv.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:loose-leaf-tv/loose-leaf-tv.xcodeproj">
+      location = "container:Project/LooseLeaf.xcodeproj">
    </FileRef>
 </Workspace>

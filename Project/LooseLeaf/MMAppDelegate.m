@@ -25,6 +25,9 @@
 #import "MMUnknownObject.h"
 #import <ChattyiOS/ChattyiOS.h>
 
+@interface MMAppDelegate()<ServerBrowserDelegate>
+
+@end
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
@@ -32,6 +35,8 @@
     CFAbsoluteTime resignedActiveAtStamp;
     BOOL didRecieveReportFromCrashlytics;
     BOOL isActive;
+    ServerBrowser* serverBrowser;
+    LocalRoom* room;
 }
 
 @synthesize window = _window;
@@ -43,6 +48,12 @@
 {
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
+
+    // Override point for customization after application launch.
+    serverBrowser = [[ServerBrowser alloc] init];
+    serverBrowser.delegate = self;
+    [serverBrowser start];
+
 
     isActive = YES;
     
@@ -360,6 +371,12 @@
     }@catch(id e){
         // noop
     }
+}
+
+#pragma mark - ServerBrowserDelegate
+
+- (void)updateServerList{
+    NSLog(@"updateServerList");
 }
 
 @end
