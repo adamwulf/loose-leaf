@@ -54,7 +54,6 @@
     serverBrowser.delegate = self;
     [serverBrowser start];
 
-
     isActive = YES;
     
     DebugLog(@"DID FINISH LAUNCHING");
@@ -376,7 +375,7 @@
 #pragma mark - ServerBrowserDelegate
 
 - (void)updateServerList{
-    NSLog(@"updateServerList");
+    NSLog(@"updateServerList %d", (int) [serverBrowser.servers count]);
 }
 
 @end
