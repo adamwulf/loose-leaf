@@ -1510,11 +1510,6 @@ int skipAll = NO;
     // hand the cloned scrap to the pan scrap gesture
     panScrapGesture2.scrap = clonedScrap;
 
-    // now that the scrap is where it should be,
-    // and contains its background, etc, then
-    // save everything
-    [page saveToDisk:nil];
-    
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
@@ -1549,6 +1544,11 @@ int skipAll = NO;
 //        }
         @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
+
+    // now that the scrap is where it should be,
+    // and contains its background, etc, then
+    // save everything
+    [page saveToDisk:nil];
 }
 
 
