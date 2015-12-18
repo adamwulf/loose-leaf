@@ -119,6 +119,9 @@
     isActive = NO;
     [[MMRotationManager sharedInstance] willResignActive];
     [self.viewController willResignActive];
+    // stop the timer once "App Close" event is called
+    [[Mixpanel sharedInstance] track:kMPEventActiveSession];
+    [[Mixpanel sharedInstance] track:kMPEventResign];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -162,6 +165,9 @@
     }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
+    // start the timer for the event "App Close"
+    [[Mixpanel sharedInstance] timeEvent:kMPEventActiveSession];
+
     DebugLog(@"DID BECOME ACTIVE");
     DebugLog(@"***************************************************************************");
     DebugLog(@"***************************************************************************");

@@ -174,6 +174,8 @@ _Pragma("clang diagnostic pop") \
 // MixPanel Events Properties
 #define kMPEventLaunch @"App Launch"
 #define kMPEventResume @"App Resume"
+#define kMPEventResign @"App Resign"
+#define kMPEventActiveSession @"Active Session"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventImportPage @"Import Page"
