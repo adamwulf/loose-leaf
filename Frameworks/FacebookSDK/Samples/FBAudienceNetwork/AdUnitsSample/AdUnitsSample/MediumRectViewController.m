@@ -1,31 +1,25 @@
-/**
- * Copyright 2014 Facebook, Inc.
- *
- * You are hereby granted a non-exclusive, worldwide, royalty-free license to
- * use, copy, modify, and distribute this software in source code or binary
- * form for use in connection with the web and mobile services and APIs
- * provided by Facebook.
- *
- * As with any software that integrates with the Facebook platform, your use
- * of this software is subject to the Facebook Developer Principles and
- * Policies [http://developers.facebook.com/policy/]. This copyright notice
- * shall be included in all copies or substantial portions of the software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- *
- */
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "MediumRectViewController.h"
 
 @interface MediumRectViewController ()
 
-@property (nonatomic, weak) IBOutlet UIView *adViewContainer;
 @property (nonatomic, weak) IBOutlet UILabel *adStatusLabel;
 @property (nonatomic, strong) FBAdView *mediumRectAdView;
 
@@ -51,16 +45,9 @@
   [self.mediumRectAdView loadAd];
 
   // Reposition the adView
-  self.mediumRectAdView.frame = self.adViewContainer.bounds;
+  self.mediumRectAdView.frame = [self frameForSize:self.view.bounds.size];
 
-  // Set autoresizingMask so the rotation is automatically handled
-  self.mediumRectAdView.autoresizingMask =
-    UIViewAutoresizingFlexibleRightMargin |
-    UIViewAutoresizingFlexibleLeftMargin|
-    UIViewAutoresizingFlexibleWidth |
-    UIViewAutoresizingFlexibleTopMargin;
-
-  [self.adViewContainer addSubview:self.mediumRectAdView];
+  [self.view addSubview:self.mediumRectAdView];
 
   self.adStatusLabel.text = @"Loading an ad...";
 }
@@ -70,10 +57,18 @@
   // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidLayoutSubviews
+- (void)viewWillTransitionToSize:(CGSize)size
+       withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-  [super viewDidLayoutSubviews];
-  self.mediumRectAdView.frame = self.adViewContainer.bounds;
+  self.mediumRectAdView.frame = [self frameForSize:size];
+  [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+}
+
+- (CGRect)frameForSize:(CGSize)size
+{
+  CGFloat xOffset = size.width / 2 - 150;
+  CGFloat yOffset = (size.height > size.width) ? 100 : 20;
+  return CGRectMake(xOffset, yOffset, 300, 250);
 }
 
 #pragma mark - FBAdViewDelegate implementation

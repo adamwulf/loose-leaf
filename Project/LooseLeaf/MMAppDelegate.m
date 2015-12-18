@@ -21,7 +21,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
 
 
@@ -65,9 +65,8 @@
     [[Crashlytics sharedInstance] setDelegate:self];
     [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
-    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
-    [FBAppEvents activateApp];
-    
+    [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [presentationWindow makeKeyAndVisible];
 
@@ -146,6 +145,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [FBSDKAppEvents activateApp];
     isActive = YES;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self setupTimer];
@@ -178,6 +178,11 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                   openURL:url
+                                         sourceApplication:sourceApplication
+                                                annotation:annotation];
+
     if (url) {
         [self importFileFrom:url fromApp:sourceApplication];
     }

@@ -18,12 +18,14 @@
 		58D92D6518C7A6BC0090E7E2 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58D92D6218C7A6BC0090E7E2 /* ViewController.xib */; };
 		58D92D6C18C7A6D00090E7E2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D92D6818C7A6D00090E7E2 /* main.m */; };
 		58D92D6E18C7A6EB0090E7E2 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D92D6D18C7A6EB0090E7E2 /* AdSupport.framework */; };
+		737A56211A5F438D00AF33D4 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 737A56201A5F438D00AF33D4 /* FBAudienceNetwork.framework */; };
+		905E47651B260B3F00EC94D0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73E6A2C91A94146800938B52 /* AVFoundation.framework */; };
+		905E47671B260BDD00EC94D0 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99F681131AAA9E7800A232DB /* CoreMedia.framework */; };
 		908D9F551A2E4E2900A1438B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 908D9F541A2E4E2900A1438B /* LaunchScreen.xib */; };
-		EE23E6E3198AEE5800215C81 /* NativeAdCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE23E6E1198AEE5800215C81 /* NativeAdCell.m */; };
-		EE23E6E4198AEE5800215C81 /* NativeAdCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE23E6E2198AEE5800215C81 /* NativeAdCell.xib */; };
+		90E89CD41A99AE95005D3430 /* ScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 90E89CD21A99AE95005D3430 /* ScrollViewController.m */; };
+		90E89CD51A99AE95005D3430 /* ScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 90E89CD31A99AE95005D3430 /* ScrollViewController.xib */; };
 		EE23E6E8198B0B0600215C81 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE23E6E6198B0B0600215C81 /* TableViewController.m */; };
 		EE23E6E9198B0B0600215C81 /* TableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE23E6E7198B0B0600215C81 /* TableViewController.xib */; };
-		EEFC6BE418FF33CF004FE2E6 /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEFC6BE318FF33CF004FE2E6 /* FBAudienceNetwork.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,14 +46,21 @@
 		58D92D6818C7A6D00090E7E2 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		58D92D6918C7A6D00090E7E2 /* NativeAdSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NativeAdSample-Prefix.pch"; sourceTree = "<group>"; };
 		58D92D6D18C7A6EB0090E7E2 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		737A56201A5F438D00AF33D4 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBAudienceNetwork.framework; path = ../../src/build/FBAudienceNetwork.framework; sourceTree = "<group>"; };
+		73E6A2C91A94146800938B52 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		73E6A2CD1A94148E00938B52 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		73E6A2D11A9414D400938B52 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		73F881F21A6F24220015DC5C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		902131541AE1179D000A81C2 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		908D9F541A2E4E2900A1438B /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		EE23E6E0198AEE5800215C81 /* NativeAdCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NativeAdCell.h; sourceTree = "<group>"; };
-		EE23E6E1198AEE5800215C81 /* NativeAdCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NativeAdCell.m; sourceTree = "<group>"; };
-		EE23E6E2198AEE5800215C81 /* NativeAdCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NativeAdCell.xib; sourceTree = "<group>"; };
+		90E89CD11A99AE95005D3430 /* ScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollViewController.h; sourceTree = "<group>"; };
+		90E89CD21A99AE95005D3430 /* ScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollViewController.m; sourceTree = "<group>"; };
+		90E89CD31A99AE95005D3430 /* ScrollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ScrollViewController.xib; sourceTree = "<group>"; };
+		99D0C1301AAF6ACD00B66D23 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		99F681131AAA9E7800A232DB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		EE23E6E5198B0B0600215C81 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
 		EE23E6E6198B0B0600215C81 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
 		EE23E6E7198B0B0600215C81 /* TableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewController.xib; sourceTree = "<group>"; };
-		EEFC6BE318FF33CF004FE2E6 /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBAudienceNetwork.framework; path = ../../../../../Documents/FacebookSDK/FBAudienceNetwork.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,13 +68,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				737A56211A5F438D00AF33D4 /* FBAudienceNetwork.framework in Frameworks */,
 				582290BE18E215B000A0CBAC /* StoreKit.framework in Frameworks */,
 				58CDF85D18CA863800790465 /* CoreMotion.framework in Frameworks */,
 				58D92D6E18C7A6EB0090E7E2 /* AdSupport.framework in Frameworks */,
 				58D92D2418C7A6100090E7E2 /* CoreGraphics.framework in Frameworks */,
 				58D92D2618C7A6100090E7E2 /* UIKit.framework in Frameworks */,
-				EEFC6BE418FF33CF004FE2E6 /* FBAudienceNetwork.framework in Frameworks */,
 				58D92D2218C7A6100090E7E2 /* Foundation.framework in Frameworks */,
+				905E47651B260B3F00EC94D0 /* AVFoundation.framework in Frameworks */,
+				905E47671B260BDD00EC94D0 /* CoreMedia.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +105,14 @@
 		58D92D2018C7A6100090E7E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EEFC6BE318FF33CF004FE2E6 /* FBAudienceNetwork.framework */,
+				902131541AE1179D000A81C2 /* MediaPlayer.framework */,
+				99D0C1301AAF6ACD00B66D23 /* libc++.dylib */,
+				99F681131AAA9E7800A232DB /* CoreMedia.framework */,
+				73E6A2D11A9414D400938B52 /* SystemConfiguration.framework */,
+				73E6A2CD1A94148E00938B52 /* CoreTelephony.framework */,
+				73E6A2C91A94146800938B52 /* AVFoundation.framework */,
+				73F881F21A6F24220015DC5C /* libz.dylib */,
+				737A56201A5F438D00AF33D4 /* FBAudienceNetwork.framework */,
 				582290BD18E215B000A0CBAC /* StoreKit.framework */,
 				58CDF85C18CA863800790465 /* CoreMotion.framework */,
 				58D92D6D18C7A6EB0090E7E2 /* AdSupport.framework */,
@@ -108,12 +126,12 @@
 		58D92D2718C7A6100090E7E2 /* NativeAdSample */ = {
 			isa = PBXGroup;
 			children = (
-				EE23E6E0198AEE5800215C81 /* NativeAdCell.h */,
-				EE23E6E1198AEE5800215C81 /* NativeAdCell.m */,
-				EE23E6E2198AEE5800215C81 /* NativeAdCell.xib */,
 				EE23E6E5198B0B0600215C81 /* TableViewController.h */,
 				EE23E6E6198B0B0600215C81 /* TableViewController.m */,
 				EE23E6E7198B0B0600215C81 /* TableViewController.xib */,
+				90E89CD11A99AE95005D3430 /* ScrollViewController.h */,
+				90E89CD21A99AE95005D3430 /* ScrollViewController.m */,
+				90E89CD31A99AE95005D3430 /* ScrollViewController.xib */,
 				58D92D6018C7A6BC0090E7E2 /* ViewController.h */,
 				58D92D6118C7A6BC0090E7E2 /* ViewController.m */,
 				58D92D6218C7A6BC0090E7E2 /* ViewController.xib */,
@@ -163,7 +181,7 @@
 		58D92D1618C7A6100090E7E2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Facebook;
 			};
 			buildConfigurationList = 58D92D1918C7A6100090E7E2 /* Build configuration list for PBXProject "NativeAdSample" */;
@@ -191,9 +209,9 @@
 			files = (
 				908D9F551A2E4E2900A1438B /* LaunchScreen.xib in Resources */,
 				58D92D6518C7A6BC0090E7E2 /* ViewController.xib in Resources */,
-				EE23E6E4198AEE5800215C81 /* NativeAdCell.xib in Resources */,
 				58D92D5D18C7A6B10090E7E2 /* Images.xcassets in Resources */,
 				EE23E6E9198B0B0600215C81 /* TableViewController.xib in Resources */,
+				90E89CD51A99AE95005D3430 /* ScrollViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,9 +222,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE23E6E3198AEE5800215C81 /* NativeAdCell.m in Sources */,
 				58D92D5C18C7A6B10090E7E2 /* AppDelegate.m in Sources */,
 				58D92D6C18C7A6D00090E7E2 /* main.m in Sources */,
+				90E89CD41A99AE95005D3430 /* ScrollViewController.m in Sources */,
 				EE23E6E8198B0B0600215C81 /* TableViewController.m in Sources */,
 				58D92D6418C7A6BC0090E7E2 /* ViewController.m in Sources */,
 			);
@@ -219,7 +237,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -234,6 +251,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -259,7 +277,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -296,11 +313,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NativeAdSample/NativeAdSample-Prefix.pch";
 				INFOPLIST_FILE = "NativeAdSample/NativeAdSample-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.audiencenetwork.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -313,11 +331,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../../../../Documents/FacebookSDK\"",
+					"\"$(SRCROOT)/../../../\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NativeAdSample/NativeAdSample-Prefix.pch";
 				INFOPLIST_FILE = "NativeAdSample/NativeAdSample-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.audiencenetwork.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

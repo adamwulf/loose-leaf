@@ -1,0 +1,1297 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>FBSDKAppEvents Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">Facebook SDK 4.8 for iOS </a></h1>
+				<a id="developerHome" href="../index.html">Facebook</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">FBSDKAppEvents Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	<option value="class_methods">Class Methods</option>
+	
+	<option value="//api/name/activateApp">&nbsp;&nbsp;&nbsp;&nbsp;+ activateApp</option>
+	
+	<option value="//api/name/flush">&nbsp;&nbsp;&nbsp;&nbsp;+ flush</option>
+	
+	<option value="//api/name/flushBehavior">&nbsp;&nbsp;&nbsp;&nbsp;+ flushBehavior</option>
+	
+	<option value="//api/name/logEvent:">&nbsp;&nbsp;&nbsp;&nbsp;+ logEvent:</option>
+	
+	<option value="//api/name/logEvent:parameters:">&nbsp;&nbsp;&nbsp;&nbsp;+ logEvent:parameters:</option>
+	
+	<option value="//api/name/logEvent:valueToSum:">&nbsp;&nbsp;&nbsp;&nbsp;+ logEvent:valueToSum:</option>
+	
+	<option value="//api/name/logEvent:valueToSum:parameters:">&nbsp;&nbsp;&nbsp;&nbsp;+ logEvent:valueToSum:parameters:</option>
+	
+	<option value="//api/name/logEvent:valueToSum:parameters:accessToken:">&nbsp;&nbsp;&nbsp;&nbsp;+ logEvent:valueToSum:parameters:accessToken:</option>
+	
+	<option value="//api/name/logPurchase:currency:">&nbsp;&nbsp;&nbsp;&nbsp;+ logPurchase:currency:</option>
+	
+	<option value="//api/name/logPurchase:currency:parameters:">&nbsp;&nbsp;&nbsp;&nbsp;+ logPurchase:currency:parameters:</option>
+	
+	<option value="//api/name/logPurchase:currency:parameters:accessToken:">&nbsp;&nbsp;&nbsp;&nbsp;+ logPurchase:currency:parameters:accessToken:</option>
+	
+	<option value="//api/name/loggingOverrideAppID">&nbsp;&nbsp;&nbsp;&nbsp;+ loggingOverrideAppID</option>
+	
+	<option value="//api/name/requestForCustomAudienceThirdPartyIDWithAccessToken:">&nbsp;&nbsp;&nbsp;&nbsp;+ requestForCustomAudienceThirdPartyIDWithAccessToken:</option>
+	
+	<option value="//api/name/setFlushBehavior:">&nbsp;&nbsp;&nbsp;&nbsp;+ setFlushBehavior:</option>
+	
+	<option value="//api/name/setLoggingOverrideAppID:">&nbsp;&nbsp;&nbsp;&nbsp;+ setLoggingOverrideAppID:</option>
+	
+	
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/activateApp">activateApp</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/flush">flush</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/flushBehavior">flushBehavior</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logEvent:">logEvent:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logEvent:parameters:">logEvent:parameters:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logEvent:valueToSum:">logEvent:valueToSum:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logEvent:valueToSum:parameters:">logEvent:valueToSum:parameters:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logEvent:valueToSum:parameters:accessToken:">logEvent:valueToSum:parameters:accessToken:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logPurchase:currency:">logPurchase:currency:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logPurchase:currency:parameters:">logPurchase:currency:parameters:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logPurchase:currency:parameters:accessToken:">logPurchase:currency:parameters:accessToken:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loggingOverrideAppID">loggingOverrideAppID</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/requestForCustomAudienceThirdPartyIDWithAccessToken:">requestForCustomAudienceThirdPartyIDWithAccessToken:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setFlushBehavior:">setFlushBehavior:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setLoggingOverrideAppID:">setLoggingOverrideAppID:</a></span></li>
+	
+</ul></li>
+
+
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="FBSDKAppEvents Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">FBSDKAppEvents Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">FBSDKAppEvents.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>@class FBSDKAppEvents</p>
+
+<p>@abstract
+Client-side event logging for specialized application analytics available through Facebook App Insights
+and for use with Facebook Ads conversion tracking and optimization.</p>
+
+<p>@discussion
+The <code>FBSDKAppEvents</code> static class has a few related roles:</p>
+
+<ul>
+<li><p>Logging predefined and application-defined events to Facebook App Insights with a
+numeric value to sum across a large number of events, and an optional set of key/value
+parameters that define &ldquo;segments&rdquo; for this event (e.g., &lsquo;purchaserStatus&rsquo; : &lsquo;frequent&rsquo;, or
+&lsquo;gamerLevel&rsquo; : &lsquo;intermediate&rsquo;)</p></li>
+<li><p>Logging events to later be used for ads optimization around lifetime value.</p></li>
+<li><p>Methods that control the way in which events are flushed out to the Facebook servers.</p></li>
+</ul>
+
+
+<p>Here are some important characteristics of the logging mechanism provided by <code>FBSDKAppEvents</code>:</p>
+
+<ul>
+<li>Events are not sent immediately when logged.  They&rsquo;re cached and flushed out to the Facebook servers
+in a number of situations:</li>
+<li>when an event count threshold is passed (currently 100 logged events).</li>
+<li>when a time threshold is passed (currently 15 seconds).</li>
+<li><p>when an app has gone to background and is then brought back to the foreground.</p></li>
+<li><p>Events will be accumulated when the app is in a disconnected state, and sent when the connection is
+restored and one of the above &lsquo;flush&rsquo; conditions are met.</p></li>
+<li><p>The <code>FBSDKAppEvents</code> class is thread-safe in that events may be logged from any of the app&rsquo;s threads.</p></li>
+<li><p>The developer can set the <code>flushBehavior</code> on <code>FBSDKAppEvents</code> to force the flushing of events to only
+occur on an explicit call to the <code>flush</code> method.</p></li>
+<li><p>The developer can turn on console debug output for event logging and flushing to the server by using
+the <code>FBSDKLoggingBehaviorAppEvents</code> value in <code>[FBSettings setLoggingBehavior:]</code>.</p></li>
+</ul>
+
+
+<p>Some things to note when logging events:</p>
+
+<ul>
+<li>There is a limit on the number of unique event names an app can use, on the order of 1000.</li>
+<li>There is a limit to the number of unique parameter names in the provided parameters that can
+be used per event, on the order of 25.  This is not just for an individual call, but for all
+invocations for that eventName.</li>
+<li>Event names and parameter names (the keys in the NSDictionary) must be between 2 and 40 characters, and
+must consist of alphanumeric characters, _, -, or spaces.</li>
+<li>The length of each parameter value can be no more than on the order of 100 characters.</li>
+</ul>
+
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logEvent:">+&nbsp;logEvent:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logEvent:valueToSum:">+&nbsp;logEvent:valueToSum:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logEvent:parameters:">+&nbsp;logEvent:parameters:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logEvent:valueToSum:parameters:">+&nbsp;logEvent:valueToSum:parameters:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logEvent:valueToSum:parameters:accessToken:">+&nbsp;logEvent:valueToSum:parameters:accessToken:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logPurchase:currency:">+&nbsp;logPurchase:currency:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logPurchase:currency:parameters:">+&nbsp;logPurchase:currency:parameters:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logPurchase:currency:parameters:accessToken:">+&nbsp;logPurchase:currency:parameters:accessToken:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/activateApp">+&nbsp;activateApp</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/flushBehavior">+&nbsp;flushBehavior</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setFlushBehavior:">+&nbsp;setFlushBehavior:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setLoggingOverrideAppID:">+&nbsp;setLoggingOverrideAppID:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loggingOverrideAppID">+&nbsp;loggingOverrideAppID</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/flush">+&nbsp;flush</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/requestForCustomAudienceThirdPartyIDWithAccessToken:">+&nbsp;requestForCustomAudienceThirdPartyIDWithAccessToken:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Class Methods" name="class_methods"></a>
+						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/activateApp" title="activateApp"></a>
+	<h3 class="subsubtitle method-title">activateApp</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Notifies the events system that the app has launched and, when appropriate, logs an &ldquo;activated app&rdquo; event.  Should typically be placed in the
+app delegates' <code>applicationDidBecomeActive:</code> method.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)activateApp</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>This method also takes care of logging the event indicating the first time this app has been launched, which, among other things, is used to
+track user acquisition and app install ads conversions.</p>
+
+<p>@discussion
+<code>activateApp</code> will not log an event on every app launch, since launches happen every time the app is backgrounded and then foregrounded.
+&ldquo;activated app&rdquo; events will be logged when the app has not been active for more than 60 seconds.  This method also causes a &ldquo;deactivated app&rdquo;
+event to be logged when sessions are &ldquo;completed&rdquo;, and these events are logged with the session length, with an indication of how much
+time has elapsed between sessions, and with the number of background/foreground interruptions that session had.  This data
+is all visible in your app&rsquo;s App Events Insights.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/flush" title="flush"></a>
+	<h3 class="subsubtitle method-title">flush</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Explicitly kick off flushing of events to Facebook.  This is an asynchronous method, but it does initiate an immediate
+kick off.  Server failures will be reported through the NotificationCenter with notification ID <code>FBSDKAppEventsLoggingResultNotification</code>.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)flush</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/flushBehavior" title="flushBehavior"></a>
+	<h3 class="subsubtitle method-title">flushBehavior</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Get the current event flushing behavior specifying when events are sent back to Facebook servers.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBSDKAppEventsFlushBehavior)flushBehavior</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logEvent:" title="logEvent:"></a>
+	<h3 class="subsubtitle method-title">logEvent:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log an event with just an eventName.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logEvent:(NSString *)<em>eventName</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>eventName</em></dt>
+			<dd><p>The name of the event to record.  Limitations on number of events and name length
+are given in the <code>FBSDKAppEvents</code> documentation.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logEvent:parameters:" title="logEvent:parameters:"></a>
+	<h3 class="subsubtitle method-title">logEvent:parameters:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log an event with an eventName and a set of key/value pairs in the parameters dictionary.
+Parameter limitations are described above.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logEvent:(NSString *)<em>eventName</em> parameters:(NSDictionary *)<em>parameters</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>eventName</em></dt>
+			<dd><p>The name of the event to record.  Limitations on number of events and name construction
+are given in the <code>FBSDKAppEvents</code> documentation.  Common event names are provided in <code>FBAppEventName*</code> constants.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+be NSString&rsquo;s, and the values are expected to be NSString or NSNumber.  Limitations on the number of
+parameters and name construction are given in the <code>FBSDKAppEvents</code> documentation.  Commonly used parameter names
+are provided in <code>FBSDKAppEventParameterName*</code> constants.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logEvent:valueToSum:" title="logEvent:valueToSum:"></a>
+	<h3 class="subsubtitle method-title">logEvent:valueToSum:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log an event with an eventName and a numeric value to be aggregated with other events of this name.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logEvent:(NSString *)<em>eventName</em> valueToSum:(double)<em>valueToSum</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>eventName</em></dt>
+			<dd><p>The name of the event to record.  Limitations on number of events and name length
+are given in the <code>FBSDKAppEvents</code> documentation.  Common event names are provided in <code>FBAppEventName*</code> constants.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>valueToSum</em></dt>
+			<dd><p>Amount to be aggregated into all events of this eventName, and App Insights will report
+the cumulative and average value of this amount.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logEvent:valueToSum:parameters:" title="logEvent:valueToSum:parameters:"></a>
+	<h3 class="subsubtitle method-title">logEvent:valueToSum:parameters:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log an event with an eventName, a numeric value to be aggregated with other events of this name,
+and a set of key/value pairs in the parameters dictionary.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logEvent:(NSString *)<em>eventName</em> valueToSum:(double)<em>valueToSum</em> parameters:(NSDictionary *)<em>parameters</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>eventName</em></dt>
+			<dd><p>The name of the event to record.  Limitations on number of events and name construction
+are given in the <code>FBSDKAppEvents</code> documentation.  Common event names are provided in <code>FBAppEventName*</code> constants.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>valueToSum</em></dt>
+			<dd><p>Amount to be aggregated into all events of this eventName, and App Insights will report
+the cumulative and average value of this amount.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+be NSString&rsquo;s, and the values are expected to be NSString or NSNumber.  Limitations on the number of
+parameters and name construction are given in the <code>FBSDKAppEvents</code> documentation.  Commonly used parameter names
+are provided in <code>FBSDKAppEventParameterName*</code> constants.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logEvent:valueToSum:parameters:accessToken:" title="logEvent:valueToSum:parameters:accessToken:"></a>
+	<h3 class="subsubtitle method-title">logEvent:valueToSum:parameters:accessToken:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log an event with an eventName, a numeric value to be aggregated with other events of this name,
+and a set of key/value pairs in the parameters dictionary.  Providing session lets the developer
+target a particular <FBSession>.  If nil is provided, then <code>[FBSession activeSession]</code> will be used.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logEvent:(NSString *)<em>eventName</em> valueToSum:(NSNumber *)<em>valueToSum</em> parameters:(NSDictionary *)<em>parameters</em> accessToken:(FBSDKAccessToken *)<em>accessToken</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>eventName</em></dt>
+			<dd><p>The name of the event to record.  Limitations on number of events and name construction
+are given in the <code>FBSDKAppEvents</code> documentation.  Common event names are provided in <code>FBAppEventName*</code> constants.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>valueToSum</em></dt>
+			<dd><p>Amount to be aggregated into all events of this eventName, and App Insights will report
+the cumulative and average value of this amount.  Note that this is an NSNumber, and a value of <code>nil</code> denotes
+that this event doesn&rsquo;t have a value associated with it for summation.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+be NSString&rsquo;s, and the values are expected to be NSString or NSNumber.  Limitations on the number of
+parameters and name construction are given in the <code>FBSDKAppEvents</code> documentation.  Commonly used parameter names
+are provided in <code>FBSDKAppEventParameterName*</code> constants.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>accessToken</em></dt>
+			<dd><p>The optional access token to log the event as.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logPurchase:currency:" title="logPurchase:currency:"></a>
+	<h3 class="subsubtitle method-title">logPurchase:currency:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log a purchase of the specified amount, in the specified currency.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logPurchase:(double)<em>purchaseAmount</em> currency:(NSString *)<em>currency</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>purchaseAmount</em></dt>
+			<dd><p>Purchase amount to be logged, as expressed in the specified currency.  This value
+will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>currency</em></dt>
+			<dd><p>Currency, is denoted as, e.g. &ldquo;USD&rdquo;, &ldquo;EUR&rdquo;, &ldquo;GBP&rdquo;.  See ISO-4217 for
+specific values.  One reference for these is <a href="http://en.wikipedia.org/wiki/ISO_4217">http://en.wikipedia.org/wiki/ISO_4217</a>.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>This event immediately triggers a flush of the <code>FBSDKAppEvents</code> event queue, unless the <code>flushBehavior</code> is set
+to <code>FBSDKAppEventsFlushBehaviorExplicitOnly</code>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logPurchase:currency:parameters:" title="logPurchase:currency:parameters:"></a>
+	<h3 class="subsubtitle method-title">logPurchase:currency:parameters:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log a purchase of the specified amount, in the specified currency, also providing a set of
+additional characteristics describing the purchase.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logPurchase:(double)<em>purchaseAmount</em> currency:(NSString *)<em>currency</em> parameters:(NSDictionary *)<em>parameters</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>purchaseAmount</em></dt>
+			<dd><p>Purchase amount to be logged, as expressed in the specified currency.This value
+will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>currency</em></dt>
+			<dd><p>Currency, is denoted as, e.g. &ldquo;USD&rdquo;, &ldquo;EUR&rdquo;, &ldquo;GBP&rdquo;.  See ISO-4217 for
+specific values.  One reference for these is <a href="http://en.wikipedia.org/wiki/ISO_4217">http://en.wikipedia.org/wiki/ISO_4217</a>.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+be NSString&rsquo;s, and the values are expected to be NSString or NSNumber.  Limitations on the number of
+parameters and name construction are given in the <code>FBSDKAppEvents</code> documentation.  Commonly used parameter names
+are provided in <code>FBSDKAppEventParameterName*</code> constants.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>This event immediately triggers a flush of the <code>FBSDKAppEvents</code> event queue, unless the <code>flushBehavior</code> is set
+to <code>FBSDKAppEventsFlushBehaviorExplicitOnly</code>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logPurchase:currency:parameters:accessToken:" title="logPurchase:currency:parameters:accessToken:"></a>
+	<h3 class="subsubtitle method-title">logPurchase:currency:parameters:accessToken:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Log a purchase of the specified amount, in the specified currency, also providing a set of
+additional characteristics describing the purchase, as well as an <FBSession> to log to.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logPurchase:(double)<em>purchaseAmount</em> currency:(NSString *)<em>currency</em> parameters:(NSDictionary *)<em>parameters</em> accessToken:(FBSDKAccessToken *)<em>accessToken</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>purchaseAmount</em></dt>
+			<dd><p>Purchase amount to be logged, as expressed in the specified currency.This value
+will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>currency</em></dt>
+			<dd><p>Currency, is denoted as, e.g. &ldquo;USD&rdquo;, &ldquo;EUR&rdquo;, &ldquo;GBP&rdquo;.  See ISO-4217 for
+specific values.  One reference for these is <a href="http://en.wikipedia.org/wiki/ISO_4217">http://en.wikipedia.org/wiki/ISO_4217</a>.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>Arbitrary parameter dictionary of characteristics. The keys to this dictionary must
+be NSString&rsquo;s, and the values are expected to be NSString or NSNumber.  Limitations on the number of
+parameters and name construction are given in the <code>FBSDKAppEvents</code> documentation.  Commonly used parameter names
+are provided in <code>FBSDKAppEventParameterName*</code> constants.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>accessToken</em></dt>
+			<dd><p>The optional access token to log the event as.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>This event immediately triggers a flush of the <code>FBSDKAppEvents</code> event queue, unless the <code>flushBehavior</code> is set
+to <code>FBSDKAppEventsFlushBehaviorExplicitOnly</code>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loggingOverrideAppID" title="loggingOverrideAppID"></a>
+	<h3 class="subsubtitle method-title">loggingOverrideAppID</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Get the &lsquo;override&rsquo; App ID for App Event logging.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (NSString *)loggingOverrideAppID</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection see-also-section">
+		<h4 class="method-subtitle">See Also</h4>
+		<ul>
+			
+			<li><code><p><a href="#//api/name/setLoggingOverrideAppID:">+ setLoggingOverrideAppID:</a></p></code></li>
+			
+		</ul>
+	</div>
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/requestForCustomAudienceThirdPartyIDWithAccessToken:" title="requestForCustomAudienceThirdPartyIDWithAccessToken:"></a>
+	<h3 class="subsubtitle method-title">requestForCustomAudienceThirdPartyIDWithAccessToken:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Creates a request representing the Graph API call to retrieve a Custom Audience &ldquo;third party ID&rdquo; for the app&rsquo;s Facebook user.
+Callers will send this ID back to their own servers, collect up a set to create a Facebook Custom Audience with,
+and then use the resultant Custom Audience to target ads.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)<em>accessToken</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>accessToken</em></dt>
+			<dd><p>The access token to use to establish the user&rsquo;s identity for users logged into Facebook through this app.
+If <code>nil</code>, then the <code>[FBSDKAccessToken currentAccessToken]</code> is used.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@discussion
+The JSON in the request&rsquo;s response will include an &ldquo;custom_audience_third_party_id&rdquo; key/value pair, with the value being the ID retrieved.
+This ID is an encrypted encoding of the Facebook user&rsquo;s ID and the invoking Facebook app ID.
+Multiple calls with the same user will return different IDs, thus these IDs cannot be used to correlate behavior
+across devices or applications, and are only meaningful when sent back to Facebook for creating Custom Audiences.</p>
+
+<p>The ID retrieved represents the Facebook user identified in the following way: if the specified access token is valid,
+the ID will represent the user associated with that token; otherwise the ID will represent the user logged into the
+native Facebook app on the device.  If there is no native Facebook app, no one is logged into it, or the user has opted out
+at the iOS level from ad tracking, then a <code>nil</code> ID will be returned.</p>
+
+<p>This method returns <code>nil</code> if either the user has opted-out (via iOS) from Ad Tracking, the app itself has limited event usage
+via the <code>[FBSDKSettings limitEventAndDataUsage]</code> flag, or a specific Facebook user cannot be identified.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setFlushBehavior:" title="setFlushBehavior:"></a>
+	<h3 class="subsubtitle method-title">setFlushBehavior:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Set the current event flushing behavior specifying when events are sent back to Facebook servers.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)setFlushBehavior:(FBSDKAppEventsFlushBehavior)<em>flushBehavior</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>flushBehavior</em></dt>
+			<dd><p>The desired <code>FBSDKAppEventsFlushBehavior</code> to be used.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setLoggingOverrideAppID:" title="setLoggingOverrideAppID:"></a>
+	<h3 class="subsubtitle method-title">setLoggingOverrideAppID:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+Set the &lsquo;override&rsquo; App ID for App Event logging.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)setLoggingOverrideAppID:(NSString *)<em>appID</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>appID</em></dt>
+			<dd><p>The Facebook App ID to be used for App Event logging.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@discussion
+In some cases, apps want to use one Facebook App ID for login and social presence and another
+for App Event logging.  (An example is if multiple apps from the same company share an app ID for login, but
+want distinct logging.)  By default, this value is <code>nil</code>, and defers to the <code>FBSDKAppEventsOverrideAppIDBundleKey</code>
+plist value.  If that&rsquo;s not set, it defaults to <code>[FBSDKSettings appID]</code>.</p>
+
+<p>This should be set before any other calls are made to <code>FBSDKAppEvents</code>.  Thus, you should set it in your application
+delegate&rsquo;s <code>application:didFinishLaunchingWithOptions:</code> delegate.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKAppEvents.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					
+                    
+                    
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 Facebook. All rights reserved. (Last updated: 2015-11-11)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>
