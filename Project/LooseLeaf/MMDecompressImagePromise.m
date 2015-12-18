@@ -36,7 +36,7 @@ NSOperationQueue* decompressImageQueue;
         delegate = _delegate;
         image = imageToDecompress;
         __weak MMDecompressImagePromise* weakSelf = self;
-        void (^notifyDelegateBlock)() = ^(void) {
+        __block void (^notifyDelegateBlock)() = ^(void) {
             @autoreleasepool {
                 MMDecompressImagePromise* strongMainSelf = weakSelf;
                 @synchronized(strongMainSelf){
