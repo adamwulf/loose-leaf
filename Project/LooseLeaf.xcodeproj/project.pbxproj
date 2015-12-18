@@ -430,6 +430,7 @@
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
+		C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C506A3921C23DAD800236895 /* TwitterCore.framework */; };
 		C567CFFA1C23D732000098B4 /* Mixpanel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C567CFF91C23D732000098B4 /* Mixpanel.framework */; };
 		C567CFFC1C23D83C000098B4 /* SSKeychain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C567CFFB1C23D83C000098B4 /* SSKeychain.framework */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
@@ -1223,6 +1224,7 @@
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
 		66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLargeTutorialSidebarButton.h; sourceTree = "<group>"; };
 		66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLargeTutorialSidebarButton.m; sourceTree = "<group>"; };
+		C506A3921C23DAD800236895 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterCore.framework; path = ../Frameworks/TwitterCore.framework; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C567CFFB1C23D83C000098B4 /* SSKeychain.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SSKeychain.framework; path = "../Submodules/sskeychain/build/Debug-iphoneos/SSKeychain.framework"; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
@@ -1243,6 +1245,7 @@
 				6682FEF41A8DB41700187325 /* SimpleCloudKitManager.framework in Frameworks */,
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */,
+				C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */,
 				6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */,
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
 				661C4B261A830FB20014DB20 /* Pinterest.framework in Frameworks */,
@@ -2596,6 +2599,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C506A3921C23DAD800236895 /* TwitterCore.framework */,
 				C567CFFB1C23D83C000098B4 /* SSKeychain.framework */,
 				C567CFF91C23D732000098B4 /* Mixpanel.framework */,
 				66AB56701B0DA010005E6FB1 /* ClippingBezier.framework */,
