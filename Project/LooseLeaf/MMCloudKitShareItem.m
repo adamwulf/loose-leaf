@@ -9,7 +9,7 @@
 #import "MMCloudKitShareItem.h"
 #import "MMCloudKitButton.h"
 #import "MMImageViewButton.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMCloudKitOptionsView.h"

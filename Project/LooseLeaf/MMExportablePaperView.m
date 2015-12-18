@@ -14,7 +14,7 @@
 #import "MMTrashManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 
 @implementation MMExportablePaperView{
     BOOL isCurrentlyExporting;

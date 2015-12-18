@@ -9,7 +9,7 @@
 #import "MMFacebookShareItem.h"
 #import "MMProgressedImageViewButton.h"
 #import "MMReachabilityManager.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import <Social/Social.h>

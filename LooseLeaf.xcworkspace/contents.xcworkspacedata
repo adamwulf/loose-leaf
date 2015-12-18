@@ -2,6 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Submodules/sskeychain/SSKeychain.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Submodules/mixpanel/Mixpanel.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Project/LooseLeaf/../../Submodules/zip-archive/ZipArchive/ZipArchive.xcodeproj">
    </FileRef>
    <FileRef

@@ -8,7 +8,7 @@
 
 #import "MMEmailShareItem.h"
 #import "MMImageViewButton.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 #import "MMPresentationWindow.h"
 

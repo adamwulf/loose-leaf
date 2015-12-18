@@ -12,7 +12,7 @@
 #import "MMDebugDrawView.h"
 #import "MMInboxManager.h"
 #import "MMMemoryProfileView.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "MMMemoryManager.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "MMDeletePageSidebarController.h"

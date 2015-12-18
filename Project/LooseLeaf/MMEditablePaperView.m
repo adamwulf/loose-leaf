@@ -16,7 +16,7 @@
 #import "MMPageCacheManager.h"
 #import "MMLoadImageCache.h"
 #import "UIView+Animations.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "MMEditablePaperViewSubclass.h"
 
 dispatch_queue_t importThumbnailQueue;

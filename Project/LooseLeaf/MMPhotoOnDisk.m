@@ -7,7 +7,7 @@
 //
 
 #import "MMPhotoOnDisk.h"
-#import "UIImage+MPImageEffects.h"
+#import <Mixpanel/Mixpanel.h>
 #import <JotUI/JotUI.h>
 
 @implementation MMPhotoOnDisk{

@@ -8,7 +8,7 @@
 
 #import "MMOpenInAppShareItem.h"
 #import "MMShareButton.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"

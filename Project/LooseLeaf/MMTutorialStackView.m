@@ -10,7 +10,7 @@
 #import "MMTutorialView.h"
 #import "MMStopWatch.h"
 #import "MMTutorialSidebarButton.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "MMTutorialManager.h"
 #import "MMLargeTutorialSidebarButton.h"
 

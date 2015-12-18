@@ -7,7 +7,7 @@
 //
 
 #import "MMStatTracker.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 
 @implementation MMStatTracker{

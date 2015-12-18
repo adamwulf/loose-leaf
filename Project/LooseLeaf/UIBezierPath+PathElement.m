@@ -8,7 +8,7 @@
 
 #import "UIBezierPath+PathElement.h"
 #import <JotUI/UIColor+JotHelper.h>
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 #import <PerformanceBezier/PerformanceBezier.h>
 

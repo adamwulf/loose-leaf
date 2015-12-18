@@ -12,8 +12,8 @@
 #import "MMRotationManager.h"
 #import "MMInboxManager.h"
 #import "NSString+UUID.h"
-#import "SSKeychain.h"
-#import "Mixpanel.h"
+#import <SSKeychain/SSKeychain.h>
+#import <Mixpanel/Mixpanel.h>
 #import "MMWindow.h"
 #import "MMCloudKitManager.h"
 #import "MMPresentationWindow.h"

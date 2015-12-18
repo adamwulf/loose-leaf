@@ -8,7 +8,7 @@
 
 #import "MMTutorialManager.h"
 #import "MMStopWatch.h"
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 #import "Constants.h"
 
 @implementation MMTutorialManager{
