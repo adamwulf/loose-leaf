@@ -27,7 +27,7 @@
 #import "MMRotationManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIView+Debug.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 
 @implementation MMCloudKitOptionsView{
     UILabel* cloudKitLabel;

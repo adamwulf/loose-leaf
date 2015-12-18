@@ -14,7 +14,7 @@
 #import "Constants.h"
 #import <JotUI/JotUI.h>
 #import <mach/mach.h>
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 
 @implementation MMMemoryManager{
     NSOperationQueue* timerQueue;

@@ -13,7 +13,7 @@
 #import "SPRMessage+Initials.h"
 #import <ZipArchive/ZipArchive.h>
 #import "MMCloudKitManager.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMReachabilityManager.h"
 

@@ -11,7 +11,7 @@
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
 #import "MMExportablePaperView.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "NSString+UUID.h"
 #import "NSArray+Extras.h"
 #import "NSFileManager+DirectoryOptimizations.h"

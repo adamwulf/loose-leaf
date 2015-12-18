@@ -14,7 +14,7 @@
 #import "MMExportablePaperView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "NSThread+BlockAdditions.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import <JotUI/JotUI.h>
 
 #define kPercentCompleteAtStart  .15

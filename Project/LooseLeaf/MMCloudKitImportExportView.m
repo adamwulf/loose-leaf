@@ -16,7 +16,7 @@
 #import "MMEditablePaperView.h"
 #import "Constants.h"
 #import "MMUnknownObject.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 
 @implementation MMCloudKitImportExportView{
     NSMutableSet* disappearingButtons;

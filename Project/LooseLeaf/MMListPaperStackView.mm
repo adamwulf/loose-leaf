@@ -12,7 +12,7 @@
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMExportablePaperView.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #include <map>
 #include <iterator>
 

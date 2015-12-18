@@ -25,7 +25,7 @@
 #import "MMVector.h"
 #import "MMScrapViewState.h"
 #import "MMPageCacheManager.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "UIDevice+PPI.h"
 #import "MMLoadImageCache.h"
 #import "MMCachedPreviewManager.h"

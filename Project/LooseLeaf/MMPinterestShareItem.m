@@ -8,7 +8,7 @@
 
 #import "MMPinterestShareItem.h"
 #import "MMProgressedImageViewButton.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMReachabilityManager.h"

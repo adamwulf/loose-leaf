@@ -7,7 +7,7 @@
 //
 
 #import "MMCopyShareItem.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMImageViewButton.h"
 #import "Constants.h"

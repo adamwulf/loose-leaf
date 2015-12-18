@@ -15,7 +15,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMMemoryProfileView.h"
 #import "MMExportablePaperView.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
 @implementation MMEditablePaperStackView{

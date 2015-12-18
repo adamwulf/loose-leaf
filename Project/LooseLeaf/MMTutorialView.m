@@ -21,7 +21,7 @@
 #import "NSArray+Extras.h"
 #import "Constants.h"
 #import "NSURL+UTI.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "NSArray+MapReduce.h"
 
 @interface MMTutorialView ()<MMNewsletterSignupFormDelegate>

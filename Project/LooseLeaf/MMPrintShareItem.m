@@ -7,7 +7,7 @@
 //
 
 #import "MMPrintShareItem.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "MMReachabilityManager.h"
 #import "MMProgressedImageViewButton.h"
 #import "MMPresentationWindow.h"

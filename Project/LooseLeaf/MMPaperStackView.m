@@ -11,7 +11,7 @@
 #import "MMShadowManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMScrappedPaperView.h"
-#import <Mixpanel/Mixpanel.h>
+#import "Mixpanel.h"
 #import "MMExportablePaperView.h"
 #import "NSMutableSet+Extras.h"
 
