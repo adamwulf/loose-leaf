@@ -363,6 +363,7 @@
     [UIView animateWithDuration:duration animations:^{
         [self.toolbar setButtonsVisible:visible];
         settingsButton.alpha = visible;
+        pencilTool.alpha = visible;
     }];
 }
 
