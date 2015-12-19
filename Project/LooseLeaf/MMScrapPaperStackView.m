@@ -428,7 +428,8 @@
         block();
     }else{
         [self transitionFromListToNewBlankPageIfInPageView];
-        [[NSThread mainThread] performBlock:block afterDelay:.2];
+        block();
+//        [[NSThread mainThread] performBlock:block afterDelay:.2];
     }
 }
 
