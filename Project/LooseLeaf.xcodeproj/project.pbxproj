@@ -434,6 +434,10 @@
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
+		C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
+		C5F4BE851C2676D700FFB640 /* bottom-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */; };
+		C5F4BE871C2676F400FFB640 /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
+		C5F4BE891C2676F900FFB640 /* bottom-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE881C2676F900FFB640 /* bottom-buttons.png */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1303,6 +1307,10 @@
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
 		C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonToolbarView.m; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
+		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
+		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
+		C5F4BE881C2676F900FFB640 /* bottom-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons.png"; sourceTree = "<group>"; };
 		C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C5FC07B31C23E01B00C88675 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _MPTweakBindObserver.h; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.h; sourceTree = "<group>"; };
 		C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _MPTweakBindObserver.m; path = ../../Submodules/mixpanel/Mixpanel/_MPTweakBindObserver.m; sourceTree = "<group>"; };
@@ -2857,6 +2865,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C5F4BE811C2676C100FFB640 /* LaunchScreen */,
 				C5FC07B21C23E00300C88675 /* Mixpanel */,
 				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
 				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
@@ -2877,7 +2886,6 @@
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
-				C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3199,6 +3207,18 @@
 			name = Toolbar;
 			sourceTree = "<group>";
 		};
+		C5F4BE811C2676C100FFB640 /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				C5F4BE861C2676F400FFB640 /* top-buttons.png */,
+				C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */,
+				C5F4BE881C2676F900FFB640 /* bottom-buttons.png */,
+				C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */,
+				C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */,
+			);
+			name = LaunchScreen;
+			sourceTree = "<group>";
+		};
 		C5FC07B21C23E00300C88675 /* Mixpanel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3422,10 +3442,12 @@
 				66343C641AC0755F00801962 /* Lato-Semibold.ttf in Resources */,
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
+				C5F4BE851C2676D700FFB640 /* bottom-buttons@2x.png in Resources */,
 				C5FC086E1C23E01B00C88675 /* test_variant.json in Resources */,
 				665245311996D1E800C36609 /* imgur.png in Resources */,
 				665245251995936500C36609 /* tencentWeibo.png in Resources */,
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
+				C5F4BE871C2676F400FFB640 /* top-buttons.png in Resources */,
 				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
 				6652456E1996E69D00C36609 /* link@2x.png in Resources */,
 				66437C57199FE0F2003389F0 /* airsharing.png in Resources */,
@@ -3452,6 +3474,7 @@
 				66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
+				C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */,
 				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */,
@@ -3463,6 +3486,7 @@
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
 				663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
+				C5F4BE891C2676F900FFB640 /* bottom-buttons.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,
