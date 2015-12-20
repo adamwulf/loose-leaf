@@ -302,7 +302,7 @@
                                                                           kMPEventImportPropFileType : [url universalTypeID],
                                                                           kMPEventImportPropSource : kMPEventImportPropSourceApplication,
                                                                           kMPEventImportPropReferApp : sourceApplication}];
-    } afterDelay:.15];
+    } afterDelay:.75];
 }
 
 -(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
@@ -342,7 +342,7 @@
             // show show the PDF content in the sidebar
             [importImageSidebar showPDF:pdfDoc];
         }
-    } afterDelay:.15];
+    } afterDelay:.75];
 
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -358,79 +358,85 @@
 // adds the incoming image as a new scrap to the top page
 // throws exception if in list view
 -(void) importImageAsNewScrap:(UIImage*)scrapBacking{
-    
-    void(^block)() = ^{
-        MMVector* up = [[MMRotationManager sharedInstance] upVector];
-        MMVector* perp = [[up perpendicular] normal];
-        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
-                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
-        // start the photo "up" and have it drop down into the center ish of the page
-        center = [up pointFromPoint:center distance:80];
-        // randomize it a bit
-        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
-        
-        
-        // subtract 1px from the border so that the background is clipped nicely around the edge
-        CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
-        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
-        
-        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
-        [scrapContainer addSubview:scrap];
-        
-        // background fills the entire scrap
-        [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
-        
-        
-        // prep the scrap to fade in while it drops on screen
-        scrap.alpha = .3;
-        scrap.scale = 1.2;
-        
-        // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
-        
-        // animate the scrap dropping and bouncing on the page
-        [UIView animateWithDuration:.2
-                              delay:.1
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             // doesn't need to land exactly center. this way
-                             // multiple imports of multiple photos won't all
-                             // land exactly on top of each other. looks nicer.
-                             MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-                             CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
-                             // scale the center point to 1.0 scale
-                             center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
-                             // at this point, we have the true center of the page,
-                             // now add a bit of random to it to give it some variance
-                             center.x += random() % 14 - 7;
-                             center.y += random() % 14 - 7;
-                             scrap.center = center;
-                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
-                             scrap.alpha = .72;
-                         }
-                         completion:^(BOOL finished){
-                             [UIView animateWithDuration:.1
-                                                   delay:0
-                                                 options:UIViewAnimationOptionCurveEaseIn
-                                              animations:^{
-                                                  [scrap setScale:1];
-                                                  scrap.alpha = 1.0;
-                                              }
-                                              completion:^(BOOL finished){
-                                                  [topPage.scrapsOnPaperState showScrap:scrap];
-                                                  [topPage saveToDisk:nil];
-                                              }];
-                         }];
-    };
-    
     if([self isShowingPageView]){
-        block();
+        [self importImageOntoTopVisibleAndLoadedPage:scrapBacking];
     }else{
         [self transitionFromListToNewBlankPageIfInPageView];
-        block();
-//        [[NSThread mainThread] performBlock:block afterDelay:.2];
+        [self performSelector:@selector(importImageOntoTopVisibleAndLoadedPage:) withObject:scrapBacking afterDelay:.2];
     }
+}
+
+-(void) importImageOntoTopVisibleAndLoadedPage:(UIImage*)scrapBacking{
+
+    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    if(![topPage isStateLoaded]){
+        // if our state isn't loaded yet, then just wait a bit
+        // and try the import again soon.
+        [self performSelector:@selector(importImageOntoTopVisibleAndLoadedPage:) withObject:scrapBacking afterDelay:.2];
+        return;
+    }
+
+    MMVector* up = [[MMRotationManager sharedInstance] upVector];
+    MMVector* perp = [[up perpendicular] normal];
+    CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                 ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+    // start the photo "up" and have it drop down into the center ish of the page
+    center = [up pointFromPoint:center distance:80];
+    // randomize it a bit
+    center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+
+
+    // subtract 1px from the border so that the background is clipped nicely around the edge
+    CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
+
+    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
+    [scrapContainer addSubview:scrap];
+
+    // background fills the entire scrap
+    [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
+
+
+    // prep the scrap to fade in while it drops on screen
+    scrap.alpha = .3;
+    scrap.scale = 1.2;
+
+    // bounce by 20px (10 on each side)
+    CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
+
+    // animate the scrap dropping and bouncing on the page
+    [UIView animateWithDuration:.2
+                          delay:.1
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         // doesn't need to land exactly center. this way
+                         // multiple imports of multiple photos won't all
+                         // land exactly on top of each other. looks nicer.
+                         MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+                         CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
+                         // scale the center point to 1.0 scale
+                         center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+                         // at this point, we have the true center of the page,
+                         // now add a bit of random to it to give it some variance
+                         center.x += random() % 14 - 7;
+                         center.y += random() % 14 - 7;
+                         scrap.center = center;
+                         [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
+                         scrap.alpha = .72;
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:.1
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [scrap setScale:1];
+                                              scrap.alpha = 1.0;
+                                          }
+                                          completion:^(BOOL finished){
+                                              [topPage.scrapsOnPaperState showScrap:scrap];
+                                              [topPage saveToDisk:nil];
+                                          }];
+                     }];
 }
 
 
