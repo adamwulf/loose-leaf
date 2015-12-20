@@ -106,8 +106,10 @@
                                                       }];
         [[Mixpanel sharedInstance] flush];
 
-        [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackblur.png"]]];
-        
+        UIImage* blackBlur = [UIImage imageNamed:@"blackblur.png"];
+        self.view.layer.contents = (__bridge id)blackBlur.CGImage;
+
+
 //        [self.view addSubview:[MMDebugDrawView sharedInstance]];
         
         
