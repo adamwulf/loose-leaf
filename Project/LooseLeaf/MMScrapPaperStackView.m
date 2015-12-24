@@ -2171,7 +2171,7 @@ int skipAll = NO;
         }];
         return isAnyStateLoading;
     };
-    
+
     // we'll wait around if:
     // 1. our top page has pending edits to save
     // 2. our top page is still loading in content
@@ -2186,7 +2186,9 @@ int skipAll = NO;
     if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage)){
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
-        
+
+
+
         // if we're in here, then our page has to either load or save
         // some content. We're going to use a custom MMMainOperationQueue
         // that will let other threads send blocks to the main thread
@@ -2194,7 +2196,7 @@ int skipAll = NO;
         //
         // regardless of what happens, we'll only wait here for 7 seconds
         // to prevent us from being killed by the watchdog.
-        while(([currentEditablePage hasEditsToSave] || isPageLoadingHuh(currentEditablePage) || [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
+        while(([currentEditablePage hasEditsToSave] || isPageLoadingHuh(currentEditablePage) || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || ![[MMPageCacheManager sharedInstance] isEditablePageStable]) && [stopwatch read] < 7){
             // fire any timers that would've been triggered if this was a normal run loop
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
             // now run any blocks that were sent to the main thread from background threads
@@ -2208,8 +2210,13 @@ int skipAll = NO;
                 // thread signals us with a new block to run
                 [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
+            NSLog(@" - exit status: %d %d %d %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash], ![[MMPageCacheManager sharedInstance] isEditablePageStable]);
         }
         NSLog(@" - completed save in %.2fs", [stopwatch read]);
+
+        BOOL topIsLoadedAndEditable = [[MMPageCacheManager sharedInstance] isEditablePageStable];
+        NSLog(@" - top is editable and loaded? %d", topIsLoadedAndEditable);
+
     }
     NSLog(@"stack: willResignActive end");
 }
