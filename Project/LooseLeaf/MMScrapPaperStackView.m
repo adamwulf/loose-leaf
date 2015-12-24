@@ -2183,11 +2183,9 @@ int skipAll = NO;
     // leave this method, all our OpenGL calls will crash
     // the app, so we need to try our best to wrap up before
     // then.
-    if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage)){
+    if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage) || ![[MMPageCacheManager sharedInstance] isEditablePageStable]){
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
-
-
 
         // if we're in here, then our page has to either load or save
         // some content. We're going to use a custom MMMainOperationQueue
