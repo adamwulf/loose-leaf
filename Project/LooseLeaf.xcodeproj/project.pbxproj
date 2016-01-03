@@ -432,6 +432,11 @@
 		C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C506A3921C23DAD800236895 /* TwitterCore.framework */; };
 		C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B71C23DE3200236895 /* SSKeychain.m */; };
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
+		C584F8391C37C56800413840 /* point.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* point.vsh */; };
+		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
+		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
+		C584F83F1C37D26200413840 /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F83E1C37D26200413840 /* quad.vsh */; };
+		C584F8411C37D27600413840 /* quad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8401C37D27600413840 /* quad.fsh */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
@@ -1304,6 +1309,11 @@
 		C506A3B91C23DE3200236895 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.m; sourceTree = "<group>"; };
 		C506A3BD1C23DEC800236895 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
+		C584F8371C37C56800413840 /* point.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.vsh; sourceTree = "<group>"; };
+		C584F8381C37C56800413840 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
+		C584F83B1C37C57000413840 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
+		C584F83E1C37D26200413840 /* quad.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = quad.vsh; sourceTree = "<group>"; };
+		C584F8401C37D27600413840 /* quad.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = quad.fsh; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
 		C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonToolbarView.m; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -2785,6 +2795,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				C584F8361C37C55A00413840 /* Shaders */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -3198,6 +3209,18 @@
 			name = SSKeychain;
 			sourceTree = "<group>";
 		};
+		C584F8361C37C55A00413840 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				C584F83B1C37C57000413840 /* Particle.png */,
+				C584F8371C37C56800413840 /* point.vsh */,
+				C584F8381C37C56800413840 /* point.fsh */,
+				C584F83E1C37D26200413840 /* quad.vsh */,
+				C584F8401C37D27600413840 /* quad.fsh */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
 		C5860E131C14CA1000CD079B /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
@@ -3451,12 +3474,14 @@
 				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
 				6652456E1996E69D00C36609 /* link@2x.png in Resources */,
 				66437C57199FE0F2003389F0 /* airsharing.png in Resources */,
+				C584F83F1C37D26200413840 /* quad.vsh in Resources */,
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */,
 				6634856219DB3ED000B5CF2D /* crumple.jpg in Resources */,
+				C584F83C1C37C57000413840 /* Particle.png in Resources */,
 				C5FC085A1C23E01B00C88675 /* MPSurvey.storyboard in Resources */,
 				C5FC086D1C23E01B00C88675 /* snapshot_config.json in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
@@ -3486,6 +3511,7 @@
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
 				663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
+				C584F8391C37C56800413840 /* point.vsh in Resources */,
 				C5F4BE891C2676F900FFB640 /* bottom-buttons.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
@@ -3505,6 +3531,7 @@
 				665245001995673900C36609 /* email@2x.png in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */,
+				C584F83A1C37C56800413840 /* point.fsh in Resources */,
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				665F7F5B1AE08B8600635D56 /* import-and-scissor.mov in Resources */,
 				662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */,
@@ -3512,6 +3539,7 @@
 				6634856519DB41F000B5CF2D /* Crumple.license in Resources */,
 				663326C21AAFE9F9003915E6 /* clipboard-icon@2x.png in Resources */,
 				6652451B19958C2900C36609 /* sinaWeibo@2x.png in Resources */,
+				C584F8411C37D27600413840 /* quad.fsh in Resources */,
 				66E223FE19D631EA000FCA96 /* settings-privacy.png in Resources */,
 				6650DD2318F48F8300ADF591 /* facebook@2x.png in Resources */,
 				66CC2A9D1AEC3EAD00C6A3F9 /* scrap-to-sidebar.mov in Resources */,
