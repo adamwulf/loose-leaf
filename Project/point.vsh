@@ -46,9 +46,9 @@
  */
 
 attribute vec4 inVertex;
+attribute float pointSize;
 
 uniform mat4 MVP;
-uniform float pointSize;
 uniform lowp vec4 vertexColor;
 
 varying lowp vec4 color;
