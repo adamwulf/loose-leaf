@@ -432,6 +432,7 @@
 		C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C506A3921C23DAD800236895 /* TwitterCore.framework */; };
 		C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B71C23DE3200236895 /* SSKeychain.m */; };
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
+		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C569DB441C3A50BB00ABFEC8 /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C569DB431C3A50BB00ABFEC8 /* stencil.fsh */; };
 		C584F8391C37C56800413840 /* point.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* point.vsh */; };
 		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
@@ -1309,6 +1310,7 @@
 		C506A3B81C23DE3200236895 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychainQuery.h; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.h; sourceTree = "<group>"; };
 		C506A3B91C23DE3200236895 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.m; sourceTree = "<group>"; };
 		C506A3BD1C23DEC800236895 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
+		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* point.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.vsh; sourceTree = "<group>"; };
@@ -2194,6 +2196,7 @@
 				66A02F9B19A1DBE90013EFAE /* Eppz.license */,
 				6634856319DB41F000B5CF2D /* Crumple.license */,
 				6634856419DB41F000B5CF2D /* TemplateIcon2x.png */,
+				C51F68721C3B7DC2003C046F /* GPUImage.license */,
 			);
 			name = Licenses;
 			sourceTree = "<group>";
@@ -3568,6 +3571,7 @@
 				661C4B2A1A83F8D50014DB20 /* pinterest@2x.png in Resources */,
 				6652456D1996E69D00C36609 /* link.png in Resources */,
 				6652450D199576E800C36609 /* text@2x.png in Resources */,
+				C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
 				66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */,
