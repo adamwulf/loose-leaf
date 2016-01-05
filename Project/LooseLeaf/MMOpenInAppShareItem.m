@@ -131,7 +131,7 @@
         [self.delegate didShare:self];
         button.selected = NO;
         [button setNeedsDisplay];
-        activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
+        activityViewController.completionWithItemsHandler = ^(NSString * __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError){
             block(activityType, completed);
         };
     }

@@ -97,7 +97,7 @@
     CGFloat radius = button.drawableFrame.size.width / 2 - 1;
     CAShapeLayer *circle;
     if([button.layer.sublayers count]){
-        circle = [button.layer.sublayers firstObject];
+        circle = (CAShapeLayer*)[button.layer.sublayers firstObject];
     }else{
         circle=[CAShapeLayer layer];
         circle.fillColor=[UIColor clearColor].CGColor;

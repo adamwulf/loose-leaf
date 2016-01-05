@@ -3380,7 +3380,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MM;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Milestone Made, LLC";
 				TargetAttributes = {
 					66DCFB851581BCEF00B4918C = {
@@ -4022,6 +4022,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -4116,6 +4117,7 @@
 					"-ObjC++",
 					"-lstdc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.milestonemade.looseleaf;
 				PRODUCT_NAME = LooseLeaf;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
@@ -4144,6 +4146,7 @@
 					"-ObjC++",
 					"-lstdc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.milestonemade.looseleaf;
 				PRODUCT_NAME = LooseLeaf;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
