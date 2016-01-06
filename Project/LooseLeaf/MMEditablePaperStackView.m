@@ -223,6 +223,24 @@
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 
+-(void) highlighterTapped:(UIButton *)button{
+    [scissor cancelAllTouches];
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
+    eraserButton.selected = NO;
+    pencilTool.selected = YES;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
+}
+
+-(void) pencilTapped:(UIButton*)_button{
+    [scissor cancelAllTouches];
+    [[JotStrokeManager sharedInstance] cancelAllStrokes];
+    eraserButton.selected = NO;
+    pencilTool.selected = YES;
+    insertImageButton.selected = NO;
+    scissorButton.selected = NO;
+}
+
 -(void) penTapped:(UIButton*)_button{
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];

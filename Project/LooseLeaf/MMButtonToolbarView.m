@@ -34,9 +34,16 @@
 }
 
 -(void) addPencilTool:(MMPencilAndPaletteView*)pencilTool{
+    self.buttons[self.numberOfButtons].button = (__bridge void*)pencilTool.penButton;
+    self.buttons[self.numberOfButtons].originalRect = pencilTool.penButton.frame;
+    _numberOfButtons++;
+
     self.buttons[self.numberOfButtons].button = (__bridge void*)pencilTool.pencilButton;
     self.buttons[self.numberOfButtons].originalRect = pencilTool.pencilButton.frame;
+    _numberOfButtons++;
 
+    self.buttons[self.numberOfButtons].button = (__bridge void*)pencilTool.highlighterButton;
+    self.buttons[self.numberOfButtons].originalRect = pencilTool.highlighterButton.frame;
     _numberOfButtons++;
 
     [self addSubview:pencilTool];

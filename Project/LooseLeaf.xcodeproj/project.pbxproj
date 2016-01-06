@@ -440,6 +440,9 @@
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
 		C584F83F1C37D26200413840 /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F83E1C37D26200413840 /* quad.vsh */; };
 		C584F8411C37D27600413840 /* quad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8401C37D27600413840 /* quad.fsh */; };
+		C50C0D6D1C3CE72D00DFC079 /* MMPaletteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */; };
+		C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */; };
+		C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
@@ -1313,6 +1316,12 @@
 		C506A3BD1C23DEC800236895 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C50C0D691C3CA26600DFC079 /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = coloredpoint.vsh; sourceTree = "<group>"; };
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
+		C50C0D6B1C3CE72D00DFC079 /* MMPaletteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaletteButton.h; sourceTree = "<group>"; };
+		C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaletteButton.m; sourceTree = "<group>"; };
+		C50C0D6E1C3CE7A600DFC079 /* MMPenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPenButton.h; sourceTree = "<group>"; };
+		C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPenButton.m; sourceTree = "<group>"; };
+		C50C0D711C3CE80A00DFC079 /* MMHighlighterButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHighlighterButton.h; sourceTree = "<group>"; };
+		C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHighlighterButton.m; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
@@ -2115,8 +2124,14 @@
 				665CAC1F17B57B0B000BD505 /* MMPencilAndPaletteView.h */,
 				665CAC2017B57B0B000BD505 /* MMPencilAndPaletteView.m */,
 				665CAC2217B5803B000BD505 /* MMPencilAndPaletteViewDelegate.h */,
+				C50C0D6B1C3CE72D00DFC079 /* MMPaletteButton.h */,
+				C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */,
 				66BD6E9A15940D7300D4544C /* MMPencilButton.h */,
 				66BD6E9B15940D7400D4544C /* MMPencilButton.m */,
+				C50C0D6E1C3CE7A600DFC079 /* MMPenButton.h */,
+				C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */,
+				C50C0D711C3CE80A00DFC079 /* MMHighlighterButton.h */,
+				C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */,
 				665CAC1B17B578B0000BD505 /* MMColorButton.h */,
 				665CAC1C17B578B0000BD505 /* MMColorButton.m */,
 			);
@@ -3814,6 +3829,7 @@
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,
+				C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */,
 				665245651996DAB800C36609 /* AFNetworkReachabilityManager.m in Sources */,
 				66E5AC9019DFA781006CEAAF /* MMScrapCollectionState.m in Sources */,
 				C5FC083C1C23E01B00C88675 /* MPABTestDesignerTweakRequestMessage.m in Sources */,
@@ -3890,6 +3906,7 @@
 				C5FC08681C23E01B00C88675 /* MPUITableViewBinding.m in Sources */,
 				66FA039B19BF8CDD00AF0DC4 /* MMCloudLoadingIconLayer.m in Sources */,
 				C5FC08711C23E01B00C88675 /* UIImage+MPImageEffects.m in Sources */,
+				C50C0D6D1C3CE72D00DFC079 /* MMPaletteButton.m in Sources */,
 				6651820A1937B57600CBEAB4 /* MMBackgroundTimer.m in Sources */,
 				669115AD1AE8828500C4FC89 /* MMImageLoopView.m in Sources */,
 				6652450319956DFA00C36609 /* MMEmailShareItem.m in Sources */,
@@ -3988,6 +4005,7 @@
 				C5FC085B1C23E01B00C88675 /* MPSurveyNavigationController.m in Sources */,
 				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,
 				66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */,
+				C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */,
 				C5FC085E1C23E01B00C88675 /* MPSwizzler.m in Sources */,
 				66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */,
 				66A471BE17C7DAA000C2A5B6 /* MMScrappedPaperView.m in Sources */,
