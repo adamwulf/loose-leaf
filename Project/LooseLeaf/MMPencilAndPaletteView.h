@@ -16,7 +16,7 @@
 @property (nonatomic) CGFloat rotation;
 @property (nonatomic) BOOL selected;
 @property (readonly) MMPaletteButton* highlighterButton;
-@property (readonly) MMPaletteButton* penButton;
+@property (readonly) MMPaletteButton* markerButton;
 @property (readonly) MMPaletteButton* pencilButton;
 @property (nonatomic, weak) NSObject<MMPencilAndPaletteViewDelegate>* delegate;
 

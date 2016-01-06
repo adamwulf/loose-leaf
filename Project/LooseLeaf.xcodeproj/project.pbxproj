@@ -433,6 +433,10 @@
 		C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B71C23DE3200236895 /* SSKeychain.m */; };
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
 		C50C0D6A1C3CA26600DFC079 /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C50C0D691C3CA26600DFC079 /* coloredpoint.vsh */; };
+		C50C0D6D1C3CE72D00DFC079 /* MMPaletteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */; };
+		C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */; };
+		C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */; };
+		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C569DB441C3A50BB00ABFEC8 /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C569DB431C3A50BB00ABFEC8 /* stencil.fsh */; };
 		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
@@ -440,9 +444,6 @@
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
 		C584F83F1C37D26200413840 /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F83E1C37D26200413840 /* quad.vsh */; };
 		C584F8411C37D27600413840 /* quad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8401C37D27600413840 /* quad.fsh */; };
-		C50C0D6D1C3CE72D00DFC079 /* MMPaletteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */; };
-		C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */; };
-		C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
@@ -1315,13 +1316,15 @@
 		C506A3B91C23DE3200236895 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.m; sourceTree = "<group>"; };
 		C506A3BD1C23DEC800236895 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C50C0D691C3CA26600DFC079 /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = coloredpoint.vsh; sourceTree = "<group>"; };
-		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C50C0D6B1C3CE72D00DFC079 /* MMPaletteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaletteButton.h; sourceTree = "<group>"; };
 		C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaletteButton.m; sourceTree = "<group>"; };
 		C50C0D6E1C3CE7A600DFC079 /* MMPenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPenButton.h; sourceTree = "<group>"; };
 		C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPenButton.m; sourceTree = "<group>"; };
 		C50C0D711C3CE80A00DFC079 /* MMHighlighterButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHighlighterButton.h; sourceTree = "<group>"; };
 		C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHighlighterButton.m; sourceTree = "<group>"; };
+		C50C0D741C3D077A00DFC079 /* MMMarkerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMarkerButton.h; sourceTree = "<group>"; };
+		C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMarkerButton.m; sourceTree = "<group>"; };
+		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
@@ -2128,6 +2131,8 @@
 				C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */,
 				66BD6E9A15940D7300D4544C /* MMPencilButton.h */,
 				66BD6E9B15940D7400D4544C /* MMPencilButton.m */,
+				C50C0D741C3D077A00DFC079 /* MMMarkerButton.h */,
+				C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */,
 				C50C0D6E1C3CE7A600DFC079 /* MMPenButton.h */,
 				C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */,
 				C50C0D711C3CE80A00DFC079 /* MMHighlighterButton.h */,
@@ -3721,6 +3726,7 @@
 				66343C061ABE45CF00801962 /* MMTutorialButton.m in Sources */,
 				66524521199591FF00C36609 /* MMTencentWeiboShareItem.m in Sources */,
 				C5FC086F1C23E01B00C88675 /* UIColor+MPColor.m in Sources */,
+				C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */,
 				C5FC08411C23E01B00C88675 /* MPCGAffineTransformToNSDictionaryValueTransformer.m in Sources */,
 				6664C89E1B27A3890012622E /* MMUntouchableTutorialView.m in Sources */,
 				C5FC08381C23E01B00C88675 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,

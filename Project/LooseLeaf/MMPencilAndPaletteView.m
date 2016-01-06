@@ -13,14 +13,14 @@
 #import "UIView+Animations.h"
 #import "UIView+Debug.h"
 #import "MMPencilButton.h"
-#import "MMPenButton.h"
+#import "MMMarkerButton.h"
 #import "MMHighlighterButton.h"
 
 @implementation MMPencilAndPaletteView{
     CGRect originalFrame;
     NSObject<MMPencilAndPaletteViewDelegate>* delegate;
     MMPaletteButton* highlighterButton;
-    MMPaletteButton* penButton;
+    MMPaletteButton* markerButton;
     MMPaletteButton* pencilButton;
     MMColorButton* blackButton;
     MMColorButton* blueButton;
@@ -43,7 +43,7 @@
 }
 
 @synthesize highlighterButton;
-@synthesize penButton;
+@synthesize markerButton;
 @synthesize pencilButton;
 
 -(UIView*) newButtonHolderWithPencilLoc:(CGPoint)pencilLocInContentHolder{
@@ -74,11 +74,11 @@
         pencilButton.tool = self;
         [self addSubview:pencilButton];
         
-        penButton = [[MMPenButton alloc] initWithFrame:originalFrame];
-        [penButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
-        penButton.tool = self;
-        penButton.center = CGPointApplyAffineTransform(pencilButton.center, CGAffineTransformMakeTranslation(-60, -kWidthOfSidebarButton));
-        [self addSubview:penButton];
+        markerButton = [[MMMarkerButton alloc] initWithFrame:originalFrame];
+        [markerButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
+        markerButton.tool = self;
+        markerButton.center = CGPointApplyAffineTransform(pencilButton.center, CGAffineTransformMakeTranslation(-60, -kWidthOfSidebarButton));
+        [self addSubview:markerButton];
 
         highlighterButton = [[MMHighlighterButton alloc] initWithFrame:originalFrame];
         [highlighterButton addTarget:self action:@selector(highlighterTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -137,7 +137,7 @@
         pencilColor = (pencilColor < 0) ? 0 : (pencilColor >= [allColors count]) ? 0 : pencilColor;
         highlighterColor = (highlighterColor < 0) ? 0 : (highlighterColor >= [allColors count]) ? 0 : highlighterColor;
 
-        penButton.selectedColor = allColors[penColor];
+        markerButton.selectedColor = allColors[penColor];
         pencilButton.selectedColor = allColors[pencilColor];
         highlighterButton.selectedColor = allColors[highlighterColor];
 
@@ -152,12 +152,12 @@
 
 -(void) setRotation:(CGFloat)_rotation{
     pencilButton.rotation = _rotation;
-    penButton.rotation = _rotation;
+    markerButton.rotation = _rotation;
     highlighterButton.rotation = _rotation;
 }
 
 -(int) fullByteSize{
-    return pencilButton.fullByteSize + penButton.fullByteSize + highlighterButton.fullByteSize + blackButton.fullByteSize + blueButton.fullByteSize + redButton.fullByteSize + yellowButton.fullByteSize + greenButton.fullByteSize + activeColorButton.fullByteSize;
+    return pencilButton.fullByteSize + markerButton.fullByteSize + highlighterButton.fullByteSize + blackButton.fullByteSize + blueButton.fullByteSize + redButton.fullByteSize + yellowButton.fullByteSize + greenButton.fullByteSize + activeColorButton.fullByteSize;
 }
 
 #pragma mark - Touch Events
@@ -166,7 +166,7 @@
 // only return our button subviews,
 // never ourself
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    for(UIView* subview in [NSArray arrayWithObjects:pencilButton, penButton, highlighterButton, blackButton, blueButton, redButton, yellowButton, greenButton, nil]){
+    for(UIView* subview in [NSArray arrayWithObjects:pencilButton, markerButton, highlighterButton, blackButton, blueButton, redButton, yellowButton, greenButton, nil]){
         if([subview pointInside:[self convertPoint:point toView:subview] withEvent:event]){
             return subview;
         }
@@ -175,7 +175,7 @@
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    for(UIView* subview in [NSArray arrayWithObjects:pencilButton, penButton, highlighterButton, blackButton, blueButton, redButton, yellowButton, greenButton, nil]){
+    for(UIView* subview in [NSArray arrayWithObjects:pencilButton, markerButton, highlighterButton, blackButton, blueButton, redButton, yellowButton, greenButton, nil]){
         if([subview pointInside:[self convertPoint:point toView:subview] withEvent:event]){
             return YES;
         }
@@ -187,7 +187,7 @@
 
 -(void) setTransform:(CGAffineTransform)transform{
     [pencilButton setTransform:transform];
-    [penButton setTransform:transform];
+    [markerButton setTransform:transform];
     [highlighterButton setTransform:transform];
 }
 
@@ -198,15 +198,15 @@
 -(void) setDelegate:(NSObject<MMPencilAndPaletteViewDelegate> *)_delegate{
     delegate = _delegate;
     pencilButton.delegate = delegate;
-    penButton.delegate = delegate;
+    markerButton.delegate = delegate;
     highlighterButton.delegate = delegate;
     [self.delegate didChangeColorTo:activeButton.selectedColor];
 }
 
 -(void) setSelected:(BOOL)selected{
     [activeButton setSelected:selected];
-    if(activeButton != penButton){
-        [penButton setSelected:NO];
+    if(activeButton != markerButton){
+        [markerButton setSelected:NO];
     }
     if(activeButton != pencilButton){
         [pencilButton setSelected:NO];
@@ -258,7 +258,7 @@
 }
 
 -(void) penTapped:(UIButton*)button{
-    if(penButton.selected){
+    if(markerButton.selected){
         if([self isShowingColors]){
             [self hideColors];
             [self.delegate colorMenuToggled];
@@ -267,7 +267,7 @@
             [self.delegate colorMenuToggled];
         }
     }else{
-        activeButton = penButton;
+        activeButton = markerButton;
         [self.delegate penTapped:button];
         [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
@@ -289,8 +289,8 @@
         [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             CGPoint originalCenter = CGPointMake(CGRectGetMidX(originalFrame), CGRectGetMidY(originalFrame));
             activeButton.center = originalCenter;
-            if(penButton != activeButton){
-                penButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(-60, -kWidthOfSidebarButton));
+            if(markerButton != activeButton){
+                markerButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(-60, -kWidthOfSidebarButton));
             }
             if(highlighterButton != activeButton){
                 highlighterButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(-60, -2 * kWidthOfSidebarButton));
@@ -375,8 +375,8 @@
         [UIView animateWithDuration:(pencilButton == activeButton ? .3 : .22) delay:(pencilButton == activeButton ? 0 : .14) options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             pencilButton.center = originalCenter;
         } completion:nil];
-        [UIView animateWithDuration:(penButton == activeButton ? .3 : .22) delay:(penButton == activeButton ? 0 : .14) options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
-            penButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(0, -kWidthOfSidebarButton));
+        [UIView animateWithDuration:(markerButton == activeButton ? .3 : .22) delay:(markerButton == activeButton ? 0 : .14) options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
+            markerButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(0, -kWidthOfSidebarButton));
         } completion:nil];
         [UIView animateWithDuration:(highlighterButton == activeButton ? .3 : .19) delay:(highlighterButton == activeButton ? 0 : .2) options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
             highlighterButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(0, -2 * kWidthOfSidebarButton));
@@ -425,7 +425,7 @@
         
         [self.delegate didChangeColorTo:activeButton.selectedColor];
 
-        if(activeButton == penButton){
+        if(activeButton == markerButton){
             [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"penColor"];
         }else if(activeButton == pencilButton){
             [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"pencilColor"];
