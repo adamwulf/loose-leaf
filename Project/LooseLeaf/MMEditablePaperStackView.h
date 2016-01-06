@@ -64,6 +64,7 @@
     MMRulerButton* rulerButton;
     MMHandButton* handButton;
 
+    Pen* marker;
     Pen* pen;
     Eraser* eraser;
     MMScissorTool* scissor;

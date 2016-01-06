@@ -48,6 +48,8 @@
 //        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
+        marker = [[Pen alloc] initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:1.0 andMaxAlpha:1.0];
+
         pen = [[Pen alloc] init];
         
         eraser = [[Eraser alloc] init];
@@ -216,8 +218,10 @@
         return scissor;
     }else if(eraserButton.selected){
         return eraser;
-    }else{
+    }else if(pencilTool.pencilButton.selected){
         return pen;
+    }else{
+        return marker;
     }
 }
 
@@ -257,6 +261,7 @@
 -(void) didChangeColorTo:(UIColor*)color{
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     pen.color = color;
+    marker.color = color;
     if(!pencilTool.selected){
         [self penTapped:nil];
     }
