@@ -30,8 +30,6 @@
 
     MMColorButton* activeColorButton;
 
-    UIColor* color;
-    
     UIView* blackColorHolder;
     UIView* blueColorHolder;
     UIView* redColorHolder;
@@ -41,9 +39,9 @@
     BOOL isShowingColorOptions;
 
     MMPaletteButton* activeButton;
+    NSArray* allColors;
 }
 
-@synthesize color;
 @synthesize highlighterButton;
 @synthesize penButton;
 @synthesize pencilButton;
@@ -68,8 +66,6 @@
     if (self) {
         
         CGPoint pencilLocInContentHolder = CGPointMake(120, 20);
-        
-        color = [UIColor blackColor];
         
         // Initialization code
         
@@ -128,11 +124,24 @@
         blueButton.alpha = 0;
         greenButton.alpha = 0;
         activeColorButton.alpha = 1;
-        activeColorButton.color = blackButton.color;
         blackButton.alpha = 0;
 
         activeButton = pencilButton;
-        activeButton.selectedColor = blackButton.color;
+
+        allColors = @[blackButton.color, redButton.color, blueButton.color, yellowButton.color, greenButton.color];
+
+        NSInteger penColor = [[NSUserDefaults standardUserDefaults] integerForKey:@"penColor"];
+        NSInteger pencilColor = [[NSUserDefaults standardUserDefaults] integerForKey:@"pencilColor"];
+        NSInteger highlighterColor = [[NSUserDefaults standardUserDefaults] integerForKey:@"highlighterColor"];
+        penColor = (penColor < 0) ? 0 : (penColor >= [allColors count]) ? 0 : penColor;
+        pencilColor = (pencilColor < 0) ? 0 : (pencilColor >= [allColors count]) ? 0 : pencilColor;
+        highlighterColor = (highlighterColor < 0) ? 0 : (highlighterColor >= [allColors count]) ? 0 : highlighterColor;
+
+        penButton.selectedColor = allColors[penColor];
+        pencilButton.selectedColor = allColors[pencilColor];
+        highlighterButton.selectedColor = allColors[highlighterColor];
+
+        activeColorButton.color = activeButton.selectedColor;
     }
     return self;
 }
@@ -191,6 +200,7 @@
     pencilButton.delegate = delegate;
     penButton.delegate = delegate;
     highlighterButton.delegate = delegate;
+    [self.delegate didChangeColorTo:activeButton.selectedColor];
 }
 
 -(void) setSelected:(BOOL)selected{
@@ -291,7 +301,7 @@
         } completion:nil];
 
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState animations:^{
-            activeColorButton.color = color;
+            activeColorButton.color = activeButton.selectedColor;
             blackColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, .01);
             blueColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, .01);
             greenColorHolder.transform = CGAffineTransformRotate(CGAffineTransformIdentity, .01);
@@ -413,8 +423,15 @@
 
         activeButton.selectedColor = button.color;
         
-        color = button.color;
-        [self.delegate didChangeColorTo:color];
+        [self.delegate didChangeColorTo:activeButton.selectedColor];
+
+        if(activeButton == penButton){
+            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"penColor"];
+        }else if(activeButton == pencilButton){
+            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"pencilColor"];
+        }else if(activeButton == highlighterButton){
+            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"highlighterColor"];
+        }
     }
 }
 

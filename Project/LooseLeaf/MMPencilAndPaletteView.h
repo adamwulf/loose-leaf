@@ -15,7 +15,6 @@
 
 @property (nonatomic) CGFloat rotation;
 @property (nonatomic) BOOL selected;
-@property (readonly) UIColor* color;
 @property (readonly) MMPaletteButton* highlighterButton;
 @property (readonly) MMPaletteButton* penButton;
 @property (readonly) MMPaletteButton* pencilButton;
