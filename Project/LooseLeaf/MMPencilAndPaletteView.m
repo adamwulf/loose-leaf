@@ -40,7 +40,7 @@
     
     BOOL isShowingColorOptions;
 
-    UIButton* activeButton;
+    MMPaletteButton* activeButton;
 }
 
 @synthesize color;
@@ -132,6 +132,7 @@
         blackButton.alpha = 0;
 
         activeButton = pencilButton;
+        activeButton.selectedColor = blackButton.color;
     }
     return self;
 }
@@ -224,8 +225,9 @@
     }else{
         activeButton = highlighterButton;
         [self.delegate highlighterTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor];
+        [self updateSelectedColorAndBounce:YES];
     }
-
 }
 
 -(void) pencilTapped:(UIButton*)button{
@@ -240,6 +242,8 @@
     }else{
         activeButton = pencilButton;
         [self.delegate pencilTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor];
+        [self updateSelectedColorAndBounce:YES];
     }
 }
 
@@ -255,6 +259,8 @@
     }else{
         activeButton = penButton;
         [self.delegate penTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor];
+        [self updateSelectedColorAndBounce:YES];
     }
 }
 
@@ -308,6 +314,33 @@
     } completion:nil];
 }
 
+-(void) updateSelectedColorAndBounce:(BOOL)shouldBounce{
+    if([self isShowingColors]){
+        blackButton.selected = NO;
+        blueButton.selected = NO;
+        redButton.selected = NO;
+        yellowButton.selected = NO;
+        greenButton.selected = NO;
+
+        if(activeButton.selectedColor == blackButton.color){
+            blackButton.selected = YES;
+            if(shouldBounce) [blackButton bounce];
+        }else if(activeButton.selectedColor == blueButton.color){
+            blueButton.selected = YES;
+            if(shouldBounce) [blueButton bounce];
+        }else if(activeButton.selectedColor == redButton.color){
+            redButton.selected = YES;
+            if(shouldBounce) [redButton bounce];
+        }else if(activeButton.selectedColor == yellowButton.color){
+            yellowButton.selected = YES;
+            if(shouldBounce) [yellowButton bounce];
+        }else if(activeButton.selectedColor == greenButton.color){
+            greenButton.selected = YES;
+            if(shouldBounce) [greenButton bounce];
+        }
+    }
+}
+
 -(void) showColors{
     if(![self isShowingColors]){
         isShowingColorOptions = YES;
@@ -320,19 +353,9 @@
             redButton.frame = redButton.originalFrame;
             yellowButton.frame = yellowButton.originalFrame;
             greenButton.frame = greenButton.originalFrame;
-            
-            if(activeColorButton.color == blackButton.color){
-                blackButton.selected = YES;
-            }else if(activeColorButton.color == blueButton.color){
-                blueButton.selected = YES;
-            }else if(activeColorButton.color == redButton.color){
-                redButton.selected = YES;
-            }else if(activeColorButton.color == yellowButton.color){
-                yellowButton.selected = YES;
-            }else if(activeColorButton.color == greenButton.color){
-                greenButton.selected = YES;
-            }
-            
+
+            [self updateSelectedColorAndBounce:NO];
+
             activeColorButton.alpha = 0;
             blackButton.alpha = 1;
         } completion:nil];
@@ -387,10 +410,11 @@
         yellowButton.selected = NO;
         greenButton.selected = NO;
         button.selected = YES;
+
+        activeButton.selectedColor = button.color;
         
         color = button.color;
         [self.delegate didChangeColorTo:color];
-        [pencilButton setNeedsDisplay];
     }
 }
 

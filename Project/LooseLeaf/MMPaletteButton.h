@@ -12,6 +12,7 @@
 
 @interface MMPaletteButton : MMSidebarButton
 
-@property (weak) MMPencilAndPaletteView* tool;
+@property (nonatomic,weak) MMPencilAndPaletteView* tool;
+@property (nonatomic,strong) UIColor* selectedColor;
 
 @end
