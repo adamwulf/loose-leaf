@@ -432,9 +432,10 @@
 		C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C506A3921C23DAD800236895 /* TwitterCore.framework */; };
 		C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B71C23DE3200236895 /* SSKeychain.m */; };
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
+		C50C0D6A1C3CA26600DFC079 /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C50C0D691C3CA26600DFC079 /* coloredpoint.vsh */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C569DB441C3A50BB00ABFEC8 /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C569DB431C3A50BB00ABFEC8 /* stencil.fsh */; };
-		C584F8391C37C56800413840 /* point.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* point.vsh */; };
+		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
 		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
 		C584F83F1C37D26200413840 /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F83E1C37D26200413840 /* quad.vsh */; };
@@ -1310,10 +1311,11 @@
 		C506A3B81C23DE3200236895 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychainQuery.h; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.h; sourceTree = "<group>"; };
 		C506A3B91C23DE3200236895 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.m; sourceTree = "<group>"; };
 		C506A3BD1C23DEC800236895 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
+		C50C0D691C3CA26600DFC079 /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = coloredpoint.vsh; sourceTree = "<group>"; };
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
-		C584F8371C37C56800413840 /* point.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.vsh; sourceTree = "<group>"; };
+		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
 		C584F8381C37C56800413840 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
 		C584F83B1C37C57000413840 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
 		C584F83E1C37D26200413840 /* quad.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = quad.vsh; sourceTree = "<group>"; };
@@ -3218,7 +3220,8 @@
 			isa = PBXGroup;
 			children = (
 				C584F83B1C37C57000413840 /* Particle.png */,
-				C584F8371C37C56800413840 /* point.vsh */,
+				C584F8371C37C56800413840 /* colorlesspoint.vsh */,
+				C50C0D691C3CA26600DFC079 /* coloredpoint.vsh */,
 				C584F8381C37C56800413840 /* point.fsh */,
 				C584F83E1C37D26200413840 /* quad.vsh */,
 				C584F8401C37D27600413840 /* quad.fsh */,
@@ -3518,7 +3521,7 @@
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
 				663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
-				C584F8391C37C56800413840 /* point.vsh in Resources */,
+				C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */,
 				C5F4BE891C2676F900FFB640 /* bottom-buttons.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
@@ -3533,6 +3536,7 @@
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
 				66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */,
+				C50C0D6A1C3CA26600DFC079 /* coloredpoint.vsh in Resources */,
 				667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */,
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
 				665245001995673900C36609 /* email@2x.png in Resources */,
