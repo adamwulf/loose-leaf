@@ -878,6 +878,16 @@ int skipAll = NO;
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 
+-(void) highlighterTapped:(UIButton *)button{
+    [super highlighterTapped:button];
+    [self anySidebarButtonTapped:nil];
+}
+
+-(void) pencilTapped:(UIButton*)_button{
+    [super pencilTapped:_button];
+    [self anySidebarButtonTapped:nil];
+}
+
 -(void) penTapped:(UIButton*)_button{
     [super penTapped:_button];
     [self anySidebarButtonTapped:nil];
