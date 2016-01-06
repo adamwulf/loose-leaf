@@ -60,17 +60,21 @@
 #pragma mark - Tap Handling
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    UIView* sv = [super hitTest:point withEvent:event];
-    if(sv != self){
-        return sv;
+    if([(__bridge UIButton*)self.buttons[0].button alpha]){
+        UIView* sv = [super hitTest:point withEvent:event];
+        if(sv != self){
+            return sv;
+        }
     }
     return nil;
 }
 
 -(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
-    for (UIView* subview in self.subviews) {
-        if([subview pointInside:[subview convertPoint:point fromView:self] withEvent:event]){
-            return YES;
+    if([(__bridge UIButton*)self.buttons[0].button alpha]){
+        for (UIView* subview in self.subviews) {
+            if([subview pointInside:[subview convertPoint:point fromView:self] withEvent:event]){
+                return YES;
+            }
         }
     }
     return NO;
