@@ -888,8 +888,8 @@ int skipAll = NO;
     [self anySidebarButtonTapped:nil];
 }
 
--(void) penTapped:(UIButton*)_button{
-    [super penTapped:_button];
+-(void) markerTapped:(UIButton*)_button{
+    [super markerTapped:_button];
     [self anySidebarButtonTapped:nil];
 }
 

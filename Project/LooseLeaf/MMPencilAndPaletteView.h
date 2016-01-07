@@ -22,4 +22,6 @@
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize;
 
+-(void) setActiveButton:(MMPaletteButton*)button;
+
 @end

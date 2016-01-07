@@ -75,7 +75,7 @@
         [self addSubview:pencilButton];
         
         markerButton = [[MMMarkerButton alloc] initWithFrame:originalFrame];
-        [markerButton addTarget:self action:@selector(penTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [markerButton addTarget:self action:@selector(markerTapped:) forControlEvents:UIControlEventTouchUpInside];
         markerButton.tool = self;
         markerButton.center = CGPointApplyAffineTransform(pencilButton.center, CGAffineTransformMakeTranslation(-60, -kWidthOfSidebarButton));
         [self addSubview:markerButton];
@@ -220,6 +220,34 @@
     return activeButton.selected;
 }
 
+-(void) setActiveButton:(MMPaletteButton*)button{
+    activeButton = button;
+    [self setSelected:YES];
+    if(activeButton == pencilButton){
+        [self.delegate pencilTapped:button];
+    }else if(activeButton == markerButton){
+        [self.delegate markerTapped:button];
+    }else if(activeButton == highlighterButton){
+        [self.delegate highlighterTapped:button];
+    }
+    [self.delegate didChangeColorTo:activeButton.selectedColor];
+
+    if(!isShowingColorOptions){
+        CGPoint originalCenter = CGPointMake(CGRectGetMidX(originalFrame), CGRectGetMidY(originalFrame));
+        activeButton.center = originalCenter;
+        if(markerButton != activeButton){
+            markerButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(-60, -kWidthOfSidebarButton));
+        }
+        if(highlighterButton != activeButton){
+            highlighterButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(-60, -2 * kWidthOfSidebarButton));
+        }
+        if(pencilButton != activeButton){
+            pencilButton.center = CGPointApplyAffineTransform(originalCenter, CGAffineTransformMakeTranslation(-60, 0));
+        }
+        activeColorButton.color = activeButton.selectedColor;
+    }
+}
+
 
 #pragma mark - Events
 
@@ -257,7 +285,7 @@
     }
 }
 
--(void) penTapped:(UIButton*)button{
+-(void) markerTapped:(UIButton*)button{
     if(markerButton.selected){
         if([self isShowingColors]){
             [self hideColors];
@@ -268,7 +296,7 @@
         }
     }else{
         activeButton = markerButton;
-        [self.delegate penTapped:button];
+        [self.delegate markerTapped:button];
         [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
     }

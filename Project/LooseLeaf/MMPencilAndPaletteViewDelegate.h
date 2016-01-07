@@ -15,7 +15,7 @@
 
 -(void) pencilTapped:(UIButton*)button;
 
--(void) penTapped:(UIButton*)button;
+-(void) markerTapped:(UIButton*)button;
 
 -(void) didChangeColorTo:(UIColor*)color;
 

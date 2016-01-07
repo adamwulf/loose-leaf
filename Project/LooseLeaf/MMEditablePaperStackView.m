@@ -88,7 +88,6 @@
         
         
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
-        pencilTool.delegate = self;
         [self.toolbar addPencilTool:pencilTool];
 
         eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
@@ -152,7 +151,16 @@
         self.clipsToBounds = YES;
         self.delaysContentTouches = NO;
         
-        
+
+        if([[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedBrush"] isEqualToString:@"marker"]){
+            [pencilTool setActiveButton:pencilTool.markerButton];
+        }else if([[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedBrush"] isEqualToString:@"highlighter"]){
+            [pencilTool setActiveButton:pencilTool.highlighterButton];
+        }else{
+            [pencilTool setActiveButton:pencilTool.pencilButton];
+        }
+        pencilTool.delegate = self;
+
         pencilTool.selected = YES;
         handButton.selected = YES;
         
@@ -234,6 +242,8 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
+    [[NSUserDefaults standardUserDefaults] setObject:@"highlighter" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void) pencilTapped:(UIButton*)_button{
@@ -243,15 +253,19 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
+    [[NSUserDefaults standardUserDefaults] setObject:@"pencil" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
--(void) penTapped:(UIButton*)_button{
+-(void) markerTapped:(UIButton*)_button{
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
+    [[NSUserDefaults standardUserDefaults] setObject:@"marker" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 -(void) colorMenuToggled{
@@ -263,7 +277,7 @@
     pen.color = color;
     marker.color = color;
     if(!pencilTool.selected){
-        [self penTapped:nil];
+        [self markerTapped:nil];
     }
 }
 
