@@ -178,6 +178,11 @@
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [touches enumerateObjectsUsingBlock:^(UITouch*  _Nonnull obj, BOOL * _Nonnull stop) {
+        if(obj.type == UITouchTypeIndirect){
+            NSLog(@"indirect touch!");
+        }
+    }];
     [self processSubStateForNextIteration];
     
 //    DebugLog(@"%@: %i touches began", [self description], [touches count]);

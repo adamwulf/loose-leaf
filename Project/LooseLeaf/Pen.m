@@ -126,7 +126,17 @@
  * is the look we're going for.
  */
 -(UIColor*) colorForTouch:(JotTouch*)touch{
-    if(self.shouldUseVelocity){
+    if(touch.touch.type == UITouchTypeStylus){
+        CGFloat segmentAlpha = (maxAlpha + minAlpha) / 2.0;
+        segmentAlpha *= touch.touch.force;
+        if(segmentAlpha < minAlpha) segmentAlpha = minAlpha;
+        if(segmentAlpha > maxAlpha) segmentAlpha = maxAlpha;
+
+        UIColor* currColor = color;
+        currColor = [UIColor colorWithCGColor:currColor.CGColor];
+        UIColor* ret = [currColor colorWithAlphaComponent:segmentAlpha];
+        return ret;
+    }else if(self.shouldUseVelocity){
         CGFloat segmentAlpha = (velocity - 1);
         if(segmentAlpha > 0) segmentAlpha = 0;
         segmentAlpha = minAlpha + ABS(segmentAlpha) * (maxAlpha - minAlpha);
@@ -151,7 +161,14 @@
  * we'll fall back to use velocity data
  */
 -(CGFloat) widthForTouch:(JotTouch*)touch{
-    if(self.shouldUseVelocity){
+    if(touch.touch.type == UITouchTypeStylus){
+        CGFloat width = (maxSize + minSize) / 2.0;
+        width *= touch.touch.force;
+        if(width < minSize) width = minSize;
+        if(width > maxSize) width = maxSize;
+
+        return width;
+    }else if(self.shouldUseVelocity){
         CGFloat width = (velocity - 1);
         if(width > 0) width = 0;
         width = minSize + ABS(width) * (maxSize - minSize);
