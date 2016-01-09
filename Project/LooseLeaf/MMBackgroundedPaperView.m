@@ -44,7 +44,9 @@
                                          scale: 1.0
                                    orientation: [self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp];
     }
-    
+
+    img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:self.bounds.size interpolationQuality:kCGInterpolationMedium];
+
     if(!paperBackgroundView){
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
