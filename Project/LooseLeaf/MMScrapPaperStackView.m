@@ -236,9 +236,9 @@
 }
 
 
--(BOOL) imageMatchesPaperDimensions:(UIImage*)img{
+-(BOOL) imageMatchesPaperDimensions:(MMImageInboxItem*)img{
     CGSize stackSize = visibleStackHolder.bounds.size;
-    CGSize imgSize = img.size;
+    CGSize imgSize = [img sizeForPage:0];
 
     if(stackSize.width == imgSize.width &&
        stackSize.height == imgSize.height){
@@ -275,22 +275,22 @@
     [[NSThread mainThread] performBlock:^{
 //        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
-//        if([self imageMatchesPaperDimensions:scrapBacking]){
-//            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-//            page.isBrandNewPage = YES;
-//            page.delegate = self;
-//            [page setPageBackgroundTexture:scrapBacking];
-//            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-//            [page updateThumbnailVisibility];
-//            [hiddenStackHolder pushSubview:page];
-//            [[visibleStackHolder peekSubview] enableAllGestures];
-//            [self popTopPageOfHiddenStack];
-//            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-//            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-//
-//            return;
-//        }
-        
+        if([self imageMatchesPaperDimensions:scrapBacking]){
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+            page.isBrandNewPage = YES;
+            page.delegate = self;
+            [page setPageBackgroundTexture:[scrapBacking imageForPage:0 forMaxDim:MAX(page.bounds.size.width, page.bounds.size.height)]];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [hiddenStackHolder pushSubview:page];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+            return;
+        }
+
         [importImageSidebar hide:NO onComplete:^(BOOL finished) {
             [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:kPhotoImportMaxDim]];
             [importImageSidebar refreshPDF];
@@ -579,6 +579,33 @@
 //    NSLog(@"imported button ratio %f", buttonSize.width / buttonSize.height);
     CGSize fullScaleSize = photo.fullResolutionSize;
 //    NSLog(@"imported photo ratio %f", fullScaleSize.width / fullScaleSize.height);
+
+
+    CGFloat ratioDiff = ABS(fullScaleSize.width / fullScaleSize.height - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
+    if(ratioDiff < .1){
+        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+        page.isBrandNewPage = YES;
+        page.delegate = self;
+        UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:MAX(page.bounds.size.width, page.bounds.size.height)];
+        [page setPageBackgroundTexture:scrapBacking];
+        [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+        [page updateThumbnailVisibility];
+        [hiddenStackHolder pushSubview:page];
+        [[visibleStackHolder peekSubview] enableAllGestures];
+        [self popTopPageOfHiddenStack];
+        [page saveToDisk:^(BOOL didSaveEdits) {
+            NSLog(@"page saved ok: %d", didSaveEdits);
+        }];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+        [importImageSidebar hide:YES onComplete:nil];
+
+        return;
+    }
+
+
+
 
     // force the rect path that we're building to
     // match the aspect ratio of the input photo

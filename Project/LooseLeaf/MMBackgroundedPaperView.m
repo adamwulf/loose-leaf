@@ -9,6 +9,7 @@
 #import "MMBackgroundedPaperView.h"
 #import "MMEditablePaperViewSubclass.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMLoadImageCache.h"
 
 @implementation MMBackgroundedPaperView{
     UIImageView* paperBackgroundView;
@@ -61,10 +62,32 @@
 //        }
     }
     paperBackgroundView.image = img;
-    
+
+    BOOL wasBrandNewPage = self.isBrandNewPage;
+    if(self.isBrandNewPage){
+        CGSize thumbSize = self.bounds.size;
+        thumbSize.width = floorf(thumbSize.width / 2);
+        thumbSize.height = floorf(thumbSize.height / 2);
+        UIImage* thumbImage = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:thumbSize interpolationQuality:kCGInterpolationMedium];
+
+        [UIImagePNGRepresentation(thumbImage) writeToFile:[self thumbnailPath] atomically:YES];
+        [UIImagePNGRepresentation(thumbImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
+        
+    }
     if(saveToDisk){
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^{
             [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
+            if(wasBrandNewPage){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    definitelyDoesNotHaveAnInkThumbnail = NO;
+                    definitelyDoesNotHaveAScrappedThumbnail = NO;
+                    fileExistsAtInkPath = NO;
+                    cachedImgViewImage = nil;
+                    [self loadCachedPreviewAndDecompressImmediately:YES];
+                });
+            }
         });
     }
 }

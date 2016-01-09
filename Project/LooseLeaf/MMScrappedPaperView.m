@@ -45,13 +45,6 @@
 @implementation MMScrappedPaperView{
     NSString* scrapIDsPath;
     MMDecompressImagePromise* scrappedImgViewImage;
-    // this defaults to NO, which means we'll try to
-    // load a thumbnail. if an image does not exist
-    // on disk, then we'll set this to YES which will
-    // prevent any more thumbnail loads until this page
-    // is saved
-    BOOL definitelyDoesNotHaveAScrappedThumbnail;
-    BOOL isLoadingCachedScrappedThumbnailFromDisk;
     // track if we should have our thumbnail loaded
     // this will help us since we use lots of threads
     // during thumbnail loading.
