@@ -46,10 +46,6 @@
     return [self initWithMinSize:1.6 andMaxSize:2.7 andMinAlpha:1.0 andMaxAlpha:1.0];
 }
 
--(UIImage*) texture{
-    return [UIImage imageNamed:@"Circle.png"];
-}
-
 -(BOOL) shouldUseVelocity{
     if([[JotStylusManager sharedInstance] enabled] && [[JotStylusManager sharedInstance] isStylusConnected]){
         return NO;
@@ -181,6 +177,9 @@
     }
 }
 
+-(JotBrushTexture*) textureForTouch:(JotTouch *)touch{
+    return [JotDefaultBrushTexture sharedInstance];
+}
 
 /**
  * we'll keep this pen fairly smooth, and using 0.75 gives

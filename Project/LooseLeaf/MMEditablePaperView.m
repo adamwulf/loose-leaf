@@ -430,6 +430,10 @@ static int count = 0;
     [delegate didCancelStroke:stroke withTouch:touch];
 }
 
+-(JotBrushTexture*)textureForTouch:(JotTouch *)touch{
+    return [delegate textureForTouch:touch];
+}
+
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     return [delegate colorForTouch:touch];
 }

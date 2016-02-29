@@ -1912,6 +1912,10 @@
     @throw kAbstractMethodException;
 }
 
+-(JotBrushTexture*) textureForTouch:(JotTouch *)touch{
+    @throw kAbstractMethodException;
+}
+
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     @throw kAbstractMethodException;
 }

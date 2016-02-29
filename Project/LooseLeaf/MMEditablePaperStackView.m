@@ -7,14 +7,15 @@
 //
 
 #import "MMEditablePaperStackView.h"
-#import "UIView+SubviewStacks.h"
-#import "MMRulerView.h"
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMMemoryProfileView.h"
 #import "MMExportablePaperView.h"
+#import "Highlighter.h"
+#import "MMMemoryProfileView.h"
+#import "MMRulerView.h"
+#import "UIView+SubviewStacks.h"
 #import "Mixpanel.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
@@ -47,6 +48,8 @@
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
 //        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
+
+        marker = [[Highlighter alloc] init];
 
         marker = [[Pen alloc] initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:0.8 andMaxAlpha:1.0];
 
@@ -851,6 +854,10 @@
 
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     return [[self activePen] colorForTouch:touch];
+}
+
+-(JotBrushTexture*)textureForTouch:(JotTouch *)touch{
+    return [[self activePen] textureForTouch:touch];
 }
 
 -(CGFloat) widthForTouch:(JotTouch*)touch{
