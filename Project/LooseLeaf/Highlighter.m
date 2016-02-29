@@ -54,11 +54,6 @@
 }
 
 
--(UIColor*) colorForTouch:(JotTouch*)touch{
-    return [UIColor colorWithRed:.8 green:.5 blue:.2 alpha:1.0];
-}
-
-
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     //    DebugLog(@"ERASER velocity: %f", velocity);
 }

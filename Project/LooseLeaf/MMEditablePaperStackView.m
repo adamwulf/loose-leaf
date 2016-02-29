@@ -49,7 +49,7 @@
 //        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
-        marker = [[Highlighter alloc] init];
+        highlighter = [[Highlighter alloc] init];
 
         marker = [[Pen alloc] initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:0.8 andMaxAlpha:1.0];
 
@@ -231,6 +231,8 @@
         return eraser;
     }else if(pencilTool.pencilButton.selected){
         return pen;
+    }else if(pencilTool.highlighterButton.selected){
+        return highlighter;
     }else{
         return marker;
     }
@@ -277,6 +279,7 @@
 
 -(void) didChangeColorTo:(UIColor*)color{
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
+    highlighter.color = color;
     pen.color = color;
     marker.color = color;
     if(!pencilTool.selected){
