@@ -48,7 +48,7 @@
 //        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
-        marker = [[Pen alloc] initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:1.0 andMaxAlpha:1.0];
+        marker = [[Pen alloc] initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:0.8 andMaxAlpha:1.0];
 
         pen = [[Pen alloc] init];
         
