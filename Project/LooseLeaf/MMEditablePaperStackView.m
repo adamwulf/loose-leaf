@@ -863,6 +863,10 @@
     return [[self activePen] textureForStroke];
 }
 
+-(CGFloat) stepWidthForStroke{
+    return [[self activePen] stepWidthForStroke];
+}
+
 -(CGFloat) widthForTouch:(JotTouch*)touch{
     //
     // we divide by scale so that when the user is zoomed in,

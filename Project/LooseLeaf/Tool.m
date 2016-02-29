@@ -19,6 +19,10 @@
     @throw kAbstractMethodException;
 }
 
+-(CGFloat) stepWidthForStroke{
+    @throw kAbstractMethodException;
+}
+
 - (UIColor*) colorForTouch:(JotTouch *)touch{
     @throw kAbstractMethodException;
 }

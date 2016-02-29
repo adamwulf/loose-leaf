@@ -434,6 +434,10 @@ static int count = 0;
     return [delegate textureForStroke];
 }
 
+-(CGFloat)stepWidthForStroke{
+    return [delegate stepWidthForStroke];
+}
+
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     return [delegate colorForTouch:touch];
 }

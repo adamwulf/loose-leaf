@@ -181,6 +181,10 @@
     return [JotDefaultBrushTexture sharedInstance];
 }
 
+- (CGFloat) stepWidthForStroke{
+    return .5;
+}
+
 /**
  * we'll keep this pen fairly smooth, and using 0.75 gives
  * a good effect.

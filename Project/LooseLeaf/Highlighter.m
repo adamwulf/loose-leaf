@@ -7,12 +7,13 @@
 //
 
 #import "Highlighter.h"
+#import <JotUI/JotUI.h>
 
 @implementation Highlighter
 
 
 -(id) init{
-    return [self initWithMinSize:20.0 andMaxSize:20.0 andMinAlpha:1.0 andMaxAlpha:1.0];
+    return [self initWithMinSize:40.0 andMaxSize:40.0 andMinAlpha:1.0 andMaxAlpha:1.0];
 }
 
 /**
@@ -53,6 +54,13 @@
     }
 }
 
+-(JotBrushTexture*) textureForStroke{
+    return [JotHighlighterBrushTexture sharedInstance];
+}
+
+- (CGFloat) stepWidthForStroke{
+    return 2;
+}
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
     //    DebugLog(@"ERASER velocity: %f", velocity);
