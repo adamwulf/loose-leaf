@@ -859,8 +859,8 @@
     return [[self activePen] colorForTouch:touch];
 }
 
--(JotBrushTexture*)textureForTouch:(JotTouch *)touch{
-    return [[self activePen] textureForTouch:touch];
+-(JotBrushTexture*)textureForStroke{
+    return [[self activePen] textureForStroke];
 }
 
 -(CGFloat) widthForTouch:(JotTouch*)touch{

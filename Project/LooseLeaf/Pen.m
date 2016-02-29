@@ -177,7 +177,7 @@
     }
 }
 
--(JotBrushTexture*) textureForTouch:(JotTouch *)touch{
+-(JotBrushTexture*) textureForStroke{
     return [JotDefaultBrushTexture sharedInstance];
 }
 

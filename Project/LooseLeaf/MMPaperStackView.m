@@ -1912,7 +1912,7 @@
     @throw kAbstractMethodException;
 }
 
--(JotBrushTexture*) textureForTouch:(JotTouch *)touch{
+-(JotBrushTexture*) textureForStroke{
     @throw kAbstractMethodException;
 }
 
