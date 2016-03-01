@@ -47,10 +47,26 @@
  */
 
 uniform sampler2D texture;
-varying lowp float rotation;
+varying highp float rotation;
 varying lowp vec4 color;
 
 void main()
 {
-	gl_FragColor = color * texture2D(texture, gl_PointCoord);
+    // from: http://stackoverflow.com/questions/11269011/is-it-possible-to-rotate-a-texture-at-a-vertex-point-when-drawing-as-gl-points
+    // Set a center position.
+    highp vec2 center = vec2(0.5, 0.5);
+
+    // Translate the center of the point the origin.
+    highp vec2 centeredPoint = gl_PointCoord - center;
+
+    // Create a rotation matrix using the provided angle
+    highp mat2 rotMat = mat2(cos(rotation), sin(rotation),
+                               -sin(rotation), cos(rotation));
+
+    // Perform the rotation.
+    centeredPoint = rotMat * centeredPoint + center;
+
+
+    // rotated
+	gl_FragColor = color * texture2D(texture, centeredPoint);
 }
