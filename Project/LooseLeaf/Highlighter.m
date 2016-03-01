@@ -13,7 +13,7 @@
 
 
 -(id) init{
-    return [self initWithMinSize:40.0 andMaxSize:40.0 andMinAlpha:1.0 andMaxAlpha:1.0];
+    return [self initWithMinSize:40.0 andMaxSize:40.0 andMinAlpha:0.8 andMaxAlpha:0.8];
 }
 
 /**

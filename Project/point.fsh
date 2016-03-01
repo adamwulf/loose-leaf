@@ -47,6 +47,7 @@
  */
 
 uniform sampler2D texture;
+varying lowp float rotation;
 varying lowp vec4 color;
 
 void main()

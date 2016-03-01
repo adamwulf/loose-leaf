@@ -49,13 +49,17 @@ attribute vec4 inVertex;
 attribute float pointSize;
 
 uniform mat4 MVP;
+uniform float inRotation;
 uniform lowp vec4 vertexColor;
 
 varying lowp vec4 color;
+varying float rotation;
+
 
 void main()
 {
 	gl_Position = MVP * inVertex;
     gl_PointSize = pointSize;
     color = vertexColor;
+    rotation = inRotation;
 }
