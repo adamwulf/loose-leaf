@@ -438,6 +438,10 @@ static int count = 0;
     return [delegate stepWidthForStroke];
 }
 
+-(BOOL) supportsRotation{
+    return [delegate supportsRotation];
+}
+
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     return [delegate colorForTouch:touch];
 }

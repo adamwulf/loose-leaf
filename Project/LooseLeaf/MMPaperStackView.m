@@ -1920,6 +1920,10 @@
     @throw kAbstractMethodException;
 }
 
+-(BOOL) supportsRotation{
+    @throw kAbstractMethodException;
+}
+
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     @throw kAbstractMethodException;
 }

@@ -867,6 +867,10 @@
     return [[self activePen] stepWidthForStroke];
 }
 
+-(BOOL) supportsRotation{
+    return [[self activePen] supportsRotation];
+}
+
 -(CGFloat) widthForTouch:(JotTouch*)touch{
     //
     // we divide by scale so that when the user is zoomed in,

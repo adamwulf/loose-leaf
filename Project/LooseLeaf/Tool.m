@@ -27,6 +27,10 @@
     @throw kAbstractMethodException;
 }
 
+-(BOOL) supportsRotation{
+    @throw kAbstractMethodException;
+}
+
 - (CGFloat) smoothnessForTouch:(JotTouch *)touch{
     @throw kAbstractMethodException;
 }

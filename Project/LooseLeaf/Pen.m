@@ -185,6 +185,10 @@
     return .5;
 }
 
+-(BOOL) supportsRotation{
+    return NO;
+}
+
 /**
  * we'll keep this pen fairly smooth, and using 0.75 gives
  * a good effect.

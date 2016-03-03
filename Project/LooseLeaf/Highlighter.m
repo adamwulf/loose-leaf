@@ -13,7 +13,7 @@
 
 
 -(id) init{
-    return [self initWithMinSize:40.0 andMaxSize:40.0 andMinAlpha:0.8 andMaxAlpha:0.8];
+    return [self initWithMinSize:40.0 andMaxSize:40.0 andMinAlpha:0.5 andMaxAlpha:0.8];
 }
 
 /**
@@ -60,6 +60,10 @@
 
 - (CGFloat) stepWidthForStroke{
     return 2;
+}
+
+-(BOOL) supportsRotation{
+    return YES;
 }
 
 -(void) didEndStrokeWithTouch:(JotTouch *)touch{
