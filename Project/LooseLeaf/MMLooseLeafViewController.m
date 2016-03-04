@@ -48,10 +48,9 @@
     
         self.view.opaque = YES;
         
-        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 120)];
-        listOfStacksView.layer.borderColor = [[UIColor redColor] CGColor];
-        listOfStacksView.layer.borderWidth = 4;
+        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
         listOfStacksView.alpha = 0;
+        listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
 
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
