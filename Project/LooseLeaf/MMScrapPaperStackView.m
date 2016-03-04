@@ -153,7 +153,7 @@
 //        drawLongElementButton.backgroundColor = [UIColor whiteColor];
 //        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
 //        drawLongElementButton.layer.borderWidth = 1;
-//        [self addSubview:drawLongElementButton];
+//        [self.toolbar addButton:drawLongElementButton extendFrame:NO];
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -236,9 +236,9 @@
 }
 
 
--(BOOL) imageMatchesPaperDimensions:(UIImage*)img{
+-(BOOL) imageMatchesPaperDimensions:(MMImageInboxItem*)img{
     CGSize stackSize = visibleStackHolder.bounds.size;
-    CGSize imgSize = img.size;
+    CGSize imgSize = [img sizeForPage:0];
 
     if(stackSize.width == imgSize.width &&
        stackSize.height == imgSize.height){
@@ -275,22 +275,22 @@
     [[NSThread mainThread] performBlock:^{
 //        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
         
-//        if([self imageMatchesPaperDimensions:scrapBacking]){
-//            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-//            page.isBrandNewPage = YES;
-//            page.delegate = self;
-//            [page setPageBackgroundTexture:scrapBacking];
-//            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-//            [page updateThumbnailVisibility];
-//            [hiddenStackHolder pushSubview:page];
-//            [[visibleStackHolder peekSubview] enableAllGestures];
-//            [self popTopPageOfHiddenStack];
-//            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-//            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-//
-//            return;
-//        }
-        
+        if([self imageMatchesPaperDimensions:scrapBacking]){
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+            page.isBrandNewPage = YES;
+            page.delegate = self;
+            [page setPageBackgroundTexture:[scrapBacking imageForPage:0 forMaxDim:MAX(page.bounds.size.width, page.bounds.size.height)]];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [hiddenStackHolder pushSubview:page];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+            return;
+        }
+
         [importImageSidebar hide:NO onComplete:^(BOOL finished) {
             [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:kPhotoImportMaxDim]];
             [importImageSidebar refreshPDF];
@@ -302,7 +302,7 @@
                                                                           kMPEventImportPropFileType : [url universalTypeID],
                                                                           kMPEventImportPropSource : kMPEventImportPropSourceApplication,
                                                                           kMPEventImportPropReferApp : sourceApplication}];
-    } afterDelay:.15];
+    } afterDelay:.75];
 }
 
 -(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
@@ -342,7 +342,7 @@
             // show show the PDF content in the sidebar
             [importImageSidebar showPDF:pdfDoc];
         }
-    } afterDelay:.15];
+    } afterDelay:.75];
 
     
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -358,78 +358,85 @@
 // adds the incoming image as a new scrap to the top page
 // throws exception if in list view
 -(void) importImageAsNewScrap:(UIImage*)scrapBacking{
-    
-    void(^block)() = ^{
-        MMVector* up = [[MMRotationManager sharedInstance] upVector];
-        MMVector* perp = [[up perpendicular] normal];
-        CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
-                                     ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
-        // start the photo "up" and have it drop down into the center ish of the page
-        center = [up pointFromPoint:center distance:80];
-        // randomize it a bit
-        center = [perp pointFromPoint:center distance:(random() % 80) - 40];
-        
-        
-        // subtract 1px from the border so that the background is clipped nicely around the edge
-        CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
-        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
-        
-        MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
-        [scrapContainer addSubview:scrap];
-        
-        // background fills the entire scrap
-        [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
-        
-        
-        // prep the scrap to fade in while it drops on screen
-        scrap.alpha = .3;
-        scrap.scale = 1.2;
-        
-        // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
-        
-        // animate the scrap dropping and bouncing on the page
-        [UIView animateWithDuration:.2
-                              delay:.1
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             // doesn't need to land exactly center. this way
-                             // multiple imports of multiple photos won't all
-                             // land exactly on top of each other. looks nicer.
-                             MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-                             CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
-                             // scale the center point to 1.0 scale
-                             center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
-                             // at this point, we have the true center of the page,
-                             // now add a bit of random to it to give it some variance
-                             center.x += random() % 14 - 7;
-                             center.y += random() % 14 - 7;
-                             scrap.center = center;
-                             [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
-                             scrap.alpha = .72;
-                         }
-                         completion:^(BOOL finished){
-                             [UIView animateWithDuration:.1
-                                                   delay:0
-                                                 options:UIViewAnimationOptionCurveEaseIn
-                                              animations:^{
-                                                  [scrap setScale:1];
-                                                  scrap.alpha = 1.0;
-                                              }
-                                              completion:^(BOOL finished){
-                                                  [topPage.scrapsOnPaperState showScrap:scrap];
-                                                  [topPage saveToDisk:nil];
-                                              }];
-                         }];
-    };
-    
     if([self isShowingPageView]){
-        block();
+        [self importImageOntoTopVisibleAndLoadedPage:scrapBacking];
     }else{
         [self transitionFromListToNewBlankPageIfInPageView];
-        [[NSThread mainThread] performBlock:block afterDelay:.2];
+        [self performSelector:@selector(importImageOntoTopVisibleAndLoadedPage:) withObject:scrapBacking afterDelay:.2];
     }
+}
+
+-(void) importImageOntoTopVisibleAndLoadedPage:(UIImage*)scrapBacking{
+
+    MMScrappedPaperView* topPage = [visibleStackHolder peekSubview];
+    if(![topPage isStateLoaded]){
+        // if our state isn't loaded yet, then just wait a bit
+        // and try the import again soon.
+        [self performSelector:@selector(importImageOntoTopVisibleAndLoadedPage:) withObject:scrapBacking afterDelay:.2];
+        return;
+    }
+
+    MMVector* up = [[MMRotationManager sharedInstance] upVector];
+    MMVector* perp = [[up perpendicular] normal];
+    CGPoint center = CGPointMake(ceilf((self.bounds.size.width - scrapBacking.size.width) / 2),
+                                 ceilf((self.bounds.size.height - scrapBacking.size.height) / 2));
+    // start the photo "up" and have it drop down into the center ish of the page
+    center = [up pointFromPoint:center distance:80];
+    // randomize it a bit
+    center = [perp pointFromPoint:center distance:(random() % 80) - 40];
+
+
+    // subtract 1px from the border so that the background is clipped nicely around the edge
+    CGSize scrapSize = CGSizeMake(scrapBacking.size.width - 2, scrapBacking.size.height - 2);
+    UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(center.x, center.y, scrapSize.width, scrapSize.height)];
+
+    MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:RandomPhotoRotation(rand()) andScale:1.0];
+    [scrapContainer addSubview:scrap];
+
+    // background fills the entire scrap
+    [scrap setBackgroundView:[[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state]];
+
+
+    // prep the scrap to fade in while it drops on screen
+    scrap.alpha = .3;
+    scrap.scale = 1.2;
+
+    // bounce by 20px (10 on each side)
+    CGFloat bounceScale = 20 / MAX(scrapSize.width, scrapSize.height);
+
+    // animate the scrap dropping and bouncing on the page
+    [UIView animateWithDuration:.2
+                          delay:.1
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         // doesn't need to land exactly center. this way
+                         // multiple imports of multiple photos won't all
+                         // land exactly on top of each other. looks nicer.
+                         MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+                         CGPoint center = CGPointMake(page.bounds.size.width/2, page.bounds.size.height/2);
+                         // scale the center point to 1.0 scale
+                         center = CGPointApplyAffineTransform(center, CGAffineTransformMakeScale(1/page.scale, 1/page.scale));
+                         // at this point, we have the true center of the page,
+                         // now add a bit of random to it to give it some variance
+                         center.x += random() % 14 - 7;
+                         center.y += random() % 14 - 7;
+                         scrap.center = center;
+                         [scrap setScale:(1-bounceScale) andRotation:RandomPhotoRotation(rand())];
+                         scrap.alpha = .72;
+                     }
+                     completion:^(BOOL finished){
+                         [UIView animateWithDuration:.1
+                                               delay:0
+                                             options:UIViewAnimationOptionCurveEaseIn
+                                          animations:^{
+                                              [scrap setScale:1];
+                                              scrap.alpha = 1.0;
+                                          }
+                                          completion:^(BOOL finished){
+                                              [topPage.scrapsOnPaperState showScrap:scrap];
+                                              [topPage saveToDisk:nil];
+                                          }];
+                     }];
 }
 
 
@@ -573,6 +580,33 @@
     CGSize fullScaleSize = photo.fullResolutionSize;
 //    NSLog(@"imported photo ratio %f", fullScaleSize.width / fullScaleSize.height);
 
+
+    CGFloat ratioDiff = ABS(fullScaleSize.width / fullScaleSize.height - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
+    if(ratioDiff < .1){
+        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+        page.isBrandNewPage = YES;
+        page.delegate = self;
+        UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:MAX(page.bounds.size.width, page.bounds.size.height)];
+        [page setPageBackgroundTexture:scrapBacking];
+        [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+        [page updateThumbnailVisibility];
+        [hiddenStackHolder pushSubview:page];
+        [[visibleStackHolder peekSubview] enableAllGestures];
+        [self popTopPageOfHiddenStack];
+        [page saveToDisk:^(BOOL didSaveEdits) {
+            NSLog(@"page saved ok: %d", didSaveEdits);
+        }];
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+        [importImageSidebar hide:YES onComplete:nil];
+
+        return;
+    }
+
+
+
+
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
     CGFloat ratio = buttonSize.width / fullScaleSize.width;
@@ -715,18 +749,22 @@ int skipAll = NO;
     MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:startOfLine];
     moveTo.width = 3;
     moveTo.color = [UIColor blackColor];
+    moveTo.stepWidth = .5;
+    moveTo.rotation = 0;
     
     CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:moveTo.startPoint
                                                              andLineTo:endOfLine];
     curveTo.width = 3;
     curveTo.color = [UIColor blackColor];
-    
+    curveTo.stepWidth = .5;
+    curveTo.rotation = 0;
+
     NSArray* shortLine = [NSArray arrayWithObjects:
                           moveTo,
                           curveTo,
                           nil];
     
-    [page.drawableView addElements:shortLine];
+    [page.drawableView addElements:shortLine withTexture:[JotDefaultBrushTexture sharedInstance]];
     [page.drawableView.state finishCurrentStroke];
     [page.scrapsOnPaper makeObjectsPerformSelector:@selector(addUndoLevelAndFinishStroke)];
 
@@ -871,8 +909,18 @@ int skipAll = NO;
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 
--(void) penTapped:(UIButton*)_button{
-    [super penTapped:_button];
+-(void) highlighterTapped:(UIButton *)button{
+    [super highlighterTapped:button];
+    [self anySidebarButtonTapped:nil];
+}
+
+-(void) pencilTapped:(UIButton*)_button{
+    [super pencilTapped:_button];
+    [self anySidebarButtonTapped:nil];
+}
+
+-(void) markerTapped:(UIButton*)_button{
+    [super markerTapped:_button];
     [self anySidebarButtonTapped:nil];
 }
 
@@ -1510,11 +1558,6 @@ int skipAll = NO;
     // hand the cloned scrap to the pan scrap gesture
     panScrapGesture2.scrap = clonedScrap;
 
-    // now that the scrap is where it should be,
-    // and contains its background, etc, then
-    // save everything
-    [page saveToDisk:nil];
-    
     // time to reset the gesture for the cloned scrap
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
@@ -1549,6 +1592,11 @@ int skipAll = NO;
 //        }
         @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
+
+    // now that the scrap is where it should be,
+    // and contains its background, etc, then
+    // save everything
+    [page saveToDisk:nil];
 }
 
 
@@ -2164,7 +2212,7 @@ int skipAll = NO;
         }];
         return isAnyStateLoading;
     };
-    
+
     // we'll wait around if:
     // 1. our top page has pending edits to save
     // 2. our top page is still loading in content
@@ -2176,10 +2224,10 @@ int skipAll = NO;
     // leave this method, all our OpenGL calls will crash
     // the app, so we need to try our best to wrap up before
     // then.
-    if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage)){
+    if([currentEditablePage hasEditsToSave] || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || isPageLoadingHuh(currentEditablePage) || ![[MMPageCacheManager sharedInstance] isEditablePageStable]){
         MMStopWatch* stopwatch = [[MMStopWatch alloc] init];
         [stopwatch start];
-        
+
         // if we're in here, then our page has to either load or save
         // some content. We're going to use a custom MMMainOperationQueue
         // that will let other threads send blocks to the main thread
@@ -2187,7 +2235,7 @@ int skipAll = NO;
         //
         // regardless of what happens, we'll only wait here for 7 seconds
         // to prevent us from being killed by the watchdog.
-        while(([currentEditablePage hasEditsToSave] || isPageLoadingHuh(currentEditablePage) || [[JotTrashManager sharedInstance] numberOfItemsInTrash]) && [stopwatch read] < 7){
+        while(([currentEditablePage hasEditsToSave] || isPageLoadingHuh(currentEditablePage) || [[JotTrashManager sharedInstance] numberOfItemsInTrash] || ![[MMPageCacheManager sharedInstance] isEditablePageStable]) && [stopwatch read] < 7){
             // fire any timers that would've been triggered if this was a normal run loop
             [[MMWeakTimer allWeakTimers] makeObjectsPerformSelector:@selector(fireIfNeeded)];
             // now run any blocks that were sent to the main thread from background threads
@@ -2201,8 +2249,13 @@ int skipAll = NO;
                 // thread signals us with a new block to run
                 [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
+            NSLog(@" - exit status: %d %d %d %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash], ![[MMPageCacheManager sharedInstance] isEditablePageStable]);
         }
         NSLog(@" - completed save in %.2fs", [stopwatch read]);
+
+        BOOL topIsLoadedAndEditable = [[MMPageCacheManager sharedInstance] isEditablePageStable];
+        NSLog(@" - top is editable and loaded? %d", topIsLoadedAndEditable);
+
     }
     NSLog(@"stack: willResignActive end");
 }

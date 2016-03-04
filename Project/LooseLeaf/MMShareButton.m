@@ -121,13 +121,17 @@
     [[UIColor whiteColor] setFill];
     [boxPath stroke];
     [arrowHeadPath stroke];
-    [arrowBodyPath stroke];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
 
-    
     [strokeColor setStroke];
     [boxPath stroke];
     [arrowHeadPath stroke];
+
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setFill];
+    [arrowBodyPath stroke];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+
     [arrowBodyPath stroke];
 
     

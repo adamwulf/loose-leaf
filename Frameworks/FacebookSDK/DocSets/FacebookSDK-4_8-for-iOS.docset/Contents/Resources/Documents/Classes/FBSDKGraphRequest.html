@@ -1,0 +1,838 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>FBSDKGraphRequest Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">Facebook SDK 4.8 for iOS </a></h1>
+				<a id="developerHome" href="../index.html">Facebook</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">FBSDKGraphRequest Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	<option value="properties">Properties</option>
+	
+	<option value="//api/name/HTTPMethod">&nbsp;&nbsp;&nbsp;&nbsp;HTTPMethod</option>
+	
+	<option value="//api/name/graphPath">&nbsp;&nbsp;&nbsp;&nbsp;graphPath</option>
+	
+	<option value="//api/name/parameters">&nbsp;&nbsp;&nbsp;&nbsp;parameters</option>
+	
+	<option value="//api/name/tokenString">&nbsp;&nbsp;&nbsp;&nbsp;tokenString</option>
+	
+	<option value="//api/name/version">&nbsp;&nbsp;&nbsp;&nbsp;version</option>
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/initWithGraphPath:parameters:">&nbsp;&nbsp;&nbsp;&nbsp;- initWithGraphPath:parameters:</option>
+	
+	<option value="//api/name/initWithGraphPath:parameters:HTTPMethod:">&nbsp;&nbsp;&nbsp;&nbsp;- initWithGraphPath:parameters:HTTPMethod:</option>
+	
+	<option value="//api/name/initWithGraphPath:parameters:tokenString:version:HTTPMethod:">&nbsp;&nbsp;&nbsp;&nbsp;- initWithGraphPath:parameters:tokenString:version:HTTPMethod:</option>
+	
+	<option value="//api/name/setGraphErrorRecoveryDisabled:">&nbsp;&nbsp;&nbsp;&nbsp;- setGraphErrorRecoveryDisabled:</option>
+	
+	<option value="//api/name/startWithCompletionHandler:">&nbsp;&nbsp;&nbsp;&nbsp;- startWithCompletionHandler:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/HTTPMethod">HTTPMethod</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/graphPath">graphPath</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/parameters">parameters</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/tokenString">tokenString</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/version">version</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/initWithGraphPath:parameters:">initWithGraphPath:parameters:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/initWithGraphPath:parameters:HTTPMethod:">initWithGraphPath:parameters:HTTPMethod:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/initWithGraphPath:parameters:tokenString:version:HTTPMethod:">initWithGraphPath:parameters:tokenString:version:HTTPMethod:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setGraphErrorRecoveryDisabled:">setGraphErrorRecoveryDisabled:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/startWithCompletionHandler:">startWithCompletionHandler:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="FBSDKGraphRequest Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">FBSDKGraphRequest Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">FBSDKGraphRequest.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p><code>FBSDKGraphRequest</code> encapsulates the components of a request (the
+Graph API path, the parameters, error recovery behavior) and should be
+used in conjunction with <code>FBSDKGraphRequestConnection</code> to issue the request.</p>
+
+<p>Nearly all Graph APIs require an access token. Unless specified, the
+<code>[FBSDKAccessToken currentAccessToken]</code> is used. Therefore, most requests
+will require login first (see <code>FBSDKLoginManager</code> in FBSDKLoginKit.framework).</p>
+
+<p>A <code>- start</code> method is provided for convenience for single requests.</p>
+
+<p>By default, FBSDKGraphRequest will attempt to recover any errors returned from
+Facebook. You can disable this via <code>disableErrorRecovery:</code>.</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/initWithGraphPath:parameters:">&ndash;&nbsp;initWithGraphPath:parameters:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/initWithGraphPath:parameters:HTTPMethod:">&ndash;&nbsp;initWithGraphPath:parameters:HTTPMethod:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/initWithGraphPath:parameters:tokenString:version:HTTPMethod:">&ndash;&nbsp;initWithGraphPath:parameters:tokenString:version:HTTPMethod:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/parameters">&nbsp;&nbsp;parameters</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/tokenString">&nbsp;&nbsp;tokenString</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/graphPath">&nbsp;&nbsp;graphPath</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/HTTPMethod">&nbsp;&nbsp;HTTPMethod</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/version">&nbsp;&nbsp;version</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setGraphErrorRecoveryDisabled:">&ndash;&nbsp;setGraphErrorRecoveryDisabled:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/startWithCompletionHandler:">&ndash;&nbsp;startWithCompletionHandler:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Properties" name="properties"></a>
+						<h2 class="subtitle subtitle-methods">Properties</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/HTTPMethod" title="HTTPMethod"></a>
+	<h3 class="subsubtitle method-title">HTTPMethod</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The HTTPMethod to use for the request, for example &ldquo;GET&rdquo; or &ldquo;POST&rdquo;.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) NSString *HTTPMethod</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/graphPath" title="graphPath"></a>
+	<h3 class="subsubtitle method-title">graphPath</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The Graph API endpoint to use for the request, for example &ldquo;me&rdquo;.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) NSString *graphPath</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/parameters" title="parameters"></a>
+	<h3 class="subsubtitle method-title">parameters</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The request parameters.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) NSMutableDictionary *parameters</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/tokenString" title="tokenString"></a>
+	<h3 class="subsubtitle method-title">tokenString</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The access token string used by the request.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) NSString *tokenString</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/version" title="version"></a>
+	<h3 class="subsubtitle method-title">version</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The Graph API version to use (e.g., &ldquo;v2.0&rdquo;)</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) NSString *version</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/initWithGraphPath:parameters:" title="initWithGraphPath:parameters:"></a>
+	<h3 class="subsubtitle method-title">initWithGraphPath:parameters:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Initializes a new instance that use use <code>[FBSDKAccessToken currentAccessToken]</code>.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (instancetype)initWithGraphPath:(NSString *)<em>graphPath</em> parameters:(NSDictionary *)<em>parameters</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>graphPath</em></dt>
+			<dd><p>the graph path (e.g., @&ldquo;me&rdquo;).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>the optional parameters dictionary.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/initWithGraphPath:parameters:HTTPMethod:" title="initWithGraphPath:parameters:HTTPMethod:"></a>
+	<h3 class="subsubtitle method-title">initWithGraphPath:parameters:HTTPMethod:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Initializes a new instance that use use <code>[FBSDKAccessToken currentAccessToken]</code>.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (instancetype)initWithGraphPath:(NSString *)<em>graphPath</em> parameters:(NSDictionary *)<em>parameters</em> HTTPMethod:(NSString *)<em>HTTPMethod</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>graphPath</em></dt>
+			<dd><p>the graph path (e.g., @&ldquo;me&rdquo;).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>the optional parameters dictionary.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>HTTPMethod</em></dt>
+			<dd><p>the optional HTTP method. nil defaults to @&ldquo;GET&rdquo;.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/initWithGraphPath:parameters:tokenString:version:HTTPMethod:" title="initWithGraphPath:parameters:tokenString:version:HTTPMethod:"></a>
+	<h3 class="subsubtitle method-title">initWithGraphPath:parameters:tokenString:version:HTTPMethod:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Initializes a new instance.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (instancetype)initWithGraphPath:(NSString *)<em>graphPath</em> parameters:(NSDictionary *)<em>parameters</em> tokenString:(NSString *)<em>tokenString</em> version:(NSString *)<em>version</em> HTTPMethod:(NSString *)<em>HTTPMethod</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>graphPath</em></dt>
+			<dd><p>the graph path (e.g., @&ldquo;me&rdquo;).</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>parameters</em></dt>
+			<dd><p>the optional parameters dictionary.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>tokenString</em></dt>
+			<dd><p>the token string to use. Specifying nil will cause no token to be used.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>version</em></dt>
+			<dd><p>the optional Graph API version (e.g., @&ldquo;v2.0&rdquo;). nil defaults to FBSDK_TARGET_PLATFORM_VERSION.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>HTTPMethod</em></dt>
+			<dd><p>the optional HTTP method (e.g., @&ldquo;POST&rdquo;). nil defaults to @&ldquo;GET&rdquo;.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setGraphErrorRecoveryDisabled:" title="setGraphErrorRecoveryDisabled:"></a>
+	<h3 class="subsubtitle method-title">setGraphErrorRecoveryDisabled:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>If set, disables the automatic error recovery mechanism.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)setGraphErrorRecoveryDisabled:(BOOL)<em>disable</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>disable</em></dt>
+			<dd><p>whether to disable the automatic error recovery mechanism</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>By default, non-batched FBSDKGraphRequest instances will automatically try to recover
+from errors by constructing a <code>FBSDKGraphErrorRecoveryProcessor</code> instance that
+re-issues the request on successful recoveries. The re-issued request will call the same
+handler as the receiver but may occur with a different <code>FBSDKGraphRequestConnection</code> instance.</p>
+
+<p>This will override [FBSDKSettings setGraphErrorRecoveryDisabled:].</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/startWithCompletionHandler:" title="startWithCompletionHandler:"></a>
+	<h3 class="subsubtitle method-title">startWithCompletionHandler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Starts a connection to the Graph API.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (FBSDKGraphRequestConnection *)startWithCompletionHandler:(FBSDKGraphRequestHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>The handler block to call when the request completes.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequest.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+                    
+                    
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 Facebook. All rights reserved. (Last updated: 2015-11-11)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

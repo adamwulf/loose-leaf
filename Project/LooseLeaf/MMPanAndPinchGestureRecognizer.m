@@ -127,7 +127,7 @@
 
 -(void) touchesDidDie:(NSSet *)touches{
 //    DebugLog(@"%@ told that %i touches have died", self, [touches count]);
-    [self touchesEnded:touches withEvent:nil];
+    [self touchesEnded:touches];
     if(![possibleTouches count] && ![validTouches count] && ![ignoredTouches count]){
         // don't ask for touch info anymore.
         // i can't rely on removing myself in the reset method,
@@ -178,6 +178,11 @@
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [touches enumerateObjectsUsingBlock:^(UITouch*  _Nonnull obj, BOOL * _Nonnull stop) {
+        if(obj.type == UITouchTypeIndirect){
+            NSLog(@"indirect touch!");
+        }
+    }];
     [self processSubStateForNextIteration];
     
 //    DebugLog(@"%@: %i touches began", [self description], [touches count]);
@@ -304,7 +309,12 @@
     self.state = UIGestureRecognizerStateChanged;
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    // forward to our own method and ignore the event
+    [self touchesEnded:touches];
+}
+
+- (void)touchesEnded:(NSSet *)touches{
     [self processSubStateForNextIteration];
 
 //    DebugLog(@"%@: %i touches ended", [self description], [touches count]);

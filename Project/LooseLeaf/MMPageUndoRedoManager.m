@@ -39,7 +39,7 @@
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
     @synchronized(self){
-        DebugLog(@"adding undo item %@", item);
+//        DebugLog(@"adding undo item %@", item);
         BOOL needsLoad = !isLoaded;
         if(needsLoad){
             [self loadFrom:page.undoStatePath];

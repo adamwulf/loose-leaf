@@ -16,6 +16,7 @@
 #import "MMPageCacheManagerDelegate.h"
 #import "MMDeletePageSidebarController.h"
 #import "MMInboxManagerDelegate.h"
+#import "MMButtonToolbarView.h"
 
 @interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate>{
     //
@@ -49,6 +50,8 @@
 }
 
 @property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
+@property (nonatomic, readonly) MMButtonToolbarView* toolbar;
+
 
 -(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
 -(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;

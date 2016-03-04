@@ -1193,12 +1193,20 @@
                 }
             }
         }
-        [self willChangeTopPageTo:popUntil];
-        [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:popUntil]];
-        [self popStackUntilPage:popUntil onComplete:^(BOOL finished){
-            [self updateIconAnimations];
-            [self didChangeTopPage];
-        }];
+        if(popUntil){
+            [self willChangeTopPageTo:popUntil];
+            [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:popUntil]];
+            [self popStackUntilPage:popUntil onComplete:^(BOOL finished){
+                [self updateIconAnimations];
+                [self didChangeTopPage];
+            }];
+        }else{
+            for (MMPaperView* page in setOfPagesBeingPanned) {
+                [page cancelAllGestures];
+            }
+            [setOfPagesBeingPanned removeAllObjects];
+            [self cancelAllGestures];
+        }
         return;
     }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
 //        DebugLog(@"didn't release top page but need to pop a page");
@@ -1904,6 +1912,18 @@
     @throw kAbstractMethodException;
 }
 
+-(JotBrushTexture*) textureForStroke{
+    @throw kAbstractMethodException;
+}
+
+-(CGFloat) stepWidthForStroke{
+    @throw kAbstractMethodException;
+}
+
+-(BOOL) supportsRotation{
+    @throw kAbstractMethodException;
+}
+
 -(UIColor*) colorForTouch:(JotTouch *)touch{
     @throw kAbstractMethodException;
 }
@@ -1920,7 +1940,7 @@
     @throw kAbstractMethodException;
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+-(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
     @throw kAbstractMethodException;
 }
 

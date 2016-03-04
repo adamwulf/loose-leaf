@@ -43,11 +43,7 @@
 }
 
 -(id) init{
-    return [self initWithMinSize:4.0 andMaxSize:8.0 andMinAlpha:0.75 andMaxAlpha:0.9];
-}
-
--(UIImage*) texture{
-    return [UIImage imageNamed:@"Circle.png"];
+    return [self initWithMinSize:1.6 andMaxSize:2.7 andMinAlpha:1.0 andMaxAlpha:1.0];
 }
 
 -(BOOL) shouldUseVelocity{
@@ -126,7 +122,17 @@
  * is the look we're going for.
  */
 -(UIColor*) colorForTouch:(JotTouch*)touch{
-    if(self.shouldUseVelocity){
+    if(touch.touch.type == UITouchTypeStylus){
+        CGFloat segmentAlpha = (maxAlpha + minAlpha) / 2.0;
+        segmentAlpha *= touch.touch.force;
+        if(segmentAlpha < minAlpha) segmentAlpha = minAlpha;
+        if(segmentAlpha > maxAlpha) segmentAlpha = maxAlpha;
+
+        UIColor* currColor = color;
+        currColor = [UIColor colorWithCGColor:currColor.CGColor];
+        UIColor* ret = [currColor colorWithAlphaComponent:segmentAlpha];
+        return ret;
+    }else if(self.shouldUseVelocity){
         CGFloat segmentAlpha = (velocity - 1);
         if(segmentAlpha > 0) segmentAlpha = 0;
         segmentAlpha = minAlpha + ABS(segmentAlpha) * (maxAlpha - minAlpha);
@@ -151,7 +157,14 @@
  * we'll fall back to use velocity data
  */
 -(CGFloat) widthForTouch:(JotTouch*)touch{
-    if(self.shouldUseVelocity){
+    if(touch.touch.type == UITouchTypeStylus){
+        CGFloat width = (maxSize + minSize) / 2.0;
+        width *= touch.touch.force;
+        if(width < minSize) width = minSize;
+        if(width > maxSize) width = maxSize;
+
+        return width;
+    }else if(self.shouldUseVelocity){
         CGFloat width = (velocity - 1);
         if(width > 0) width = 0;
         width = minSize + ABS(width) * (maxSize - minSize);
@@ -164,6 +177,17 @@
     }
 }
 
+-(JotBrushTexture*) textureForStroke{
+    return [JotDefaultBrushTexture sharedInstance];
+}
+
+- (CGFloat) stepWidthForStroke{
+    return .5;
+}
+
+-(BOOL) supportsRotation{
+    return NO;
+}
 
 /**
  * we'll keep this pen fairly smooth, and using 0.75 gives
@@ -187,7 +211,7 @@
     return 0;
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+-(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement{
     return elements;
 }
 

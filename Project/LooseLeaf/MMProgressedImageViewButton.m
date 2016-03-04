@@ -39,7 +39,7 @@
     CGFloat radius = self.drawableFrame.size.width / 2 + 1;
     CAShapeLayer *circle;
     if([self.layer.sublayers count]){
-        circle = [self.layer.sublayers firstObject];
+        circle = (CAShapeLayer*)[self.layer.sublayers firstObject];
     }else{
         circle=[CAShapeLayer layer];
         circle.fillColor=[UIColor clearColor].CGColor;

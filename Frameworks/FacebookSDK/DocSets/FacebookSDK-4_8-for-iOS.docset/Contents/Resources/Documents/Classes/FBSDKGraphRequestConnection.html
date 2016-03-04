@@ -1,0 +1,1013 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>FBSDKGraphRequestConnection Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">Facebook SDK 4.8 for iOS </a></h1>
+				<a id="developerHome" href="../index.html">Facebook</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">FBSDKGraphRequestConnection Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	<option value="properties">Properties</option>
+	
+	<option value="//api/name/URLResponse">&nbsp;&nbsp;&nbsp;&nbsp;URLResponse</option>
+	
+	<option value="//api/name/delegate">&nbsp;&nbsp;&nbsp;&nbsp;delegate</option>
+	
+	<option value="//api/name/timeout">&nbsp;&nbsp;&nbsp;&nbsp;timeout</option>
+	
+	
+	
+	
+	<option value="class_methods">Class Methods</option>
+	
+	<option value="//api/name/setDefaultConnectionTimeout:">&nbsp;&nbsp;&nbsp;&nbsp;+ setDefaultConnectionTimeout:</option>
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/addRequest:completionHandler:">&nbsp;&nbsp;&nbsp;&nbsp;- addRequest:completionHandler:</option>
+	
+	<option value="//api/name/addRequest:completionHandler:batchEntryName:">&nbsp;&nbsp;&nbsp;&nbsp;- addRequest:completionHandler:batchEntryName:</option>
+	
+	<option value="//api/name/addRequest:completionHandler:batchParameters:">&nbsp;&nbsp;&nbsp;&nbsp;- addRequest:completionHandler:batchParameters:</option>
+	
+	<option value="//api/name/cancel">&nbsp;&nbsp;&nbsp;&nbsp;- cancel</option>
+	
+	<option value="//api/name/overrideVersionPartWith:">&nbsp;&nbsp;&nbsp;&nbsp;- overrideVersionPartWith:</option>
+	
+	<option value="//api/name/setDelegateQueue:">&nbsp;&nbsp;&nbsp;&nbsp;- setDelegateQueue:</option>
+	
+	<option value="//api/name/start">&nbsp;&nbsp;&nbsp;&nbsp;- start</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Class methods">Class methods</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Adding requests">Adding requests</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Instance methods">Instance methods</a></span></li>
+	
+</ul></li>
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/URLResponse">URLResponse</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/delegate">delegate</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/timeout">timeout</a></span></li>
+	
+</ul></li>
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setDefaultConnectionTimeout:">setDefaultConnectionTimeout:</a></span></li>
+	
+</ul></li>
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/addRequest:completionHandler:">addRequest:completionHandler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/addRequest:completionHandler:batchEntryName:">addRequest:completionHandler:batchEntryName:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/addRequest:completionHandler:batchParameters:">addRequest:completionHandler:batchParameters:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/cancel">cancel</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/overrideVersionPartWith:">overrideVersionPartWith:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setDelegateQueue:">setDelegateQueue:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/start">start</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="FBSDKGraphRequestConnection Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">FBSDKGraphRequestConnection Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">FBSDKGraphRequestConnection.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>@class FBSDKGraphRequestConnection</p>
+
+<p>@abstract
+The <code>FBSDKGraphRequestConnection</code> represents a single connection to Facebook to service a request.</p>
+
+<p>@discussion
+The request settings are encapsulated in a reusable <a href="../Classes/FBSDKGraphRequest.html">FBSDKGraphRequest</a> object. The
+<code>FBSDKGraphRequestConnection</code> object encapsulates the concerns of a single communication
+e.g. starting a connection, canceling a connection, or batching requests.</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						<h3 class="subsubtitle task-title">Other Methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/delegate">&nbsp;&nbsp;delegate</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/timeout">&nbsp;&nbsp;timeout</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/URLResponse">&nbsp;&nbsp;URLResponse</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li>
+						</ul>
+						
+						
+						<a title="Class methods" name="task_Class methods"></a>
+						<h3 class="subsubtitle task-title">Class methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setDefaultConnectionTimeout:">+&nbsp;setDefaultConnectionTimeout:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Adding requests" name="task_Adding requests"></a>
+						<h3 class="subsubtitle task-title">Adding requests</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/addRequest:completionHandler:">&ndash;&nbsp;addRequest:completionHandler:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/addRequest:completionHandler:batchEntryName:">&ndash;&nbsp;addRequest:completionHandler:batchEntryName:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/addRequest:completionHandler:batchParameters:">&ndash;&nbsp;addRequest:completionHandler:batchParameters:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Instance methods" name="task_Instance methods"></a>
+						<h3 class="subsubtitle task-title">Instance methods</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/cancel">&ndash;&nbsp;cancel</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/start">&ndash;&nbsp;start</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setDelegateQueue:">&ndash;&nbsp;setDelegateQueue:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/overrideVersionPartWith:">&ndash;&nbsp;overrideVersionPartWith:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Properties" name="properties"></a>
+						<h2 class="subtitle subtitle-methods">Properties</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/URLResponse" title="URLResponse"></a>
+	<h3 class="subsubtitle method-title">URLResponse</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+The raw response that was returned from the server.  (readonly)</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, retain, readonly) NSHTTPURLResponse *URLResponse</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@discussion
+This property can be used to inspect HTTP headers that were returned from
+the server.</p>
+
+<p>The property is nil until the request completes.  If there was a response
+then this property will be non-nil during the FBSDKGraphRequestHandler callback.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/delegate" title="delegate"></a>
+	<h3 class="subsubtitle method-title">delegate</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@abstract
+The delegate object that receives updates.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, assign) id&lt;FBSDKGraphRequestConnectionDelegate&gt; delegate</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/timeout" title="timeout"></a>
+	<h3 class="subsubtitle method-title">timeout</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Gets or sets the timeout interval to wait for a response before giving up.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic) NSTimeInterval timeout</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Class Methods" name="class_methods"></a>
+						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/setDefaultConnectionTimeout:" title="setDefaultConnectionTimeout:"></a>
+	<h3 class="subsubtitle method-title">setDefaultConnectionTimeout:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)setDefaultConnectionTimeout:(NSTimeInterval)<em>defaultConnectionTimeout</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>defaultConnectionTimeout</em></dt>
+			<dd><p>The timeout interval.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+This method sets the default timeout on all FBSDKGraphRequestConnection instances. Defaults to 60 seconds.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/addRequest:completionHandler:" title="addRequest:completionHandler:"></a>
+	<h3 class="subsubtitle method-title">addRequest:completionHandler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)addRequest:(FBSDKGraphRequest *)<em>request</em> completionHandler:(FBSDKGraphRequestHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>request</em></dt>
+			<dd><p>A request to be included in the round-trip when start is called.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A handler to call back when the round-trip completes or times out.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+This method adds an <a href="../Classes/FBSDKGraphRequest.html">FBSDKGraphRequest</a> object to this connection.</p>
+
+<p>@discussion
+The completion handler is retained until the block is called upon the
+completion or cancellation of the connection.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/addRequest:completionHandler:batchEntryName:" title="addRequest:completionHandler:batchEntryName:"></a>
+	<h3 class="subsubtitle method-title">addRequest:completionHandler:batchEntryName:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)addRequest:(FBSDKGraphRequest *)<em>request</em> completionHandler:(FBSDKGraphRequestHandler)<em>handler</em> batchEntryName:(NSString *)<em>name</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>request</em></dt>
+			<dd><p>A request to be included in the round-trip when start is called.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A handler to call back when the round-trip completes or times out.
+The handler will be invoked on the main thread.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>name</em></dt>
+			<dd><p>An optional name for this request.  This can be used to feed
+the results of one request to the input of another <a href="../Classes/FBSDKGraphRequest.html">FBSDKGraphRequest</a> in the same
+<code>FBSDKGraphRequestConnection</code> as described in
+<a href="https://developers.facebook.com/docs/reference/api/batch/">Graph API Batch Requests</a>.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+This method adds an <a href="../Classes/FBSDKGraphRequest.html">FBSDKGraphRequest</a> object to this connection.</p>
+
+<p>@discussion
+The completion handler is retained until the block is called upon the
+completion or cancellation of the connection. This request can be named
+to allow for using the request&rsquo;s response in a subsequent request.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/addRequest:completionHandler:batchParameters:" title="addRequest:completionHandler:batchParameters:"></a>
+	<h3 class="subsubtitle method-title">addRequest:completionHandler:batchParameters:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)addRequest:(FBSDKGraphRequest *)<em>request</em> completionHandler:(FBSDKGraphRequestHandler)<em>handler</em> batchParameters:(NSDictionary *)<em>batchParameters</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>request</em></dt>
+			<dd><p>A request to be included in the round-trip when start is called.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>A handler to call back when the round-trip completes or times out.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>batchParameters</em></dt>
+			<dd><p>The optional dictionary of parameters to include for this request
+as described in <a href="https://developers.facebook.com/docs/reference/api/batch/">Graph API Batch Requests</a>.
+Examples include &ldquo;depends_on&rdquo;, &ldquo;name&rdquo;, or &ldquo;omit_response_on_success&rdquo;.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+This method adds an <a href="../Classes/FBSDKGraphRequest.html">FBSDKGraphRequest</a> object to this connection.</p>
+
+<p>@discussion
+The completion handler is retained until the block is called upon the
+completion or cancellation of the connection. This request can be named
+to allow for using the request&rsquo;s response in a subsequent request.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/cancel" title="cancel"></a>
+	<h3 class="subsubtitle method-title">cancel</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)cancel</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Signals that a connection should be logically terminated as the
+application is no longer interested in a response.</p>
+
+<p>@discussion
+Synchronously calls any handlers indicating the request was cancelled. Cancel
+does not guarantee that the request-related processing will cease. It
+does promise that  all handlers will complete before the cancel returns. A call to
+cancel prior to a start implies a cancellation of all requests associated
+with the connection.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/overrideVersionPartWith:" title="overrideVersionPartWith:"></a>
+	<h3 class="subsubtitle method-title">overrideVersionPartWith:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)overrideVersionPartWith:(NSString *)<em>version</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>version</em></dt>
+			<dd><p>This is a string in the form @&ldquo;v2.0&rdquo; which will be used for the version part of an API path</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+Overrides the default version for a batch request</p>
+
+<p>@discussion
+The SDK automatically prepends a version part, such as &ldquo;v2.0&rdquo; to API paths in order to simplify API versioning
+for applications. If you want to override the version part while using batch requests on the connection, call
+this method to set the version for the batch request.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setDelegateQueue:" title="setDelegateQueue:"></a>
+	<h3 class="subsubtitle method-title">setDelegateQueue:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Determines the operation queue that is used to call methods on the connection&rsquo;s delegate.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)setDelegateQueue:(NSOperationQueue *)<em>queue</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>queue</em></dt>
+			<dd><p>The operation queue to use when calling delegate methods.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>By default, a connection is scheduled on the current thread in the default mode when it is created.
+You cannot reschedule a connection after it has started.</p>
+
+<p>This is very similar to <code>[NSURLConnection setDelegateQueue:]</code>.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/start" title="start"></a>
+	<h3 class="subsubtitle method-title">start</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>@method</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)start</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>@abstract
+This method starts a connection with the server and is capable of handling all of the
+requests that were added to the connection.</p><p>By default, a connection is scheduled on the current thread in the default mode when it is created.
+See <code>setDelegateQueue:</code> for other options.</p>
+
+<p>This method cannot be called twice for an <code>FBSDKGraphRequestConnection</code> instance.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKGraphRequestConnection.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+                    
+                    
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 Facebook. All rights reserved. (Last updated: 2015-11-11)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

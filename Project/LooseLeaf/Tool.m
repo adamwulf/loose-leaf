@@ -15,7 +15,19 @@
     @throw kAbstractMethodException;
 }
 
+-(JotBrushTexture*) textureForStroke{
+    @throw kAbstractMethodException;
+}
+
+-(CGFloat) stepWidthForStroke{
+    @throw kAbstractMethodException;
+}
+
 - (UIColor*) colorForTouch:(JotTouch *)touch{
+    @throw kAbstractMethodException;
+}
+
+-(BOOL) supportsRotation{
     @throw kAbstractMethodException;
 }
 
@@ -51,7 +63,7 @@
     @throw kAbstractMethodException;
 }
 
-- (NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement *)previousElement{
+- (NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
     @throw kAbstractMethodException;
 }
 

@@ -85,7 +85,9 @@
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
                              withTransform:(CGAffineTransform)transform
-                                  andScale:(CGFloat)scale{
+                                   andScale:(CGFloat)scale
+                               andStepWidth:(CGFloat)stepWidth
+                                andRotation:(CGFloat)rotation{
     NSMutableArray* convertedElements = [NSMutableArray array];
     UIBezierPath* pathSegment = self;
     @try{
@@ -141,6 +143,8 @@
                 }
                 newElement.width = fromWidth + widthDiff*tValueAtEndPoint;
                 newElement.width /= scale;
+                newElement.stepWidth = stepWidth;
+                newElement.rotation = rotation;
                 [convertedElements addObject:newElement];
             }
         }];

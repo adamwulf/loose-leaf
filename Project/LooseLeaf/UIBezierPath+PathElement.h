@@ -25,5 +25,7 @@
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
                              withTransform:(CGAffineTransform)transform
-                                  andScale:(CGFloat)scale;
+                                   andScale:(CGFloat)scale
+                               andStepWidth:(CGFloat)stepWidth
+                                andRotation:(CGFloat)rotation;
 @end

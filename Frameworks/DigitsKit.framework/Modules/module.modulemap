@@ -1,0 +1,24 @@
+framework module DigitsKit {
+    umbrella header "DigitsKit.h"
+    
+    export *
+    module * { export * }
+
+    link framework "AddressBook"
+
+    header "DGTAPIClient.h"
+    header "DGTAppearance.h"
+    header "DGTAuthenticateButton.h"
+    header "DGTAuthenticationConfiguration.h"
+    header "DGTCompletionViewController.h"
+    header "DGTContactAccessAuthorizationStatus.h"
+    header "DGTContacts.h"
+    header "DGTContactsUploadResult.h"
+    header "DGTErrors.h"
+    header "DGTOAuthSigning.h"
+    header "DGTSession.h"
+    header "DGTSessionUpdateDelegate.h"
+    header "DGTUser.h"
+    header "Digits.h"
+    header "DigitsKit.h"
+}

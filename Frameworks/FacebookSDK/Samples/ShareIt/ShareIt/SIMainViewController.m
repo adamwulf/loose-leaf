@@ -1,34 +1,43 @@
-/*
- * Copyright 2010-present Facebook.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "SIMainViewController.h"
 
 #import <MessageUI/MessageUI.h>
 
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+
+#import <FBSDKShareKit/FBSDKShareKit.h>
+
 #import "SIMainView.h"
 #import "SIPhoto.h"
 
-@interface SIMainViewController ()
-<MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UIActionSheetDelegate>
-@property (nonatomic, strong) UIActionSheet *shareActionSheet;
+@interface SIMainViewController () <
+  MFMailComposeViewControllerDelegate,
+  MFMessageComposeViewControllerDelegate,
+  FBSDKSharingDelegate>
 @end
 
 @implementation SIMainViewController
 {
-  FBLikeControl *_photoLikeControl;
+  FBSDKLikeButton *_photoLikeButton;
   NSArray *_photos;
 }
 
@@ -52,23 +61,6 @@
            ];
 }
 
-#pragma mark - Object Lifecycle
-
-- (void)dealloc
-{
-  _shareActionSheet.delegate = nil;
-}
-
-#pragma mark - Properties
-
-- (void)setShareActionSheet:(UIActionSheet *)shareActionSheet
-{
-  if (![_shareActionSheet isEqual:shareActionSheet]) {
-    _shareActionSheet.delegate = nil;
-    _shareActionSheet = shareActionSheet;
-  }
-}
-
 #pragma mark - View Management
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -79,15 +71,15 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+  self.loginButton.publishPermissions = @[@"publish_actions"];
 
-  self.loginView.publishPermissions = @[@"publish_actions"];
+  _photoLikeButton = [[FBSDKLikeButton alloc] init];
+  _photoLikeButton.objectType = FBSDKLikeObjectTypeOpenGraph;
+  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_photoLikeButton];
 
-  _photoLikeControl = [[FBLikeControl alloc] init];
-  _photoLikeControl.likeControlStyle = FBLikeControlStyleButton;
-  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_photoLikeControl];
-
-  self.pageLikeControl.likeControlAuxiliaryPosition = FBLikeControlAuxiliaryPositionBottom;
-  self.pageLikeControl.likeControlHorizontalAlignment = FBLikeControlHorizontalAlignmentCenter;
+  self.pageLikeControl.likeControlAuxiliaryPosition = FBSDKLikeControlAuxiliaryPositionBottom;
+  self.pageLikeControl.likeControlHorizontalAlignment = FBSDKLikeControlHorizontalAlignmentCenter;
+  self.pageLikeControl.foregroundColor = [UIColor whiteColor];
   self.pageLikeControl.objectID = @"shareitexampleapp";
 
   [self _configurePhotos];
@@ -97,58 +89,51 @@
 
 - (void)share:(id)sender
 {
-  UIActionSheet *shareActionSheet = self.shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                                        delegate:self
-                                                                               cancelButtonTitle:nil
-                                                                          destructiveButtonTitle:nil
-                                                                               otherButtonTitles:nil];
+  SIPhoto *photo = [self _currentPhoto];
+  UIAlertController *shareAlertController = [UIAlertController alertControllerWithTitle:@"Share"
+                                                                                message:nil
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
 
   if ([MFMailComposeViewController canSendMail]) {
-    [shareActionSheet addButtonWithTitle:@"Mail"];
+    UIAlertAction *sendMailAction = [UIAlertAction actionWithTitle:@"Mail"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                             [self _sendMailWithPhoto:photo];
+                                                           }];
+    [shareAlertController addAction:sendMailAction];
   }
 
   if ([MFMessageComposeViewController canSendAttachments]) {
-    [shareActionSheet addButtonWithTitle:@"Message"];
+    UIAlertAction *sendMessageAction = [UIAlertAction actionWithTitle:@"Message"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction *action) {
+                                                                [self _sendMessageWithPhoto:photo];
+                                                              }];
+    [shareAlertController addAction:sendMessageAction];
   }
 
-  FBLinkShareParams *params = [[FBLinkShareParams alloc] initWithLink:[self _currentPhoto].objectURL
-                                                                 name:nil
-                                                              caption:nil
-                                                          description:nil
-                                                              picture:nil];
-  if ([FBDialogs canPresentShareDialogWithParams:params]) {
-    [shareActionSheet addButtonWithTitle:@"Share on Facebook"];
+  FBSDKShareDialog *facebookShareDialog = [self getShareDialogWithContentURL:[self _currentPhoto].objectURL];
+  if ([facebookShareDialog canShow]) {
+    UIAlertAction *shareOnFacebookAction = [UIAlertAction actionWithTitle:@"Share on Facebook"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction *action) {
+                                                                    [self _shareFacebookWithPhoto:photo];
+                                                                  }];
+    [shareAlertController addAction:shareOnFacebookAction];
   }
 
-  if ([FBDialogs canPresentMessageDialogWithParams:params]) {
-    [shareActionSheet addButtonWithTitle:@"Send with Messenger"];
+  FBSDKMessageDialog *messengerShareDialog = [self getMessageDialogWithContentURL:[self _currentPhoto].objectURL];
+  if ( [messengerShareDialog canShow]) {
+    UIAlertAction *sendWithMessengerAction = [UIAlertAction actionWithTitle:@"Send with Messenger"
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction *action) {
+                                                                      messengerShareDialog.delegate = self;
+                                                                      [messengerShareDialog show];
+                                                                    }];
+    [shareAlertController addAction:sendWithMessengerAction];
   }
 
-  [shareActionSheet addButtonWithTitle:@"Cancel"];
-  shareActionSheet.cancelButtonIndex = shareActionSheet.numberOfButtons - 1;
-  [shareActionSheet showInView:self.view];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-  if (_shareActionSheet != actionSheet) {
-    return;
-  }
-
-  SIPhoto *photo = [self _currentPhoto];
-
-  NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-  if ([buttonTitle isEqualToString:@"Mail"]) {
-    [self _sendMailWithPhoto:photo];
-  } else if ([buttonTitle isEqualToString:@"Message"]) {
-    [self _sendMessageWithPhoto:photo];
-  } else if ([buttonTitle isEqualToString:@"Share on Facebook"]) {
-    [FBDialogs presentShareDialogWithLink:photo.objectURL handler:NULL];
-  } else if ([buttonTitle isEqualToString:@"Send with Messenger"]) {
-    [FBDialogs presentMessageDialogWithLink:photo.objectURL handler:NULL];
-  }
-
-  _shareActionSheet = nil;
+  [self presentViewController:shareAlertController animated:YES completion:nil];
 }
 
 - (void)_sendMailWithPhoto:(SIPhoto *)photo
@@ -172,6 +157,13 @@
   [self presentViewController:viewController animated:YES completion:NULL];
 }
 
+- (void)_shareFacebookWithPhoto:(SIPhoto *)photo
+{
+  [FBSDKShareDialog showFromViewController:self.parentViewController
+                               withContent:[self getShareLinkContentWithContentURL:photo.objectURL]
+                                  delegate:nil];
+}
+
 - (void)mailComposeController:(MFMailComposeViewController *)controller
           didFinishWithResult:(MFMailComposeResult)result
                         error:(NSError *)error
@@ -183,6 +175,27 @@
                  didFinishWithResult:(MessageComposeResult)result
 {
   [controller dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (FBSDKShareLinkContent *)getShareLinkContentWithContentURL:(NSURL *)objectURL
+{
+  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  content.contentURL = objectURL;
+  return content;
+}
+
+- (FBSDKShareDialog *)getShareDialogWithContentURL:(NSURL *)objectURL
+{
+  FBSDKShareDialog *shareDialog = [[FBSDKShareDialog alloc] init];
+  shareDialog.shareContent = [self getShareLinkContentWithContentURL:objectURL];
+  return shareDialog;
+}
+
+- (FBSDKMessageDialog *)getMessageDialogWithContentURL:(NSURL *)objectURL
+{
+  FBSDKMessageDialog *shareDialog = [[FBSDKMessageDialog alloc] init];
+  shareDialog.shareContent = [self getShareLinkContentWithContentURL:objectURL];
+  return shareDialog;
 }
 
 #pragma mark - Paging
@@ -228,7 +241,28 @@
 {
   SIPhoto *photo = [self _currentPhoto];
   [self _mainView].photo = photo;
-  _photoLikeControl.objectID = photo.objectURL.absoluteString;
+  _photoLikeButton.objectID = photo.objectURL.absoluteString;
 }
 
+#pragma mark - FBSDKSharingDelegate
+
+- (void)sharer:(id<FBSDKSharing>)sharer didCompleteWithResults:(NSDictionary *)results
+{
+  NSLog(@"completed share:%@", results);
+}
+
+- (void)sharer:(id<FBSDKSharing>)sharer didFailWithError:(NSError *)error
+{
+  NSLog(@"sharing error:%@", error);
+  NSString *message = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?:
+  @"There was a problem sharing, please try again later.";
+  NSString *title = error.userInfo[FBSDKErrorLocalizedTitleKey] ?: @"Oops!";
+
+  [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+}
+
+- (void)sharerDidCancel:(id<FBSDKSharing>)sharer
+{
+  NSLog(@"share cancelled");
+}
 @end

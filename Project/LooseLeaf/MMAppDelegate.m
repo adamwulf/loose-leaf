@@ -21,7 +21,7 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
-#import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
 
 
@@ -65,13 +65,13 @@
     [[Crashlytics sharedInstance] setDelegate:self];
     [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
-    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
-    [FBAppEvents activateApp];
-    
+    [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
+
     presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [presentationWindow makeKeyAndVisible];
 
-    self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    self.window = [[MMWindow alloc] initWithFrame:screenBounds];
     // Override point for customization after application launch.
     self.viewController = [[MMLooseLeafViewController alloc] init];
     self.window.rootViewController = self.viewController;
@@ -119,6 +119,9 @@
     isActive = NO;
     [[MMRotationManager sharedInstance] willResignActive];
     [self.viewController willResignActive];
+    // stop the timer once "App Close" event is called
+    [[Mixpanel sharedInstance] track:kMPEventActiveSession];
+    [[Mixpanel sharedInstance] track:kMPEventResign];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -145,6 +148,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [FBSDKAppEvents activateApp];
     isActive = YES;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self setupTimer];
@@ -161,6 +165,9 @@
     }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
+    // start the timer for the event "App Close"
+    [[Mixpanel sharedInstance] timeEvent:kMPEventActiveSession];
+
     DebugLog(@"DID BECOME ACTIVE");
     DebugLog(@"***************************************************************************");
     DebugLog(@"***************************************************************************");
@@ -177,6 +184,11 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                   openURL:url
+                                         sourceApplication:sourceApplication
+                                                annotation:annotation];
+
     if (url) {
         [self importFileFrom:url fromApp:sourceApplication];
     }
@@ -184,7 +196,7 @@
 }
 
 -(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
-    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
+    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:^(UIBackgroundFetchResult noop){ /* noop */ }];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler{

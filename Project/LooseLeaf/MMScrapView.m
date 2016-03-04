@@ -90,7 +90,7 @@
     // for us, but if not, then go ahead and build one
     MMScrapViewState* _scrapState = [[MMScrapViewState alloc] initWithUUID:[NSString createStringUUID] andBezierPath:originalPath andPaperState:paperState];
     _scrapState.delegate = self;
-    
+
     if(self = [self initWithScrapViewState:_scrapState]){
         // when we create a scrap state, it adjusts the path to have its corner in (0,0), so
         // we need to set our center after we create the state
@@ -466,8 +466,8 @@
 
 #pragma mark - JotView
 
--(void) addElements:(NSArray*)elements{
-    [scrapState addElements:elements];
+-(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture{
+    [scrapState addElements:elements withTexture:texture];
 }
 
 -(void) addUndoLevelAndFinishStroke{

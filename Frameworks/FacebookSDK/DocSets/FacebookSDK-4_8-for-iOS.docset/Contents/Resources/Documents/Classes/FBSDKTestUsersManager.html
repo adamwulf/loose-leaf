@@ -1,0 +1,606 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>FBSDKTestUsersManager Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">Facebook SDK 4.8 for iOS </a></h1>
+				<a id="developerHome" href="../index.html">Facebook</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">FBSDKTestUsersManager Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	<option value="class_methods">Class Methods</option>
+	
+	<option value="//api/name/sharedInstanceForAppID:appSecret:">&nbsp;&nbsp;&nbsp;&nbsp;+ sharedInstanceForAppID:appSecret:</option>
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/addTestAccountWithPermissions:completionHandler:">&nbsp;&nbsp;&nbsp;&nbsp;- addTestAccountWithPermissions:completionHandler:</option>
+	
+	<option value="//api/name/makeFriendsWithFirst:second:callback:">&nbsp;&nbsp;&nbsp;&nbsp;- makeFriendsWithFirst:second:callback:</option>
+	
+	<option value="//api/name/removeTestAccount:completionHandler:">&nbsp;&nbsp;&nbsp;&nbsp;- removeTestAccount:completionHandler:</option>
+	
+	<option value="//api/name/requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:">&nbsp;&nbsp;&nbsp;&nbsp;- requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/sharedInstanceForAppID:appSecret:">sharedInstanceForAppID:appSecret:</a></span></li>
+	
+</ul></li>
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/addTestAccountWithPermissions:completionHandler:">addTestAccountWithPermissions:completionHandler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/makeFriendsWithFirst:second:callback:">makeFriendsWithFirst:second:callback:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/removeTestAccount:completionHandler:">removeTestAccount:completionHandler:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:">requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="FBSDKTestUsersManager Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">FBSDKTestUsersManager Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">FBSDKTestUsersManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>@class FBSDKTestUsersManager</p><p>Facebook allows developers to create test accounts for testing their applications'
+Facebook integration (see https://developers.facebook.com/docs/test_users/). This class
+simplifies use of these accounts for writing tests. It is not designed for use in
+production application code.</p>
+
+<p>This class will make Graph API calls on behalf of your app to manage test accounts and requires
+an app id and app secret. You will typically use this class to write unit or integration tests.
+Make sure you NEVER include your app secret in your production app.</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/sharedInstanceForAppID:appSecret:">+&nbsp;sharedInstanceForAppID:appSecret:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:">&ndash;&nbsp;requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/addTestAccountWithPermissions:completionHandler:">&ndash;&nbsp;addTestAccountWithPermissions:completionHandler:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/removeTestAccount:completionHandler:">&ndash;&nbsp;removeTestAccount:completionHandler:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/makeFriendsWithFirst:second:callback:">&ndash;&nbsp;makeFriendsWithFirst:second:callback:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Class Methods" name="class_methods"></a>
+						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/sharedInstanceForAppID:appSecret:" title="sharedInstanceForAppID:appSecret:"></a>
+	<h3 class="subsubtitle method-title">sharedInstanceForAppID:appSecret:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>construct or return the shared instance</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (instancetype)sharedInstanceForAppID:(NSString *)<em>appID</em> appSecret:(NSString *)<em>appSecret</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>appID</em></dt>
+			<dd><p>the Facebook app id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>appSecret</em></dt>
+			<dd><p>the Facebook app secret</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKTestUsersManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/addTestAccountWithPermissions:completionHandler:" title="addTestAccountWithPermissions:completionHandler:"></a>
+	<h3 class="subsubtitle method-title">addTestAccountWithPermissions:completionHandler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>add a test account with the specified permissions</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)addTestAccountWithPermissions:(NSSet *)<em>permissions</em> completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>permissions</em></dt>
+			<dd><p>the set of permissions, e.g., [NSSet setWithObjects:@&ldquo;email&rdquo;, @&ldquo;user_friends&rdquo;]</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>the callback handler</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKTestUsersManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/makeFriendsWithFirst:second:callback:" title="makeFriendsWithFirst:second:callback:"></a>
+	<h3 class="subsubtitle method-title">makeFriendsWithFirst:second:callback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Make two test users friends with each other.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)makeFriendsWithFirst:(FBSDKAccessToken *)<em>first</em> second:(FBSDKAccessToken *)<em>second</em> callback:(void ( ^ ) ( NSError *))<em>callback</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>first</em></dt>
+			<dd><p>the token of the first user</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>second</em></dt>
+			<dd><p>the token of the second user</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>the callback handler</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKTestUsersManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/removeTestAccount:completionHandler:" title="removeTestAccount:completionHandler:"></a>
+	<h3 class="subsubtitle method-title">removeTestAccount:completionHandler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>remove a test account for the given user id</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)removeTestAccount:(NSString *)<em>userId</em> completionHandler:(FBSDKTestUsersManagerRemoveTestAccountHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>userId</em></dt>
+			<dd><p>the user id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>the callback handler</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKTestUsersManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:" title="requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:"></a>
+	<h3 class="subsubtitle method-title">requestTestAccountTokensWithArraysOfPermissions:createIfNotFound:completionHandler:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>retrieve FBSDKAccessToken instances for test accounts with the specific permissions.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)requestTestAccountTokensWithArraysOfPermissions:(NSArray *)<em>arraysOfPermissions</em> createIfNotFound:(BOOL)<em>createIfNotFound</em> completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)<em>handler</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>arraysOfPermissions</em></dt>
+			<dd><p>an array of permissions sets, such as @[ [NSSet setWithObject:@&ldquo;email&rdquo;], [NSSet setWithObject:@&ldquo;user_birthday&rdquo;]]
+if you needed two test accounts with email and birthday permissions, respectively. You can pass in empty nested sets
+if you need two arbitrary test accounts. For convenience, passing nil is treated as @[ [NSSet set] ]
+for fetching a single test user.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>createIfNotFound</em></dt>
+			<dd><p>if YES, new test accounts are created if no test accounts existed that fit the permissions
+requirement</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>handler</em></dt>
+			<dd><p>the callback to invoke which will return an array of <code>FBAccessTokenData</code> instances or an <code>NSError</code>.
+If param <code>createIfNotFound</code> is NO, the array may contain <code>[NSNull null]</code> instances.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>If you are requesting test accounts with differing number of permissions, try to order
+<code>arrayOfPermissionsArrays</code> so that the most number of permissions come first to minimize creation of new
+test accounts.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">FBSDKTestUsersManager.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+                    
+                    
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 Facebook. All rights reserved. (Last updated: 2015-11-11)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

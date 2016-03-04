@@ -1,0 +1,130 @@
+/* Label instructing customer on how to enter the code on digits.com */
+"ASSISTED_AUTH_INSTRUCTIONS" = "Visit %@ and enter the following code to sign into %@";
+
+/* Label before phone input field */
+"LABEL_ENTER_PHONE_NUMBER" = "What's your phone number?";
+
+/* Send confirmation code button text */
+"BUTTON_SEND_CONF_CODE" = "Send confirmation code";
+
+/* Sending confirmation code button text */
+"BUTTON_SENDING_CONF_CODE" = "Sending confirmation code";
+
+/* Sent confirmation code button text */
+"BUTTON_SENT_CONF_CODE" = "Sent confirmation code";
+
+/* Footnote disclaimer for send confirmation code screen */
+"FOOTNOTE_SEND_CONF_CODE" = "By tapping \"Send confirmation code\" above, <a href=\"https://www.digits.com\">Digits by Twitter</a> will send you an SMS to confirm your phone number. Message & data rates may apply.";
+
+/* Footnote disclaimer for call me to send a confirmation code screen */
+"FOOTNOTE_CONF_CODE_CALL_ME" = "By tapping \"Call me\" above, <a href=\"https://www.digits.com\">Digits by Twitter</a> will send you a voice call to confirm your phone number. Call & data rates may apply.";
+
+/* Description that email is being added to a user's Digits profile  */
+"FOOTNOTE_EMAIL_DISCLOSURE" =  "You agree that this app and <a href=\"https://www.digits.com/settings\">all apps listed in your Digits account</a> can access this email address and their users can discover you by email.";
+
+/* Label before confirmation code input field */
+"LABEL_ENTER_CONF_CODE" = "We sent you a code.";
+
+/* Placeholder for confirmation code input field */
+"PLACEHOLDER_CONF_CODE" = "Enter your 6-digit code";
+
+/* Label before email input field */
+"LABEL_ENTER_EMAIL" = "Enter your email.";
+
+/* Create account button title */
+"BUTTON_CREATE_ACCOUNT" = "Create account";
+
+/* Creating account button title */
+"BUTTON_CREATING_ACCOUNT" = "Creating account";
+
+/* Created account button title */
+"BUTTON_CREATED_ACCOUNT" = "Created account";
+
+/* Button title to indicate moving forward to the next step  */
+"BUTTON_CONTINUE" = "Continue";
+
+/* Button title for in-progress event */
+"BUTTON_SENDING" = "Sending...";
+
+/* Button title for successful continuation */
+"BUTTON_DONE" = "Done";
+
+/* Button title for initiating a voice verification call */
+"CALL_ME_ACTION" = "Call Me";
+
+/* Button title showing progress towards a phone call being initiated */
+"CALL_ME_LOADING" = "Calling...";
+
+/* Prompt to use to request a new code if they did not receive one already */
+"LABEL_RESEND_CONF_CODE" = "Didn't get a code?";
+
+/* Button title for requesting a new confirmation code */
+"BUTTON_RESEND_CONF_CODE" = "Request another.";
+
+/* Footnote when creating account */
+"FOOTNOTE_CREATE_ACCOUNT" = "By tapping \"Create account\" above, you agree to the <a href=\"https://twitter.com/tos\">Terms of Service</a>, <a href=\"https://twitter.com/privacy\">Privacy Policy</a>, and <a href=\"https://support.twitter.com/articles/20170514\">Cookies Policy</a> of <a href=\"https://www.digits.com\">Digits by Twitter</a>, to share your phone number with %@, and that other users of %@ can discover you by phone number.";
+
+/* Footnote when logging into an existing account */
+"FOOTNOTE_LOGIN" = "By tapping \"Continue\", your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> will be shared with %@ and other users of %@ can discover you by phone number and/or email.";
+
+/* Footnote when logging into an existing account but the terms of service have changed */
+"FOOTNOTE_TOS_UPDATE" = "By tapping \"Continue\", you agree to the Terms of Service, Privacy Policy, and Cookies Policy of Digits by Twitter, to share your <a href=\"https://www.digits.com/settings\">Digits phone number and/or email address</a> with %@, and that other users of %@ can discover you by phone number and/or email.";
+
+/* Text to be inserted when the name of the app is unknown in the sentence: "... other users of [app name] can discover you..." */
+"PARTIAL_FOOTNOTE_THIS_APP" = "this app";
+
+/* Dismiss button text */
+"BUTTON_DISMISS" = "Dismiss";
+
+/* Retry button text */
+"BUTTON_RETRY" = "Retry";
+
+/* Not now button text */
+"BUTTON_NOT_NOW" = "Not now";
+
+/* Okay button text */
+"BUTTON_OKAY" = "OK";
+
+/* Large label when we couldn't confirm a user's number */
+"LABEL_UNABLE_TO_CONFIRM_NUMBER" = "Unable to confirm your phone number";
+
+/* Text explaining why we couldn't confirm a user's number */
+"LABEL_UNABLE_TO_CONFIRM_NUMBER_EXPLANATION" = "Sorry, we are having trouble sending you a confirmation code.";
+
+/* Title for description explaining what the find your friends feature does */
+"LABEL_FIND_YOUR_FRIENDS_TITLE" = "Find your friends";
+
+/* Text explaining why we're asking to upload the user's address book */
+"LABEL_EXPLAIN_FIND_YOUR_FRIENDS" = "We use Digits by Twitter to find more of your friends who use this app. When you tap Ok, we'll upload your address book to Digits by Twitter so that we can help you find users of %@ that you know or help other users of %@ find you.";
+
+/* Button text for trying a different number */
+"BUTTON_TRY_DIFFERENT_NUMBER" = "Try a different number";
+
+/* Error text when number may be invalid */
+"ERROR_CHECK_NUMBER_TRY_AGAIN" = "Please check your number and try again";
+
+/* Error text when confirmation code may be invalid */
+"ERROR_CHECK_CODE_TRY_AGAIN" = "Please check your code and try again";
+
+"ERROR_CANT_SMS" = "Unable to send this number an SMS message.";
+
+/* Error text when email may be invalid */
+"ERROR_CHECK_EMAIL_TRY_AGAIN" = "Please check your email and try again";
+
+/* Error text when network connection may be broken, includes error code */
+"ERROR_CHECK_CONNECTION_TRY_AGAIN" = "Whoops, looks like we hit a network issue. Let’s try that again? [%@]";
+
+/* Authenticate button label */
+"BUTTON_AUTHENTICATE" = "Use my phone number";
+
+/* PIN Code entry screen header label */
+"LABEL_ENTER_2_STEP_VERIFICATION_CODE" = "Enter 2-step verification code.";
+
+/* PIN Code entry screen footer label */
+"FOOTNOTE_2_STEP_VERIFICATION_CODE" = "You have previously set a 2-step verification code on <a href=\"https://www.digits.com/settings\">digits.com</a>";
+
+/* PIN Code field placeholder */
+"PLACEHOLDER_2_STEP_VERIFICATION_CODE" = "Verification code";
+
+/* Message to show developers to configure their Digits app */
+"ONBOARDING_MESSAGE" = "[Digits] Log into https://fabric.io to set your App's name which will be included in verification emails and SMS/voice authorization messages.";

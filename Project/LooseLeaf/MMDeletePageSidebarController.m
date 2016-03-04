@@ -121,17 +121,17 @@ static CGFloat(^clampPercent)(CGFloat);
 }
 
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView{
-    if(percent > 1.0){
-        // start slowing down until we hit 1.7
-        CGFloat ease = .7 - (percent - 1);
-        if(ease < 0) ease = 0;
-        ease /= .7;
-        // ease is now 0 < ease < 1
-        // and starts at 1 and works it way to 0
-        percent = 1.0 + .7 * (1-ease*ease);
-    }
-    
-    
+//    Math.easeOutCubic = function (t, b, c, d) {
+//        t /= d;
+//        t--;
+//        return c*(t*t*t + 1) + b;
+//    };
+
+    // start slowing down until we hit 1.7
+    CGFloat ease = percent / 1.7;
+    ease -= 1.0;
+    percent = 1.7 * (ease*ease*ease + 1.0);
+
     CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width + 200 * percent, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
     deleteSidebarBackground.frame = fr;
     
@@ -140,7 +140,7 @@ static CGFloat(^clampPercent)(CGFloat);
     
     CGFloat iconOpacity = (percent - .6) * 2;
     iconOpacity = clampPercent(iconOpacity);
-    
+
     CGFloat movementDistance = 20.0;
     
     CGPoint targetViewCenter = [deleteSidebarForeground convertPoint:targetView.center fromView:targetView.superview];

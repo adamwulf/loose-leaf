@@ -18,6 +18,17 @@
 "tw__email_share_detail_message_this_app" = "this app";
 /* Fallback string for detail message in case the user is not signed in */
 "tw__email_share_detail_message_not_signed_in" = "(not signed in)";
+/* Label for attributing this Tweet was retweeted by the user %@ */
+"tw__tweet_retweeted_by_user" = "Retweeted by %@";
+/* Label for the Install button within the app promo card preview of the Tweet composer */
+"tw__card_composer_install_button" = "Install";
+/* Label for the post tweet button in the compose view */
+"tw__card_composer_tweet" = "Tweet";
+/* Label for the App Store subtitle on the card install preview */
+"tw__card_composer_app_store" = "App Store";
+/* Placeholder text for the composer */
+"tw__composer_placeholder_text" = "What's Happening?";
+
 
 /* Timestamps */
 
@@ -40,12 +51,36 @@
 
 /* Accessibility Labels */
 
-/* Text spoken out with VoiceOver when a tweet has an image showing */
-"tw__single_image" = "One image attached";
+/* Text spoken out with VoiceOver when a tweet has an image thumbnail showing */
+"tw__single_image" = "Image Attachment";
+/* Text spoken out with VoiceOver when a tweet has a video thumbnail showing */
+"tw__video_thumbnail" = "Video Attachment";
 /* Text spoken out with VoiceOver for selecting the profile image on a regular tweet view */
 "tw__tweet_profile_accessibility" = "Profile";
 /* Text spoken out with VoiceOver for selecting the attached image on a regular tweet view */
 "tw__tweet_image_accessibility" = "Attachment";
+/* Text spoken out with VoiceOver for the content image of the card composer preview */
+"tw__user_content_image" = "App Preview";
+/* Text spoken out with VoiceOver for the Install button preview in card composer previews */
+"tw__card_compose_install_preview" = "Preview of install button for %@";
+/* Text spoken as VoiceOver hint for Tweet button in the card composer bottom bar */
+"tw__card_compose_tweet_hint" = "Double-tap to post this Tweet";
+/* Text spoken out with VoiceOver for the remaining character count in composer bottom bar */
+"tw__card_compose_character_count" = "%td characters remaining";
+/* Text spoken out with VoiceOver for the profile image in the composer top bar */
+"tw__card_compose_profile_image" = "%@'s profile";
+/* Text spoken out with VoiceOver for the close button in the card composer top bar */
+"tw__card_compose_close_button" = "Close";
+/* Text spoken out as VoiceOver hint for the close button in the card composer top bar */
+"tw__card_compose_close_hint" = "Double-tap to dismiss the composer.";
+/* VoiceOver label for Done button on image viewer */
+"tw__image_viewer_done_button" = "Done";
+/* VoiceOver label for Like button */
+"tw__tweet_like_button" = "Like";
+/* VoiceOver value for Like button on Tweet that has been liked */
+"tw__tweet_liked_state" = "Liked";
+/* VoiceOver value for Like button on Tweet that has not yet been liked */
+"tw__tweet_not_liked_state" = "Not Liked";
 
 /* Test String (just for unit tests) */
 "tw__test_string" = "Test";

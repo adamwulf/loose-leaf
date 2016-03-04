@@ -26,6 +26,7 @@
     BOOL isAnimatingTowardPageView;
 }
 
+@synthesize toolbar;
 @synthesize deleteSidebar;
 
 - (id)initWithFrame:(CGRect)frame
@@ -82,6 +83,10 @@
                 [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
             }
         }];
+
+        toolbar = [[MMButtonToolbarView alloc] initWithFrame:self.bounds];
+        toolbar.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [self addSubview:toolbar];
 
         // init the add page button in top left of scrollview
         addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];

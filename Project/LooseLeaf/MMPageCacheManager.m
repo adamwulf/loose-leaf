@@ -16,7 +16,7 @@
     // be the top page soon
     NSString* recentlySuggestedPageUUID;
     NSString* recentlyConfirmedPageUUID;
-    MMEditablePaperView* currentlyTopPage;
+    MMUndoablePaperView* currentlyTopPage;
     MMUndoablePaperView* currentEditablePage;
     NSMutableArray* stateLoadedPages;
     NSMutableOrderedSet* pagesWithLoadedCacheImages;
@@ -183,6 +183,21 @@ static MMPageCacheManager* _instance = nil;
 
 #pragma mark - Protected
 
+-(BOOL) isEditablePageStable{
+
+    BOOL (^isPageLoadedHuh)(MMUndoablePaperView*) = ^(MMUndoablePaperView* page){
+        __block BOOL allStatesAreLoaded = [currentEditablePage isStateLoaded];
+        [[currentEditablePage scrapsOnPaper] enumerateObjectsUsingBlock:^(MMScrapView* obj, NSUInteger idx, BOOL *stop) {
+            allStatesAreLoaded = allStatesAreLoaded && [[obj state] isScrapStateLoaded];
+        }];
+        return allStatesAreLoaded;
+    };
+
+    BOOL topIsEditable = currentEditablePage == currentlyTopPage;
+    BOOL topIsLoaded = isPageLoadedHuh(currentlyTopPage);
+
+    return topIsEditable && topIsLoaded;
+}
 
 -(void) ensureTopPageIsLoaded:(MMPaperView*)topPage{
     CheckMainThread;
@@ -211,10 +226,10 @@ static MMPageCacheManager* _instance = nil;
                 }else if(![replacementEditablePage isStateLoaded]){
                     // now we need to load the state for the page
                     // that will become editable
-//                    DebugLog(@"MMPageCacheManager loading new top page %@", topPage.uuid);
+                    DebugLog(@"MMPageCacheManager loading new top page %@", topPage.uuid);
                     [replacementEditablePage loadStateAsynchronously:YES withSize:drawableView.pagePtSize andScale:drawableView.scale andContext:drawableView.context];
                 }else{
-//                    DebugLog(@"MMPageCacheManager new current editable %@", topPage.uuid);
+                    DebugLog(@"MMPageCacheManager new current editable %@", topPage.uuid);
                     // now the old editable page is unloaded,
                     // and the new editable page is loaded,
                     // so give the drawable view to the new page

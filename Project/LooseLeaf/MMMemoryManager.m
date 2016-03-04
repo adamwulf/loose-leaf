@@ -82,7 +82,7 @@
         MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(tick)];
         [self tick];
         [timerQueue addOperation:backgroundTimer];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;

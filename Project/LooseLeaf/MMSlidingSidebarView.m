@@ -43,7 +43,11 @@
 //        [blurContainerView showDebugBorder];
 //        [blurView showDebugBorder];
 
-        
+        UISwipeGestureRecognizer* swipeToCloseGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(closeButtonTapped:)];
+        swipeToCloseGestureRecognizer.direction = fromLeft ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
+        [self addGestureRecognizer:swipeToCloseGestureRecognizer];
+
+
         // 2 points for the border size
         borderSize = 2;
         // store our direction and reference button

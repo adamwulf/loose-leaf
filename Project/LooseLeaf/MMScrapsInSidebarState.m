@@ -269,7 +269,6 @@
                 NSMutableDictionary* replacementProps = [NSMutableDictionary dictionaryWithDictionary:aScrapProps];
                 [replacementProps setObject:kPageUUIDForBezelCollectionState forKey:@"pageUUID"];
                 [allPropertiesForScraps replaceObjectAtIndex:i withObject:replacementProps];
-                DebugLog(@"swapped properties too");
                 hasEditsToSave = YES;
                 break;
             }
@@ -278,21 +277,21 @@
 }
 
 -(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers{
-    DebugLog(@"sidebar needs to delete assets for %@", scrapUUID);
-    
+//    DebugLog(@"sidebar needs to delete assets for %@", scrapUUID);
+
     dispatch_async([[MMTrashManager sharedInstance] trashManagerQueue], ^{
         @autoreleasepool {
             NSString* directoryForScrap = [self directoryPathForScrapUUID:scrapUUID];
             
             if(![[NSFileManager defaultManager] fileExistsAtPath:directoryForScrap]){
-                DebugLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
+//                DebugLog(@"asking sidebar to delete a scrap that doesn't exist on the filesystem: %@", directoryForScrap);
             }else{
                 NSError* err = nil;
                 [[NSFileManager defaultManager] removeItemAtPath:directoryForScrap error:&err];
                 if(err){
                     DebugLog(@"error deleted scrap assets from sidebar: %@, %@", directoryForScrap, err);
                 }else{
-                    DebugLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
+//                    DebugLog(@"deleted scrap assets from sidebar: %@", directoryForScrap);
                 }
             }
         }

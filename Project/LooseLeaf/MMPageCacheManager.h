@@ -24,6 +24,9 @@
 @property (nonatomic, weak) NSObject<MMPageCacheManagerDelegate>* delegate;
 @property (nonatomic, strong) JotView* drawableView;
 @property (nonatomic, readonly) MMUndoablePaperView* currentEditablePage;
+// YES if the currently editable page is both: the top page + has its state loaded + is editable and ready
+// NO otherwise
+@property (nonatomic, readonly) BOOL isEditablePageStable;
 
 +(MMPageCacheManager*) sharedInstance;
 
