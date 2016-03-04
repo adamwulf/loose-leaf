@@ -466,8 +466,8 @@
 
 #pragma mark - JotView
 
--(void) addElements:(NSArray*)elements{
-    [scrapState addElements:elements];
+-(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture{
+    [scrapState addElements:elements withTexture:texture];
 }
 
 -(void) addUndoLevelAndFinishStroke{

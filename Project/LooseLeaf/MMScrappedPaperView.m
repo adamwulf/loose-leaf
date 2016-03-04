@@ -421,8 +421,8 @@
     }
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
-    NSArray* strokeElementsToDraw = [super willAddElementsToStroke:elements fromPreviousElement:_previousElement];
+-(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement*)_previousElement{
+    NSArray* strokeElementsToDraw = [super willAddElements:elements toStroke:stroke fromPreviousElement:_previousElement];
     
     // track the segment test/reset count
     // when splitting the stroke
@@ -571,7 +571,9 @@
                         [nextStrokesToCrop addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
                                                                                                toColor:element.color
                                                                                              fromWidth:previousElement.width
-                                                                                               toWidth:element.width]];
+                                                                                               toWidth:element.width
+                                                                                          andStepWidth:element.stepWidth
+                                                                                           andRotation:element.rotation]];
                     }
                     // determine the tranlsation that we need to make on the path
                     // so that it's moved into the scrap's coordinate space
@@ -587,11 +589,13 @@
                                                                                                 fromWidth:previousElement.width
                                                                                                   toWidth:element.width
                                                                                             withTransform:entireTransform
-                                                                                                 andScale:scrap.scale]];
+                                                                                                 andScale:scrap.scale
+                                                                                             andStepWidth:element.stepWidth
+                                                                                              andRotation:element.rotation]];
                     }
                 }
                 if([elementsToAddToScrap count]){
-                    [scrap addElements:elementsToAddToScrap];
+                    [scrap addElements:elementsToAddToScrap withTexture:stroke.texture];
                 }
             }else{
                 [nextStrokesToCrop addObject:element];

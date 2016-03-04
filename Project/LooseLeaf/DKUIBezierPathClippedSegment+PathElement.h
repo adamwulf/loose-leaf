@@ -17,8 +17,10 @@
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
                              withTransform:(CGAffineTransform)transform
-                                  andScale:(CGFloat)scale;
+                                  andScale:(CGFloat)scale
+                              andStepWidth:(CGFloat)stepWidth
+                               andRotation:(CGFloat)rotation;
 
--(NSArray*) convertToPathElementsFromColor:(UIColor*)startColor toColor:(UIColor*)endColor fromWidth:(CGFloat)startWidth toWidth:(CGFloat)toWidth;
+-(NSArray*) convertToPathElementsFromColor:(UIColor*)startColor toColor:(UIColor*)endColor fromWidth:(CGFloat)startWidth toWidth:(CGFloat)toWidth andStepWidth:(CGFloat)stepWidth andRotation:(CGFloat)rotation;
 
 @end

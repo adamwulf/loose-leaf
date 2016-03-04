@@ -749,18 +749,22 @@ int skipAll = NO;
     MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:startOfLine];
     moveTo.width = 3;
     moveTo.color = [UIColor blackColor];
+    moveTo.stepWidth = .5;
+    moveTo.rotation = 0;
     
     CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:moveTo.startPoint
                                                              andLineTo:endOfLine];
     curveTo.width = 3;
     curveTo.color = [UIColor blackColor];
-    
+    curveTo.stepWidth = .5;
+    curveTo.rotation = 0;
+
     NSArray* shortLine = [NSArray arrayWithObjects:
                           moveTo,
                           curveTo,
                           nil];
     
-    [page.drawableView addElements:shortLine];
+    [page.drawableView addElements:shortLine withTexture:[JotDefaultBrushTexture sharedInstance]];
     [page.drawableView.state finishCurrentStroke];
     [page.scrapsOnPaper makeObjectsPerformSelector:@selector(addUndoLevelAndFinishStroke)];
 

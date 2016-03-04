@@ -770,12 +770,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 #pragma mark - OpenGL
 
--(void) addElements:(NSArray*)elements{
+-(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture{
     if(!drawableViewState){
         // https://github.com/adamwulf/loose-leaf/issues/258
         DebugLog(@"trying to draw on an unloaded scrap");
     }
-    [drawableView addElements:elements];
+    [drawableView addElements:elements withTexture:texture];
 }
 -(void) addUndoLevelAndFinishStroke{
     [drawableView addUndoLevelAndFinishStroke];

@@ -459,9 +459,9 @@ static int count = 0;
     return [delegate smoothnessForTouch:touch];
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+-(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
     
-    NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    NSArray* modifiedElements = [self.delegate willAddElements:elements toStroke:stroke fromPreviousElement:previousElement];
     
     NSMutableArray* croppedElements = [NSMutableArray array];
     for(AbstractBezierPathElement* element in modifiedElements){
@@ -496,7 +496,9 @@ static int count = 0;
                     [croppedElements addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
                                                                                          toColor:element.color
                                                                                        fromWidth:previousElement.width
-                                                                                         toWidth:element.width]];
+                                                                                         toWidth:element.width
+                                                                                    andStepWidth:element.stepWidth
+                                                                                     andRotation:element.rotation]];
                     
                 }
             }

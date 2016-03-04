@@ -18,19 +18,23 @@
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
                              withTransform:(CGAffineTransform)transform
-                                  andScale:(CGFloat)scale{
+                                  andScale:(CGFloat)scale
+                              andStepWidth:(CGFloat)stepWidth
+                               andRotation:(CGFloat)rotation{
     return [self.pathSegment1 convertToPathElementsFromTValue:self.startIntersection.tValue1
-                                               toTValue:self.endIntersection.tValue1
-                                              fromColor:fromColor
-                                                toColor:toColor
-                                              fromWidth:fromWidth
-                                                toWidth:toWidth
-                                          withTransform:transform
-                                               andScale:scale];
+                                                     toTValue:self.endIntersection.tValue1
+                                                    fromColor:fromColor
+                                                      toColor:toColor
+                                                    fromWidth:fromWidth
+                                                      toWidth:toWidth
+                                                withTransform:transform
+                                                     andScale:scale
+                                                 andStepWidth:stepWidth
+                                                  andRotation:rotation];
 }
 
--(NSArray*) convertToPathElementsFromColor:(UIColor*)fromColor toColor:(UIColor*)toColor fromWidth:(CGFloat)fromWidth toWidth:(CGFloat)toWidth{
-    return [self convertToPathElementsFromColor:fromColor toColor:toColor fromWidth:fromWidth toWidth:toWidth withTransform:CGAffineTransformIdentity andScale:1.0];
+-(NSArray*) convertToPathElementsFromColor:(UIColor*)fromColor toColor:(UIColor*)toColor fromWidth:(CGFloat)fromWidth toWidth:(CGFloat)toWidth andStepWidth:(CGFloat)stepWidth andRotation:(CGFloat)rotation{
+    return [self convertToPathElementsFromColor:fromColor toColor:toColor fromWidth:fromWidth toWidth:toWidth withTransform:CGAffineTransformIdentity andScale:1.0 andStepWidth:stepWidth andRotation:rotation];
 }
 
 @end

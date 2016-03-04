@@ -884,8 +884,8 @@
     return [[self activePen] smoothnessForTouch:touch];
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
-    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElementsToStroke:elements fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+-(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElements:elements toStroke:stroke fromPreviousElement:previousElement] fromPreviousElement:previousElement];
 
     if(adjustments.didAdjust){
         numberOfRulerGesturesWithoutStroke = 0;
