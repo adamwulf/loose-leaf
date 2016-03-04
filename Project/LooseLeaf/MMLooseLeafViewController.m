@@ -19,11 +19,19 @@
 #import "MMPhotoManager.h"
 #import "MMTutorialStackView.h"
 #import "MMCloudKitImportExportView.h"
+#import "MMPaperStackViewDelegate.h"
+#import "MMStackControllerView.h"
+
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate>
+
+@end
 
 @implementation MMLooseLeafViewController{
     MMMemoryManager* memoryManager;
     MMDeletePageSidebarController* deleteSidebar;
     MMCloudKitImportExportView* cloudKitExportView;
+
+    UIScrollView* listOfStacksView;
 }
 
 - (id)init{
@@ -40,10 +48,16 @@
     
         self.view.opaque = YES;
         
+        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 120)];
+        listOfStacksView.layer.borderColor = [[UIColor redColor] CGColor];
+        listOfStacksView.layer.borderWidth = 4;
+        listOfStacksView.alpha = 0;
+
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
         
         stackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
+        stackView.stackDelegate = self;
 //        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         stackView.deleteSidebar = deleteSidebar;
         [self.view addSubview:stackView];
@@ -108,6 +122,8 @@
 
         UIImage* blackBlur = [UIImage imageNamed:@"blackblur.png"];
         self.view.layer.contents = (__bridge id)blackBlur.CGImage;
+
+        [self.view addSubview:listOfStacksView];
 
 
 //        [self.view addSubview:[MMDebugDrawView sharedInstance]];
@@ -198,6 +214,16 @@
 -(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
 //    DebugLog(@"presenting view controller");
+}
+
+#pragma mark - MMPaperStackViewDelegate
+
+-(void) animatingToListView{
+    listOfStacksView.alpha = 1;
+}
+
+-(void) animatingToPageView{
+    listOfStacksView.alpha = 0;
 }
 
 @end

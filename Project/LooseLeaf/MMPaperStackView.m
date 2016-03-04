@@ -28,6 +28,7 @@
     
 }
 
+@synthesize stackDelegate = _stackDelegate;
 @synthesize visibleStackHolder = visibleStackHolder;
 @synthesize hiddenStackHolder = hiddenStackHolder;
 @synthesize bezelStackHolder = bezelStackHolder;

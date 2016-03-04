@@ -23,6 +23,7 @@
 #import "Constants.h"
 #import "MMPageCacheManager.h"
 #import "MMGestureTouchOwnershipDelegate.h"
+#import "MMPaperStackViewDelegate.h"
 
 @interface MMPaperStackView : UIScrollView<MMPaperViewDelegate,MMGestureTouchOwnershipDelegate>{
 
@@ -40,6 +41,7 @@
 @property (nonatomic, readonly) UIView* visibleStackHolder;
 @property (nonatomic, readonly) UIView* hiddenStackHolder;
 @property (nonatomic, readonly) UIView* bezelStackHolder;
+@property (nonatomic, weak) NSObject<MMPaperStackViewDelegate>* stackDelegate;
 
 -(void) addPaperToBottomOfStack:(MMPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;

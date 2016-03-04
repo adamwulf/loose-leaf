@@ -41,8 +41,6 @@
         
         [MMPageCacheManager sharedInstance].delegate = self;
 
-        self.delegate = self;
-        
         stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
         
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
@@ -971,9 +969,9 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [super scrollViewDidScroll:scrollView];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
-
 
 #pragma mark - Gestures for List View
 

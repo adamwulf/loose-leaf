@@ -33,9 +33,11 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.delegate = self;
+
         isShowingPageView = YES;
         isAnimatingTowardPageView = NO;
-        
+
         mapOfFinalFramesForPagesBeingZoomed = new std::map<NSUInteger,CGRect>;
         
         // Initialization code
@@ -656,6 +658,7 @@
                 aPage.frame = [self framePositionDuringTransitionForPage:aPage originalFrame:aPage.frame withTrust:0.0];
             }
         }
+        [self.stackDelegate animatingToListView];
         hiddenStackHolder.frame = visibleStackHolder.frame;
         [self subclassDuringTransitionToListView];
     };
@@ -792,6 +795,12 @@
  */
 -(BOOL) isInVisibleStack:(MMPaperView*)page{
     return [visibleStackHolder.subviews indexOfObject:page] != NSNotFound;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView{
+    // noop
 }
 
 #pragma mark - MMButtonAwareTapGestureRecognizer
@@ -1664,11 +1673,9 @@
         newHiddenFrame.origin.x += screenWidth;
         hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
+        [self.stackDelegate animatingToPageView];
     };
-    
-    
-    
-    
+
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately

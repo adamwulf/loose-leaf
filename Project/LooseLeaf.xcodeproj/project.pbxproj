@@ -439,6 +439,7 @@
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C518C87F1C8421B400F1895C /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C518C87E1C8421B400F1895C /* highlighter.png */; };
+		C51C69631C8978CE00C77AC7 /* MMStackControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C569DB441C3A50BB00ABFEC8 /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C569DB431C3A50BB00ABFEC8 /* stencil.fsh */; };
 		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
@@ -1329,6 +1330,9 @@
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C518C87E1C8421B400F1895C /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
+		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
+		C51C69611C8978CE00C77AC7 /* MMStackControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackControllerView.h; sourceTree = "<group>"; };
+		C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackControllerView.m; sourceTree = "<group>"; };
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
@@ -2419,6 +2423,7 @@
 		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
 			isa = PBXGroup;
 			children = (
+				C51C69601C8978B200C77AC7 /* StackController */,
 				66E1010019ECB5CD006E7C15 /* Presentation Window */,
 				6634855D19DA2E4200B5CF2D /* Delete Sidebar */,
 				66DCFB991581BCEF00B4918C /* MMAppDelegate.h */,
@@ -2945,6 +2950,7 @@
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				66C38AC51753226F0035B872 /* Tools */,
+				C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */,
 				66DCFBC01581C85B00B4918C /* MMPaperStackView.h */,
 				66DCFBC11581C85B00B4918C /* MMPaperStackView.m */,
 				664C62EE15A36DA40072736A /* MMListPaperStackView.h */,
@@ -3242,6 +3248,15 @@
 				C506A3B91C23DE3200236895 /* SSKeychainQuery.m */,
 			);
 			name = SSKeychain;
+			sourceTree = "<group>";
+		};
+		C51C69601C8978B200C77AC7 /* StackController */ = {
+			isa = PBXGroup;
+			children = (
+				C51C69611C8978CE00C77AC7 /* MMStackControllerView.h */,
+				C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */,
+			);
+			name = StackController;
 			sourceTree = "<group>";
 		};
 		C584F8361C37C55A00413840 /* Shaders */ = {
@@ -3724,6 +3739,7 @@
 				665245691996DAB800C36609 /* AFURLResponseSerialization.m in Sources */,
 				C5FC08501C23E01B00C88675 /* MPNSNumberToCGFloatValueTransformer.m in Sources */,
 				C5FC08421C23E01B00C88675 /* MPCGColorRefToNSStringValueTransformer.m in Sources */,
+				C51C69631C8978CE00C77AC7 /* MMStackControllerView.m in Sources */,
 				66BE6CA219D67BC100A5F650 /* MMPolaroidView.m in Sources */,
 				664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */,
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,

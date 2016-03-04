@@ -44,7 +44,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
+@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
     
     // managers
     MMStackManager* stackManager;
