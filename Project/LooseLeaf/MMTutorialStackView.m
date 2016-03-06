@@ -21,8 +21,8 @@
     MMLargeTutorialSidebarButton* listViewTutorialButton;
 }
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid{
+    if(self = [super initWithFrame:frame andUUID:_uuid]){
         helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
             return [[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps];
         }];

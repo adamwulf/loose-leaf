@@ -10,7 +10,7 @@
 #import <JotUI/JotUI.h>
 #import "MMGestureTouchOwnershipDelegate.h"
 
-@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapsInBezelContainerView;
+@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapsInBezelContainerView,MMStackManager;
 
 @protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
 
@@ -159,6 +159,8 @@
 #pragma mark - Scrap Container for Sidebar
 
 -(MMScrapsInBezelContainerView*) bezelContainerView;
+
+-(MMStackManager*) stackManager;
 
 #pragma mark Mixpanel
 

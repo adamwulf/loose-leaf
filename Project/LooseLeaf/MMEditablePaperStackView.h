@@ -46,9 +46,6 @@
  */
 @interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
     
-    // managers
-    MMStackManager* stackManager;
-    
     // toolbar
     MMPlusButton* addPageSidebarButton;
     MMImageButton* insertImageButton;

@@ -29,9 +29,9 @@
 @synthesize toolbar;
 @synthesize deleteSidebar;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         self.delegate = self;
 

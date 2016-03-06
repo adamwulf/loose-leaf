@@ -22,6 +22,7 @@
 #import "MMPaperStackViewDelegate.h"
 #import "MMStackControllerView.h"
 #import "MMTextButton.h"
+#import "MMStacksManager.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate>
 
@@ -235,7 +236,7 @@
         // stack A view
 
         if(!aStackView){
-            aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
+            aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:[[[MMStacksManager sharedInstance] stackIDs] firstObject]];
             aStackView.stackDelegate = self;
             aStackView.deleteSidebar = deleteSidebar;
             [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
@@ -248,7 +249,7 @@
     }else{
         // b list
         if(!bStackView){
-            bStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
+            bStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:[[MMStacksManager sharedInstance] createStack]];
             bStackView.stackDelegate = self;
             bStackView.deleteSidebar = deleteSidebar;
             [self.view insertSubview:bStackView aboveSubview:deleteSidebar.deleteSidebarBackground];

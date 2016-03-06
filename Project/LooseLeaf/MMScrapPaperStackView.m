@@ -81,7 +81,7 @@
 
 @synthesize cloudKitExportView;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
     if(frame.size.width > frame.size.height){
         // force portrait build
@@ -91,7 +91,7 @@
     }
     DebugLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
     
-    if ((self = [super initWithFrame:frame])) {
+    if ((self = [super initWithFrame:frame andUUID:_uuid])) {
         
         self.autoresizingMask = UIViewAutoresizingNone;
 

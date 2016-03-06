@@ -18,8 +18,11 @@
 
 @implementation MMStackManager
 
--(id) initWithVisibleStack:(MMPaperStackView*)_visibleStack andHiddenStack:(MMPaperStackView*)_hiddenStack andBezelStack:(MMPaperStackView*)_bezelStack{
+@synthesize uuid;
+
+-(id) initWithUUID:(NSString*)_uuid visibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack{
     if(self = [super init]){
+        uuid = _uuid;
         visibleStack = _visibleStack;
         hiddenStack = _hiddenStack;
         bezelStack = _bezelStack;
@@ -30,14 +33,16 @@
     return self;
 }
 
+-(NSString*) stackDirectoryPath{
+    return [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:self.uuid];
+}
+
 -(NSString*) visiblePlistPath{
-    NSString* documentsPath = [NSFileManager documentsPath];
-    return [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+    return [[[self stackDirectoryPath] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
 }
 
 -(NSString*) hiddenPlistPath{
-    NSString* documentsPath = [NSFileManager documentsPath];
-    return [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+    return [[[self stackDirectoryPath] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
 }
 
 
@@ -89,11 +94,11 @@
     NSMutableSet* seenPageUUIDs = [NSMutableSet set];
     
     for(NSDictionary* pageDict in visiblePagesToCreate){
-        NSString* uuid = [pageDict objectForKey:@"uuid"];
-        if(![seenPageUUIDs containsObject:uuid]){
-            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+        NSString* pageuuid = [pageDict objectForKey:@"uuid"];
+        if(![seenPageUUIDs containsObject:pageuuid]){
+            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageuuid];
             [visiblePages addObject:page];
-            [seenPageUUIDs addObject:uuid];
+            [seenPageUUIDs addObject:pageuuid];
             //
             //
             //
@@ -112,19 +117,19 @@
             //
             //
         }else{
-            DebugLog(@"found duplicate page: %@", uuid);
+            DebugLog(@"found duplicate page: %@", pageuuid);
             hasFoundDuplicate++;
         }
     }
     
     for(NSDictionary* pageDict in hiddenPagesToCreate){
-        NSString* uuid = [pageDict objectForKey:@"uuid"];
-        if(![seenPageUUIDs containsObject:uuid]){
-            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
+        NSString* pageuuid = [pageDict objectForKey:@"uuid"];
+        if(![seenPageUUIDs containsObject:pageuuid]){
+            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageuuid];
             [hiddenPages addObject:page];
-            [seenPageUUIDs addObject:uuid];
+            [seenPageUUIDs addObject:pageuuid];
         }else{
-            DebugLog(@"found duplicate page: %@", uuid);
+            DebugLog(@"found duplicate page: %@", pageuuid);
             hasFoundDuplicate++;
         }
     }

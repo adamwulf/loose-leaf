@@ -31,20 +31,17 @@
     NSInteger numberOfRulerGesturesWithoutStroke;
 }
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
         
-        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
-        
         [MMPageCacheManager sharedInstance].delegate = self;
 
-        stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
-        
+        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[self.stackManager stackDirectoryPath] stringByAppendingPathComponent:@"Pages"]];
+
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
-//        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         highlighter = [[Highlighter alloc] init];
@@ -710,25 +707,22 @@
 #pragma mark - Stack Loading and Saving
 
 -(void) saveStacksToDisk{
-    [stackManager saveStacksToDisk];
+    [self.stackManager saveStacksToDisk];
 }
 
 -(void) buildDefaultContent{
     
     // just need to copy the visible/hiddenPages.plist files
     // and the content will be loaded from the bundle just fine
-    
-    NSString* documentsPath = [NSFileManager documentsPath];
-    NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
     NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
     NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
     
     [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
-                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                            toPath:[self.stackManager visiblePlistPath]
                                                     error:nil];
     [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
-                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                            toPath:[self.stackManager hiddenPlistPath]
                                              error:nil];
 }
 
@@ -740,7 +734,7 @@
 
     // check to see if we have any state to load at all, and if
     // not then build our default content
-    if(![stackManager hasStateToLoad]){
+    if(![self.stackManager hasStateToLoad]){
         // we don't have any pages, and we don't have any
         // state to load
         self.userInteractionEnabled = NO;
@@ -757,7 +751,7 @@
         }];
         return;
     }else{
-        NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
+        NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
         for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
             [self addPaperToBottomOfStack:page];
         }

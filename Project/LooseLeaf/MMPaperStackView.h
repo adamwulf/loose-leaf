@@ -38,10 +38,15 @@
     NSMutableSet* setOfPagesBeingPanned;
 }
 
+@property (nonatomic, readonly) MMStackManager* stackManager;
 @property (nonatomic, readonly) UIView* visibleStackHolder;
 @property (nonatomic, readonly) UIView* hiddenStackHolder;
 @property (nonatomic, readonly) UIView* bezelStackHolder;
 @property (nonatomic, weak) NSObject<MMPaperStackViewDelegate>* stackDelegate;
+
+-(id) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid;
 
 -(void) addPaperToBottomOfStack:(MMPaperView*)page;
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
