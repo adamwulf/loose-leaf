@@ -21,6 +21,7 @@
 #import "MMCloudKitImportExportView.h"
 #import "MMPaperStackViewDelegate.h"
 #import "MMStackControllerView.h"
+#import "MMTextButton.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate>
 
@@ -47,25 +48,13 @@
         [[MMShadowManager sharedInstance] beginGeneratingShadows];
     
         self.view.opaque = YES;
-        
-        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
-        listOfStacksView.alpha = 0;
-        listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
 
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
-        
-        stackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
-        stackView.stackDelegate = self;
-//        stackView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        stackView.deleteSidebar = deleteSidebar;
-        [self.view addSubview:stackView];
-        stackView.center = self.view.center;
+
 
         // export icons will show here, below the sidebars but over the stacks
         cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
-        stackView.cloudKitExportView = cloudKitExportView;
-        cloudKitExportView.stackView = stackView;
         [self.view addSubview:cloudKitExportView];
         // an extra view to help with animations
         MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.view.bounds];
@@ -74,12 +63,11 @@
         
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
-        [stackView loadStacksFromDisk];
-        
-        [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:stackView];
-        
+
+        // book keeping
+
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
-                                             to:@([stackView.visibleStackHolder.subviews count] + [stackView.hiddenStackHolder.subviews count])];
+                                             to:@([self numberOfPages])];
         NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
                                              to:language];
@@ -122,14 +110,28 @@
         UIImage* blackBlur = [UIImage imageNamed:@"blackblur.png"];
         self.view.layer.contents = (__bridge id)blackBlur.CGImage;
 
+        // navigation between stacks
+
+        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
+        listOfStacksView.alpha = 0;
+        listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
+        MMTextButton* aStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100, 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"A" andXOffset:0 andYOffset:0];
+        aStackButton.tag = 1;
+        [aStackButton addTarget:self action:@selector(switchToStack:) forControlEvents:UIControlEventTouchUpInside];
+        [listOfStacksView addSubview:aStackButton];
+        MMTextButton* bStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(200, 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"B" andXOffset:0 andYOffset:0];
+        [bStackButton addTarget:self action:@selector(switchToStack:) forControlEvents:UIControlEventTouchUpInside];
+        [listOfStacksView addSubview:bStackButton];
+
         [self.view addSubview:listOfStacksView];
 
+        memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
-//        [self.view addSubview:[MMDebugDrawView sharedInstance]];
-        
-        
-        memoryManager = [[MMMemoryManager alloc] initWithStack:stackView];
-        
+        // load the A stack first
+        [self switchToStack:aStackButton];
+
+
+
 //        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
 //        memoryProfileView.memoryManager = memoryManager;
 //        memoryProfileView.hidden = YES;
@@ -195,14 +197,14 @@
 -(void) willResignActive{
     DebugLog(@"telling stack to cancel all gestures");
     NSLog(@"willResignActive");
-    [stackView willResignActive];
-    [stackView cancelAllGestures];
-    [[stackView.visibleStackHolder peekSubview] cancelAllGestures];
+    [currentStackView willResignActive];
+    [currentStackView cancelAllGestures];
+    [[currentStackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
 -(void) didEnterBackground{
     NSLog(@"didEnterBackground");
-    [stackView didEnterBackground];
+    [currentStackView didEnterBackground];
 }
 
 -(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
@@ -223,6 +225,56 @@
 
 -(void) animatingToPageView{
     listOfStacksView.alpha = 0;
+}
+
+#pragma mark - Multiple Stacks
+
+-(void) switchToStack:(id)sender{
+
+    if([sender tag]){
+        // stack A view
+
+        if(!aStackView){
+            aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
+            aStackView.stackDelegate = self;
+            aStackView.deleteSidebar = deleteSidebar;
+            [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
+            aStackView.center = self.view.center;
+
+            [aStackView loadStacksFromDisk];
+        }
+
+        currentStackView = aStackView;
+    }else{
+        // b list
+        if(!bStackView){
+            bStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds];
+            bStackView.stackDelegate = self;
+            bStackView.deleteSidebar = deleteSidebar;
+            [self.view insertSubview:bStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
+            bStackView.center = self.view.center;
+
+            [aStackView loadStacksFromDisk];
+        }
+
+        currentStackView = bStackView;
+    }
+
+    currentStackView.cloudKitExportView = cloudKitExportView;
+    cloudKitExportView.stackView = currentStackView;
+    [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
+
+}
+
+#pragma mark - MMMemoryManagerDelegate
+
+-(int) fullByteSize{
+    return aStackView.fullByteSize + bStackView.fullByteSize;
+}
+
+-(NSInteger) numberOfPages{
+    return [aStackView.visibleStackHolder.subviews count] + [aStackView.hiddenStackHolder.subviews count] +
+    [bStackView.visibleStackHolder.subviews count] + [bStackView.hiddenStackHolder.subviews count];
 }
 
 @end
