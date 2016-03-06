@@ -53,6 +53,11 @@
 @property (nonatomic, assign, readonly) long long retweetCount;
 
 /**
+ *  The language of the Tweet.
+ */
+@property (nonatomic, copy, readonly) NSString *languageCode;
+
+/**
  *  The Tweet this Tweet was a reply to.
  */
 @property (nonatomic, copy, readonly) NSString *inReplyToTweetID;

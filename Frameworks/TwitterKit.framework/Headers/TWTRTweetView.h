@@ -5,7 +5,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TWTRTweetViewDelegate.h"
+#import <TwitterKit/TWTRTweetViewDelegate.h>
 
 @class TWTRTweet;
 

@@ -14,6 +14,8 @@
 "tw__email_share_heading" = "Share your email address";
 /* Detail message that includes the app name and username on the share your email screen */
 "tw__email_share_detail_message_format" = "Get updates and other information from %@ when you allow them access to your email on your Twitter account @%@.";
+/* Detail message that includes the app name on the share your email screen, the app name is used in all the (%@) locations */
+"tw__email_share_detail_message_format_app_name_only" = "Allow %@ to access the email address associated with your Twitter account so that %@ can use it according to its privacy policy. For example, %@ could send you updates and other information at that address.";
 /* Fallback string for detail message in case the app name is not available */
 "tw__email_share_detail_message_this_app" = "this app";
 /* Fallback string for detail message in case the user is not signed in */

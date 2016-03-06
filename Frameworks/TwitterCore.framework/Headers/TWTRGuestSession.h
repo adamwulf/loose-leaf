@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TWTRAuthSession.h"
+#import <TwitterCore/TWTRAuthSession.h>
 
 @class TWTRGuestSession;
 
