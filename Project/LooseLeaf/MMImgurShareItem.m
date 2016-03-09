@@ -258,8 +258,8 @@
 {
     NSAssert(imageData, @"Image data is required");
     
-//    NSString *urlString = @"https://api.imgur.com/3/upload.json";
-    NSString *urlString = @"https://imgur-apiv3.p.mashape.com/3/upload.json";
+    NSString *urlString = @"https://api.imgur.com/3/upload.json";
+//    NSString *urlString = @"https://imgur-apiv3.p.mashape.com/3/upload.json";
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init] ;
     [request setURL:[NSURL URLWithString:urlString]];
     [request setHTTPMethod:@"POST"];
