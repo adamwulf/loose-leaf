@@ -14,9 +14,6 @@
 
 @interface MMLooseLeafViewController : UIViewController<MMMemoryManagerDelegate>{
     MMTutorialStackView* currentStackView;
-
-    MMTutorialStackView* aStackView;
-    MMTutorialStackView* bStackView;
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;

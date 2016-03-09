@@ -25,6 +25,7 @@
 #import "MMStacksManager.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
+#import "NSArray+Map.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate>
 
@@ -42,6 +43,8 @@
 
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
+
+    NSMutableDictionary* stackViewsByUUID;
 }
 
 - (id)init{
@@ -51,6 +54,8 @@
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
                                                    object:[MMPageCacheManager sharedInstance]];
+
+        stackViewsByUUID = [NSMutableDictionary dictionary];
 
         [MMPageCacheManager sharedInstance].delegate = self;
         [MMInboxManager sharedInstance].delegate = self;
@@ -132,20 +137,21 @@
         listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
         listOfStacksView.alpha = 0;
         listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
-        MMTextButton* aStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100, 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"A" andXOffset:0 andYOffset:0];
-        aStackButton.tag = 1;
-        [aStackButton addTarget:self action:@selector(switchToStack:) forControlEvents:UIControlEventTouchUpInside];
-        [listOfStacksView addSubview:aStackButton];
-        MMTextButton* bStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(200, 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"B" andXOffset:0 andYOffset:0];
-        [bStackButton addTarget:self action:@selector(switchToStack:) forControlEvents:UIControlEventTouchUpInside];
-        [listOfStacksView addSubview:bStackButton];
+
+
+        for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
+            MMTextButton* switchToStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:[NSString stringWithFormat:@"%d", i] andXOffset:0 andYOffset:0];
+            switchToStackButton.tag = i;
+            [switchToStackButton addTarget:self action:@selector(switchToStack:) forControlEvents:UIControlEventTouchUpInside];
+            [listOfStacksView addSubview:switchToStackButton];
+        }
 
         [self.view addSubview:listOfStacksView];
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
         // Load the stack
-        [self switchToStack:aStackButton];
+        [self switchToStack:[listOfStacksView.subviews firstObject]];
 
 
         // Image import sidebar
@@ -292,14 +298,13 @@
 
 #pragma mark - Multiple Stacks
 
--(void) switchToStack:(id)sender{
-    if([sender tag]){
-        // stack A view
+-(void) switchToStack:(UIButton*)sender{
+    if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){
+        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
+        MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
 
         if(!aStackView){
-            NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] firstObject];
-
-            aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:[[[MMStacksManager sharedInstance] stackIDs] firstObject]];
+            aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
             aStackView.stackDelegate = self;
             aStackView.deleteSidebar = deleteSidebar;
             [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
@@ -308,51 +313,38 @@
             NSLog(@"Loading A stack: %@", stackUUID);
 
             [aStackView loadStacksFromDisk];
+
+            stackViewsByUUID[stackUUID] = aStackView;
         }
-        aStackView.hidden = NO;
-        bStackView.hidden = YES;
+
+        [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, MMTutorialStackView*  _Nonnull obj, BOOL * _Nonnull stop) {
+            obj.hidden = ![key isEqualToString:stackUUID];
+        }];
 
         currentStackView = aStackView;
-    }else{
-        // b list
-        if(!bStackView){
-            NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] count] > 1 ? [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:1] : [[MMStacksManager sharedInstance] createStack];
 
-            NSLog(@"Loading B stack: %@", stackUUID);
-
-            bStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
-            bStackView.stackDelegate = self;
-            bStackView.deleteSidebar = deleteSidebar;
-            [self.view insertSubview:bStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
-            bStackView.center = self.view.center;
-
-            [bStackView loadStacksFromDisk];
-        }
-        aStackView.hidden = YES;
-        bStackView.hidden = NO;
-
-        currentStackView = bStackView;
-
+        [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
+        
+        cloudKitExportView.stackView = currentStackView;
+        [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
     }
-
-    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
-
-    cloudKitExportView.stackView = currentStackView;
-    [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
-
 }
 
 #pragma mark - MMMemoryManagerDelegate
 
 -(int) fullByteSize{
-    return aStackView.fullByteSize + bStackView.fullByteSize + importImageSidebar.fullByteSize;
+    int fullByteSize = [[[stackViewsByUUID allValues] jotReduce:^id(MMTutorialStackView* obj, NSUInteger index, id accum) {
+        return @([accum intValue] + obj.fullByteSize);
+    }] intValue];
+
+    return fullByteSize + importImageSidebar.fullByteSize;
 }
 
 -(NSInteger) numberOfPages{
-    return [aStackView.visibleStackHolder.subviews count] + [aStackView.hiddenStackHolder.subviews count] +
-    [bStackView.visibleStackHolder.subviews count] + [bStackView.hiddenStackHolder.subviews count];
+    return [[[stackViewsByUUID allValues] jotReduce:^id(MMTutorialStackView* obj, NSUInteger index, id accum) {
+        return @([accum integerValue] + [obj.visibleStackHolder.subviews count] + [obj.hiddenStackHolder.subviews count]);
+    }] integerValue];
 }
-
 
 
 #pragma mark - MMPageCacheManagerDelegate
