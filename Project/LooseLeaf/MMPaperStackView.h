@@ -38,6 +38,7 @@
     NSMutableSet* setOfPagesBeingPanned;
 }
 
+@property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, readonly) MMStackManager* stackManager;
 @property (nonatomic, readonly) UIView* visibleStackHolder;
 @property (nonatomic, readonly) UIView* hiddenStackHolder;

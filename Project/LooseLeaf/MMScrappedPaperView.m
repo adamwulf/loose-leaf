@@ -113,7 +113,7 @@
         // then we know it was it's prepped and ready to show valid ink
         if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
             // page is editable and ready for work
-//            DebugLog(@"page %@ is editing, so nil thumb", self.uuid);
+            DebugLog(@"page %@ is editing, so nil thumb", self.uuid);
             [self setThumbnailTo:nil];
             scrapsOnPaperState.scrapContainerView.hidden = NO;
             drawableView.hidden = NO;
@@ -123,7 +123,7 @@
         }else if([self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
-//            DebugLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
+            DebugLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);
             [self setThumbnailTo:[self cachedImgViewImage]];
             scrapsOnPaperState.scrapContainerView.hidden = NO;
             drawableView.hidden = YES;
@@ -133,7 +133,7 @@
         }else{
             // scrap state isn't loaded, so show
             // our thumbnail
-//            DebugLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
+            DebugLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
             [self setThumbnailTo:scrappedImgViewImage.image];
             scrapsOnPaperState.scrapContainerView.hidden = YES;
             drawableView.hidden = YES;
@@ -142,7 +142,7 @@
             [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
         }
     }else if([self.scrapsOnPaperState isStateLoaded] && [self.scrapsOnPaperState hasEditsToSave]){
-//        DebugLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
+        DebugLog(@"page %@ isn't editing, has unsaved scraps, showing ink thumb", self.uuid);
         [self setThumbnailTo:[self cachedImgViewImage]];
         scrapsOnPaperState.scrapContainerView.hidden = NO;
         drawableView.hidden = YES;
@@ -150,14 +150,14 @@
         cachedImgView.hidden = NO;
         [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
     }else if(!isAskedToLoadThumbnail){
-//        DebugLog(@"default thumb for %@, HIDING thumb", self.uuid);
+        DebugLog(@"default thumb for %@, HIDING thumb", self.uuid);
         [self setThumbnailTo:nil];
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
         [self isShowingDrawableView:NO andIsShowingThumbnail:NO];
     }else{
-//        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
+        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
 //        DebugLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
         [self setThumbnailTo:scrappedImgViewImage.image];
         scrapsOnPaperState.scrapContainerView.hidden = YES;
@@ -1375,6 +1375,7 @@
 -(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately{
     @autoreleasepool {
         @synchronized(self){
+            NSLog(@"isAskedToLoadThumbnail = YES for uuid: %@", self.uuid);
             isAskedToLoadThumbnail = YES;
         }
         // make sure our thumbnail is loaded
@@ -1415,6 +1416,7 @@
 -(void) unloadCachedPreview{
     @autoreleasepool {
         @synchronized(self){
+            NSLog(@"isAskedToLoadThumbnail = NO for uuid: %@", self.uuid);
             isAskedToLoadThumbnail = NO;
         }
         // free our preview memory

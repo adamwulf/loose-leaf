@@ -24,7 +24,7 @@
 #import "MMTextButton.h"
 #import "MMStacksManager.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate>
 
 @end
 
@@ -43,6 +43,8 @@
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
                                                    object:[MMPageCacheManager sharedInstance]];
+
+        [MMPageCacheManager sharedInstance].delegate = self;
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
@@ -231,35 +233,49 @@
 #pragma mark - Multiple Stacks
 
 -(void) switchToStack:(id)sender{
-
     if([sender tag]){
         // stack A view
 
         if(!aStackView){
+            NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] firstObject];
+
             aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:[[[MMStacksManager sharedInstance] stackIDs] firstObject]];
             aStackView.stackDelegate = self;
             aStackView.deleteSidebar = deleteSidebar;
             [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
             aStackView.center = self.view.center;
 
+            NSLog(@"Loading A stack: %@", stackUUID);
+
             [aStackView loadStacksFromDisk];
         }
+        aStackView.hidden = NO;
+        bStackView.hidden = YES;
 
         currentStackView = aStackView;
     }else{
         // b list
         if(!bStackView){
-            bStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:[[MMStacksManager sharedInstance] createStack]];
+            NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] count] > 1 ? [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:1] : [[MMStacksManager sharedInstance] createStack];
+
+            NSLog(@"Loading B stack: %@", stackUUID);
+
+            bStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
             bStackView.stackDelegate = self;
             bStackView.deleteSidebar = deleteSidebar;
             [self.view insertSubview:bStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
             bStackView.center = self.view.center;
 
-            [aStackView loadStacksFromDisk];
+            [bStackView loadStacksFromDisk];
         }
+        aStackView.hidden = YES;
+        bStackView.hidden = NO;
 
         currentStackView = bStackView;
+
     }
+
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 
     currentStackView.cloudKitExportView = cloudKitExportView;
     cloudKitExportView.stackView = currentStackView;
@@ -277,5 +293,34 @@
     return [aStackView.visibleStackHolder.subviews count] + [aStackView.hiddenStackHolder.subviews count] +
     [bStackView.visibleStackHolder.subviews count] + [bStackView.hiddenStackHolder.subviews count];
 }
+
+
+
+#pragma mark - MMPageCacheManagerDelegate
+
+-(BOOL) isPageInVisibleStack:(MMPaperView*)page{
+    return [currentStackView isPageInVisibleStack:page];
+}
+
+-(MMPaperView*) getPageBelow:(MMPaperView*)page{
+    return [currentStackView getPageBelow:page];
+}
+
+-(NSArray*) findPagesInVisibleRowsOfListView{
+    return [currentStackView findPagesInVisibleRowsOfListView];
+}
+
+-(NSArray*) pagesInCurrentBezelGesture{
+    return [currentStackView pagesInCurrentBezelGesture];
+}
+
+-(BOOL) isShowingPageView{
+    return [currentStackView isShowingPageView];
+}
+
+-(NSInteger) countAllPages{
+    return [currentStackView countAllPages];
+}
+
 
 @end

@@ -75,8 +75,4 @@ static MMStacksManager* _instance = nil;
 
     }
 }
-
-
-
-
 @end

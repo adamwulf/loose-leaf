@@ -37,8 +37,6 @@
     if (self) {
         // Initialization code
         
-        [MMPageCacheManager sharedInstance].delegate = self;
-
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[self.stackManager stackDirectoryPath] stringByAppendingPathComponent:@"Pages"]];
 
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];

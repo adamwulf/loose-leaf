@@ -29,6 +29,7 @@
     
 }
 
+@synthesize uuid;
 @synthesize stackManager = _stackManager;
 @synthesize stackDelegate = _stackDelegate;
 @synthesize visibleStackHolder = visibleStackHolder;
@@ -40,7 +41,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        
+        uuid = _uuid;
         // Initialization code
         setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
         visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
@@ -61,7 +62,7 @@
         visibleStackHolder.clipsToBounds = YES;
         bezelStackHolder.clipsToBounds = NO;
         
-        _stackManager = [[MMStackManager alloc] initWithUUID:_uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
+        _stackManager = [[MMStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
 
         //
         // icons for moving and panning pages
