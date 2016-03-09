@@ -1210,8 +1210,10 @@
     //
     // scroll update for drag
     lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
-    if(displayLink.paused) displayLink.paused = NO;
-    
+    if(displayLink.paused){
+        displayLink.paused = NO;
+    }
+
     
     //
     // now, with our pan offset and new scale, we need to calculate the new frame location.

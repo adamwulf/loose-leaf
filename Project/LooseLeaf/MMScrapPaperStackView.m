@@ -108,9 +108,6 @@
 //                                                    userInfo:nil
 //                                                     repeats:YES];
 
-        [MMInboxManager sharedInstance].delegate = self;
-        [MMCloudKitManager sharedManager].delegate = self;
-        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];

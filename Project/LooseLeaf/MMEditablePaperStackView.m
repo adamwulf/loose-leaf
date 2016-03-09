@@ -133,9 +133,6 @@
         // accelerometer for rotating buttons
         // ================================================================================
         
-        [[MMRotationManager sharedInstance] setDelegate:self];
-        
-        
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.multipleTouchEnabled = YES;
@@ -173,13 +170,6 @@
         
         rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
-        
-        
-        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
-        
-        [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
-        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
-        
     }
     return self;
 }

@@ -24,7 +24,7 @@
 #import "MMTextButton.h"
 #import "MMStacksManager.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate>
 
 @end
 
@@ -45,6 +45,10 @@
                                                    object:[MMPageCacheManager sharedInstance]];
 
         [MMPageCacheManager sharedInstance].delegate = self;
+        [MMInboxManager sharedInstance].delegate = self;
+        [MMCloudKitManager sharedManager].delegate = self;
+        [[MMRotationManager sharedInstance] setDelegate:self];
+
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
@@ -134,6 +138,10 @@
         [self switchToStack:aStackButton];
 
 
+        [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
+
+        [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
+        [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
 //        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
 //        memoryProfileView.memoryManager = memoryManager;
@@ -320,6 +328,72 @@
 
 -(NSInteger) countAllPages{
     return [currentStackView countAllPages];
+}
+
+#pragma mark - MMInboxManagerDelegate
+
+-(void) didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    [currentStackView didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
+}
+
+-(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    [currentStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
+}
+
+-(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+    [currentStackView failedToProcessIncomingURL:url fromApp:sourceApplication];
+}
+
+
+#pragma mark - MMCloudKitManagerDelegate
+
+-(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+    [currentStackView cloudKitDidChangeState:currentState];
+}
+
+-(void) didFetchMessage:(SPRMessage*)message{
+    [currentStackView didFetchMessage:message];
+}
+
+-(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
+    [currentStackView didResetBadgeCountTo:badgeNumber];
+}
+
+#pragma mark - MMGestureTouchOwnershipDelegate
+
+-(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+    [currentStackView ownershipOfTouches:touches isGesture:gesture];
+}
+
+-(BOOL) isAllowedToPan{
+    return [currentStackView isAllowedToPan];
+}
+
+-(BOOL) isAllowedToBezel{
+    return [currentStackView isAllowedToBezel];
+}
+
+#pragma mark - MMRotationManagerDelegate
+
+
+-(void) willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    [currentStackView willRotateInterfaceFrom:fromOrient to:toOrient];
+}
+
+-(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+    [currentStackView didRotateInterfaceFrom:fromOrient to:toOrient];
+}
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient{
+    [currentStackView didRotateToIdealOrientation:toOrient];
+}
+
+-(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
+    [currentStackView didUpdateAccelerometerWithReading:currentRawReading];
+}
+
+-(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+    [currentStackView didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
 }
 
 
