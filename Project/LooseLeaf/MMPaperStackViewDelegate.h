@@ -20,4 +20,10 @@
 
 -(MMShareSidebarContainerView*) sharePageSidebar;
 
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
+
+-(void) didFailToExportPage:(MMPaperView*)page;
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+
 @end

@@ -73,8 +73,6 @@
     UIImageView* testImageView;
 }
 
-@synthesize cloudKitExportView;
-
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
     if(frame.size.width > frame.size.height){
@@ -1706,15 +1704,15 @@ int skipAll = NO;
 }
 
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
-    [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
+    [self.stackDelegate didExportPage:page toZipLocation:fileLocationOnDisk];
 }
 
 -(void) didFailToExportPage:(MMPaperView*)page{
-    [cloudKitExportView didFailToExportPage:page];
+    [self.stackDelegate didFailToExportPage:page];
 }
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
-    [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
+    [self.stackDelegate isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
 #pragma mark - MMScrapViewOwnershipDelegate
@@ -2113,7 +2111,7 @@ int skipAll = NO;
 }
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
-//    DebugLog(@"may share %@", NSStringFromClass([shareItem class]));
+    // noop
 }
 
 -(void) wontShare:(NSObject<MMShareItem> *)shareItem{
@@ -2121,27 +2119,11 @@ int skipAll = NO;
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
-//    DebugLog(@"did share %@", NSStringFromClass([shareItem class]));
-    [self.stackDelegate.sharePageSidebar hide:YES onComplete:nil];
+    // noop
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
-    [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
-    [self.stackDelegate.sharePageSidebar hide:YES onComplete:nil];
-}
-
-#pragma mark - MMCloudKitManagerDelegate
-
--(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
-    [self.stackDelegate.sharePageSidebar cloudKitDidChangeState:currentState];
-}
-
--(void) didFetchMessage:(SPRMessage *)message{
-    [cloudKitExportView didFetchMessage:message];
-}
-
--(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
-    [cloudKitExportView didResetBadgeCountTo:badgeNumber];
+    // noop
 }
 
 #pragma mark - Import

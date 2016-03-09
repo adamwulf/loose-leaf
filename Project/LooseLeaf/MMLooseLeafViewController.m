@@ -278,6 +278,18 @@
     return sharePageSidebar;
 }
 
+-(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+    [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
+}
+
+-(void) didFailToExportPage:(MMPaperView*)page{
+    [cloudKitExportView didFailToExportPage:page];
+}
+
+-(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+    [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
+}
+
 #pragma mark - Multiple Stacks
 
 -(void) switchToStack:(id)sender{
@@ -325,7 +337,6 @@
 
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 
-    currentStackView.cloudKitExportView = cloudKitExportView;
     cloudKitExportView.stackView = currentStackView;
     [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
 
@@ -388,15 +399,15 @@
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
-    [currentStackView cloudKitDidChangeState:currentState];
+    [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
 -(void) didFetchMessage:(SPRMessage*)message{
-    [currentStackView didFetchMessage:message];
+    [cloudKitExportView didFetchMessage:message];
 }
 
 -(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
-    [currentStackView didResetBadgeCountTo:badgeNumber];
+    [cloudKitExportView didResetBadgeCountTo:badgeNumber];
 }
 
 #pragma mark - MMGestureTouchOwnershipDelegate
@@ -481,6 +492,7 @@
 }
 
 -(void) didShare:(NSObject<MMShareItem>*)shareItem{
+    [sharePageSidebar hide:YES onComplete:nil];
     [currentStackView didShare:shareItem];
 }
 
@@ -493,6 +505,9 @@
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+    [cloudKitExportView didShareTopPageToUser:userId fromButton:button];
+    [sharePageSidebar hide:YES onComplete:nil];
+
     [currentStackView didShare:shareItem toUser:userId fromButton:button];
 }
 
