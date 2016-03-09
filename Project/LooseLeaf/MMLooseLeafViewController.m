@@ -24,8 +24,9 @@
 #import "MMTextButton.h"
 #import "MMStacksManager.h"
 #import "MMImageSidebarContainerView.h"
+#import "MMShareSidebarContainerView.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate>
 
 @end
 
@@ -38,6 +39,9 @@
 
     // image picker sidebar
     MMImageSidebarContainerView* importImageSidebar;
+
+    // share sidebar
+    MMShareSidebarContainerView* sharePageSidebar;
 }
 
 - (id)init{
@@ -150,6 +154,16 @@
         [importImageSidebar hide:NO onComplete:nil];
         [self.view addSubview:importImageSidebar];
 
+        // Share sidebar
+        [[NSThread mainThread] performBlock:^{
+            // going to delay building this UI so we can startup faster
+            sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.shareButton animateFromLeft:YES];
+            sharePageSidebar.delegate = self;
+            [sharePageSidebar hide:NO onComplete:nil];
+            sharePageSidebar.shareDelegate = self;
+            [self.view addSubview:sharePageSidebar];
+        } afterDelay:1];
+
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
@@ -258,6 +272,10 @@
 
 -(MMImageSidebarContainerView*) importImageSidebar{
     return importImageSidebar;
+}
+
+-(MMShareSidebarContainerView*) sharePageSidebar{
+    return sharePageSidebar;
 }
 
 #pragma mark - Multiple Stacks
@@ -408,6 +426,7 @@
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient{
     @autoreleasepool {
+        [sharePageSidebar updateInterfaceTo:toOrient];
         [importImageSidebar updateInterfaceTo:toOrient];
     }
     [currentStackView didRotateToIdealOrientation:toOrient];
@@ -450,5 +469,32 @@
 -(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription{
     [currentStackView photoWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription];
 }
+
+#pragma mark - MMShareItemDelegate
+
+-(UIImage*) imageToShare{
+    return [currentStackView imageToShare];
+}
+
+-(NSDictionary*) cloudKitSenderInfo{
+    return [currentStackView cloudKitSenderInfo];
+}
+
+-(void) didShare:(NSObject<MMShareItem>*)shareItem{
+    [currentStackView didShare:shareItem];
+}
+
+-(void) mayShare:(NSObject<MMShareItem>*)shareItem{
+    [currentStackView mayShare:shareItem];
+}
+
+-(void) wontShare:(NSObject<MMShareItem>*)shareItem{
+    [currentStackView wontShare:shareItem];
+}
+
+-(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+    [currentStackView didShare:shareItem toUser:userId fromButton:button];
+}
+
 
 @end

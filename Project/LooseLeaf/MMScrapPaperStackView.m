@@ -59,9 +59,6 @@
     // in the right sidebar
     MMCountBubbleButton* countButton;
     
-    // share sidebar
-    MMShareSidebarContainerView* sharePageSidebar;
-    
     NSTimer* debugTimer;
     NSTimer* drawTimer;
     UIImageView* debugImgView;
@@ -158,15 +155,6 @@
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
         
-        
-        [[NSThread mainThread] performBlock:^{
-            // going to delay building this UI so we can startup faster
-            sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
-            sharePageSidebar.delegate = self;
-            [sharePageSidebar hide:NO onComplete:nil];
-            sharePageSidebar.shareDelegate = self;
-            [self insertSubview:sharePageSidebar belowSubview:scrapContainer];
-        } afterDelay:1];
         
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
@@ -891,7 +879,7 @@ int skipAll = NO;
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [sharePageSidebar show:YES];
+    [self.stackDelegate.sharePageSidebar show:YES];
 }
 
 
@@ -1958,11 +1946,7 @@ int skipAll = NO;
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            [sharePageSidebar updateInterfaceTo:orientation];
-        }
-    });
+    // noop
 }
 
 
@@ -2063,7 +2047,7 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![self.stackDelegate.importImageSidebar isVisible] && ![sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
+    return ![self.stackDelegate.importImageSidebar isVisible] && ![self.stackDelegate.sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 #pragma mark - Check for Active Gestures
@@ -2138,18 +2122,18 @@ int skipAll = NO;
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
 //    DebugLog(@"did share %@", NSStringFromClass([shareItem class]));
-    [sharePageSidebar hide:YES onComplete:nil];
+    [self.stackDelegate.sharePageSidebar hide:YES onComplete:nil];
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
     [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
-    [sharePageSidebar hide:YES onComplete:nil];
+    [self.stackDelegate.sharePageSidebar hide:YES onComplete:nil];
 }
 
 #pragma mark - MMCloudKitManagerDelegate
 
 -(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
-    [sharePageSidebar cloudKitDidChangeState:currentState];
+    [self.stackDelegate.sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
 -(void) didFetchMessage:(SPRMessage *)message{

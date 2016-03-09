@@ -32,6 +32,7 @@
 }
 
 @synthesize insertImageButton;
+@synthesize shareButton;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {

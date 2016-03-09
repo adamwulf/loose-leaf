@@ -71,6 +71,7 @@
 }
 
 @property (nonatomic, readonly) MMImageButton* insertImageButton;
+@property (nonatomic, readonly) MMShareButton* shareButton;
 
 -(void) saveStacksToDisk;
 

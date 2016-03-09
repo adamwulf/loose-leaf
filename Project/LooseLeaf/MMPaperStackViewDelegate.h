@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMImageSidebarContainerView.h"
+#import "MMShareSidebarContainerView.h"
 
 @protocol MMPaperStackViewDelegate <NSObject>
 
@@ -16,5 +17,7 @@
 -(void) animatingToPageView;
 
 -(MMImageSidebarContainerView*) importImageSidebar;
+
+-(MMShareSidebarContainerView*) sharePageSidebar;
 
 @end
