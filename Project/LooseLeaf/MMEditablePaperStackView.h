@@ -70,6 +70,8 @@
     MMRulerView* rulerView;
 }
 
+@property (nonatomic, readonly) MMImageButton* insertImageButton;
+
 -(void) saveStacksToDisk;
 
 -(void) loadStacksFromDisk;

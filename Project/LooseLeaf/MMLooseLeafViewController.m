@@ -23,8 +23,9 @@
 #import "MMStackControllerView.h"
 #import "MMTextButton.h"
 #import "MMStacksManager.h"
+#import "MMImageSidebarContainerView.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate>
 
 @end
 
@@ -34,6 +35,9 @@
     MMCloudKitImportExportView* cloudKitExportView;
 
     UIScrollView* listOfStacksView;
+
+    // image picker sidebar
+    MMImageSidebarContainerView* importImageSidebar;
 }
 
 - (id)init{
@@ -117,6 +121,8 @@
         UIImage* blackBlur = [UIImage imageNamed:@"blackblur.png"];
         self.view.layer.contents = (__bridge id)blackBlur.CGImage;
 
+
+
         // navigation between stacks
 
         listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
@@ -134,14 +140,26 @@
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
-        // load the A stack first
+        // Load the stack
         [self switchToStack:aStackButton];
 
 
+        // Image import sidebar
+        importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.insertImageButton animateFromLeft:YES];
+        importImageSidebar.delegate = self;
+        [importImageSidebar hide:NO onComplete:nil];
+        [self.view addSubview:importImageSidebar];
+
+
+        // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
 
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
+
+
+
+        // Debug
 
 //        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
 //        memoryProfileView.memoryManager = memoryManager;
@@ -238,6 +256,10 @@
     listOfStacksView.alpha = 0;
 }
 
+-(MMImageSidebarContainerView*) importImageSidebar{
+    return importImageSidebar;
+}
+
 #pragma mark - Multiple Stacks
 
 -(void) switchToStack:(id)sender{
@@ -294,7 +316,7 @@
 #pragma mark - MMMemoryManagerDelegate
 
 -(int) fullByteSize{
-    return aStackView.fullByteSize + bStackView.fullByteSize;
+    return aStackView.fullByteSize + bStackView.fullByteSize + importImageSidebar.fullByteSize;
 }
 
 -(NSInteger) numberOfPages{
@@ -385,6 +407,9 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient{
+    @autoreleasepool {
+        [importImageSidebar updateInterfaceTo:toOrient];
+    }
     [currentStackView didRotateToIdealOrientation:toOrient];
 }
 
@@ -396,5 +421,34 @@
     [currentStackView didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
 }
 
+#pragma mark - MMImageSidebarContainerViewDelegate
+
+-(void) sidebarCloseButtonWasTapped{
+    [currentStackView sidebarCloseButtonWasTapped];
+}
+
+-(void) sidebarWillShow{
+    [currentStackView sidebarWillShow];
+}
+
+-(void) sidebarWillHide{
+    [currentStackView sidebarWillHide];
+}
+
+-(UIView*) viewForBlur{
+    return [currentStackView viewForBlur];
+}
+
+-(UIImage*) imageForBlur{
+    return [currentStackView imageForBlur];
+}
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    [currentStackView pictureTakeWithCamera:img fromView:cameraView];
+}
+
+-(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription{
+    [currentStackView photoWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription];
+}
 
 @end

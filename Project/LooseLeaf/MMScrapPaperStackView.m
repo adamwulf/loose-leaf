@@ -59,9 +59,6 @@
     // in the right sidebar
     MMCountBubbleButton* countButton;
     
-    // image picker sidebar
-    MMImageSidebarContainerView* importImageSidebar;
-    
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
     
@@ -154,14 +151,8 @@
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
-        importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
-        importImageSidebar.delegate = self;
-        [importImageSidebar hide:NO onComplete:nil];
-        [self addSubview:importImageSidebar];
-        
-        
+
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
@@ -199,7 +190,7 @@
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + importImageSidebar.fullByteSize + bezelScrapContainer.fullByteSize;
+    return [super fullByteSize] + bezelScrapContainer.fullByteSize;
     
 }
 
@@ -210,7 +201,7 @@
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [importImageSidebar show:YES];
+    [self.stackDelegate.importImageSidebar show:YES];
 }
 
 #pragma mark - MMInboxManagerDelegate
@@ -288,9 +279,9 @@
             return;
         }
 
-        [importImageSidebar hide:NO onComplete:^(BOOL finished) {
+        [self.stackDelegate.importImageSidebar hide:NO onComplete:^(BOOL finished) {
             [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:kPhotoImportMaxDim]];
-            [importImageSidebar refreshPDF];
+            [self.stackDelegate.importImageSidebar refreshPDF];
         }];
         
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -311,10 +302,10 @@
             [self cancelAllGestures];
             [[visibleStackHolder peekSubview] cancelAllGestures];
             [self setButtonsVisible:NO withDuration:0.15];
-            [importImageSidebar refreshPDF];
-            [importImageSidebar show:YES];
+            [self.stackDelegate.importImageSidebar refreshPDF];
+            [self.stackDelegate.importImageSidebar show:YES];
         }else if(pdfDoc.pageCount == 1){
-            [importImageSidebar hide:NO onComplete:^(BOOL finished) {
+            [self.stackDelegate.importImageSidebar hide:NO onComplete:^(BOOL finished) {
                 // create a UIImage from teh PDF and add it like normal above
                 // immediately import that single page
                 MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithInboxItem:pdfDoc];
@@ -325,7 +316,7 @@
                 }];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     // make sure PDF sidebar shows refreshed data
-                    [importImageSidebar refreshPDF];
+                    [self.stackDelegate.importImageSidebar refreshPDF];
                 });
             }];
         }else{
@@ -334,10 +325,10 @@
             [self cancelAllGestures];
             [[visibleStackHolder peekSubview] cancelAllGestures];
             [self setButtonsVisible:NO withDuration:0.15];
-            [importImageSidebar show:YES];
+            [self.stackDelegate.importImageSidebar show:YES];
 
             // show show the PDF content in the sidebar
-            [importImageSidebar showPDF:pdfDoc];
+            [self.stackDelegate.importImageSidebar showPDF:pdfDoc];
         }
     } afterDelay:.75];
 
@@ -530,7 +521,7 @@
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
-    [importImageSidebar hide:YES onComplete:nil];
+    [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
     
     // hide the photo in the row
     cameraView.alpha = 0;
@@ -596,7 +587,7 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
         [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
 
-        [importImageSidebar hide:YES onComplete:nil];
+        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
 
         return;
     }
@@ -670,7 +661,7 @@
         
         // hide the picker, this'll slide it out
         // underneath our scrap
-        [importImageSidebar hide:YES onComplete:nil];
+        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
         
         // hide the photo in the row. this way the scrap
         // becomes the photo, and it doesn't seem to duplicate
@@ -1970,7 +1961,6 @@ int skipAll = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
             [sharePageSidebar updateInterfaceTo:orientation];
-            [importImageSidebar updateInterfaceTo:orientation];
         }
     });
 }
@@ -2073,7 +2063,7 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![importImageSidebar isVisible] && ![sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
+    return ![self.stackDelegate.importImageSidebar isVisible] && ![sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 #pragma mark - Check for Active Gestures

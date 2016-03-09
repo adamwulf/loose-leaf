@@ -31,6 +31,8 @@
     NSInteger numberOfRulerGesturesWithoutStroke;
 }
 
+@synthesize insertImageButton;
+
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
     self = [super initWithFrame:frame andUUID:_uuid];
@@ -100,9 +102,6 @@
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
         [self.toolbar addButton:insertImageButton extendFrame:NO];
-
-        
-        
         
         CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
