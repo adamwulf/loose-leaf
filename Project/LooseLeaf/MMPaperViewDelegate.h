@@ -60,7 +60,7 @@
  * the user has continued to scale the page down so far
  * that we can now take over and auto-scale it into list view
  */
--(void) finishedScalingReallySmall:(MMPaperView*)page;
+-(void) finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated;
 
 /**
  * the user has already begun to scale small (notification above),

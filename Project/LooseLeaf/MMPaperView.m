@@ -272,7 +272,7 @@
                 self.isBeingPannedAndZoomed = NO;
                 if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
                     if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
-                        [self.delegate finishedScalingReallySmall:self];
+                        [self.delegate finishedScalingReallySmall:self animated:YES];
                     }else{
                         [self.delegate cancelledScalingReallySmall:self];
                     }

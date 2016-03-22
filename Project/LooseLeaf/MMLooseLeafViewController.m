@@ -314,6 +314,12 @@
 
             [aStackView loadStacksFromDisk];
 
+            if([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowingListView"]){
+                // open into list view if that was their last visible screen
+                [aStackView immediatelyTransitionToListView];
+                [aStackView setButtonsVisible:NO animated:NO];
+            }
+
             stackViewsByUUID[stackUUID] = aStackView;
         }
 

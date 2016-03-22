@@ -79,11 +79,11 @@
 
 -(BOOL) hasPages;
 
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated;
+
 // protected
 
 -(void) addPageButtonTapped:(UIButton*)_button;
-
--(void) setButtonsVisible:(BOOL)visible;
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 

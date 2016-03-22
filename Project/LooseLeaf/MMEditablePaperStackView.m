@@ -381,16 +381,23 @@
     DebugLog(@"temp button");
 }
 
--(void) setButtonsVisible:(BOOL)visible{
-    [self setButtonsVisible:visible withDuration:0.3];
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated{
+    [self setButtonsVisible:visible withDuration:animated ? 0.3 : 0];
 }
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration{
-    [UIView animateWithDuration:duration animations:^{
+
+    void(^block)() = ^{
         [self.toolbar setButtonsVisible:visible];
         settingsButton.alpha = visible;
         pencilTool.alpha = visible;
-    }];
+    };
+
+    if(duration > 0){
+        [UIView animateWithDuration:duration animations:block];
+    }else{
+        block();
+    }
 }
 
 #pragma mark - MMRotationManagerDelegate
@@ -518,18 +525,18 @@
         DebugLog(@"would save, but can't b/c its readonly page");
     }
     // update UI for scaling small into list view
-    [self setButtonsVisible:NO];
+    [self setButtonsVisible:NO animated:YES];
     [scissor cancelAllTouches];
     [super isBeginningToScaleReallySmall:page];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
--(void) finishedScalingReallySmall:(MMPaperView *)page{
-    [super finishedScalingReallySmall:page];
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
+    [super finishedScalingReallySmall:page animated:animated];
     [self saveStacksToDisk];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
-    [self setButtonsVisible:YES];
+    [self setButtonsVisible:YES animated:YES];
     [super cancelledScalingReallySmall:page];
 
     // ok, we've zoomed into this page now
@@ -545,7 +552,7 @@
     [rulerView setHidden:NO];
 }
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
-    [self setButtonsVisible:YES];
+    [self setButtonsVisible:YES animated:YES];
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
     [rulerView setHidden:NO];
@@ -773,8 +780,6 @@
         // list is empty on purpose
         [self immediatelyTransitionToListView];
     }
-    
-
 }
 
 -(BOOL) hasPages{

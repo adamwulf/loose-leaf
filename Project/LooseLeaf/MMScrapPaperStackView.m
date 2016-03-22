@@ -441,7 +441,7 @@
 }
 
 -(void) sidebarWillHide{
-    [self setButtonsVisible:YES];
+    [self setButtonsVisible:YES animated:YES];
     [self enableAllGesturesForPageView];
 }
 
@@ -1671,11 +1671,15 @@ int skipAll = NO;
     [self panAndScaleScrap:panAndPinchScrapGesture2];
 }
 
--(void) setButtonsVisible:(BOOL)visible{
-    [UIView animateWithDuration:.3 animations:^{
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated{
+    if(animated){
+        [UIView animateWithDuration:.3 animations:^{
+            bezelScrapContainer.alpha = visible ? 1 : 0;
+        }];
+    }else{
         bezelScrapContainer.alpha = visible ? 1 : 0;
-    }];
-    [super setButtonsVisible:visible];
+    }
+    [super setButtonsVisible:visible animated:animated];
 }
 
 
@@ -1894,7 +1898,7 @@ int skipAll = NO;
 }
 
 
--(void) finishedScalingReallySmall:(MMPaperView *)page{
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
     if(panAndPinchScrapGesture.scrap){
         [panAndPinchScrapGesture cancel];
     }
@@ -1903,7 +1907,7 @@ int skipAll = NO;
     }
     [panAndPinchScrapGesture setEnabled:NO];
     [panAndPinchScrapGesture2 setEnabled:NO];
-    [super finishedScalingReallySmall:page];
+    [super finishedScalingReallySmall:page animated:(BOOL)animated];
 }
 
 -(void) finishedScalingBackToPageView:(MMPaperView *)page{

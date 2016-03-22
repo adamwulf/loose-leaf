@@ -216,8 +216,8 @@
 
 -(void) immediatelyTransitionToListView{
     if(isShowingPageView){
-        [self isBeginningToScaleReallySmall:nil];
-        [self finishUITransitionToListView];
+        MMEditablePaperView* page = [[self visibleStackHolder] peekSubview];
+        [self finishedScalingReallySmall:page animated:NO];
         hiddenStackHolder.frame = visibleStackHolder.frame;
     }
 }
@@ -558,8 +558,8 @@
  * when the animation completes, we'll adjust all the frames
  * and content offsets to that the user can scroll them
  */
--(void) finishedScalingReallySmall:(MMPaperView *)page{
-    [super finishedScalingReallySmall:page];
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
+    [super finishedScalingReallySmall:page animated:animated];
     //
     // clean up gesture state
 //    DebugLog(@"removing1 %p", page);
@@ -687,15 +687,23 @@
         mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         [self moveAddButtonToTop];
+
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowingListView"];
     };
     
     step1();
-    // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:duration
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:step2
-                     completion:step3];
+
+    if(animated){
+        // ok, animate all the views in the visible stack!
+        [UIView animateWithDuration:duration
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:step2
+                         completion:step3];
+    }else{
+        step2();
+        step3(YES);
+    }
     //
     // now that the user has finished the gesture,
     // we can forget about the original frame locations
@@ -774,7 +782,8 @@
  */
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [super finishedScalingBackToPageView:page];
-    // noop
+
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowingListView"];
 }
 
 /**

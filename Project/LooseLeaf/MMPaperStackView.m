@@ -1428,7 +1428,7 @@
     [self updateIconAnimations];
 }
 
--(void) finishedScalingReallySmall:(MMPaperView *)page{
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
     [self updateIconAnimations];
 }
 
