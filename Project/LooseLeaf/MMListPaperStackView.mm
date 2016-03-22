@@ -217,6 +217,8 @@
 -(void) immediatelyTransitionToListView{
     if(isShowingPageView){
         MMEditablePaperView* page = [[self visibleStackHolder] peekSubview];
+
+        [self beginUITransitionFromPageView];
         [self finishedScalingReallySmall:page animated:NO];
         hiddenStackHolder.frame = visibleStackHolder.frame;
     }
