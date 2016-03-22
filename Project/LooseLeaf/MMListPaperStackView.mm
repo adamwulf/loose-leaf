@@ -563,7 +563,9 @@
     //
     // clean up gesture state
 //    DebugLog(@"removing1 %p", page);
-    [setOfPagesBeingPanned removeObject:page];
+    if(page){
+        [setOfPagesBeingPanned removeObject:page];
+    }
 
     CGFloat duration = 0.3;
     __block MMPaperView* lastPage = nil;
