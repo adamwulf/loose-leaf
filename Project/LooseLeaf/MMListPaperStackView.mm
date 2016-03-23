@@ -12,6 +12,7 @@
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMExportablePaperView.h"
+#import "NSArray+Map.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -426,11 +427,11 @@
         // how close are we to list view? 1 is not close at all, 0 is list view
         CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
         
-        
         //
         // start to move the hidden frame to overlap the visible frame
         CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
-        percentageToMoveHiddenFrame += .1;
+        percentageToMoveHiddenFrame += .06;
+        
         CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
         CGFloat amountToMoveHiddenFrameFromCachedPosition = visibleStackHolder.frame.size.width - percentageToTrustToFrame * visibleStackHolder.frame.size.width;
         
@@ -440,6 +441,13 @@
         CGFloat transitionDelay = 0;
         for(MMPaperView* aPage in [pagesThatWillBeVisibleAfterTransitionToListView reverseObjectEnumerator]){
             if(aPage != page){
+                if(aPage == [hiddenStackHolder peekSubview]){
+                    // reset the transition delay so that the hidden pages
+                    // begin to show at the same time, regardless of how many
+                    // visible pages might be showing.
+                    transitionDelay = .06;
+                }
+                
                 CGRect oldFrame = hiddenStackHolder.bounds;
                 NSValue* possibleCachedOriginalLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
                 if(possibleCachedOriginalLocation){
@@ -448,7 +456,9 @@
                     // so use that as its original location if we can
                     oldFrame = [possibleCachedOriginalLocation CGRectValue];
                 }
+                
                 CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
+                
                 if(![self isInVisibleStack:aPage] && !possibleCachedOriginalLocation){
                     //
                     // this helps the hidden pages to show coming in from
@@ -1405,7 +1415,7 @@
             //
             // only care about the hidden stack if there's anything
             // actually in the stack
-            [pagesThatWouldBeVisible addObject:aPage];
+            [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
             while((aPage = [hiddenStackHolder getPageBelow:aPage])){
                 CGRect frameOfPage = [self frameForListViewForPage:aPage];
                 // we have to expand the frame, because we want to count pages even if
@@ -1544,6 +1554,7 @@
  * up screen by numberOfHiddenRows
  */
 -(CGRect) framePositionDuringTransitionForPage:(MMPaperView*)page originalFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
+
     if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
     if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
     // final frame when the page is in the list view
