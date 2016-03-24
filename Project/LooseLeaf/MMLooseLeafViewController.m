@@ -138,20 +138,14 @@
         listOfStacksView.alpha = 0;
         listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
 
-
-        for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
-            MMTextButton* switchToStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:[NSString stringWithFormat:@"%d", i] andXOffset:0 andYOffset:0];
-            switchToStackButton.tag = i;
-            [switchToStackButton addTarget:self action:@selector(switchToStack:) forControlEvents:UIControlEventTouchUpInside];
-            [listOfStacksView addSubview:switchToStackButton];
-        }
-
+        [self reloadStackButtons];
+        
         [self.view addSubview:listOfStacksView];
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
         // Load the stack
-        [self switchToStack:[listOfStacksView.subviews firstObject]];
+        [self switchToStackAction:[listOfStacksView.subviews firstObject]];
 
 
         // Image import sidebar
@@ -195,6 +189,33 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+-(void) reloadStackButtons{
+    [[listOfStacksView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
+        MMTextButton* switchToStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:[NSString stringWithFormat:@"%d", i] andXOffset:0 andYOffset:0];
+        switchToStackButton.tag = i;
+        [switchToStackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
+        [listOfStacksView addSubview:switchToStackButton];
+    }
+    
+    NSInteger i = [[[MMStacksManager sharedInstance] stackIDs] count];
+    MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60)];
+    [addStackButton addTarget:self action:@selector(addStack:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [listOfStacksView addSubview:addStackButton];
+
+    CGSize cs = CGSizeMake(i*100 + 200, 1);
+
+    [listOfStacksView setContentSize:cs];
+
+}
+
+-(void) addStack:(id)sender{
+    NSString* stackID = [[MMStacksManager sharedInstance] createStack];
+    [self switchToStack:stackID];
+    [self reloadStackButtons];
+}
 
 -(void) pageCacheManagerDidLoadPage{
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
@@ -298,42 +319,46 @@
 
 #pragma mark - Multiple Stacks
 
--(void) switchToStack:(UIButton*)sender{
+-(void) switchToStackAction:(UIButton*)sender{
     if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){
         NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
-        MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
+        [self switchToStack:stackUUID];
+    }
+}
 
-        if(!aStackView){
-            aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
-            aStackView.stackDelegate = self;
-            aStackView.deleteSidebar = deleteSidebar;
-            [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
-            aStackView.center = self.view.center;
+-(void) switchToStack:(NSString*)stackUUID{
+    MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
 
-            NSLog(@"Loading A stack: %@", stackUUID);
+    if(!aStackView){
+        aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
+        aStackView.stackDelegate = self;
+        aStackView.deleteSidebar = deleteSidebar;
+        [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
+        aStackView.center = self.view.center;
 
-            [aStackView loadStacksFromDisk];
+        NSLog(@"Loading A stack: %@", stackUUID);
 
-            if([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowingListView"]){
-                // open into list view if that was their last visible screen
-                [aStackView immediatelyTransitionToListView];
-                [aStackView setButtonsVisible:NO animated:NO];
-            }
+        [aStackView loadStacksFromDisk];
 
-            stackViewsByUUID[stackUUID] = aStackView;
+        if([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowingListView"]){
+            // open into list view if that was their last visible screen
+            [aStackView immediatelyTransitionToListView];
+            [aStackView setButtonsVisible:NO animated:NO];
         }
 
-        [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, MMTutorialStackView*  _Nonnull obj, BOOL * _Nonnull stop) {
-            obj.hidden = ![key isEqualToString:stackUUID];
-        }];
-
-        currentStackView = aStackView;
-
-        [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
-        
-        cloudKitExportView.stackView = currentStackView;
-        [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
+        stackViewsByUUID[stackUUID] = aStackView;
     }
+
+    [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, MMTutorialStackView*  _Nonnull obj, BOOL * _Nonnull stop) {
+        obj.hidden = ![key isEqualToString:stackUUID];
+    }];
+
+    currentStackView = aStackView;
+
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
+    
+    cloudKitExportView.stackView = currentStackView;
+    [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
 }
 
 #pragma mark - MMMemoryManagerDelegate
