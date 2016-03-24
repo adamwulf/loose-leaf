@@ -18,9 +18,10 @@
 }
 
 @property (nonatomic, readonly) NSString* uuid;
-@property (nonatomic, readonly) NSString* stackDirectoryPath;
 @property (nonatomic, readonly) NSString* visiblePlistPath;
 @property (nonatomic, readonly) NSString* hiddenPlistPath;
+
++(NSString*) stackDirectoryPathForUUID:(NSString*)uuid;
 
 -(id) initWithUUID:(NSString*)uuid visibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
 

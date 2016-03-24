@@ -527,7 +527,7 @@ static int count = 0;
 
 -(NSString*) pagesPath{
     if(!pagesPath){
-        NSString* documentsPath = [self.delegate.stackManager stackDirectoryPath];
+        NSString* documentsPath = [MMStackManager stackDirectoryPathForUUID:self.delegate.stackManager.uuid];
         pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
         [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
     }

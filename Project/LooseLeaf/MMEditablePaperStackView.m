@@ -40,7 +40,7 @@
     if (self) {
         // Initialization code
         
-        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[self.stackManager stackDirectoryPath] stringByAppendingPathComponent:@"Pages"]];
+        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[MMStackManager stackDirectoryPathForUUID:self.stackManager.uuid] stringByAppendingPathComponent:@"Pages"]];
 
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];

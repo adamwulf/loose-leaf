@@ -33,16 +33,16 @@
     return self;
 }
 
--(NSString*) stackDirectoryPath{
-    return [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:self.uuid];
++(NSString*) stackDirectoryPathForUUID:(NSString*)uuid{
+    return [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:uuid];
 }
 
 -(NSString*) visiblePlistPath{
-    return [[[self stackDirectoryPath] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+    return [[[MMStackManager stackDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
 }
 
 -(NSString*) hiddenPlistPath{
-    return [[[self stackDirectoryPath] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+    return [[[MMStackManager stackDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
 }
 
 

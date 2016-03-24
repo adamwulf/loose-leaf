@@ -8,6 +8,7 @@
 
 #import "MMStacksManager.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMStackManager.h"
 
 @implementation MMStacksManager{
     NSMutableArray* stackIDs;
@@ -59,7 +60,10 @@ static MMStacksManager* _instance = nil;
 
 -(void) deleteStack:(NSString*)stackUUID{
     [stackIDs removeObject:stackUUID];
-    [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];    
+    [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSFileManager defaultManager] removeItemAtPath:[MMStackManager stackDirectoryPathForUUID:stackUUID] error:nil];
+    });
 }
 
 #pragma mark - Upgrade to 2.0.0
