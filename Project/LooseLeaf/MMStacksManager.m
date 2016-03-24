@@ -29,7 +29,12 @@ static MMStacksManager* _instance = nil;
 
 -(instancetype) init{
     if(self = [super init]){
-        stackIDs = [NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"]]];
+        stackIDs = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"]]]];
+        
+        if(!stackIDs){
+            stackIDs = [NSMutableArray array];
+        }
+        
         [self checkForUpgrade];
     }
     return self;
@@ -71,8 +76,6 @@ static MMStacksManager* _instance = nil;
         [[NSFileManager defaultManager] moveItemAtPath:visiblePages toPath:[stackDirectory stringByAppendingPathComponent:[visiblePages lastPathComponent]] error:nil];
         [[NSFileManager defaultManager] moveItemAtPath:hiddenPages toPath:[stackDirectory stringByAppendingPathComponent:[hiddenPages lastPathComponent]] error:nil];
         [[NSFileManager defaultManager] moveItemAtPath:pagesDir toPath:[stackDirectory stringByAppendingPathComponent:[pagesDir lastPathComponent]] error:nil];
-
-
     }
 }
 @end

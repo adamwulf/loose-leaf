@@ -192,6 +192,10 @@
 -(void) reloadStackButtons{
     [[listOfStacksView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
+    if(![[[MMStacksManager sharedInstance] stackIDs] count]){
+        [[MMStacksManager sharedInstance] createStack];
+    }
+    
     for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
         MMTextButton* switchToStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:[NSString stringWithFormat:@"%d", i] andXOffset:0 andYOffset:0];
         switchToStackButton.tag = i;
