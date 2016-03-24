@@ -139,7 +139,6 @@
         self.bounces = YES;
         self.alwaysBounceHorizontal = NO;
         self.canCancelContentTouches = YES;
-        self.opaque = YES;
         self.clearsContextBeforeDrawing = YES;
         self.clipsToBounds = YES;
         self.delaysContentTouches = NO;
@@ -733,14 +732,10 @@
         // we don't have any pages, and we don't have any
         // state to load
         self.userInteractionEnabled = NO;
-        UIView* white = [[UIView alloc] initWithFrame:self.bounds];
-        white.backgroundColor = [UIColor whiteColor];
-        [self insertSubview:white belowSubview:visibleStackHolder];
         [NSThread performBlockInBackground:^{
             [self buildDefaultContent];
             [NSThread performBlockOnMainThread:^{
                 self.userInteractionEnabled = YES;
-                [white removeFromSuperview];
                 [self loadStacksFromDisk];
             }];
         }];
