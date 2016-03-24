@@ -201,6 +201,11 @@
         switchToStackButton.tag = i;
         [switchToStackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
         [listOfStacksView addSubview:switchToStackButton];
+
+        MMTextButton* deleteStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 90, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"x" andXOffset:0 andYOffset:0];
+        deleteStackButton.tag = i;
+        [deleteStackButton addTarget:self action:@selector(deleteStackAction:) forControlEvents:UIControlEventTouchUpInside];
+        [listOfStacksView addSubview:deleteStackButton];
     }
     
     NSInteger i = [[[MMStacksManager sharedInstance] stackIDs] count];
@@ -213,12 +218,6 @@
 
     [listOfStacksView setContentSize:cs];
 
-}
-
--(void) addStack:(id)sender{
-    NSString* stackID = [[MMStacksManager sharedInstance] createStack];
-    [self switchToStack:stackID];
-    [self reloadStackButtons];
 }
 
 -(void) pageCacheManagerDidLoadPage{
@@ -322,6 +321,37 @@
 }
 
 #pragma mark - Multiple Stacks
+
+-(void) deleteStackAction:(UIButton*)sender{
+    if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){
+        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
+        NSInteger idx = [[[MMStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
+        if(stackViewsByUUID[stackUUID]){
+            [stackViewsByUUID[stackUUID] removeFromSuperview];
+            [stackViewsByUUID removeObjectForKey:stackUUID];
+        }
+        [[MMStacksManager sharedInstance] deleteStack:stackUUID];
+        
+        if([currentStackView.uuid isEqualToString:stackUUID]){
+            if(idx >= [[[MMStacksManager sharedInstance] stackIDs] count]){
+                idx -= 1;
+            }
+            
+            if(idx == -1){
+                [self addStack:nil];
+            }else{
+                [self switchToStack:[[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:idx]];
+            }
+        }
+        [self reloadStackButtons];
+    }
+}
+
+-(void) addStack:(id)sender{
+    NSString* stackID = [[MMStacksManager sharedInstance] createStack];
+    [self switchToStack:stackID];
+    [self reloadStackButtons];
+}
 
 -(void) switchToStackAction:(UIButton*)sender{
     if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){

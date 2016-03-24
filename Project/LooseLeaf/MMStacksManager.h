@@ -14,6 +14,8 @@
 
 -(NSString*) createStack;
 
+-(void) deleteStack:(NSString*)stackUUID;
+
 -(NSArray*)stackIDs;
 
 @end

@@ -57,6 +57,11 @@ static MMStacksManager* _instance = nil;
     return uuid;
 }
 
+-(void) deleteStack:(NSString*)stackUUID{
+    [stackIDs removeObject:stackUUID];
+    [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];    
+}
+
 #pragma mark - Upgrade to 2.0.0
 
 -(void) checkForUpgrade{
