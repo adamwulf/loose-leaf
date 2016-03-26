@@ -1482,11 +1482,11 @@
 #pragma mark - Paths
 
 -(NSString*) scrappedThumbnailPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+    return [[[self pagesPath] stringByAppendingPathComponent:@"scrapped.thumb"] stringByAppendingPathExtension:@"png"];
 }
 
 -(NSString*) bundledScrappedThumbnailPath{
-    return [[[self bundledPagesPath] stringByAppendingPathComponent:[@"scrapped" stringByAppendingString:@".thumb"]] stringByAppendingPathExtension:@"png"];
+    return [[[self bundledPagesPath] stringByAppendingPathComponent:@"scrapped.thumb"] stringByAppendingPathExtension:@"png"];
 }
 
 -(NSString*) scrapIDsPath{

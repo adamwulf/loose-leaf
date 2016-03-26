@@ -8,8 +8,14 @@
 
 #import "MMStackControllerView.h"
 #import "MMStacksManager.h"
+#import "MMStackButtonView.h"
 #import "MMTextButton.h"
 #import "MMPlusButton.h"
+#import "UIView+Debug.h"
+
+@interface MMStackControllerView ()<MMStackButtonViewDelegate>
+
+@end
 
 @implementation MMStackControllerView
 
@@ -21,24 +27,22 @@
     }
     
     for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
-        MMTextButton* switchToStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:[NSString stringWithFormat:@"%d", i] andXOffset:0 andYOffset:0];
-        switchToStackButton.tag = i;
-        [switchToStackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:switchToStackButton];
+        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:i];
+        MMStackButtonView* stackButton = [[MMStackButtonView alloc] initWithFrame:CGRectMake(200 * i, 0, 200, CGRectGetHeight(self.bounds)) andStackUUID:stackUUID];
         
-        MMTextButton* deleteStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 90, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"x" andXOffset:0 andYOffset:0];
-        deleteStackButton.tag = i;
-        [deleteStackButton addTarget:self action:@selector(deleteStackAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:deleteStackButton];
+        [stackButton loadThumb];
+        [stackButton setDelegate:self];
+        
+        [self addSubview:stackButton];
     }
     
     NSInteger i = [[[MMStacksManager sharedInstance] stackIDs] count];
-    MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60)];
+    MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(200 * i + 70, 40, 60, 60)];
     [addStackButton addTarget:self action:@selector(addStack:) forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:addStackButton];
     
-    CGSize cs = CGSizeMake(i*100 + 200, 1);
+    CGSize cs = CGSizeMake(i*200 + 200, 1);
     
     [self setContentSize:cs];
 }
@@ -49,16 +53,15 @@
     [self.stackDelegate addStack];
 }
 
--(void) switchToStackAction:(UIButton*)sender{
-    if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){
-        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
-        [[self stackDelegate] switchToStack:stackUUID];
-    }
-}
-
 -(void) deleteStackAction:(UIButton*)sender{
     NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
     [self.stackDelegate deleteStack:stackUUID];
+}
+
+#pragma mark - MMStackButtonViewDelegate
+
+-(void) switchToStackAction:(NSString*)stackUUID{
+    [[self stackDelegate] switchToStack:stackUUID];
 }
 
 @end

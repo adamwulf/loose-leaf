@@ -21,8 +21,6 @@
 @property (nonatomic, readonly) NSString* visiblePlistPath;
 @property (nonatomic, readonly) NSString* hiddenPlistPath;
 
-+(NSString*) stackDirectoryPathForUUID:(NSString*)uuid;
-
 -(id) initWithUUID:(NSString*)uuid visibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
 
 -(void) saveStacksToDisk;
@@ -30,5 +28,7 @@
 -(BOOL) hasStateToLoad;
 
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds;
+
++(NSDictionary*) loadFromDiskForStackUUID:(NSString*)stackUUID;
 
 @end

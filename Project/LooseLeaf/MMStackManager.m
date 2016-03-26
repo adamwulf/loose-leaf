@@ -15,6 +15,7 @@
 #import "NSString+UUID.h"
 #import "NSArray+Extras.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMStacksManager.h"
 
 @implementation MMStackManager
 
@@ -33,18 +34,13 @@
     return self;
 }
 
-+(NSString*) stackDirectoryPathForUUID:(NSString*)uuid{
-    return [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:uuid];
-}
-
 -(NSString*) visiblePlistPath{
-    return [[[MMStackManager stackDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+    return [MMStackManager visiblePlistPathForStackUUID:self.uuid];
 }
 
 -(NSString*) hiddenPlistPath{
-    return [[[MMStackManager stackDirectoryPathForUUID:self.uuid] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+    return [MMStackManager hiddenPlistPathForStackUUID:self.uuid];
 }
-
 
 -(void) saveStacksToDisk{
     [NSThread performBlockOnMainThread:^{
@@ -81,48 +77,29 @@
 }
 
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds{
+    NSDictionary* plist = [MMStackManager loadFromDiskForStackUUID:self.uuid];
     
-    NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPath]];
-    NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self hiddenPlistPath]];
+    //    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
     
-//    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
-
     NSMutableArray* visiblePages = [NSMutableArray array];
     NSMutableArray* hiddenPages = [NSMutableArray array];
     
     int hasFoundDuplicate = 0;
     NSMutableSet* seenPageUUIDs = [NSMutableSet set];
     
-    for(NSDictionary* pageDict in visiblePagesToCreate){
+    for(NSDictionary* pageDict in plist[@"visiblePages"]){
         NSString* pageuuid = [pageDict objectForKey:@"uuid"];
         if(![seenPageUUIDs containsObject:pageuuid]){
             MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageuuid];
             [visiblePages addObject:page];
             [seenPageUUIDs addObject:pageuuid];
-            //
-            //
-            //
-            // duplicate the page
-//#ifdef DEBUG
-//            NSString* pathOfPage = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]stringByAppendingPathComponent:uuid];
-//            // create new page uuid
-//            uuid = [NSString createStringUUID];
-//            NSString* duplicatePagePath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]stringByAppendingPathComponent:uuid];
-//            [[NSFileManager defaultManager] copyItemAtPath:pathOfPage toPath:duplicatePagePath error:nil];
-//            // create the new page object
-//            page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:uuid];
-//            [visiblePages addObject:page];
-//            [seenPageUUIDs addObject:uuid];
-//#endif
-            //
-            //
         }else{
             DebugLog(@"found duplicate page: %@", pageuuid);
             hasFoundDuplicate++;
         }
     }
     
-    for(NSDictionary* pageDict in hiddenPagesToCreate){
+    for(NSDictionary* pageDict in plist[@"hiddenPages"]){
         NSString* pageuuid = [pageDict objectForKey:@"uuid"];
         if(![seenPageUUIDs containsObject:pageuuid]){
             MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageuuid];
@@ -138,15 +115,26 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
     }
     
-//    DebugLog(@"loaded %d and %d",(int) [visiblePages count],(int) [hiddenPages count]);
-
-//#ifdef DEBUG
-//    [visiblePages shuffle];
-//    [hiddenPages shuffle];
-//#endif
-    
     return [NSDictionary dictionaryWithObjectsAndKeys:visiblePages, @"visiblePages",
             hiddenPages, @"hiddenPages", nil];
+}
+
+#pragma mark - Class methods
+
++(NSString*) visiblePlistPathForStackUUID:(NSString*)stackUUID{
+    return [[[[MMStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+}
+
++(NSString*) hiddenPlistPathForStackUUID:(NSString*)stackUUID{
+    return [[[[MMStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+}
+
++(NSDictionary*) loadFromDiskForStackUUID:(NSString*)stackUUID{
+    NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPathForStackUUID:stackUUID]];
+    NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self hiddenPlistPathForStackUUID:stackUUID]];
+
+    return [NSDictionary dictionaryWithObjectsAndKeys:visiblePagesToCreate, @"visiblePages",
+            hiddenPagesToCreate, @"hiddenPages", nil];
 }
 
 @end

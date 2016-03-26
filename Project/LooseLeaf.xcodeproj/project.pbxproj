@@ -449,6 +449,7 @@
 		C584F83F1C37D26200413840 /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F83E1C37D26200413840 /* quad.vsh */; };
 		C584F8411C37D27600413840 /* quad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8401C37D27600413840 /* quad.fsh */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
+		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
 		C5F4BE851C2676D700FFB640 /* bottom-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */; };
@@ -1347,6 +1348,9 @@
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
 		C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonToolbarView.m; sourceTree = "<group>"; };
 		C5A7A0861CA64C590054EEF1 /* MMStackControllerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackControllerViewDelegate.h; sourceTree = "<group>"; };
+		C5A7A0871CA651D70054EEF1 /* MMStackButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonView.h; sourceTree = "<group>"; };
+		C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackButtonView.m; sourceTree = "<group>"; };
+		C5A7A08A1CA65E5A0054EEF1 /* MMStackButtonViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonViewDelegate.h; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
@@ -3262,6 +3266,9 @@
 				C51C69611C8978CE00C77AC7 /* MMStackControllerView.h */,
 				C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */,
 				C5A7A0861CA64C590054EEF1 /* MMStackControllerViewDelegate.h */,
+				C5A7A0871CA651D70054EEF1 /* MMStackButtonView.h */,
+				C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */,
+				C5A7A08A1CA65E5A0054EEF1 /* MMStackButtonViewDelegate.h */,
 			);
 			name = StackController;
 			sourceTree = "<group>";
@@ -3988,6 +3995,7 @@
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
 				C5FC08571C23E01B00C88675 /* MPPropertyDescription.m in Sources */,
 				66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */,
+				C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				66E2241919D66F8B000FCA96 /* MMEmptyCollectionViewCell.m in Sources */,

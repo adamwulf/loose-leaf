@@ -12,6 +12,8 @@
 
 +(MMStacksManager*) sharedInstance;
 
+-(NSString*) stackDirectoryPathForUUID:(NSString*)uuid;
+
 -(NSString*) createStack;
 
 -(void) deleteStack:(NSString*)stackUUID;

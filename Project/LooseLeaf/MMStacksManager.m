@@ -28,6 +28,10 @@ static MMStacksManager* _instance = nil;
     return _instance;
 }
 
+-(NSString*) stackDirectoryPathForUUID:(NSString*)uuid{
+    return [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:uuid];
+}
+
 -(instancetype) init{
     if(self = [super init]){
         stackIDs = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:[NSData dataWithContentsOfFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"]]]];
@@ -62,7 +66,7 @@ static MMStacksManager* _instance = nil;
     [stackIDs removeObject:stackUUID];
     [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[NSFileManager defaultManager] removeItemAtPath:[MMStackManager stackDirectoryPathForUUID:stackUUID] error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:[self stackDirectoryPathForUUID:stackUUID] error:nil];
     });
 }
 
