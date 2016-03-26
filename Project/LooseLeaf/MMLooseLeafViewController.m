@@ -27,7 +27,7 @@
 #import "MMShareSidebarContainerView.h"
 #import "NSArray+Map.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate>
 
 @end
 
@@ -36,7 +36,7 @@
     MMDeletePageSidebarController* deleteSidebar;
     MMCloudKitImportExportView* cloudKitExportView;
 
-    UIScrollView* listOfStacksView;
+    MMStackControllerView* listOfStacksView;
 
     // image picker sidebar
     MMImageSidebarContainerView* importImageSidebar;
@@ -137,16 +137,16 @@
         listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
         listOfStacksView.alpha = 0;
         listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
+        listOfStacksView.stackDelegate = self;
 
-        [self reloadStackButtons];
+        [listOfStacksView reloadStackButtons];
         
         [self.view addSubview:listOfStacksView];
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
         // Load the stack
-        [self switchToStackAction:[listOfStacksView.subviews firstObject]];
-
+        [self switchToStack:[[[MMStacksManager sharedInstance] stackIDs] firstObject]];
 
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.insertImageButton animateFromLeft:YES];
@@ -187,37 +187,6 @@
 
 -(void) dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
--(void) reloadStackButtons{
-    [[listOfStacksView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    if(![[[MMStacksManager sharedInstance] stackIDs] count]){
-        [[MMStacksManager sharedInstance] createStack];
-    }
-    
-    for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
-        MMTextButton* switchToStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:[NSString stringWithFormat:@"%d", i] andXOffset:0 andYOffset:0];
-        switchToStackButton.tag = i;
-        [switchToStackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
-        [listOfStacksView addSubview:switchToStackButton];
-
-        MMTextButton* deleteStackButton = [[MMTextButton alloc] initWithFrame:CGRectMake(100 * (i+1), 90, 60, 60) andFont:[UIFont systemFontOfSize:20] andLetter:@"x" andXOffset:0 andYOffset:0];
-        deleteStackButton.tag = i;
-        [deleteStackButton addTarget:self action:@selector(deleteStackAction:) forControlEvents:UIControlEventTouchUpInside];
-        [listOfStacksView addSubview:deleteStackButton];
-    }
-    
-    NSInteger i = [[[MMStacksManager sharedInstance] stackIDs] count];
-    MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(100 * (i+1), 40, 60, 60)];
-    [addStackButton addTarget:self action:@selector(addStack:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [listOfStacksView addSubview:addStackButton];
-
-    CGSize cs = CGSizeMake(i*100 + 200, 1);
-
-    [listOfStacksView setContentSize:cs];
-
 }
 
 -(void) pageCacheManagerDidLoadPage{
@@ -320,44 +289,12 @@
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
-#pragma mark - Multiple Stacks
+#pragma mark - MMStackControllerViewDelegate
 
--(void) deleteStackAction:(UIButton*)sender{
-    if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){
-        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
-        NSInteger idx = [[[MMStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
-        if(stackViewsByUUID[stackUUID]){
-            [stackViewsByUUID[stackUUID] removeFromSuperview];
-            [stackViewsByUUID removeObjectForKey:stackUUID];
-        }
-        [[MMStacksManager sharedInstance] deleteStack:stackUUID];
-        
-        if([currentStackView.uuid isEqualToString:stackUUID]){
-            if(idx >= [[[MMStacksManager sharedInstance] stackIDs] count]){
-                idx -= 1;
-            }
-            
-            if(idx == -1){
-                [self addStack:nil];
-            }else{
-                [self switchToStack:[[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:idx]];
-            }
-        }
-        [self reloadStackButtons];
-    }
-}
-
--(void) addStack:(id)sender{
+-(void) addStack{
     NSString* stackID = [[MMStacksManager sharedInstance] createStack];
     [self switchToStack:stackID];
-    [self reloadStackButtons];
-}
-
--(void) switchToStackAction:(UIButton*)sender{
-    if(sender.tag < [[[MMStacksManager sharedInstance] stackIDs] count]){
-        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
-        [self switchToStack:stackUUID];
-    }
+    [listOfStacksView reloadStackButtons];
 }
 
 -(void) switchToStack:(NSString*)stackUUID{
@@ -393,6 +330,29 @@
     
     cloudKitExportView.stackView = currentStackView;
     [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
+}
+
+-(void) deleteStack:(NSString*)stackUUID{
+    NSInteger idx = [[[MMStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
+    if(stackViewsByUUID[stackUUID]){
+        [stackViewsByUUID[stackUUID] removeFromSuperview];
+        [stackViewsByUUID removeObjectForKey:stackUUID];
+    }
+    
+    [[MMStacksManager sharedInstance] deleteStack:stackUUID];
+    
+    if([currentStackView.uuid isEqualToString:stackUUID]){
+        if(idx >= [[[MMStacksManager sharedInstance] stackIDs] count]){
+            idx -= 1;
+        }
+        
+        if(idx == -1){
+            [self addStack];
+        }else{
+            [self switchToStack:[[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:idx]];
+        }
+    }
+    [listOfStacksView reloadStackButtons];
 }
 
 #pragma mark - MMMemoryManagerDelegate

@@ -26,13 +26,11 @@
     NSDate* dateOfLastBezelEnding;
     NSInteger numberOfRepeatingBezels;
     
-    __weak NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
-    
     UIGestureRecognizerState subState;
 }
 
 @property (readonly) NSArray* touches;
-@property (nonatomic, weak) NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
+@property (nonatomic, assign) NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
 @property (nonatomic, readonly) MMBezelDirection panDirection;
 @property (nonatomic, readonly) NSInteger numberOfRepeatingBezels;
 @property (nonatomic, readonly) UIGestureRecognizerState subState;
