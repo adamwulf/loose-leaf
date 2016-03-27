@@ -32,10 +32,15 @@ static UIImage* missingThumb;
         
         stackUUID = _stackUUID;
         
+        CGFloat stackIconHeight = 220;
+        CGFloat thumbOffset = 10;
+        
         CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
-        CGFloat scale = CGRectGetHeight(self.bounds) / CGRectGetHeight(screenBounds);
+        CGFloat scale = stackIconHeight / CGRectGetHeight(screenBounds);
         CGRect thumbFrame = CGRectApplyAffineTransform(screenBounds, CGAffineTransformMakeScale(scale, scale));
-        CGRect pageThumbFrame = CGRectInset(thumbFrame, 10, 10);
+        thumbFrame.origin.x += (CGRectGetWidth(self.bounds) - CGRectGetWidth(thumbFrame)) / 2;
+        thumbFrame.origin.y = 30;
+        CGRect pageThumbFrame = CGRectInset(thumbFrame, thumbOffset, thumbOffset);
         
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -53,7 +58,9 @@ static UIImage* missingThumb;
             UIGraphicsBeginImageContext(bounds.size);
             
             [[UIColor lightGrayColor] setStroke];
-            UIBezierPath* pageOutline = [UIBezierPath bezierPathWithRoundedRect:pageThumbFrame cornerRadius:10];
+            CGRect pathRect = pageThumbFrame;
+            pathRect.origin = CGPointMake(thumbOffset, thumbOffset);
+            UIBezierPath* pageOutline = [UIBezierPath bezierPathWithRoundedRect:pathRect cornerRadius:10];
             pageOutline.lineWidth = 2;
             CGFloat dashPattern[] = {12,12}; //make your pattern here
             [pageOutline setLineDash:dashPattern count:2 phase:11];
@@ -103,9 +110,29 @@ static UIImage* missingThumb;
         page2Thumbnail.transform = CGAffineTransformMakeRotation(sign * (((rand() % 100) / 100.0) * .07 + .03));
         page3Thumbnail.transform = CGAffineTransformMakeRotation(sign * (((rand() % 100) / 100.0 - 1.0) * .07 + .03));
         
-        stackButton = [[UIButton alloc] initWithFrame:self.bounds];
+        stackButton = [[UIButton alloc] initWithFrame:thumbFrame];
         [stackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:stackButton];
+
+        CGRect buttonFrame = CGRectMake(15, CGRectGetMaxY(thumbFrame), CGRectGetWidth(self.bounds) - 30, CGRectGetHeight(self.bounds) - CGRectGetMaxY(thumbFrame) - 15);
+        UIButton* nameButton = [[UIButton alloc] initWithFrame:buttonFrame];
+        [self addSubview:nameButton];
+        [nameButton.titleLabel setFont:[UIFont systemFontOfSize:18]];
+        [nameButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
+        [nameButton.titleLabel setMinimumScaleFactor:.9];
+        nameButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        nameButton.titleLabel.numberOfLines = 2;
+        nameButton.titleLabel.adjustsFontSizeToFitWidth = YES;
+        nameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
+        [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        
+        if(rand() % 3 == 0){
+            [nameButton setTitle:@"John's Notes" forState:UIControlStateNormal];
+        }else if(rand() % 2 == 0){
+            [nameButton setTitle:@"Board Meeting longer title." forState:UIControlStateNormal];
+        }else{
+            [nameButton setTitle:@"This is a super long title for the button that will be too long. No really its super long title." forState:UIControlStateNormal];
+        }
     }
     return self;
 }
