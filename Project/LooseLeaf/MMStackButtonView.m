@@ -10,14 +10,18 @@
 #import "MMStackManager.h"
 #import "MMStacksManager.h"
 #import "MMTextButton.h"
-
+#import "NSArray+Extras.h"
+#import <JotUI/UIImage+Alpha.h>
 
 static UIImage* whiteThumb;
 static UIImage* missingThumb;
 
 @implementation MMStackButtonView{
     NSString* stackUUID;
-    UIImageView* pageThumbnail;
+    CGAffineTransform page1Transform;
+    UIImageView* page1Thumbnail;
+    UIImageView* page2Thumbnail;
+    UIImageView* page3Thumbnail;
     UIButton* stackButton;
 }
 
@@ -43,7 +47,8 @@ static UIImage* missingThumb;
             UIRectFill(bounds);
             whiteThumb = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-
+            
+            whiteThumb = [whiteThumb transparentBorderImage:1];
             
             UIGraphicsBeginImageContext(bounds.size);
             
@@ -65,12 +70,38 @@ static UIImage* missingThumb;
             
             missingThumb = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            
         });
         
-        pageThumbnail = [[UIImageView alloc] initWithFrame:pageThumbFrame];
-        pageThumbnail.contentMode = UIViewContentModeScaleAspectFit;
-        [self addSubview:pageThumbnail];
+        
+        page3Thumbnail = [[UIImageView alloc] initWithFrame:pageThumbFrame];
+        page3Thumbnail.contentMode = UIViewContentModeScaleAspectFit;
+        page3Thumbnail.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.6].CGColor;
+        page3Thumbnail.layer.shadowOffset = CGSizeZero;
+        page3Thumbnail.layer.shadowRadius = 2;
+        page3Thumbnail.layer.shadowOpacity = 1;
+        [self addSubview:page3Thumbnail];
+        
+        page2Thumbnail = [[UIImageView alloc] initWithFrame:pageThumbFrame];
+        page2Thumbnail.contentMode = UIViewContentModeScaleAspectFit;
+        page2Thumbnail.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.6].CGColor;
+        page2Thumbnail.layer.shadowOffset = CGSizeZero;
+        page2Thumbnail.layer.shadowRadius = 2;
+        page2Thumbnail.layer.shadowOpacity = 1;
+        [self addSubview:page2Thumbnail];
+
+        page1Thumbnail = [[UIImageView alloc] initWithFrame:pageThumbFrame];
+        page1Thumbnail.contentMode = UIViewContentModeScaleAspectFit;
+        page1Thumbnail.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.6].CGColor;
+        page1Thumbnail.layer.shadowOffset = CGSizeZero;
+        page1Thumbnail.layer.shadowRadius = 2;
+        page1Thumbnail.layer.shadowOpacity = 1;
+        [self addSubview:page1Thumbnail];
+
+        CGFloat sign = rand() % 2 ? -1 : 1;
+        page1Transform = CGAffineTransformMakeRotation(sign * (((rand() % 100) / 100.0 - 1.0) * .05 + .01));
+        page1Thumbnail.transform = page1Transform;
+        page2Thumbnail.transform = CGAffineTransformMakeRotation(sign * (((rand() % 100) / 100.0) * .07 + .03));
+        page3Thumbnail.transform = CGAffineTransformMakeRotation(sign * (((rand() % 100) / 100.0 - 1.0) * .07 + .03));
         
         stackButton = [[UIButton alloc] initWithFrame:self.bounds];
         [stackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -80,30 +111,56 @@ static UIImage* missingThumb;
 }
 
 -(void) loadThumb{
-    
     NSDictionary* stackPageIDs = [MMStackManager loadFromDiskForStackUUID:stackUUID];
-    NSString* pageUUID = [stackPageIDs[@"visiblePages"] firstObject][@"uuid"];
 
+    NSArray* allPages = [stackPageIDs[@"visiblePages"] arrayByAddingObjectsFromArray:[stackPageIDs[@"hiddenPages"] reversedArray]];
+    
+    NSString* page1UUID = [allPages firstObject][@"uuid"];
+    if([self loadThumb:page1UUID intoImageView:page1Thumbnail]){
+        page1Thumbnail.transform = page1Transform;
+    }else{
+        page1Thumbnail.transform = CGAffineTransformIdentity;
+    }
+
+    if([allPages count] > 1){
+        NSString* page2UUID = [allPages objectAtIndex:1][@"uuid"];
+        [self loadThumb:page2UUID intoImageView:page2Thumbnail];
+    }else{
+        page2Thumbnail.image = nil;
+    }
+
+    if([allPages count] > 2){
+        NSString* page3UUID = [allPages objectAtIndex:2][@"uuid"];
+        [self loadThumb:page3UUID intoImageView:page3Thumbnail];
+    }else{
+        page3Thumbnail.image = nil;
+    }
+}
+
+-(BOOL) loadThumb:(NSString*)pageUUID intoImageView:(UIImageView*)imgView{
     NSString* stackPath = [[MMStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
     NSString* pagePath = [[stackPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
     NSString* thumbPath = [pagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
     
     if([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]){
-        UIImage* thumb = [UIImage imageWithContentsOfFile:thumbPath];
+        UIImage* thumb = [[UIImage imageWithContentsOfFile:thumbPath] transparentBorderImage:2];
         if(thumb){
             NSLog(@"have thumb: %@", thumbPath);
-            pageThumbnail.image = thumb;
+            imgView.image = thumb;
         }else{
             NSLog(@"should have thumb but don't");
-            pageThumbnail.image = whiteThumb;
+            imgView.image = whiteThumb;
         }
+        return YES;
     }else if([[NSFileManager defaultManager] fileExistsAtPath:pagePath]){
         NSLog(@"page is white");
-        pageThumbnail.image = whiteThumb;
+        imgView.image = whiteThumb;
+        return YES;
     }else{
         NSLog(@"no pages");
-        pageThumbnail.image = missingThumb;
+        imgView.image = missingThumb;
     }
+    return NO;
 }
 
 -(void) switchToStackAction:(id)sender{

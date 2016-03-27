@@ -26,9 +26,13 @@
         [[MMStacksManager sharedInstance] createStack];
     }
     
+    CGFloat singleStackWidth = 250;
+    CGFloat buffer = 30;
+    CGFloat xBuffer = 24;
+    
     for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
         NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:i];
-        MMStackButtonView* stackButton = [[MMStackButtonView alloc] initWithFrame:CGRectMake(200 * i, 0, 200, CGRectGetHeight(self.bounds)) andStackUUID:stackUUID];
+        MMStackButtonView* stackButton = [[MMStackButtonView alloc] initWithFrame:CGRectMake(singleStackWidth * i + buffer + xBuffer, buffer, singleStackWidth, 220) andStackUUID:stackUUID];
         
         [stackButton loadThumb];
         [stackButton setDelegate:self];
@@ -37,12 +41,12 @@
     }
     
     NSInteger i = [[[MMStacksManager sharedInstance] stackIDs] count];
-    MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(200 * i + 70, 40, 60, 60)];
+    MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(singleStackWidth * i + 90, 40, 60, 60)];
     [addStackButton addTarget:self action:@selector(addStack:) forControlEvents:UIControlEventTouchUpInside];
     
     [self addSubview:addStackButton];
     
-    CGSize cs = CGSizeMake(i*200 + 200, 1);
+    CGSize cs = CGSizeMake(i*singleStackWidth + singleStackWidth + buffer, 1);
     
     [self setContentSize:cs];
 }

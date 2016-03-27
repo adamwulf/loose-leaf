@@ -134,7 +134,7 @@
 
         // navigation between stacks
 
-        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 220)];
+        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 320)];
         listOfStacksView.alpha = 0;
         listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
         listOfStacksView.stackDelegate = self;
