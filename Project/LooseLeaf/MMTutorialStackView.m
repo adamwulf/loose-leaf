@@ -21,6 +21,10 @@
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid{
     if(self = [super initWithFrame:frame andUUID:_uuid]){
+        
+        self.contentInset = UIEdgeInsetsMake(300, 0, 0, 0);
+        
+        
         helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
             return [[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps];
         }];

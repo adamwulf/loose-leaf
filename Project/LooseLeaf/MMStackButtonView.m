@@ -37,6 +37,7 @@
         thumbFrame.origin.y = 30;
         
         icon = [[MMStackIconView alloc] initWithFrame:thumbFrame andStackUUID:stackUUID andStyle:MMStackIconViewStyleDark];
+        [self addSubview:icon];
         
         stackButton = [[UIButton alloc] initWithFrame:thumbFrame];
         [stackButton addTarget:self action:@selector(switchToStackAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -54,8 +55,6 @@
         nameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
         [nameButton addTarget:self action:@selector(didTapNameForStack:) forControlEvents:UIControlEventTouchUpInside];
 
-        [self addSubview:icon];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:@"StackCachedPagesDidUpdateNotification" object:nil];
     }
     return self;
