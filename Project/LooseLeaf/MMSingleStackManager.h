@@ -31,4 +31,6 @@
 
 +(NSDictionary*) loadFromDiskForStackUUID:(NSString*)stackUUID;
 
++(UIImage*) hasThumbail:(BOOL*)thumbExists forPage:(NSString*)pageUUID forStack:(NSString*)stackUUID;
+
 @end

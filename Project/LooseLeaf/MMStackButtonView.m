@@ -148,7 +148,14 @@ static UIImage* missingThumb;
     NSArray* allPages = [[MMAllStacksManager sharedInstance] cachedPagesForStack:stackUUID];
     
     NSString* page1UUID = [allPages firstObject][@"uuid"];
-    if([self loadThumb:page1UUID intoImageView:page1Thumbnail]){
+    BOOL hasThumb = NO;
+    
+    UIImage* image = [MMSingleStackManager hasThumbail:&hasThumb forPage:page1UUID forStack:stackUUID];
+    CGSize thumbSize = CGSizeApplyAffineTransform(page1Thumbnail.bounds.size, CGAffineTransformMakeScale([[UIScreen mainScreen] scale], [[UIScreen mainScreen] scale]));
+    image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:thumbSize interpolationQuality:kCGInterpolationMedium];
+    image = [image transparentBorderImage:2];
+    if(image || hasThumb){
+        page1Thumbnail.image = image ?: whiteThumb;
         page1Thumbnail.transform = page1Transform;
     }else{
         page1Thumbnail.transform = CGAffineTransformIdentity;
@@ -156,50 +163,23 @@ static UIImage* missingThumb;
 
     if([allPages count] > 1){
         NSString* page2UUID = [allPages objectAtIndex:1][@"uuid"];
-        [self loadThumb:page2UUID intoImageView:page2Thumbnail];
+        UIImage* image = [MMSingleStackManager hasThumbail:&hasThumb forPage:page2UUID forStack:stackUUID];
+        image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:page1Thumbnail.bounds.size interpolationQuality:kCGInterpolationMedium];
+        image = [image transparentBorderImage:2];
+        page2Thumbnail.image = image ?: (hasThumb ? whiteThumb : nil);
     }else{
         page2Thumbnail.image = nil;
     }
 
     if([allPages count] > 2){
         NSString* page3UUID = [allPages objectAtIndex:2][@"uuid"];
-        [self loadThumb:page3UUID intoImageView:page3Thumbnail];
+        UIImage* image = [MMSingleStackManager hasThumbail:&hasThumb forPage:page3UUID forStack:stackUUID];
+        image = [image resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:page1Thumbnail.bounds.size interpolationQuality:kCGInterpolationMedium];
+        image = [image transparentBorderImage:2];
+        page3Thumbnail.image = image ?: (hasThumb ? whiteThumb : nil);
     }else{
         page3Thumbnail.image = nil;
     }
-}
-
--(BOOL) loadThumb:(NSString*)pageUUID intoImageView:(UIImageView*)imgView{
-    NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
-    NSString* pagePath = [[stackPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
-    NSString* thumbPath = [pagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
-    
-    NSString* bundledDocsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
-    NSString* bundledPagePath = [[bundledDocsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
-    NSString* bundledThumbPath = [bundledPagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
-
-    if([[NSFileManager defaultManager] fileExistsAtPath:thumbPath] || [[NSFileManager defaultManager] fileExistsAtPath:bundledThumbPath]){
-        UIImage* thumb = [[UIImage imageWithContentsOfFile:thumbPath] transparentBorderImage:2];
-        if(!thumb){
-            thumb = [[UIImage imageWithContentsOfFile:bundledThumbPath] transparentBorderImage:2];
-        }
-        if(thumb){
-            NSLog(@"have thumb: %@", thumbPath);
-            imgView.image = thumb;
-        }else{
-            NSLog(@"should have thumb but don't");
-            imgView.image = whiteThumb;
-        }
-        return YES;
-    }else if([[NSFileManager defaultManager] fileExistsAtPath:pagePath]){
-        NSLog(@"page is white");
-        imgView.image = whiteThumb;
-        return YES;
-    }else{
-        NSLog(@"no pages");
-        imgView.image = missingThumb;
-    }
-    return NO;
 }
 
 -(void) switchToStackAction:(id)sender{
