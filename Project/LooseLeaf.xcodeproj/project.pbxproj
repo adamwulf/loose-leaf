@@ -443,6 +443,7 @@
 		C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */; };
 		C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */; };
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
+		C51290491CAB13250057363A /* MMStackIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C51290481CAB13250057363A /* MMStackIconView.m */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C518C87F1C8421B400F1895C /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C518C87E1C8421B400F1895C /* highlighter.png */; };
 		C51C69631C8978CE00C77AC7 /* MMStackControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */; };
@@ -1336,6 +1337,8 @@
 		C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHighlighterButton.m; sourceTree = "<group>"; };
 		C50C0D741C3D077A00DFC079 /* MMMarkerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMarkerButton.h; sourceTree = "<group>"; };
 		C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMarkerButton.m; sourceTree = "<group>"; };
+		C51290471CAB13250057363A /* MMStackIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackIconView.h; sourceTree = "<group>"; };
+		C51290481CAB13250057363A /* MMStackIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackIconView.m; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C518C87E1C8421B400F1895C /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
@@ -3289,6 +3292,8 @@
 				C5A7A08A1CA65E5A0054EEF1 /* MMStackButtonViewDelegate.h */,
 				C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */,
 				C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */,
+				C51290471CAB13250057363A /* MMStackIconView.h */,
+				C51290481CAB13250057363A /* MMStackIconView.m */,
 			);
 			name = StackController;
 			sourceTree = "<group>";
@@ -4015,6 +4020,7 @@
 				663326CA1AB09BA7003915E6 /* MMInboxImageAlbum.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
+				C51290491CAB13250057363A /* MMStackIconView.m in Sources */,
 				C5FC08571C23E01B00C88675 /* MPPropertyDescription.m in Sources */,
 				66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */,
 				C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */,
