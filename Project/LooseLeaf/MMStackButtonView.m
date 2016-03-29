@@ -174,8 +174,15 @@ static UIImage* missingThumb;
     NSString* pagePath = [[stackPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
     NSString* thumbPath = [pagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
     
-    if([[NSFileManager defaultManager] fileExistsAtPath:thumbPath]){
+    NSString* bundledDocsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    NSString* bundledPagePath = [[bundledDocsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
+    NSString* bundledThumbPath = [bundledPagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
+
+    if([[NSFileManager defaultManager] fileExistsAtPath:thumbPath] || [[NSFileManager defaultManager] fileExistsAtPath:bundledThumbPath]){
         UIImage* thumb = [[UIImage imageWithContentsOfFile:thumbPath] transparentBorderImage:2];
+        if(!thumb){
+            thumb = [[UIImage imageWithContentsOfFile:bundledThumbPath] transparentBorderImage:2];
+        }
         if(thumb){
             NSLog(@"have thumb: %@", thumbPath);
             imgView.image = thumb;
