@@ -16,4 +16,6 @@
 
 -(void) deleteStack:(NSString*)stackUUID;
 
+-(void) didTapNameForStack:(NSString*)stackUUID;
+
 @end

@@ -12,4 +12,6 @@
 
 -(void) switchToStackAction:(NSString*)stackUUID;
 
+-(void) didTapNameForStack:(NSString*)stackUUID;
+
 @end

@@ -67,4 +67,8 @@
     [[self stackDelegate] switchToStack:stackUUID];
 }
 
+-(void) didTapNameForStack:(NSString *)stackUUID{
+    [[self stackDelegate] didTapNameForStack:stackUUID];
+}
+
 @end

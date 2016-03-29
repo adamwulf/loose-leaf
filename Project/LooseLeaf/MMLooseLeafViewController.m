@@ -29,6 +29,7 @@
 #import "MMTutorialView.h"
 #import "MMTutorialManager.h"
 #import "MMTutorialViewDelegate.h"
+#import "MMStackPropertiesView.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate>
 
@@ -49,6 +50,8 @@
 
     NSMutableDictionary* stackViewsByUUID;
     
+    // stack properties
+    MMStackPropertiesView* stackPropertiesView;
     // tutorials
     MMTutorialView* tutorialView;
     UIView* backdrop;
@@ -304,6 +307,27 @@
 
 #pragma mark - MMStackControllerViewDelegate
 
+-(void) didTapNameForStack:(NSString*)stackUUID{
+    if(stackPropertiesView){
+        return;
+    }
+    
+    backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
+    backdrop.backgroundColor = [UIColor whiteColor];
+    backdrop.alpha = 0;
+    [self.view addSubview:backdrop];
+    
+    stackPropertiesView = [[MMStackPropertiesView alloc] initWithFrame:self.view.bounds andStackUUID:stackUUID];
+    stackPropertiesView.alpha = 0;
+    [self.view addSubview:stackPropertiesView];
+    
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 1;
+        stackPropertiesView.alpha = 1;
+    }];
+    NSLog(@"show stack id: %@", stackUUID);
+}
+
 -(void) addStack{
     NSString* stackID = [[MMStacksManager sharedInstance] createStack];
     [self switchToStack:stackID];
@@ -319,8 +343,6 @@
         aStackView.deleteSidebar = deleteSidebar;
         [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
         aStackView.center = self.view.center;
-
-        NSLog(@"Loading A stack: %@", stackUUID);
 
         [aStackView loadStacksFromDisk];
 

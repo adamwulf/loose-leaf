@@ -125,7 +125,8 @@ static UIImage* missingThumb;
         nameButton.titleLabel.adjustsFontSizeToFitWidth = YES;
         nameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
         [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        
+        [nameButton addTarget:self action:@selector(didTapNameForStack:) forControlEvents:UIControlEventTouchUpInside];
+
         if(rand() % 3 == 0){
             [nameButton setTitle:@"John's Notes" forState:UIControlStateNormal];
         }else if(rand() % 2 == 0){
@@ -192,6 +193,10 @@ static UIImage* missingThumb;
 
 -(void) switchToStackAction:(id)sender{
     [[self delegate] switchToStackAction:stackUUID];
+}
+
+-(void) didTapNameForStack:(id)sender{
+    [[self delegate] didTapNameForStack:stackUUID];
 }
 
 
