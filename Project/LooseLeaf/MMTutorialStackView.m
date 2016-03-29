@@ -15,8 +15,6 @@
 #import "MMLargeTutorialSidebarButton.h"
 
 @implementation MMTutorialStackView{
-    UIView* backdrop;
-    MMTutorialView* tutorialView;
     MMTextButton* helpButton;
     MMLargeTutorialSidebarButton* listViewTutorialButton;
 }
@@ -109,7 +107,6 @@
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
-    [tutorialView didRotateToIdealOrientation:orientation];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:.3 animations:^{
