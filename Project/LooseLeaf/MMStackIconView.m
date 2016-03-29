@@ -36,8 +36,8 @@ static UIImage* missingThumbDark;
         CGFloat scaleW = CGRectGetWidth(frame) / CGRectGetWidth(screenBounds);
         CGFloat scale = MIN(scaleH, scaleW);
         CGRect thumbFrame = CGRectApplyAffineTransform(screenBounds, CGAffineTransformMakeScale(scale, scale));
-        thumbFrame.origin.x += (CGRectGetWidth(self.bounds) - CGRectGetWidth(thumbFrame)) / 2;
-        thumbFrame.origin.y = 110;
+        thumbFrame.origin.x = (CGRectGetWidth(self.bounds) - CGRectGetWidth(thumbFrame)) / 2;
+        thumbFrame.origin.y = (CGRectGetHeight(self.bounds) - CGRectGetHeight(thumbFrame)) / 2;
         CGRect pageThumbFrame = CGRectInset(thumbFrame, thumbOffset, thumbOffset);
         
         static dispatch_once_t onceToken;

@@ -49,6 +49,8 @@
         icon = [[MMStackIconView alloc] initWithFrame:thumbFrame andStackUUID:stackUUID andStyle:MMStackIconViewStyleLight];
         [icon loadThumbs];
         [contentView addSubview:icon];
+        
+        icon.center = CGPointMake(CGRectGetMidX(contentView.bounds), CGRectGetMidY(contentView.bounds));
     }
     return self;
 }
