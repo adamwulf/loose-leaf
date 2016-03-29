@@ -12,6 +12,7 @@
 
 @property (nonatomic, readonly) UIView* rotateableSquareView;
 @property (nonatomic, readonly) UIView* maskedScrollContainer;
+@property (nonatomic, readonly) CGFloat boxSize;
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 

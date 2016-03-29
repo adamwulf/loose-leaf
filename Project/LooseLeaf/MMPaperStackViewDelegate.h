@@ -26,4 +26,6 @@
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
 
+-(BOOL) isShowingTutorial;
+
 @end

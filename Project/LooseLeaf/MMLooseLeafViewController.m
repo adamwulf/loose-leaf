@@ -26,8 +26,11 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
 #import "NSArray+Map.h"
+#import "MMTutorialView.h"
+#import "MMTutorialManager.h"
+#import "MMTutorialViewDelegate.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate>
 
 @end
 
@@ -45,6 +48,10 @@
     MMShareSidebarContainerView* sharePageSidebar;
 
     NSMutableDictionary* stackViewsByUUID;
+    
+    // tutorials
+    MMTutorialView* tutorialView;
+    UIView* backdrop;
 }
 
 - (id)init{
@@ -54,6 +61,8 @@
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
                                                    object:[MMPageCacheManager sharedInstance]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
 
         stackViewsByUUID = [NSMutableDictionary dictionary];
 
@@ -287,6 +296,10 @@
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
+}
+
+-(BOOL) isShowingTutorial{
+    return tutorialView != nil || tutorialView.alpha;
 }
 
 #pragma mark - MMStackControllerViewDelegate
@@ -527,6 +540,61 @@
 
     [currentStackView didShare:shareItem toUser:userId fromButton:button];
 }
+
+#pragma mark - Tutorial Notifications
+
+-(void) tutorialShouldOpen:(NSNotification*)note{
+    if([self isShowingTutorial]){
+        // tutorial is already showing, just return
+        return;
+    }
+    
+    NSArray* tutorials = [note.userInfo objectForKey:@"tutorialList"];
+    backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
+    backdrop.backgroundColor = [UIColor whiteColor];
+    backdrop.alpha = 0;
+    [self.view addSubview:backdrop];
+    
+    tutorialView = [[MMTutorialView alloc] initWithFrame:self.view.bounds andTutorials:tutorials];
+    tutorialView.delegate = self;
+    tutorialView.alpha = 0;
+    [self.view addSubview:tutorialView];
+    
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 1;
+        tutorialView.alpha = 1;
+    }];
+}
+
+-(void) tutorialShouldClose:(NSNotification*)note{
+    if(![self isShowingTutorial]){
+        // tutorial is already hidden, just return
+        return;
+    }
+    
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 0;
+        tutorialView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [backdrop removeFromSuperview];
+        backdrop = nil;
+        [tutorialView unloadTutorials];
+        [tutorialView removeFromSuperview];
+        tutorialView = nil;
+    }];
+}
+
+
+#pragma mark - MMTutorialViewDelegate
+
+-(void) userIsViewingTutorialStep:(NSInteger)stepNum{
+    NSLog(@"user is watching %d", (int) stepNum);
+}
+
+-(void) didFinishTutorial{
+    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
+}
+
 
 
 @end

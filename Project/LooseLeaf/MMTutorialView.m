@@ -51,13 +51,9 @@
         
         tutorialList = _tutorialList;
         
-        // 10% buffer
-        CGFloat boxSize = 600;
-        CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
-
         //
         // scrollview
-        scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, boxSize, boxSize)];
+        scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.boxSize, self.boxSize)];
         scrollView.delaysContentTouches = NO;
         scrollView.delegate = self;
         scrollView.pagingEnabled = YES;
@@ -71,14 +67,14 @@
         
         [self.maskedScrollContainer addSubview:scrollView];
         
-        separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, boxSize)];
+        separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, self.boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
         [self.maskedScrollContainer addSubview:separator];
 
         CGFloat buttonWidth = 160;
         CGFloat buttonHeight = 70;
         CGFloat adjust = .35;
-        nextButton = [[UIButton alloc] initWithFrame:CGRectMake(boxSize-buttonWidth, boxSize-buttonHeight, buttonWidth, buttonHeight*(1+adjust))];
+        nextButton = [[UIButton alloc] initWithFrame:CGRectMake(self.boxSize-buttonWidth, self.boxSize-buttonHeight, buttonWidth, buttonHeight*(1+adjust))];
         nextButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, adjust*buttonHeight, 0);
         nextButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
         nextButton.adjustsImageWhenHighlighted = NO;
@@ -90,7 +86,7 @@
         nextButtonMask.fillColor = [UIColor whiteColor].CGColor;
         nextButtonMask.path = [UIBezierPath bezierPathWithRoundedRect:nextButton.bounds
                                                     byRoundingCorners:UIRectCornerTopLeft
-                                                          cornerRadii:CGSizeMake(boxSize/10, boxSize/10)].CGPath;
+                                                          cornerRadii:CGSizeMake(self.boxSize/10, self.boxSize/10)].CGPath;
         nextButton.layer.mask = nextButtonMask;
         
         [self.maskedScrollContainer addSubview:nextButton];

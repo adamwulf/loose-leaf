@@ -7,8 +7,7 @@
 //
 
 #import "MMScrapPaperStackView.h"
-#import "MMTutorialViewDelegate.h"
 
-@interface MMTutorialStackView : MMScrapPaperStackView<MMTutorialViewDelegate>
+@interface MMTutorialStackView : MMScrapPaperStackView
 
 @end
