@@ -66,6 +66,10 @@
             NSArray* visiblePagesToWrite = [visiblePages mapObjectsUsingSelector:@selector(dictionaryDescription)];
             NSArray* hiddenPagesToWrite = [hiddenPages mapObjectsUsingSelector:@selector(dictionaryDescription)];
             
+            NSArray* allPagesToWrite = [visiblePagesToWrite arrayByAddingObjectsFromArray:[hiddenPagesToWrite reversedArray]];
+            
+            [[MMAllStacksManager sharedInstance] updateCachedPages:allPagesToWrite forStackUUID:uuid];
+
             [visiblePagesToWrite writeToFile:[self visiblePlistPath] atomically:YES];
             [hiddenPagesToWrite writeToFile:[self hiddenPlistPath] atomically:YES];
         }]];
@@ -78,6 +82,10 @@
 
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds{
     NSDictionary* plist = [MMSingleStackManager loadFromDiskForStackUUID:self.uuid];
+    
+    NSArray* allPagesToWrite = [plist[@"visiblePages"] arrayByAddingObjectsFromArray:[plist[@"hiddenPages"] reversedArray]];
+    [[MMAllStacksManager sharedInstance] updateCachedPages:allPagesToWrite forStackUUID:uuid];
+
     
     //    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
     
@@ -130,8 +138,8 @@
 }
 
 +(NSDictionary*) loadFromDiskForStackUUID:(NSString*)stackUUID{
-    NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self visiblePlistPathForStackUUID:stackUUID]];
-    NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[self hiddenPlistPathForStackUUID:stackUUID]];
+    NSArray* visiblePagesToCreate = [[NSArray alloc] initWithContentsOfFile:[MMSingleStackManager visiblePlistPathForStackUUID:stackUUID]];
+    NSArray* hiddenPagesToCreate = [[NSArray alloc] initWithContentsOfFile:[MMSingleStackManager hiddenPlistPathForStackUUID:stackUUID]];
 
     return [NSDictionary dictionaryWithObjectsAndKeys:visiblePagesToCreate, @"visiblePages",
             hiddenPagesToCreate, @"hiddenPages", nil];

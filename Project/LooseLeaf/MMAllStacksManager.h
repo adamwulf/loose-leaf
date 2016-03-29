@@ -22,4 +22,8 @@
 
 -(NSString*) nameOfStack:(NSString*)stackUUID;
 
+-(NSArray*) cachedPagesForStack:(NSString*)stackUUID;
+
+-(void) updateCachedPages:(NSArray*)allPages forStackUUID:(NSString*)stackUUID;
+
 @end

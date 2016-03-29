@@ -127,21 +127,25 @@ static UIImage* missingThumb;
         [nameButton addTarget:self action:@selector(didTapNameForStack:) forControlEvents:UIControlEventTouchUpInside];
 
         NSString* stackName = [[MMAllStacksManager sharedInstance] nameOfStack:stackUUID];
-        if(stackName){
+        if([stackName length]){
             [nameButton setTitle:stackName forState:UIControlStateNormal];
             [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         }else{
             [nameButton setTitle:@"No Name" forState:UIControlStateNormal];
             [nameButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         }
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:@"StackCachedPagesDidUpdateNotification" object:nil];
     }
     return self;
 }
 
--(void) loadThumb{
-    NSDictionary* stackPageIDs = [MMSingleStackManager loadFromDiskForStackUUID:stackUUID];
+-(void) refresh{
+    [self loadThumb];
+}
 
-    NSArray* allPages = [stackPageIDs[@"visiblePages"] arrayByAddingObjectsFromArray:[stackPageIDs[@"hiddenPages"] reversedArray]];
+-(void) loadThumb{
+    NSArray* allPages = [[MMAllStacksManager sharedInstance] cachedPagesForStack:stackUUID];
     
     NSString* page1UUID = [allPages firstObject][@"uuid"];
     if([self loadThumb:page1UUID intoImageView:page1Thumbnail]){
