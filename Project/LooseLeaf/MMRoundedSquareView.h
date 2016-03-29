@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMRoundedSquareViewDelegate.h"
 
 @interface MMRoundedSquareView : UIView
 
 @property (nonatomic, readonly) UIView* rotateableSquareView;
 @property (nonatomic, readonly) UIView* maskedScrollContainer;
 @property (nonatomic, readonly) CGFloat boxSize;
+@property (nonatomic, weak) NSObject<MMRoundedSquareViewDelegate>* delegate;
+
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 

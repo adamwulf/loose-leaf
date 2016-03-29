@@ -431,6 +431,10 @@
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
 		C5060FB21CAA0A0C00B9721C /* MMRoundedSquareView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */; };
 		C5060FB51CAA147000B9721C /* MMStackPropertiesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */; };
+		C5060FB61CAA170400B9721C /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
+		C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
+		C5060FB81CAA170400B9721C /* bottom-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE881C2676F900FFB640 /* bottom-buttons.png */; };
+		C5060FB91CAA170400B9721C /* bottom-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */; };
 		C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C506A3921C23DAD800236895 /* TwitterCore.framework */; };
 		C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B71C23DE3200236895 /* SSKeychain.m */; };
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
@@ -453,10 +457,6 @@
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
-		C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
-		C5F4BE851C2676D700FFB640 /* bottom-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */; };
-		C5F4BE871C2676F400FFB640 /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
-		C5F4BE891C2676F900FFB640 /* bottom-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE881C2676F900FFB640 /* bottom-buttons.png */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1319,6 +1319,7 @@
 		C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedSquareView.m; sourceTree = "<group>"; };
 		C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackPropertiesView.h; sourceTree = "<group>"; };
 		C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackPropertiesView.m; sourceTree = "<group>"; };
+		C5060FBA1CAA197600B9721C /* MMRoundedSquareViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedSquareViewDelegate.h; sourceTree = "<group>"; };
 		C506A3921C23DAD800236895 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterCore.framework; path = ../Frameworks/TwitterCore.framework; sourceTree = "<group>"; };
 		C506A39B1C23DD6100236895 /* SSKeychain.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SSKeychain.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/SSKeychain.framework"; sourceTree = "<group>"; };
 		C506A3B61C23DE3200236895 /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychain.h; path = ../../Submodules/sskeychain/SSKeychain/SSKeychain.h; sourceTree = "<group>"; };
@@ -3261,6 +3262,7 @@
 			children = (
 				C5060FB01CAA0A0C00B9721C /* MMRoundedSquareView.h */,
 				C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */,
+				C5060FBA1CAA197600B9721C /* MMRoundedSquareViewDelegate.h */,
 			);
 			name = RoundedSquareView;
 			sourceTree = "<group>";
@@ -3545,16 +3547,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
+				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
+				C5060FB81CAA170400B9721C /* bottom-buttons.png in Resources */,
+				C5060FB91CAA170400B9721C /* bottom-buttons@2x.png in Resources */,
 				66343C631AC0755D00801962 /* Lato-Bold.ttf in Resources */,
 				66343C641AC0755F00801962 /* Lato-Semibold.ttf in Resources */,
 				6650DD1418F4843D00ADF591 /* photoalbum.png in Resources */,
 				6650DD2518F491B700ADF591 /* evernote.png in Resources */,
-				C5F4BE851C2676D700FFB640 /* bottom-buttons@2x.png in Resources */,
 				C5FC086E1C23E01B00C88675 /* test_variant.json in Resources */,
 				665245311996D1E800C36609 /* imgur.png in Resources */,
 				665245251995936500C36609 /* tencentWeibo.png in Resources */,
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
-				C5F4BE871C2676F400FFB640 /* top-buttons.png in Resources */,
 				665245231995936000C36609 /* tencentWeibo@2x.png in Resources */,
 				6652456E1996E69D00C36609 /* link@2x.png in Resources */,
 				66437C57199FE0F2003389F0 /* airsharing.png in Resources */,
@@ -3584,7 +3588,6 @@
 				66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
 				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
-				C5F4BE831C2676CF00FFB640 /* top-buttons@2x.png in Resources */,
 				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */,
@@ -3597,7 +3600,6 @@
 				663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */,
-				C5F4BE891C2676F900FFB640 /* bottom-buttons.png in Resources */,
 				6634856619DB41F000B5CF2D /* TemplateIcon2x.png in Resources */,
 				660FA2961A7C5B6F00BA0ECE /* TwitterKitResources.bundle in Resources */,
 				66684B4A182DAEBC005A27B4 /* UIImageRoundedCorner.license in Resources */,

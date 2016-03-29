@@ -30,8 +30,9 @@
 #import "MMTutorialManager.h"
 #import "MMTutorialViewDelegate.h"
 #import "MMStackPropertiesView.h"
+#import "MMRoundedSquareViewDelegate.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
 @end
 
@@ -319,6 +320,7 @@
     
     stackPropertiesView = [[MMStackPropertiesView alloc] initWithFrame:self.view.bounds andStackUUID:stackUUID];
     stackPropertiesView.alpha = 0;
+    stackPropertiesView.delegate = self;
     [self.view addSubview:stackPropertiesView];
     
     [UIView animateWithDuration:.3 animations:^{
@@ -618,6 +620,20 @@
     [[MMTutorialManager sharedInstance] finishWatchingTutorial];
 }
 
+#pragma mark - MMRoundedSquareViewDelegate
 
+-(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView *)squareView{
+    if(squareView == stackPropertiesView){
+        [UIView animateWithDuration:.3 animations:^{
+            backdrop.alpha = 0;
+            stackPropertiesView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [backdrop removeFromSuperview];
+            backdrop = nil;
+            [stackPropertiesView removeFromSuperview];
+            stackPropertiesView = nil;
+        }];
+    }
+}
 
 @end

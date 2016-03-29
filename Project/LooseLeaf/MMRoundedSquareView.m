@@ -107,7 +107,7 @@
 #pragma mark - Actions
 
 -(void) tapToClose{
-    // noop
+    [self.delegate didTapToCloseRoundedSquareView:self];
 }
 
 
