@@ -30,7 +30,6 @@
 
 @implementation MMTutorialView{
     
-    UIView* rotateableTutorialSquare;
     NSMutableArray* tutorialButtons;
     
     UIView* fadedBackground;
@@ -55,41 +54,9 @@
         // 10% buffer
         CGFloat boxSize = 600;
         CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
-        
-        //
-        // faded background
-        
-        fadedBackground = [[UIView alloc] initWithFrame:self.bounds];
-        fadedBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
-        
-        UIButton* backgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        backgroundButton.bounds = fadedBackground.bounds;
-        [backgroundButton addTarget:self action:@selector(tapToClose) forControlEvents:UIControlEventTouchUpInside];
-        [fadedBackground addSubview:backgroundButton];
-        backgroundButton.center = fadedBackground.center;
-        
-        [self addSubview:fadedBackground];
-        
-        
-        CGFloat widthOfRotateableContainer = boxSize + 2 * buttonBuffer;
-        rotateableTutorialSquare = [[MMUntouchableTutorialView alloc] initWithFrame:CGRectMake((self.bounds.size.width - widthOfRotateableContainer) / 2,
-                                                                            (self.bounds.size.height - widthOfRotateableContainer) / 2,
-                                                                            widthOfRotateableContainer,
-                                                                            widthOfRotateableContainer)];
-        [self addSubview:rotateableTutorialSquare];
-        
-        
+
         //
         // scrollview
-        CGPoint boxOrigin = CGPointMake(buttonBuffer, buttonBuffer);
-        UIView* maskedScrollContainer = [[UIView alloc] initWithFrame:CGRectMake(boxOrigin.x, boxOrigin.y, boxSize, boxSize)];
-        
-        CAShapeLayer* scrollMaskLayer = [CAShapeLayer layer];
-        scrollMaskLayer.backgroundColor = [UIColor clearColor].CGColor;
-        scrollMaskLayer.fillColor = [UIColor whiteColor].CGColor;
-        scrollMaskLayer.path = [self roundedRectPathForBoxSize:boxSize withOrigin:CGPointZero].CGPath;
-        maskedScrollContainer.layer.mask = scrollMaskLayer;
-
         scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, boxSize, boxSize)];
         scrollView.delaysContentTouches = NO;
         scrollView.delegate = self;
@@ -102,12 +69,11 @@
         UITapGestureRecognizer* tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tutorialViewWasTapped:)];
         [scrollView addGestureRecognizer:tapGesture];
         
-        [maskedScrollContainer addSubview:scrollView];
-        [rotateableTutorialSquare addSubview:maskedScrollContainer];
+        [self.maskedScrollContainer addSubview:scrollView];
         
         separator = [[UIView alloc] initWithFrame:CGRectMake(-1, 0, 1, boxSize)];
         separator.backgroundColor = [UIColor lightGrayColor];
-        [maskedScrollContainer addSubview:separator];
+        [self.maskedScrollContainer addSubview:separator];
 
         CGFloat buttonWidth = 160;
         CGFloat buttonHeight = 70;
@@ -127,9 +93,9 @@
                                                           cornerRadii:CGSizeMake(boxSize/10, boxSize/10)].CGPath;
         nextButton.layer.mask = nextButtonMask;
         
-        [maskedScrollContainer addSubview:nextButton];
+        [self.maskedScrollContainer addSubview:nextButton];
         
-        rotateableTutorialSquare.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
+        self.rotateableSquareView.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
 
         [self loadTutorials];
         
@@ -356,13 +322,13 @@
     
     [firstTutorialView startAnimating];
     
-    CGFloat widthForButtonCenters = rotateableTutorialSquare.bounds.size.width;
+    CGFloat widthForButtonCenters = self.rotateableSquareView.bounds.size.width;
     CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
     widthForButtonCenters = widthForButtonCenters - 2 * buttonBuffer;
     widthForButtonCenters = widthForButtonCenters - kWidthOfSidebarButton;
     widthForButtonCenters -= 100;
     CGFloat stepForEachButton = widthForButtonCenters / numberOfTutorialButtons;
-    CGFloat startX = (rotateableTutorialSquare.bounds.size.width - widthForButtonCenters) / 2;
+    CGFloat startX = (self.rotateableSquareView.bounds.size.width - widthForButtonCenters) / 2;
     
     tutorialButtons = [NSMutableArray array];
     __block NSInteger buttonIndex = 0;
@@ -383,7 +349,7 @@
             [button addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
             
             [tutorialButtons addObject:button];
-            [rotateableTutorialSquare addSubview:button];
+            [self.rotateableSquareView addSubview:button];
             buttonIndex += 1;
         }
     }];
@@ -393,7 +359,7 @@
     checkButton.center = center;
     checkButton.tag = NSIntegerMax;
     [tutorialButtons addObject:checkButton];
-    [rotateableTutorialSquare addSubview:checkButton];
+    [self.rotateableSquareView addSubview:checkButton];
     [checkButton addTarget:self action:@selector(didTapToChangeToTutorial:) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -422,12 +388,8 @@
 
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    [super didRotateToIdealOrientation:orientation];
     dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            [UIView animateWithDuration:.2 animations:^{
-                rotateableTutorialSquare.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
-            }];
-        }
         [newsletterSignupForm didRotateToIdealOrientation:orientation];
     });
 }

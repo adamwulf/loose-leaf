@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MMTutorialViewDelegate.h"
+#import "MMRoundedSquareView.h"
 
-@interface MMTutorialView : UIView<UIScrollViewDelegate>
+@interface MMTutorialView : MMRoundedSquareView<UIScrollViewDelegate>
 
 @property (nonatomic, weak) NSObject<MMTutorialViewDelegate>* delegate;
 
 -(id) initWithFrame:(CGRect)frame andTutorials:(NSArray*)tutorialList;
-
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
 -(void) unloadTutorials;
 
