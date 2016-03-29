@@ -18,8 +18,8 @@
 #import "UIView+Animations.h"
 #import "Mixpanel.h"
 #import "MMEditablePaperViewSubclass.h"
-#import "MMStackManager.h"
-#import "MMStacksManager.h"
+#import "MMSingleStackManager.h"
+#import "MMAllStacksManager.h"
 
 dispatch_queue_t importThumbnailQueue;
 
@@ -528,7 +528,7 @@ static int count = 0;
 
 -(NSString*) pagesPath{
     if(!pagesPath){
-        NSString* documentsPath = [[MMStacksManager sharedInstance] stackDirectoryPathForUUID:self.delegate.stackManager.uuid];
+        NSString* documentsPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.delegate.stackManager.uuid];
         pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
         [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
     }

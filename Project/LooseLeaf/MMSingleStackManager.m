@@ -1,12 +1,12 @@
 //
-//  MMStackManager.m
+//  MMSingleStackManager.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 6/4/13.
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMStackManager.h"
+#import "MMSingleStackManager.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
 #import "MMBlockOperation.h"
@@ -15,9 +15,9 @@
 #import "NSString+UUID.h"
 #import "NSArray+Extras.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMStacksManager.h"
+#import "MMAllStacksManager.h"
 
-@implementation MMStackManager
+@implementation MMSingleStackManager
 
 @synthesize uuid;
 
@@ -35,11 +35,11 @@
 }
 
 -(NSString*) visiblePlistPath{
-    return [MMStackManager visiblePlistPathForStackUUID:self.uuid];
+    return [MMSingleStackManager visiblePlistPathForStackUUID:self.uuid];
 }
 
 -(NSString*) hiddenPlistPath{
-    return [MMStackManager hiddenPlistPathForStackUUID:self.uuid];
+    return [MMSingleStackManager hiddenPlistPathForStackUUID:self.uuid];
 }
 
 -(void) saveStacksToDisk{
@@ -77,7 +77,7 @@
 }
 
 -(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds{
-    NSDictionary* plist = [MMStackManager loadFromDiskForStackUUID:self.uuid];
+    NSDictionary* plist = [MMSingleStackManager loadFromDiskForStackUUID:self.uuid];
     
     //    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
     
@@ -122,11 +122,11 @@
 #pragma mark - Class methods
 
 +(NSString*) visiblePlistPathForStackUUID:(NSString*)stackUUID{
-    return [[[[MMStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+    return [[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
 }
 
 +(NSString*) hiddenPlistPathForStackUUID:(NSString*)stackUUID{
-    return [[[[MMStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+    return [[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
 }
 
 +(NSDictionary*) loadFromDiskForStackUUID:(NSString*)stackUUID{

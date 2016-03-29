@@ -1,5 +1,5 @@
 //
-//  MMStacksManager.h
+//  MMAllStacksManager.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 3/6/16.
@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MMStacksManager : NSObject
+@interface MMAllStacksManager : NSObject
 
-+(MMStacksManager*) sharedInstance;
++(MMAllStacksManager*) sharedInstance;
 
 -(NSString*) stackDirectoryPathForUUID:(NSString*)uuid;
 
@@ -19,5 +19,7 @@
 -(void) deleteStack:(NSString*)stackUUID;
 
 -(NSArray*)stackIDs;
+
+-(NSString*) nameOfStack:(NSString*)stackUUID;
 
 @end

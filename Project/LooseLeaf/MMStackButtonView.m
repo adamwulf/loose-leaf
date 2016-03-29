@@ -7,8 +7,8 @@
 //
 
 #import "MMStackButtonView.h"
-#import "MMStackManager.h"
-#import "MMStacksManager.h"
+#import "MMSingleStackManager.h"
+#import "MMAllStacksManager.h"
 #import "MMTextButton.h"
 #import "NSArray+Extras.h"
 #import <JotUI/UIImage+Alpha.h>
@@ -124,22 +124,22 @@ static UIImage* missingThumb;
         nameButton.titleLabel.numberOfLines = 2;
         nameButton.titleLabel.adjustsFontSizeToFitWidth = YES;
         nameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
-        [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         [nameButton addTarget:self action:@selector(didTapNameForStack:) forControlEvents:UIControlEventTouchUpInside];
 
-        if(rand() % 3 == 0){
-            [nameButton setTitle:@"John's Notes" forState:UIControlStateNormal];
-        }else if(rand() % 2 == 0){
-            [nameButton setTitle:@"Board Meeting longer title." forState:UIControlStateNormal];
+        NSString* stackName = [[MMAllStacksManager sharedInstance] nameOfStack:stackUUID];
+        if(stackName){
+            [nameButton setTitle:stackName forState:UIControlStateNormal];
+            [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
         }else{
-            [nameButton setTitle:@"This is a super long title for the button that will be too long. No really its super long title." forState:UIControlStateNormal];
+            [nameButton setTitle:@"No Name" forState:UIControlStateNormal];
+            [nameButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         }
     }
     return self;
 }
 
 -(void) loadThumb{
-    NSDictionary* stackPageIDs = [MMStackManager loadFromDiskForStackUUID:stackUUID];
+    NSDictionary* stackPageIDs = [MMSingleStackManager loadFromDiskForStackUUID:stackUUID];
 
     NSArray* allPages = [stackPageIDs[@"visiblePages"] arrayByAddingObjectsFromArray:[stackPageIDs[@"hiddenPages"] reversedArray]];
     
@@ -166,7 +166,7 @@ static UIImage* missingThumb;
 }
 
 -(BOOL) loadThumb:(NSString*)pageUUID intoImageView:(UIImageView*)imgView{
-    NSString* stackPath = [[MMStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
+    NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
     NSString* pagePath = [[stackPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
     NSString* thumbPath = [pagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
     

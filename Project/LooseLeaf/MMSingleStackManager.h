@@ -1,5 +1,5 @@
 //
-//  MMStackManager.h
+//  MMSingleStackManager.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 6/4/13.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMPaperStackView.h"
 
-@interface MMStackManager : NSObject{
+@interface MMSingleStackManager : NSObject{
     UIView* visibleStack;
     UIView* bezelStack;
     UIView* hiddenStack;

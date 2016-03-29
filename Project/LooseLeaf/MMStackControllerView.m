@@ -7,7 +7,7 @@
 //
 
 #import "MMStackControllerView.h"
-#import "MMStacksManager.h"
+#import "MMAllStacksManager.h"
 #import "MMStackButtonView.h"
 #import "MMTextButton.h"
 #import "MMPlusButton.h"
@@ -22,15 +22,15 @@
 -(void) reloadStackButtons{
     [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    if(![[[MMStacksManager sharedInstance] stackIDs] count]){
-        [[MMStacksManager sharedInstance] createStack];
+    if(![[[MMAllStacksManager sharedInstance] stackIDs] count]){
+        [[MMAllStacksManager sharedInstance] createStack];
     }
     
     CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
     CGFloat singleStackWidth = CGRectGetWidth(screenBounds) / 4;
     
-    for (int i=0; i<[[[MMStacksManager sharedInstance] stackIDs] count]; i++) {
-        NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:i];
+    for (int i=0; i<[[[MMAllStacksManager sharedInstance] stackIDs] count]; i++) {
+        NSString* stackUUID = [[[MMAllStacksManager sharedInstance] stackIDs] objectAtIndex:i];
         MMStackButtonView* stackButton = [[MMStackButtonView alloc] initWithFrame:CGRectMake(singleStackWidth * i, 0, singleStackWidth, CGRectGetHeight(self.bounds)) andStackUUID:stackUUID];
         
         [stackButton loadThumb];
@@ -39,7 +39,7 @@
         [self addSubview:stackButton];
     }
     
-    NSInteger i = [[[MMStacksManager sharedInstance] stackIDs] count];
+    NSInteger i = [[[MMAllStacksManager sharedInstance] stackIDs] count];
     MMPlusButton* addStackButton = [[MMPlusButton alloc] initWithFrame:CGRectMake(singleStackWidth * i + 90, 40, 60, 60)];
     [addStackButton addTarget:self action:@selector(addStack:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -57,7 +57,7 @@
 }
 
 -(void) deleteStackAction:(UIButton*)sender{
-    NSString* stackUUID = [[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
+    NSString* stackUUID = [[[MMAllStacksManager sharedInstance] stackIDs] objectAtIndex:sender.tag];
     [self.stackDelegate deleteStack:stackUUID];
 }
 

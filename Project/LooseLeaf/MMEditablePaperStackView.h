@@ -28,7 +28,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
-#import "MMStackManager.h"
+#import "MMSingleStackManager.h"
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"

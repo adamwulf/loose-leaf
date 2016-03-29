@@ -7,7 +7,7 @@
 //
 
 #import "MMEditablePaperStackView.h"
-#import "MMStacksManager.h"
+#import "MMAllStacksManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
@@ -41,7 +41,7 @@
     if (self) {
         // Initialization code
         
-        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[[MMStacksManager sharedInstance] stackDirectoryPathForUUID:self.stackManager.uuid] stringByAppendingPathComponent:@"Pages"]];
+        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.stackManager.uuid] stringByAppendingPathComponent:@"Pages"]];
 
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
         [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];

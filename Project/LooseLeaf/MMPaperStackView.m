@@ -14,7 +14,7 @@
 #import "Mixpanel.h"
 #import "MMExportablePaperView.h"
 #import "NSMutableSet+Extras.h"
-#import "MMStackManager.h"
+#import "MMSingleStackManager.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -62,7 +62,7 @@
         visibleStackHolder.clipsToBounds = YES;
         bezelStackHolder.clipsToBounds = NO;
         
-        _stackManager = [[MMStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
+        _stackManager = [[MMSingleStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
 
         //
         // icons for moving and panning pages

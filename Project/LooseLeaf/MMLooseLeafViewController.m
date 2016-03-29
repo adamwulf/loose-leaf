@@ -22,7 +22,7 @@
 #import "MMPaperStackViewDelegate.h"
 #import "MMStackControllerView.h"
 #import "MMTextButton.h"
-#import "MMStacksManager.h"
+#import "MMAllStacksManager.h"
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
 #import "NSArray+Map.h"
@@ -159,7 +159,7 @@
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
         // Load the stack
-        [self switchToStack:[[[MMStacksManager sharedInstance] stackIDs] firstObject]];
+        [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
 
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.insertImageButton animateFromLeft:YES];
@@ -331,7 +331,7 @@
 }
 
 -(void) addStack{
-    NSString* stackID = [[MMStacksManager sharedInstance] createStack];
+    NSString* stackID = [[MMAllStacksManager sharedInstance] createStack];
     [self switchToStack:stackID];
     [listOfStacksView reloadStackButtons];
 }
@@ -370,23 +370,23 @@
 }
 
 -(void) deleteStack:(NSString*)stackUUID{
-    NSInteger idx = [[[MMStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
+    NSInteger idx = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
     if(stackViewsByUUID[stackUUID]){
         [stackViewsByUUID[stackUUID] removeFromSuperview];
         [stackViewsByUUID removeObjectForKey:stackUUID];
     }
     
-    [[MMStacksManager sharedInstance] deleteStack:stackUUID];
+    [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
     
     if([currentStackView.uuid isEqualToString:stackUUID]){
-        if(idx >= [[[MMStacksManager sharedInstance] stackIDs] count]){
+        if(idx >= [[[MMAllStacksManager sharedInstance] stackIDs] count]){
             idx -= 1;
         }
         
         if(idx == -1){
             [self addStack];
         }else{
-            [self switchToStack:[[[MMStacksManager sharedInstance] stackIDs] objectAtIndex:idx]];
+            [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] objectAtIndex:idx]];
         }
     }
     [listOfStacksView reloadStackButtons];
