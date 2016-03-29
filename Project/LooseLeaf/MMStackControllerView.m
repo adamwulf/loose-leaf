@@ -33,7 +33,7 @@
         NSString* stackUUID = [[[MMAllStacksManager sharedInstance] stackIDs] objectAtIndex:i];
         MMStackButtonView* stackButton = [[MMStackButtonView alloc] initWithFrame:CGRectMake(singleStackWidth * i, 0, singleStackWidth, CGRectGetHeight(self.bounds)) andStackUUID:stackUUID];
         
-        [stackButton loadThumb];
+        [stackButton refresh];
         [stackButton setDelegate:self];
         
         [self addSubview:stackButton];

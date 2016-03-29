@@ -23,6 +23,7 @@ static UIImage* missingThumb;
     UIImageView* page2Thumbnail;
     UIImageView* page3Thumbnail;
     UIButton* stackButton;
+    UIButton* nameButton;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame andStackUUID:(NSString*)_stackUUID{
@@ -115,7 +116,7 @@ static UIImage* missingThumb;
         [self addSubview:stackButton];
 
         CGRect buttonFrame = CGRectMake(15, CGRectGetMaxY(thumbFrame), CGRectGetWidth(self.bounds) - 30, CGRectGetHeight(self.bounds) - CGRectGetMaxY(thumbFrame) - 15);
-        UIButton* nameButton = [[UIButton alloc] initWithFrame:buttonFrame];
+        nameButton = [[UIButton alloc] initWithFrame:buttonFrame];
         [self addSubview:nameButton];
         [nameButton.titleLabel setFont:[UIFont systemFontOfSize:18]];
         [nameButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -126,21 +127,21 @@ static UIImage* missingThumb;
         nameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
         [nameButton addTarget:self action:@selector(didTapNameForStack:) forControlEvents:UIControlEventTouchUpInside];
 
-        NSString* stackName = [[MMAllStacksManager sharedInstance] nameOfStack:stackUUID];
-        if([stackName length]){
-            [nameButton setTitle:stackName forState:UIControlStateNormal];
-            [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        }else{
-            [nameButton setTitle:@"No Name" forState:UIControlStateNormal];
-            [nameButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        }
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresh) name:@"StackCachedPagesDidUpdateNotification" object:nil];
     }
     return self;
 }
 
 -(void) refresh{
+    NSString* stackName = [[MMAllStacksManager sharedInstance] nameOfStack:stackUUID];
+    if([stackName length]){
+        [nameButton setTitle:stackName forState:UIControlStateNormal];
+        [nameButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+    }else{
+        [nameButton setTitle:@"No Name" forState:UIControlStateNormal];
+        [nameButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    }
+    
     [self loadThumb];
 }
 

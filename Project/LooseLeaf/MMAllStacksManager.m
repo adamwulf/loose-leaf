@@ -130,6 +130,27 @@ static MMAllStacksManager* _instance = nil;
     }];
 }
 
+-(void) updateName:(NSString*)name forStack:(NSString*)stackUUID{
+    [NSThread performBlockOnMainThread:^{
+        __block BOOL didUpdateAnything = NO;
+        stackIDs = [[stackIDs mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            if([obj[@"uuid"] isEqualToString:stackUUID]){
+                if(![obj[@"name"] isEqualToString:name]){
+                    didUpdateAnything = YES;
+                    NSMutableDictionary* mutObj = [obj mutableCopy];
+                    mutObj[@"name"] = name;
+                    return mutObj;
+                }
+            }
+            return obj;
+        }] mutableCopy];
+        if(didUpdateAnything){
+            [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"StackCachedPagesDidUpdateNotification" object:nil userInfo:@{ @"stackUUID" : stackUUID }];
+        }
+    }];
+}
+
 #pragma mark - Upgrade to 2.0.0
 
 -(void) checkForUpgrade{

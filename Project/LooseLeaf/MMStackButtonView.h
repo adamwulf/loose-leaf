@@ -17,6 +17,6 @@
 
 -(instancetype) initWithFrame:(CGRect)frame andStackUUID:(NSString*)stackUUID;
 
--(void) loadThumb;
+-(void) refresh;
 
 @end
