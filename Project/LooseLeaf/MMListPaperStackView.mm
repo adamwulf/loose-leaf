@@ -461,14 +461,18 @@
                 
                 CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:totalTrust];
                 
+                CGFloat frameMovement = MIN(.15, MAX(0, totalTrust - .85));
+                frameMovement *= 5; // frameMovement is now between 0 and 1 during the first 20% of trust
+                frameMovement = 1 - frameMovement; // frameMovement now moves from 0 to 1 instead of 1 to 0
+                
                 if(![self isInVisibleStack:aPage] && !possibleCachedOriginalLocation){
                     //
                     // this helps the hidden pages to show coming in from
                     // the right, but only if their position wasn't saved
                     // frome the bezel location
-                    newFrame.origin.x -= (amountToMoveHiddenFrame + 10) * MAX(0, (1 - totalTrust * totalTrust * totalTrust * totalTrust));
+                    newFrame.origin.x -= (amountToMoveHiddenFrame + 10) * frameMovement;
                 }else if(![self isInVisibleStack:aPage]){
-                    newFrame.origin.x -= (amountToMoveHiddenFrameFromCachedPosition + 10) * MAX(0, (1 - totalTrust * totalTrust * totalTrust * totalTrust));
+                    newFrame.origin.x -= (amountToMoveHiddenFrameFromCachedPosition + 10) * frameMovement;
                 }
                 
                 aPage.frame = newFrame;
