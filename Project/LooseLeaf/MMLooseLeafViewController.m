@@ -151,6 +151,7 @@
         listOfStacksView.alpha = 0;
         listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
         listOfStacksView.stackDelegate = self;
+        listOfStacksView.hidden = YES;
 
         [listOfStacksView reloadStackButtons];
         

@@ -445,7 +445,7 @@
                     // reset the transition delay so that the hidden pages
                     // begin to show at the same time, regardless of how many
                     // visible pages might be showing.
-                    transitionDelay = .06;
+                    transitionDelay = 0;
                 }
                 
                 CGRect oldFrame = hiddenStackHolder.bounds;
@@ -457,17 +457,20 @@
                     oldFrame = [possibleCachedOriginalLocation CGRectValue];
                 }
                 
-                CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
+                CGFloat totalTrust = percentageToTrustToFrame + transitionDelay;
+                
+                CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:totalTrust];
                 
                 if(![self isInVisibleStack:aPage] && !possibleCachedOriginalLocation){
                     //
                     // this helps the hidden pages to show coming in from
                     // the right, but only if their position wasn't saved
                     // frome the bezel location
-                    newFrame.origin.x -= amountToMoveHiddenFrame;
+                    newFrame.origin.x -= (amountToMoveHiddenFrame + 10) * MAX(0, (1 - totalTrust * totalTrust * totalTrust * totalTrust));
                 }else if(![self isInVisibleStack:aPage]){
-                    newFrame.origin.x -= amountToMoveHiddenFrameFromCachedPosition;
+                    newFrame.origin.x -= (amountToMoveHiddenFrameFromCachedPosition + 10) * MAX(0, (1 - totalTrust * totalTrust * totalTrust * totalTrust));
                 }
+                
                 aPage.frame = newFrame;
                 
                 //
@@ -757,6 +760,7 @@
         [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
             CGRect fr = visibleStackHolder.frame;
             fr.origin.x = fr.size.width;
+            fr.origin.x += 10;
             hiddenStackHolder.frame = fr;
             //
             // reset hidden stack pages
@@ -1697,6 +1701,7 @@
         }
         CGRect newHiddenFrame = visibleStackHolder.frame;
         newHiddenFrame.origin.x += screenWidth;
+        newHiddenFrame.origin.x += 10;
         hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
         [self.stackDelegate animatingToPageView];

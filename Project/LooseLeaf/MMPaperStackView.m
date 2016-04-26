@@ -54,7 +54,7 @@
 
         
         CGRect frameOfHiddenStack = hiddenStackHolder.frame;
-        frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
+        frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 10;
         hiddenStackHolder.frame = frameOfHiddenStack;
         bezelStackHolder.frame = frameOfHiddenStack;
         
