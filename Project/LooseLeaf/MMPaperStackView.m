@@ -15,6 +15,9 @@
 #import "MMExportablePaperView.h"
 #import "NSMutableSet+Extras.h"
 #import "MMSingleStackManager.h"
+#import "MMVisibleStackHolderView.h"
+#import "MMHiddenStackHolderView.h"
+#import "MMBezelStackHolderView.h"
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -44,9 +47,12 @@
         uuid = _uuid;
         // Initialization code
         setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
-        visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-        hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-        bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+        // These custom classes exist so that they
+        // are easily discernable in the UI inspector in
+        // the debugger.
+        visibleStackHolder = [[MMVisibleStackHolderView alloc] initWithFrame:self.bounds];
+        hiddenStackHolder = [[MMHiddenStackHolderView alloc] initWithFrame:self.bounds];
+        bezelStackHolder = [[MMBezelStackHolderView alloc] initWithFrame:self.bounds];
         
         visibleStackHolder.tag = 0;
         bezelStackHolder.tag = 1;
@@ -521,9 +527,7 @@
                 [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             }
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
-                if(finished){
-                    bezelStackHolder.frame = hiddenStackHolder.frame;
-                }
+                bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off

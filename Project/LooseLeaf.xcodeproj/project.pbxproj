@@ -450,6 +450,9 @@
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
 		C569DB441C3A50BB00ABFEC8 /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C569DB431C3A50BB00ABFEC8 /* stencil.fsh */; };
+		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
+		C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */; };
+		C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */; };
 		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
 		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
@@ -1350,6 +1353,12 @@
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
+		C569F42F1CD070C400C19BB0 /* MMVisibleStackHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVisibleStackHolderView.h; sourceTree = "<group>"; };
+		C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVisibleStackHolderView.m; sourceTree = "<group>"; };
+		C569F4321CD070CF00C19BB0 /* MMHiddenStackHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHiddenStackHolderView.h; sourceTree = "<group>"; };
+		C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHiddenStackHolderView.m; sourceTree = "<group>"; };
+		C569F4351CD070DE00C19BB0 /* MMBezelStackHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBezelStackHolderView.h; sourceTree = "<group>"; };
+		C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelStackHolderView.m; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
 		C584F8381C37C56800413840 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
 		C584F83B1C37C57000413840 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
@@ -2965,6 +2974,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
+				C569F42E1CD0709800C19BB0 /* Named Stack */,
 				C5860E131C14CA1000CD079B /* Toolbar */,
 				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
 				66B42FBD19955A2C005D8214 /* Share Sidebar */,
@@ -3296,6 +3306,19 @@
 				C51290481CAB13250057363A /* MMStackIconView.m */,
 			);
 			name = StackController;
+			sourceTree = "<group>";
+		};
+		C569F42E1CD0709800C19BB0 /* Named Stack */ = {
+			isa = PBXGroup;
+			children = (
+				C569F42F1CD070C400C19BB0 /* MMVisibleStackHolderView.h */,
+				C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */,
+				C569F4321CD070CF00C19BB0 /* MMHiddenStackHolderView.h */,
+				C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */,
+				C569F4351CD070DE00C19BB0 /* MMBezelStackHolderView.h */,
+				C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */,
+			);
+			name = "Named Stack";
 			sourceTree = "<group>";
 		};
 		C584F8361C37C55A00413840 /* Shaders */ = {
@@ -3783,6 +3806,7 @@
 				664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */,
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,
 				6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */,
+				C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */,
 				C5FC08521C23E01B00C88675 /* MPObjectSelector.m in Sources */,
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
 				6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */,
@@ -3865,6 +3889,7 @@
 				C5FC085C1C23E01B00C88675 /* MPSurveyQuestion.m in Sources */,
 				C5FC084E1C23E01B00C88675 /* MPNotificationViewController.m in Sources */,
 				663523EC19A8401100A26B88 /* MMCloudKitManager.m in Sources */,
+				C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */,
 				66BD6E801593AF4200D4544C /* MMSidebarButton.m in Sources */,
 				66BD6E8E1593D18800D4544C /* MMPolylineButton.m in Sources */,
 				66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */,
@@ -3874,6 +3899,7 @@
 				66BD6E911593DE4E00D4544C /* MMPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66343C6B1AC088D300801962 /* NSString+URLEncode.m in Sources */,
+				C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */,
 				66A7AF2019A53C7900E0AA29 /* MMCloudKitOptionsView.m in Sources */,
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
 				6672EFF119C3AC2B0076009F /* MMCloudErrorIconLayer.m in Sources */,
