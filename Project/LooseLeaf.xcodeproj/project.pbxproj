@@ -40,7 +40,6 @@
 		6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
 		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
-		6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C38AC7175329160035B872 /* JotTouchSDK.framework */; };
 		661708E61981B434006A73EF /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708E51981B434006A73EF /* FXBlurView.m */; };
 		661708EE19841988006A73EF /* MMTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708ED19841988006A73EF /* MMTrashManager.m */; };
 		661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D018F9ABD70016A333 /* MMFlipCameraButton.m */; };
@@ -1172,7 +1171,6 @@
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
 		66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAdonitButton.h; sourceTree = "<group>"; };
 		66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAdonitButton.m; sourceTree = "<group>"; };
-		66C38AC7175329160035B872 /* JotTouchSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotTouchSDK.framework; path = ../Submodules/JotUI/JotTouchSDK/JotTouchSDK.framework; sourceTree = "<group>"; };
 		66C3CBDF1A29046200D7EE42 /* MMRulerAdjustment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRulerAdjustment.h; sourceTree = "<group>"; };
 		66C3CBE01A29046200D7EE42 /* MMRulerAdjustment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerAdjustment.m; sourceTree = "<group>"; };
 		66C4734D19CB999000505BC0 /* MMAssetListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAssetListLayout.h; sourceTree = "<group>"; };
@@ -1515,7 +1513,6 @@
 				66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */,
 				6682FEF41A8DB41700187325 /* SimpleCloudKitManager.framework in Frameworks */,
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
-				6616CCD218B6AEB100CAD0F3 /* JotTouchSDK.framework in Frameworks */,
 				C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */,
 				6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */,
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
@@ -2496,7 +2493,6 @@
 		6695B6E41750086D0069E61F /* JotTouchSDK */ = {
 			isa = PBXGroup;
 			children = (
-				66C38AC7175329160035B872 /* JotTouchSDK.framework */,
 				6695B6E71750088D0069E61F /* AudioToolbox.framework */,
 				6695B6E5175008840069E61F /* CoreBluetooth.framework */,
 			);
@@ -4264,7 +4260,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
 					"$(SRCROOT)/../Submodules/MMStretchGestureRecognizers/**",
 					"$(SRCROOT)/../Project",
 					"$(SRCROOT)/../Frameworks/**",
@@ -4299,7 +4294,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(SRCROOT)/../Submodules/JotUI/JotTouchSDK",
 					"$(SRCROOT)/../Submodules/MMStretchGestureRecognizers/**",
 					"$(SRCROOT)/../Project",
 					"$(SRCROOT)/../Frameworks/**",
