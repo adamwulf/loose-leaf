@@ -515,15 +515,6 @@ static int count = 0;
     return croppedElements;
 }
 
-
--(void) jotSuggestsToDisableGestures{
-    DebugLog(@"disable gestures!");
-}
-
--(void) jotSuggestsToEnableGestures{
-    DebugLog(@"enable gestures!");
-}
-
 #pragma mark - File Paths
 
 -(NSString*) pagesPath{

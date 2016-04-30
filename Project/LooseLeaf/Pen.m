@@ -47,9 +47,6 @@
 }
 
 -(BOOL) shouldUseVelocity{
-    if([[JotStylusManager sharedInstance] enabled] && [[JotStylusManager sharedInstance] isStylusConnected]){
-        return NO;
-    }
     return YES;
 }
 

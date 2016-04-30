@@ -44,7 +44,6 @@
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.stackManager.uuid] stringByAppendingPathComponent:@"Pages"]];
 
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         highlighter = [[Highlighter alloc] init];
 
@@ -74,11 +73,6 @@
         shareButton.delegate = self;
         [self.toolbar addButton:shareButton extendFrame:NO];
 
-//        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        settingsButton.delegate = self;
-//        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.toolbar addButton:settingsButton extendFrame:NO];
-        
         // memory button
         CGRect settingsButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 2 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
         settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
@@ -156,17 +150,6 @@
 
         pencilTool.selected = YES;
         handButton.selected = YES;
-        
-        [NSThread performBlockInBackground:^{
-            @autoreleasepool {
-                [[NSNotificationCenter defaultCenter] addObserver: self
-                                                         selector:@selector(connectionChange:)
-                                                             name:JotStylusManagerDidChangeConnectionStatus
-                                                           object:nil];
-                [[JotStylusManager sharedInstance] setRejectMode:NO];
-            }
-        }];
-        
         
         rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
@@ -343,18 +326,6 @@
     [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
-}
-
--(void) jotSettingsTapped:(UIButton*)_button{
-//    if(jotTouchPopover && jotTouchPopover.popoverVisible){
-//        return;
-//    }else if(jotTouchPopover){
-//        [jotTouchPopover dismissPopoverAnimated:NO];
-//    }
-//    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
-//    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
-//    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-//    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
 }
 
 
@@ -911,42 +882,6 @@
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page cancelScissorAtPoint:adjustedPoint];
 }
-
-
-#pragma mark - JotStylusManager Connection Notification
-
--(void)connectionChange:(NSNotification *) note{
-//    NSString *text;
-    switch([[JotStylusManager sharedInstance] connectionStatus])
-    {
-        case JotConnectionStatusOff:
-//            text = @"Off";
-            settingsButton.selected = NO;
-            break;
-        case JotConnectionStatusScanning:
-//            text = @"Scanning";
-            settingsButton.selected = NO;
-            break;
-        case JotConnectionStatusPairing:
-//            text = @"Pairing";
-            settingsButton.selected = NO;
-            break;
-        case JotConnectionStatusConnected:
-//            text = @"Connected";
-            settingsButton.selected = YES;
-            break;
-        case JotConnectionStatusDisconnected:
-//            text = @"Disconnected";
-            settingsButton.selected = NO;
-            break;
-        default:
-//            text = @"";
-            settingsButton.selected = NO;
-            break;
-    }
-//    DebugLog(@"jot status: %@", text);
-}
-
 
 
 #pragma mark - UIScrollViewDelegate
