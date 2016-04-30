@@ -1898,27 +1898,27 @@
 }
 
 #pragma mark - JotViewDelegate
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
+-(void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
+-(void) didEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
@@ -1934,15 +1934,15 @@
     @throw kAbstractMethodException;
 }
 
--(UIColor*) colorForTouch:(JotTouch *)touch{
+-(UIColor*) colorForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(CGFloat) widthForTouch:(JotTouch*)touch{
+-(CGFloat) widthForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 

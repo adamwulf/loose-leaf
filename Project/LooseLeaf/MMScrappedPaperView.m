@@ -387,14 +387,14 @@
 
 #pragma mark - JotViewDelegate
 
--(void) didEndStrokeWithTouch:(JotTouch *)touch{
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     for(MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]){
         [scrap addUndoLevelAndFinishStroke];
     }
-    [super didEndStrokeWithTouch:touch];
+    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch *)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // when a stroke ends, our drawableview has its undo-state
     // set by removing its current stroke. to match, we need to
     // end all the strokes of our scraps, and then undo them, to
@@ -407,7 +407,7 @@
         [scrap addUndoLevelAndFinishStroke];
         [scrap.state.drawableView undoAndForget];
     }
-    [super didCancelStroke:stroke withTouch:touch];
+    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 

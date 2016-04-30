@@ -20,8 +20,8 @@
  * that a new touch is about to be processed. we should
  * reset all of our counters/etc to base values
  */
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
-    [super willBeginStrokeWithTouch:touch];
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [super willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     velocity = 0;
     return YES;
 }
@@ -33,7 +33,7 @@
  * we'll use pressure data to determine width if we can, otherwise
  * we'll fall back to use velocity data
  */
--(CGFloat) widthForTouch:(JotTouch*)touch{
+-(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     if(self.shouldUseVelocity){
         //
         // velocity is reversed from the pen, this eraser
@@ -48,13 +48,13 @@
         //
         //
         // for pressure width:
-        CGFloat newWidth = minSize + (maxSize-minSize) * touch.pressure / JOT_MAX_PRESSURE;
-        return newWidth;
+        CGFloat newWidth = minSize + (maxSize-minSize) * coalescedTouch.force;
+        return MAX(minSize, MIN(maxSize, newWidth));
     }
 }
 
 
--(UIColor*) colorForTouch:(JotTouch*)touch{
+-(UIColor*) colorForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     return nil; // nil means erase
 }
 

@@ -401,35 +401,35 @@ static int count = 0;
 
 #pragma mark - JotViewDelegate
 
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     if(panGesture.state == UIGestureRecognizerStateBegan ||
        panGesture.state == UIGestureRecognizerStateChanged){
-        if([panGesture containsTouch:touch.touch]){
+        if([panGesture containsTouch:touch]){
             return NO;
         }
     }
-    return [delegate willBeginStrokeWithTouch:touch];
+    return [delegate willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    [delegate willMoveStrokeWithTouch:touch];
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
-    [delegate willEndStrokeWithTouch:touch];
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    [delegate didEndStrokeWithTouch:touch];
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     [self saveToDisk:nil];
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [delegate willCancelStroke:stroke withTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [delegate didCancelStroke:stroke withTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:coalescedTouch fromTouch:touch{
+    [delegate didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 -(JotBrushTexture*)textureForStroke{
@@ -444,21 +444,21 @@ static int count = 0;
     return [delegate supportsRotation];
 }
 
--(UIColor*) colorForTouch:(JotTouch *)touch{
-    return [delegate colorForTouch:touch];
+-(UIColor*) colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [delegate colorForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(CGFloat) widthForTouch:(JotTouch*)touch{
+-(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     //
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [delegate widthForTouch:touch] / self.scale;
+    return [delegate widthForCoalescedTouch:coalescedTouch fromTouch:touch] / self.scale;
 }
 
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
-    return [delegate smoothnessForTouch:touch];
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [delegate smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 -(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{

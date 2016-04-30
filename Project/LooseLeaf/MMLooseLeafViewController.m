@@ -31,6 +31,7 @@
 #import "MMTutorialViewDelegate.h"
 #import "MMStackPropertiesView.h"
 #import "MMRoundedSquareViewDelegate.h"
+#import "MMPalmGestureRecognizer.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
@@ -181,6 +182,7 @@
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
+        [self.view addGestureRecognizer:[MMPalmGestureRecognizer sharedInstance]];
 
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];

@@ -453,6 +453,7 @@
 		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
 		C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */; };
 		C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */; };
+		C570B5251CD4564100FAB432 /* MMPalmGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */; };
 		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
 		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
@@ -1359,6 +1360,8 @@
 		C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHiddenStackHolderView.m; sourceTree = "<group>"; };
 		C569F4351CD070DE00C19BB0 /* MMBezelStackHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBezelStackHolderView.h; sourceTree = "<group>"; };
 		C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelStackHolderView.m; sourceTree = "<group>"; };
+		C570B5231CD4564100FAB432 /* MMPalmGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPalmGestureRecognizer.h; sourceTree = "<group>"; };
+		C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPalmGestureRecognizer.m; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
 		C584F8381C37C56800413840 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
 		C584F83B1C37C57000413840 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
@@ -1937,6 +1940,8 @@
 				6640E6D717E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.h */,
 				6640E6D817E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m */,
 				664FB55D194E2CF4009C1EF9 /* MMTouchLifeCycleDelegate.h */,
+				C570B5231CD4564100FAB432 /* MMPalmGestureRecognizer.h */,
+				C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */,
 			);
 			name = Velocity;
 			sourceTree = "<group>";
@@ -4114,6 +4119,7 @@
 				6610D0851AA8F4A20019C2FB /* MMDisplayAsset.m in Sources */,
 				660116EF19ABB1720065C1B4 /* MMCloudKitAccountMissingState.m in Sources */,
 				66E1010619ECDD6C006E7C15 /* MMPresentationWindow.m in Sources */,
+				C570B5251CD4564100FAB432 /* MMPalmGestureRecognizer.m in Sources */,
 				660116F819ABB8980065C1B4 /* MMCloudKitFetchingAccountInfoState.m in Sources */,
 				C5FC08621C23E01B00C88675 /* MPTypeDescription.m in Sources */,
 				C5FC08701C23E01B00C88675 /* UIImage+MPAverageColor.m in Sources */,

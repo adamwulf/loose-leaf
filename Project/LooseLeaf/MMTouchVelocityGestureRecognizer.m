@@ -11,7 +11,7 @@
 #import "MMScrapPaperStackView.h"
 #import "MMPageCacheManager.h"
 #import "MMUntouchableView.h"
-
+#import "NSArray+Map.h"
 
 #define  kVelocityLowPass 0.7
 #define  kDurationTouchHashSize 20
@@ -20,11 +20,15 @@
 
 static float clamp(min, max, value) { return fmaxf(min, fminf(max, value)); }
 
+@interface MMTouchVelocityGestureRecognizer ()<UIGestureRecognizerDelegate>
+
+@end
 
 @implementation MMTouchVelocityGestureRecognizer{
     struct DurationCacheObject durationCache[kDurationTouchHashSize];
     NSTimer* debugTimer;
     NSMutableSet* notifyTheseWhenTouchDies;
+    NSMutableSet* liveTouches;
 }
 
 #pragma mark - Properties
@@ -51,6 +55,7 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
         self.delaysTouchesEnded = NO;
         self.cancelsTouchesInView = NO;
         notifyTheseWhenTouchDies = [NSMutableSet set];
+        liveTouches = [NSMutableSet set];
     }
     return _instance;
 }
@@ -108,11 +113,18 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self killTimer];
     for(UITouch* touch in touches){
+        [liveTouches addObject:touch];
+        NSLog(@"Touch Began: %p  living: %ld", touch,(long) [liveTouches count]);
         // initialize values for touch
         int indexOfTouch = [self indexForTouchInCache:touch];
         durationCache[indexOfTouch].instantaneousNormalizedVelocity = 1;
         durationCache[indexOfTouch].lastTimestamp = touch.timestamp;
         durationCache[indexOfTouch].totalDistance = 0;
+    }
+    if([liveTouches count]){
+        NSLog(@" - touches: %@", [[liveTouches allObjects] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            return [NSString stringWithFormat:@"%p", obj];
+        }]);
     }
 }
 
@@ -121,6 +133,17 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+    for(UITouch* touch in touches){
+        [liveTouches removeObject:touch];
+        NSLog(@"Touch Ended: %p  living: %ld", touch,(long) [liveTouches count]);
+    }
+    if([liveTouches count]){
+        NSLog(@" - touches: %@", [[liveTouches allObjects] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            return [NSString stringWithFormat:@"%p", obj];
+        }]);
+    }
+
+    
     [self updateStateInformationForTouches:touches];
     NSSet* touchesToKill = [NSSet setWithSet:touches];
     dispatch_async(dispatch_get_main_queue(),^{
@@ -134,6 +157,16 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+    for(UITouch* touch in touches){
+        [liveTouches removeObject:touch];
+        NSLog(@"Touch Cancelled: %p  living: %ld", touch, (long) [liveTouches count]);
+    }
+    if([liveTouches count]){
+        NSLog(@" - touches: %@", [[liveTouches allObjects] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
+            return [NSString stringWithFormat:@"%p", obj];
+        }]);
+    }
+    
     [self touchesEnded:touches withEvent:event];
 }
 

@@ -784,7 +784,7 @@
 
 #pragma mark - JotViewDelegate
 
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0){
 //        DebugLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
@@ -807,20 +807,20 @@
     if([rulerView rulerIsVisible]){
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfRulerUses by:@(1)];
     }
-    return [[self activePen] willBeginStrokeWithTouch:touch];
+    return [[self activePen] willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     [rulerView willMoveStrokeAt:[touch locationInView:rulerView]];
-    [[self activePen] willMoveStrokeWithTouch:touch];
+    [[self activePen] willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] willEndStrokeWithTouch:touch];
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] didEndStrokeWithTouch:touch];
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     if([self activePen] == pen){
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPenUses by:@(1)];
     }else if([self activePen] == eraser){
@@ -828,16 +828,16 @@
     }
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [[self activePen] willCancelStroke:stroke withTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [[self activePen] didCancelStroke:stroke withTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(UIColor*) colorForTouch:(JotTouch *)touch{
-    return [[self activePen] colorForTouch:touch];
+-(UIColor*) colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [[self activePen] colorForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 -(JotBrushTexture*)textureForStroke{
@@ -852,17 +852,17 @@
     return [[self activePen] supportsRotation];
 }
 
--(CGFloat) widthForTouch:(JotTouch*)touch{
+-(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     //
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [[self activePen] widthForTouch:touch];
+    return [[self activePen] widthForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
-    return [[self activePen] smoothnessForTouch:touch];
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [[self activePen] smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 -(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement{
