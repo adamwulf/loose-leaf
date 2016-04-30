@@ -453,6 +453,7 @@
 		C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */; };
 		C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */; };
 		C570B5251CD4564100FAB432 /* MMPalmGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */; };
+		C570B5291CD46CFD00FAB432 /* MMTwitterFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */; };
 		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
 		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
@@ -1360,6 +1361,8 @@
 		C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBezelStackHolderView.m; sourceTree = "<group>"; };
 		C570B5231CD4564100FAB432 /* MMPalmGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPalmGestureRecognizer.h; sourceTree = "<group>"; };
 		C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPalmGestureRecognizer.m; sourceTree = "<group>"; };
+		C570B5271CD46CFD00FAB432 /* MMTwitterFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTwitterFollow.h; sourceTree = "<group>"; };
+		C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwitterFollow.m; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
 		C584F8381C37C56800413840 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
 		C584F83B1C37C57000413840 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
@@ -2629,6 +2632,7 @@
 		66A74630176B860900466AA4 /* Used */ = {
 			isa = PBXGroup;
 			children = (
+				C570B5261CD46CEC00FAB432 /* Twitter */,
 				665F7F651AE0979200635D56 /* Tutorial Sidebar */,
 				66CE120117D3AD7C00882275 /* MMBounceButton.h */,
 				66CE120217D3AD7C00882275 /* MMBounceButton.m */,
@@ -3322,6 +3326,15 @@
 			name = "Named Stack";
 			sourceTree = "<group>";
 		};
+		C570B5261CD46CEC00FAB432 /* Twitter */ = {
+			isa = PBXGroup;
+			children = (
+				C570B5271CD46CFD00FAB432 /* MMTwitterFollow.h */,
+				C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */,
+			);
+			name = Twitter;
+			sourceTree = "<group>";
+		};
 		C584F8361C37C55A00413840 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -3900,6 +3913,7 @@
 				66BD6E911593DE4E00D4544C /* MMPolygonButton.m in Sources */,
 				66BD6E941593E1D800D4544C /* MMImageButton.m in Sources */,
 				66343C6B1AC088D300801962 /* NSString+URLEncode.m in Sources */,
+				C570B5291CD46CFD00FAB432 /* MMTwitterFollow.m in Sources */,
 				C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */,
 				66A7AF2019A53C7900E0AA29 /* MMCloudKitOptionsView.m in Sources */,
 				66B75DB51877ADDE00EF0A48 /* DKUIBezierPathClippedSegment+PathElement.m in Sources */,
