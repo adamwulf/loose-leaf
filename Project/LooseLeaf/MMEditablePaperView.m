@@ -23,6 +23,8 @@
 
 dispatch_queue_t importThumbnailQueue;
 
+#define kMinimumStrokeLengthAfterStylus 10.0
+#define kLightStrokeUndoDurationAfterStylus 3.0
 
 @implementation MMEditablePaperView{
     // cached static values
@@ -459,6 +461,23 @@ static int count = 0;
 
         isWaitingToNotifyDelegateOfStylusEnd = YES;
         [self performSelector:@selector(didFinishWithStylus) withObject:nil afterDelay:.5];
+    }
+    
+    JotStroke* recentStroke = [[[[self drawableView] state] everyVisibleStroke] lastObject];
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if(touch.type != UITouchTypeStylus && now - stylusDidDrawTimestamp < kLightStrokeUndoDurationAfterStylus){
+        
+        CGFloat len = 0;
+        for (AbstractBezierPathElement* ele in [recentStroke segments]) {
+            len += [ele lengthOfElement];
+            if(len > kMinimumStrokeLengthAfterStylus){
+                break;
+            }
+        }
+        
+        if(len < kMinimumStrokeLengthAfterStylus){
+            [self undo];
+        }
     }
 }
 
