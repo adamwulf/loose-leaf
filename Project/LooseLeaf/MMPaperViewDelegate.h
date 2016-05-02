@@ -16,6 +16,10 @@
 
 #pragma mark - Scale
 
+-(void) didStartToWriteWithStylus;
+
+-(void) didEndWritingWithStylus;
+
 /**
  * return YES if we allow the input page to
  * be scaled with a pinch gesture (top page),

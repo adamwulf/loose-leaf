@@ -19,6 +19,8 @@
 #import "MMHiddenStackHolderView.h"
 #import "MMBezelStackHolderView.h"
 
+#define kBounceThreshhold .1
+
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
     MMPaperIcon* paperIcon;
@@ -899,6 +901,14 @@
 
 #pragma mark - MMPaperViewDelegate
 
+-(void) didStartToWriteWithStylus{
+    @throw kAbstractMethodException;
+}
+
+-(void) didEndWritingWithStylus{
+    @throw kAbstractMethodException;
+}
+
 -(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
     @throw kAbstractMethodException;
 }
@@ -1402,25 +1412,12 @@
             // in top page, so we won't do it here.
             [self popTopPageOfHiddenStack];
         }
-    }else if(page.scale <= 1){
-//        DebugLog(@"scale < 1");
-        //
-        // bezelStackHolder debugging DONE
-        //
-        // bounce it back to full screen
-//        DebugLog(@"bounce it back to full page");
-        [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
-        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
-//        DebugLog(@"last case");
-        //
-        // bezelStackHolder debugging DONE
-        //
-        // first, empty the bezelStackHolder, if any
+        // bounce it back to full screen
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
+        BOOL shouldBounce = ABS(page.scale - 1) > kBounceThreshhold;
+        [self animatePageToFullScreen:page withDelay:0 withBounce:shouldBounce onComplete:nil];
     }
 }
 

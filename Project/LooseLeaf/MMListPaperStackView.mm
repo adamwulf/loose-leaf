@@ -386,6 +386,20 @@
 
 #pragma mark - MMPaperViewDelegate
 
+-(void) didStartToWriteWithStylus{
+    fromRightBezelGesture.enabled = NO;
+    fromLeftBezelGesture.enabled = NO;
+
+    NSLog(@"didStartToWriteWithStylus");
+}
+
+-(void) didEndWritingWithStylus{
+    fromRightBezelGesture.enabled = YES;
+    fromLeftBezelGesture.enabled = YES;
+    
+    NSLog(@"didEndWritingWithStylus");
+}
+
 /**
  * this is a delegate method that's called when the page is being actively panned
  * by the user. this page pan is only when we are in PAGE view. when panning a page

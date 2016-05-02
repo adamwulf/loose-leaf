@@ -31,6 +31,9 @@ dispatch_queue_t importThumbnailQueue;
     NSString* plistPath;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
+    
+    BOOL isWaitingToNotifyDelegateOfStylusEnd;
+    NSTimeInterval stylusDidDrawTimestamp;
 }
 
 @synthesize drawableView;
@@ -401,14 +404,42 @@ static int count = 0;
 
 #pragma mark - JotViewDelegate
 
+-(void) didFinishWithStylus{
+    [[self delegate] didEndWritingWithStylus];
+    isWaitingToNotifyDelegateOfStylusEnd = NO;
+    self.panGesture.enabled = YES;
+}
+
 -(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
-    if(panGesture.state == UIGestureRecognizerStateBegan ||
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if(touch.type != UITouchTypeStylus && isWaitingToNotifyDelegateOfStylusEnd){
+        // if our delegate thinks the stylus is down, then we shouldn't allow non-stylus writing.
+        return NO;
+    }else if(touch.type != UITouchTypeStylus && now - stylusDidDrawTimestamp < 1.0){
+        // don't allow drawing with finger within 1 second of stylus
+        return NO;
+    }else if(panGesture.state == UIGestureRecognizerStateBegan ||
        panGesture.state == UIGestureRecognizerStateChanged){
         if([panGesture containsTouch:touch]){
             return NO;
         }
     }
-    return [delegate willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    
+    if([delegate willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch]){
+        if(touch.type == UITouchTypeStylus){
+            // disable gestures while writing with the stylus
+            if(!isWaitingToNotifyDelegateOfStylusEnd){
+                [[self delegate] didStartToWriteWithStylus];
+            }else{
+                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishWithStylus) object:nil];
+            }
+            panGesture.enabled = NO;
+        }
+
+        return YES;
+    }
+    
+    return NO;
 }
 
 -(void) willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
@@ -422,14 +453,26 @@ static int count = 0;
 -(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     [delegate didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     [self saveToDisk:nil];
+    
+    if(touch.type == UITouchTypeStylus){
+        stylusDidDrawTimestamp = [NSDate timeIntervalSinceReferenceDate];
+
+        isWaitingToNotifyDelegateOfStylusEnd = YES;
+        [self performSelector:@selector(didFinishWithStylus) withObject:nil afterDelay:.5];
+    }
 }
 
 -(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     [delegate willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:coalescedTouch fromTouch:touch{
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     [delegate didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+
+    if(touch.type == UITouchTypeStylus){
+        isWaitingToNotifyDelegateOfStylusEnd = YES;
+        [self performSelector:@selector(didFinishWithStylus) withObject:nil afterDelay:.5];
+    }
 }
 
 -(JotBrushTexture*)textureForStroke{
