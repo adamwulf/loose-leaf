@@ -454,6 +454,8 @@
 		C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */; };
 		C570B5251CD4564100FAB432 /* MMPalmGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */; };
 		C570B5291CD46CFD00FAB432 /* MMTwitterFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */; };
+		C57E55EC1CD90828004A6D19 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57E55E81CD90793004A6D19 /* GPUImage.framework */; };
+		C57E55ED1CD90828004A6D19 /* GPUImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C57E55E81CD90793004A6D19 /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C584F8391C37C56800413840 /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8371C37C56800413840 /* colorlesspoint.vsh */; };
 		C584F83A1C37C56800413840 /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C584F8381C37C56800413840 /* point.fsh */; };
 		C584F83C1C37C57000413840 /* Particle.png in Resources */ = {isa = PBXBuildFile; fileRef = C584F83B1C37C57000413840 /* Particle.png */; };
@@ -533,6 +535,20 @@
 		C5FC08711C23E01B00C88675 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC082B1C23E01B00C88675 /* UIImage+MPImageEffects.m */; };
 		C5FC08721C23E01B00C88675 /* UIView+MPHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC082D1C23E01B00C88675 /* UIView+MPHelpers.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C57E55EE1CD90828004A6D19 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C57E55ED1CD90828004A6D19 /* GPUImage.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-user-intro.png"; sourceTree = "<group>"; };
@@ -1363,6 +1379,7 @@
 		C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPalmGestureRecognizer.m; sourceTree = "<group>"; };
 		C570B5271CD46CFD00FAB432 /* MMTwitterFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTwitterFollow.h; sourceTree = "<group>"; };
 		C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwitterFollow.m; sourceTree = "<group>"; };
+		C57E55E81CD90793004A6D19 /* GPUImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GPUImage.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-cemwdkmzpxcrmoafjcounebazjsc/Build/Products/Debug-iphoneos/GPUImage.framework"; sourceTree = "<group>"; };
 		C584F8371C37C56800413840 /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorlesspoint.vsh; sourceTree = "<group>"; };
 		C584F8381C37C56800413840 /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = point.fsh; sourceTree = "<group>"; };
 		C584F83B1C37C57000413840 /* Particle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Particle.png; sourceTree = "<group>"; };
@@ -1521,6 +1538,7 @@
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
 				661C4B261A830FB20014DB20 /* Pinterest.framework in Frameworks */,
 				66627FB21A0258D10064FAD3 /* libicucore.dylib in Frameworks */,
+				C57E55EC1CD90828004A6D19 /* GPUImage.framework in Frameworks */,
 				667D98AC192D4B7A00625879 /* ImageIO.framework in Frameworks */,
 				666425C218CBC40000A306C1 /* CoreMedia.framework in Frameworks */,
 				666425C018CBC3EF00A306C1 /* AssetsLibrary.framework in Frameworks */,
@@ -2886,6 +2904,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C57E55E81CD90793004A6D19 /* GPUImage.framework */,
 				C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */,
 				C506A3BD1C23DEC800236895 /* Mixpanel.framework */,
 				C506A39B1C23DD6100236895 /* SSKeychain.framework */,
@@ -3514,6 +3533,7 @@
 				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
 				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
 				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
+				C57E55EE1CD90828004A6D19 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -4277,6 +4297,7 @@
 					"$(SRCROOT)/../Submodules/MMStretchGestureRecognizers/**",
 					"$(SRCROOT)/../Project",
 					"$(SRCROOT)/../Frameworks/**",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
@@ -4287,6 +4308,7 @@
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -4311,11 +4333,13 @@
 					"$(SRCROOT)/../Submodules/MMStretchGestureRecognizers/**",
 					"$(SRCROOT)/../Project",
 					"$(SRCROOT)/../Frameworks/**",
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
