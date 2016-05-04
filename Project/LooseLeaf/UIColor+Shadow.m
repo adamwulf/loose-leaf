@@ -16,7 +16,7 @@ static UIColor* blueShadowColor;
     if(shadowColor){
         return shadowColor;
     }
-    shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.75];
+    shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.35];
     return shadowColor;
 }
 

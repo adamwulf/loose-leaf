@@ -32,6 +32,7 @@
 #import "MMStackPropertiesView.h"
 #import "MMRoundedSquareViewDelegate.h"
 #import "MMPalmGestureRecognizer.h"
+#import "MMRotatingBackgroundView.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
@@ -83,6 +84,8 @@
     
         self.view.opaque = YES;
 
+        [self.view addSubview:[[MMRotatingBackgroundView alloc] initWithFrame:self.view.bounds]];
+        
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
 
@@ -140,11 +143,6 @@
                                                       kMPShareStatusSinaWeibo : kMPShareStatusUnknown,
                                                       }];
         [[Mixpanel sharedInstance] flush];
-
-        UIImage* blackBlur = [UIImage imageNamed:@"blackblur.png"];
-        self.view.layer.contents = (__bridge id)blackBlur.CGImage;
-
-
 
         // navigation between stacks
 
