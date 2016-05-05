@@ -79,17 +79,36 @@ static CGFloat(^clampPercent)(CGFloat);
         rightBorderMask.fillRule = kCAFillRuleEvenOdd;
         rightBorder.mask = rightBorderMask;
         
+
+        UIView* stripes = [[UIView alloc] initWithFrame:deleteSidebarBackground.bounds];
+        stripes.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.2];
         
+        UIBezierPath* stripesPath = [UIBezierPath bezierPath];
+        for (int i=0; i<CGRectGetHeight(deleteSidebarBackground.bounds); i+=200) {
+            [stripesPath appendPath:[UIBezierPath bezierPathWithRect:CGRectMake(-1000, i, 3000, 100)]];
+        }
+        [stripesPath applyTransform:CGAffineTransformMakeRotation(M_PI / 4)];
+        [stripesPath applyTransform:CGAffineTransformMakeTranslation(500, -CGRectGetHeight(deleteSidebarBackground.bounds) / 2)];
+        CAShapeLayer* stripesMask = [CAShapeLayer layer];
+        stripesMask.frame = stripes.bounds;
+        stripesMask.fillColor = [UIColor whiteColor].CGColor;
+        stripesMask.path = stripesPath.CGPath;
+        stripes.layer.mask = stripesMask;
+
         // default fill w/o stripes
-        trashBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"crumple.jpg"]];
+        trashBackground = [[UIView alloc] initWithFrame:deleteSidebarBackground.bounds];
+        trashBackground.backgroundColor = [UIColor colorWithWhite:1.0 alpha:.4];
         CGPoint center2 = CGPointMake(trashBackground.bounds.size.width-radius, frame.size.height/2);
         UIBezierPath* fillPath = [UIBezierPath bezierPathWithArcCenter:center2 radius:radius - kBorderSpacing - kBorderWidth startAngle:0 endAngle:2*M_PI clockwise:YES];
         trashBackground.alpha = 0.4;
         trashBackground.frame = CGRectMake(frame.size.width - trashBackground.bounds.size.width, 0, trashBackground.bounds.size.width, frame.size.height);
         CAShapeLayer* trashBackgroundMask = [CAShapeLayer layer];
-        trashBackgroundMask.backgroundColor = [UIColor whiteColor].CGColor;
+        trashBackgroundMask.fillColor = [UIColor whiteColor].CGColor;
         trashBackgroundMask.path = fillPath.CGPath;
         trashBackground.layer.mask = trashBackgroundMask;
+        
+        [trashBackground addSubview:stripes];
+        
         deleteSidebarBackground.layer.backgroundColor = [UIColor clearColor].CGColor;
         [deleteSidebarBackground.layer addSublayer:rightBorder];
         [deleteSidebarBackground addSubview:trashBackground];
@@ -141,10 +160,10 @@ static CGFloat(^clampPercent)(CGFloat);
     CGFloat iconOpacity = (percent - .6) * 2;
     iconOpacity = clampPercent(iconOpacity);
 
-    CGFloat movementDistance = 20.0;
+    CGFloat movementDistance = 10.0;
     
     CGPoint targetViewCenter = [deleteSidebarForeground convertPoint:targetView.center fromView:targetView.superview];
-    CGPoint trashIconCenter = CGPointMake(targetViewCenter.x + targetView.bounds.size.width / 2 - trashIcon.bounds.size.width / 4 + movementDistance,
+    CGPoint trashIconCenter = CGPointMake(trashIcon.bounds.size.width / 2 + movementDistance + 10,
                                           targetViewCenter.y - targetView.bounds.size.height / 2 - trashIcon.bounds.size.height / 2 - 2);
 
     CGFloat(^easeOut)(CGFloat t) = ^(CGFloat t){
