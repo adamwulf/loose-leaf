@@ -890,7 +890,7 @@
     if(!nextTopPage){
         DebugLog(@"hrmph. out of pages...");
     }
-    [deleteSidebar deletePage:page];
+    [deleteSidebar deleteView:page];
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
     [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
     [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];

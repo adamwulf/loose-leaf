@@ -14,6 +14,8 @@
 @property (nonatomic, readonly) UIView* deleteSidebarBackground;
 @property (nonatomic, readonly) UIView* deleteSidebarForeground;
 
+@property (nonatomic, copy) void (^deleteCompleteBlock)(UIView* deletedView);
+
 -(id) initWithFrame:(CGRect)frame;
 
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView;
@@ -22,8 +24,8 @@
 
 // returns YES if the page would be dropped in the
 // sidebar at its current location
--(BOOL) shouldDelete:(MMPaperView*)pageMightDelete;
+-(BOOL) shouldDelete:(UIView*)pageMightDelete;
 
--(void) deletePage:(MMPaperView*)pageToDelete;
+-(void) deleteView:(UIView*)pageToDelete;
 
 @end

@@ -71,6 +71,8 @@
     BOOL isAnimatingScrapToOrFromSidebar;
     
     UIImageView* testImageView;
+
+    MMDeletePageSidebarController* deleteScrapSidebar;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
@@ -128,10 +130,14 @@
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
 
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        
+
+        deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds];
+        [self addSubview:deleteScrapSidebar.deleteSidebarBackground];
+
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
-        
+
+        [self addSubview:deleteScrapSidebar.deleteSidebarForeground];
         
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
@@ -847,6 +853,23 @@
         didReset = YES;
     }
     
+    
+    // Trash sidebar
+    CGFloat trashPercentShown = 0;
+    if(gesture.scrap){
+        CGPoint p = [self convertPoint:gesture.scrap.center fromView:gesture.scrap.superview];
+        CGFloat x = 100 - p.x + 50;
+        trashPercentShown = MAX(0, MIN(1.0, x / 100.0));
+
+        // the scrap center will be the midpoint of the two fingers of the pan gesture
+        // because we've reset the anchor point of the scrap during the gesture.
+        
+        [deleteScrapSidebar showSidebarWithPercent:trashPercentShown withTargetView:trashPercentShown ? gesture.scrap : nil];
+        
+        [self setButtonsVisible:![deleteScrapSidebar shouldDelete:gesture.scrap] animated:YES];
+    }
+    
+    
     if(gesture.scrap && (gesture.scrap != stretchScrapGesture.scrap) && gesture.state != UIGestureRecognizerStateCancelled){
         
         // handle the scrap.
@@ -967,6 +990,11 @@
         if(gesture.didExitToBezel){
             shouldBezel = YES;
             // remove scrap undo item
+        }else if([deleteScrapSidebar shouldDelete:gesture.scrap]){
+            // don't set any of its center/scale etc.
+            // we don't want to potentially pass this scrap to
+            // another page, just to delete it. we'll actually
+            // handle the deletion in the next block
         }else if([scrapsInContainer containsObject:gesture.scrap]){
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
@@ -1057,7 +1085,6 @@
         // and position, so that we can consistently determine it's position with
         // the center property
         
-        
         // giving up the scrap will make sure
         // its anchor point is back in the true
         // center of the scrap. It'll also
@@ -1066,8 +1093,33 @@
         MMScrapView* scrap = gesture.scrap;
         NSDictionary* startingScrapProperties = gesture.startingScrapProperties;
         MMUndoablePaperView* startingPageForScrap = gesture.startingPageForScrap;
+
+        // need to check this bool before [giveUpScrap], since that will
+        // reset its anchor point and change the calculation made
+        // by the deleteScrapSidebar
+        BOOL shouldDelete = [deleteScrapSidebar shouldDelete:gesture.scrap];
         
         [gesture giveUpScrap];
+        
+        if(shouldDelete){
+            // set our block so that we add an undo item after the scrap
+            // has been removed from view
+            __weak MMScrapPaperStackView* weakSelf = self;
+            deleteScrapSidebar.deleteCompleteBlock = ^(UIView* viewToDelete){
+                [startingPageForScrap addUndoItemForRemovedScrap:scrap withProperties:startingScrapProperties];
+                [weakSelf finishedPanningAndScalingScrap:scrap];
+            };
+
+            // delete the scrap after resetting its anchor point
+            // so that the delete animation is guaranteed to remove
+            // the entire scrap from the screen before [removeFromSuperview]
+            [deleteScrapSidebar deleteView:scrap];
+        }
+        
+        // if our delete sidebar was visible, then we need
+        // to reset our buttons + close the sidebar
+        [self setButtonsVisible:YES animated:YES];
+        [deleteScrapSidebar closeSidebarAnimated];
         
         if(shouldBezel){
             [[[Mixpanel sharedInstance] people] set:@{kMPHasBezelledScrap : @(YES)}];
@@ -1495,9 +1547,11 @@
 
 -(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated{
     if(animated){
-        [UIView animateWithDuration:.3 animations:^{
-            bezelScrapContainer.alpha = visible ? 1 : 0;
-        }];
+        if(bezelScrapContainer.alpha != visible ? 1 : 0){
+            [UIView animateWithDuration:.3 animations:^{
+                bezelScrapContainer.alpha = visible ? 1 : 0;
+            }];
+        }
     }else{
         bezelScrapContainer.alpha = visible ? 1 : 0;
     }

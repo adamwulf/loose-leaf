@@ -165,6 +165,12 @@ static CGFloat(^clampPercent)(CGFloat);
     CGPoint targetViewCenter = [deleteSidebarForeground convertPoint:targetView.center fromView:targetView.superview];
     CGPoint trashIconCenter = CGPointMake(trashIcon.bounds.size.width / 2 + movementDistance + 10,
                                           targetViewCenter.y - targetView.bounds.size.height / 2 - trashIcon.bounds.size.height / 2 - 2);
+    
+    if(trashIconCenter.y < CGRectGetHeight(trashIcon.bounds) / 2){
+        trashIconCenter.y = CGRectGetHeight(trashIcon.bounds) / 2;
+    }else if(trashIconCenter.y > CGRectGetHeight(deleteSidebarForeground.bounds) - CGRectGetHeight(trashIcon.bounds) / 2){
+        trashIconCenter.y = CGRectGetHeight(deleteSidebarForeground.bounds) - CGRectGetHeight(trashIcon.bounds) / 2;
+    }
 
     CGFloat(^easeOut)(CGFloat t) = ^(CGFloat t){
         return (CGFloat) - t*(t-2);
@@ -176,38 +182,41 @@ static CGFloat(^clampPercent)(CGFloat);
     trashIcon.center = trashIconCenter;
 }
 
--(BOOL) shouldDelete:(MMPaperView*)pageMightDelete{
+-(BOOL) shouldDelete:(UIView*)potentialViewToDelete{
     return trashIcon.alpha > .25;
 }
 
--(void) deletePage:(MMPaperView*)pageToDelete{
-    DebugLog(@"deleting page... %p", pageToDelete);
+-(void) deleteView:(UIView*)pageToDelete{
+    DebugLog(@"deleting view... %p", pageToDelete);
     
     CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
     [deleteSidebarForeground addSubview:pageToDelete];
     pageToDelete.center = center;
     
-    [UIView animateWithDuration:.3 animations:^{
+    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         pageToDelete.center = CGPointMake(-100 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
     } completion:^(BOOL finished) {
         [pageToDelete removeFromSuperview];
+        if(self.deleteCompleteBlock){
+            self.deleteCompleteBlock(pageToDelete);
+        }
     }];
-
-    [[MMTrashManager sharedInstance] deletePage:pageToDelete];
 }
 
 -(void) closeSidebarAnimated{
     trashBackground.alpha = alphaForPercent(.1);
 
-    [UIView animateWithDuration:.20 animations:^{
-        CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
-        deleteSidebarBackground.frame = fr;
-        trashIcon.alpha = 0;
-
-        CGPoint c = trashIcon.center;
-        c.x -= 20;
-        trashIcon.center = c;
-    }];
+    CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
+    if(!CGRectEqualToRect(deleteSidebarBackground.frame, fr)) {
+        [UIView animateWithDuration:.20 animations:^{
+            deleteSidebarBackground.frame = fr;
+            trashIcon.alpha = 0;
+            
+            CGPoint c = trashIcon.center;
+            c.x -= 20;
+            trashIcon.center = c;
+        }];
+    }
 }
 
 @end

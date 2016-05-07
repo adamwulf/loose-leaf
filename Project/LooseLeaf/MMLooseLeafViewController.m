@@ -33,6 +33,7 @@
 #import "MMRoundedSquareViewDelegate.h"
 #import "MMPalmGestureRecognizer.h"
 #import "MMRotatingBackgroundView.h"
+#import "MMTrashManager.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
@@ -87,6 +88,13 @@
         [self.view addSubview:[[MMRotatingBackgroundView alloc] initWithFrame:self.view.bounds]];
         
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
+        deleteSidebar.deleteCompleteBlock = ^(UIView* pageToDelete){
+            if([pageToDelete isKindOfClass:[MMPaperView class]]){
+                // sanity check. only pages should be passed here in list view.
+                // scraps are handled in a separate delete sidebar
+                [[MMTrashManager sharedInstance] deletePage:(MMPaperView*)pageToDelete];
+            }
+        };
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
 
 
