@@ -11,7 +11,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 
 static const NSInteger numberOfBackgrounds = 56;
-static const CGFloat durationBetweenBackgroundTransitions = 30;
+static const CGFloat durationBetweenBackgroundTransitions = 60;
 static const CGFloat durationOfTransition = 10;
 
 @implementation MMRotatingBackgroundView{
