@@ -508,7 +508,7 @@ static NSString* bezelStatePath;
 }
 
 -(void) loadFromDisk{
-    [sidebarScrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
+    [sidebarScrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO andAdjustForScale:NO];
 }
 
 
