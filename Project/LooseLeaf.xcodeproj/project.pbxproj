@@ -517,8 +517,6 @@
 		C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A181CDB1B4A00508F1D /* bg53.jpg */; };
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C58E6A541CDB1B4A00508F1D /* bg55.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A1A1CDB1B4A00508F1D /* bg55.jpg */; };
-		C58E6A551CDB1B4A00508F1D /* bg56.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A1B1CDB1B4A00508F1D /* bg56.jpg */; };
-		C58E6A561CDB1B4A00508F1D /* bg57.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A1C1CDB1B4A00508F1D /* bg57.jpg */; };
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
@@ -1489,8 +1487,6 @@
 		C58E6A181CDB1B4A00508F1D /* bg53.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg53.jpg; sourceTree = "<group>"; };
 		C58E6A191CDB1B4A00508F1D /* bg54.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg54.jpg; sourceTree = "<group>"; };
 		C58E6A1A1CDB1B4A00508F1D /* bg55.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg55.jpg; sourceTree = "<group>"; };
-		C58E6A1B1CDB1B4A00508F1D /* bg56.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg56.jpg; sourceTree = "<group>"; };
-		C58E6A1C1CDB1B4A00508F1D /* bg57.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg57.jpg; sourceTree = "<group>"; };
 		C5A7A0861CA64C590054EEF1 /* MMStackControllerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackControllerViewDelegate.h; sourceTree = "<group>"; };
 		C5A7A0871CA651D70054EEF1 /* MMStackButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonView.h; sourceTree = "<group>"; };
 		C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackButtonView.m; sourceTree = "<group>"; };
@@ -3497,8 +3493,6 @@
 				C58E6A181CDB1B4A00508F1D /* bg53.jpg */,
 				C58E6A191CDB1B4A00508F1D /* bg54.jpg */,
 				C58E6A1A1CDB1B4A00508F1D /* bg55.jpg */,
-				C58E6A1B1CDB1B4A00508F1D /* bg56.jpg */,
-				C58E6A1C1CDB1B4A00508F1D /* bg57.jpg */,
 			);
 			name = backgrounds;
 			sourceTree = "<group>";
@@ -3801,7 +3795,6 @@
 				C58E6A481CDB1B4A00508F1D /* bg43.jpg in Resources */,
 				C5FC086E1C23E01B00C88675 /* test_variant.json in Resources */,
 				665245311996D1E800C36609 /* imgur.png in Resources */,
-				C58E6A561CDB1B4A00508F1D /* bg57.jpg in Resources */,
 				C58E6A1E1CDB1B4A00508F1D /* bg01.jpg in Resources */,
 				665245251995936500C36609 /* tencentWeibo.png in Resources */,
 				66524512199583B600C36609 /* twitterLarge@2x.png in Resources */,
@@ -3967,7 +3960,6 @@
 				C58E6A361CDB1B4A00508F1D /* bg25.jpg in Resources */,
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
-				C58E6A551CDB1B4A00508F1D /* bg56.jpg in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
 			);

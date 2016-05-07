@@ -10,7 +10,7 @@
 #import "UIImage+FXBlur.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
-static const NSInteger numberOfBackgrounds = 58;
+static const NSInteger numberOfBackgrounds = 56;
 static const CGFloat durationBetweenBackgroundTransitions = 30;
 static const CGFloat durationOfTransition = 10;
 
