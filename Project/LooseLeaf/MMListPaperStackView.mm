@@ -102,6 +102,9 @@
     return self;
 }
 
+-(BOOL) isAnimatingTowardPageView{
+    return isAnimatingTowardPageView;
+}
 
 -(int) fullByteSize{
     return [super fullByteSize] + addPageButtonInListView.fullByteSize;
@@ -1759,8 +1762,8 @@
                                  aPage.frame = hiddenStackHolder.bounds;
                                  aPage.scale = 1;
                              }
-                             [self finishUITransitionToPageView];
                              isAnimatingTowardPageView = NO;
+                             [self finishUITransitionToPageView];
                          }];
     };
     

@@ -111,7 +111,7 @@
     if(drawableView && drawableView.superview && (self.scale > kMinPageZoom || hasPendingScrappedIconUpdate)){
         // if we have a drawable view, and it's been added to our page
         // then we know it was it's prepped and ready to show valid ink
-        if([self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
+        if(![self.delegate isAnimatingTowardPageView] && [self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]){
             // page is editable and ready for work
 //            DebugLog(@"page %@ is editing, so nil thumb", self.uuid);
             [self setThumbnailTo:nil];
@@ -120,7 +120,7 @@
             shapeBuilderView.hidden = NO;
             cachedImgView.hidden = YES;
             [self isShowingDrawableView:YES andIsShowingThumbnail:NO];
-        }else if([self.scrapsOnPaperState isStateLoaded]){
+        }else if(![self.delegate isAnimatingTowardPageView] && [self.scrapsOnPaperState isStateLoaded]){
             // scrap state is loaded, so at least
             // show that
 //            DebugLog(@"page %@ wants editing, has scraps, showing ink thumb", self.uuid);

@@ -54,6 +54,7 @@
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
         [self.contentView insertSubview:paperBackgroundView atIndex:0];
+        paperBackgroundView.hidden = self.drawableView.hidden;
     }
     paperBackgroundView.image = img;
 
@@ -86,6 +87,11 @@
     }
 }
 
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
+    [super updateThumbnailVisibility:forceUpdateIconImage];
+    paperBackgroundView.hidden = self.drawableView.hidden;
+}
+
 #pragma mark - Loading and Unloading State
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
@@ -103,6 +109,7 @@
             if(img){
                 [[NSThread mainThread] performBlock:^{
                     if(wantsBackgroundTextureLoaded){
+                        NSLog(@"image loaded");
                         [self setPageBackgroundTexture:img andSaveToDisk:NO];
                         isLoadingBackgroundTexture = NO;
                     };
@@ -126,6 +133,7 @@
 
 -(void) unloadState{
     [super unloadState];
+    paperBackgroundView.image = nil;
     [paperBackgroundView removeFromSuperview];
     paperBackgroundView = nil;
     wantsBackgroundTextureLoaded = NO;

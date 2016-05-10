@@ -14,11 +14,15 @@
 
 @protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
 
-#pragma mark - Scale
+#pragma mark - Stylus
 
 -(void) didStartToWriteWithStylus;
 
 -(void) didEndWritingWithStylus;
+
+#pragma mark - Scale
+
+-(BOOL) isAnimatingTowardPageView;
 
 /**
  * return YES if we allow the input page to
