@@ -28,7 +28,7 @@
     MMAlbumSidebarContentView* albumListContentView;
     MMFaceSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
-    MMInboxContentView* inboxListContent;
+    MMInboxContentView* inboxListContentView;
     
     NSArray* allListContentViews;
     
@@ -81,15 +81,15 @@
         [slidingSidebarView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
         
-        inboxListContent = [[MMInboxContentView alloc] initWithFrame:contentBounds];
-        inboxListContent.delegate = self;
-        [slidingSidebarView addSubview:inboxListContent];
-        inboxListContent.hidden = YES;
+        inboxListContentView = [[MMInboxContentView alloc] initWithFrame:contentBounds];
+        inboxListContentView.delegate = self;
+        [slidingSidebarView addSubview:inboxListContentView];
+        inboxListContentView.hidden = YES;
         
         
         allListContentViews = [NSArray arrayWithObjects:cameraListContentView,
                                albumListContentView, faceListContentView, eventListContentView,
-                               inboxListContent, nil];
+                               inboxListContentView, nil];
         //////////////////////////////////////////
         // buttons
         
@@ -159,8 +159,8 @@
     if(!eventListContentView.hidden){
         [eventListContentView show:animated];
     }
-    if(!inboxListContent.hidden){
-        [inboxListContent show:animated];
+    if(!inboxListContentView.hidden){
+        [inboxListContentView show:animated];
     }
     [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
@@ -171,7 +171,7 @@
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
-        [inboxListContent hide:animated];
+        [inboxListContentView hide:animated];
         
         if(onComplete){
             onComplete(finished);
@@ -230,29 +230,30 @@
 }
 
 -(void) inboxButtonTapped:(MMSidebarButton*)button{
-    [self switchToListView:inboxListContent];
+    [self switchToListView:inboxListContentView];
     [self highlightButton:button];
 }
 
 -(void) showPDF:(MMInboxItem*)pdf{
-    [self switchToListView:inboxListContent];
-    [inboxListContent switchToPDFView:pdf];
+    [self switchToListView:inboxListContentView];
+    [inboxListContentView switchToPDFView:pdf];
     [self highlightButton:inboxButton];
 }
 
 -(void) refreshPDF{
-    [inboxListContent reset:NO];
+    [inboxListContentView reset:NO];
 }
 
 #pragma mark - MMPhotoManagerDelegate
 
--(void) doneLoadingPhotoAlbums;{
+-(void) doneLoadingPhotoAlbums{
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
             [cameraListContentView doneLoadingPhotoAlbums];
             [albumListContentView doneLoadingPhotoAlbums];
             [faceListContentView doneLoadingPhotoAlbums];
             [eventListContentView doneLoadingPhotoAlbums];
+            [inboxListContentView doneLoadingPhotoAlbums];
         }
     });
 }
@@ -297,8 +298,8 @@
         [faceListContentView updatePhotoRotation:animated];
     }else if(!eventListContentView.hidden){
         [eventListContentView updatePhotoRotation:animated];
-    }else if(!inboxListContent.hidden){
-        [inboxListContent updatePhotoRotation:animated];
+    }else if(!inboxListContentView.hidden){
+        [inboxListContentView updatePhotoRotation:animated];
     }
     
     void(^animations)() = ^{
@@ -337,7 +338,7 @@
         [albumListContentView killMemory];
         [faceListContentView killMemory];
         [eventListContentView killMemory];
-        [inboxListContent killMemory];
+        [inboxListContentView killMemory];
     }
 }
 
