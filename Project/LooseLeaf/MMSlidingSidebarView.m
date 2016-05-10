@@ -12,6 +12,11 @@
 #import "MMFullScreenSidebarContainingView.h"
 #import "FXBlurView.h"
 #import "Constants.h"
+#import <UIKit/UIGestureRecognizerSubclass.h>
+
+@interface MMSlidingSidebarView ()<UIGestureRecognizerDelegate>
+
+@end
 
 @implementation MMSlidingSidebarView{
     // this is the button that'll trigger the sidebar
@@ -42,11 +47,6 @@
 
 //        [blurContainerView showDebugBorder];
 //        [blurView showDebugBorder];
-
-        UISwipeGestureRecognizer* swipeToCloseGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(closeButtonTapped:)];
-        swipeToCloseGestureRecognizer.direction = fromLeft ? UISwipeGestureRecognizerDirectionLeft : UISwipeGestureRecognizerDirectionRight;
-        [self addGestureRecognizer:swipeToCloseGestureRecognizer];
-
 
         // 2 points for the border size
         borderSize = 2;
