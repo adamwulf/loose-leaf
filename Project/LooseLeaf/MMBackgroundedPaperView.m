@@ -14,6 +14,8 @@
 @implementation MMBackgroundedPaperView{
     UIImageView* paperBackgroundView;
     NSString* backgroundTexturePath;
+    BOOL isLoadingBackgroundTexture;
+    BOOL wantsBackgroundTextureLoaded;
 }
 
 -(BOOL) isVert:(UIImage*)img{
@@ -32,36 +34,29 @@
 //    }
 }
 
+-(UIImage*) pageBackgroundTexture{
+    return paperBackgroundView.image;
+}
+
 -(void) setPageBackgroundTexture:(UIImage*)img{
     [self setPageBackgroundTexture:img andSaveToDisk:YES];
 }
 
 -(void) setPageBackgroundTexture:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk{
     CheckMainThread;
+    CGAffineTransform rotationTransform = CGAffineTransformIdentity;
     if(img.size.width > img.size.height){
         // rotate
-        img = [[UIImage alloc] initWithCGImage: img.CGImage
-                                         scale: 1.0
-                                   orientation: [self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp];
+        rotationTransform = CGAffineTransformMakeRotation(-M_PI / 2);
     }
 
-    img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:self.bounds.size interpolationQuality:kCGInterpolationHigh];
-
     if(!paperBackgroundView){
-        paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
+        paperBackgroundView = [[UIImageView alloc] initWithImage:img];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
+        paperBackgroundView.transform = rotationTransform;
         [self.contentView insertSubview:paperBackgroundView atIndex:0];
-//        if(drawableView){
-//            [self.contentView insertSubview:paperBackgroundView belowSubview:drawableView];
-//        }else{
-//            [self.contentView insertSubview:paperBackgroundView belowSubview:scrapsOnPaperState.scrapContainerView];
-//        }
-//        if(drawableView && !drawableView.hidden){
-//            paperBackgroundView.hidden = NO;
-//        }else{
-//            paperBackgroundView.hidden = YES;
-//        }
+        paperBackgroundView.center = CGPointMake(CGRectGetMidX([self.contentView bounds]), CGRectGetMidY([self.contentView bounds]));
     }
     paperBackgroundView.image = img;
 
@@ -99,12 +94,22 @@
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
     [super loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context];
     
+    if(isLoadingBackgroundTexture){
+        return;
+    }
+    isLoadingBackgroundTexture = YES;
+    wantsBackgroundTextureLoaded = YES;
+
     void (^loadPageBackgroundFromDisk)() = ^{
-        UIImage* img = [UIImage imageWithContentsOfFile:[self backgroundTexturePath]];
-        if(img){
-            [[NSThread mainThread] performBlock:^{
-                [self setPageBackgroundTexture:img andSaveToDisk:NO];
-            }];
+        if(![self pageBackgroundTexture]){
+            UIImage* img = [UIImage imageWithContentsOfFile:[self backgroundTexturePath]];
+            if(img){
+                [[NSThread mainThread] performBlock:^{
+                    if(wantsBackgroundTextureLoaded){
+                        [self setPageBackgroundTexture:img andSaveToDisk:NO];
+                    };
+                }];
+            }
         }
     };
     
@@ -121,6 +126,7 @@
     [super unloadState];
     [paperBackgroundView removeFromSuperview];
     paperBackgroundView = nil;
+    wantsBackgroundTextureLoaded = NO;
 }
 
 #pragma mark - Thumbnail Generation

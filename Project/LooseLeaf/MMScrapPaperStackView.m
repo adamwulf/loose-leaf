@@ -524,8 +524,9 @@
     CGSize fullScaleSize = photo.fullResolutionSize;
 
 
-    CGFloat ratioDiff = ABS(fullScaleSize.width / fullScaleSize.height - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
-    if(ratioDiff < .1){
+    CGFloat ratioDiffPortrait = ABS(fullScaleSize.width / fullScaleSize.height - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
+    CGFloat ratioDiffLandscape = ABS(fullScaleSize.height / fullScaleSize.width - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
+    if(ratioDiffPortrait < .1 || ratioDiffLandscape < .1){
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;

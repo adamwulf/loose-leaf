@@ -23,4 +23,6 @@
 
 -(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
 
+-(void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size;
+
 @end

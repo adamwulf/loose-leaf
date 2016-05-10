@@ -44,7 +44,10 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
         itemURL = _itemURL;
         pageSizeCache = [NSMutableDictionary dictionary];
         if(block) block();
-        [self generatePageThumbnailCache];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self generatePageThumbnailCache];
+        });
     }
     return self;
 }
