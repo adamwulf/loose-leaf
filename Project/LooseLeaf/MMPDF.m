@@ -90,12 +90,12 @@
     UIImage *image;
     @autoreleasepool {
         CGSize sizeOfPage = [self sizeForPage:page];
-        if(sizeOfPage.width > maxDim || sizeOfPage.height > maxDim){
-            CGFloat maxCurrDim = MAX(sizeOfPage.width, sizeOfPage.height);
-            CGFloat ratio = maxDim / maxCurrDim;
-            sizeOfPage.width *= ratio;
-            sizeOfPage.height *= ratio;
-        }
+
+        CGFloat maxCurrDim = MAX(sizeOfPage.width, sizeOfPage.height);
+        CGFloat ratio = maxDim / maxCurrDim;
+        sizeOfPage.width *= ratio;
+        sizeOfPage.height *= ratio;
+
         if(CGSizeEqualToSize(sizeOfPage, CGSizeZero)){
             sizeOfPage = [UIScreen mainScreen].bounds.size;
         }

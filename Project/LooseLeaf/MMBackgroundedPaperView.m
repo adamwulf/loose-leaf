@@ -44,19 +44,18 @@
 
 -(void) setPageBackgroundTexture:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk{
     CheckMainThread;
-    CGAffineTransform rotationTransform = CGAffineTransformIdentity;
     if(img.size.width > img.size.height){
         // rotate
-        rotationTransform = CGAffineTransformMakeRotation(-M_PI / 2);
+        img = [[UIImage alloc] initWithCGImage: img.CGImage
+                                         scale: img.scale
+                                   orientation: [self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp];
     }
 
     if(!paperBackgroundView){
-        paperBackgroundView = [[UIImageView alloc] initWithImage:img];
+        paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
-        paperBackgroundView.transform = rotationTransform;
         [self.contentView insertSubview:paperBackgroundView atIndex:0];
-        paperBackgroundView.center = CGPointMake(CGRectGetMidX([self.contentView bounds]), CGRectGetMidY([self.contentView bounds]));
     }
     paperBackgroundView.image = img;
 
