@@ -63,8 +63,8 @@
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
 		6630EDA115F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */; };
-		6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */; };
+		6630F4C61AA4FAA1004F2FDC /* MMPDFAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C51AA4FAA1004F2FDC /* MMPDFAssetGroup.m */; };
+		6630F4C91AA4FBF8004F2FDC /* MMPDFPageAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4C81AA4FBF8004F2FDC /* MMPDFPageAsset.m */; };
 		6630F4CF1AA532EE004F2FDC /* MMAssetGroupListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4CE1AA532EE004F2FDC /* MMAssetGroupListLayout.m */; };
 		6630F4D21AA534CF004F2FDC /* MMDisplayAssetGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6630F4D11AA534CF004F2FDC /* MMDisplayAssetGroupCell.m */; };
 		663326BA1AAFE409003915E6 /* MMAbstractShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 663326B91AAFE409003915E6 /* MMAbstractShareItem.m */; };
@@ -703,10 +703,10 @@
 		6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizer.h; sourceTree = "<group>"; };
 		6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPanAndPinchFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPanAndPinchFromListViewGestureRecognizerDelegate.h; sourceTree = "<group>"; };
-		6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFAlbum.h; sourceTree = "<group>"; };
-		6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAlbum.m; sourceTree = "<group>"; };
-		6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFPage.h; sourceTree = "<group>"; };
-		6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFPage.m; sourceTree = "<group>"; };
+		6630F4C41AA4FAA1004F2FDC /* MMPDFAssetGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFAssetGroup.h; sourceTree = "<group>"; };
+		6630F4C51AA4FAA1004F2FDC /* MMPDFAssetGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFAssetGroup.m; sourceTree = "<group>"; };
+		6630F4C71AA4FBF8004F2FDC /* MMPDFPageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDFPageAsset.h; sourceTree = "<group>"; };
+		6630F4C81AA4FBF8004F2FDC /* MMPDFPageAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDFPageAsset.m; sourceTree = "<group>"; };
 		6630F4CD1AA532EE004F2FDC /* MMAssetGroupListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAssetGroupListLayout.h; sourceTree = "<group>"; };
 		6630F4CE1AA532EE004F2FDC /* MMAssetGroupListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAssetGroupListLayout.m; sourceTree = "<group>"; };
 		6630F4D01AA534CF004F2FDC /* MMDisplayAssetGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetGroupCell.h; sourceTree = "<group>"; };
@@ -1814,10 +1814,10 @@
 		6610D0871AA8F4C20019C2FB /* PDFs */ = {
 			isa = PBXGroup;
 			children = (
-				6630F4C41AA4FAA1004F2FDC /* MMPDFAlbum.h */,
-				6630F4C51AA4FAA1004F2FDC /* MMPDFAlbum.m */,
-				6630F4C71AA4FBF8004F2FDC /* MMPDFPage.h */,
-				6630F4C81AA4FBF8004F2FDC /* MMPDFPage.m */,
+				6630F4C41AA4FAA1004F2FDC /* MMPDFAssetGroup.h */,
+				6630F4C51AA4FAA1004F2FDC /* MMPDFAssetGroup.m */,
+				6630F4C71AA4FBF8004F2FDC /* MMPDFPageAsset.h */,
+				6630F4C81AA4FBF8004F2FDC /* MMPDFPageAsset.m */,
 			);
 			name = PDFs;
 			sourceTree = "<group>";
@@ -4195,7 +4195,7 @@
 				C5FC083C1C23E01B00C88675 /* MPABTestDesignerTweakRequestMessage.m in Sources */,
 				6630F4D21AA534CF004F2FDC /* MMDisplayAssetGroupCell.m in Sources */,
 				C518C86F1C8412C800F1895C /* Highlighter.m in Sources */,
-				6630F4C61AA4FAA1004F2FDC /* MMPDFAlbum.m in Sources */,
+				6630F4C61AA4FAA1004F2FDC /* MMPDFAssetGroup.m in Sources */,
 				6650943719AD3ECE00D58118 /* MMCloudKitShareListHorizontalLayout.m in Sources */,
 				669329701598E4DC0033E557 /* NSString+UUID.m in Sources */,
 				6612C8881964C113003A9575 /* MMUndoablePaperView.m in Sources */,
@@ -4251,7 +4251,7 @@
 				66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */,
 				C5FC08431C23E01B00C88675 /* MPCGPointToNSDictionaryValueTransformer.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
-				6630F4C91AA4FBF8004F2FDC /* MMPDFPage.m in Sources */,
+				6630F4C91AA4FBF8004F2FDC /* MMPDFPageAsset.m in Sources */,
 				66343C671AC085D600801962 /* MMNewsletterSignupHandler.m in Sources */,
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,
 				C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */,

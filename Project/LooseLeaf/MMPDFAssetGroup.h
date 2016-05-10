@@ -9,7 +9,7 @@
 #import "MMInboxAssetGroup.h"
 #import "MMPDFInboxItem.h"
 
-@interface MMPDFAlbum : MMInboxAssetGroup
+@interface MMPDFAssetGroup : MMInboxAssetGroup
 
 -(id) init NS_UNAVAILABLE;
 

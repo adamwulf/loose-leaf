@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPDFAlbum.h"
+#import "MMPDFAssetGroup.h"
 #import "NSString+UUID.h"
-#import "MMPDFPage.h"
+#import "MMPDFPageAsset.h"
 
-@implementation MMPDFAlbum{
+@implementation MMPDFAssetGroup{
     NSArray* previewPhotos;
     NSMutableDictionary* cachedPages;
 }
@@ -35,10 +35,10 @@
     return [previewPhotos count];
 }
 
--(MMPDFPage*) pdfPageForIndex:(NSInteger)idx{
-    MMPDFPage* page = [cachedPages objectForKey:@(idx)];
+-(MMPDFPageAsset*) pdfPageForIndex:(NSInteger)idx{
+    MMPDFPageAsset* page = [cachedPages objectForKey:@(idx)];
     if(!page){
-        page = [[MMPDFPage alloc] initWithPDF:(MMPDFInboxItem*)self.inboxItem andPage:idx];
+        page = [[MMPDFPageAsset alloc] initWithPDF:(MMPDFInboxItem*)self.inboxItem andPage:idx];
         [cachedPages setObject:page forKey:@(idx)];
     }
     return page;
@@ -47,7 +47,7 @@
 -(void) loadPreviewPhotos{
     previewPhotos = @[];
     for (int idx=0; idx<5 && idx < [self.inboxItem pageCount]; idx++) {
-        MMPDFPage* page = [self pdfPageForIndex:idx];
+        MMPDFPageAsset* page = [self pdfPageForIndex:idx];
         previewPhotos = [previewPhotos arrayByAddingObject:page];
     }
 }
@@ -59,7 +59,7 @@
 
 -(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
     [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
-        MMPDFPage* page = [self pdfPageForIndex:idx];
+        MMPDFPageAsset* page = [self pdfPageForIndex:idx];
         enumerationBlock(page, idx, stop);
     }];
 }

@@ -35,10 +35,10 @@
 #import "MMStatTracker.h"
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMTutorialView.h"
-#import "MMPDFAlbum.h"
+#import "MMPDFAssetGroup.h"
 #import "MMStopWatch.h"
 #import "MMAppDelegate.h"
-#import "MMPDFPage.h"
+#import "MMPDFPageAsset.h"
 #import "MMImageInboxItem.h"
 
 @implementation MMScrapPaperStackView{
@@ -265,7 +265,7 @@
             [self.stackDelegate.importImageSidebar hide:NO onComplete:^(BOOL finished) {
                 // create a UIImage from teh PDF and add it like normal above
                 // immediately import that single page
-                MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithInboxItem:pdfDoc];
+                MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
                 NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
                 [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
                     UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:kPDFImportMaxDim];

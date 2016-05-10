@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMPDFPage.h"
+#import "MMPDFPageAsset.h"
 #import "MMPDFInboxItem.h"
 #import <JotUI/UIImage+Resize.h>
 #import "Constants.h"
 
-@implementation MMPDFPage{
+@implementation MMPDFPageAsset{
     MMPDFInboxItem* pdf;
     NSInteger pageNumber;
 }

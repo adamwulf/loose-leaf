@@ -12,7 +12,7 @@
 #import "MMDisplayAssetGroupCellDelegate.h"
 #import "MMPhotoManager.h"
 #import "MMInboxManager.h"
-#import "MMPDFAlbum.h"
+#import "MMPDFAssetGroup.h"
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
 #import "MMAlbumGroupListLayout.h"
@@ -126,7 +126,7 @@
     if(!assetGroup){
         // asset is not in cache, create it
         if([inboxItem isKindOfClass:[MMPDFInboxItem class]]){
-            assetGroup = [[MMPDFAlbum alloc] initWithInboxItem:(MMPDFInboxItem*)inboxItem];
+            assetGroup = [[MMPDFAssetGroup alloc] initWithInboxItem:(MMPDFInboxItem*)inboxItem];
         }else if([inboxItem isKindOfClass:[MMInboxItem class]]){
             assetGroup = [[MMInboxImageAlbum alloc] initWithInboxItem:inboxItem];
         }
@@ -262,7 +262,7 @@
 -(void) collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     if(collectionView == albumListScrollView){
         MMInboxAssetGroup* pdfAlbum = (MMInboxAssetGroup*) [self albumAtIndex:indexPath.row];
-        MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAlbum class]] ? pdfAlbum.inboxItem : nil);
+        MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAssetGroup class]] ? pdfAlbum.inboxItem : nil);
         if([pdfItem isEncrypted]){
             decryptingIndexPath = indexPath;
             // ask for password
@@ -297,8 +297,8 @@
         NSString* password = [[alertView textFieldAtIndex:0] text];
         NSLog(@"password: %@", password);
         
-        MMPDFAlbum* pdfAlbum = (MMPDFAlbum*) [self albumAtIndex:decryptingIndexPath.row];
-        MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAlbum class]] ? pdfAlbum.inboxItem : nil);
+        MMPDFAssetGroup* pdfAlbum = (MMPDFAssetGroup*) [self albumAtIndex:decryptingIndexPath.row];
+        MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAssetGroup class]] ? pdfAlbum.inboxItem : nil);
         if([pdfItem attemptToDecrypt:password]){
             NSLog(@"congrats");
             
