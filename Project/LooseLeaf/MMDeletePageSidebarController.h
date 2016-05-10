@@ -16,7 +16,7 @@
 
 @property (nonatomic, copy) void (^deleteCompleteBlock)(UIView* deletedView);
 
--(id) initWithFrame:(CGRect)frame;
+-(id) initWithFrame:(CGRect)frame andDarkBorder:(BOOL)dark;
 
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView;
 

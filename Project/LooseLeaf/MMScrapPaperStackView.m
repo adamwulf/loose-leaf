@@ -131,7 +131,7 @@
 
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-        deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds];
+        deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds andDarkBorder:YES];
         [self addSubview:deleteScrapSidebar.deleteSidebarBackground];
 
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];

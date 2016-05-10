@@ -87,7 +87,7 @@
 
         [self.view addSubview:[[MMRotatingBackgroundView alloc] initWithFrame:self.view.bounds]];
         
-        deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds];
+        deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds andDarkBorder:NO];
         deleteSidebar.deleteCompleteBlock = ^(UIView* pageToDelete){
             if([pageToDelete isKindOfClass:[MMPaperView class]]){
                 // sanity check. only pages should be passed here in list view.

@@ -12,7 +12,6 @@
 #import "MMTrashManager.h"
 
 #define kBorderWidth 3
-#define kBorderSpacing 2
 #define kStripeHeight 40.0
 
 @implementation MMDeletePageSidebarController{
@@ -28,7 +27,7 @@
 static CGFloat(^alphaForPercent)(CGFloat);
 static CGFloat(^clampPercent)(CGFloat);
 
--(id) initWithFrame:(CGRect)frame{
+-(id) initWithFrame:(CGRect)frame andDarkBorder:(BOOL)dark{
     if(self = [super init]){
         
         alphaForPercent = [^(CGFloat percent){
@@ -54,6 +53,9 @@ static CGFloat(^clampPercent)(CGFloat);
         CGFloat curveSize = 20.0;
         
         UIColor* borderColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
+        if(dark){
+            borderColor = [[UIColor blackColor] colorWithAlphaComponent:.1];
+        }
         
         deleteSidebarBackground = [[UIView alloc] initWithFrame:frame];
         deleteSidebarBackground.backgroundColor = [UIColor clearColor];
@@ -99,7 +101,7 @@ static CGFloat(^clampPercent)(CGFloat);
         trashBackground = [[UIView alloc] initWithFrame:deleteSidebarBackground.bounds];
         trashBackground.backgroundColor = [UIColor colorWithWhite:1.0 alpha:.4];
         CGPoint center2 = CGPointMake(trashBackground.bounds.size.width-radius, frame.size.height/2);
-        UIBezierPath* fillPath = [UIBezierPath bezierPathWithArcCenter:center2 radius:radius - kBorderSpacing - kBorderWidth startAngle:0 endAngle:2*M_PI clockwise:YES];
+        UIBezierPath* fillPath = [UIBezierPath bezierPathWithArcCenter:center2 radius:radius - kBorderWidth startAngle:0 endAngle:2*M_PI clockwise:YES];
         trashBackground.alpha = 0.4;
         trashBackground.frame = CGRectMake(frame.size.width - trashBackground.bounds.size.width, 0, trashBackground.bounds.size.width, frame.size.height);
         CAShapeLayer* trashBackgroundMask = [CAShapeLayer layer];
