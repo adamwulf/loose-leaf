@@ -263,7 +263,7 @@
             [self.stackDelegate.importImageSidebar show:YES];
         }else if(pdfDoc.pageCount == 1){
             [self.stackDelegate.importImageSidebar hide:NO onComplete:^(BOOL finished) {
-                // create a UIImage from teh PDF and add it like normal above
+                // create a UIImage from the PDF and add it like normal above
                 // immediately import that single page
                 MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
                 NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
@@ -530,7 +530,8 @@
         MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
         page.isBrandNewPage = YES;
         page.delegate = self;
-        UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:MAX(page.bounds.size.width, page.bounds.size.height)];
+        CGSize pageSize = page.bounds.size;
+        UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height];
         [page setPageBackgroundTexture:scrapBacking];
         [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
         [page updateThumbnailVisibility];

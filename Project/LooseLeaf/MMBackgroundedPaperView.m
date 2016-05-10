@@ -104,9 +104,14 @@
                 [[NSThread mainThread] performBlock:^{
                     if(wantsBackgroundTextureLoaded){
                         [self setPageBackgroundTexture:img andSaveToDisk:NO];
+                        isLoadingBackgroundTexture = NO;
                     };
                 }];
+            }else{
+                isLoadingBackgroundTexture = NO;
             }
+        }else{
+            isLoadingBackgroundTexture = NO;
         }
     };
     

@@ -8,6 +8,7 @@
 
 #import "MMDisplayAsset.h"
 #import "Constants.h"
+#import <JotUI/UIImage+Resize.h>
 
 @implementation MMDisplayAsset
 
@@ -17,6 +18,32 @@
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
     @throw kAbstractMethodException;
+}
+
+-(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio{
+    
+    UIImage* ret = [self aspectThumbnailWithMaxPixelSize:maxDim];
+    
+    CGSize size = [self fullResolutionSize];
+    CGFloat pdfRatio = ret.size.width / ret.size.height;
+    
+    if((pdfRatio > 1 && ratio < 1) || (pdfRatio < 1 && ratio > 1)){
+        ratio = 1 / ratio;
+    }
+    
+    if(pdfRatio != ratio){
+        if(pdfRatio > 1){
+            size.width = maxDim;
+            size.height = maxDim * ratio;
+        }else{
+            size.height = maxDim;
+            size.width = maxDim * ratio;
+        }
+        
+        ret = [ret resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:size interpolationQuality:kCGInterpolationHigh];
+    }
+    
+    return ret;
 }
 
 -(NSURL*) fullResolutionURL{
