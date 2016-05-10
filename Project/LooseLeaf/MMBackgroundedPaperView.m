@@ -46,9 +46,7 @@
     CheckMainThread;
     if(img.size.width > img.size.height){
         // rotate
-        img = [[UIImage alloc] initWithCGImage: img.CGImage
-                                         scale: img.scale
-                                   orientation: [self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp];
+        img = [[UIImage alloc] initWithCGImage:img.CGImage scale:img.scale orientation:([self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp)];
     }
 
     if(!paperBackgroundView){
