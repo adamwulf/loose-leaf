@@ -786,8 +786,8 @@
     [[self activePen] willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
-    [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
+    [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding];
 }
 
 -(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{

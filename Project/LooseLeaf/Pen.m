@@ -15,7 +15,9 @@
 #define           VELOCITY_CLAMP_MAX 1000
 
 
-@implementation Pen
+@implementation Pen{
+    BOOL shortStrokeEnding;
+}
 
 @synthesize minSize;
 @synthesize maxSize;
@@ -74,6 +76,7 @@
  * reset all of our counters/etc to base values
  */
 -(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    shortStrokeEnding = NO;
     velocity = 1;
     return YES;
 }
@@ -87,8 +90,8 @@
     velocity = [[MMTouchVelocityGestureRecognizer sharedInstance] normalizedVelocityForTouch:touch];
 }
 
--(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
-    // noop
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)_shortStrokeEnding{
+    shortStrokeEnding = _shortStrokeEnding;
 }
 
 /**
@@ -167,6 +170,10 @@
         if(width > 0) width = 0;
         width = minSize + ABS(width) * (maxSize - minSize);
         if(width < 1) width = 1;
+        
+        if(shortStrokeEnding){
+            return maxSize;
+        }
         
         return width;
     }else{

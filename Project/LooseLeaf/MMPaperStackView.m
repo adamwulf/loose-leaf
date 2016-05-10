@@ -1903,7 +1903,7 @@
     @throw kAbstractMethodException;
 }
 
--(void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+-(void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
     @throw kAbstractMethodException;
 }
 

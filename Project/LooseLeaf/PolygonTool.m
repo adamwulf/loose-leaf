@@ -45,7 +45,7 @@
  * a notification that the input will end the
  * stroke
  */
-- (void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
     if([polygonTouches containsObject:touch]){
         [delegate finishShapeWithTouch:coalescedTouch withTool:self];
         [polygonTouches removeObject:touch];

@@ -9,7 +9,9 @@
 #import "Eraser.h"
 #import "Constants.h"
 
-@implementation Eraser
+@implementation Eraser{
+    BOOL shortStrokeEnding;
+}
 
 -(id) init{
     return [self initWithMinSize:12.0 andMaxSize:180.0 andMinAlpha:1.0 andMaxAlpha:1.0];
@@ -24,6 +26,10 @@
     [super willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     velocity = 0;
     return YES;
+}
+
+-(void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)_shortStrokeEnding{
+    shortStrokeEnding = _shortStrokeEnding;
 }
 
 /**
@@ -43,6 +49,11 @@
         if(width > 0) width = 0;
         width = maxSize + ABS(width) * (minSize - maxSize);
         if(width < 1) width = 1;
+        
+        if(shortStrokeEnding){
+            return minSize;
+        }
+        
         return width;
     }else{
         //
