@@ -901,6 +901,10 @@
 
 #pragma mark - MMPaperViewDelegate
 
+-(BOOL) isAnimatingTowardPageView{
+    @throw kAbstractMethodException;
+}
+
 -(void) didStartToWriteWithStylus{
     @throw kAbstractMethodException;
 }

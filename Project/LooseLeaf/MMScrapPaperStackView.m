@@ -416,9 +416,38 @@
     [self enableAllGesturesForPageView];
 }
 
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+-(void) importImageAsNewPage:(UIImage*)imageToImport{
+    MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    page.isBrandNewPage = YES;
+    page.delegate = self;
+    [page setPageBackgroundTexture:imageToImport];
+    [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+    [page updateThumbnailVisibility];
+    [hiddenStackHolder pushSubview:page];
+    [[visibleStackHolder peekSubview] enableAllGestures];
+    [self popTopPageOfHiddenStack];
+    [page saveToDisk:^(BOOL didSaveEdits) {
+        NSLog(@"page saved ok: %d", didSaveEdits);
+    }];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+    
+    [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+}
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotosTaken by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventTakePhoto];
+    
+    
+    if(asPage){
+        CGSize pageSize = hiddenStackHolder.bounds.size;
+        img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
+        [self importImageAsNewPage:img];
+        return;
+    }
+
+    
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
     scrapRect.size = cameraView.bounds.size;
@@ -509,7 +538,7 @@
                      }];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+-(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription andRequestsImportAsPage:(BOOL)asPage{
     CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
@@ -523,34 +552,11 @@
     CGSize buttonSize = [bufferedImage visibleImageSize];
     CGSize fullScaleSize = photo.fullResolutionSize;
 
-
-    CGFloat ratioDiffPortrait = ABS(fullScaleSize.width / fullScaleSize.height - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
-    CGFloat ratioDiffLandscape = ABS(fullScaleSize.height / fullScaleSize.width - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
-    if(ratioDiffPortrait < .1 || ratioDiffLandscape < .1){
-        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-        page.isBrandNewPage = YES;
-        page.delegate = self;
-        CGSize pageSize = page.bounds.size;
-        UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height];
-        [page setPageBackgroundTexture:scrapBacking];
-        [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-        [page updateThumbnailVisibility];
-        [hiddenStackHolder pushSubview:page];
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popTopPageOfHiddenStack];
-        [page saveToDisk:^(BOOL didSaveEdits) {
-            NSLog(@"page saved ok: %d", didSaveEdits);
-        }];
-        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-
-        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
-
+    if(asPage){
+        CGSize pageSize = hiddenStackHolder.bounds.size;
+        [self importImageAsNewPage:[photo aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height]];
         return;
     }
-
-
-
 
     // force the rect path that we're building to
     // match the aspect ratio of the input photo

@@ -21,6 +21,7 @@
 #import "Constants.h"
 #import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
+#import "UIImage+MMColor.h"
 #import "UIView+Debug.h"
 
 @implementation MMImageSidebarContainerView{
@@ -37,6 +38,9 @@
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
     MMInboxButton* inboxButton;
+    
+    UIButton* importAsPageButton;
+    UIButton* importAsScrapButton;
 }
 
 @dynamic delegate;
@@ -44,14 +48,14 @@
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
     self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
-        
         CGRect contentBounds = [slidingSidebarView contentBounds];
         
         [MMPhotoManager sharedInstance].delegate = self;
         
         CGRect buttonBounds = CGRectZero;
-        buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
+        buttonBounds.origin.y = 0;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
+        buttonBounds.size.height += kHeightOfImportTypeButton + 10;
         buttonBounds.size.width = kWidthOfSidebarButton * 5;
         buttonBounds.origin.x = (contentBounds.size.width - buttonBounds.size.width)/2 + 10;
         
@@ -93,8 +97,24 @@
         //////////////////////////////////////////
         // buttons
         
+        
+        importAsPageButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [importAsPageButton setBackgroundImage:[UIImage imageFromColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+        [importAsPageButton setBackgroundImage:[UIImage imageFromColor:[UIColor redColor]] forState:UIControlStateSelected];
+        [importAsPageButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
+        importAsPageButton.selected = YES;
+        [slidingSidebarView addSubview:importAsPageButton];
+
+        importAsScrapButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [importAsScrapButton setBackgroundImage:[UIImage imageFromColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+        [importAsScrapButton setBackgroundImage:[UIImage imageFromColor:[UIColor redColor]] forState:UIControlStateSelected];
+        [importAsScrapButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
+        importAsScrapButton.selected = NO;
+        [slidingSidebarView addSubview:importAsScrapButton];
+        
+        
         // camera
-        cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
+        cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds), CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                              kWidthOfSidebarButton, kWidthOfSidebarButton)];
         cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         cameraAlbumButton.shadowInset = -1;
@@ -102,7 +122,7 @@
         [slidingSidebarView addSubview:cameraAlbumButton];
         
         // albums
-        iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
+        iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -111,7 +131,7 @@
         [slidingSidebarView addSubview:iPhotoAlbumButton];
         
         // faces button
-        iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
+        iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + 2* kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                            kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -119,14 +139,14 @@
         [slidingSidebarView addSubview:iPhotoFacesButton];
         
         // event button
-        iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
+        iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + 3* kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoEventsButton.shadowInset = -1;
         [slidingSidebarView addSubview:iPhotoEventsButton];
         
-        inboxButton = [[MMInboxButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+        inboxButton = [[MMInboxButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [inboxButton addTarget:self action:@selector(inboxButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         inboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -137,6 +157,11 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;
+}
+
+-(void) setImportType:(id)sender{
+    importAsPageButton.selected = (importAsPageButton == sender);
+    importAsScrapButton.selected = (importAsScrapButton == sender);
 }
 
 -(void) dealloc{
@@ -180,11 +205,11 @@
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
-    [self.delegate pictureTakeWithCamera:img fromView:cameraView];
+    [self.delegate pictureTakeWithCamera:img fromView:cameraView andRequestsImportAsPage:importAsPageButton.selected];
 }
 
 -(void) photoWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
-    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
+    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description] andRequestsImportAsPage:importAsPageButton.selected];
 }
 
 -(void) switchToListView:(MMAbstractSidebarContentView*)listView{

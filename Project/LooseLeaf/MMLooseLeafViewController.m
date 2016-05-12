@@ -537,12 +537,14 @@
     return [currentStackView imageForBlur];
 }
 
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
-    [currentStackView pictureTakeWithCamera:img fromView:cameraView];
+#pragma mark - MMImageSidebarContainerViewDelegate
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage{
+    [currentStackView pictureTakeWithCamera:img fromView:cameraView andRequestsImportAsPage:asPage];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription{
-    [currentStackView photoWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription];
+-(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage{
+    [currentStackView photoWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription andRequestsImportAsPage:asPage];
 }
 
 #pragma mark - MMShareItemDelegate
