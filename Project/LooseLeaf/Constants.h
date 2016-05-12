@@ -89,6 +89,10 @@ _Pragma("clang diagnostic pop") \
 #define kMaxButtonBounceHeight .4
 #define kMinButtonBounceHeight -.2
 
+// User Defaults
+
+#define kImportAsPagePreferenceDefault @"ImportAsPagePreferenceDefault"
+
 // Camera
 #define kCameraMargin 10
 #define kCameraPositionUserDefaultKey @"com.milestonemade.preferredCameraPosition"
