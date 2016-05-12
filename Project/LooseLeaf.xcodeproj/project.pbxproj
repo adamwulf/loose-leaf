@@ -441,6 +441,7 @@
 		C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */; };
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C50CBF6F1CE441240053885A /* UIImage+MMColor.m */; };
+		C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C50CBF8A1CE4522E0053885A /* Icons.xcassets */; };
 		C51290491CAB13250057363A /* MMStackIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C51290481CAB13250057363A /* MMStackIconView.m */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C518C87F1C8421B400F1895C /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C518C87E1C8421B400F1895C /* highlighter.png */; };
@@ -1398,6 +1399,7 @@
 		C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMarkerButton.m; sourceTree = "<group>"; };
 		C50CBF6E1CE441240053885A /* UIImage+MMColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMColor.h"; sourceTree = "<group>"; };
 		C50CBF6F1CE441240053885A /* UIImage+MMColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMColor.m"; sourceTree = "<group>"; };
+		C50CBF8A1CE4522E0053885A /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		C51290471CAB13250057363A /* MMStackIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackIconView.h; sourceTree = "<group>"; };
 		C51290481CAB13250057363A /* MMStackIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackIconView.m; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
@@ -3078,6 +3080,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C50CBF711CE451FA0053885A /* icons */,
 				C53F633D1CDA85E900091EF1 /* backgrounds */,
 				C5F4BE811C2676C100FFB640 /* LaunchScreen */,
 				C5FC07B21C23E00300C88675 /* Mixpanel */,
@@ -3422,6 +3425,14 @@
 				C506A3B91C23DE3200236895 /* SSKeychainQuery.m */,
 			);
 			name = SSKeychain;
+			sourceTree = "<group>";
+		};
+		C50CBF711CE451FA0053885A /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				C50CBF8A1CE4522E0053885A /* Icons.xcassets */,
+			);
+			name = icons;
 			sourceTree = "<group>";
 		};
 		C51C69601C8978B200C77AC7 /* StackController */ = {
@@ -3954,6 +3965,7 @@
 				C58E6A401CDB1B4A00508F1D /* bg35.jpg in Resources */,
 				665810891B6DAF0A00A2C603 /* hello.mp4 in Resources */,
 				C58E6A4B1CDB1B4A00508F1D /* bg46.jpg in Resources */,
+				C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */,
 				C58E6A451CDB1B4A00508F1D /* bg40.jpg in Resources */,
 				66E2240D19D645BD000FCA96 /* ios8-settings-photos.png in Resources */,
 				665F7F621AE096D000635D56 /* list-view-delete-page.mov in Resources */,

@@ -99,15 +99,15 @@
         
         
         importAsPageButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
-        [importAsPageButton setBackgroundImage:[UIImage imageFromColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-        [importAsPageButton setBackgroundImage:[UIImage imageFromColor:[UIColor redColor]] forState:UIControlStateSelected];
+        [importAsPageButton setBackgroundImage:[UIImage imageNamed:@"importAsPage"] forState:UIControlStateNormal];
+        [importAsPageButton setBackgroundImage:[UIImage imageNamed:@"importAsPageHighlighted"] forState:UIControlStateSelected];
         [importAsPageButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
         importAsPageButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kImportAsPagePreferenceDefault];
         [slidingSidebarView addSubview:importAsPageButton];
 
         importAsScrapButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
-        [importAsScrapButton setBackgroundImage:[UIImage imageFromColor:[UIColor whiteColor]] forState:UIControlStateNormal];
-        [importAsScrapButton setBackgroundImage:[UIImage imageFromColor:[UIColor redColor]] forState:UIControlStateSelected];
+        [importAsScrapButton setBackgroundImage:[UIImage imageNamed:@"importAsScrap"] forState:UIControlStateNormal];
+        [importAsScrapButton setBackgroundImage:[UIImage imageNamed:@"importAsScrapHighlighted"] forState:UIControlStateSelected];
         [importAsScrapButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
         importAsScrapButton.selected = ![[NSUserDefaults standardUserDefaults] boolForKey:kImportAsPagePreferenceDefault];
         [slidingSidebarView addSubview:importAsScrapButton];
