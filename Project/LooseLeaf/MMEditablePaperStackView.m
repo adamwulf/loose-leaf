@@ -139,9 +139,9 @@
         self.delaysContentTouches = NO;
         
 
-        if([[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedBrush"] isEqualToString:@"marker"]){
+        if([[[NSUserDefaults standardUserDefaults] stringForKey:kSelectedBrush] isEqualToString:kBrushMarker]){
             [pencilTool setActiveButton:pencilTool.markerButton];
-        }else if([[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedBrush"] isEqualToString:@"highlighter"]){
+        }else if([[[NSUserDefaults standardUserDefaults] stringForKey:kSelectedBrush] isEqualToString:kBrushHighlighter]){
             [pencilTool setActiveButton:pencilTool.highlighterButton];
         }else{
             [pencilTool setActiveButton:pencilTool.pencilButton];
@@ -213,7 +213,7 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@"highlighter" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] setObject:kBrushHighlighter forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -224,7 +224,7 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@"pencil" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] setObject:kBrushPencil forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -235,7 +235,7 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@"marker" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] setObject:kBrushMarker forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 

@@ -130,9 +130,9 @@
 
         allColors = @[blackButton.color, redButton.color, blueButton.color, yellowButton.color, greenButton.color];
 
-        NSInteger penColor = [[NSUserDefaults standardUserDefaults] integerForKey:@"penColor"];
-        NSInteger pencilColor = [[NSUserDefaults standardUserDefaults] integerForKey:@"pencilColor"];
-        NSInteger highlighterColor = [[NSUserDefaults standardUserDefaults] integerForKey:@"highlighterColor"];
+        NSInteger penColor = [[NSUserDefaults standardUserDefaults] integerForKey:kMarkerColor];
+        NSInteger pencilColor = [[NSUserDefaults standardUserDefaults] integerForKey:kPencilColor];
+        NSInteger highlighterColor = [[NSUserDefaults standardUserDefaults] integerForKey:kHighlighterColor];
         penColor = (penColor < 0) ? 0 : (penColor >= [allColors count]) ? 0 : penColor;
         pencilColor = (pencilColor < 0) ? 0 : (pencilColor >= [allColors count]) ? 0 : pencilColor;
         highlighterColor = (highlighterColor < 0) ? 0 : (highlighterColor >= [allColors count]) ? 0 : highlighterColor;
@@ -454,11 +454,11 @@
         [self.delegate didChangeColorTo:activeButton.selectedColor];
 
         if(activeButton == markerButton){
-            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"penColor"];
+            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:kMarkerColor];
         }else if(activeButton == pencilButton){
-            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"pencilColor"];
+            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:kPencilColor];
         }else if(activeButton == highlighterButton){
-            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:@"highlighterColor"];
+            [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:kHighlighterColor];
         }
     }
 }

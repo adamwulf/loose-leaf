@@ -91,7 +91,17 @@ _Pragma("clang diagnostic pop") \
 
 // User Defaults
 
-#define kImportAsPagePreferenceDefault @"ImportAsPagePreferenceDefault"
+#define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
+#define kHasEverImportedAPage @"hasEverImportedAPage"
+#define kMixpanelUUID @"mixpanel_uuid"
+#define kSelectedBrush @"selectedBrush"
+#define kBrushPencil @"pencil"
+#define kBrushHighlighter @"highlighter"
+#define kBrushMarker @"marker"
+#define kIsShowingListView @"ShowingListView"
+#define kMarkerColor @"markerColor"
+#define kPencilColor @"pencilColor"
+#define kHighlighterColor @"highlighterColor"
 
 // Camera
 #define kCameraMargin 10

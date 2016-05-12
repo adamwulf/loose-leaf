@@ -17,6 +17,7 @@
 #import "Constants.h"
 #import "MMUnknownObject.h"
 #import "Mixpanel.h"
+#import "Constants.h"
 
 @implementation MMCloudKitImportExportView{
     NSMutableSet* disappearingButtons;
@@ -377,7 +378,7 @@
     [self animateAndAlignAllButtons];
     
     
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"hasEverImportedAPage"]){
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:kHasEverImportedAPage]){
         if(!bounceTimer){
             bounceTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(bounceMostRecentImport) userInfo:nil repeats:YES];
         }
@@ -396,7 +397,7 @@
 }
 
 -(void) importWasTapped:(MMCloudKitImportCoordinator*)coordinator{
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"hasEverImportedAPage"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHasEverImportedAPage];
     [bounceTimer invalidate];
     bounceTimer = nil;
     

@@ -726,7 +726,7 @@
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         [self moveAddButtonToTop];
 
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ShowingListView"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kIsShowingListView];
     };
     
     step1();
@@ -822,7 +822,7 @@
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [super finishedScalingBackToPageView:page];
 
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"ShowingListView"];
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kIsShowingListView];
 }
 
 /**

@@ -357,7 +357,7 @@
 
         [aStackView loadStacksFromDisk];
 
-        if([[NSUserDefaults standardUserDefaults] boolForKey:@"ShowingListView"]){
+        if([[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]){
             // open into list view if that was their last visible screen
             [aStackView immediatelyTransitionToListView];
             [aStackView setButtonsVisible:NO animated:NO];
