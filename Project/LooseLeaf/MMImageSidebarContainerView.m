@@ -159,10 +159,10 @@
 }
 
 -(void) setImportType:(id)sender{
-    [[NSUserDefaults standardUserDefaults] setBool:importAsPageButton.selected forKey:kImportAsPagePreferenceDefault];
-
     importAsPageButton.selected = (importAsPageButton == sender);
     importAsScrapButton.selected = (importAsScrapButton == sender);
+
+    [[NSUserDefaults standardUserDefaults] setBool:importAsPageButton.selected forKey:kImportAsPagePreferenceDefault];
 }
 
 -(void) dealloc{
