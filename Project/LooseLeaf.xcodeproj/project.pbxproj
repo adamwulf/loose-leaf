@@ -520,6 +520,7 @@
 		C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A181CDB1B4A00508F1D /* bg53.jpg */; };
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
+		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
@@ -1497,6 +1498,8 @@
 		C5A7A0871CA651D70054EEF1 /* MMStackButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonView.h; sourceTree = "<group>"; };
 		C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackButtonView.m; sourceTree = "<group>"; };
 		C5A7A08A1CA65E5A0054EEF1 /* MMStackButtonViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonViewDelegate.h; sourceTree = "<group>"; };
+		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
+		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
@@ -2101,6 +2104,7 @@
 		664C62F115A36DB00072736A /* MMPaperView */ = {
 			isa = PBXGroup;
 			children = (
+				C5B905CA1CEACE1A002943BF /* Backgrounds */,
 				6612C8821964C0C4003A9575 /* Undo Redo */,
 				66E47E22187F278A000AFD18 /* Ruler */,
 				66A471C317C7E05C00C2A5B6 /* Scraps */,
@@ -3577,6 +3581,15 @@
 			name = Toolbar;
 			sourceTree = "<group>";
 		};
+		C5B905CA1CEACE1A002943BF /* Backgrounds */ = {
+			isa = PBXGroup;
+			children = (
+				C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */,
+				C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */,
+			);
+			name = Backgrounds;
+			sourceTree = "<group>";
+		};
 		C5F4BE811C2676C100FFB640 /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -4306,6 +4319,7 @@
 				66F968B119C3940400C1F696 /* MMCloudKitNoAccountHelpView.m in Sources */,
 				C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */,
 				6623C7F01AB0D3A600192F95 /* MMInboxImage.m in Sources */,
+				C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */,
 				6648D21D178C9E5400BE3B37 /* UIColor+Shadow.m in Sources */,
 				661C4B241A830F740014DB20 /* MMPinterestShareItem.m in Sources */,
 				66E1010319ECB5DE006E7C15 /* MMRotateViewController.m in Sources */,

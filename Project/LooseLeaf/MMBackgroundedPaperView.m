@@ -10,6 +10,7 @@
 #import "MMEditablePaperViewSubclass.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
+#import "MMScrapBackgroundView.h"
 
 @implementation MMBackgroundedPaperView{
     UIImageView* paperBackgroundView;
@@ -174,5 +175,38 @@
 //    }
 }
 
+-(void) newlyCutScrapFromPaperView:(MMScrapView*)addedScrap{
+    if(self.pageBackgroundTexture){
+        MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.pageBackgroundTexture forScrapState:addedScrap.state];
+        
+        // clone the background so that the new scrap's
+        // background aligns with the old scrap's background
+        CGFloat orgRot = 0;
+        CGFloat newRot = addedScrap.state.delegate.rotation;
+        CGFloat rotDiff = orgRot - newRot;
+        
+        CGPoint orgC = CGPointMake(CGRectGetMidX([[self page] bounds]), CGRectGetMidY([[self page] bounds]));
+        CGPoint newC = addedScrap.state.delegate.center;
+        CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
+        
+        CGPoint convertedC = [addedScrap.state.contentView convertPoint:orgC fromView:[self page]];
+        CGPoint refPoint = CGPointMake(addedScrap.state.contentView.bounds.size.width/2,
+                                       addedScrap.state.contentView.bounds.size.height/2);
+        CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
+        
+        // we have the correct adjustment value,
+        // but now we need to account for the fact
+        // that the new scrap has a different rotation
+        // than the start scrap
+        
+        moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(orgRot - newRot));
+        
+        backgroundView.backgroundRotation = rotDiff;
+        backgroundView.backgroundScale = self.pageBackgroundTexture.scale;
+        backgroundView.backgroundOffset = moveC2;
+        
+        [addedScrap setBackgroundView:backgroundView];
+    }
+}
 
 @end

@@ -15,7 +15,6 @@
 static int totalBackgroundBytes;
 
 @implementation MMScrapBackgroundView{
-    UIImageView* backingContentView;
     // the scrap that we're the background for
     __weak MMScrapViewState* scrapState;
     // cache our path
@@ -26,22 +25,15 @@ static int totalBackgroundBytes;
     return totalBackgroundBytes;
 }
 
-
-@synthesize backingContentView;
-@synthesize backgroundRotation;
-@synthesize backgroundScale;
-@synthesize backgroundOffset;
-@synthesize backingViewHasChanged;
-
 -(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)_scrapState{
-    if(self = [super initWithFrame:CGRectZero]){
+    if(self = [super initWithImage:img]){
         scrapState = _scrapState;
-        backingContentView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        backingContentView.contentMode = UIViewContentModeScaleAspectFit;
-        backingContentView.clipsToBounds = YES;
-        backgroundScale = 1.0;
-        [self addSubview:backingContentView];
+        _backingContentView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _backingContentView.contentMode = UIViewContentModeScaleAspectFit;
+        _backingContentView.clipsToBounds = YES;
+        [self setBackgroundScale:1.0];
         [self setBackingImage:img];
+        [self addSubview:_backingContentView];
         if(img){
             @synchronized([MMScrapBackgroundView class]){
                 totalBackgroundBytes += [img uncompressedByteSize];
@@ -53,10 +45,10 @@ static int totalBackgroundBytes;
 
 -(void) setFrame:(CGRect)frame{
     [super setFrame:frame];
-    if(!backingContentView.image){
+    if(!_backingContentView.image){
         // if the backingContentView has an image, then
         // it's frame is already set for its image size
-        backingContentView.bounds = self.bounds;
+        _backingContentView.bounds = self.bounds;
     }
     [self updateBackingImageLocation];
 }
@@ -73,39 +65,57 @@ static int totalBackgroundBytes;
 
 -(void) setBackingImage:(UIImage*)img{
     CheckMainThread;
+    [super setBackingImage:img];
     @synchronized([MMScrapBackgroundView class]){
-        totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
+        totalBackgroundBytes -= [_backingContentView.image uncompressedByteSize];
         totalBackgroundBytes += [img uncompressedByteSize];
     }
-    backingContentView.image = img;
-    CGRect r = backingContentView.bounds;
+    _backingContentView.image = img;
+    CGRect r = _backingContentView.bounds;
     r.size = CGSizeMake(img.size.width, img.size.height);
     // must set the bounds, because the image view
     // has a transform applied, and setting the frame
     // will try to take that transform into account.
     //
     // instead, we want to change the pre-transform size
-    backingContentView.bounds = r;
+    _backingContentView.bounds = r;
     [self updateBackingImageLocation];
 }
 
--(UIImage*) backingImage{
-    return backingContentView.image;
-}
-
 -(void) setBackgroundRotation:(CGFloat)_backgroundRotation{
-    backgroundRotation = _backgroundRotation;
+    [super setBackgroundRotation:_backgroundRotation];
     [self updateBackingImageLocation];
 }
 
 -(void) setBackgroundScale:(CGFloat)_backgroundScale{
-    backgroundScale = _backgroundScale;
+    [super setBackgroundScale:_backgroundScale];
     [self updateBackingImageLocation];
 }
 
 -(void) setBackgroundOffset:(CGPoint)bgOffset{
-    backgroundOffset = bgOffset;
+    [super setBackgroundOffset:bgOffset];
     [self updateBackingImageLocation];
+}
+
+#pragma mark - Context Properties
+// The background object lives in some parent view space.
+// so these properties are how we relate to that parent view space
+
+// the context that our scrap lives in
+-(UIView*) contextView{
+    return scrapState.contentView;
+}
+
+// the rotation of the scrap relative to the contextView (the page)
+// (vs self.backgroundRotation, which is the rotation of the
+//  background relative to the scrap)
+-(CGFloat) contextRotation{
+    return scrapState.delegate.rotation;
+}
+
+// the center of the background relative to the contextView (the page)
+-(CGPoint) currentCenterOfBackground{
+    return [scrapState currentCenterOfScrapBackground];
 }
 
 #pragma mark - Path to the JPG on disk
@@ -130,46 +140,11 @@ static int totalBackgroundBytes;
     // might be deleted from disk soon. so this image needs to load
     // from its own assets
     UIImage* replacementImage = [UIImage imageWithData:UIImagePNGRepresentation(self.backingImage)];
-//    UIImage* replacementImage = self.backingImage;
     MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:replacementImage
                                                                            forScrapState:otherScrapState];
     backgroundView.backgroundRotation = self.backgroundRotation;
     backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundOffset = self.backgroundOffset;
-    return backgroundView;
-}
-
-// this will create a copy of the current background and will align
-// it onto the input scrap so that the new scrap's background perfectly
-// aligns with this scrap's background
--(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)otherScrapState{
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
-                                                                           forScrapState:otherScrapState];
-    // clone the background so that the new scrap's
-    // background aligns with the old scrap's background
-    CGFloat orgRot = scrapState.delegate.rotation;
-    CGFloat newRot = otherScrapState.delegate.rotation;
-    CGFloat rotDiff = orgRot - newRot;
-    
-    CGPoint orgC = scrapState.delegate.center;
-    CGPoint newC = otherScrapState.delegate.center;
-    CGPoint moveC = CGPointMake(newC.x - orgC.x, newC.y - orgC.y);
-    
-    CGPoint convertedC = [otherScrapState.contentView convertPoint:[scrapState currentCenterOfScrapBackground] fromView:scrapState.contentView];
-    CGPoint refPoint = CGPointMake(otherScrapState.contentView.bounds.size.width/2,
-                                   otherScrapState.contentView.bounds.size.height/2);
-    CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
-    
-    // we have the correct adjustment value,
-    // but now we need to account for the fact
-    // that the new scrap has a different rotation
-    // than the start scrap
-    
-    moveC = CGPointApplyAffineTransform(moveC, CGAffineTransformMakeRotation(scrapState.delegate.rotation - otherScrapState.delegate.rotation));
-    
-    backgroundView.backgroundRotation = self.backgroundRotation + rotDiff;
-    backgroundView.backgroundScale = self.backgroundScale;
-    backgroundView.backgroundOffset = moveC2;
     return backgroundView;
 }
 
@@ -222,48 +197,8 @@ static int totalBackgroundBytes;
 
 -(void) dealloc{
     @synchronized([MMScrapBackgroundView class]){
-        totalBackgroundBytes -= [backingContentView.image uncompressedByteSize];
+        totalBackgroundBytes -= [_backingContentView.image uncompressedByteSize];
     }
 }
-
-//
-// to support drawing on the view instead of transforming a subview,
-// for instance drawing PDFs, then don't use the backingContentView
-// at all, and uncomment this drawRect: call
-//
-//
-//
-//-(void) drawRect:(CGRect)rect{
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    CGContextSaveGState(context);
-//
-//    // get the image
-//    UIImage* img = self.backingContentView.image;
-//
-//    // center in the content bounds + offset
-//    CGPoint moveCenterTo = CGPointMake(self.bounds.size.width/2 + self.backgroundOffset.x,
-//                                       self.bounds.size.height/2 + self.backgroundOffset.y);
-//    CGContextTranslateCTM(context, moveCenterTo.x, moveCenterTo.y);
-//
-//    // scale and rotate the image
-//    CGContextConcatCTM(context, CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),
-//                                                        CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale)));
-//    
-//    // draw the image, with 0,0 at the center
-//    [img drawInRect:CGRectMake(-img.size.width/2, -img.size.height/2, img.size.width, img.size.height)];
-//
-//    // debug drawing
-//    // dot the center
-//    [[UIColor redColor] setFill];
-//    [[UIBezierPath bezierPathWithArcCenter:CGPointZero radius:10 startAngle:0 endAngle:2*M_PI clockwise:YES] fill];
-//    // red border
-//    UIBezierPath* redBorder = [UIBezierPath bezierPathWithRect:CGRectMake(-img.size.width/2, -img.size.height/2, img.size.width, img.size.height)];
-//    redBorder.lineWidth = 20;
-//    [[UIColor redColor] setStroke];
-//    [redBorder stroke];
-//
-//    // restore
-//    CGContextRestoreGState(context);
-//}
 
 @end

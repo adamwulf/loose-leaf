@@ -171,7 +171,7 @@
 #pragma mark - Thumbnail helpers
 
 -(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail{
-    // noop
+    // noop. debug use only for now
 }
 
 #pragma mark - Undo Redo
@@ -801,6 +801,8 @@
             MMScrapView* addedScrap = [self addScrapWithPath:scissorPath andScale:1.0];
             [addedScrap stampContentsFrom:self.drawableView];
             
+            [self newlyCutScrapFromPaperView:addedScrap];
+            
             [scrapsBeingBuilt addObject:addedScrap];
             
             // now we need to add a stroke to the underlying page that
@@ -875,6 +877,11 @@
                                        andRemovedScraps:scrapsBeingRemoved
                               andRemovedScrapProperties:removedScrapProperties
                                        andDidFillStroke:didFill];
+}
+
+-(void) newlyCutScrapFromPaperView:(MMScrapView*)scrap{
+    // noop. This allows our subclsses to modify
+    // newly created scraps
 }
 
 
