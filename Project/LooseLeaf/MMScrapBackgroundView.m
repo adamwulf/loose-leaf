@@ -14,6 +14,10 @@
 
 static int totalBackgroundBytes;
 
+@interface MMScrapBackgroundView ()<MMGenericBackgroundViewDelegate>
+
+@end
+
 @implementation MMScrapBackgroundView{
     // the scrap that we're the background for
     __weak MMScrapViewState* scrapState;
@@ -26,7 +30,7 @@ static int totalBackgroundBytes;
 }
 
 -(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)_scrapState{
-    if(self = [super initWithImage:img]){
+    if(self = [super initWithImage:img andDelegate:self]){
         scrapState = _scrapState;
         _backingContentView = [[UIImageView alloc] initWithFrame:CGRectZero];
         _backingContentView.contentMode = UIViewContentModeScaleAspectFit;
@@ -97,24 +101,25 @@ static int totalBackgroundBytes;
     [self updateBackingImageLocation];
 }
 
-#pragma mark - Context Properties
+#pragma mark - MMGenericBackgroundViewDelegate
+
 // The background object lives in some parent view space.
 // so these properties are how we relate to that parent view space
 
 // the context that our scrap lives in
--(UIView*) contextView{
+-(UIView*) contextViewForGenericBackground:(MMGenericBackgroundView*)backgroundView{
     return scrapState.contentView;
 }
 
 // the rotation of the scrap relative to the contextView (the page)
 // (vs self.backgroundRotation, which is the rotation of the
 //  background relative to the scrap)
--(CGFloat) contextRotation{
+-(CGFloat) contextRotationForGenericBackground:(MMGenericBackgroundView*)backgroundView{
     return scrapState.delegate.rotation;
 }
 
 // the center of the background relative to the contextView (the page)
--(CGPoint) currentCenterOfBackground{
+-(CGPoint) currentCenterOfBackgroundForGenericBackground:(MMGenericBackgroundView*)backgroundView{
     return [scrapState currentCenterOfScrapBackground];
 }
 

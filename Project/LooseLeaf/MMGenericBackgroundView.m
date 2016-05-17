@@ -12,40 +12,21 @@
 
 @implementation MMGenericBackgroundView
 
--(id) initWithImage:(UIImage*)img{
+-(id) initWithImage:(UIImage*)img andDelegate:(NSObject<MMGenericBackgroundViewDelegate>*)delegate{
     if(self = [super initWithFrame:CGRectZero]){
         [self setBackingImage:img];
+        [self setDelegate:delegate];
+        self.bounds = CGRectMake(0, 0, img.size.width, img.size.height);
     }
     return self;
 }
 
 // scale the image so that it would be aspectFill
 -(void) aspectFillBackgroundImageIntoView{
-    CGFloat horizontalRatio = self.backingImage.size.width / self.bounds.size.width;
-    CGFloat verticalRatio = self.backingImage.size.height / self.bounds.size.height;
+    CGFloat horizontalRatio = self.bounds.size.width / self.backingImage.size.width;
+    CGFloat verticalRatio = self.bounds.size.height / self.backingImage.size.height;
     CGFloat ratio = MAX(horizontalRatio, verticalRatio);
     [self setBackgroundScale:ratio];
-}
-
-#pragma mark - Context Properties
-// The background object lives in some parent view space.
-// so these properties are how we relate to that parent view space
-
-// the context that our scrap lives in
--(UIView*) contextView{
-    return self.superview;
-}
-
-// the rotation of the scrap relative to the contextView (the page)
-// (vs self.backgroundRotation, which is the rotation of the
-//  background relative to the scrap)
--(CGFloat) contextRotation{
-    return 0;
-}
-
-// the center of the background relative to the contextView (the page)
--(CGPoint) currentCenterOfBackground{
-    return self.center;
 }
 
 #pragma mark - Public Methods
@@ -62,11 +43,11 @@
                                                                            forScrapState:targetScrapState];
     // clone the background so that the new scrap's
     // background aligns with the old scrap's background
-    CGFloat orgRot = [self contextRotation];
+    CGFloat orgRot = [self.delegate contextRotationForGenericBackground:self];
     CGFloat newRot = targetScrapState.delegate.rotation;
     CGFloat rotDiff = orgRot - newRot;
     
-    CGPoint convertedC = [targetScrapState.contentView convertPoint:[self currentCenterOfBackground] fromView:[self contextView]];
+    CGPoint convertedC = [targetScrapState.contentView convertPoint:[self.delegate currentCenterOfBackgroundForGenericBackground:self] fromView:[self.delegate contextViewForGenericBackground:self]];
     CGPoint refPoint = CGPointMake(targetScrapState.contentView.bounds.size.width/2,
                                    targetScrapState.contentView.bounds.size.height/2);
     CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);

@@ -7,23 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMGenericBackgroundViewDelegate.h"
 
 @class MMScrapBackgroundView, MMScrapViewState;
 
 @interface MMGenericBackgroundView : UIView
 
--(id) initWithImage:(UIImage*)img;
+-(id) initWithImage:(UIImage*)img andDelegate:(NSObject<MMGenericBackgroundViewDelegate>*)delegate;
 
+@property (nonatomic, weak) NSObject<MMGenericBackgroundViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat backgroundRotation;
 @property (nonatomic, assign) CGFloat backgroundScale;
 @property (nonatomic, assign) CGPoint backgroundOffset;
 @property (nonatomic, retain) UIImage* backingImage;
 
--(UIView*) contextView;
-
--(CGFloat) contextRotation;
-
--(CGPoint) currentCenterOfBackground;
+-(void) aspectFillBackgroundImageIntoView;
 
 -(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)targetScrapState;
 
