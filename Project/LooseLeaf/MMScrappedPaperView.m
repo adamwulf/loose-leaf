@@ -788,6 +788,10 @@
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
         }
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
+            
+            
+            scissorPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, self.bounds.size.width/2, self.bounds.size.height/2)];
+            
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
             NSArray* subshapes = [[UIBezierPath bezierPathWithRect:drawableView.bounds] uniqueShapesCreatedFromSlicingWithUnclosedPath:scissorPath];

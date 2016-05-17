@@ -59,6 +59,44 @@
     backgroundView.backgroundRotation = self.backgroundRotation + rotDiff;
     backgroundView.backgroundScale = self.backgroundScale;
     backgroundView.backgroundOffset = moveC2;
+    
+    
+    CGSize contextSize = [self.delegate contextViewForGenericBackground:self].bounds.size;
+    CGSize backingSize = _backingImage.size;
+    CGSize targetSize = targetScrapState.originalSize;
+    CGFloat targetRotation = backgroundView.backgroundRotation;
+    CGFloat targetScale = backgroundView.backgroundScale;
+    CGPoint targetOffset = backgroundView.backgroundOffset;
+    
+    UIGraphicsBeginImageContext(targetSize);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    [[UIColor whiteColor] setFill];
+    CGContextFillRect(context, CGRectMake(0, 0, targetSize.width, targetSize.height));
+    
+    CGAffineTransform scrapRotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(targetRotation),CGAffineTransformMakeScale(targetScale, targetScale));
+    CGAffineTransform backingRotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
+
+    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
+//    CGContextTranslateCTM(context, targetOffset.x, targetOffset.y);
+    CGContextConcatCTM(context, backingRotateAndScale);
+//    CGContextTranslateCTM(context, -targetOffset.x, -targetOffset.y);
+//    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
+    
+    
+//    CGContextTranslateCTM(context, targetOffset.x, targetOffset.y);
+//    CGContextConcatCTM(context, scrapRotateAndScale);
+    
+    [self.backingImage drawInRect:CGRectMake(-backingSize.width/2, -backingSize.height/2, backingSize.width, backingSize.height)];
+    
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    backgroundView = [[MMScrapBackgroundView alloc] initWithImage:image forScrapState:targetScrapState];
+    backgroundView.backgroundScale = 1.0;
+    backgroundView.backgroundRotation = 0;
+    backgroundView.backgroundOffset = CGPointZero;
+    
+    
     return backgroundView;
 }
 
