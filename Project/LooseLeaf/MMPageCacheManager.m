@@ -325,10 +325,12 @@ static MMPageCacheManager* _instance = nil;
 
 -(int) memoryOfStateLoadedPages{
     int totalBytes = 0;
+    NSArray* pagesToCountBytes;
     @synchronized(stateLoadedPages){
-        for(MMPaperView* page in stateLoadedPages){
-            totalBytes += page.fullByteSize;
-        }
+        pagesToCountBytes = [stateLoadedPages copy];
+    }
+    for(MMPaperView* page in pagesToCountBytes){
+        totalBytes += page.fullByteSize;
     }
     return totalBytes;
 }

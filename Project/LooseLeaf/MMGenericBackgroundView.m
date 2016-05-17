@@ -68,6 +68,14 @@
     CGFloat targetScale = backgroundView.backgroundScale;
     CGPoint targetOffset = backgroundView.backgroundOffset;
     
+    double widthInt = 0;
+    CGFloat widthFrac = modf(targetSize.width, &widthInt);
+    targetSize.width += (1 - widthFrac);
+
+    double heightInt = 0;
+    CGFloat heightFrac = modf(targetSize.height, &heightInt);
+    targetSize.height += (1 - heightFrac);
+    
     UIGraphicsBeginImageContext(targetSize);
     CGContextRef context = UIGraphicsGetCurrentContext();
     [[UIColor whiteColor] setFill];
@@ -76,9 +84,22 @@
     CGAffineTransform scrapRotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(targetRotation),CGAffineTransformMakeScale(targetScale, targetScale));
     CGAffineTransform backingRotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
 
-    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
+//    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
+////    CGContextConcatCTM(context, backingRotateAndScale);
+//
+//    CGContextTranslateCTM(context, -contextSize.width/2+convertedC.x, -contextSize.height/2+convertedC.y);
+    CGContextTranslateCTM(context, convertedC.x, convertedC.y);
+    
+    CGContextTranslateCTM(context, -4, -4);
+    
+    CGContextRotateCTM(context, targetRotation);
+
+    CGContextScaleCTM(context, targetScale, targetScale);
+    
+    
+//    CGContextConcatCTM(context, scrapRotateAndScale);
+
 //    CGContextTranslateCTM(context, targetOffset.x, targetOffset.y);
-    CGContextConcatCTM(context, backingRotateAndScale);
 //    CGContextTranslateCTM(context, -targetOffset.x, -targetOffset.y);
 //    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
     

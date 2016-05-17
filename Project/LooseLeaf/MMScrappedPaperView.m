@@ -771,16 +771,16 @@
             }
         }
 
-        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            for(int i=0;i<[vectorsForAnimation count];i++){
-                MMVector* vector = [vectorsForAnimation objectAtIndex:i];
-                vector = [vector normalizedTo:maxDist];
-                MMScrapView* scrap = [scrapsToAnimate objectAtIndex:i];
-
-                CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
-                scrap.center = newC;
-            }
-        } completion:nil];
+//        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//            for(int i=0;i<[vectorsForAnimation count];i++){
+//                MMVector* vector = [vectorsForAnimation objectAtIndex:i];
+//                vector = [vector normalizedTo:maxDist];
+//                MMScrapView* scrap = [scrapsToAnimate objectAtIndex:i];
+//
+//                CGPoint newC = [vector pointFromPoint:scrap.center distance:10];
+//                scrap.center = newC;
+//            }
+//        } completion:nil];
 
 
         if(hasBuiltAnyScraps){
@@ -790,7 +790,7 @@
         if(!hasBuiltAnyScraps && [scissorPath isClosed]){
             
             
-            scissorPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, self.bounds.size.width/2, self.bounds.size.height/2)];
+            scissorPath = [UIBezierPath bezierPathWithRect:CGRectMake(100, 100, self.bounds.size.width/2, self.bounds.size.height/2)];
             
             // track if they cut new scrap from base page
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfScissorUses by:@(1)];
@@ -837,11 +837,11 @@
             randTurn = randTurn * M_PI / 180; // convert to radians
             MMVector* vector = [[MMVector vectorWithX:randX andY:randY] normal];
             
-            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
-                addedScrap.center = newC;
-                addedScrap.rotation = addedScrap.rotation + randTurn;
-            } completion:nil];
+//            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//                CGPoint newC = [vector pointFromPoint:addedScrap.center distance:10];
+//                addedScrap.center = newC;
+//                addedScrap.rotation = addedScrap.rotation + randTurn;
+//            } completion:nil];
             
 
             [scissorPath applyTransform:CGAffineTransformMakeTranslation(-scissorPath.bounds.origin.x + kScrapShadowBufferSize, -scissorPath.bounds.origin.y + kScrapShadowBufferSize)];

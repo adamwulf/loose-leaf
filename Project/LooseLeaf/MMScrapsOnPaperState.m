@@ -56,10 +56,12 @@
 
 -(int) fullByteSize{
     int totalBytes = 0;
+    NSArray* scrapsToCountBytes;
     @synchronized(allLoadedScraps){
-        for(MMScrapView* scrap in allLoadedScraps){
-            totalBytes += scrap.fullByteSize;
-        }
+        scrapsToCountBytes = [allLoadedScraps copy];
+    }
+    for(MMScrapView* scrap in scrapsToCountBytes){
+        totalBytes += scrap.fullByteSize;
     }
     return totalBytes;
 }
