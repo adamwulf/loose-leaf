@@ -344,6 +344,9 @@
         
         inboxButton.rotation = [self sidebarButtonRotation];
         inboxButton.transform = rotationTransform;
+        
+        importAsPageButton.transform = rotationTransform;
+        importAsScrapButton.transform = rotationTransform;
     };
     
     [[NSThread mainThread] performBlock:^{
