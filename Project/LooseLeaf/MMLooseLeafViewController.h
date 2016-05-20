@@ -10,9 +10,10 @@
 #import "MMTutorialStackView.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import "MMMemoryManager.h"
 
-@interface MMLooseLeafViewController : UIViewController{
-    MMTutorialStackView* stackView;
+@interface MMLooseLeafViewController : UIViewController<MMMemoryManagerDelegate>{
+    MMTutorialStackView* currentStackView;
 }
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;

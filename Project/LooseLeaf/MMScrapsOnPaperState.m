@@ -56,17 +56,19 @@
 
 -(int) fullByteSize{
     int totalBytes = 0;
+    NSArray* scrapsToCountBytes;
     @synchronized(allLoadedScraps){
-        for(MMScrapView* scrap in allLoadedScraps){
-            totalBytes += scrap.fullByteSize;
-        }
+        scrapsToCountBytes = [allLoadedScraps copy];
+    }
+    for(MMScrapView* scrap in scrapsToCountBytes){
+        totalBytes += scrap.fullByteSize;
     }
     return totalBytes;
 }
 
 #pragma mark - Save and Load
 
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+-(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable andAdjustForScale:(BOOL)adjustForScale{
     if(self.isForgetful){
         return;
     }
@@ -174,10 +176,31 @@
                 [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
                     return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
                 }];
-                for(NSDictionary* scrapProperties in scrapPropsWithState){
+                for(__strong NSDictionary* scrapProperties in scrapPropsWithState){
                     if(self.isForgetful){
                         return;
                     }
+                    
+                    if(adjustForScale){
+                        // https://github.com/adamwulf/loose-leaf/issues/1611
+                        // bundled pages are from 768x1024 pages, so we need to scale them for iPad Pro
+                        // this works as long as the width/height ratios are equal.
+                        // if/when Apple releases a device w/ different screen ratio then I'll need
+                        // to update this to handle aspect fill/fit/whatever
+                        CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
+                        if(CGRectGetWidth(screenBounds) != 768 && CGRectGetHeight(screenBounds) != 1024){
+                            CGFloat widthRatio = CGRectGetWidth(screenBounds) / 768.0;
+
+                            NSMutableDictionary* adjustedProperties = [scrapProperties mutableCopy];
+                            adjustedProperties[@"center.x"] = @([scrapProperties[@"center.x"] floatValue] * widthRatio);
+                            adjustedProperties[@"center.y"] = @([scrapProperties[@"center.y"] floatValue] * widthRatio);
+                            adjustedProperties[@"scale"] = @([scrapProperties[@"scale"] floatValue] * widthRatio);
+                            
+                            scrapProperties = adjustedProperties;
+                        }
+                    }
+                    
+                    
                     MMScrapView* scrap = nil;
                     if([scrapProperties objectForKey:@"scrap"]){
                         scrap = [scrapProperties objectForKey:@"scrap"];
@@ -335,9 +358,9 @@
         // itself, so the load method below won't be run with pending blocks already
         // on the queue.
         if([[NSFileManager defaultManager] fileExistsAtPath:scrapIDsPath]){
-            [self loadStateAsynchronously:NO atPath:scrapIDsPath andMakeEditable:YES];
+            [self loadStateAsynchronously:NO atPath:scrapIDsPath andMakeEditable:YES andAdjustForScale:NO];
         }else{
-            [self loadStateAsynchronously:NO atPath:bundledScrapIDsPath andMakeEditable:YES];
+            [self loadStateAsynchronously:NO atPath:bundledScrapIDsPath andMakeEditable:YES andAdjustForScale:YES];
         }
     }
     block();

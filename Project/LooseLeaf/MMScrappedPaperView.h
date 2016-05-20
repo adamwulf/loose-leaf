@@ -80,4 +80,6 @@
 
 -(void) setThumbnailTo:(UIImage*)img;
 
+-(void) newlyCutScrapFromPaperView:(MMScrapView*)scrap;
+
 @end

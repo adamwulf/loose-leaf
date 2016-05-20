@@ -55,7 +55,7 @@
         NSInteger loc1 = [str rangeOfString:@"-"].location;
         NSInteger loc2 = [str rangeOfString:@"-" options:NSLiteralSearch range:NSMakeRange(loc1+1, [str length]-loc1-1)].location;
         str = [str substringToIndex:loc2];
-        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"mixpanel_uuid"];
+        [[NSUserDefaults standardUserDefaults] setObject:str forKey:kMixpanelUUID];
         [[NSUserDefaults standardUserDefaults] synchronize];
     });
     

@@ -20,6 +20,7 @@
 #import "UIView+Debug.h"
 #import "MMAlbumGroupListLayout.h"
 #import "Constants.h"
+#import "MMBorderedCamView.h"
 
 @interface MMAbstractSidebarContentView (Protected)
 
@@ -208,5 +209,18 @@
     }
 }
 
+#pragma mark - MMSinglePhotoCollectionViewCellDelegate
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    lastCameraRollOffset = photoListScrollView.contentOffset;
+    [super pictureTakeWithCamera:img fromView:cameraView];
+}
+
+-(void) photoWasTapped:(MMDisplayAsset *)asset
+              fromView:(MMBufferedImageView *)bufferedImage
+          withRotation:(CGFloat)rotation{
+    lastCameraRollOffset = photoListScrollView.contentOffset;
+    [super photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
+}
 
 @end

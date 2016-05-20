@@ -10,7 +10,15 @@
 
 @class MMScrapPaperStackView;
 
+@protocol MMMemoryManagerDelegate <NSObject>
+
+-(int) fullByteSize;
+
+@end
+
 @interface MMMemoryManager : NSObject
+
+@property (nonatomic, weak) id<MMMemoryManagerDelegate> delegate;
 
 @property (readonly) int maxVirtualSize;
 @property (readonly) int maxResidentSize;
@@ -35,6 +43,6 @@
 @property (readonly) int totalBytesInVBOs;
 @property (readonly) int totalBytesInTextures;
 
--(id) initWithStack:(MMScrapPaperStackView*)stack;
+-(id) initWithDelegate:(id<MMMemoryManagerDelegate>)delegate;
 
 @end

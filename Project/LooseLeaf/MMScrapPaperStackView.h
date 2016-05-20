@@ -11,16 +11,12 @@
 #import "MMStretchScrapGestureRecognizerDelegate.h"
 #import "MMImageSidebarContainerViewDelegate.h"
 #import "MMShareItemDelegate.h"
-#import "MMCloudKitManagerDelegate.h"
 #import "MMExportablePaperView.h"
 #import "MMScrapViewOwnershipDelegate.h"
 #import "MMCloudKitImportExportView.h"
 
-@interface MMScrapPaperStackView : MMEditablePaperStackView<MMScrapViewOwnershipDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMShareItemDelegate,MMCloudKitManagerDelegate,MMInboxManagerDelegate>{
-    __weak MMCloudKitImportExportView* cloudKitExportView;
+@interface MMScrapPaperStackView : MMEditablePaperStackView<MMScrapViewOwnershipDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMShareItemDelegate,MMInboxManagerDelegate>{
 }
-
-@property (nonatomic, weak) MMCloudKitImportExportView* cloudKitExportView;
 
 -(void) willResignActive;
 

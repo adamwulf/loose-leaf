@@ -15,14 +15,12 @@
 #import "MMLargeTutorialSidebarButton.h"
 
 @implementation MMTutorialStackView{
-    UIView* backdrop;
-    MMTutorialView* tutorialView;
     MMTextButton* helpButton;
     MMLargeTutorialSidebarButton* listViewTutorialButton;
 }
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid{
+    if(self = [super initWithFrame:frame andUUID:_uuid]){
         helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
             return [[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps];
         }];
@@ -52,64 +50,24 @@
 }
 
 
-#pragma mark - Private Helpers
-
--(BOOL) isShowingTutorial{
-    return tutorialView != nil || tutorialView.alpha;
-}
-
 #pragma mark - Tutorial Notifications
 
 -(void) tutorialShouldOpen:(NSNotification*)note{
     [super tutorialShouldOpen:note];
-    
-    if([self isShowingTutorial]){
-        // tutorial is already showing, just return
-        return;
-    }
-    
-    NSArray* tutorials = [note.userInfo objectForKey:@"tutorialList"];
-    backdrop = [[UIView alloc] initWithFrame:self.bounds];
-    backdrop.backgroundColor = [UIColor whiteColor];
-    backdrop.alpha = 0;
-    [self addSubview:backdrop];
-    
-    tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds andTutorials:tutorials];
-    tutorialView.delegate = self;
-    tutorialView.alpha = 0;
-    [self addSubview:tutorialView];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 1;
-        tutorialView.alpha = 1;
-    }];
     
     self.scrollEnabled = NO;
     [self disableAllGesturesForPageView];
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
-    if(![self isShowingTutorial]){
-        // tutorial is already hidden, just return
-        return;
-    }
-
     [super tutorialShouldClose:note];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 0;
-        tutorialView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [backdrop removeFromSuperview];
-        backdrop = nil;
-        [tutorialView unloadTutorials];
-        [tutorialView removeFromSuperview];
-        tutorialView = nil;
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps]];
         if(numPendingTutorials){
             [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
         }
-    }];
+    });
     
     if(!self.isShowingPageView){
         self.scrollEnabled = YES;
@@ -117,18 +75,6 @@
         [self enableAllGesturesForPageView];
     }
 }
-
-
-#pragma mark - MMTutorialViewDelegate
-
--(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    NSLog(@"user is watching %d", (int) stepNum);
-}
-
--(void) didFinishTutorial{
-    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
-}
-
 
 #pragma mark - Rotation Manager Delegate
 
@@ -161,7 +107,6 @@
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
     [super didRotateToIdealOrientation:orientation];
-    [tutorialView didRotateToIdealOrientation:orientation];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:.3 animations:^{
@@ -215,7 +160,7 @@
 #pragma mark - tap control
 
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    if([self isShowingTutorial]){
+    if([self.stackDelegate isShowingTutorial]){
         return NO;
     }
     return [super shouldPrioritizeSidebarButtonsForTaps];

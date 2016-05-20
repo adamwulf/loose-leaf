@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MMRoundedSquareViewDelegate.h"
 
-@protocol MMTutorialViewDelegate <NSObject>
+@protocol MMTutorialViewDelegate <MMRoundedSquareViewDelegate>
 
 -(void) userIsViewingTutorialStep:(NSInteger)stepNum;
 

@@ -7,6 +7,7 @@
 //
 
 #import "MMEditablePaperStackView.h"
+#import "MMAllStacksManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMScrapBubbleButton.h"
 #import "MMTouchVelocityGestureRecognizer.h"
@@ -31,23 +32,18 @@
     NSInteger numberOfRulerGesturesWithoutStroke;
 }
 
-- (id)initWithFrame:(CGRect)frame
+@synthesize insertImageButton;
+@synthesize shareButton;
+
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
         // Initialization code
         
-        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Pages"]];
-        
-        [MMPageCacheManager sharedInstance].delegate = self;
+        [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.stackManager.uuid] stringByAppendingPathComponent:@"Pages"]];
 
-        self.delegate = self;
-        
-        stackManager = [[MMStackManager alloc] initWithVisibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
-        
         [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
-//        [MMPageCacheManager sharedInstance].drawableView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.3];
-        [[JotStylusManager sharedInstance] setPalmRejectorDelegate:[MMPageCacheManager sharedInstance].drawableView];
 
         highlighter = [[Highlighter alloc] init];
 
@@ -77,11 +73,6 @@
         shareButton.delegate = self;
         [self.toolbar addButton:shareButton extendFrame:NO];
 
-//        settingsButton = [[MMAdonitButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        settingsButton.delegate = self;
-//        [settingsButton addTarget:self action:@selector(jotSettingsTapped:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.toolbar addButton:settingsButton extendFrame:NO];
-        
         // memory button
         CGRect settingsButtonRect = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, (kWidthOfSidebar - kWidthOfSidebarButton)/2 + 2 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
         settingsButton = [[MMTextButton alloc] initWithFrame:settingsButtonRect andFont:[UIFont systemFontOfSize:20] andLetter:@"!?" andXOffset:2 andYOffset:0];
@@ -107,9 +98,6 @@
         insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         insertImageButton.delegate = self;
         [self.toolbar addButton:insertImageButton extendFrame:NO];
-
-        
-        
         
         CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
@@ -140,24 +128,20 @@
         // accelerometer for rotating buttons
         // ================================================================================
         
-        [[MMRotationManager sharedInstance] setDelegate:self];
-        
-        
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.multipleTouchEnabled = YES;
         self.bounces = YES;
         self.alwaysBounceHorizontal = NO;
         self.canCancelContentTouches = YES;
-        self.opaque = YES;
         self.clearsContextBeforeDrawing = YES;
         self.clipsToBounds = YES;
         self.delaysContentTouches = NO;
         
 
-        if([[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedBrush"] isEqualToString:@"marker"]){
+        if([[[NSUserDefaults standardUserDefaults] stringForKey:kSelectedBrush] isEqualToString:kBrushMarker]){
             [pencilTool setActiveButton:pencilTool.markerButton];
-        }else if([[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedBrush"] isEqualToString:@"highlighter"]){
+        }else if([[[NSUserDefaults standardUserDefaults] stringForKey:kSelectedBrush] isEqualToString:kBrushHighlighter]){
             [pencilTool setActiveButton:pencilTool.highlighterButton];
         }else{
             [pencilTool setActiveButton:pencilTool.pencilButton];
@@ -167,26 +151,8 @@
         pencilTool.selected = YES;
         handButton.selected = YES;
         
-        [NSThread performBlockInBackground:^{
-            @autoreleasepool {
-                [[NSNotificationCenter defaultCenter] addObserver: self
-                                                         selector:@selector(connectionChange:)
-                                                             name:JotStylusManagerDidChangeConnectionStatus
-                                                           object:nil];
-                [[JotStylusManager sharedInstance] setRejectMode:NO];
-            }
-        }];
-        
-        
         rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
-        
-        
-        [self addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
-        
-        [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
-        [self addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
-        
     }
     return self;
 }
@@ -247,7 +213,7 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@"highlighter" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] setObject:kBrushHighlighter forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -258,7 +224,7 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@"pencil" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] setObject:kBrushPencil forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -269,7 +235,7 @@
     pencilTool.selected = YES;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
-    [[NSUserDefaults standardUserDefaults] setObject:@"marker" forKey:@"selectedBrush"];
+    [[NSUserDefaults standardUserDefaults] setObject:kBrushMarker forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -362,18 +328,6 @@
     rulerButton.selected = YES;
 }
 
--(void) jotSettingsTapped:(UIButton*)_button{
-//    if(jotTouchPopover && jotTouchPopover.popoverVisible){
-//        return;
-//    }else if(jotTouchPopover){
-//        [jotTouchPopover dismissPopoverAnimated:NO];
-//    }
-//    JotSettingsViewController* settings = [[JotSettingsViewController alloc] initWithOnOffSwitch: YES];
-//    jotTouchPopover = [[UIPopoverController alloc] initWithContentViewController:settings];
-//    [jotTouchPopover presentPopoverFromRect:_button.frame inView:self permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
-//    [jotTouchPopover setPopoverContentSize:CGSizeMake(300, 446) animated:NO];
-}
-
 
 #pragma mark - Page/Save Button Actions
 
@@ -398,16 +352,23 @@
     DebugLog(@"temp button");
 }
 
--(void) setButtonsVisible:(BOOL)visible{
-    [self setButtonsVisible:visible withDuration:0.3];
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated{
+    [self setButtonsVisible:visible withDuration:animated ? 0.3 : 0];
 }
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration{
-    [UIView animateWithDuration:duration animations:^{
+
+    void(^block)() = ^{
         [self.toolbar setButtonsVisible:visible];
         settingsButton.alpha = visible;
         pencilTool.alpha = visible;
-    }];
+    };
+
+    if(duration > 0){
+        [UIView animateWithDuration:duration animations:block];
+    }else{
+        block();
+    }
 }
 
 #pragma mark - MMRotationManagerDelegate
@@ -535,18 +496,18 @@
         DebugLog(@"would save, but can't b/c its readonly page");
     }
     // update UI for scaling small into list view
-    [self setButtonsVisible:NO];
+    [self setButtonsVisible:NO animated:YES];
     [scissor cancelAllTouches];
     [super isBeginningToScaleReallySmall:page];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
--(void) finishedScalingReallySmall:(MMPaperView *)page{
-    [super finishedScalingReallySmall:page];
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
+    [super finishedScalingReallySmall:page animated:animated];
     [self saveStacksToDisk];
     [rulerView setHidden:YES];
 }
 -(void) cancelledScalingReallySmall:(MMPaperView *)page{
-    [self setButtonsVisible:YES];
+    [self setButtonsVisible:YES animated:YES];
     [super cancelledScalingReallySmall:page];
 
     // ok, we've zoomed into this page now
@@ -562,7 +523,7 @@
     [rulerView setHidden:NO];
 }
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
-    [self setButtonsVisible:YES];
+    [self setButtonsVisible:YES animated:YES];
     [super finishedScalingBackToPageView:page];
     [self saveStacksToDisk];
     [rulerView setHidden:NO];
@@ -712,25 +673,22 @@
 #pragma mark - Stack Loading and Saving
 
 -(void) saveStacksToDisk{
-    [stackManager saveStacksToDisk];
+    [self.stackManager saveStacksToDisk];
 }
 
 -(void) buildDefaultContent{
     
     // just need to copy the visible/hiddenPages.plist files
     // and the content will be loaded from the bundle just fine
-    
-    NSString* documentsPath = [NSFileManager documentsPath];
-    NSURL* realDocumentsPath = [NSURL URLWithString:[documentsPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
     NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
     NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
     
     [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
-                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"visiblePages.plist"]
+                                            toPath:[self.stackManager visiblePlistPath]
                                                     error:nil];
     [[NSFileManager defaultManager] copyItemAtPath:[hiddenPagesPlist path]
-                                            toPath:[[realDocumentsPath path] stringByAppendingPathComponent:@"hiddenPages.plist"]
+                                            toPath:[self.stackManager hiddenPlistPath]
                                              error:nil];
 }
 
@@ -742,24 +700,20 @@
 
     // check to see if we have any state to load at all, and if
     // not then build our default content
-    if(![stackManager hasStateToLoad]){
+    if(![self.stackManager hasStateToLoad]){
         // we don't have any pages, and we don't have any
         // state to load
         self.userInteractionEnabled = NO;
-        UIView* white = [[UIView alloc] initWithFrame:self.bounds];
-        white.backgroundColor = [UIColor whiteColor];
-        [self insertSubview:white belowSubview:visibleStackHolder];
         [NSThread performBlockInBackground:^{
             [self buildDefaultContent];
             [NSThread performBlockOnMainThread:^{
                 self.userInteractionEnabled = YES;
-                [white removeFromSuperview];
                 [self loadStacksFromDisk];
             }];
         }];
         return;
     }else{
-        NSDictionary* pages = [stackManager loadFromDiskWithBounds:self.bounds];
+        NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
         for(MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]){
             [self addPaperToBottomOfStack:page];
         }
@@ -793,8 +747,6 @@
         // list is empty on purpose
         [self immediatelyTransitionToListView];
     }
-    
-
 }
 
 -(BOOL) hasPages{
@@ -803,7 +755,7 @@
 
 #pragma mark - JotViewDelegate
 
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // dont start a new stroke if one already exists
     if([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0){
 //        DebugLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
@@ -826,20 +778,20 @@
     if([rulerView rulerIsVisible]){
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfRulerUses by:@(1)];
     }
-    return [[self activePen] willBeginStrokeWithTouch:touch];
+    return [[self activePen] willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     [rulerView willMoveStrokeAt:[touch locationInView:rulerView]];
-    [[self activePen] willMoveStrokeWithTouch:touch];
+    [[self activePen] willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] willEndStrokeWithTouch:touch];
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
+    [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding];
 }
 
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    [[self activePen] didEndStrokeWithTouch:touch];
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     if([self activePen] == pen){
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPenUses by:@(1)];
     }else if([self activePen] == eraser){
@@ -847,16 +799,16 @@
     }
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [[self activePen] willCancelStroke:stroke withTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [[self activePen] didCancelStroke:stroke withTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [[self activePen] didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(UIColor*) colorForTouch:(JotTouch *)touch{
-    return [[self activePen] colorForTouch:touch];
+-(UIColor*) colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [[self activePen] colorForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 -(JotBrushTexture*)textureForStroke{
@@ -871,17 +823,17 @@
     return [[self activePen] supportsRotation];
 }
 
--(CGFloat) widthForTouch:(JotTouch*)touch{
+-(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     //
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [[self activePen] widthForTouch:touch];
+    return [[self activePen] widthForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
-    return [[self activePen] smoothnessForTouch:touch];
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [[self activePen] smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
 -(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement{
@@ -932,48 +884,12 @@
 }
 
 
-#pragma mark - JotStylusManager Connection Notification
-
--(void)connectionChange:(NSNotification *) note{
-//    NSString *text;
-    switch([[JotStylusManager sharedInstance] connectionStatus])
-    {
-        case JotConnectionStatusOff:
-//            text = @"Off";
-            settingsButton.selected = NO;
-            break;
-        case JotConnectionStatusScanning:
-//            text = @"Scanning";
-            settingsButton.selected = NO;
-            break;
-        case JotConnectionStatusPairing:
-//            text = @"Pairing";
-            settingsButton.selected = NO;
-            break;
-        case JotConnectionStatusConnected:
-//            text = @"Connected";
-            settingsButton.selected = YES;
-            break;
-        case JotConnectionStatusDisconnected:
-//            text = @"Disconnected";
-            settingsButton.selected = NO;
-            break;
-        default:
-//            text = @"";
-            settingsButton.selected = NO;
-            break;
-    }
-//    DebugLog(@"jot status: %@", text);
-}
-
-
-
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [super scrollViewDidScroll:scrollView];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
-
 
 #pragma mark - Gestures for List View
 

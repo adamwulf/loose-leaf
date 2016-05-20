@@ -80,6 +80,7 @@ _Pragma("clang diagnostic pop") \
 #define kWidthOfSidebarButton 60.0
 #define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
+#define kHeightOfImportTypeButton 80.0
 #define kMinScaleDelta .0
 #define kShadowDepth 7
 #define kShadowBend 3
@@ -87,6 +88,20 @@ _Pragma("clang diagnostic pop") \
 #define kUndoLimit 10 // TODO: make sure this defines the jot undo level
 #define kMaxButtonBounceHeight .4
 #define kMinButtonBounceHeight -.2
+
+// User Defaults
+
+#define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
+#define kHasEverImportedAPage @"hasEverImportedAPage"
+#define kMixpanelUUID @"mixpanel_uuid"
+#define kSelectedBrush @"selectedBrush"
+#define kBrushPencil @"pencil"
+#define kBrushHighlighter @"highlighter"
+#define kBrushMarker @"marker"
+#define kIsShowingListView @"ShowingListView"
+#define kMarkerColor @"markerColor"
+#define kPencilColor @"pencilColor"
+#define kHighlighterColor @"highlighterColor"
 
 // Camera
 #define kCameraMargin 10

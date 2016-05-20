@@ -179,6 +179,7 @@ static MMTutorialManager* _instance = nil;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasFinishedTutorial];
     [[[Mixpanel sharedInstance] people] set:kMPHasFinishedTutorial to:@(YES)];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialClosedNotification object:self];
+    hasFinishedTutorial = YES;
 }
 
 

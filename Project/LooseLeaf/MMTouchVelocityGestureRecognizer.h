@@ -37,7 +37,7 @@ struct DurationCacheObject{
     CGFloat totalDistance;
 };
 
-@interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
+@interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer
 
 @property (nonatomic, weak) MMScrapPaperStackView* stackView;
 

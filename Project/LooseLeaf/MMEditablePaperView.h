@@ -38,9 +38,6 @@
     BOOL fileExistsAtPlistPath;
 }
 
-+(NSString*) pagesPathForUUID:(NSString*)uuidOfPage;
-+(NSString*) bundledPagesPathForUUID:(NSString*)uuidOfPage;
-
 @property (nonatomic, weak) JotView* drawableView;
 @property (readonly) JotViewStateProxy* paperState;
 

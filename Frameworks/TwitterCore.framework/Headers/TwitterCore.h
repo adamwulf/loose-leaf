@@ -20,11 +20,11 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
-#import "TWTRAPIErrorCode.h"
-#import "TWTRAuthConfig.h"
-#import "TWTRAuthSession.h"
-#import "TWTRConstants.h"
-#import "TWTRCoreOAuthSigning.h"
-#import "TWTRGuestSession.h"
-#import "TWTRSession.h"
-#import "TWTRSessionStore.h"
+#import <TwitterCore/TWTRAPIErrorCode.h>
+#import <TwitterCore/TWTRAuthConfig.h>
+#import <TwitterCore/TWTRAuthSession.h>
+#import <TwitterCore/TWTRConstants.h>
+#import <TwitterCore/TWTRCoreOAuthSigning.h>
+#import <TwitterCore/TWTRGuestSession.h>
+#import <TwitterCore/TWTRSession.h>
+#import <TwitterCore/TWTRSessionStore.h>

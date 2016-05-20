@@ -10,6 +10,8 @@
 
 @interface MMBackgroundedPaperView : MMUndoablePaperView
 
+-(UIImage*) pageBackgroundTexture;
+
 -(void) setPageBackgroundTexture:(UIImage*)img;
 
 @end

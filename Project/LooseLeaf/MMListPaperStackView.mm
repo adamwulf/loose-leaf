@@ -12,6 +12,7 @@
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMExportablePaperView.h"
+#import "NSArray+Map.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -29,13 +30,15 @@
 @synthesize toolbar;
 @synthesize deleteSidebar;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
+        self.delegate = self;
+
         isShowingPageView = YES;
         isAnimatingTowardPageView = NO;
-        
+
         mapOfFinalFramesForPagesBeingZoomed = new std::map<NSUInteger,CGRect>;
         
         // Initialization code
@@ -99,6 +102,9 @@
     return self;
 }
 
+-(BOOL) isAnimatingTowardPageView{
+    return isAnimatingTowardPageView;
+}
 
 -(int) fullByteSize{
     return [super fullByteSize] + addPageButtonInListView.fullByteSize;
@@ -214,8 +220,10 @@
 
 -(void) immediatelyTransitionToListView{
     if(isShowingPageView){
-        [self isBeginningToScaleReallySmall:nil];
-        [self finishUITransitionToListView];
+        MMEditablePaperView* page = [[self visibleStackHolder] peekSubview];
+
+        [self beginUITransitionFromPageView];
+        [self finishedScalingReallySmall:page animated:NO];
         hiddenStackHolder.frame = visibleStackHolder.frame;
     }
 }
@@ -381,6 +389,20 @@
 
 #pragma mark - MMPaperViewDelegate
 
+-(void) didStartToWriteWithStylus{
+    fromRightBezelGesture.enabled = NO;
+    fromLeftBezelGesture.enabled = NO;
+
+    NSLog(@"didStartToWriteWithStylus");
+}
+
+-(void) didEndWritingWithStylus{
+    fromRightBezelGesture.enabled = YES;
+    fromLeftBezelGesture.enabled = YES;
+    
+    NSLog(@"didEndWritingWithStylus");
+}
+
 /**
  * this is a delegate method that's called when the page is being actively panned
  * by the user. this page pan is only when we are in PAGE view. when panning a page
@@ -422,11 +444,11 @@
         // how close are we to list view? 1 is not close at all, 0 is list view
         CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
         
-        
         //
         // start to move the hidden frame to overlap the visible frame
         CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
-        percentageToMoveHiddenFrame += .1;
+        percentageToMoveHiddenFrame += .06;
+        
         CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
         CGFloat amountToMoveHiddenFrameFromCachedPosition = visibleStackHolder.frame.size.width - percentageToTrustToFrame * visibleStackHolder.frame.size.width;
         
@@ -436,6 +458,13 @@
         CGFloat transitionDelay = 0;
         for(MMPaperView* aPage in [pagesThatWillBeVisibleAfterTransitionToListView reverseObjectEnumerator]){
             if(aPage != page){
+                if(aPage == [hiddenStackHolder peekSubview]){
+                    // reset the transition delay so that the hidden pages
+                    // begin to show at the same time, regardless of how many
+                    // visible pages might be showing.
+                    transitionDelay = 0;
+                }
+                
                 CGRect oldFrame = hiddenStackHolder.bounds;
                 NSValue* possibleCachedOriginalLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
                 if(possibleCachedOriginalLocation){
@@ -444,16 +473,25 @@
                     // so use that as its original location if we can
                     oldFrame = [possibleCachedOriginalLocation CGRectValue];
                 }
-                CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:percentageToTrustToFrame + transitionDelay];
+                
+                CGFloat totalTrust = percentageToTrustToFrame + transitionDelay;
+                
+                CGRect newFrame = [self framePositionDuringTransitionForPage:aPage originalFrame:oldFrame withTrust:totalTrust];
+                
+                CGFloat frameMovement = MIN(.15, MAX(0, totalTrust - .85));
+                frameMovement *= 5; // frameMovement is now between 0 and 1 during the first 20% of trust
+                frameMovement = 1 - frameMovement; // frameMovement now moves from 0 to 1 instead of 1 to 0
+                
                 if(![self isInVisibleStack:aPage] && !possibleCachedOriginalLocation){
                     //
                     // this helps the hidden pages to show coming in from
                     // the right, but only if their position wasn't saved
                     // frome the bezel location
-                    newFrame.origin.x -= amountToMoveHiddenFrame;
+                    newFrame.origin.x -= (amountToMoveHiddenFrame + 10) * frameMovement;
                 }else if(![self isInVisibleStack:aPage]){
-                    newFrame.origin.x -= amountToMoveHiddenFrameFromCachedPosition;
+                    newFrame.origin.x -= (amountToMoveHiddenFrameFromCachedPosition + 10) * frameMovement;
                 }
+                
                 aPage.frame = newFrame;
                 
                 //
@@ -556,12 +594,14 @@
  * when the animation completes, we'll adjust all the frames
  * and content offsets to that the user can scroll them
  */
--(void) finishedScalingReallySmall:(MMPaperView *)page{
-    [super finishedScalingReallySmall:page];
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
+    [super finishedScalingReallySmall:page animated:animated];
     //
     // clean up gesture state
 //    DebugLog(@"removing1 %p", page);
-    [setOfPagesBeingPanned removeObject:page];
+    if(page){
+        [setOfPagesBeingPanned removeObject:page];
+    }
 
     CGFloat duration = 0.3;
     __block MMPaperView* lastPage = nil;
@@ -656,6 +696,7 @@
                 aPage.frame = [self framePositionDuringTransitionForPage:aPage originalFrame:aPage.frame withTrust:0.0];
             }
         }
+        [self.stackDelegate animatingToListView];
         hiddenStackHolder.frame = visibleStackHolder.frame;
         [self subclassDuringTransitionToListView];
     };
@@ -684,15 +725,23 @@
         mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
         [self moveAddButtonToTop];
+
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kIsShowingListView];
     };
     
     step1();
-    // ok, animate all the views in the visible stack!
-    [UIView animateWithDuration:duration
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:step2
-                     completion:step3];
+
+    if(animated){
+        // ok, animate all the views in the visible stack!
+        [UIView animateWithDuration:duration
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:step2
+                         completion:step3];
+    }else{
+        step2();
+        step3(YES);
+    }
     //
     // now that the user has finished the gesture,
     // we can forget about the original frame locations
@@ -732,6 +781,7 @@
         [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
             CGRect fr = visibleStackHolder.frame;
             fr.origin.x = fr.size.width;
+            fr.origin.x += 10;
             hiddenStackHolder.frame = fr;
             //
             // reset hidden stack pages
@@ -771,7 +821,8 @@
  */
 -(void) finishedScalingBackToPageView:(MMPaperView*)page{
     [super finishedScalingBackToPageView:page];
-    // noop
+
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kIsShowingListView];
 }
 
 /**
@@ -792,6 +843,12 @@
  */
 -(BOOL) isInVisibleStack:(MMPaperView*)page{
     return [visibleStackHolder.subviews indexOfObject:page] != NSNotFound;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+-(void) scrollViewDidScroll:(UIScrollView *)scrollView{
+    // noop
 }
 
 #pragma mark - MMButtonAwareTapGestureRecognizer
@@ -836,7 +893,7 @@
     if(!nextTopPage){
         DebugLog(@"hrmph. out of pages...");
     }
-    [deleteSidebar deletePage:page];
+    [deleteSidebar deleteView:page];
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
     [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
     [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
@@ -1201,8 +1258,10 @@
     //
     // scroll update for drag
     lastDragPoint = CGPointMake(locatinInScrollView.x, locatinInScrollView.y - self.contentOffset.y);
-    if(displayLink.paused) displayLink.paused = NO;
-    
+    if(displayLink.paused){
+        displayLink.paused = NO;
+    }
+
     
     //
     // now, with our pan offset and new scale, we need to calculate the new frame location.
@@ -1381,7 +1440,7 @@
             //
             // only care about the hidden stack if there's anything
             // actually in the stack
-            [pagesThatWouldBeVisible addObject:aPage];
+            [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
             while((aPage = [hiddenStackHolder getPageBelow:aPage])){
                 CGRect frameOfPage = [self frameForListViewForPage:aPage];
                 // we have to expand the frame, because we want to count pages even if
@@ -1520,6 +1579,7 @@
  * up screen by numberOfHiddenRows
  */
 -(CGRect) framePositionDuringTransitionForPage:(MMPaperView*)page originalFrame:(CGRect)oldFrame withTrust:(CGFloat)percentageToTrustToFrame{
+
     if(percentageToTrustToFrame < 0) percentageToTrustToFrame = 0;
     if(percentageToTrustToFrame > 1) percentageToTrustToFrame = 1;
     // final frame when the page is in the list view
@@ -1662,13 +1722,12 @@
         }
         CGRect newHiddenFrame = visibleStackHolder.frame;
         newHiddenFrame.origin.x += screenWidth;
+        newHiddenFrame.origin.x += 10;
         hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
+        [self.stackDelegate animatingToPageView];
     };
-    
-    
-    
-    
+
     //
     // first, find all pages behind the first full scale
     // page, and just move them immediately
@@ -1703,8 +1762,8 @@
                                  aPage.frame = hiddenStackHolder.bounds;
                                  aPage.scale = 1;
                              }
-                             [self finishUITransitionToPageView];
                              isAnimatingTowardPageView = NO;
+                             [self finishUITransitionToPageView];
                          }];
     };
     

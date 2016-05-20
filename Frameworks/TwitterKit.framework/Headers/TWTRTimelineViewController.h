@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TWTRTimelineDataSource.h"
+#import <TwitterKit/TWTRTimelineDataSource.h>
 
 /**
  This class is a `UITableViewController` subclass that displays `TWTRTweetTableViewCell` cells. It handles cell-reuse, cell-configuration, and loading more tweets from the given timeline once the last cell is reached.

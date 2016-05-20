@@ -5,7 +5,7 @@
 //  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
-#import "TWTRTimelineType.h"
+#import <TwitterKit/TWTRTimelineType.h>
 @class TWTRAPIClient;
 @class TWTRTimelineCursor;
 

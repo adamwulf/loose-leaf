@@ -22,11 +22,11 @@
     return self;
 }
 
-- (BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+- (BOOL) willBeginStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     if(![polygonTouches count]){
-        [delegate beginShapeWithTouch:touch.touch withTool:self];
+        [delegate beginShapeWithTouch:touch withTool:self];
         // return that we _do not_ want the JotView to draw
-        [polygonTouches addObject:touch.touch];
+        [polygonTouches addObject:coalescedTouch];
     }
     return NO;
 }
@@ -35,9 +35,9 @@
  * a notification that the input is moving to the
  * next touch
  */
-- (void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    if([polygonTouches containsObject:touch.touch]){
-        [delegate continueShapeWithTouch:touch.touch withTool:self];
+- (void) willMoveStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+    if([polygonTouches containsObject:touch]){
+        [delegate continueShapeWithTouch:coalescedTouch withTool:self];
     }
 }
 
@@ -45,20 +45,20 @@
  * a notification that the input will end the
  * stroke
  */
-- (void) willEndStrokeWithTouch:(JotTouch*)touch{
-    if([polygonTouches containsObject:touch.touch]){
-        [delegate finishShapeWithTouch:touch.touch withTool:self];
-        [polygonTouches removeObject:touch.touch];
+- (void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
+    if([polygonTouches containsObject:touch]){
+        [delegate finishShapeWithTouch:coalescedTouch withTool:self];
+        [polygonTouches removeObject:touch];
     }
 }
 
 /**
  * the stroke for the input touch will been cancelled.
  */
-- (void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    if([polygonTouches containsObject:touch.touch]){
-        [delegate cancelShapeWithTouch:touch.touch withTool:self];
-        [polygonTouches removeObject:touch.touch];
+- (void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+    if([polygonTouches containsObject:touch]){
+        [delegate cancelShapeWithTouch:touch withTool:self];
+        [polygonTouches removeObject:touch];
     }
 }
 

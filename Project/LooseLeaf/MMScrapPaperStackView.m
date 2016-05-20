@@ -35,10 +35,10 @@
 #import "MMStatTracker.h"
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "MMTutorialView.h"
-#import "MMPDFAlbum.h"
+#import "MMPDFAssetGroup.h"
 #import "MMStopWatch.h"
 #import "MMAppDelegate.h"
-#import "MMPDFPage.h"
+#import "MMPDFPageAsset.h"
 #import "MMImageInboxItem.h"
 
 @implementation MMScrapPaperStackView{
@@ -59,12 +59,6 @@
     // in the right sidebar
     MMCountBubbleButton* countButton;
     
-    // image picker sidebar
-    MMImageSidebarContainerView* importImageSidebar;
-    
-    // share sidebar
-    MMShareSidebarContainerView* sharePageSidebar;
-    
     NSTimer* debugTimer;
     NSTimer* drawTimer;
     UIImageView* debugImgView;
@@ -77,11 +71,11 @@
     BOOL isAnimatingScrapToOrFromSidebar;
     
     UIImageView* testImageView;
+
+    MMDeletePageSidebarController* deleteScrapSidebar;
 }
 
-@synthesize cloudKitExportView;
-
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
     if(frame.size.width > frame.size.height){
         // force portrait build
@@ -91,26 +85,10 @@
     }
     DebugLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
     
-    if ((self = [super initWithFrame:frame])) {
+    if ((self = [super initWithFrame:frame andUUID:_uuid])) {
         
         self.autoresizingMask = UIViewAutoresizingNone;
 
-//        debugTimer = [NSTimer scheduledTimerWithTimeInterval:10
-//                                                                  target:self
-//                                                                selector:@selector(timerDidFire:)
-//                                                                userInfo:nil
-//                                                                 repeats:YES];
-
-        
-//        drawTimer = [NSTimer scheduledTimerWithTimeInterval:.25
-//                                                      target:self
-//                                                    selector:@selector(drawTimerDidFire:)
-//                                                    userInfo:nil
-//                                                     repeats:YES];
-
-        [MMInboxManager sharedInstance].delegate = self;
-        [MMCloudKitManager sharedManager].delegate = self;
-        
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3*80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
@@ -146,53 +124,23 @@
                 [possibleSidebarButton addTarget:self action:@selector(anySidebarButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             }
         }
-
-//        UIButton* drawLongElementButton = [[UIButton alloc] initWithFrame:CGRectMake(100, 100, 200, 60)];
-//        [drawLongElementButton addTarget:self action:@selector(drawLine) forControlEvents:UIControlEventTouchUpInside];
-//        [drawLongElementButton setTitle:@"Draw Line" forState:UIControlStateNormal];
-//        drawLongElementButton.backgroundColor = [UIColor whiteColor];
-//        drawLongElementButton.layer.borderColor = [UIColor blackColor].CGColor;
-//        drawLongElementButton.layer.borderWidth = 1;
-//        [self.toolbar addButton:drawLongElementButton extendFrame:NO];
         
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-
         [self insertSubview:countButton belowSubview:addPageSidebarButton];
-        importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.bounds forButton:insertImageButton animateFromLeft:YES];
-        importImageSidebar.delegate = self;
-        [importImageSidebar hide:NO onComplete:nil];
-        [self addSubview:importImageSidebar];
-        
-        
+
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        
+
+        deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds andDarkBorder:YES];
+        [self addSubview:deleteScrapSidebar.deleteSidebarBackground];
+
         scrapContainer = [[MMScrapContainerView alloc] initWithFrame:self.bounds forScrapsOnPaperState:nil];
         [self addSubview:scrapContainer];
-        
-        
-        [[NSThread mainThread] performBlock:^{
-            // going to delay building this UI so we can startup faster
-            sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.bounds forButton:shareButton animateFromLeft:YES];
-            sharePageSidebar.delegate = self;
-            [sharePageSidebar hide:NO onComplete:nil];
-            sharePageSidebar.shareDelegate = self;
-            [self insertSubview:sharePageSidebar belowSubview:scrapContainer];
-        } afterDelay:1];
+
+        [self addSubview:deleteScrapSidebar.deleteSidebarForeground];
         
         fromRightBezelGesture.panDelegate = self;
         fromLeftBezelGesture.panDelegate = self;
-
-//        debugImgView = [[UIImageView alloc] initWithFrame:CGRectMake(380, 80, self.bounds.size.width / 3, self.bounds.size.height/3)];
-//        debugImgView.layer.borderWidth = 1;
-//        debugImgView.layer.borderColor = [UIColor redColor].CGColor;
-//        debugImgView.contentMode = UIViewContentModeScaleAspectFit;
-//        debugImgView.backgroundColor = [UIColor orangeColor];
-//        [self addSubview:debugImgView];
-        
-//        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
-//        [testImageView showDebugBorder];
-//        [self addSubview:testImageView];
     }
     return self;
 }
@@ -202,7 +150,7 @@
 }
 
 -(int) fullByteSize{
-    return [super fullByteSize] + importImageSidebar.fullByteSize + bezelScrapContainer.fullByteSize;
+    return [super fullByteSize] + bezelScrapContainer.fullByteSize;
     
 }
 
@@ -213,13 +161,12 @@
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [importImageSidebar show:YES];
+    [self.stackDelegate.importImageSidebar show:YES];
 }
 
 #pragma mark - MMInboxManagerDelegate
 
 -(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
-    DebugLog(@"too bad! can't import file from %@", url);
     if([[url scheme] hasPrefix:@"pin"]){
         // pinterest export completed successfully
         [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Pinterest",
@@ -273,8 +220,6 @@
     // import after slight delay so the transition from the other app
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
-//        DebugLog(@"got image: %p width: %f %f", scrapBacking, scrapBacking.size.width, scrapBacking.size.height);
-        
         if([self imageMatchesPaperDimensions:scrapBacking]){
             MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
             page.isBrandNewPage = YES;
@@ -291,9 +236,9 @@
             return;
         }
 
-        [importImageSidebar hide:NO onComplete:^(BOOL finished) {
+        [self.stackDelegate.importImageSidebar hide:NO onComplete:^(BOOL finished) {
             [self importImageAsNewScrap:[scrapBacking imageForPage:0 forMaxDim:kPhotoImportMaxDim]];
-            [importImageSidebar refreshPDF];
+            [self.stackDelegate.importImageSidebar refreshPDF];
         }];
         
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
@@ -314,13 +259,13 @@
             [self cancelAllGestures];
             [[visibleStackHolder peekSubview] cancelAllGestures];
             [self setButtonsVisible:NO withDuration:0.15];
-            [importImageSidebar refreshPDF];
-            [importImageSidebar show:YES];
+            [self.stackDelegate.importImageSidebar refreshPDF];
+            [self.stackDelegate.importImageSidebar show:YES];
         }else if(pdfDoc.pageCount == 1){
-            [importImageSidebar hide:NO onComplete:^(BOOL finished) {
-                // create a UIImage from teh PDF and add it like normal above
+            [self.stackDelegate.importImageSidebar hide:NO onComplete:^(BOOL finished) {
+                // create a UIImage from the PDF and add it like normal above
                 // immediately import that single page
-                MMPDFAlbum* pdfAlbum = [[MMPDFAlbum alloc] initWithInboxItem:pdfDoc];
+                MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
                 NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
                 [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
                     UIImage* pageImage = [result aspectThumbnailWithMaxPixelSize:kPDFImportMaxDim];
@@ -328,7 +273,7 @@
                 }];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     // make sure PDF sidebar shows refreshed data
-                    [importImageSidebar refreshPDF];
+                    [self.stackDelegate.importImageSidebar refreshPDF];
                 });
             }];
         }else{
@@ -337,10 +282,10 @@
             [self cancelAllGestures];
             [[visibleStackHolder peekSubview] cancelAllGestures];
             [self setButtonsVisible:NO withDuration:0.15];
-            [importImageSidebar show:YES];
+            [self.stackDelegate.importImageSidebar show:YES];
 
             // show show the PDF content in the sidebar
-            [importImageSidebar showPDF:pdfDoc];
+            [self.stackDelegate.importImageSidebar showPDF:pdfDoc];
         }
     } afterDelay:.75];
 
@@ -467,13 +412,42 @@
 }
 
 -(void) sidebarWillHide{
-    [self setButtonsVisible:YES];
+    [self setButtonsVisible:YES animated:YES];
     [self enableAllGesturesForPageView];
 }
 
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+-(void) importImageAsNewPage:(UIImage*)imageToImport{
+    MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    page.isBrandNewPage = YES;
+    page.delegate = self;
+    [page setPageBackgroundTexture:imageToImport];
+    [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+    [page updateThumbnailVisibility];
+    [hiddenStackHolder pushSubview:page];
+    [[visibleStackHolder peekSubview] enableAllGestures];
+    [self popTopPageOfHiddenStack];
+    [page saveToDisk:^(BOOL didSaveEdits) {
+        NSLog(@"page saved ok: %d", didSaveEdits);
+    }];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+    
+    [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+}
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage{
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotosTaken by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventTakePhoto];
+    
+    
+    if(asPage){
+        CGSize pageSize = hiddenStackHolder.bounds.size;
+        img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
+        [self importImageAsNewPage:img];
+        return;
+    }
+
+    
     CGRect scrapRect = CGRectZero;
     scrapRect.origin = [self convertPoint:cameraView.layer.bounds.origin fromView:cameraView];
     scrapRect.size = cameraView.bounds.size;
@@ -533,7 +507,7 @@
     scrap.center = [self convertPoint:CGPointMake(cameraView.bounds.size.width/2, cameraView.bounds.size.height/2) fromView:cameraView];
     scrap.rotation = cameraView.rotation;
     
-    [importImageSidebar hide:YES onComplete:nil];
+    [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
     
     // hide the photo in the row
     cameraView.alpha = 0;
@@ -564,7 +538,7 @@
                      }];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription{
+-(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription andRequestsImportAsPage:(BOOL)asPage{
     CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
@@ -576,36 +550,13 @@
     
     CGRect scrapRect = CGRectZero;
     CGSize buttonSize = [bufferedImage visibleImageSize];
-//    NSLog(@"imported button ratio %f", buttonSize.width / buttonSize.height);
     CGSize fullScaleSize = photo.fullResolutionSize;
-//    NSLog(@"imported photo ratio %f", fullScaleSize.width / fullScaleSize.height);
 
-
-    CGFloat ratioDiff = ABS(fullScaleSize.width / fullScaleSize.height - hiddenStackHolder.bounds.size.width / hiddenStackHolder.bounds.size.height);
-    if(ratioDiff < .1){
-        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-        page.isBrandNewPage = YES;
-        page.delegate = self;
-        UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:MAX(page.bounds.size.width, page.bounds.size.height)];
-        [page setPageBackgroundTexture:scrapBacking];
-        [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-        [page updateThumbnailVisibility];
-        [hiddenStackHolder pushSubview:page];
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popTopPageOfHiddenStack];
-        [page saveToDisk:^(BOOL didSaveEdits) {
-            NSLog(@"page saved ok: %d", didSaveEdits);
-        }];
-        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-        [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-
-        [importImageSidebar hide:YES onComplete:nil];
-
+    if(asPage){
+        CGSize pageSize = hiddenStackHolder.bounds.size;
+        [self importImageAsNewPage:[photo aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height]];
         return;
     }
-
-
-
 
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
@@ -673,7 +624,7 @@
         
         // hide the picker, this'll slide it out
         // underneath our scrap
-        [importImageSidebar hide:YES onComplete:nil];
+        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
         
         // hide the photo in the row. this way the scrap
         // becomes the photo, and it doesn't seem to duplicate
@@ -725,80 +676,7 @@
 }
 
 
-static int numLines = 0;
-BOOL skipOnce = NO;
-int skipAll = NO;
-
--(void) drawTimerDidFire:(NSTimer*)timer{
-    if(skipOnce){
-        skipOnce = NO;
-        return;
-    }
-    
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
-    
-    if(!page.isEditable){
-        return;
-    }
-    
-    CGPoint startOfLine = CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height);
-    CGPoint endOfLine = CGPointMake(rand() % (int) page.bounds.size.width, rand() % (int) page.bounds.size.height);
-    MMVector* v = [[MMVector vectorWithPoint:startOfLine andPoint:endOfLine] normal];
-    endOfLine = [v pointFromPoint:startOfLine distance:100];
-    
-    MoveToPathElement* moveTo = [MoveToPathElement elementWithMoveTo:startOfLine];
-    moveTo.width = 3;
-    moveTo.color = [UIColor blackColor];
-    moveTo.stepWidth = .5;
-    moveTo.rotation = 0;
-    
-    CurveToPathElement* curveTo = [CurveToPathElement elementWithStart:moveTo.startPoint
-                                                             andLineTo:endOfLine];
-    curveTo.width = 3;
-    curveTo.color = [UIColor blackColor];
-    curveTo.stepWidth = .5;
-    curveTo.rotation = 0;
-
-    NSArray* shortLine = [NSArray arrayWithObjects:
-                          moveTo,
-                          curveTo,
-                          nil];
-    
-    [page.drawableView addElements:shortLine withTexture:[JotDefaultBrushTexture sharedInstance]];
-    [page.drawableView.state finishCurrentStroke];
-    [page.scrapsOnPaper makeObjectsPerformSelector:@selector(addUndoLevelAndFinishStroke)];
-
-    
-    [page saveToDisk:nil];
-    
-    numLines++;
-    
-    
-    int strokesPerPage = 30;
-    numLines = numLines % (int)strokesPerPage;
-    
-    if(numLines % ((int)strokesPerPage/2) == 12 && numLines < 30){
-        CGRect scissorRect = CGRectMake(300+rand() % (int) page.bounds.size.width/2, 300+rand() % (int) page.bounds.size.height / 2, 200, 200);
-        scissorRect = CGRectInset(scissorRect, -(rand() % 100), -(rand() % 100));
-        UIBezierPath* scissorPath = [UIBezierPath bezierPathWithRect:scissorRect];
-        [scissorPath applyTransform:CGAffineTransformMakeTranslation(-(scissorRect.origin.x + scissorRect.size.width/2),
-                                                                     -(scissorRect.origin.y + scissorRect.size.height/2))];
-        [scissorPath applyTransform:CGAffineTransformMakeRotation(M_PI * (rand() % 180) / 180.0)];
-        [scissorPath applyTransform:CGAffineTransformMakeTranslation(scissorRect.origin.x + scissorRect.size.width/2,
-                                                                     scissorRect.origin.y + scissorRect.size.height/2)];
-        [[visibleStackHolder peekSubview] completeScissorsCutWithPath:scissorPath];
-    }
-    if(numLines % (int)strokesPerPage == 0){
-        [self deletePage:[visibleStackHolder peekSubview]];
-        [self addPageButtonTapped:nil];
-        skipOnce = YES;
-    }
-    
-    DebugLog(@"auto-lines: %d   pages: %d", numLines, (int) floor(numLines / strokesPerPage));
-}
-
-
--(NSString*) activeGestureSummary{
+-(NSString*) debug_activeGestureSummary{
     
     NSMutableString* str = [NSMutableString stringWithString:@"\n\n\n"];
     [str appendString:@"begin\n"];
@@ -869,11 +747,6 @@ int skipAll = NO;
     return str;
 }
 
-
--(void) timerDidFire:(NSTimer*)timer{
-    DebugLog(@"%@", [self activeGestureSummary]);
-}
-
 -(void) drawLine{
     [[[visibleStackHolder peekSubview] drawableView] drawLongLine];
 }
@@ -903,7 +776,7 @@ int skipAll = NO;
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [sharePageSidebar show:YES];
+    [self.stackDelegate.sharePageSidebar show:YES];
 }
 
 
@@ -942,14 +815,12 @@ int skipAll = NO;
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture];
-//            DebugLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
     if(panAndPinchScrapGesture2.scrap && panAndPinchScrapGesture2.state != UIGestureRecognizerStateCancelled){
         if(![scrapContainer.subviews containsObject:panAndPinchScrapGesture2.scrap]){
             [scrapContainer addSubview:panAndPinchScrapGesture2.scrap];
             [self panAndScaleScrap:panAndPinchScrapGesture2];
-//            DebugLog(@"forceScrapToScrapContainerDuringGesture");
         }
     }
 }
@@ -989,6 +860,23 @@ int skipAll = NO;
         gesture.shouldReset = NO;
         didReset = YES;
     }
+    
+    
+    // Trash sidebar
+    CGFloat trashPercentShown = 0;
+    if(gesture.scrap){
+        CGPoint p = [self convertPoint:gesture.scrap.center fromView:gesture.scrap.superview];
+        CGFloat x = 100 - p.x + 50;
+        trashPercentShown = MAX(0, MIN(1.0, x / 100.0));
+
+        // the scrap center will be the midpoint of the two fingers of the pan gesture
+        // because we've reset the anchor point of the scrap during the gesture.
+        
+        [deleteScrapSidebar showSidebarWithPercent:trashPercentShown withTargetView:trashPercentShown ? gesture.scrap : nil];
+        
+        [self setButtonsVisible:![deleteScrapSidebar shouldDelete:gesture.scrap] animated:YES];
+    }
+    
     
     if(gesture.scrap && (gesture.scrap != stretchScrapGesture.scrap) && gesture.state != UIGestureRecognizerStateCancelled){
         
@@ -1110,6 +998,11 @@ int skipAll = NO;
         if(gesture.didExitToBezel){
             shouldBezel = YES;
             // remove scrap undo item
+        }else if([deleteScrapSidebar shouldDelete:gesture.scrap]){
+            // don't set any of its center/scale etc.
+            // we don't want to potentially pass this scrap to
+            // another page, just to delete it. we'll actually
+            // handle the deletion in the next block
         }else if([scrapsInContainer containsObject:gesture.scrap]){
             CGFloat scrapScaleInPage;
             CGPoint scrapCenterInPage;
@@ -1167,7 +1060,6 @@ int skipAll = NO;
                 // the original page's scrap state might be unloaded mid-gesture,
                 // so we need to unload this scrap to match.
                 if(![gesture.startingPageForScrap.scrapsOnPaperState isStateLoaded]){
-//                    DebugLog(@"dropping scrap from unloaded starting page!");
                     [gesture.scrap unloadState];
                 }
                 
@@ -1201,7 +1093,6 @@ int skipAll = NO;
         // and position, so that we can consistently determine it's position with
         // the center property
         
-        
         // giving up the scrap will make sure
         // its anchor point is back in the true
         // center of the scrap. It'll also
@@ -1210,8 +1101,33 @@ int skipAll = NO;
         MMScrapView* scrap = gesture.scrap;
         NSDictionary* startingScrapProperties = gesture.startingScrapProperties;
         MMUndoablePaperView* startingPageForScrap = gesture.startingPageForScrap;
+
+        // need to check this bool before [giveUpScrap], since that will
+        // reset its anchor point and change the calculation made
+        // by the deleteScrapSidebar
+        BOOL shouldDelete = [deleteScrapSidebar shouldDelete:gesture.scrap];
         
         [gesture giveUpScrap];
+        
+        if(shouldDelete){
+            // set our block so that we add an undo item after the scrap
+            // has been removed from view
+            __weak MMScrapPaperStackView* weakSelf = self;
+            deleteScrapSidebar.deleteCompleteBlock = ^(UIView* viewToDelete){
+                [startingPageForScrap addUndoItemForRemovedScrap:scrap withProperties:startingScrapProperties];
+                [weakSelf finishedPanningAndScalingScrap:scrap];
+            };
+
+            // delete the scrap after resetting its anchor point
+            // so that the delete animation is guaranteed to remove
+            // the entire scrap from the screen before [removeFromSuperview]
+            [deleteScrapSidebar deleteView:scrap];
+        }
+        
+        // if our delete sidebar was visible, then we need
+        // to reset our buttons + close the sidebar
+        [self setButtonsVisible:YES animated:YES];
+        [deleteScrapSidebar closeSidebarAnimated];
         
         if(shouldBezel){
             [[[Mixpanel sharedInstance] people] set:@{kMPHasBezelledScrap : @(YES)}];
@@ -1334,12 +1250,6 @@ int skipAll = NO;
 }
 
 -(CGPoint) beginStretchForScrap:(MMScrapView*)scrap{
-//    DebugLog(@"beginStretchForScrap");
-//    [panAndPinchScrapGesture say:@"beginning start" ISee:[NSSet setWithArray:panAndPinchScrapGesture.validTouches]];
-//    [panAndPinchScrapGesture2 say:@"beginning start" ISee:[NSSet setWithArray:panAndPinchScrapGesture2.validTouches]];
-//    [stretchScrapGesture say:@"beginning start" ISee:[NSSet setWithArray:stretchScrapGesture.validTouches]];
-
-    
     if(![scrapContainer.subviews containsObject:scrap]){
         MMPanAndPinchScrapGestureRecognizer* owningPan = panAndPinchScrapGesture.scrap == scrap ? panAndPinchScrapGesture : panAndPinchScrapGesture2;
         scrap.center = CGPointMake(owningPan.translation.x + owningPan.preGestureCenter.x,
@@ -1482,25 +1392,6 @@ int skipAll = NO;
     }
 }
 
-
-//-(void) logOutputGestureTouchOwnership:(NSString*) prefix gesture:(MMPanAndPinchScrapGestureRecognizer*)gesture{
-//    return;
-////    NSString* validOut = @"valid:";
-////    for (UITouch* t in gesture.validTouches) {
-////        validOut = [validOut stringByAppendingFormat:@" %p", t];
-////    }
-////    NSString* possibleOut = @"possible:";
-////    for (UITouch* t in gesture.possibleTouches) {
-////        possibleOut = [possibleOut stringByAppendingFormat:@" %p", t];
-////    }
-////    NSString* ignoredOut = @"ignored:";
-////    for (UITouch* t in gesture.ignoredTouches) {
-////        ignoredOut = [ignoredOut stringByAppendingFormat:@" %p", t];
-////    }
-////    DebugLog(@"%@ (%p) knows about:\n%@\n%@\n%@ ", prefix, gesture, validOut, possibleOut, ignoredOut);
-//}
-
-
 // time to duplicate the scraps! it's been pulled into two pieces
 -(void) endStretchBySplittingScrap:(MMScrapView*)scrap toTouches:(NSOrderedSet*)touches1 atNormalPoint:(CGPoint)np1
                      andTouches:(NSOrderedSet*)touches2  atNormalPoint:(CGPoint)np2{
@@ -1529,20 +1420,10 @@ int skipAll = NO;
         np2 = tnp;
     }
     
-//    [self logOutputGestureTouchOwnership:@"before gesture 1" gesture:panScrapGesture1];
-//    [self logOutputGestureTouchOwnership:@"before gesture 2" gesture:panScrapGesture2];
-    
     [panScrapGesture1 relinquishOwnershipOfTouches:[touches2 set]];
     [panScrapGesture2 relinquishOwnershipOfTouches:[touches1 set]];
     
-//    [self logOutputGestureTouchOwnership:@"relenquished gesture 1" gesture:panScrapGesture1];
-//    [self logOutputGestureTouchOwnership:@"relenquished gesture 2" gesture:panScrapGesture2];
-    
     [self sendStretchedScrap:scrap toPanGesture:panScrapGesture1 withTouches:[touches1 array] withAnchor:np1];
-    
-//    [self logOutputGestureTouchOwnership:@"after 1 set gesture 1" gesture:panScrapGesture1];
-//    [self logOutputGestureTouchOwnership:@"after 1 set gesture 2" gesture:panScrapGesture2];
-
 
     // next, add the new scrap to the same page as the stretched scrap
     MMUndoablePaperView* page = [visibleStackHolder peekSubview];
@@ -1562,34 +1443,9 @@ int skipAll = NO;
     // now the scrap is in the right place, so hand it off to the pan gesture
     [self sendStretchedScrap:clonedScrap toPanGesture:panScrapGesture2 withTouches:[touches2 array] withAnchor:np2];
     
-//    [self logOutputGestureTouchOwnership:@"after 2 set gesture 1" gesture:panScrapGesture1];
-//    [self logOutputGestureTouchOwnership:@"after 2 set gesture 2" gesture:panScrapGesture2];
-
-    
     if(!panScrapGesture1.scrap || !panScrapGesture2.scrap){
-        DebugLog(@"what: ending scrap gesture w/o holding scrap");
-        // sanity checks.
-        // we should never enter here
-        if([panScrapGesture1.initialTouchVector isEqual:panScrapGesture2.initialTouchVector]){
-            DebugLog(@"what10");
-        }
-        
-        if(scrap.scale != clonedScrap.scale ||
-           scrap.rotation != clonedScrap.rotation){
-            DebugLog(@"what11");
-        }
-        
-        DebugLog(@"success? %d %p,  %d %p", (int)[panScrapGesture1.validTouches count], panScrapGesture1.scrap,
-              (int)[panScrapGesture2.validTouches count], panScrapGesture2.scrap);
+        DebugLog(@"ending scrap gesture w/o holding scrap");
 
-//        if([panScrapGesture1.validTouches count] < 2){
-//            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 1" gesture:panScrapGesture1];
-//            [self logOutputGestureTouchOwnership:@"gesture 1 failed gesture 2" gesture:panScrapGesture2];
-//        }
-//        if([panScrapGesture2.validTouches count] < 2){
-//            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 1" gesture:panScrapGesture1];
-//            [self logOutputGestureTouchOwnership:@"gesture 2 failed gesture 2" gesture:panScrapGesture2];
-//        }
         @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
 
@@ -1697,11 +1553,17 @@ int skipAll = NO;
     [self panAndScaleScrap:panAndPinchScrapGesture2];
 }
 
--(void) setButtonsVisible:(BOOL)visible{
-    [UIView animateWithDuration:.3 animations:^{
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated{
+    if(animated){
+        if(bezelScrapContainer.alpha != visible ? 1 : 0){
+            [UIView animateWithDuration:.3 animations:^{
+                bezelScrapContainer.alpha = visible ? 1 : 0;
+            }];
+        }
+    }else{
         bezelScrapContainer.alpha = visible ? 1 : 0;
-    }];
-    [super setButtonsVisible:visible];
+    }
+    [super setButtonsVisible:visible animated:animated];
 }
 
 
@@ -1730,15 +1592,15 @@ int skipAll = NO;
 }
 
 -(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
-    [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
+    [self.stackDelegate didExportPage:page toZipLocation:fileLocationOnDisk];
 }
 
 -(void) didFailToExportPage:(MMPaperView*)page{
-    [cloudKitExportView didFailToExportPage:page];
+    [self.stackDelegate didFailToExportPage:page];
 }
 
 -(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
-    [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
+    [self.stackDelegate isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
 #pragma mark - MMScrapViewOwnershipDelegate
@@ -1920,7 +1782,7 @@ int skipAll = NO;
 }
 
 
--(void) finishedScalingReallySmall:(MMPaperView *)page{
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
     if(panAndPinchScrapGesture.scrap){
         [panAndPinchScrapGesture cancel];
     }
@@ -1929,7 +1791,7 @@ int skipAll = NO;
     }
     [panAndPinchScrapGesture setEnabled:NO];
     [panAndPinchScrapGesture2 setEnabled:NO];
-    [super finishedScalingReallySmall:page];
+    [super finishedScalingReallySmall:page animated:(BOOL)animated];
 }
 
 -(void) finishedScalingBackToPageView:(MMPaperView *)page{
@@ -1970,12 +1832,7 @@ int skipAll = NO;
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            [sharePageSidebar updateInterfaceTo:orientation];
-            [importImageSidebar updateInterfaceTo:orientation];
-        }
-    });
+    // noop
 }
 
 
@@ -2034,15 +1891,9 @@ int skipAll = NO;
             [scrapContainer addSubview:clonedScrap];
         }
         
-        
-//        DebugLog(@"======");
-        
         // next match it's location exactly on top of the original scrap:
         [UIView setAnchorPoint:scrap.layer.anchorPoint forView:clonedScrap];
         clonedScrap.center = scrap.center;
-        
-//        DebugLog(@"cloned scrap %@ has center %f %f", clonedScrap.state.uuid, clonedScrap.center.x, clonedScrap.center.y);
-//        DebugLog(@"cloned scrap %@ has center %f %f", scrap.state.uuid, scrap.center.x, scrap.center.y);
         
         // next, clone the contents onto the new scrap. at this point i have a duplicate scrap
         // but it's in the wrong place.
@@ -2055,8 +1906,6 @@ int skipAll = NO;
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:clonedScrap];
         
         [page.scrapsOnPaperState showScrap:clonedScrap];
-
-//        DebugLog(@"clone scrap %@ into %@", scrap.uuid, clonedScrap.uuid);
     };
     
     if(needsStateLoading){
@@ -2076,7 +1925,7 @@ int skipAll = NO;
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    return ![importImageSidebar isVisible] && ![sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
+    return ![self.stackDelegate.importImageSidebar isVisible] && ![self.stackDelegate.sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 #pragma mark - Check for Active Gestures
@@ -2142,7 +1991,7 @@ int skipAll = NO;
 }
 
 -(void) mayShare:(NSObject<MMShareItem> *)shareItem{
-//    DebugLog(@"may share %@", NSStringFromClass([shareItem class]));
+    // noop
 }
 
 -(void) wontShare:(NSObject<MMShareItem> *)shareItem{
@@ -2150,27 +1999,11 @@ int skipAll = NO;
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem{
-//    DebugLog(@"did share %@", NSStringFromClass([shareItem class]));
-    [sharePageSidebar hide:YES onComplete:nil];
+    // noop
 }
 
 -(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
-    [cloudKitExportView didShareTopPageToUser:userId fromButton:avatarButton];
-    [sharePageSidebar hide:YES onComplete:nil];
-}
-
-#pragma mark - MMCloudKitManagerDelegate
-
--(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
-    [sharePageSidebar cloudKitDidChangeState:currentState];
-}
-
--(void) didFetchMessage:(SPRMessage *)message{
-    [cloudKitExportView didFetchMessage:message];
-}
-
--(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
-    [cloudKitExportView didResetBadgeCountTo:badgeNumber];
+    // noop
 }
 
 #pragma mark - Import

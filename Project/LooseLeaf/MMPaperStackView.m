@@ -14,6 +14,12 @@
 #import "Mixpanel.h"
 #import "MMExportablePaperView.h"
 #import "NSMutableSet+Extras.h"
+#import "MMSingleStackManager.h"
+#import "MMVisibleStackHolderView.h"
+#import "MMHiddenStackHolderView.h"
+#import "MMBezelStackHolderView.h"
+
+#define kBounceThreshhold .1
 
 @implementation MMPaperStackView{
     MMPapersIcon* papersIcon;
@@ -28,29 +34,37 @@
     
 }
 
+@synthesize uuid;
+@synthesize stackManager = _stackManager;
+@synthesize stackDelegate = _stackDelegate;
 @synthesize visibleStackHolder = visibleStackHolder;
 @synthesize hiddenStackHolder = hiddenStackHolder;
 @synthesize bezelStackHolder = bezelStackHolder;
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
 {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        
+        uuid = _uuid;
         // Initialization code
         setOfPagesBeingPanned = [[NSMutableSet alloc] init]; // use this as a quick cache of pages being panned
-        visibleStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-        hiddenStackHolder = [[UIView alloc] initWithFrame:self.bounds];
-        bezelStackHolder = [[UIView alloc] initWithFrame:self.bounds];
+        // These custom classes exist so that they
+        // are easily discernable in the UI inspector in
+        // the debugger.
+        visibleStackHolder = [[MMVisibleStackHolderView alloc] initWithFrame:self.bounds];
+        hiddenStackHolder = [[MMHiddenStackHolderView alloc] initWithFrame:self.bounds];
+        bezelStackHolder = [[MMBezelStackHolderView alloc] initWithFrame:self.bounds];
+        
+        bezelStackHolder.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.05];
+        bezelStackHolder.userInteractionEnabled = NO;
         
         visibleStackHolder.tag = 0;
         bezelStackHolder.tag = 1;
         hiddenStackHolder.tag = 2;
-
         
         CGRect frameOfHiddenStack = hiddenStackHolder.frame;
-        frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 1;
+        frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 10;
         hiddenStackHolder.frame = frameOfHiddenStack;
         bezelStackHolder.frame = frameOfHiddenStack;
         
@@ -58,6 +72,8 @@
         visibleStackHolder.clipsToBounds = YES;
         bezelStackHolder.clipsToBounds = NO;
         
+        _stackManager = [[MMSingleStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
+
         //
         // icons for moving and panning pages
         [self addSubview:visibleStackHolder];
@@ -515,9 +531,7 @@
                 [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             }
             void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
-                if(finished){
-                    bezelStackHolder.frame = hiddenStackHolder.frame;
-                }
+                bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off
@@ -888,6 +902,18 @@
 }
 
 #pragma mark - MMPaperViewDelegate
+
+-(BOOL) isAnimatingTowardPageView{
+    @throw kAbstractMethodException;
+}
+
+-(void) didStartToWriteWithStylus{
+    @throw kAbstractMethodException;
+}
+
+-(void) didEndWritingWithStylus{
+    @throw kAbstractMethodException;
+}
 
 -(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
     @throw kAbstractMethodException;
@@ -1392,25 +1418,12 @@
             // in top page, so we won't do it here.
             [self popTopPageOfHiddenStack];
         }
-    }else if(page.scale <= 1){
-//        DebugLog(@"scale < 1");
-        //
-        // bezelStackHolder debugging DONE
-        //
-        // bounce it back to full screen
-//        DebugLog(@"bounce it back to full page");
-        [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
-        [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
     }else{
-//        DebugLog(@"last case");
-        //
-        // bezelStackHolder debugging DONE
-        //
-        // first, empty the bezelStackHolder, if any
+        // bounce it back to full screen
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        [self animatePageToFullScreen:page withDelay:0 withBounce:YES onComplete:nil];
+        BOOL shouldBounce = ABS(page.scale - 1) > kBounceThreshhold;
+        [self animatePageToFullScreen:page withDelay:0 withBounce:shouldBounce onComplete:nil];
     }
 }
 
@@ -1422,7 +1435,7 @@
     [self updateIconAnimations];
 }
 
--(void) finishedScalingReallySmall:(MMPaperView *)page{
+-(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
     [self updateIconAnimations];
 }
 
@@ -1888,27 +1901,27 @@
 }
 
 #pragma mark - JotViewDelegate
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
+-(void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
     @throw kAbstractMethodException;
 }
 
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
+-(void) didEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
@@ -1924,15 +1937,15 @@
     @throw kAbstractMethodException;
 }
 
--(UIColor*) colorForTouch:(JotTouch *)touch{
+-(UIColor*) colorForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(CGFloat) widthForTouch:(JotTouch*)touch{
+-(CGFloat) widthForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
     @throw kAbstractMethodException;
 }
 

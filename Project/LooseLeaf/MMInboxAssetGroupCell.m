@@ -7,7 +7,7 @@
 //
 
 #import "MMInboxAssetGroupCell.h"
-#import "MMPDFAlbum.h"
+#import "MMPDFAssetGroup.h"
 #import "MMBufferedImageView.h"
 #import "Constants.h"
 
@@ -35,7 +35,7 @@
     }
     [super setAlbum:_album];
     [self initializePositionsForPreviewPhotos];
-    MMInboxAssetGroup* inboxAlbum = (MMPDFAlbum*)album;
+    MMInboxAssetGroup* inboxAlbum = (MMPDFAssetGroup*)album;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(previewUpdated:) name:kInboxItemThumbnailGenerated object:inboxAlbum.inboxItem];
 }
 
@@ -48,7 +48,7 @@
 }
 
 -(void) initializePositionsForPreviewPhotos{
-    MMInboxAssetGroup* inboxAlbum = (MMPDFAlbum*)album;
+    MMInboxAssetGroup* inboxAlbum = (MMPDFAssetGroup*)album;
     if([inboxAlbum.inboxItem isKindOfClass:[MMPDFInboxItem class]]){
         MMPDFInboxItem* pdfInboxItem = (MMPDFInboxItem*) inboxAlbum.inboxItem;
         if(pdfInboxItem.isEncrypted){

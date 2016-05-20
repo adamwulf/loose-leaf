@@ -4,9 +4,9 @@
 //  Copyright (c) 2015 Twitter. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <TwitterCore/TWTRSession.h>
-#import "TWTRAPIClient.h"
+#import <TwitterKit/TWTRAPIClient.h>
+#import <UIKit/UIKit.h>
 
 @class TWTRSessionStore;
 

@@ -119,7 +119,15 @@
         backgroundColorLayer.fillColor = [UIColor whiteColor].CGColor;
         backgroundColorLayer.masksToBounds = YES;
         backgroundColorLayer.frame = self.layer.bounds;
-        [self.layer addSublayer:backgroundColorLayer];
+        
+        CALayer* whiteLayer = [CALayer layer];
+        whiteLayer.backgroundColor = [UIColor whiteColor].CGColor;
+        whiteLayer.mask = backgroundColorLayer;
+        whiteLayer.frame = self.layer.bounds;
+        
+        
+        [self.layer addSublayer:whiteLayer];
+
         
         
         // only the path contents are opaque, but outside the path needs to be transparent

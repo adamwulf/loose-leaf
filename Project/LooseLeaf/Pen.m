@@ -15,7 +15,9 @@
 #define           VELOCITY_CLAMP_MAX 1000
 
 
-@implementation Pen
+@implementation Pen{
+    BOOL shortStrokeEnding;
+}
 
 @synthesize minSize;
 @synthesize maxSize;
@@ -47,9 +49,6 @@
 }
 
 -(BOOL) shouldUseVelocity{
-    if([[JotStylusManager sharedInstance] enabled] && [[JotStylusManager sharedInstance] isStylusConnected]){
-        return NO;
-    }
     return YES;
 }
 
@@ -76,7 +75,8 @@
  * that a new touch is about to be processed. we should
  * reset all of our counters/etc to base values
  */
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    shortStrokeEnding = NO;
     velocity = 1;
     return YES;
 }
@@ -86,30 +86,30 @@
  * alpha/width info for this touch. let's update
  * our velocity model and state info for this new touch
  */
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    velocity = [[MMTouchVelocityGestureRecognizer sharedInstance] normalizedVelocityForTouch:touch.touch];
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    velocity = [[MMTouchVelocityGestureRecognizer sharedInstance] normalizedVelocityForTouch:touch];
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
-    // noop
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)_shortStrokeEnding{
+    shortStrokeEnding = _shortStrokeEnding;
 }
 
 /**
  * user is finished with a stroke. for our purposes
  * we don't need to do anything
  */
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // noop
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // noop
 }
 
 /**
  * the user cancelled the touch
  */
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // noop
 }
 
@@ -121,10 +121,10 @@
  * but for our demo adjusting only the alpha
  * is the look we're going for.
  */
--(UIColor*) colorForTouch:(JotTouch*)touch{
-    if(touch.touch.type == UITouchTypeStylus){
+-(UIColor*) colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    if(coalescedTouch.type == UITouchTypeStylus){
         CGFloat segmentAlpha = (maxAlpha + minAlpha) / 2.0;
-        segmentAlpha *= touch.touch.force;
+        segmentAlpha *= coalescedTouch.force;
         if(segmentAlpha < minAlpha) segmentAlpha = minAlpha;
         if(segmentAlpha > maxAlpha) segmentAlpha = maxAlpha;
 
@@ -142,8 +142,9 @@
         UIColor* ret = [currColor colorWithAlphaComponent:segmentAlpha];
         return ret;
     }else{
-        CGFloat segmentAlpha = minAlpha + (maxAlpha-minAlpha) * touch.pressure / JOT_MAX_PRESSURE;
-        if(segmentAlpha < minAlpha) segmentAlpha = minAlpha;
+        CGFloat segmentAlpha = minAlpha + (maxAlpha-minAlpha) * coalescedTouch.force;
+        segmentAlpha = MAX(minAlpha, MIN(maxAlpha, segmentAlpha));
+        
         UIColor* ret = [color colorWithAlphaComponent:segmentAlpha];
         return ret;
     }
@@ -156,10 +157,10 @@
  * we'll use pressure data to determine width if we can, otherwise
  * we'll fall back to use velocity data
  */
--(CGFloat) widthForTouch:(JotTouch*)touch{
-    if(touch.touch.type == UITouchTypeStylus){
+-(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    if(coalescedTouch.type == UITouchTypeStylus){
         CGFloat width = (maxSize + minSize) / 2.0;
-        width *= touch.touch.force;
+        width *= coalescedTouch.force;
         if(width < minSize) width = minSize;
         if(width > maxSize) width = maxSize;
 
@@ -170,9 +171,14 @@
         width = minSize + ABS(width) * (maxSize - minSize);
         if(width < 1) width = 1;
         
+        if(shortStrokeEnding){
+            return maxSize;
+        }
+        
         return width;
     }else{
-        CGFloat newWidth = minSize + (maxSize-minSize) * touch.pressure / (CGFloat) JOT_MAX_PRESSURE;
+        CGFloat newWidth = minSize + (maxSize-minSize) * coalescedTouch.force;
+        newWidth = MAX(minSize, MIN(maxSize, newWidth));
         return newWidth;
     }
 }
@@ -198,7 +204,7 @@
  * > 1 is loopy
  * < 0 is knotty
  */
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     return 0.75;
 }
 

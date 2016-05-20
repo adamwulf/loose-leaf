@@ -10,10 +10,17 @@
 #import "MMEditablePaperViewSubclass.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
+#import "MMScrapBackgroundView.h"
+
+@interface MMBackgroundedPaperView ()<MMGenericBackgroundViewDelegate>
+
+@end
 
 @implementation MMBackgroundedPaperView{
     UIImageView* paperBackgroundView;
     NSString* backgroundTexturePath;
+    BOOL isLoadingBackgroundTexture;
+    BOOL wantsBackgroundTextureLoaded;
 }
 
 -(BOOL) isVert:(UIImage*)img{
@@ -24,12 +31,8 @@
     
 }
 
--(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail{
-//    if(showDrawableView && !showThumbnail){
-//        paperBackgroundView.hidden = NO;
-//    }else{
-//        paperBackgroundView.hidden = YES;
-//    }
+-(UIImage*) pageBackgroundTexture{
+    return paperBackgroundView.image;
 }
 
 -(void) setPageBackgroundTexture:(UIImage*)img{
@@ -40,28 +43,15 @@
     CheckMainThread;
     if(img.size.width > img.size.height){
         // rotate
-        img = [[UIImage alloc] initWithCGImage: img.CGImage
-                                         scale: 1.0
-                                   orientation: [self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp];
+        img = [[UIImage alloc] initWithCGImage:img.CGImage scale:img.scale orientation:([self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp)];
     }
-
-    img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:self.bounds.size interpolationQuality:kCGInterpolationHigh];
 
     if(!paperBackgroundView){
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
         [self.contentView insertSubview:paperBackgroundView atIndex:0];
-//        if(drawableView){
-//            [self.contentView insertSubview:paperBackgroundView belowSubview:drawableView];
-//        }else{
-//            [self.contentView insertSubview:paperBackgroundView belowSubview:scrapsOnPaperState.scrapContainerView];
-//        }
-//        if(drawableView && !drawableView.hidden){
-//            paperBackgroundView.hidden = NO;
-//        }else{
-//            paperBackgroundView.hidden = YES;
-//        }
+        paperBackgroundView.hidden = self.drawableView.hidden;
     }
     paperBackgroundView.image = img;
 
@@ -94,17 +84,38 @@
     }
 }
 
+-(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage{
+    [super updateThumbnailVisibility:forceUpdateIconImage];
+    paperBackgroundView.hidden = self.drawableView.hidden;
+}
+
 #pragma mark - Loading and Unloading State
 
 -(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext *)context{
     [super loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context];
     
+    if(isLoadingBackgroundTexture){
+        return;
+    }
+    isLoadingBackgroundTexture = YES;
+    wantsBackgroundTextureLoaded = YES;
+
     void (^loadPageBackgroundFromDisk)() = ^{
-        UIImage* img = [UIImage imageWithContentsOfFile:[self backgroundTexturePath]];
-        if(img){
-            [[NSThread mainThread] performBlock:^{
-                [self setPageBackgroundTexture:img andSaveToDisk:NO];
-            }];
+        if(![self pageBackgroundTexture]){
+            UIImage* img = [UIImage imageWithContentsOfFile:[self backgroundTexturePath]];
+            if(img){
+                [[NSThread mainThread] performBlock:^{
+                    if(wantsBackgroundTextureLoaded){
+                        NSLog(@"image loaded");
+                        [self setPageBackgroundTexture:img andSaveToDisk:NO];
+                        isLoadingBackgroundTexture = NO;
+                    };
+                }];
+            }else{
+                isLoadingBackgroundTexture = NO;
+            }
+        }else{
+            isLoadingBackgroundTexture = NO;
         }
     };
     
@@ -119,8 +130,10 @@
 
 -(void) unloadState{
     [super unloadState];
+    paperBackgroundView.image = nil;
     [paperBackgroundView removeFromSuperview];
     paperBackgroundView = nil;
+    wantsBackgroundTextureLoaded = NO;
 }
 
 #pragma mark - Thumbnail Generation
@@ -147,15 +160,28 @@
 
 #pragma mark - Protected Methods
 
--(void) addDrawableViewToContentView{
-    CheckMainThread;
-    // default will be to just append drawable view. subclasses
-    // can (and will) change behavior
-//    if(paperBackgroundView){
-//        [self.contentView insertSubview:drawableView aboveSubview:paperBackgroundView];
-//    }else{
-        [super addDrawableViewToContentView];
-//    }
+-(void) newlyCutScrapFromPaperView:(MMScrapView*)addedScrap{
+    if(self.pageBackgroundTexture){
+        MMGenericBackgroundView* pageBackground = [[MMGenericBackgroundView alloc] initWithImage:self.pageBackgroundTexture andDelegate:self];
+        pageBackground.bounds = self.bounds;
+        [pageBackground aspectFillBackgroundImageIntoView];
+        
+        [addedScrap setBackgroundView:[pageBackground stampBackgroundFor:[addedScrap state]]];
+    }
+}
+
+#pragma mark - MMGenericBackgroundViewDelegate
+
+-(UIView*) contextViewForGenericBackground:(MMGenericBackgroundView*)backgroundView{
+    return self.superview;
+}
+
+-(CGFloat) contextRotationForGenericBackground:(MMGenericBackgroundView*)backgroundView{
+    return 0;
+}
+
+-(CGPoint) currentCenterOfBackgroundForGenericBackground:(MMGenericBackgroundView*)backgroundView{
+    return CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 }
 
 

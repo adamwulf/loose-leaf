@@ -28,7 +28,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
-#import "MMStackManager.h"
+#import "MMSingleStackManager.h"
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"
@@ -44,10 +44,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
-    
-    // managers
-    MMStackManager* stackManager;
+@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
     
     // toolbar
     MMPlusButton* addPageSidebarButton;
@@ -73,17 +70,20 @@
     MMRulerView* rulerView;
 }
 
+@property (nonatomic, readonly) MMImageButton* insertImageButton;
+@property (nonatomic, readonly) MMShareButton* shareButton;
+
 -(void) saveStacksToDisk;
 
 -(void) loadStacksFromDisk;
 
 -(BOOL) hasPages;
 
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated;
+
 // protected
 
 -(void) addPageButtonTapped:(UIButton*)_button;
-
--(void) setButtonsVisible:(BOOL)visible;
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 
