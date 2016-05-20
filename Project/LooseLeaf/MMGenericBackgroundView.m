@@ -39,84 +39,58 @@
 // refactor this in the future so that scraps contain a generic background
 // instead of a specific subclass of background. same for pages.
 -(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)targetScrapState{
-    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:self.backingImage
-                                                                           forScrapState:targetScrapState];
-    // clone the background so that the new scrap's
-    // background aligns with the old scrap's background
+    // Find the relative rotation of the target scrap vs us
     CGFloat orgRot = [self.delegate contextRotationForGenericBackground:self];
     CGFloat newRot = targetScrapState.delegate.rotation;
     CGFloat rotDiff = orgRot - newRot;
     
+    // also calculate its center vs our center
     CGPoint convertedC = [targetScrapState.contentView convertPoint:[self.delegate currentCenterOfBackgroundForGenericBackground:self] fromView:[self.delegate contextViewForGenericBackground:self]];
-    CGPoint refPoint = CGPointMake(targetScrapState.contentView.bounds.size.width/2,
-                                   targetScrapState.contentView.bounds.size.height/2);
-    CGPoint moveC2 = CGPointMake(convertedC.x - refPoint.x, convertedC.y - refPoint.y);
     
-    // we have the correct adjustment value,
-    // but now we need to account for the fact
-    // that the new scrap has a different rotation
-    // than the start scrap
-    backgroundView.backgroundRotation = self.backgroundRotation + rotDiff;
-    backgroundView.backgroundScale = self.backgroundScale;
-    backgroundView.backgroundOffset = moveC2;
+    CGSize backingImageSize = _backingImage.size;
+    CGSize targetImageSize = targetScrapState.originalSize;
+    CGFloat targetRotation = self.backgroundRotation + rotDiff;
+    CGFloat targetScale = self.backgroundScale;
     
-    
-    CGSize contextSize = [self.delegate contextViewForGenericBackground:self].bounds.size;
-    CGSize backingSize = _backingImage.size;
-    CGSize targetSize = targetScrapState.originalSize;
-    CGFloat targetRotation = backgroundView.backgroundRotation;
-    CGFloat targetScale = backgroundView.backgroundScale;
-    CGPoint targetOffset = backgroundView.backgroundOffset;
-    
+    // our target image size may not be on an exact pixel boundary
+    // since its based off of the target scrap's bezier path's
+    // bounding box. Let's round up to the nearest point.
     double widthInt = 0;
-    CGFloat widthFrac = modf(targetSize.width, &widthInt);
-    targetSize.width += (1 - widthFrac);
+    CGFloat widthFrac = modf(targetImageSize.width, &widthInt);
+    targetImageSize.width += (1 - widthFrac);
 
     double heightInt = 0;
-    CGFloat heightFrac = modf(targetSize.height, &heightInt);
-    targetSize.height += (1 - heightFrac);
+    CGFloat heightFrac = modf(targetImageSize.height, &heightInt);
+    targetImageSize.height += (1 - heightFrac);
     
-    UIGraphicsBeginImageContext(targetSize);
+    UIGraphicsBeginImageContextWithOptions(targetImageSize, NO, [[UIScreen mainScreen] scale]);
     CGContextRef context = UIGraphicsGetCurrentContext();
     [[UIColor whiteColor] setFill];
-    CGContextFillRect(context, CGRectMake(0, 0, targetSize.width, targetSize.height));
-    
-    CGAffineTransform scrapRotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(targetRotation),CGAffineTransformMakeScale(targetScale, targetScale));
-    CGAffineTransform backingRotateAndScale = CGAffineTransformConcat(CGAffineTransformMakeRotation(self.backgroundRotation),CGAffineTransformMakeScale(self.backgroundScale, self.backgroundScale));
+    CGContextFillRect(context, CGRectMake(0, 0, targetImageSize.width, targetImageSize.height));
 
-//    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
-////    CGContextConcatCTM(context, backingRotateAndScale);
-//
-//    CGContextTranslateCTM(context, -contextSize.width/2+convertedC.x, -contextSize.height/2+convertedC.y);
+    // translate into the center of the context
     CGContextTranslateCTM(context, convertedC.x, convertedC.y);
     
+    // No idea currently why i need this offset. There must be an offset somewhere
+    // for scraps that I'm not remembering, but I'm not finding it.
     CGContextTranslateCTM(context, -4, -4);
     
+    // rotate to match our target scrap orientation
     CGContextRotateCTM(context, targetRotation);
 
+    // match our target scrap scale
     CGContextScaleCTM(context, targetScale, targetScale);
     
-    
-//    CGContextConcatCTM(context, scrapRotateAndScale);
-
-//    CGContextTranslateCTM(context, targetOffset.x, targetOffset.y);
-//    CGContextTranslateCTM(context, -targetOffset.x, -targetOffset.y);
-//    CGContextTranslateCTM(context, contextSize.width/2, contextSize.height/2);
-    
-    
-//    CGContextTranslateCTM(context, targetOffset.x, targetOffset.y);
-//    CGContextConcatCTM(context, scrapRotateAndScale);
-    
-    [self.backingImage drawInRect:CGRectMake(-backingSize.width/2, -backingSize.height/2, backingSize.width, backingSize.height)];
+    // now draw the image centered at our current point
+    [self.backingImage drawInRect:CGRectMake(-backingImageSize.width/2, -backingImageSize.height/2, backingImageSize.width, backingImageSize.height)];
     
     UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    backgroundView = [[MMScrapBackgroundView alloc] initWithImage:image forScrapState:targetScrapState];
+    MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:image forScrapState:targetScrapState];
     backgroundView.backgroundScale = 1.0;
     backgroundView.backgroundRotation = 0;
     backgroundView.backgroundOffset = CGPointZero;
-    
     
     return backgroundView;
 }

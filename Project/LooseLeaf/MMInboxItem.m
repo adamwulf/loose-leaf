@@ -79,17 +79,24 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 #pragma mark - Public
 
 -(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim{
+    return [self imageForPage:pageNumber forMaxDim:maxDim andSaveToDiskCache:maxDim == kThumbnailMaxDim];
+}
+
+-(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim andSaveToDiskCache:(BOOL)saveToCache{
     NSString* cachedImagePath = [self pathForPage:pageNumber forMaxDim:maxDim];
     
     UIImage* pageThumb = [self cachedImageAtPath:cachedImagePath];
     if(!pageThumb){
         @autoreleasepool {
             pageThumb = [self generateImageForPage:pageNumber withMaxDim:maxDim];
-            BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
-            if(!success){
-                NSLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
+            if(saveToCache){
+                BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
+                if(!success){
+                    NSLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
+                }
             }
             if(cachedImagePath){
+                // memory cache only
                 [[MMLoadImageCache sharedInstance] updateCacheForPath:cachedImagePath toImage:pageThumb];
             }
         }
@@ -189,7 +196,8 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 -(UIImage*) cachedImageAtPath:(NSString*)cachedImagePath{
     UIImage* pageThumb = nil;
     @autoreleasepool {
-        if(cachedImagePath && [[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
+        BOOL containsPathAlready = [[MMLoadImageCache sharedInstance] containsPathInCache:cachedImagePath];
+        if(cachedImagePath && (containsPathAlready || [[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath])){
             return [[MMLoadImageCache sharedInstance] imageAtPath:cachedImagePath];
         }
     }
