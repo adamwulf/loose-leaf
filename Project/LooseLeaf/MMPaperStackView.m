@@ -56,7 +56,6 @@
         hiddenStackHolder = [[MMHiddenStackHolderView alloc] initWithFrame:self.bounds];
         bezelStackHolder = [[MMBezelStackHolderView alloc] initWithFrame:self.bounds];
         
-        bezelStackHolder.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.05];
         bezelStackHolder.userInteractionEnabled = NO;
         
         visibleStackHolder.tag = 0;
