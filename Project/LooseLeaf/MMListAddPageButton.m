@@ -21,8 +21,7 @@
 
 - (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithFrame:frame];
-    if (self) {
+    if (self = [super initWithFrame:frame]) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
@@ -100,7 +99,8 @@
     UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.12];
     
     //// Frames
-    CGRect frame = CGRectMake(0, 0, 192, 256);
+    CGRect frame = [self bounds];
+    CGFloat cornerRadius = roundf(.125 * CGRectGetWidth(frame));
     
     //// Subframes
     CGRect plusFrame = CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.27), CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.32), floor(CGRectGetWidth(frame) * 0.47), floor(CGRectGetHeight(frame) * 0.35));
@@ -111,7 +111,7 @@
     
     
     //// DashedBorder Drawing
-    UIBezierPath* dashedBorderPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, 191, 255) cornerRadius: 24];
+    UIBezierPath* dashedBorderPath = [UIBezierPath bezierPathWithRoundedRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, CGRectGetWidth(frame) - 1, CGRectGetHeight(frame) - 1) cornerRadius: cornerRadius];
     [quarterWhite setStroke];
     dashedBorderPath.lineWidth = dashedBorderStrokeWidth;
     CGFloat dashedBorderPattern[] = {35, 10};
