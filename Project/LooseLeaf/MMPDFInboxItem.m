@@ -12,9 +12,9 @@
 #import "MMInboxItem+Protected.h"
 #import "MMPDF.h"
 
-@implementation MMPDFInboxItem{
-    MMPDF* pdf;
-}
+@implementation MMPDFInboxItem
+
+@synthesize pdf;
 
 #pragma mark - Init
 

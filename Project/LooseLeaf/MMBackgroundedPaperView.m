@@ -35,6 +35,13 @@
     return paperBackgroundView.image;
 }
 
+-(void) saveOriginalBackgroundTextureFromURL:(NSURL*)originalAssetURL{
+    NSError* error;
+    NSString* backgroundAssetPath = [[[self pagesPath] stringByAppendingPathComponent:@"backgroundTexture.asset"] stringByAppendingPathExtension:[originalAssetURL pathExtension]];
+    NSURL* toURL = [NSURL fileURLWithPath:backgroundAssetPath];
+    [[NSFileManager defaultManager] copyItemAtURL:originalAssetURL toURL:toURL error:&error];
+}
+
 -(void) setPageBackgroundTexture:(UIImage*)img{
     [self setPageBackgroundTexture:img andSaveToDisk:YES];
 }

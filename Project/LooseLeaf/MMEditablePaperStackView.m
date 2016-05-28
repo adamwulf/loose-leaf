@@ -21,7 +21,6 @@
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
 
 @implementation MMEditablePaperStackView{
-    UIPopoverController* jotTouchPopover;
     MMMemoryProfileView* memoryView;
     
     // this tracks how many times the user has

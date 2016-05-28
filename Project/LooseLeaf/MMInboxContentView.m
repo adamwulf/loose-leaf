@@ -276,7 +276,7 @@
             
             NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
             [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset *result, NSUInteger index, BOOL *stop) {
-                [self photoWasTapped:result fromView:cell.firstImageView withRotation:0];
+                [self assetWasTapped:result fromView:cell.firstImageView withRotation:0];
             }];
         }else{
             MMInboxAssetGroupCell* cell = [self visibleCellAtIndexPath:indexPath];

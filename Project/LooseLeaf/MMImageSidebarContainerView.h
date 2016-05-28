@@ -18,7 +18,7 @@
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
 
--(void) photoWasTapped:(MMDisplayAsset *)asset
+-(void) assetWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation
          fromContainer:(MMAbstractSidebarContentView*)container;

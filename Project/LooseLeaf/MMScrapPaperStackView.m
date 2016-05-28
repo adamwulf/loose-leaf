@@ -221,18 +221,8 @@
     // can complete nicely
     [[NSThread mainThread] performBlock:^{
         if([self imageMatchesPaperDimensions:scrapBacking]){
-            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-            page.isBrandNewPage = YES;
-            page.delegate = self;
-            [page setPageBackgroundTexture:[scrapBacking imageForPage:0 forMaxDim:MAX(page.bounds.size.width, page.bounds.size.height)]];
-            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-            [page updateThumbnailVisibility];
-            [hiddenStackHolder pushSubview:page];
-            [[visibleStackHolder peekSubview] enableAllGestures];
-            [self popTopPageOfHiddenStack];
-            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
-
+            CGSize pageSize = hiddenStackHolder.bounds.size;
+            [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url];
             return;
         }
 
@@ -416,11 +406,12 @@
     [self enableAllGesturesForPageView];
 }
 
--(void) importImageAsNewPage:(UIImage*)imageToImport{
+-(void) importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL{
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
     [page setPageBackgroundTexture:imageToImport];
+    [page saveOriginalBackgroundTextureFromURL:assetURL];
     [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
     [page updateThumbnailVisibility];
     [hiddenStackHolder pushSubview:page];
@@ -443,7 +434,7 @@
     if(asPage){
         CGSize pageSize = hiddenStackHolder.bounds.size;
         img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
-        [self importImageAsNewPage:img];
+        [self importImageAsNewPage:img withAssetURL:nil];
         return;
     }
 
@@ -538,23 +529,23 @@
                      }];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription andRequestsImportAsPage:(BOOL)asPage{
+-(void) assetWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString *)containerDescription andRequestsImportAsPage:(BOOL)asPage{
     CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
     
-    NSURL* assetURL = photo.fullResolutionURL;
+    NSURL* assetURL = asset.fullResolutionURL;
     [[Mixpanel sharedInstance] track:kMPEventImportPhoto properties:@{ kMPEventImportPropFileExt : [assetURL fileExtension],
                                                                        kMPEventImportPropFileType : [assetURL universalTypeID],
                                                                        kMPEventImportPropSource: containerDescription}];
     
     CGRect scrapRect = CGRectZero;
     CGSize buttonSize = [bufferedImage visibleImageSize];
-    CGSize fullScaleSize = photo.fullResolutionSize;
+    CGSize fullScaleSize = asset.fullResolutionSize;
 
     if(asPage){
         CGSize pageSize = hiddenStackHolder.bounds.size;
-        [self importImageAsNewPage:[photo aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height]];
+        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL];
         return;
     }
 
@@ -581,7 +572,7 @@
     
     
     // max image size in any direction is 300pts
-    CGFloat maxDim = [photo preferredImportMaxDim];
+    CGFloat maxDim = [asset preferredImportMaxDim];
     
     if(fullScaleSize.width >= fullScaleSize.height && fullScaleSize.width > maxDim){
         fullScaleSize.height = fullScaleSize.height / fullScaleSize.width * maxDim;
@@ -593,7 +584,7 @@
     
     CGFloat startingScale = scrapRect.size.width / fullScaleSize.width;
     
-    UIImage* scrapBacking = [photo aspectThumbnailWithMaxPixelSize:maxDim];
+    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     

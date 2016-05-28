@@ -216,11 +216,11 @@
     [super pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)asset
+-(void) assetWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation{
     lastCameraRollOffset = photoListScrollView.contentOffset;
-    [super photoWasTapped:asset fromView:bufferedImage withRotation:rotation];
+    [super assetWasTapped:asset fromView:bufferedImage withRotation:rotation];
 }
 
 @end
