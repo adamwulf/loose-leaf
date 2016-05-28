@@ -250,11 +250,9 @@ dispatch_queue_t importThumbnailQueue;
 //        DebugLog(@"saved excess");
     }
     if([paperState hasEditsToSave]){
-//        NSLog(@"======== hasEditsToSave %@", self.uuid);
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         if(drawableView){
-//            NSLog(@"======== drawableview %@", self.uuid);
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
@@ -272,23 +270,19 @@ dispatch_queue_t importThumbnailQueue;
                                      [paperState wasSavedAtImmutableState:immutableState];
                                      [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                      cachedImgViewImage = thumbnail;
-                                     onComplete(YES);
-//                                     DebugLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                                     onComplete(YES); // saved backing store ok at the immutableState.undoHash hash
                                  }else{
                                      // NOTE!
                                      // https://github.com/adamwulf/loose-leaf/issues/658
                                      // it's important to anyone listening to us that they potentially
                                      // wait for a pending save
                                      onComplete(NO);
-//                                     DebugLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }
                              }];
         }else{
-//            NSLog(@"======== !drawableview %@", self.uuid);
             onComplete(NO);
         }
     }else{
-//        NSLog(@"======== !hasEditsToSave %@", self.uuid);
         // already saved, but don't need to write
         // anything new to disk
         onComplete(NO);
@@ -511,7 +505,6 @@ static int count = 0;
 }
 
 -(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
-    //
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
