@@ -12,7 +12,7 @@
 #import "AVHexColor.h"
 #import "UIView+Animations.h"
 #import "UIView+Debug.h"
-#import "MMPencilButton.h"
+#import "MMPenButton.h"
 #import "MMMarkerButton.h"
 #import "MMHighlighterButton.h"
 
@@ -69,7 +69,7 @@
         
         // Initialization code
         
-        pencilButton = [[MMPencilButton alloc] initWithFrame:originalFrame];
+        pencilButton = [[MMPenButton alloc] initWithFrame:originalFrame];
         [pencilButton addTarget:self action:@selector(pencilTapped:) forControlEvents:UIControlEventTouchUpInside];
         pencilButton.tool = self;
         [self addSubview:pencilButton];

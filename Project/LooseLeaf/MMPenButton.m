@@ -7,6 +7,7 @@
 //
 
 #import "MMPenButton.h"
+#import "UIColor+RHInterpolationAdditions.h"
 
 @implementation MMPenButton
 
@@ -38,23 +39,13 @@
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-    UIColor* pencilShadow = [UIColor colorWithRed: 0.57 green: 0.57 blue: 0.57 alpha: 0.35];
-    UIColor* barelyWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.25];
+    UIColor* white = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
+    UIColor* halfWhite = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 0.502];
+    UIColor* penTipColor = [UIColor colorWithRed: 0.502 green: 0.502 blue: 0.502 alpha: 0.702];
 
     //// Gradient Declarations
-    NSArray* pencilFillGradientColors = [NSArray arrayWithObjects:
-                                         (id)halfGreyFill.CGColor,
-                                         (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.42].CGColor,
-                                         (id)pencilShadow.CGColor,
-                                         (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.42].CGColor,
-                                         (id)halfGreyFill.CGColor,
-                                         (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.42].CGColor,
-                                         (id)pencilShadow.CGColor,
-                                         (id)halfGreyFill.CGColor,
-                                         (id)[UIColor colorWithRed: 0.71 green: 0.71 blue: 0.71 alpha: 0.42].CGColor,
-                                         (id)pencilShadow.CGColor, nil];
-    CGFloat pencilFillGradientLocations[] = {0, 0.26, 0.33, 0.33, 0.33, 0.5, 0.65, 0.66, 0.75, 0.93};
-    CGGradientRef pencilFillGradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)pencilFillGradientColors, pencilFillGradientLocations);
+    CGFloat penBodyLocations[] = {0, 0.31, 0.56, 0.74, 0.87};
+    CGGradientRef penBody = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)@[(id)white.CGColor, (id)[white blendedColorWithFraction: 0.5 ofColor: halfWhite].CGColor, (id)halfWhite.CGColor, (id)[halfWhite blendedColorWithFraction: 0.5 ofColor: halfGreyFill].CGColor, (id)halfGreyFill.CGColor], penBodyLocations);
 
     CGRect frame = [self drawableFrame];
 
@@ -64,39 +55,42 @@
 
     //// Pencil Tip Drawing
     UIBezierPath* pencilTipPath = [UIBezierPath bezierPath];
-    [pencilTipPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.41 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame))];
-    [pencilTipPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.35 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.35 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57 * CGRectGetHeight(frame))];
-    [pencilTipPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.33 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.69 * CGRectGetHeight(frame))];
-    [pencilTipPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.45 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66 * CGRectGetHeight(frame))];
-    [pencilTipPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.41 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.6 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.45 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.44 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.62 * CGRectGetHeight(frame))];
+    [pencilTipPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.46132 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.62278 * CGRectGetHeight(frame))];
+    [pencilTipPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.40299 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.64848 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.44034 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.63199 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.42048 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.64074 * CGRectGetHeight(frame))];
+    [pencilTipPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.36263 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61437 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.36255 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.66636 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.34606 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.65272 * CGRectGetHeight(frame))];
+    [pencilTipPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.38982 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.55128 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.37069 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.59572 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.37999 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57416 * CGRectGetHeight(frame))];
+    [pencilTipPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.46132 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.62278 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.41361 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.57507 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.43764 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.59910 * CGRectGetHeight(frame))];
     [pencilTipPath closePath];
 
     //// Pencil Outline Drawing
-    UIBezierPath* pencilOutlinePath = [UIBezierPath bezierPath];
-    [pencilOutlinePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.01 * CGRectGetHeight(frame))];
-    [pencilOutlinePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.39 * CGRectGetHeight(frame))];
-    [pencilOutlinePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.33 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.69 * CGRectGetHeight(frame))];
-    [pencilOutlinePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame))];
-    [pencilOutlinePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.99 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.26 * CGRectGetHeight(frame))];
-    [pencilOutlinePath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.01 * CGRectGetHeight(frame))];
-    [pencilOutlinePath closePath];
+    UIBezierPath* pencilBodyPath = [UIBezierPath bezierPath];
+    [pencilBodyPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.85625 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.09375 * CGRectGetHeight(frame))];
+    [pencilBodyPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.99964 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.31174 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.91214 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.39924 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.99964 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.31174 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.94964 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.36174 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.72906 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.50627 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.86214 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.44924 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.75887 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.49350 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.68714 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.52424 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.71565 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.51202 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.70160 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.51804 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.47774 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.63125 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.64346 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.54104 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.55852 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.59578 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.38125 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.53476 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.45407 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.60757 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.40503 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.55854 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.48714 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.32424 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.41618 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.45344 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.47034 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.36792 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.51109 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.26836 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.49553 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.30466 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.50359 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28586 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.55877 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.17203 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.51729 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.25390 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.53478 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.21307 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.61214 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.09924 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.57428 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.14550 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.59251 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.11887 * CGRectGetHeight(frame))];
+    [pencilBodyPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.69964 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.01174 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.64964 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.06174 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.69964 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.01174 * CGRectGetHeight(frame))];
+    [pencilBodyPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.85625 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.09375 * CGRectGetHeight(frame))];
+    [pencilBodyPath closePath];
 
-    //// Pencil Fill Drawing
-    UIBezierPath* pencilFillPath = [UIBezierPath bezierPath];
-    [pencilFillPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.01 * CGRectGetHeight(frame))];
-    [pencilFillPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.39 * CGRectGetHeight(frame))];
-    [pencilFillPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.54 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.46 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.39 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.47 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.41 * CGRectGetHeight(frame))];
-    [pencilFillPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.52 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame))];
-    [pencilFillPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.99 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.26 * CGRectGetHeight(frame))];
-    [pencilFillPath addLineToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.01 * CGRectGetHeight(frame))];
-    [pencilFillPath closePath];
-    pencilFillPath.lineJoinStyle = kCGLineJoinRound;
+    
+    // Body Line
+    UIBezierPath* bodyLinePath = [UIBezierPath bezierPath];
+    [bodyLinePath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.87500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.42500 * CGRectGetHeight(frame))];
+    [bodyLinePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.76875 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.24375 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.87500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.42500 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.83594 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.32344 * CGRectGetHeight(frame))];
+    [bodyLinePath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.58125 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.13125 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.70156 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.16406 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.58125 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.13125 * CGRectGetHeight(frame))];
 
-
+    
+    
     // Fill Oval Drawing
     [ovalPath closePath];
     [halfGreyFill setFill];
-    [[UIColor colorWithRed:0 green:1 blue:0 alpha:.5] setFill];
     [ovalPath fill];
 
     // get cliping mask for circle
@@ -114,51 +108,43 @@
     // cut pencil out
     CGContextSetBlendMode(context, kCGBlendModeClear);
     [[UIColor whiteColor] setFill];
-    [pencilOutlinePath fill];
+    [pencilBodyPath fill];
     CGContextSetBlendMode(context, kCGBlendModeNormal);
-
-    // fill pencil tip
-    [barelyWhite setFill];
-    [pencilOutlinePath fill];
-    CGContextSetBlendMode(context, kCGBlendModeClear);
-    [[UIColor whiteColor] setFill];
-    [pencilFillPath fill];
-    [pencilTipPath fill];
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-
 
     // fill pencil body
     CGContextSaveGState(context);
-    [pencilFillPath addClip];
-    UIBezierPath* pencilFillRotatedPath = [pencilFillPath copy];
-    CGAffineTransform pencilFillTransform = CGAffineTransformMakeRotation(-45 * M_PI/180);
-    [pencilFillRotatedPath applyTransform: pencilFillTransform];
-    CGRect pencilFillBounds = pencilFillRotatedPath.bounds;
-    pencilFillTransform = CGAffineTransformInvert(pencilFillTransform);
-
-    CGContextDrawLinearGradient(context, pencilFillGradient,
-                                CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(pencilFillBounds), CGRectGetMidY(pencilFillBounds)), pencilFillTransform),
-                                CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(pencilFillBounds), CGRectGetMidY(pencilFillBounds)), pencilFillTransform),
+    [pencilBodyPath addClip];
+    UIBezierPath* pencilBodyRotatedPath = [pencilBodyPath copy];
+    CGAffineTransform pencilBodyTransform = CGAffineTransformMakeRotation(58*(-M_PI/180));
+    [pencilBodyRotatedPath applyTransform: pencilBodyTransform];
+    CGRect pencilBodyBounds = CGPathGetPathBoundingBox(pencilBodyRotatedPath.CGPath);
+    pencilBodyTransform = CGAffineTransformInvert(pencilBodyTransform);
+    
+    CGContextDrawLinearGradient(context, penBody,
+                                CGPointApplyAffineTransform(CGPointMake(CGRectGetMinX(pencilBodyBounds), CGRectGetMidY(pencilBodyBounds)), pencilBodyTransform),
+                                CGPointApplyAffineTransform(CGPointMake(CGRectGetMaxX(pencilBodyBounds), CGRectGetMidY(pencilBodyBounds)), pencilBodyTransform),
                                 0);
     CGContextRestoreGState(context);
 
 
-    // stroke pencil
-    [darkerGreyBorder setStroke];
-    [pencilOutlinePath stroke];
-
-    //// Pencil Shaving Drawing
-    UIBezierPath* pencilShavingPath = [UIBezierPath bezierPath];
-    [pencilShavingPath moveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.39 * CGRectGetHeight(frame))];
-    [pencilShavingPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.54 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.46 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.39 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.39 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.47 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.41 * CGRectGetHeight(frame))];
-    [pencilShavingPath addCurveToPoint: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame)) controlPoint1: CGPointMake(CGRectGetMinX(frame) + 0.6 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.52 * CGRectGetHeight(frame)) controlPoint2: CGPointMake(CGRectGetMinX(frame) + 0.64 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.61 * CGRectGetHeight(frame))];
-    [darkerGreyBorder setStroke];
-    pencilShavingPath.lineWidth = 1;
-    [pencilShavingPath stroke];
-
-    //// Pencil Tip Drawing
-    [darkerGreyBorder setFill];
+    [penTipColor setFill];
     [pencilTipPath fill];
+
+    // stroke pencil body
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setStroke];
+    [pencilBodyPath stroke];
+    [bodyLinePath stroke];
+    CGContextSetBlendMode(context, kCGBlendModeNormal);
+
+    [darkerGreyBorder setStroke];
+    [pencilBodyPath stroke];
+
+    // body line
+    [darkerGreyBorder setStroke];
+    [bodyLinePath setLineWidth:.5];
+    [bodyLinePath stroke];
+    
 
 
     // clip end of pencil
@@ -177,7 +163,7 @@
     [super drawRect:rect];
 
     CGColorSpaceRelease(colorSpace);
-    CGGradientRelease(pencilFillGradient);
+    CGGradientRelease(penBody);
 }
 
 

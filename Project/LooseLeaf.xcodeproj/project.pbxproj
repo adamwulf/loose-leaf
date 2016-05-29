@@ -426,6 +426,8 @@
 		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
+		C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */; };
+		C504E6EC1CFAA86C00914A0E /* RHAdditions.license in Resources */ = {isa = PBXBuildFile; fileRef = C504E6EB1CFAA86C00914A0E /* RHAdditions.license */; };
 		C5060FB21CAA0A0C00B9721C /* MMRoundedSquareView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */; };
 		C5060FB51CAA147000B9721C /* MMStackPropertiesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */; };
 		C5060FB61CAA170400B9721C /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
@@ -1377,6 +1379,9 @@
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
 		66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLargeTutorialSidebarButton.h; sourceTree = "<group>"; };
 		66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLargeTutorialSidebarButton.m; sourceTree = "<group>"; };
+		C504E6E81CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RHInterpolationAdditions.h"; sourceTree = "<group>"; };
+		C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RHInterpolationAdditions.m"; sourceTree = "<group>"; };
+		C504E6EB1CFAA86C00914A0E /* RHAdditions.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RHAdditions.license; sourceTree = "<group>"; };
 		C5060FB01CAA0A0C00B9721C /* MMRoundedSquareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedSquareView.h; sourceTree = "<group>"; };
 		C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedSquareView.m; sourceTree = "<group>"; };
 		C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackPropertiesView.h; sourceTree = "<group>"; };
@@ -1705,6 +1710,8 @@
 		660E1DA6158FC6120001DA12 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				C504E6E81CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.h */,
+				C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */,
 				C53F63541CDA871D00091EF1 /* UIImage+Blur.h */,
 				C53F63551CDA871D00091EF1 /* UIImage+Blur.m */,
 				C53F63561CDA871D00091EF1 /* UIImage+FXBlur.h */,
@@ -2395,6 +2402,7 @@
 				6634856319DB41F000B5CF2D /* Crumple.license */,
 				6634856419DB41F000B5CF2D /* TemplateIcon2x.png */,
 				C51F68721C3B7DC2003C046F /* GPUImage.license */,
+				C504E6EB1CFAA86C00914A0E /* RHAdditions.license */,
 			);
 			name = Licenses;
 			sourceTree = "<group>";
@@ -3883,6 +3891,7 @@
 				6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */,
 				667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */,
 				665F7F5D1AE08D2B00635D56 /* export-to-facebook.mov in Resources */,
+				C504E6EC1CFAA86C00914A0E /* RHAdditions.license in Resources */,
 				6650DD1B18F48D7A00ADF591 /* camera@2x.png in Resources */,
 				C58E6A311CDB1B4A00508F1D /* bg20.jpg in Resources */,
 				66E2240819D637B2000FCA96 /* ios7-settings-camera@2x.png in Resources */,
@@ -4443,6 +4452,7 @@
 				C5FC086B1C23E01B00C88675 /* NSData+MPBase64.m in Sources */,
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
+				C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */,
 				6601170119ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
