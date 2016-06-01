@@ -23,7 +23,7 @@
 #import <JotUI/JotUI.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
-
+#import "MMAllStacksManager.h"
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
@@ -67,30 +67,33 @@
 
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
-    presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [presentationWindow makeKeyAndVisible];
-
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    self.window = [[MMWindow alloc] initWithFrame:screenBounds];
-    // Override point for customization after application launch.
-    self.viewController = [[MMLooseLeafViewController alloc] init];
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
     
-//    [self.window.layer setSpeed:0.1f];
-
-    // setup the timer that will help log session duration
-    [self setupTimer];
-
-    if (launchOptions != nil)
-    {
-        NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        if (dictionary != nil)
+    [[MMAllStacksManager sharedInstance] upgradeIfNecessary:^{
+        presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        [presentationWindow makeKeyAndVisible];
+        
+        CGRect screenBounds = [[UIScreen mainScreen] bounds];
+        self.window = [[MMWindow alloc] initWithFrame:screenBounds];
+        // Override point for customization after application launch.
+        self.viewController = [[MMLooseLeafViewController alloc] init];
+        self.window.rootViewController = self.viewController;
+        [self.window makeKeyAndVisible];
+        
+        //    [self.window.layer setSpeed:0.1f];
+        
+        // setup the timer that will help log session duration
+        [self setupTimer];
+        
+        if (launchOptions != nil)
         {
-            [self checkForNotificationToHandleWithNotificationInfo:dictionary];
+            NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            if (dictionary != nil)
+            {
+                [self checkForNotificationToHandleWithNotificationInfo:dictionary];
+            }
         }
-    }
-    
+    }];
+
     NSDate* dateOfCrash = [self dateOfDeathIfAny];
     [[NSThread mainThread] performBlock:^{
         if(dateOfCrash && !didRecieveReportFromCrashlytics){

@@ -428,6 +428,7 @@
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
 		C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */; };
 		C504E6EC1CFAA86C00914A0E /* RHAdditions.license in Resources */ = {isa = PBXBuildFile; fileRef = C504E6EB1CFAA86C00914A0E /* RHAdditions.license */; };
+		C504E70A1CFE685D00914A0E /* MMUpgradeInProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */; };
 		C5060FB21CAA0A0C00B9721C /* MMRoundedSquareView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */; };
 		C5060FB51CAA147000B9721C /* MMStackPropertiesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */; };
 		C5060FB61CAA170400B9721C /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
@@ -1382,6 +1383,8 @@
 		C504E6E81CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RHInterpolationAdditions.h"; sourceTree = "<group>"; };
 		C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RHInterpolationAdditions.m"; sourceTree = "<group>"; };
 		C504E6EB1CFAA86C00914A0E /* RHAdditions.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RHAdditions.license; sourceTree = "<group>"; };
+		C504E7081CFE685D00914A0E /* MMUpgradeInProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUpgradeInProgressViewController.h; sourceTree = "<group>"; };
+		C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUpgradeInProgressViewController.m; sourceTree = "<group>"; };
 		C5060FB01CAA0A0C00B9721C /* MMRoundedSquareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedSquareView.h; sourceTree = "<group>"; };
 		C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedSquareView.m; sourceTree = "<group>"; };
 		C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackPropertiesView.h; sourceTree = "<group>"; };
@@ -1917,6 +1920,7 @@
 		661708EA19841956006A73EF /* Stack Manager */ = {
 			isa = PBXGroup;
 			children = (
+				C504E7071CFE684200914A0E /* UpgradeInProgressViewController */,
 				66B21A6A175E4A5A0049F1AF /* MMSingleStackManager.h */,
 				66B21A6B175E4A5A0049F1AF /* MMSingleStackManager.m */,
 				C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */,
@@ -3419,6 +3423,15 @@
 			name = "Archiving Help";
 			sourceTree = "<group>";
 		};
+		C504E7071CFE684200914A0E /* UpgradeInProgressViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C504E7081CFE685D00914A0E /* MMUpgradeInProgressViewController.h */,
+				C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */,
+			);
+			name = UpgradeInProgressViewController;
+			sourceTree = "<group>";
+		};
 		C5060FAF1CAA09F300B9721C /* RoundedSquareView */ = {
 			isa = PBXGroup;
 			children = (
@@ -4307,6 +4320,7 @@
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,
 				C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */,
 				C5FC08661C23E01B00C88675 /* MPUIFontToNSDictionaryValueTransformer.m in Sources */,
+				C504E70A1CFE685D00914A0E /* MMUpgradeInProgressViewController.m in Sources */,
 				661708EE19841988006A73EF /* MMTrashManager.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,

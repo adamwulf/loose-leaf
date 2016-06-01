@@ -12,6 +12,7 @@
 #import "NSArray+Extras.h"
 #import "NSArray+Map.h"
 #import "NSThread+BlockAdditions.h"
+#import "MMUpgradeInProgressViewController.h"
 
 @implementation MMAllStacksManager{
     NSMutableArray* stackIDs;
@@ -42,8 +43,6 @@ static MMAllStacksManager* _instance = nil;
         if(!stackIDs){
             stackIDs = [NSMutableArray array];
         }
-        
-        [self checkForUpgrade];
     }
     return self;
 }
@@ -153,7 +152,7 @@ static MMAllStacksManager* _instance = nil;
 
 #pragma mark - Upgrade to 2.0.0
 
--(void) checkForUpgrade{
+-(void) upgradeIfNecessary:(void(^)())upgradeCompleteBlock{
     NSString* documentsPath = [NSFileManager documentsPath];
     NSString* visiblePagesPlist = [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
     NSString* hiddenPagesPlist = [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
@@ -162,14 +161,34 @@ static MMAllStacksManager* _instance = nil;
     if([[NSFileManager defaultManager] fileExistsAtPath:visiblePagesPlist] &&
        [[NSFileManager defaultManager] fileExistsAtPath:hiddenPagesPlist] &&
        [[NSFileManager defaultManager] fileExistsAtPath:pagesDir]){
-        stackIDs = stackIDs ?: [NSMutableArray array];
-        NSString* stackID = [self createStack];
 
-        NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
+        UIWindow* upgradingWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        upgradingWindow.rootViewController = [[MMUpgradeInProgressViewController alloc] init];
+        [upgradingWindow makeKeyAndVisible];
 
-        [[NSFileManager defaultManager] moveItemAtPath:visiblePagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[visiblePagesPlist lastPathComponent]] error:nil];
-        [[NSFileManager defaultManager] moveItemAtPath:hiddenPagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[hiddenPagesPlist lastPathComponent]] error:nil];
-        [[NSFileManager defaultManager] moveItemAtPath:pagesDir toPath:[stackDirectory stringByAppendingPathComponent:[pagesDir lastPathComponent]] error:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            
+            // upgrade from 1.x to 2.x required
+            stackIDs = stackIDs ?: [NSMutableArray array];
+            NSString* stackID = [self createStack];
+            
+            NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
+            
+            [[NSFileManager defaultManager] moveItemAtPath:visiblePagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[visiblePagesPlist lastPathComponent]] error:nil];
+            [[NSFileManager defaultManager] moveItemAtPath:hiddenPagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[hiddenPagesPlist lastPathComponent]] error:nil];
+            [[NSFileManager defaultManager] moveItemAtPath:pagesDir toPath:[stackDirectory stringByAppendingPathComponent:[pagesDir lastPathComponent]] error:nil];
+            
+            
+            
+            upgradeCompleteBlock();
+        });
+        
+        
+        
+        
+    }else{
+        upgradeCompleteBlock();
     }
 }
 
