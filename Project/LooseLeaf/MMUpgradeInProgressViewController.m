@@ -23,6 +23,7 @@
     UIActivityIndicatorView* spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     spinner.center = CGRectGetMidPoint(self.view.bounds);
     spinner.autoresizingMask = UIViewAutoresizingFlexibleAllMargins;
+    [spinner startAnimating];
     
     [self.view addSubview:spinner];
     
@@ -36,11 +37,6 @@
     upgradingLabel.autoresizingMask = UIViewAutoresizingFlexibleAllMargins;
 
     [self.view addSubview:upgradingLabel];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 

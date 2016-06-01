@@ -16,6 +16,7 @@
 
 @implementation MMAllStacksManager{
     NSMutableArray* stackIDs;
+    UIWindow* upgradingWindow;
 }
 
 static MMAllStacksManager* _instance = nil;
@@ -162,7 +163,7 @@ static MMAllStacksManager* _instance = nil;
        [[NSFileManager defaultManager] fileExistsAtPath:hiddenPagesPlist] &&
        [[NSFileManager defaultManager] fileExistsAtPath:pagesDir]){
 
-        UIWindow* upgradingWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        upgradingWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         upgradingWindow.rootViewController = [[MMUpgradeInProgressViewController alloc] init];
         [upgradingWindow makeKeyAndVisible];
 
@@ -180,8 +181,11 @@ static MMAllStacksManager* _instance = nil;
             [[NSFileManager defaultManager] moveItemAtPath:pagesDir toPath:[stackDirectory stringByAppendingPathComponent:[pagesDir lastPathComponent]] error:nil];
             
             
-            
             upgradeCompleteBlock();
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                upgradingWindow = nil;
+            });
         });
         
         
