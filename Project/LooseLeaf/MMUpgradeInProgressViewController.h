@@ -10,4 +10,6 @@
 
 @interface MMUpgradeInProgressViewController : UIViewController
 
+-(void) setProgress:(CGFloat)progress;
+
 @end
