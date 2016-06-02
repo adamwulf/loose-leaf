@@ -32,7 +32,7 @@
 -(void) upgradeWithCompletionBlock:(void(^)())onComplete{
     @autoreleasepool {
         if([[NSFileManager defaultManager] fileExistsAtPath:[self plistPath]]){
-            dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_async([JotView importExportStateQueue], ^{
                 // make this async so that we can update a progress bar
                 CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
                 
@@ -103,7 +103,7 @@
                     [[stateInfo objectForKey:@"stackOfUndoneStrokes"] mapObjectsUsingBlock:loadStrokeBlock];
                 }
                 
-                onComplete();
+                dispatch_async(dispatch_get_main_queue(), onComplete);
             });
         }else{
             dispatch_async(dispatch_get_main_queue(), onComplete);
