@@ -13,6 +13,7 @@
 #import "NSArray+Map.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMUpgradeInProgressViewController.h"
+#import "MMScrapStateUpgrader.h"
 
 @implementation MMAllStacksManager{
     NSMutableArray* stackIDs;
@@ -166,31 +167,56 @@ static MMAllStacksManager* _instance = nil;
         upgradingWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
         upgradingWindow.rootViewController = [[MMUpgradeInProgressViewController alloc] init];
         [upgradingWindow makeKeyAndVisible];
+        
+        // upgrade from 1.x to 2.x required
+        stackIDs = stackIDs ?: [NSMutableArray array];
+        NSString* stackID = [self createStack];
+        NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
 
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        void(^moveFilesIntoPlace)() = ^{
             
-            
-            // upgrade from 1.x to 2.x required
-            stackIDs = stackIDs ?: [NSMutableArray array];
-            NSString* stackID = [self createStack];
-            
-            NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
-            
-            [[NSFileManager defaultManager] moveItemAtPath:visiblePagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[visiblePagesPlist lastPathComponent]] error:nil];
-            [[NSFileManager defaultManager] moveItemAtPath:hiddenPagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[hiddenPagesPlist lastPathComponent]] error:nil];
-            [[NSFileManager defaultManager] moveItemAtPath:pagesDir toPath:[stackDirectory stringByAppendingPathComponent:[pagesDir lastPathComponent]] error:nil];
-            
-            
-            upgradeCompleteBlock();
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                upgradingWindow = nil;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[NSFileManager defaultManager] moveItemAtPath:visiblePagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[visiblePagesPlist lastPathComponent]] error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:hiddenPagesPlist toPath:[stackDirectory stringByAppendingPathComponent:[hiddenPagesPlist lastPathComponent]] error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:pagesDir toPath:[stackDirectory stringByAppendingPathComponent:[pagesDir lastPathComponent]] error:nil];
+                
+                NSLog(@"finished moving files into place");
+                
+                upgradeCompleteBlock();
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    upgradingWindow = nil;
+                });
             });
+        };
+        
+        
+        
+        void(^upgradeScrapStateForAllPages)() = ^{
+            __block NSInteger numberOfPagesUpgraded = 0;
+            
+            [[NSFileManager defaultManager] enumerateDirectory:pagesDir withBlock:^(NSURL *item, NSUInteger totalItemCount) {
+                
+                NSLog(@"Upgrading: %@", [pagesDir lastPathComponent]);
+                
+                MMScrapStateUpgrader* upgrader = [[MMScrapStateUpgrader alloc] initWithPagesPath:[item path]];
+                
+                [upgrader upgradeWithCompletionBlock:^{
+                    numberOfPagesUpgraded += 1;
+                    
+                    if(totalItemCount == numberOfPagesUpgraded){
+                        NSLog(@"finished upgrading scrap state");
+                        
+                        moveFilesIntoPlace();
+                    }
+                }];
+            } andErrorHandler:nil];
+        };
+
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            upgradeScrapStateForAllPages();
         });
-        
-        
-        
-        
     }else{
         upgradeCompleteBlock();
     }

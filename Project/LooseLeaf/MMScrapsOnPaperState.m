@@ -115,6 +115,7 @@
         };
         void (^blockForMainThread)() = ^{
             @autoreleasepool {
+                BOOL adjustForScaleWasNeededAfterAll = NO;
                 if(self.isForgetful){
                     return;
                 }
@@ -197,6 +198,7 @@
                             adjustedProperties[@"scale"] = @([scrapProperties[@"scale"] floatValue] * widthRatio);
                             
                             scrapProperties = adjustedProperties;
+                            adjustForScaleWasNeededAfterAll = YES;
                         }
                     }
                     
@@ -247,7 +249,11 @@
                     isLoading = NO;
                     MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                     expectedUndoHash = [immutableState undoHash];
-                    lastSavedUndoHash = [immutableState undoHash];
+                    if(!adjustForScaleWasNeededAfterAll){
+                        // if we're adjusting for scale, then we'll need to
+                        // save our edits no matter what
+                        lastSavedUndoHash = [immutableState undoHash];
+                    }
                     //                        DebugLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                 }
                 [self.delegate didLoadAllScrapsFor:self];

@@ -78,6 +78,12 @@ static NSArray* userDocumentsPaths;
     return [userDocumentsPaths objectAtIndex:0];
 }
 
+-(void) enumerateDirectory:(NSString*)directory withBlock:(void(^)(NSURL* item, NSUInteger totalItemCount))perItemBlock andErrorHandler:(BOOL (^)(NSURL *url, NSError *error))handler{
+    NSArray* directoryContents = [[self enumeratorAtURL:[NSURL fileURLWithPath:directory] includingPropertiesForKeys:nil options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsPackageDescendants errorHandler:handler] allObjects];
+    for (NSURL* subpath in directoryContents) {
+        perItemBlock(subpath, [directoryContents count]);
+    }
+}
 
 - (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly{
     [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:directoryPath];

@@ -18,6 +18,8 @@
 
 - (NSArray *)recursiveContentsOfDirectoryAtPath:(NSString *)directoryPath filesOnly:(BOOL)filesOnly;
 
+-(void) enumerateDirectory:(NSString*)directory withBlock:(void(^)(NSURL* item, NSUInteger totalItemCount))perItemBlock andErrorHandler:(BOOL (^)(NSURL *url, NSError *error))handler;
+
 -(BOOL) isDirectory:(NSString*)path;
 
 -(NSString*) humanReadableSizeForItemAtPath:(NSString*)path;
