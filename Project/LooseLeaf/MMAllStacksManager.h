@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+#define kMMAllStacksManagerUpgradeStartNotification @"kMMAllStacksManagerUpgradeStartNotification"
+
 @interface MMAllStacksManager : NSObject
 
 +(MMAllStacksManager*) sharedInstance;
+
+-(void) upgradeIfNecessary:(void(^)())upgradeCompleteBlock;
 
 -(NSString*) stackDirectoryPathForUUID:(NSString*)uuid;
 

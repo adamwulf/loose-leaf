@@ -115,6 +115,7 @@
         };
         void (^blockForMainThread)() = ^{
             @autoreleasepool {
+                BOOL adjustForScaleWasNeededAfterAll = NO;
                 if(self.isForgetful){
                     return;
                 }
@@ -190,13 +191,15 @@
                         CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
                         if(CGRectGetWidth(screenBounds) != 768 && CGRectGetHeight(screenBounds) != 1024){
                             CGFloat widthRatio = CGRectGetWidth(screenBounds) / 768.0;
+                            CGFloat heightRatio = CGRectGetHeight(screenBounds) / 1024.0;
 
                             NSMutableDictionary* adjustedProperties = [scrapProperties mutableCopy];
                             adjustedProperties[@"center.x"] = @([scrapProperties[@"center.x"] floatValue] * widthRatio);
-                            adjustedProperties[@"center.y"] = @([scrapProperties[@"center.y"] floatValue] * widthRatio);
+                            adjustedProperties[@"center.y"] = @([scrapProperties[@"center.y"] floatValue] * heightRatio);
                             adjustedProperties[@"scale"] = @([scrapProperties[@"scale"] floatValue] * widthRatio);
                             
                             scrapProperties = adjustedProperties;
+                            adjustForScaleWasNeededAfterAll = YES;
                         }
                     }
                     
@@ -247,7 +250,11 @@
                     isLoading = NO;
                     MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                     expectedUndoHash = [immutableState undoHash];
-                    lastSavedUndoHash = [immutableState undoHash];
+                    if(!adjustForScaleWasNeededAfterAll){
+                        // if we're adjusting for scale, then we'll need to
+                        // save our edits no matter what
+                        lastSavedUndoHash = [immutableState undoHash];
+                    }
                     //                        DebugLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                 }
                 [self.delegate didLoadAllScrapsFor:self];
