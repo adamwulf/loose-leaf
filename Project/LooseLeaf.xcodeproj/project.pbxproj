@@ -430,6 +430,7 @@
 		C504E6EC1CFAA86C00914A0E /* RHAdditions.license in Resources */ = {isa = PBXBuildFile; fileRef = C504E6EB1CFAA86C00914A0E /* RHAdditions.license */; };
 		C504E70A1CFE685D00914A0E /* MMUpgradeInProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */; };
 		C504E71A1CFFE55600914A0E /* MMScrapStateUpgrader.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E7191CFFE55600914A0E /* MMScrapStateUpgrader.m */; };
+		C504E71D1CFFF21100914A0E /* MMJotViewStateUpgrader.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E71C1CFFF21100914A0E /* MMJotViewStateUpgrader.m */; };
 		C5060FB21CAA0A0C00B9721C /* MMRoundedSquareView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */; };
 		C5060FB51CAA147000B9721C /* MMStackPropertiesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */; };
 		C5060FB61CAA170400B9721C /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
@@ -1388,6 +1389,8 @@
 		C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUpgradeInProgressViewController.m; sourceTree = "<group>"; };
 		C504E7181CFFE55600914A0E /* MMScrapStateUpgrader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapStateUpgrader.h; sourceTree = "<group>"; };
 		C504E7191CFFE55600914A0E /* MMScrapStateUpgrader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapStateUpgrader.m; sourceTree = "<group>"; };
+		C504E71B1CFFF21100914A0E /* MMJotViewStateUpgrader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMJotViewStateUpgrader.h; sourceTree = "<group>"; };
+		C504E71C1CFFF21100914A0E /* MMJotViewStateUpgrader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMJotViewStateUpgrader.m; sourceTree = "<group>"; };
 		C5060FB01CAA0A0C00B9721C /* MMRoundedSquareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedSquareView.h; sourceTree = "<group>"; };
 		C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedSquareView.m; sourceTree = "<group>"; };
 		C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackPropertiesView.h; sourceTree = "<group>"; };
@@ -3433,6 +3436,8 @@
 				C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */,
 				C504E7181CFFE55600914A0E /* MMScrapStateUpgrader.h */,
 				C504E7191CFFE55600914A0E /* MMScrapStateUpgrader.m */,
+				C504E71B1CFFF21100914A0E /* MMJotViewStateUpgrader.h */,
+				C504E71C1CFFF21100914A0E /* MMJotViewStateUpgrader.m */,
 			);
 			name = UpgradeInProgressViewController;
 			sourceTree = "<group>";
@@ -4378,6 +4383,7 @@
 				662370DA1A9E90B200B62F69 /* MMBackgroundedPaperView.m in Sources */,
 				C5FC08611C23E01B00C88675 /* MPTweakStore.m in Sources */,
 				662808F91A9BB57100CA3F9A /* MMTutorialStackView.m in Sources */,
+				C504E71D1CFFF21100914A0E /* MMJotViewStateUpgrader.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
 				663326CA1AB09BA7003915E6 /* MMInboxImageAlbum.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,

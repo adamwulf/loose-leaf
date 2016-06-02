@@ -27,14 +27,14 @@
 }
 
 -(NSString*)scrapIDsPath{
-    return [[[self pagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
+    return [[pagesPath stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
 }
-
 
 -(void) upgradeWithCompletionBlock:(void(^)())onComplete{
     @autoreleasepool {
         if([[NSFileManager defaultManager] fileExistsAtPath:[self scrapIDsPath]]){
-            MMScrapsOnPaperState* state = [[MMScrapsOnPaperState alloc] initWithDelegate:self withScrapContainerSize:[[UIScreen mainScreen] bounds].size];
+            CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
+            MMScrapsOnPaperState* state = [[MMScrapsOnPaperState alloc] initWithDelegate:self withScrapContainerSize:screenBounds.size];
             
             [state loadStateAsynchronously:NO atPath:[self scrapIDsPath] andMakeEditable:NO andAdjustForScale:YES];
             
