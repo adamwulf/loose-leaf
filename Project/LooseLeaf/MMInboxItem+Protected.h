@@ -12,6 +12,8 @@
 
 +(dispatch_queue_t) assetQueue;
 
++(NSString*) cacheDirectory;
+
 -(id) initWithURL:(NSURL*)itemURL andInitBlock:(void(^)())block;
 
 -(void) generatePageThumbnailCache;

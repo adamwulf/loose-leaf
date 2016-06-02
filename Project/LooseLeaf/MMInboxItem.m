@@ -61,6 +61,10 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
     return itemURL;
 }
 
++(NSString*) cacheDirectory{
+    return [[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"];
+}
+
 -(NSString*) cachedAssetsPath{
     if(!cachedAssetsPath){
         NSString* relativeToDocuments = [itemURL path];
@@ -70,7 +74,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
                                                                                   range:NSMakeRange(0, [relativeToDocuments length])];
         NSString* pdfHash = [relativeToDocuments MD5Hash];
 //        NSLog(@"generating path: %@ to %@", relativeToDocuments, pdfHash);
-        cachedAssetsPath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"] stringByAppendingPathComponent:pdfHash];
+        cachedAssetsPath = [[MMInboxItem cacheDirectory] stringByAppendingPathComponent:pdfHash];
         [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];
     }
     return cachedAssetsPath;
