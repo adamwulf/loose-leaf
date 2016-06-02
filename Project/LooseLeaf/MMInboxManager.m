@@ -12,13 +12,15 @@
 #import "NSURL+UTI.h"
 #import "MMPDFInboxItem.h"
 #import "MMImageInboxItem.h"
+#import "MMInboxItem+Protected.h"
 #import "NSString+UUID.h"
 #import "Constants.h"
+#import "NSArray+MapReduce.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMInboxManager{
     NSString* pdfInboxFolderPath;
-    NSMutableArray* contents;
+    NSMutableArray<MMInboxItem*>* contents;
 }
 
 @synthesize delegate;
@@ -142,7 +144,6 @@ static dispatch_queue_t fileSystemQueue;
                                                                              options:NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsHiddenFiles
                                                                         errorHandler:nil];
         
-        
         for (NSURL* url in [dir allObjects]) {
             NSString* uti = [url universalTypeID];
             if(UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)){
@@ -151,13 +152,15 @@ static dispatch_queue_t fileSystemQueue;
                 [contents addObject:[[MMPDFInboxItem alloc] initWithURL:url]];
             }
         }
-        [contents sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        [contents sortUsingComparator:^NSComparisonResult(MMInboxItem* obj1, MMInboxItem* obj2) {
             NSDate* dt1 = nil;
             NSDate* dt2 = nil;
             [[obj1 urlOnDisk] getResourceValue:&dt1 forKey:kURLAddedToDirectoryKey error:nil];
             [[obj2 urlOnDisk] getResourceValue:&dt2 forKey:kURLAddedToDirectoryKey error:nil];
             return [dt2 compare:dt1];
         }];
+        
+        [self cleanup];
     }
 }
 
@@ -171,6 +174,30 @@ static dispatch_queue_t fileSystemQueue;
 
 -(NSInteger) indexOfItem:(MMInboxItem*)item{
     return [contents indexOfObject:item];
+}
+
+-(void) cleanup{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        @autoreleasepool {
+            NSArray* legitContents = [[contents copy] map:^id(MMInboxItem *obj, NSUInteger index) {
+                return [obj cachedAssetsPath];
+            }];
+            
+            NSMutableArray* pathsToRemove = [NSMutableArray array];
+            
+            [[NSFileManager defaultManager] enumerateDirectory:[MMInboxItem cacheDirectory] withBlock:^(NSURL *item, NSUInteger totalItemCount) {
+                NSString* itemPath = [[item URLByResolvingSymlinksInPath] path];
+                if(![legitContents containsObject:itemPath]){
+                    [pathsToRemove addObject:itemPath];
+                }
+            } andErrorHandler:nil];
+            
+            [pathsToRemove enumerateObjectsUsingBlock:^(NSString* _Nonnull pathToRemove, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSError* errorCache = nil;
+                [[NSFileManager defaultManager] removeItemAtPath:pathToRemove error:&errorCache];
+            }];
+        }
+    });
 }
 
 @end
