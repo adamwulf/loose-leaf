@@ -172,6 +172,7 @@ static MMTutorialManager* _instance = nil;
     timeSpentInTutorial = [stopwatch stop];
     [[[Mixpanel sharedInstance] people] set:kMPDurationWatchingTutorial to:@(timeSpentInTutorial)];
     [[NSUserDefaults standardUserDefaults] setFloat:timeSpentInTutorial forKey:kMPDurationWatchingTutorial];
+    [[Mixpanel sharedInstance] flush];
 }
 
 -(void) finishWatchingTutorial{
@@ -180,6 +181,7 @@ static MMTutorialManager* _instance = nil;
     [[[Mixpanel sharedInstance] people] set:kMPHasFinishedTutorial to:@(YES)];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialClosedNotification object:self];
     hasFinishedTutorial = YES;
+    [[Mixpanel sharedInstance] flush];
 }
 
 
@@ -195,12 +197,14 @@ static MMTutorialManager* _instance = nil;
 -(void) optOutOfNewsletter{
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasIgnoredNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Opt Out"];
+    [[Mixpanel sharedInstance] flush];
 }
 
 -(void) signUpForNewsletter:(NSString*)email{
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
     [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];
+    [[Mixpanel sharedInstance] flush];
 }
 
 
