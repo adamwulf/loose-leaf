@@ -190,6 +190,9 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventGestureBug @"Gesture Bug"
 
 // MixPanel Events Properties
+#define kMPNewsletterSignupAttemptEvent @"Submit Email Attempt"
+#define kMPNewsletterSignupSuccessEvent @"Submit Email Success"
+#define kMPNewsletterSignupFailedEvent @"Submit Email Failed"
 #define kMPEventLaunch @"App Launch"
 #define kMPEventResume @"App Resume"
 #define kMPEventResign @"App Resign"
