@@ -12,6 +12,9 @@
 #import "AuthConstants.h"
 
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
+#define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
+
+
 #define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)
 
 #define kURLAddedToDirectoryKey (&NSURLAddedToDirectoryDateKey ? NSURLAddedToDirectoryDateKey : NSURLCreationDateKey)

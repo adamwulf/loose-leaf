@@ -11,6 +11,8 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
 #import "MMScrapBackgroundView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+#import "Constants.h"
 
 @interface MMBackgroundedPaperView ()<MMGenericBackgroundViewDelegate>
 
@@ -191,5 +193,75 @@
     return CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 }
 
+
+#pragma mark - Export to PDF
+
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+
+    CGRect pageBounds = CGRectFromSize([[self drawableView] pagePtSize]);
+    __block NSURL* backgroundAsset;
+    
+    [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL *item, NSUInteger totalItemCount) {
+        if([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]){
+            backgroundAsset = item;
+        }
+    } andErrorHandler:nil];
+
+    NSLog(@"found background asset: %@", backgroundAsset);
+    
+    
+    if(completionBlock) completionBlock(backgroundAsset);
+    
+    
+//
+//    NSString* backgroundAssetPath = [[[self pagesPath] stringByAppendingPathComponent:@"backgroundTexture.asset"] stringByAppendingPathExtension:@"pdf"];
+//
+//    
+//    CFAttributedStringRef currentText = CFAttributedStringCreate(NULL, (CFStringRef)textView.text, NULL);
+//    if (currentText) {
+//        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(currentText);
+//        if (framesetter) {
+//            
+//            NSString *pdfFileName = [self getPDFFileName];
+//            // Create the PDF context using the default page size of 612 x 792.
+//            UIGraphicsBeginPDFContextToFile(pdfFileName, CGRectZero, nil);
+//            
+//            CFRange currentRange = CFRangeMake(0, 0);
+//            NSInteger currentPage = 0;
+//            BOOL done = NO;
+//            
+//            do {
+//                // Mark the beginning of a new page.
+//                UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 792), nil);
+//                
+//                // Draw a page number at the bottom of each page.
+//                currentPage++;
+//                [self drawPageNumber:currentPage];
+//                
+//                // Render the current page and update the current range to
+//                // point to the beginning of the next page.
+//                currentRange = [self renderPageWithTextRange:currentRange andFramesetter:framesetter];
+//                
+//                // If we're at the end of the text, exit the loop.
+//                if (currentRange.location == CFAttributedStringGetLength((CFAttributedStringRef)currentText))
+//                    done = YES;
+//            } while (!done);
+//            
+//            // Close the PDF context and write the contents out.
+//            UIGraphicsEndPDFContext();
+//            
+//            // Release the framewetter.
+//            CFRelease(framesetter);
+//            
+//        } else {
+//            NSLog(@"Could not create the framesetter needed to lay out the atrributed string.");
+//        }
+//        // Release the attributed string.
+//        CFRelease(currentText);
+//    } else {
+//        NSLog(@"Could not create the attributed string for the framesetter");
+//    }
+    
+}
 
 @end

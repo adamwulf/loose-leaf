@@ -18,7 +18,9 @@
 #import "MMRulerView.h"
 #import "UIView+SubviewStacks.h"
 #import "Mixpanel.h"
+#import "MMPDFButton.h"
 #import <mach/mach_time.h>  // for mach_absolute_time() and friends
+#import <SafariServices/SafariServices.h>
 
 @implementation MMEditablePaperStackView{
     MMMemoryProfileView* memoryView;
@@ -123,6 +125,12 @@
         [self.toolbar addButton:redoButton extendFrame:YES];
 
         
+        MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        pdfExportButton.delegate = self;
+        [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
+        [self.toolbar addButton:pdfExportButton extendFrame:NO];
+
+        
         //
         // accelerometer for rotating buttons
         // ================================================================================
@@ -154,6 +162,27 @@
         [self addSubview:rulerView];
     }
     return self;
+}
+
+static UIWebView *pdfWebView;
+
+-(void) exportAsPDF:(id)sender{
+    if(pdfWebView){
+        [pdfWebView removeFromSuperview];
+        pdfWebView = nil;
+    }
+    [[[self visibleStackHolder] peekSubview] exportToPDF:^(NSURL *urlToPDF) {
+        if(urlToPDF){
+            pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
+            [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
+            [[pdfWebView layer] setBorderWidth:2];
+            
+            NSURLRequest *request = [NSURLRequest requestWithURL:urlToPDF];
+            [pdfWebView loadRequest:request];
+            
+            [self addSubview:pdfWebView];
+        }
+    }];
 }
 
 -(void) dealloc{
