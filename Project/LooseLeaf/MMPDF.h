@@ -13,6 +13,9 @@
 @property (nonatomic, readonly) NSURL* urlOnDisk;
 @property (nonatomic, readonly) NSUInteger pageCount;
 
+// the ppi used for PDF contexts
++(CGFloat) ppi;
+
 -(instancetype) initWithURL:(NSURL*)url;
 
 -(BOOL) attemptToDecrypt:(NSString*)password;

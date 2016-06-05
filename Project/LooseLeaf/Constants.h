@@ -13,6 +13,7 @@
 
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
 #define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
+#define CGSizeScale(size, scale)    CGSizeMake(size.width*scale,size.height*scale)
 
 
 #define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)

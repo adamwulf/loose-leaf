@@ -13,6 +13,8 @@
 #import "MMScrapBackgroundView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "Constants.h"
+#import "UIDevice+PPI.h"
+#import "MMPDF.h"
 
 @interface MMBackgroundedPaperView ()<MMGenericBackgroundViewDelegate>
 
@@ -198,19 +200,41 @@
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
 
-    CGRect pageBounds = CGRectFromSize([[self drawableView] pagePtSize]);
-    __block NSURL* backgroundAsset;
+    
+    __block NSURL* backgroundAssetURL;
     
     [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL *item, NSUInteger totalItemCount) {
         if([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]){
-            backgroundAsset = item;
+            backgroundAssetURL = item;
         }
     } andErrorHandler:nil];
 
-    NSLog(@"found background asset: %@", backgroundAsset);
+    NSLog(@"found background asset: %@", backgroundAssetURL);
+    
+    CGSize pxSize = CGSizeScale([[UIScreen mainScreen] bounds].size, [[UIScreen mainScreen] scale]);
+    CGSize inSize = CGSizeScale(pxSize, 1 / [UIDevice ppi]);
+    CGSize finalSize = CGSizeScale(inSize, [MMPDF ppi]);
+    
+    if([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]){
+        MMPDF* pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
+        if([pdf pageCount]){
+            CGSize pagePtSize = [pdf sizeForPage:0];
+            CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
+            
+            NSLog(@"Screen size (pxs): %.2f %.2f", pxSize.width, pxSize.height);
+            NSLog(@"Screen size (in):  %.2f %.2f", inSize.width, inSize.height);
+            NSLog(@"Screen PDF size (pts):  %.2f %.2f", finalSize.width, finalSize.height);
+            NSLog(@"Screen PDF ratio:  %.2f", finalSize.width / finalSize.height);
+            
+            NSLog(@"Background PDF (in):  %.2f %.2f", pageInSize.width, pageInSize.height);
+            NSLog(@"Background PDF size (pts):  %.2f %.2f", pagePtSize.width, pagePtSize.height);
+            NSLog(@"Background PDF ratio:  %.2f", pagePtSize.width / pagePtSize.height);
+            NSLog(@"done with stats");
+        }
+    }
     
     
-    if(completionBlock) completionBlock(backgroundAsset);
+    if(completionBlock) completionBlock(backgroundAssetURL);
     
     
 //
