@@ -11,9 +11,26 @@
 
 #import "AuthConstants.h"
 
+static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill, BOOL fill){
+    CGFloat horizontalRatio = sizeToFill.width / sizeToScale.width;
+    CGFloat verticalRatio = sizeToFill.height / sizeToScale.height;
+    CGFloat ratio;
+    if(fill){
+        ratio = MAX(horizontalRatio, verticalRatio); //AspectFill
+    }else{
+        ratio = MIN(horizontalRatio, verticalRatio); //AspectFill
+    }
+    
+    CGSize scaledSize = CGSizeMake(sizeToScale.width * ratio, sizeToScale.height * ratio);
+    
+    return CGRectMake((sizeToFill.width - scaledSize.width) / 2, (sizeToFill.height - scaledSize.height) / 2, scaledSize.width, scaledSize.height);
+}
+
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
 #define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
 #define CGSizeScale(size, scale)    CGSizeMake(size.width*scale,size.height*scale)
+#define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
+#define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
 
 
 #define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)

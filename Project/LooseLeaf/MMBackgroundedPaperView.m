@@ -229,6 +229,15 @@
             NSLog(@"Background PDF (in):  %.2f %.2f", pageInSize.width, pageInSize.height);
             NSLog(@"Background PDF size (pts):  %.2f %.2f", pagePtSize.width, pagePtSize.height);
             NSLog(@"Background PDF ratio:  %.2f", pagePtSize.width / pagePtSize.height);
+            
+            CGRect scaledScreen = CGSizeFill(finalSize, pagePtSize);
+            
+            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
+            
+            scaledScreen = CGSizeFit(finalSize, pagePtSize);
+            
+            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
+            
             NSLog(@"done with stats");
         }
     }
