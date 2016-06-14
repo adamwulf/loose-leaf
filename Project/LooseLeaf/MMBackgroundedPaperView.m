@@ -239,62 +239,45 @@
             NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
             
             NSLog(@"done with stats");
+            
+            
+            
+            if([[self.drawableView state] isStateLoaded]){
+                [self.drawableView exportToImageOnComplete:^(UIImage * image) {
+                    NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+                    
+                    CGRect rect = CGRectFromSize(pagePtSize);
+                    CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
+                    CGPDFContextBeginPage(pdfContext, NULL);
+                    
+                    CGContextScaleCTM(pdfContext, 1, -1);
+                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
+                    
+                    [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
+                    
+                    [image drawInRect:CGRectMake(0, 0, 100, 100)];
+                    
+                    CGContextDrawImage(pdfContext, scaledScreen, [image CGImage]);
+                    
+                    CGPDFContextEndPage(pdfContext);
+                    CFRelease(pdfContext);
+                    
+                    
+                    NSLog(@"Wrote PDF to: %@", tmpPagePath);
+                    
+                    NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
+
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if(completionBlock) completionBlock(fullyRenderedPDFURL);
+                    });
+                
+                } withScale:self.drawableView.scale];
+                return;
+            }
         }
     }
     
-    
-    if(completionBlock) completionBlock(backgroundAssetURL);
-    
-    
-//
-//    NSString* backgroundAssetPath = [[[self pagesPath] stringByAppendingPathComponent:@"backgroundTexture.asset"] stringByAppendingPathExtension:@"pdf"];
-//
-//    
-//    CFAttributedStringRef currentText = CFAttributedStringCreate(NULL, (CFStringRef)textView.text, NULL);
-//    if (currentText) {
-//        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString(currentText);
-//        if (framesetter) {
-//            
-//            NSString *pdfFileName = [self getPDFFileName];
-//            // Create the PDF context using the default page size of 612 x 792.
-//            UIGraphicsBeginPDFContextToFile(pdfFileName, CGRectZero, nil);
-//            
-//            CFRange currentRange = CFRangeMake(0, 0);
-//            NSInteger currentPage = 0;
-//            BOOL done = NO;
-//            
-//            do {
-//                // Mark the beginning of a new page.
-//                UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 612, 792), nil);
-//                
-//                // Draw a page number at the bottom of each page.
-//                currentPage++;
-//                [self drawPageNumber:currentPage];
-//                
-//                // Render the current page and update the current range to
-//                // point to the beginning of the next page.
-//                currentRange = [self renderPageWithTextRange:currentRange andFramesetter:framesetter];
-//                
-//                // If we're at the end of the text, exit the loop.
-//                if (currentRange.location == CFAttributedStringGetLength((CFAttributedStringRef)currentText))
-//                    done = YES;
-//            } while (!done);
-//            
-//            // Close the PDF context and write the contents out.
-//            UIGraphicsEndPDFContext();
-//            
-//            // Release the framewetter.
-//            CFRelease(framesetter);
-//            
-//        } else {
-//            NSLog(@"Could not create the framesetter needed to lay out the atrributed string.");
-//        }
-//        // Release the attributed string.
-//        CFRelease(currentText);
-//    } else {
-//        NSLog(@"Could not create the attributed string for the framesetter");
-//    }
-    
+    if(completionBlock) completionBlock(nil);
 }
 
 @end
