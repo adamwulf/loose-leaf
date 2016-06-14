@@ -72,6 +72,8 @@
 
 #pragma mark - protected
 
+-(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize;
+
 -(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
 -(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail;

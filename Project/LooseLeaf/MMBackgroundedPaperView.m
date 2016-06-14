@@ -15,6 +15,7 @@
 #import "Constants.h"
 #import "UIDevice+PPI.h"
 #import "MMPDF.h"
+#import "MMImmutableScrapsOnPaperState.h"
 
 @interface MMBackgroundedPaperView ()<MMGenericBackgroundViewDelegate>
 
@@ -248,18 +249,37 @@
                     
                     CGRect rect = CGRectFromSize(pagePtSize);
                     CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
-                    CGPDFContextBeginPage(pdfContext, NULL);
+                    UIGraphicsPushContext(pdfContext);
                     
+                    CGPDFContextBeginPage(pdfContext, NULL);
+
+                    // flip
                     CGContextScaleCTM(pdfContext, 1, -1);
                     CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
                     
+                    // PDF background
                     [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
                     
-                    [image drawInRect:CGRectMake(0, 0, 100, 100)];
-                    
+                    // Ink                    
                     CGContextDrawImage(pdfContext, scaledScreen, [image CGImage]);
                     
+                    // flip back
+                    CGContextScaleCTM(pdfContext, 1, -1);
+                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
+                    
+                    // Scraps
+                    // adjust so that (0,0) is the origin of the content rect in the PDF page,
+                    // since the PDF may be much taller/wider than our screen
+                    CGContextTranslateCTM(pdfContext, scaledScreen.origin.x, scaledScreen.origin.y);
+                    MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
+                    
+                    for(MMScrapView* scrap in immutableScrapState.scraps){
+                        [self drawScrap:scrap intoContext:pdfContext withSize:scaledScreen.size];
+                    }
+                    CGContextTranslateCTM(pdfContext, -scaledScreen.origin.x, -scaledScreen.origin.y);
+                    
                     CGPDFContextEndPage(pdfContext);
+                    UIGraphicsPopContext();
                     CFRelease(pdfContext);
                     
                     
