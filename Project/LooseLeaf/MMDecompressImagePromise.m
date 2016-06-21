@@ -36,17 +36,6 @@ NSOperationQueue* decompressImageQueue;
         delegate = _delegate;
         image = imageToDecompress;
         __weak MMDecompressImagePromise* weakSelf = self;
-        __block void (^notifyDelegateBlock)() = ^(void) {
-            @autoreleasepool {
-                MMDecompressImagePromise* strongMainSelf = weakSelf;
-                @synchronized(strongMainSelf){
-                    if(strongMainSelf && strongMainSelf.image){
-                        strongMainSelf.isDecompressed = YES;
-                        [strongMainSelf.delegate didDecompressImage:strongMainSelf];
-                    }
-                }
-            }
-        };
         
         decompressBlock = [[MMBlockOperation alloc] initWithBlock:^{
             @autoreleasepool {
@@ -56,7 +45,6 @@ NSOperationQueue* decompressImageQueue;
                 if(strongContextSelf){
                     @synchronized(strongContextSelf){
                         if(strongContextSelf){
-                            
                             
 //                            if(strongContextSelf.image){
 //                                size_t width = 1;
@@ -85,9 +73,16 @@ NSOperationQueue* decompressImageQueue;
                                 [strongContextSelf.image drawAtPoint:CGPointZero];
                                 UIGraphicsEndImageContext();
                             }
-                            if(notifyDelegateBlock){
-                                dispatch_async(dispatch_get_main_queue(), notifyDelegateBlock);
-                            }
+                            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                @autoreleasepool {
+                                    @synchronized(strongContextSelf){
+                                        if(strongContextSelf && strongContextSelf.image){
+                                            strongContextSelf.isDecompressed = YES;
+                                            [strongContextSelf.delegate didDecompressImage:strongContextSelf];
+                                        }
+                                    }
+                                }
+                            });
                         }
                     }
                 }
