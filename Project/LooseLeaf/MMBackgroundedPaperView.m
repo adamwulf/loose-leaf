@@ -180,6 +180,9 @@
 
 -(void) newlyCutScrapFromPaperView:(MMScrapView*)addedScrap{
     if(self.pageBackgroundTexture){
+        
+        NSLog(@"scrap on page: %@", self.pagesPath);
+        
         MMGenericBackgroundView* pageBackground = [[MMGenericBackgroundView alloc] initWithImage:self.pageBackgroundTexture andDelegate:self];
         pageBackground.bounds = self.bounds;
         [pageBackground aspectFillBackgroundImageIntoView];

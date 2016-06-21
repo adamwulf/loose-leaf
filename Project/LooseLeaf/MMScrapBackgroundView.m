@@ -166,12 +166,15 @@ static int totalBackgroundBytes;
                 DebugLog(@"can't get background!");
             }
         }
-        UIImage* image = [UIImage imageWithData:imageData];
+        // This is the scale of the loaded UIImage data, to account for retina screens etc
+        CGFloat imageDataScale = [[properties objectForKey:@"backgroundDataScale"] floatValue] ?: [[UIScreen mainScreen] scale];
+        UIImage* image = [UIImage imageWithData:imageData scale:imageDataScale];
         [NSThread performBlockOnMainThread:^{
             [self setBackingImage:image];
         }];
     }
     self.backgroundRotation = [[properties objectForKey:@"backgroundRotation"] floatValue];
+    // This is the scale of the visible image, ie, if the background was zoomed in/out from its native resolution.
     self.backgroundScale = [[properties objectForKey:@"backgroundScale"] floatValue];
     self.backgroundOffset = CGPointMake([[properties objectForKey:@"backgroundOffset.x"] floatValue],
                                         [[properties objectForKey:@"backgroundOffset.y"] floatValue]);
@@ -191,6 +194,7 @@ static int totalBackgroundBytes;
     }
     
     NSMutableDictionary* savedProperties = [NSMutableDictionary dictionary];
+    [savedProperties setObject:[NSNumber numberWithFloat:self.self.backingContentView.image.scale] forKey:@"backgroundDataScale"];
     [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundRotation] forKey:@"backgroundRotation"];
     [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundScale] forKey:@"backgroundScale"];
     [savedProperties setObject:[NSNumber numberWithFloat:self.backgroundOffset.x] forKey:@"backgroundOffset.x"];
