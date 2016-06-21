@@ -16,6 +16,10 @@
     if ((self = [super init]) == nil)
         return nil;
     
+    if(!block){
+        @throw [NSException exceptionWithName:@"NullBlockException" reason:@"block must not be nil" userInfo:nil];
+    }
+    
     /* Blocks must be copied */
     _block = [block copy];
     

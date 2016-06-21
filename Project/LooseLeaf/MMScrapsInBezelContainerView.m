@@ -18,6 +18,8 @@
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
 
+#define kAnimationDuration 0.3
+
 @interface MMSidebarButtonTapGestureRecognizer : UITapGestureRecognizer
 
 @end
@@ -557,6 +559,9 @@ static NSString* bezelStatePath;
         [self hide:YES onComplete:^(BOOL finished){
             [contentView viewDidHide];
         }];
+        [UIView animateWithDuration:kAnimationDuration animations:^{
+            [self setAlpha:1];
+        } completion:nil];
         [self.delegate sidebarCloseButtonWasTapped];
     }
 }
