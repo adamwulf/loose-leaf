@@ -57,6 +57,8 @@
         // rotate
         img = [[UIImage alloc] initWithCGImage:img.CGImage scale:img.scale orientation:([self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp)];
     }
+    
+    NSLog(@"background: %@", self.pagesPath);
 
     if(!paperBackgroundView){
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
@@ -154,8 +156,12 @@
     [super drawPageBackgroundInContext:context forThumbnailSize:thumbSize];
     if(paperBackgroundView){
         UIGraphicsPushContext(context);
-        [paperBackgroundView.image drawInRect:CGRectMake(0, 0, thumbSize.width, thumbSize.height)];
-//        CGContextDrawImage(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height), paperBackgroundView.image.CGImage);
+        
+        CGSize backgroundImageSize = paperBackgroundView.image.size;
+        CGRect scaledScreen = CGSizeFill(backgroundImageSize, thumbSize);
+
+        [paperBackgroundView.image drawInRect:scaledScreen];
+
         UIGraphicsPopContext();
     }
 }
@@ -200,8 +206,6 @@
 #pragma mark - Export to PDF
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
-
-    
     __block NSURL* backgroundAssetURL;
     
     [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL *item, NSUInteger totalItemCount) {
