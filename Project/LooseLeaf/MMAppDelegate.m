@@ -125,6 +125,7 @@
     // stop the timer once "App Close" event is called
     [[Mixpanel sharedInstance] track:kMPEventActiveSession];
     [[Mixpanel sharedInstance] track:kMPEventResign];
+    [[Mixpanel sharedInstance] flush];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -182,6 +183,7 @@
     [self logActiveAppDuration];
     [self stopTimer];
     [self removeDateOfLaunch];
+    [[Mixpanel sharedInstance] flush];
     DebugLog(@"WILL TERMINATE");
 }
 
@@ -245,6 +247,7 @@
     // calling url.pathExtension seems to immediately dealloc
     // the path extension when i pass it into the dict below
     [self.viewController importFileFrom:url fromApp:sourceApplication];
+    [[Mixpanel sharedInstance] flush];
 }
 
 
@@ -258,6 +261,7 @@
         // sanity check, only log time if our timer is running
         [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:amount];
         sessionStartStamp = CFAbsoluteTimeGetCurrent();
+        [[Mixpanel sharedInstance] flush];
     }
 }
 
@@ -315,6 +319,7 @@
     }@catch(id e){
         // noop
     }
+    [[Mixpanel sharedInstance] flush];
 }
 
 
@@ -371,6 +376,7 @@
     
     @try{
         [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+        [[Mixpanel sharedInstance] flush];
     }@catch(id e){
         // noop
     }

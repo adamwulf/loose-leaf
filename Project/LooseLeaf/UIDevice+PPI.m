@@ -55,6 +55,30 @@
         return 326; // ipad mini retina
     }else if([machineId isEqualToString:@"iPad4,6"]){
         return 326; // ipad mini retina
+    }else if([machineId isEqualToString:@"iPad4,6"]){
+        return 326; // ipad mini retina
+    }else if([machineId isEqualToString:@"iPad4,7"]){
+        return 326; // iPad Mini 3
+    }else if([machineId isEqualToString:@"iPad4,8"]){
+        return 326; // iPad Mini 3
+    }else if([machineId isEqualToString:@"iPad4,9"]){
+        return 326; // iPad Mini 3
+    }else if([machineId isEqualToString:@"iPad5,1"]){
+        return 326; // iPad Mini 4 (WiFi)
+    }else if([machineId isEqualToString:@"iPad5,2"]){
+        return 326; // iPad Mini 4 (LTE)
+    }else if([machineId isEqualToString:@"iPad5,3"]){
+        return 264; // iPad Air 2
+    }else if([machineId isEqualToString:@"iPad5,4"]){
+        return 264; // iPad Air 2
+    }else if([machineId isEqualToString:@"iPad6,7"]){
+        return 264; // iPad Pro 12.9in
+    }else if([machineId isEqualToString:@"iPad6,8"]){
+        return 264; // iPad Pro 12.9in
+    }else if([machineId isEqualToString:@"iPad6,3"]){
+        return 264; // iPad Pro 9.7in
+    }else if([machineId isEqualToString:@"iPad6,4"]){
+        return 264; // iPad Pro 9.7in
     }
     
     // ipad air: 264

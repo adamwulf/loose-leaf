@@ -209,8 +209,8 @@
     [self.delegate pictureTakeWithCamera:img fromView:cameraView andRequestsImportAsPage:importAsPageButton.selected];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
-    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description] andRequestsImportAsPage:importAsPageButton.selected];
+-(void) assetWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
+    [self.delegate assetWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description] andRequestsImportAsPage:importAsPageButton.selected];
 }
 
 -(void) switchToListView:(MMAbstractSidebarContentView*)listView{

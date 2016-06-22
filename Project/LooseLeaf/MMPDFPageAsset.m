@@ -10,19 +10,21 @@
 #import "MMPDFInboxItem.h"
 #import <JotUI/UIImage+Resize.h>
 #import "Constants.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 @implementation MMPDFPageAsset{
-    MMPDFInboxItem* pdf;
+    MMPDFInboxItem* pdfItem;
     NSInteger pageNumber;
+    NSString* pagePDFPath;
 }
 
 static UIImage* lockThumbnail;
 
 -(id) initWithPDF:(MMPDFInboxItem*)_pdf andPage:(NSInteger)_pageNum{
     if(self = [super init]){
-        pdf = _pdf;
+        pdfItem = _pdf;
         pageNumber = _pageNum;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfThumbnailGenerated:) name:kInboxItemThumbnailGenerated object:pdf];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pdfThumbnailGenerated:) name:kInboxItemThumbnailGenerated object:pdfItem];
         
         [self generateLockIcon];
     }
@@ -30,26 +32,48 @@ static UIImage* lockThumbnail;
 }
 
 -(UIImage*) aspectRatioThumbnail{
-    if(pdf.isEncrypted){
+    if(pdfItem.isEncrypted){
         return lockThumbnail;
     }
-    return [pdf thumbnailForPage:pageNumber];
+    return [pdfItem thumbnailForPage:pageNumber];
 }
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
-    return [pdf imageForPage:pageNumber forMaxDim:maxDim];
+    return [pdfItem imageForPage:pageNumber forMaxDim:maxDim];
 }
 
 -(CGSize) fullResolutionSize{
-    if([pdf isEncrypted]){
+    if([pdfItem isEncrypted]){
         return lockThumbnail.size;
     }else{
-        return [pdf sizeForPage:pageNumber];
+        return [pdfItem sizeForPage:pageNumber];
     }
 }
 
 -(NSURL*) fullResolutionURL{
-    return [NSURL fileURLWithPath:[pdf pathForPage:pageNumber forMaxDim:kThumbnailMaxDim]];
+    if(!pagePDFPath || ![[NSFileManager defaultManager] fileExistsAtPath:pagePDFPath]){
+        NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+        
+        CGSize pageSize = [self fullResolutionSize];
+        CGRect rect = CGRectMake(0, 0, pageSize.width, pageSize.height);
+        CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
+        CGPDFContextBeginPage(pdfContext, NULL);
+
+        CGContextScaleCTM(pdfContext, 1, -1);
+        CGContextTranslateCTM(pdfContext, 0, -pageSize.height);
+    
+        [pdfItem.pdf renderPage:pageNumber intoContext:pdfContext withSize:pageSize];
+        
+        CGPDFContextEndPage(pdfContext);
+        CFRelease(pdfContext);
+        
+        pagePDFPath = tmpPagePath;
+    }
+    
+    if(pagePDFPath && [[NSFileManager defaultManager] fileExistsAtPath:pagePDFPath]){
+        return [NSURL fileURLWithPath:pagePDFPath];
+    }
+    return nil; // error generating a single page PDF
 }
 
 -(CGFloat) preferredImportMaxDim{

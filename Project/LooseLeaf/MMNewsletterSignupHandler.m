@@ -10,6 +10,7 @@
 #import "MMReachabilityManager.h"
 #import "NSString+URLEncode.h"
 #import "Constants.h"
+#import "Mixpanel.h"
 
 @implementation MMNewsletterSignupHandler
 
@@ -70,6 +71,7 @@ static MMNewsletterSignupHandler* _instance = nil;
     dispatch_async(lowQueue, ^{
         @synchronized(self){
             NSString* emailToSubscribe = [[NSUserDefaults standardUserDefaults] objectForKey:kPendingEmailToSubscribe];
+            [[Mixpanel sharedInstance] track:kMPNewsletterSignupAttemptEvent];
             if(emailToSubscribe){
                 NSLog(@"trying to subscribe: %@", emailToSubscribe);
                 if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
@@ -95,24 +97,41 @@ static MMNewsletterSignupHandler* _instance = nil;
                                 if([[dataStr lowercaseString] containsString:@"subscribed"]){
                                     NSLog(@" - Connection Successful: %@", dataStr);
                                     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+                                    [[Mixpanel sharedInstance] track:kMPNewsletterSignupSuccessEvent];
                                 }else{
                                     NSLog(@" - Invalid response: %@", dataStr);
+                                    [[Mixpanel sharedInstance] track:kMPNewsletterSignupFailedEvent
+                                                          properties:@{ @"Reason" : @"Invalid response",
+                                                                        @"Info" : dataStr ?: @"null" }];
                                 }
                             }else{
                                 NSLog(@" - wrong http code: %d",(int) httpResponse.statusCode);
+                                [[Mixpanel sharedInstance] track:kMPNewsletterSignupFailedEvent
+                                                      properties:@{ @"Reason" : @"Wrong HTTP Status",
+                                                                    @"Info" : [NSString stringWithFormat:@"Code: %d",(int) httpResponse.statusCode] }];
                             }
                         }else{
                             NSLog(@" - invalid response: %@", response);
+                            [[Mixpanel sharedInstance] track:kMPNewsletterSignupFailedEvent
+                                                  properties:@{ @"Reason" : @"Invalid response",
+                                                                @"Info" : [response description] }];
                         }
                     } else {
                         NSLog(@" - Connection could not be made: %@", err);
+                        [[Mixpanel sharedInstance] track:kMPNewsletterSignupFailedEvent
+                                              properties:@{ @"Reason" : @"Connection Error",
+                                                            @"Info" : [err description] ?: @"null" }];
                     }
                 }else{
                     NSLog(@" - Can't save email address, internet is unreachable");
+                    [[Mixpanel sharedInstance] track:kMPNewsletterSignupFailedEvent
+                                          properties:@{ @"Reason" : @"Offline",
+                                                        @"Info" : @"Internet is unreachable" }];
                 }
             }else{
                 NSLog(@" - There is no email to subscribe to the newsletter");
             }
+            [[Mixpanel sharedInstance] flush];
         }
     });
 }

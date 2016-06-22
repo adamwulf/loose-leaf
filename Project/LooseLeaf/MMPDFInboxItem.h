@@ -8,10 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "MMInboxItem.h"
+#import "MMPDF.h"
 
 @interface MMPDFInboxItem : MMInboxItem
 
 @property (readonly) BOOL isEncrypted;
+@property (readonly) MMPDF* pdf;
+
 
 -(BOOL) attemptToDecrypt:(NSString*)password;
 

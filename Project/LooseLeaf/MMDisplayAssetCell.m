@@ -35,7 +35,7 @@
 -(void) tapped:(id)gesture{
     [album loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:index] usingBlock:^(MMDisplayAsset *result, NSUInteger _index, BOOL *stop) {
         if(result){
-            [delegate photoWasTapped:result fromView:bufferedImage withRotation:bufferedImage.rotation];
+            [delegate assetWasTapped:result fromView:bufferedImage withRotation:bufferedImage.rotation];
         }
     }];
 }

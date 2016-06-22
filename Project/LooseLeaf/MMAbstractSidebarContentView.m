@@ -299,12 +299,12 @@
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)asset
+-(void) assetWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
           withRotation:(CGFloat)rotation
 {
     MMAssetListLayout* layout = (MMAssetListLayout*) photoListScrollView.collectionViewLayout;
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
+    [delegate assetWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
 }
 
 

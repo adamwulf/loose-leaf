@@ -17,6 +17,10 @@
 
 @synthesize urlOnDisk;
 
++(CGFloat) ppi{
+    return 72;
+}
+
 -(instancetype) initWithURL:(NSURL*)url{
     if(self = [super init]){
         urlOnDisk = url;
