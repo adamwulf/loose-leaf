@@ -31,7 +31,8 @@
 
 @interface MMShareSidebarContainerView ()
 
-@property (nonatomic, strong) NSURL* urlToShare;
+@property (nonatomic, strong) NSURL* imageURLToShare;
+@property (nonatomic, strong) NSURL* pdfURLToShare;
 
 @end
 
@@ -46,6 +47,9 @@
     MMLargeTutorialSidebarButton* tutorialButton;
     UIButton* exportAsImageButton;
     UIButton* exportAsPDFButton;
+    
+    BOOL exportedImage;
+    BOOL exportedPDF;
 }
 
 @synthesize shareDelegate;
@@ -119,7 +123,6 @@
         tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width/2, sharingContentView.bounds.size.height - 100);
         [tutorialButton addTarget:self action:@selector(startWatchingExportTutorials) forControlEvents:UIControlEventTouchUpInside];
         [sharingContentView addSubview:tutorialButton];
-        
     }
     return self;
 }
@@ -131,6 +134,37 @@
     [[NSUserDefaults standardUserDefaults] setBool:exportAsPDFButton.selected forKey:kExportAsPDFPreferenceDefault];
     
     [self updateShareOptions];
+    
+    if(exportAsImageButton.selected && !exportedImage){
+        exportedImage = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            UIImage* img = [self.shareDelegate imageToShare];
+            NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
+            [UIImagePNGRepresentation(img) writeToFile:tmpImagePath atomically:YES];
+            _imageURLToShare = [NSURL fileURLWithPath:tmpImagePath];
+
+            [self updateShareOptions];
+        });
+    }
+
+    if(exportAsPDFButton.selected && !exportedPDF){
+        exportedPDF = YES;
+        
+        [self.shareDelegate exportToPDF:^(NSURL *urlToPDF) {
+            _pdfURLToShare = urlToPDF;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateShareOptions];
+            });
+        }];
+    }
+}
+
+-(NSURL*) urlToShare{
+    if(exportAsImageButton.selected){
+        return _imageURLToShare;
+    }else{
+        return _pdfURLToShare;
+    }
 }
 
 -(void) startWatchingExportTutorials{
@@ -199,7 +233,11 @@
     // hide tutorial if we have an options view visible
     tutorialButton.hidden = (BOOL)activeOptionsView;
     [super show:animated];
+
+    [self setExportType:[[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault] ? exportAsPDFButton : exportAsImageButton];
 }
+
+
 
 -(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete{
     [super hide:animated onComplete:^(BOOL finished){
@@ -220,6 +258,11 @@
         if(onComplete){
             onComplete(finished);
         }
+        
+        exportedImage = NO;
+        exportedPDF = NO;
+        _pdfURLToShare = nil;
+        _imageURLToShare = nil;
     }];
 }
 

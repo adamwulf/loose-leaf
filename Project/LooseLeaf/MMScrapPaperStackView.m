@@ -1978,7 +1978,7 @@
 }
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
-    [[self peekSubview] exportToPDF:completionBlock];
+    [[visibleStackHolder peekSubview] exportToPDF:completionBlock];
 }
 
 -(NSDictionary*) cloudKitSenderInfo{
