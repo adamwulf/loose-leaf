@@ -71,15 +71,17 @@
         
         
         exportAsImageButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
-        [exportAsImageButton setBackgroundImage:[UIImage imageNamed:@"importAsScrap"] forState:UIControlStateNormal];
-        [exportAsImageButton setBackgroundImage:[UIImage imageNamed:@"importAsScrapHighlighted"] forState:UIControlStateSelected];
+        [exportAsImageButton setBackgroundImage:[UIImage imageNamed:@"exportAsImage"] forState:UIControlStateNormal];
+        [exportAsImageButton setBackgroundImage:[UIImage imageNamed:@"exportAsImageHighlighted"] forState:UIControlStateSelected];
+        [exportAsImageButton setAdjustsImageWhenHighlighted:NO];
         [exportAsImageButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
         exportAsImageButton.selected = ![[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
         [slidingSidebarView addSubview:exportAsImageButton];
         
         exportAsPDFButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
-        [exportAsPDFButton setBackgroundImage:[UIImage imageNamed:@"importAsPage"] forState:UIControlStateNormal];
-        [exportAsPDFButton setBackgroundImage:[UIImage imageNamed:@"importAsPageHighlighted"] forState:UIControlStateSelected];
+        [exportAsPDFButton setBackgroundImage:[UIImage imageNamed:@"exportAsPDF"] forState:UIControlStateNormal];
+        [exportAsPDFButton setBackgroundImage:[UIImage imageNamed:@"exportAsPDFHighlighted"] forState:UIControlStateSelected];
+        [exportAsPDFButton setAdjustsImageWhenHighlighted:NO];
         [exportAsPDFButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
         exportAsPDFButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
         [slidingSidebarView addSubview:exportAsPDFButton];
