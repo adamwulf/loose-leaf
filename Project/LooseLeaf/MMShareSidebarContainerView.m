@@ -28,16 +28,19 @@
 #import "UIView+Debug.h"
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMTutorialManager.h"
+#import "MMShareItem.h"
 
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
     UIView* buttonView;
     MMShareOptionsView* activeOptionsView;
-    NSMutableArray* shareItems;
+    NSMutableArray<id<MMShareItem>>* shareItems;
     
     MMCloudKitShareItem* cloudKitShareItem;
     
     MMLargeTutorialSidebarButton* tutorialButton;
+    UIButton* exportAsImageButton;
+    UIButton* exportAsPDFButton;
 }
 
 @synthesize shareDelegate;
@@ -53,9 +56,34 @@
         scrollViewBounds.size.width = [slidingSidebarView contentBounds].origin.x + [slidingSidebarView contentBounds].size.width;
         sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
-        buttonView = [[UIView alloc] initWithFrame:[slidingSidebarView contentBounds]];
+        CGRect contentBounds = [slidingSidebarView contentBounds];
+        CGRect buttonBounds = scrollViewBounds;
+        buttonBounds.origin.y = 0;
+        buttonBounds.size.height = kHeightOfImportTypeButton + 10;
+        contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
+        contentBounds.size.height -= buttonBounds.size.height;
+        buttonView = [[UIView alloc] initWithFrame:contentBounds];
         [sharingContentView addSubview:buttonView];
         [slidingSidebarView addSubview:sharingContentView];
+
+        //////////////////////////////////////////
+        // buttons
+        
+        
+        exportAsImageButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [exportAsImageButton setBackgroundImage:[UIImage imageNamed:@"importAsScrap"] forState:UIControlStateNormal];
+        [exportAsImageButton setBackgroundImage:[UIImage imageNamed:@"importAsScrapHighlighted"] forState:UIControlStateSelected];
+        [exportAsImageButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
+        exportAsImageButton.selected = ![[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
+        [slidingSidebarView addSubview:exportAsImageButton];
+        
+        exportAsPDFButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [exportAsPDFButton setBackgroundImage:[UIImage imageNamed:@"importAsPage"] forState:UIControlStateNormal];
+        [exportAsPDFButton setBackgroundImage:[UIImage imageNamed:@"importAsPageHighlighted"] forState:UIControlStateSelected];
+        [exportAsPDFButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
+        exportAsPDFButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
+        [slidingSidebarView addSubview:exportAsPDFButton];
+        
         
         cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
         
@@ -73,7 +101,7 @@
         [shareItems addObject:[[MMPrintShareItem alloc] init]];
         [shareItems addObject:[[MMCopyShareItem alloc] init]];
         [shareItems addObject:[[MMOpenInAppShareItem alloc] init]];
-
+        
         [self updateShareOptions];
         
         
@@ -87,6 +115,13 @@
         
     }
     return self;
+}
+
+-(void) setExportType:(id)sender{
+    exportAsImageButton.selected = (exportAsImageButton == sender);
+    exportAsPDFButton.selected = (exportAsPDFButton == sender);
+
+    [[NSUserDefaults standardUserDefaults] setBool:exportAsPDFButton.selected forKey:kExportAsPDFPreferenceDefault];
 }
 
 -(void) startWatchingExportTutorials{
@@ -226,6 +261,10 @@
 
 -(UIImage*) imageToShare{
     return shareDelegate.imageToShare;
+}
+
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+    [shareDelegate exportToPDF:completionBlock];
 }
 
 -(NSDictionary*) cloudKitSenderInfo{

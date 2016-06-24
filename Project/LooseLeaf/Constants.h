@@ -116,6 +116,7 @@ _Pragma("clang diagnostic pop") \
 // User Defaults
 
 #define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
+#define kExportAsPDFPreferenceDefault @"exportAsPDFPreferenceDefault"
 #define kHasEverImportedAPage @"hasEverImportedAPage"
 #define kMixpanelUUID @"mixpanel_uuid"
 #define kSelectedBrush @"selectedBrush"

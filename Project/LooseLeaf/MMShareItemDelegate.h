@@ -16,6 +16,8 @@
 
 -(UIImage*) imageToShare;
 
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock;
+
 -(NSDictionary*) cloudKitSenderInfo;
 
 -(void) didShare:(NSObject<MMShareItem>*)shareItem;

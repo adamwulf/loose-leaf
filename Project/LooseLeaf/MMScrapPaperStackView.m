@@ -1977,6 +1977,10 @@
     return rotatedImage;
 }
 
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+    [[self peekSubview] exportToPDF:completionBlock];
+}
+
 -(NSDictionary*) cloudKitSenderInfo{
     return [[visibleStackHolder peekSubview] cloudKitSenderInfo];
 }

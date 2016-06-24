@@ -125,10 +125,10 @@
         [self.toolbar addButton:redoButton extendFrame:YES];
 
         
-//        MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-//        pdfExportButton.delegate = self;
-//        [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.toolbar addButton:pdfExportButton extendFrame:NO];
+        MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        pdfExportButton.delegate = self;
+        [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
+        [self.toolbar addButton:pdfExportButton extendFrame:NO];
 
         
         //

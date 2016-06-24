@@ -553,6 +553,10 @@
     return [currentStackView imageToShare];
 }
 
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+    [currentStackView exportToPDF:completionBlock];
+}
+
 -(NSDictionary*) cloudKitSenderInfo{
     return [currentStackView cloudKitSenderInfo];
 }
