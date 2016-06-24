@@ -28,13 +28,12 @@
 #import "UIView+Debug.h"
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMTutorialManager.h"
-#import "MMShareItem.h"
 
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
     UIView* buttonView;
     MMShareOptionsView* activeOptionsView;
-    NSMutableArray<id<MMShareItem>>* shareItems;
+    NSMutableArray<MMAbstractShareItem*>* shareItems;
     
     MMCloudKitShareItem* cloudKitShareItem;
     
@@ -180,7 +179,7 @@
 #pragma mark - Sharing button tapped
 
 -(void) show:(BOOL)animated{
-    for (NSObject<MMShareItem>*shareItem in shareItems) {
+    for (MMAbstractShareItem*shareItem in shareItems) {
         if([shareItem respondsToSelector:@selector(willShow)]){
             [shareItem willShow];
         }
@@ -203,7 +202,7 @@
             }
         }
         // notify any buttons that they're now hidden.
-        for (NSObject<MMShareItem>*shareItem in shareItems) {
+        for (MMAbstractShareItem*shareItem in shareItems) {
             if([shareItem respondsToSelector:@selector(didHide)]){
                 [shareItem didHide];
             }
@@ -215,15 +214,15 @@
 }
 
 
--(NSObject<MMShareItem>*) closeActiveSharingOptionsForButton:(UIButton*)button{
+-(MMAbstractShareItem*) closeActiveSharingOptionsForButton:(UIButton*)button{
     if(activeOptionsView){
         [activeOptionsView removeFromSuperview];
         [activeOptionsView reset];
         activeOptionsView = nil;
         tutorialButton.hidden = NO;
     }
-    NSObject<MMShareItem>*shareItemForButton = nil;
-    for (NSObject<MMShareItem>*shareItem in shareItems) {
+    MMAbstractShareItem* shareItemForButton = nil;
+    for (MMAbstractShareItem*shareItem in shareItems) {
         if(shareItem.button == button){
             shareItemForButton = shareItem;
         }
@@ -274,7 +273,7 @@
 }
 
 
--(void) mayShare:(NSObject<MMShareItem> *)shareItem{
+-(void) mayShare:(MMAbstractShareItem *)shareItem{
     // close out all of our sharing options views,
     // if any
     [self closeActiveSharingOptionsForButton:nil];
@@ -286,8 +285,8 @@
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
-            if([shareItem respondsToSelector:@selector(optionsView)]){
-                activeOptionsView = [shareItem optionsView];
+            activeOptionsView = [shareItem optionsView];
+            if(activeOptionsView){
                 [activeOptionsView reset];
                 CGRect frForOptions = buttonView.frame;
                 frForOptions.origin.y = buttonView.bounds.size.height;
@@ -299,7 +298,6 @@
                 [sharingContentView addSubview:activeOptionsView];
                 tutorialButton.hidden = YES;
             }else{
-                activeOptionsView = nil;
                 tutorialButton.hidden = NO;
             }
             
@@ -309,7 +307,7 @@
 }
 
 // called when a may share is cancelled
--(void) wontShare:(NSObject<MMShareItem>*)shareItem{
+-(void) wontShare:(MMAbstractShareItem*)shareItem{
     // close out all of our sharing options views,
     // if any
     [self closeActiveSharingOptionsForButton:nil];
@@ -317,11 +315,11 @@
     tutorialButton.hidden = NO;
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem{
+-(void) didShare:(MMAbstractShareItem *)shareItem{
     [shareDelegate didShare:shareItem];
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+-(void) didShare:(MMAbstractShareItem *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
     [shareDelegate didShare:shareItem toUser:userId fromButton:button];
 }
 

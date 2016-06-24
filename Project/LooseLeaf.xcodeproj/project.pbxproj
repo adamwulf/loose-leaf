@@ -844,7 +844,6 @@
 		6652450119956DFA00C36609 /* MMEmailShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmailShareItem.h; sourceTree = "<group>"; };
 		6652450219956DFA00C36609 /* MMEmailShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmailShareItem.m; sourceTree = "<group>"; };
 		665245051995721C00C36609 /* MMShareItemDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareItemDelegate.h; sourceTree = "<group>"; };
-		66524506199573B100C36609 /* MMShareItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShareItem.h; sourceTree = "<group>"; };
 		66524507199575A900C36609 /* MMTextShareItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTextShareItem.h; sourceTree = "<group>"; };
 		66524508199575A900C36609 /* MMTextShareItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTextShareItem.m; sourceTree = "<group>"; };
 		6652450A199576E400C36609 /* text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = text.png; sourceTree = "<group>"; };
@@ -3275,7 +3274,6 @@
 		66EDE42119AE754400A5623B /* Items */ = {
 			isa = PBXGroup;
 			children = (
-				66524506199573B100C36609 /* MMShareItem.h */,
 				665245051995721C00C36609 /* MMShareItemDelegate.h */,
 				663326B81AAFE409003915E6 /* MMAbstractShareItem.h */,
 				663326B91AAFE409003915E6 /* MMAbstractShareItem.m */,

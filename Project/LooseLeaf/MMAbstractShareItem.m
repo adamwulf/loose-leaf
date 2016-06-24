@@ -22,6 +22,15 @@
     @throw kAbstractMethodException;
 }
 
+-(void) willShow{
+    // noop
+}
+
+-(void) didHide{
+    // noop
+}
+
+
 -(void) animateCompletionText:(NSString*)linkText withImage:(UIImage*)icon{
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
     imgView.image = icon;

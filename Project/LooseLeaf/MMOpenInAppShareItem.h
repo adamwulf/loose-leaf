@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMShareItem.h"
+#import "MMAbstractShareItem.h"
 
-@interface MMOpenInAppShareItem : NSObject<MMShareItem,UIDocumentInteractionControllerDelegate>
+@interface MMOpenInAppShareItem : MMAbstractShareItem<UIDocumentInteractionControllerDelegate>
 
 @end

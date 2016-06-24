@@ -34,6 +34,7 @@
 #import "MMPalmGestureRecognizer.h"
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
+#import "MMAbstractShareItem.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
@@ -561,20 +562,20 @@
     return [currentStackView cloudKitSenderInfo];
 }
 
--(void) didShare:(NSObject<MMShareItem>*)shareItem{
+-(void) didShare:(MMAbstractShareItem*)shareItem{
     [sharePageSidebar hide:YES onComplete:nil];
     [currentStackView didShare:shareItem];
 }
 
--(void) mayShare:(NSObject<MMShareItem>*)shareItem{
+-(void) mayShare:(MMAbstractShareItem*)shareItem{
     [currentStackView mayShare:shareItem];
 }
 
--(void) wontShare:(NSObject<MMShareItem>*)shareItem{
+-(void) wontShare:(MMAbstractShareItem*)shareItem{
     [currentStackView wontShare:shareItem];
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+-(void) didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
     [cloudKitExportView didShareTopPageToUser:userId fromButton:button];
     [sharePageSidebar hide:YES onComplete:nil];
 

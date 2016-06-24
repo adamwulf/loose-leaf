@@ -10,7 +10,7 @@
 #import <CloudKit/CloudKit.h>
 #import "MMAvatarButton.h"
 
-@protocol MMShareItem;
+@class MMAbstractShareItem;
 
 @protocol MMShareItemDelegate <NSObject>
 
@@ -20,12 +20,12 @@
 
 -(NSDictionary*) cloudKitSenderInfo;
 
--(void) didShare:(NSObject<MMShareItem>*)shareItem;
+-(void) didShare:(MMAbstractShareItem*)shareItem;
 
--(void) mayShare:(NSObject<MMShareItem>*)shareItem;
+-(void) mayShare:(MMAbstractShareItem*)shareItem;
 
--(void) wontShare:(NSObject<MMShareItem>*)shareItem;
+-(void) wontShare:(MMAbstractShareItem*)shareItem;
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
+-(void) didShare:(MMAbstractShareItem *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
 
 @end

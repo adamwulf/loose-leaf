@@ -1985,19 +1985,19 @@
     return [[visibleStackHolder peekSubview] cloudKitSenderInfo];
 }
 
--(void) mayShare:(NSObject<MMShareItem> *)shareItem{
+-(void) mayShare:(MMAbstractShareItem *)shareItem{
     // noop
 }
 
--(void) wontShare:(NSObject<MMShareItem> *)shareItem{
+-(void) wontShare:(MMAbstractShareItem *)shareItem{
     // noop
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem{
+-(void) didShare:(MMAbstractShareItem *)shareItem{
     // noop
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
+-(void) didShare:(MMAbstractShareItem *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
     // noop
 }
 
