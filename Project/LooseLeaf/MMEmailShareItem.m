@@ -79,7 +79,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MFMailComposeViewController canSendMail]) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MFMailComposeViewController canSendMail]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

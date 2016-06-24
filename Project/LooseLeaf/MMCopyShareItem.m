@@ -154,7 +154,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([UIPrintInteractionController isPrintingAvailable]){
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([UIPrintInteractionController isPrintingAvailable]){
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

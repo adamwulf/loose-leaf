@@ -19,6 +19,7 @@
 #import "MMAppDelegate.h"
 #import "MMRotationManager.h"
 #import "MMPresentationWindow.h"
+#import "MMImageButton.h"
 
 @implementation MMOpenInAppShareItem{
     MMShareButton* button;
@@ -154,6 +155,17 @@
 
 -(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
+}
+
+#pragma mark - Notification
+
+-(void) updateButtonGreyscale{
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else{
+        button.greyscale = NO;
+    }
+    [button setNeedsDisplay];
 }
 
 #pragma mark - UIDocumentInteractionControllerDelegate

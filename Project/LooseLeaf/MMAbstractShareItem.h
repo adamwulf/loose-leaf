@@ -28,4 +28,6 @@
 
 -(void) animateCompletionText:(NSString* __nonnull)linkText withImage:(UIImage* __nonnull)icon;
 
+-(void) updateButtonGreyscale;
+
 @end

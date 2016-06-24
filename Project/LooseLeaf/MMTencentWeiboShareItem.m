@@ -92,7 +92,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         button.greyscale = YES;
     }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeTencentWeibo]) {
         button.greyscale = YES;

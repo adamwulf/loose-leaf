@@ -188,7 +188,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

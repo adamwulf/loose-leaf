@@ -80,7 +80,9 @@
 }
 
 -(void) updateButtonGreyscale{
-    if([MFMessageComposeViewController canSendText]) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MFMessageComposeViewController canSendText]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

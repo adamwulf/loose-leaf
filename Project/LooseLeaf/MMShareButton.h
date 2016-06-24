@@ -13,5 +13,6 @@
 @property (nonatomic) UIColor* arrowColor;
 @property (nonatomic) UIColor* topBgColor;
 @property (nonatomic) UIColor* bottomBgColor;
+@property (nonatomic, assign, getter = isGreyscale) BOOL greyscale;
 
 @end

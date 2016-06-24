@@ -173,6 +173,8 @@
                 
                 [buttonView insertSubview:button atIndex:buttonIndex];
                 
+                [item updateButtonGreyscale];
+                
                 buttonIndex += 1;
             }
         }
