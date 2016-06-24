@@ -24,6 +24,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
 #import "MMAllStacksManager.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
@@ -63,7 +66,8 @@
                                                         [MMAppDelegate userID], kMPID, nil]];
     
     [[Crashlytics sharedInstance] setDelegate:self];
-    [Fabric with:@[CrashlyticsKit, TwitterKit]];
+    [[Twitter sharedInstance] startWithConsumerKey:@"your_key" consumerSecret:@"your_secret"];
+    [Fabric with:@[CrashlyticsKit, [Twitter class]]];
 
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 

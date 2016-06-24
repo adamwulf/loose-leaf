@@ -10,6 +10,7 @@
 #import "MMTutorialStackView.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 #import "MMMemoryManager.h"
 
 @interface MMLooseLeafViewController : UIViewController<MMMemoryManagerDelegate>{

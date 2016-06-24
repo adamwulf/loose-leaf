@@ -19,6 +19,7 @@
 #import "MMTrashManager.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
