@@ -36,7 +36,7 @@
 #import "MMTrashManager.h"
 #import "MMAbstractShareItem.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
 @end
 
@@ -548,7 +548,7 @@
     [currentStackView assetWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription andRequestsImportAsPage:asPage];
 }
 
-#pragma mark - MMShareItemDelegate
+#pragma mark - MMShareSidebarDelegate
 
 -(UIImage*) imageToShare{
     return [currentStackView imageToShare];

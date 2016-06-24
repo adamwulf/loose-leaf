@@ -70,7 +70,8 @@
                 // this hung with the modal "open" in the window, no events triggered when tryign to draw
                 // even though the twitter dialog never showed. wifi was on but not connected.
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                [tweetSheet addImage:self.delegate.imageToShare];
+                UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+                [tweetSheet addImage:imgToShare];
                 tweetSheet.completionHandler = ^(SLComposeViewControllerResult result){
                     NSString* strResult;
                     if(result == SLComposeViewControllerResultCancelled){
@@ -100,8 +101,8 @@
     });
 }
 
--(BOOL) isAtAllPossible{
-    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter] != nil;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"] && [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter] != nil;
 }
 
 #pragma mark - Notification

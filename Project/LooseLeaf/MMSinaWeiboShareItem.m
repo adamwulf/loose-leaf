@@ -57,7 +57,8 @@
             SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
             if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                [fbSheet addImage:self.delegate.imageToShare];
+                UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+                [fbSheet addImage:imgToShare];
                 fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
                     NSString* strResult;
                     if(result == SLComposeViewControllerResultCancelled){
@@ -84,8 +85,8 @@
     });
 }
 
--(BOOL) isAtAllPossible{
-    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo] != nil;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"] && [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo] != nil;
 }
 
 #pragma mark - Notification

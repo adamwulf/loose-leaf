@@ -60,14 +60,7 @@
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
-            NSDate *now = [[NSDate alloc] init];
-            NSString *theDate = [dateFormatter stringFromDate:now];
-            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
-            UIImage* imageToShare = self.delegate.imageToShare;
-            [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
-            NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
-            
-            controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
+            controller = [UIDocumentInteractionController interactionControllerWithURL:[self.delegate urlToShare]];
             controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
             controller.delegate = self;
             MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
@@ -88,7 +81,7 @@
     [button setNeedsDisplay];
 
     UIActivityViewController *activityViewController =
-    [[UIActivityViewController alloc] initWithActivityItems:@[self.delegate.imageToShare]
+    [[UIActivityViewController alloc] initWithActivityItems:@[[self.delegate urlToShare]]
                                       applicationActivities:nil];
     
     activityViewController.excludedActivityTypes = @[UIActivityTypePostToFacebook,
@@ -159,7 +152,7 @@
     // noop
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
 }
 

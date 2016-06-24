@@ -19,6 +19,11 @@
     return [UTI lowercaseString];
 }
 
++(NSString*) mimeForExtension:(NSString*)fileExtension{
+    NSString *UTI = [self UTIForExtension:fileExtension];
+    return (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
+}
+
 -(NSString*) universalTypeID{
     return [NSURL UTIForExtension:[self fileExtension]];
 }
@@ -26,6 +31,10 @@
 -(NSString*) fileExtension{
     NSString* path = self.path;
     return [path.pathExtension lowercaseString];
+}
+
+-(NSString*) mimeType{
+    return [NSURL mimeForExtension:[self fileExtension]];
 }
 
 @end

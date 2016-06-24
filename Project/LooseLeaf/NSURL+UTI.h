@@ -13,6 +13,10 @@
 
 -(NSString*) universalTypeID;
 
++(NSString*) mimeForExtension:(NSString*)fileExtension;
+
 -(NSString*) fileExtension;
+
+-(NSString*) mimeType;
 
 @end

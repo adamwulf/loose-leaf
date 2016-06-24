@@ -10,16 +10,17 @@
 #import "MMShareOptionsView.h"
 #import "MMSidebarButton.h"
 #import "MMShareItemDelegate.h"
+#import "NSURL+UTI.h"
 
 @interface MMAbstractShareItem : NSObject
 
 @property (weak, nullable) NSObject<MMShareItemDelegate>* delegate;
-@property (nonatomic) BOOL isShowingOptionsView;
+@property (nonatomic, assign, getter=isShowingOptionsView) BOOL showingOptionsView;
 @property (nullable, readonly) MMShareOptionsView* optionsView;
 
 -(MMSidebarButton * __nonnull) button;
 
--(BOOL) isAtAllPossible;
+-(BOOL) isAtAllPossibleForMimeType:(NSString* __nonnull)mimeType;
 
 -(void) willShow;
 

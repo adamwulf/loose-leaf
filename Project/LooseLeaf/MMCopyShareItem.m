@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMImageViewButton.h"
 #import "Constants.h"
+#import "NSURL+UTI.h"
 
 @implementation MMCopyShareItem{
     CGFloat lastProgress;
@@ -47,7 +48,8 @@
         // only trigger if not already animating
         [delegate mayShare:self];
         
-        [UIPasteboard generalPasteboard].image = self.delegate.imageToShare;
+        UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+        [UIPasteboard generalPasteboard].image = imgToShare;
         
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
         [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
@@ -145,8 +147,8 @@
     } afterDelay:.3];
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Notification

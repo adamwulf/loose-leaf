@@ -12,11 +12,7 @@
 
 @class MMAbstractShareItem;
 
-@protocol MMShareItemDelegate <NSObject>
-
--(UIImage*) imageToShare;
-
--(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock;
+@protocol MMShareDelegate <NSObject>
 
 -(NSDictionary*) cloudKitSenderInfo;
 
@@ -27,5 +23,19 @@
 -(void) wontShare:(MMAbstractShareItem*)shareItem;
 
 -(void) didShare:(MMAbstractShareItem *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
+
+@end
+
+@protocol MMShareItemDelegate <MMShareDelegate>
+
+-(NSURL*) urlToShare;
+
+@end
+
+@protocol MMShareSidebarDelegate <MMShareDelegate>
+
+-(UIImage*) imageToShare;
+
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock;
 
 @end

@@ -29,6 +29,12 @@
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMTutorialManager.h"
 
+@interface MMShareSidebarContainerView ()
+
+@property (nonatomic, strong) NSURL* urlToShare;
+
+@end
+
 @implementation MMShareSidebarContainerView{
     UIView* sharingContentView;
     UIView* buttonView;
@@ -123,6 +129,8 @@
     exportAsPDFButton.selected = (exportAsPDFButton == sender);
 
     [[NSUserDefaults standardUserDefaults] setBool:exportAsPDFButton.selected forKey:kExportAsPDFPreferenceDefault];
+    
+    [self updateShareOptions];
 }
 
 -(void) startWatchingExportTutorials{
@@ -153,7 +161,7 @@
         CGFloat buttonWidth = [self buttonWidth];
         CGRect buttonBounds = [self buttonBounds];
         for(MMEmailShareItem* item in shareItems){
-            if(item.isAtAllPossible){
+            if([item isAtAllPossibleForMimeType:[NSURL mimeForExtension:exportAsImageButton.selected ? @"png" : @"pdf"]]){
                 item.delegate = self;
                 
                 MMSidebarButton* button = item.button;
@@ -226,9 +234,7 @@
         if(shareItem.button == button){
             shareItemForButton = shareItem;
         }
-        if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
-            shareItem.isShowingOptionsView = NO;
-        }
+        [shareItem setShowingOptionsView:NO];
     }
     return shareItemForButton;
 }
@@ -292,9 +298,7 @@
                 frForOptions.origin.y = buttonView.bounds.size.height;
                 frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
                 activeOptionsView.frame = frForOptions;
-                if([shareItem respondsToSelector:@selector(setIsShowingOptionsView:)]){
-                    shareItem.isShowingOptionsView = YES;
-                }
+                [shareItem setShowingOptionsView:YES];
                 [sharingContentView addSubview:activeOptionsView];
                 tutorialButton.hidden = YES;
             }else{

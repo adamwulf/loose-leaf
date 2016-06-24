@@ -18,7 +18,7 @@
     @throw kAbstractMethodException;
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     @throw kAbstractMethodException;
 }
 

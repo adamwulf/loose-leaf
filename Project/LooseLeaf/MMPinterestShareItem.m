@@ -49,8 +49,8 @@
     return button;
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 -(NSString*) exportDestinationName{

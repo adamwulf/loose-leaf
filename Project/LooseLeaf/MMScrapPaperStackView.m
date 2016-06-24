@@ -1934,7 +1934,7 @@
     return [visibleStackHolder peekSubview].scrappedImgViewImage;
 }
 
-#pragma mark - MMShareItemDelegate
+#pragma mark - MMShareSidebarDelegate
 
 -(UIImage*) imageToShare{
     UIImage* retImage = [visibleStackHolder peekSubview].scrappedImgViewImage;
