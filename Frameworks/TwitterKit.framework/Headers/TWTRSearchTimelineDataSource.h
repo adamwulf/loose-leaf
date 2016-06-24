@@ -34,7 +34,7 @@ Data source representing a Search Timeline. Provides TWTRTweet objects to a TWTR
  * `ftw until:2010-12-27`   containing “ftw” and sent before the date “2010-12-27”.
 
   @see https://dev.twitter.com/rest/public/search
-  Not implemented: `geocode`, `result_type`
+  Not implemented: `result_type`
  */
 @interface TWTRSearchTimelineDataSource : NSObject <TWTRTimelineDataSource>
 
@@ -48,12 +48,27 @@ Data source representing a Search Timeline. Provides TWTRTweet objects to a TWTR
  *
  *  @see http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
  */
-@property (nonatomic, copy, readonly, twtr_nullable) NSString *languageCode;
+@property (nonatomic, copy, readonly, nullable) NSString *languageCode;
 
 /**
  *  The number of Tweets to request in each network request for more Tweets. By default requests 30 tweets. If set to `0` the parameter will not be set on the request and the Twitter API will use the default size for the endpoint.
  */
-@property (nonatomic, assign, readonly) NSUInteger maxTweetsPerRequest;
+@property (nonatomic, readonly) NSUInteger maxTweetsPerRequest;
+
+/**
+ *  The geocode details to narrow search results. The format is "latitude,longitude,radius" e.g. "37.781157,-122.398720,1mi"
+ *
+ *  @see https://dev.twitter.com/rest/public/search
+ */
+@property (nonatomic, copy, nullable) NSString *geocodeSpecifier;
+
+/**
+ *  Only search top-ranked Tweets. When debugging, you may want to turn this off in order to 
+ *  show new and unfiltered Tweets.
+ *
+ *  Default to YES.
+ */
+@property (nonatomic) BOOL topTweetsOnly;
 
 /**
  *  Convenience initializer. Uses default values for `languageCode` and `maxTweetsPerRequest`.
@@ -63,11 +78,10 @@ Data source representing a Search Timeline. Provides TWTRTweet objects to a TWTR
  *
  *  @return A fully initialized search timeline datasource or `nil` if any of the required parameters are missing.
  */
-
 - (instancetype)initWithSearchQuery:(NSString *)searchQuery APIClient:(TWTRAPIClient *)client;
 
 /**
- *  Designated initializer for creating search timeline data sources taking all parameters.
+ *  Create a new search timeline data source.
  *
  *  @param  searchQuery          (required) The query string that you would type into https://twitter.com/search
  *  @param  client               (required) An instance of `TWTRAPIClient` with which API calls will be made.
@@ -76,9 +90,9 @@ Data source representing a Search Timeline. Provides TWTRTweet objects to a TWTR
  *
  *  @return A fully initialized search timeline datasource or `nil` if any of the required parameters are missing.
  */
-- (instancetype)initWithSearchQuery:(NSString *)searchQuery APIClient:(TWTRAPIClient *)client languageCode:(twtr_nullable NSString *)languageCode maxTweetsPerRequest:(NSUInteger)maxTweetsPerRequest NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithSearchQuery:(NSString *)searchQuery APIClient:(TWTRAPIClient *)client languageCode:(nullable NSString *)languageCode maxTweetsPerRequest:(NSUInteger)maxTweetsPerRequest NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)init __unavailable;
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 

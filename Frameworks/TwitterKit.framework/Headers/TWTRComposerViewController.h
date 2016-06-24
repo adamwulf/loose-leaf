@@ -15,12 +15,20 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface TWTRComposerViewController : UIViewController
 
-@property (nonatomic, weak, twtr_nullable) id<TWTRComposerViewControllerDelegate> delegate;
+@property (nonatomic, weak, nullable) id<TWTRComposerViewControllerDelegate> delegate;
 
 /**
  * A theme to use for the composer. If nil will default to the light theme.
  */
-@property (nonatomic, twtr_null_resettable) TWTRComposerTheme *theme;
+@property (nonatomic, null_resettable) TWTRComposerTheme *theme;
+
+/**
+ * An array of hashtags that will be added to the composer. This property must be
+ * set before the composer's view is loaded. If any hashtags are not valid they will
+ * be ignored.
+ * Hashtags must come in the form @[@"#fabric", @"#twitter"].
+ */
+@property (nonatomic, copy, nullable) NSArray *hashtags;
 
 /**
  * Use initWithUserID: instead.
@@ -40,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param userID     The ID of the user that is tweeting the card
  * @param cardConfig The card configuration that will be associated with this Tweet
  */
-- (instancetype)initWithUserID:(NSString *)userID cardConfiguration:(twtr_nullable TWTRCardConfiguration *)cardConfig;
+- (instancetype)initWithUserID:(NSString *)userID cardConfiguration:(nullable TWTRCardConfiguration *)cardConfig;
 
 @end
 

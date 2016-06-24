@@ -41,7 +41,7 @@ typedef void (^TWTRComposerCompletion)(TWTRComposerResult result);
  *
  *  @return This will return NO if the receiver has already been presented (and therefore cannot be changed).
  */
-- (BOOL)setText:(twtr_nullable NSString *)text;
+- (BOOL)setText:(nullable NSString *)text;
 
 /**
  *  Sets an image attachment.
@@ -50,7 +50,7 @@ typedef void (^TWTRComposerCompletion)(TWTRComposerResult result);
  *
  *  @return This will return NO if the receiver has already been presented (and therefore cannot be changed).
  */
-- (BOOL)setImage:(twtr_nullable UIImage *)image;
+- (BOOL)setImage:(nullable UIImage *)image;
 
 /**
  *  Adds a URL to the contents of the Tweet message.
@@ -59,7 +59,7 @@ typedef void (^TWTRComposerCompletion)(TWTRComposerResult result);
  *
  *  @return This will return NO if the receiver has already been presented (and therefore cannot be changed).
  */
-- (BOOL)setURL:(twtr_nullable NSURL *)url;
+- (BOOL)setURL:(nullable NSURL *)url;
 
 /**
  * Presents the composer, with an optional completion handler from the specified view controller.
@@ -67,19 +67,6 @@ typedef void (^TWTRComposerCompletion)(TWTRComposerResult result);
  * @param completion completion The completion handler, which has a single parameter indicating whether the user finished or cancelled the Tweet composition.
  */
 - (void)showFromViewController:(UIViewController *)fromController completion:(TWTRComposerCompletion)completion;
-
-@end
-
-@interface TWTRComposer (TWTRDeprecated)
-
-/**
- * Presents the composer, with an optional completion handler.
- *
- * @param completion The completion handler, which has a single parameter indicating whether the user finished or cancelled the Tweet composition.
- *  
- * @warning This method is deprecated. Use `-showFromViewController:completion:` instead.
- */
-- (void)showWithCompletion:(TWTRComposerCompletion)completion;
 
 @end
 

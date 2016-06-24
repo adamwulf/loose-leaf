@@ -6,6 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * The base session which all sessions must conform to.
  */
@@ -22,3 +24,5 @@
 @property (nonatomic, readonly, copy) NSString *userID;
 
 @end
+
+NS_ASSUME_NONNULL_END

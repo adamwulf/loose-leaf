@@ -5,11 +5,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TwitterKit/TWTRJSONConvertible.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Represents a user on Twitter.
  */
-@interface TWTRUser : NSObject <NSCoding, NSCopying>
+@interface TWTRUser : NSObject <NSCoding, NSCopying, TWTRJSONConvertible>
 
 # pragma mark - Properties
 
@@ -35,12 +38,12 @@
 /**
  *  Whether the user has been verified by Twitter.
  */
-@property (nonatomic, assign, readonly) BOOL isVerified;
+@property (nonatomic, readonly) BOOL isVerified;
 
 /**
  *  Whether the user is protected.
  */
-@property (nonatomic, assign, readonly) BOOL isProtected;
+@property (nonatomic, readonly) BOOL isProtected;
 
 /**
  *  The HTTPS URL of the user's profile image.
@@ -67,24 +70,6 @@
  */
 @property (nonatomic, copy, readonly) NSURL *profileURL;
 
-# pragma mark - Init
-
-/**
- *  Creates a Twitter user object from the dictionary of Twitter API JSON response.
- *
- *  @param dictionary A parsed dictionary of a single Twitter Tweet API JSON response.
- *
- *  @return An initialized TWTRUser instance.
- */
-- (instancetype)initWithJSONDictionary:(NSDictionary *)dictionary;
-
-/**
- *  Creates an array of Twitter User instances from the array of Twitter API JSON response.
- *
- *  @param array A parsed array of Twitter User API JSON responses.
- *
- *  @return An array of initialized TWTRTweet instances.
- */
-+ (NSArray *)usersWithJSONArray:(NSArray *)array;
-
 @end
+
+NS_ASSUME_NONNULL_END

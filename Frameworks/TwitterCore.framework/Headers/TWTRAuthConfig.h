@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  Authentication configuration details. Encapsulates credentials required to authenticate a Twitter application. You can obtain your credentials at https://apps.twitter.com/.
  */
@@ -32,6 +34,8 @@
 /**
  *  Unavailable. Use `initWithConsumerKey:consumerSecret:` instead.
  */
-- (instancetype)init __attribute__((unavailable("Use -initWithConsumerKey:consumerSecret: instead.")));
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
+
+NS_ASSUME_NONNULL_END

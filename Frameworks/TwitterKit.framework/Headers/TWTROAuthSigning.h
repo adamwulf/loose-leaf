@@ -9,6 +9,8 @@
 @class TWTRAuthConfig;
 @class TWTRSession;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  This class provides tools to generate OAuth signatures.
  */
@@ -36,6 +38,8 @@
 /**
  *  Unavailable. Use `-initWithAuthConfig:authSession:` instead.
  */
-- (instancetype)init __attribute__((unavailable("Use -initWithAuthConfig:authSession: instead.")));
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
+
+NS_ASSUME_NONNULL_END

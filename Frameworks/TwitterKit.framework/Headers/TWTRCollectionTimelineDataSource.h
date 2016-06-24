@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The number of Tweets to request in each query to the Twitter Timeline API when fetching the next batch of Tweets.
  */
-@property (nonatomic, assign, readonly) NSInteger maxTweetsPerRequest;
+@property (nonatomic, readonly) NSInteger maxTweetsPerRequest;
 
 /**
  *  ID of the collection.
@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithCollectionID:(NSString *)collectionID APIClient:(TWTRAPIClient *)client maxTweetsPerRequest:(NSUInteger)maxTweetsPerRequest NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)init __unavailable;
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 

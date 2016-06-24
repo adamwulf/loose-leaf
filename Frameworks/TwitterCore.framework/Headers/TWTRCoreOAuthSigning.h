@@ -6,6 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 FOUNDATION_EXPORT NSString * const TWTROAuthEchoRequestURLStringKey;
 FOUNDATION_EXPORT NSString * const TWTROAuthEchoAuthorizationHeaderKey;
 
@@ -31,7 +33,7 @@ FOUNDATION_EXPORT NSString * const TWTROAuthEchoAuthorizationHeaderKey;
  *
  *  @see More information about OAuth Echo: https://dev.twitter.com/oauth/echo
  */
-- (NSDictionary *)OAuthEchoHeadersForRequestMethod:(NSString *)method URLString:(NSString *)URLString parameters:(NSDictionary *)parameters error:(NSError **)error __attribute__((nonnull(1, 2)));
+- (NSDictionary *)OAuthEchoHeadersForRequestMethod:(NSString *)method URLString:(NSString *)URLString parameters:(nullable NSDictionary *)parameters error:(NSError **)error;
 
 /**
  *  This method provides you with the OAuth signature, as well as the formed URL with the query string, to send a request to `verify_credentials`.
@@ -44,3 +46,5 @@ FOUNDATION_EXPORT NSString * const TWTROAuthEchoAuthorizationHeaderKey;
 - (NSDictionary *)OAuthEchoHeadersToVerifyCredentials;
 
 @end
+
+NS_ASSUME_NONNULL_END
