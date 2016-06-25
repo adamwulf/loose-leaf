@@ -223,10 +223,16 @@
     CGSize inSize = CGSizeScale(pxSize, 1 / [UIDevice ppi]);
     CGSize finalSize = CGSizeScale(inSize, [MMPDF ppi]);
     
+    MMPDF* pdf = nil;
+    
+    // default the page size to the screen dimensions in PDF ppi.
+    CGSize pagePtSize = finalSize;
+    CGRect scaledScreen = CGRectFromSize(pagePtSize);
+    
     if([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]){
-        MMPDF* pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
+        pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
         if([pdf pageCount]){
-            CGSize pagePtSize = [pdf sizeForPage:0];
+            pagePtSize = [pdf sizeForPage:0];
             CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
             
             NSLog(@"Screen size (pxs): %.2f %.2f", pxSize.width, pxSize.height);
@@ -238,7 +244,7 @@
             NSLog(@"Background PDF size (pts):  %.2f %.2f", pagePtSize.width, pagePtSize.height);
             NSLog(@"Background PDF ratio:  %.2f", pagePtSize.width / pagePtSize.height);
             
-            CGRect scaledScreen = CGSizeFill(finalSize, pagePtSize);
+            scaledScreen = CGSizeFill(finalSize, pagePtSize);
             
             NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
             
@@ -247,61 +253,63 @@
             NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
             
             NSLog(@"done with stats");
-            
-            
-            
-            if([[self.drawableView state] isStateLoaded]){
-                [self.drawableView exportToImageOnComplete:^(UIImage * image) {
-                    NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
-                    
-                    CGRect rect = CGRectFromSize(pagePtSize);
-                    CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
-                    UIGraphicsPushContext(pdfContext);
-                    
-                    CGPDFContextBeginPage(pdfContext, NULL);
-
-                    // flip
-                    CGContextScaleCTM(pdfContext, 1, -1);
-                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
-                    
-                    // PDF background
-                    [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
-                    
-                    // Ink                    
-                    CGContextDrawImage(pdfContext, scaledScreen, [image CGImage]);
-                    
-                    // flip back
-                    CGContextScaleCTM(pdfContext, 1, -1);
-                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
-                    
-                    // Scraps
-                    // adjust so that (0,0) is the origin of the content rect in the PDF page,
-                    // since the PDF may be much taller/wider than our screen
-                    CGContextTranslateCTM(pdfContext, scaledScreen.origin.x, scaledScreen.origin.y);
-                    MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
-                    
-                    for(MMScrapView* scrap in immutableScrapState.scraps){
-                        [self drawScrap:scrap intoContext:pdfContext withSize:scaledScreen.size];
-                    }
-                    CGContextTranslateCTM(pdfContext, -scaledScreen.origin.x, -scaledScreen.origin.y);
-                    
-                    CGPDFContextEndPage(pdfContext);
-                    UIGraphicsPopContext();
-                    CFRelease(pdfContext);
-                    
-                    
-                    NSLog(@"Wrote PDF to: %@", tmpPagePath);
-                    
-                    NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
-
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if(completionBlock) completionBlock(fullyRenderedPDFURL);
-                    });
-                
-                } withScale:self.drawableView.scale];
-                return;
-            }
         }
+    }
+    
+    
+    
+    if([[self.drawableView state] isStateLoaded]){
+        [self.drawableView exportToImageOnComplete:^(UIImage * image) {
+            NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+            
+            CGRect rect = CGRectFromSize(pagePtSize);
+            CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
+            UIGraphicsPushContext(pdfContext);
+            
+            CGPDFContextBeginPage(pdfContext, NULL);
+            CGContextSetInterpolationQuality(pdfContext, kCGInterpolationHigh);
+            
+            if(pdf){
+                // PDF background
+                [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
+            }else{
+                CGContextSetFillColorWithColor(pdfContext, [[UIColor whiteColor] CGColor]);
+                CGContextFillRect(pdfContext, scaledScreen);
+            }
+            
+            // Ink
+            CGContextDrawImage(pdfContext, scaledScreen, [image CGImage]);
+            
+            // flip for scraps
+            CGContextScaleCTM(pdfContext, 1, -1);
+            CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
+            
+            // Scraps
+            // adjust so that (0,0) is the origin of the content rect in the PDF page,
+            // since the PDF may be much taller/wider than our screen
+            CGContextTranslateCTM(pdfContext, scaledScreen.origin.x, scaledScreen.origin.y);
+            MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
+            
+            for(MMScrapView* scrap in immutableScrapState.scraps){
+                [self drawScrap:scrap intoContext:pdfContext withSize:scaledScreen.size];
+            }
+            CGContextTranslateCTM(pdfContext, -scaledScreen.origin.x, -scaledScreen.origin.y);
+            
+            CGPDFContextEndPage(pdfContext);
+            UIGraphicsPopContext();
+            CFRelease(pdfContext);
+            
+            
+            NSLog(@"Wrote PDF to: %@", tmpPagePath);
+            
+            NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(completionBlock) completionBlock(fullyRenderedPDFURL);
+            });
+            
+        } withScale:self.drawableView.scale];
+        return;
     }
     
     if(completionBlock) completionBlock(nil);
