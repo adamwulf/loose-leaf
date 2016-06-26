@@ -129,19 +129,24 @@
                 CGPDFDocumentUnlockWithPassword(pdf, key);
             }
             
+            CGContextSaveGState(ctx);
             /*
              * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
              */
-            CGContextGetCTM( ctx );            
+            CGContextGetCTM( ctx );
             CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
             
+            CGContextScaleCTM( ctx, 1, -1 );
+            CGContextTranslateCTM( ctx, 0, -size.height );
             CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
             
             CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
             CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
             CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
-
+            
             CGContextDrawPDFPage( ctx, pageref );
+            
+            CGContextRestoreGState(ctx);
             
             CGPDFDocumentRelease( pdf );
         }

@@ -265,6 +265,7 @@ _Pragma("clang diagnostic pop") \
 extern "C" {
 #endif
 
+    void CGContextSaveThenRestoreForBlock(CGContextRef __nonnull context, void(^ __nonnull block)());
 
     CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 
