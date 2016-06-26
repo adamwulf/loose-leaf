@@ -215,14 +215,12 @@
             backgroundAssetURL = item;
         }
     } andErrorHandler:nil];
-
-    NSLog(@"found background asset: %@", backgroundAssetURL);
+    
+    MMPDF* pdf = nil;
     
     CGSize pxSize = CGSizeScale([[UIScreen mainScreen] bounds].size, [[UIScreen mainScreen] scale]);
     CGSize inSize = CGSizeScale(pxSize, 1 / [UIDevice ppi]);
     CGSize finalSize = CGSizeScale(inSize, [MMPDF ppi]);
-    
-    MMPDF* pdf = nil;
     
     // default the page size to the screen dimensions in PDF ppi.
     CGSize pagePtSize = finalSize;
@@ -232,26 +230,24 @@
         pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
         if([pdf pageCount]){
             pagePtSize = [pdf sizeForPage:0];
-            CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
-            
-            NSLog(@"Screen size (pxs): %.2f %.2f", pxSize.width, pxSize.height);
-            NSLog(@"Screen size (in):  %.2f %.2f", inSize.width, inSize.height);
-            NSLog(@"Screen PDF size (pts):  %.2f %.2f", finalSize.width, finalSize.height);
-            NSLog(@"Screen PDF ratio:  %.2f", finalSize.width / finalSize.height);
-            
-            NSLog(@"Background PDF (in):  %.2f %.2f", pageInSize.width, pageInSize.height);
-            NSLog(@"Background PDF size (pts):  %.2f %.2f", pagePtSize.width, pagePtSize.height);
-            NSLog(@"Background PDF ratio:  %.2f", pagePtSize.width / pagePtSize.height);
-            
-            scaledScreen = CGSizeFill(finalSize, pagePtSize);
-            
-            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
-            
+//            CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
+//            
+//            NSLog(@"Screen size (pxs): %.2f %.2f", pxSize.width, pxSize.height);
+//            NSLog(@"Screen size (in):  %.2f %.2f", inSize.width, inSize.height);
+//            NSLog(@"Screen PDF size (pts):  %.2f %.2f", finalSize.width, finalSize.height);
+//            NSLog(@"Screen PDF ratio:  %.2f", finalSize.width / finalSize.height);
+//            
+//            NSLog(@"Background PDF (in):  %.2f %.2f", pageInSize.width, pageInSize.height);
+//            NSLog(@"Background PDF size (pts):  %.2f %.2f", pagePtSize.width, pagePtSize.height);
+//            NSLog(@"Background PDF ratio:  %.2f", pagePtSize.width / pagePtSize.height);
+//            
+//            scaledScreen = CGSizeFill(finalSize, pagePtSize);
+//            
+//            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
+//            
             scaledScreen = CGSizeFit(finalSize, pagePtSize);
-            
-            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
-            
-            NSLog(@"done with stats");
+//            
+//            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
         }
     }
     
@@ -259,7 +255,8 @@
         [self.drawableView exportToImageOnComplete:^(UIImage * image) {
             NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
             
-            CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &scaledScreen, NULL);
+            CGRect exportedPageSize = CGRectFromSize(pagePtSize);
+            CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &exportedPageSize, NULL);
             UIGraphicsPushContext(pdfContext);
             
             CGPDFContextBeginPage(pdfContext, NULL);
@@ -285,6 +282,9 @@
                 CGContextDrawImage(pdfContext, scaledScreen, [image CGImage]);
                 
                 CGContextSaveThenRestoreForBlock(pdfContext, ^{
+                    CGContextScaleCTM(pdfContext, 1, -1);
+                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
+                    
                     // Scraps
                     // adjust so that (0,0) is the origin of the content rect in the PDF page,
                     // since the PDF may be much taller/wider than our screen
@@ -301,8 +301,6 @@
             CGPDFContextEndPage(pdfContext);
             UIGraphicsPopContext();
             CFRelease(pdfContext);
-            
-            NSLog(@"Wrote PDF to: %@", tmpPagePath);
             
             NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
             
