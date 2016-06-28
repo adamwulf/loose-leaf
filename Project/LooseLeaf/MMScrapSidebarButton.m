@@ -7,6 +7,7 @@
 //
 
 #import "MMScrapSidebarButton.h"
+#import <Crashlytics/Crashlytics.h>
 
 @implementation MMScrapSidebarButton{
     MMScrapView* scrap;
@@ -28,7 +29,7 @@
 
 
 +(CGFloat) scaleOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width{
-    CGFloat maxDim = MAX(scrap.frame.size.width, scrap.frame.size.height);
+    CGFloat maxDim = MAX(MAX(scrap.frame.size.width, scrap.frame.size.height), 1);
     return width / maxDim;
 }
 
@@ -46,6 +47,7 @@
     
     CGRect fr = self.frame;
     fr.size = [MMScrapSidebarButton sizeOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    CLS_LOG(@"updating scrap button frame from: %.2f %.2f %.2f %.2f to %.2f %.2f %.2f %.2f", self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, fr.origin.x, fr.origin.y, fr.size.width, fr.size.height);
     self.frame = fr;
     
     // remove anything in our button
