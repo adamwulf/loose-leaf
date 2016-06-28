@@ -411,6 +411,11 @@
     page.isBrandNewPage = YES;
     page.delegate = self;
     [page setPageBackgroundTexture:imageToImport];
+    if(!assetURL){
+        NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
+        [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
+        assetURL = [NSURL fileURLWithPath:tmpImagePath];
+    }
     [page saveOriginalBackgroundTextureFromURL:assetURL];
     [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
     [page updateThumbnailVisibility];
