@@ -292,13 +292,9 @@
         }
     }
     
-    CGPoint center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-    if(self.contentScaleFactor == 2){
-        center = CGPointMake(self.bounds.size.width/2-.5, self.bounds.size.height/2-.5);
-    }
+    CGPoint center = CGPointMake(CGRectGetMidX(self.drawableFrame), CGRectGetMidY(self.drawableFrame));
     
-    
-    CGFloat radius = self.drawableFrame.size.width / 2;
+    CGFloat radius = ceilf(self.drawableFrame.size.width / 2 + 1);
     CAShapeLayer *circle;
     if([self.layer.sublayers count]){
         circle = (CAShapeLayer*)[self.layer.sublayers firstObject];

@@ -85,12 +85,9 @@
         addPageSidebarButton.transform = rotationTransform;
         helpButton.transform = rotationTransform;
         helpButton.rotation = rotationValue;
-
-        // this'll let super's call run entirely on the main thread,
-        // instead both us + them adding blocks to the main thread's
-        // queue
-        [super didUpdateAccelerometerWithReading:currentRawReading];
     }];
+
+    [super didUpdateAccelerometerWithReading:currentRawReading];
 }
 
 -(CGFloat) listViewButtonRotation{

@@ -58,37 +58,42 @@ static MMLoadImageCache* _instance = nil;
 
 static int count = 0;
 -(UIImage*) imageAtPath:(NSString*)path{
-    @autoreleasepool {
-        UIImage* cachedImage = nil;
-        @synchronized(self){
-            cachedImage = [loadedImages objectForKey:path];
-        }
-        if(!cachedImage){
+    if(path){
+        @autoreleasepool {
+            UIImage* cachedImage = nil;
             @synchronized(self){
-                if([orderedKeys containsObject:path]){
-                    // we don't have an image, but our path is
-                    // in cache. this means there was nothing on disk
-                    return nil;
+                cachedImage = [loadedImages objectForKey:path];
+            }
+            if(!cachedImage){
+                @synchronized(self){
+                    if([orderedKeys containsObject:path]){
+                        // we don't have an image, but our path is
+                        // in cache. this means there was nothing on disk
+                        return nil;
+                    }
+                }
+                cachedImage = [JotDiskAssetManager imageWithContentsOfFile:path];
+                count++;
+                @synchronized(self){
+                    if(cachedImage){
+                        [loadedImages setObject:cachedImage forKey:path];
+                    }
+                    if(path){
+                        [orderedKeys removeObject:path];
+                        [orderedKeys insertObject:path atIndex:0];
+                    }else{
+                        DebugLog(@"how did we get nil path?");
+                    }
+                    [self ensureCacheSize];
+                    
+                    loadedBytes += [cachedImage uncompressedByteSize];
                 }
             }
-            cachedImage = [JotDiskAssetManager imageWithContentsOfFile:path];
-            count++;
-            @synchronized(self){
-                if(cachedImage){
-                    [loadedImages setObject:cachedImage forKey:path];
-                }
-                if(path){
-                    [orderedKeys removeObject:path];
-                    [orderedKeys insertObject:path atIndex:0];
-                }else{
-                    DebugLog(@"how did we get nil path?");
-                }
-                [self ensureCacheSize];
-                
-                loadedBytes += [cachedImage uncompressedByteSize];
-            }
+            return cachedImage;
         }
-        return cachedImage;
+    }else{
+        NSLog(@"nil path for image cache");
+        return nil;
     }
 }
 
@@ -115,26 +120,30 @@ static int count = 0;
 }
 
 -(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image{
-    @synchronized(self){
-        @autoreleasepool {
-            [self clearCacheForPath:path];
-            if(image){
-                UIImage* cachedImage = [loadedImages objectForKey:path];
-                if(cachedImage){
-                    loadedBytes -= [cachedImage uncompressedByteSize];
+    if(path){
+        @synchronized(self){
+            @autoreleasepool {
+                [self clearCacheForPath:path];
+                if(image){
+                    UIImage* cachedImage = [loadedImages objectForKey:path];
+                    if(cachedImage){
+                        loadedBytes -= [cachedImage uncompressedByteSize];
+                    }
+                    [loadedImages setObject:image forKey:path];
+                    loadedBytes += [image uncompressedByteSize];
+                }else{
+                    UIImage* cachedImage = [loadedImages objectForKey:path];
+                    if(cachedImage){
+                        loadedBytes -= [cachedImage uncompressedByteSize];
+                    }
+                    [loadedImages removeObjectForKey:path];
                 }
-                [loadedImages setObject:image forKey:path];
-                loadedBytes += [image uncompressedByteSize];
-            }else{
-                UIImage* cachedImage = [loadedImages objectForKey:path];
-                if(cachedImage){
-                    loadedBytes -= [cachedImage uncompressedByteSize];
-                }
-                [loadedImages removeObjectForKey:path];
+                [orderedKeys insertObject:path atIndex:0];
+                [self ensureCacheSize];
             }
-            [orderedKeys insertObject:path atIndex:0];
-            [self ensureCacheSize];
         }
+    }else{
+        NSLog(@"nil path for image cache");
     }
 }
 
