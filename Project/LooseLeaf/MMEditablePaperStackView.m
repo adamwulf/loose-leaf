@@ -215,7 +215,12 @@ static UIWebView *pdfWebView;
  * should be rotated to stay pointed "down"
  */
 -(CGFloat) sidebarButtonRotation{
-    return -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI/2);
+    CGFloat rotationValue = -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI/2);
+    if(isnan(rotationValue)){
+        [[[Mixpanel sharedInstance] people] set:kMPFailedRotationReading to:@(YES)];
+        rotationValue = 0;
+    }
+    return rotationValue;
 }
 
 -(Tool*) activePen{

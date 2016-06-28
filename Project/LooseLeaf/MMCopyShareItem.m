@@ -60,14 +60,10 @@
 }
 
 -(void) animateToSuccess:(BOOL)succeeded{
-    CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
-    if(button.contentScaleFactor == 2){
-        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
-    }
-    
+    CGPoint center = CGPointMake(CGRectGetMidX(button.drawableFrame), CGRectGetMidY(button.drawableFrame));
     
     CAShapeLayer *circle=[CAShapeLayer layer];
-    CGFloat radius = button.drawableFrame.size.width / 2;
+    CGFloat radius = ceilf(button.drawableFrame.size.width / 2);
     circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     circle.fillColor=[UIColor clearColor].CGColor;
     circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;

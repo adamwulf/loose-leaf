@@ -189,6 +189,7 @@ _Pragma("clang diagnostic pop") \
 #define kMPDistanceErased @"Distance Erased (m)"
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
+#define kMPFailedRotationReading @"Failed Rotation Reading"
 
 // tutorial
 #define kMPHasFinishedTutorial @"Has Finished Tutorial"
