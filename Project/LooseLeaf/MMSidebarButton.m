@@ -56,7 +56,7 @@
 }
 
 -(CGRect) drawableFrame{
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
+    CGFloat smallest = floorf(MIN(self.bounds.size.width, self.bounds.size.height));
     return CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
 }
 
