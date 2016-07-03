@@ -181,8 +181,8 @@ dispatch_queue_t importThumbnailQueue;
                 // it's old page, so remove that animation
                 // if any
                 [drawableView.layer removeAllAnimations];
-                [drawableView loadState:paperState];
                 [self addDrawableViewToContentView];
+                [drawableView loadState:paperState];
                 // anchor the view to the top left,
                 // so that when we scale down, the drawable view
                 // stays in place
