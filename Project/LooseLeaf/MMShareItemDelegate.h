@@ -34,7 +34,7 @@
 
 @protocol MMShareSidebarDelegate <MMShareDelegate>
 
--(UIImage*) imageToShare;
+-(void) exportToImage:(void(^)(NSURL* urlToImage))completionBlock;
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock;
 

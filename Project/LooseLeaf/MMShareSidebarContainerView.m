@@ -28,6 +28,7 @@
 #import "UIView+Debug.h"
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMTutorialManager.h"
+#import <JotUI/JotUI.h>
 
 @interface MMShareSidebarContainerView ()
 
@@ -128,6 +129,7 @@
 }
 
 -(void) setExportType:(id)sender{
+    CheckMainThread;
     exportAsImageButton.selected = (exportAsImageButton == sender);
     exportAsPDFButton.selected = (exportAsPDFButton == sender);
 
@@ -137,14 +139,14 @@
     
     if(exportAsImageButton.selected && !exportedImage){
         exportedImage = YES;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            UIImage* img = [self.shareDelegate imageToShare];
-            NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
-            [UIImagePNGRepresentation(img) writeToFile:tmpImagePath atomically:YES];
-            _imageURLToShare = [NSURL fileURLWithPath:tmpImagePath];
+        [self.shareDelegate exportToImage:^(NSURL *urlToImage) {
+            _imageURLToShare = urlToImage;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateShareOptions];
+            });
+        }];
 
-            [self updateShareOptions];
-        });
+        [self updateShareOptions];
     }
 
     if(exportAsPDFButton.selected && !exportedPDF){
@@ -311,8 +313,8 @@
 
 #pragma mark - MMShareItemDelegate
 
--(UIImage*) imageToShare{
-    return shareDelegate.imageToShare;
+-(void) exportToImage:(void(^)(NSURL* urlToImage))completionBlock{
+    [shareDelegate exportToImage:completionBlock];
 }
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{

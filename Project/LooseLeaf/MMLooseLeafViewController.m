@@ -550,8 +550,8 @@
 
 #pragma mark - MMShareSidebarDelegate
 
--(UIImage*) imageToShare{
-    return [currentStackView imageToShare];
+-(void) exportToImage:(void (^)(NSURL *))completionBlock{
+    [currentStackView exportToImage:completionBlock];
 }
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{

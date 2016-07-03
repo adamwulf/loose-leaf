@@ -315,4 +315,116 @@
     if(completionBlock) completionBlock(nil);
 }
 
+-(void) exportToImage:(void(^)(NSURL* urlToImage))completionBlock{
+    __block NSURL* backgroundAssetURL;
+    
+    [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL *item, NSUInteger totalItemCount) {
+        if([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]){
+            backgroundAssetURL = item;
+        }
+    } andErrorHandler:nil];
+    
+    MMPDF* pdf = nil;
+    
+    // default the page size to the screen dimensions in PDF ppi.
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+    CGSize pagePtSize = screenSize;
+    CGRect scaledScreen = CGRectFromSize(pagePtSize);
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+
+    if([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]){
+        pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
+        if([pdf pageCount]){
+            pagePtSize = [pdf sizeForPage:0];
+            //            CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
+            //
+            //            NSLog(@"Screen size (pxs): %.2f %.2f", pxSize.width, pxSize.height);
+            //            NSLog(@"Screen size (in):  %.2f %.2f", inSize.width, inSize.height);
+            //            NSLog(@"Screen PDF size (pts):  %.2f %.2f", finalSize.width, finalSize.height);
+            //            NSLog(@"Screen PDF ratio:  %.2f", finalSize.width / finalSize.height);
+            //
+            //            NSLog(@"Background PDF (in):  %.2f %.2f", pageInSize.width, pageInSize.height);
+            //            NSLog(@"Background PDF size (pts):  %.2f %.2f", pagePtSize.width, pagePtSize.height);
+            //            NSLog(@"Background PDF ratio:  %.2f", pagePtSize.width / pagePtSize.height);
+            //
+            //            scaledScreen = CGSizeFill(finalSize, pagePtSize);
+            //
+            //            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
+            //
+            scaledScreen = CGSizeFill(pagePtSize, screenSize);
+            //
+            //            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
+        }
+    }
+    
+    
+    if([[self.drawableView state] isStateLoaded]){
+        [self.drawableView exportToImageOnComplete:^(UIImage * image) {
+            NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
+            
+            UIGraphicsBeginImageContextWithOptions(scaledScreen.size, NO, scale);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            
+            CGContextSaveThenRestoreForBlock(context, ^{
+                // flip
+                CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+                
+                [[UIColor whiteColor] setFill];
+                [[UIBezierPath bezierPathWithRect:scaledScreen] fill];
+
+                if(pdf){
+                    CGContextSaveThenRestoreForBlock(context, ^{
+                        
+                        CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
+                        
+                        // PDF background
+                        [pdf renderPage:0 intoContext:context withSize:scaledScreen.size];
+                        
+                        CGContextTranslateCTM(context, scaledScreen.origin.x, scaledScreen.origin.y);
+                        
+                    });
+                }
+                
+                CGContextSaveThenRestoreForBlock(context, ^{
+                    CGContextTranslateCTM(context, 0, scaledScreen.size.height);
+                    CGContextScaleCTM(context, 1, -1);
+                    
+                    // Ink
+                    CGContextDrawImage(context, scaledScreen, [image CGImage]);
+                });
+                
+                CGContextSaveThenRestoreForBlock(context, ^{
+                    // Scraps
+                    // adjust so that (0,0) is the origin of the content rect in the PDF page,
+                    // since the PDF may be much taller/wider than our screen
+                    CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
+                    MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
+                    
+                    for(MMScrapView* scrap in immutableScrapState.scraps){
+                        [self drawScrap:scrap intoContext:context withSize:scaledScreen.size];
+                    }
+
+                });
+            });
+            
+            
+            UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
+            [UIImagePNGRepresentation(outputImage) writeToFile:tmpPagePath atomically:YES];
+
+            CFRelease(context);
+            
+            NSURL* fullyRenderedImageURL = [NSURL fileURLWithPath:tmpPagePath];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(completionBlock) completionBlock(fullyRenderedImageURL);
+            });
+            
+        } withScale:self.drawableView.scale];
+        return;
+    }
+    
+    if(completionBlock) completionBlock(nil);
+}
+
 @end

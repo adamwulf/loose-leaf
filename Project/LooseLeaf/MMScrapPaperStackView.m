@@ -1941,45 +1941,8 @@
 
 #pragma mark - MMShareSidebarDelegate
 
--(UIImage*) imageToShare{
-    UIImage* retImage = [visibleStackHolder peekSubview].scrappedImgViewImage;
-    if(!retImage){
-        @autoreleasepool {
-            CGSize thumbSize = [[visibleStackHolder peekSubview] thumbnailSize];
-            UIGraphicsBeginImageContextWithOptions(thumbSize, YES, 0.0);
-            [[UIColor whiteColor] setFill];
-            CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, thumbSize.width, thumbSize.height));
-            
-            retImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-    }
-
-    UIImage *rotatedImage;
-    @autoreleasepool {
-        UIImageOrientation orientation = UIImageOrientationUp;
-        
-        if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeLeft){
-            orientation = UIImageOrientationRight;
-        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeRight){
-            orientation = UIImageOrientationLeft;
-        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationMaskPortraitUpsideDown){
-            orientation = UIImageOrientationDown;
-        }
-        
-        // rotate it to match the ipad's current orientation
-        rotatedImage = [UIImage imageWithCGImage:[retImage CGImage] scale:retImage.scale orientation:orientation];
-        
-        if(!(rotatedImage.imageOrientation == UIImageOrientationUp || rotatedImage.imageOrientation == UIImageOrientationUpMirrored)){
-            CGSize imgsize = rotatedImage.size;
-            UIGraphicsBeginImageContext(imgsize);
-            [rotatedImage drawInRect:CGRectMake(0.0, 0.0, imgsize.width, imgsize.height)];
-            rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-    }
-    
-    return rotatedImage;
+-(void) exportToImage:(void (^)(NSURL *))completionBlock{
+    [[visibleStackHolder peekSubview] exportToImage:completionBlock];
 }
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{

@@ -21,4 +21,6 @@
 
 -(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock;
 
+-(void) exportToImage:(void(^)(NSURL* urlToImage))completionBlock;
+
 @end
