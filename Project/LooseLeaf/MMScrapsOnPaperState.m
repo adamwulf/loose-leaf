@@ -76,6 +76,7 @@
     if(![self isStateLoaded]){
         __block NSArray* scrapProps;
         __block NSArray* scrapIDsOnPage;
+        __block CGSize scrapStatePageSize;
         BOOL wasAlreadyLoading = isLoading;
         @synchronized(self){
             isLoading = YES;
@@ -111,6 +112,7 @@
                 }
                 scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
                 scrapProps = [allScrapStateInfo objectForKey:@"allScrapProperties"];
+                scrapStatePageSize = CGSizeMake([allScrapStateInfo[@"screenSize.width"] floatValue], [allScrapStateInfo[@"screenSize.height"] floatValue]);
             }
         };
         void (^blockForMainThread)() = ^{
@@ -182,16 +184,21 @@
                         return;
                     }
                     
-                    if(adjustForScale){
+                    if(adjustForScale || !CGSizeEqualToSize(scrapStatePageSize, CGSizeZero)){
+                        if(CGSizeEqualToSize(scrapStatePageSize, CGSizeZero)) {
+                            scrapStatePageSize.width = 768;
+                            scrapStatePageSize.height = 1024;
+                        }
                         // https://github.com/adamwulf/loose-leaf/issues/1611
                         // bundled pages are from 768x1024 pages, so we need to scale them for iPad Pro
                         // this works as long as the width/height ratios are equal.
                         // if/when Apple releases a device w/ different screen ratio then I'll need
                         // to update this to handle aspect fill/fit/whatever
+                        
                         CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
-                        if(CGRectGetWidth(screenBounds) != 768 && CGRectGetHeight(screenBounds) != 1024){
-                            CGFloat widthRatio = CGRectGetWidth(screenBounds) / 768.0;
-                            CGFloat heightRatio = CGRectGetHeight(screenBounds) / 1024.0;
+                        if(CGRectGetWidth(screenBounds) != scrapStatePageSize.width && CGRectGetHeight(screenBounds) != scrapStatePageSize.height){
+                            CGFloat widthRatio = CGRectGetWidth(screenBounds) / scrapStatePageSize.width;
+                            CGFloat heightRatio = CGRectGetHeight(screenBounds) / scrapStatePageSize.height;
 
                             NSMutableDictionary* adjustedProperties = [scrapProperties mutableCopy];
                             adjustedProperties[@"center.x"] = @([scrapProperties[@"center.x"] floatValue] * widthRatio);
