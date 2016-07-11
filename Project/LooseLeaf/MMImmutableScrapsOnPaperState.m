@@ -80,7 +80,10 @@
         }
         
 //        DebugLog(@"saving %lu scraps on %@", (unsigned long)[scrapsOnPageIDs count], ownerState.delegate);
-        NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", nil];
+        
+        CGSize screenSize = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size;
+        
+        NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", scrapsOnPageIDs, @"scrapsOnPageIDs", @(screenSize.width), @"screenSize.width", @(screenSize.height), @"screenSize.height", nil];
         if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
 //            DebugLog(@"saved to %@", scrapIDsPath);
         }else{
