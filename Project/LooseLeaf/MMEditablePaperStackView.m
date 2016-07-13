@@ -124,6 +124,10 @@
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:redoButton extendFrame:YES];
 
+        MMTextButton* imageExportButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 5 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont systemFontOfSize:12] andLetter:@"PNG" andXOffset:0 andYOffset:0];
+        imageExportButton.delegate = self;
+        [imageExportButton addTarget:self action:@selector(exportAsImage:) forControlEvents:UIControlEventTouchUpInside];
+        [self.toolbar addButton:imageExportButton extendFrame:NO];
         
         MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         pdfExportButton.delegate = self;
@@ -182,6 +186,37 @@ static UIWebView *pdfWebView;
             
             [self addSubview:pdfWebView];
         }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [pdfWebView removeFromSuperview];
+            pdfWebView = nil;
+        });
+    }];
+}
+
+-(void) exportAsImage:(id)sender{
+    if(pdfWebView){
+        [pdfWebView removeFromSuperview];
+        pdfWebView = nil;
+    }
+    [[[self visibleStackHolder] peekSubview] exportToImage:^(NSURL *urlToImage) {
+        if(urlToImage){
+            pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
+            [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
+            [[pdfWebView layer] setBorderWidth:2];
+            pdfWebView.scalesPageToFit = YES;
+            pdfWebView.contentMode = UIViewContentModeScaleAspectFit;
+            
+            NSURLRequest *request = [NSURLRequest requestWithURL:urlToImage];
+            [pdfWebView loadRequest:request];
+            
+            [self addSubview:pdfWebView];
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [pdfWebView removeFromSuperview];
+            pdfWebView = nil;
+        });
     }];
 }
 

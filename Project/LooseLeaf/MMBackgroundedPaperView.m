@@ -224,7 +224,7 @@
     
     // default the page size to the screen dimensions in PDF ppi.
     CGSize pagePtSize = finalSize;
-    CGRect scaledScreen = CGRectFromSize(pagePtSize);
+    CGRect finalExportBounds = CGRectFromSize(pagePtSize);
     
     if([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]){
         pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
@@ -245,7 +245,7 @@
 //            
 //            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
 //            
-            scaledScreen = CGSizeFit(finalSize, pagePtSize);
+            finalExportBounds = CGSizeFit(finalSize, pagePtSize);
 //            
 //            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
         }
@@ -274,12 +274,12 @@
                         [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
                     }else{
                         CGContextSetFillColorWithColor(pdfContext, [[UIColor whiteColor] CGColor]);
-                        CGContextFillRect(pdfContext, scaledScreen);
+                        CGContextFillRect(pdfContext, finalExportBounds);
                     }
                 });
                 
                 // Ink
-                CGContextDrawImage(pdfContext, scaledScreen, [image CGImage]);
+                CGContextDrawImage(pdfContext, finalExportBounds, [image CGImage]);
                 
                 CGContextSaveThenRestoreForBlock(pdfContext, ^{
                     CGContextScaleCTM(pdfContext, 1, -1);
@@ -288,13 +288,13 @@
                     // Scraps
                     // adjust so that (0,0) is the origin of the content rect in the PDF page,
                     // since the PDF may be much taller/wider than our screen
-                    CGContextTranslateCTM(pdfContext, scaledScreen.origin.x, scaledScreen.origin.y);
+                    CGContextTranslateCTM(pdfContext, finalExportBounds.origin.x, finalExportBounds.origin.y);
                     MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
                     
                     for(MMScrapView* scrap in immutableScrapState.scraps){
-                        [self drawScrap:scrap intoContext:pdfContext withSize:scaledScreen.size];
+                        [self drawScrap:scrap intoContext:pdfContext withSize:finalExportBounds.size];
                     }
-                    CGContextTranslateCTM(pdfContext, -scaledScreen.origin.x, -scaledScreen.origin.y);
+                    CGContextTranslateCTM(pdfContext, -finalExportBounds.origin.x, -finalExportBounds.origin.y);
                 });
             });
             
@@ -329,7 +329,7 @@
     // default the page size to the screen dimensions in PDF ppi.
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     CGSize pagePtSize = screenSize;
-    CGRect scaledScreen = CGRectFromSize(pagePtSize);
+    CGRect finalExportBounds = CGRectFromSize(pagePtSize);
     CGFloat scale = [[UIScreen mainScreen] scale];
     
 
@@ -352,7 +352,7 @@
             //
             //            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
             //
-            scaledScreen = CGSizeFill(pagePtSize, screenSize);
+            finalExportBounds = CGSizeFill(pagePtSize, screenSize);
             //
             //            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
         }
@@ -363,7 +363,7 @@
         [self.drawableView exportToImageOnComplete:^(UIImage * image) {
             NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
             
-            UIGraphicsBeginImageContextWithOptions(scaledScreen.size, NO, scale);
+            UIGraphicsBeginImageContextWithOptions(finalExportBounds.size, NO, scale);
             CGContextRef context = UIGraphicsGetCurrentContext();
             
             CGContextSaveThenRestoreForBlock(context, ^{
@@ -371,38 +371,36 @@
                 CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
                 
                 [[UIColor whiteColor] setFill];
-                [[UIBezierPath bezierPathWithRect:scaledScreen] fill];
+                [[UIBezierPath bezierPathWithRect:finalExportBounds] fill];
 
                 if(pdf){
                     CGContextSaveThenRestoreForBlock(context, ^{
-                        
-                        CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
-                        
                         // PDF background
-                        [pdf renderPage:0 intoContext:context withSize:scaledScreen.size];
-                        
-                        CGContextTranslateCTM(context, scaledScreen.origin.x, scaledScreen.origin.y);
-                        
+                        [pdf renderPage:0 intoContext:context withSize:finalExportBounds.size];
                     });
                 }
                 
                 CGContextSaveThenRestoreForBlock(context, ^{
-                    CGContextTranslateCTM(context, 0, scaledScreen.size.height);
+                    // flip context
+                    CGContextTranslateCTM(context, 0, finalExportBounds.size.height);
                     CGContextScaleCTM(context, 1, -1);
                     
-                    // Ink
-                    CGContextDrawImage(context, scaledScreen, [image CGImage]);
+                    // adjust to origin
+                    CGContextTranslateCTM(context, -finalExportBounds.origin.x, -finalExportBounds.origin.y);
+                    
+                    // Draw Ink
+                    CGContextDrawImage(context, CGRectFromSize(screenSize), [image CGImage]);
                 });
                 
                 CGContextSaveThenRestoreForBlock(context, ^{
                     // Scraps
                     // adjust so that (0,0) is the origin of the content rect in the PDF page,
                     // since the PDF may be much taller/wider than our screen
-                    CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
+                    CGContextTranslateCTM(context, -finalExportBounds.origin.x, -finalExportBounds.origin.y);
                     MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
                     
                     for(MMScrapView* scrap in immutableScrapState.scraps){
-                        [self drawScrap:scrap intoContext:context withSize:scaledScreen.size];
+                        [self drawScrap:scrap intoContext:context withSize:screenSize];
                     }
 
                 });
