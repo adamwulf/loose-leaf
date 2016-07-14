@@ -217,7 +217,8 @@
     } andErrorHandler:nil];
     
     MMPDF* pdf = nil;
-    
+    UIImage* backgroundImage = nil;
+
     CGSize pxSize = CGSizeScale([[UIScreen mainScreen] bounds].size, [[UIScreen mainScreen] scale]);
     CGSize inSize = CGSizeScale(pxSize, 1 / [UIDevice ppi]);
     CGSize finalSize = CGSizeScale(inSize, [MMPDF ppi]);
@@ -249,6 +250,21 @@
 //            
 //            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
         }
+    }else if([self backgroundTexturePath]){
+        if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundTexturePath]]){
+            backgroundAssetURL = [NSURL fileURLWithPath:[self backgroundTexturePath]];
+            backgroundImage = [UIImage imageWithContentsOfFile:[backgroundAssetURL path]];
+            if(backgroundImage){
+                if(backgroundImage.size.width > backgroundImage.size.height){
+                    // rotate
+                    backgroundImage = [[UIImage alloc] initWithCGImage:backgroundImage.CGImage scale:backgroundImage.scale orientation:([self isVert:backgroundImage] ? UIImageOrientationLeft : UIImageOrientationUp)];
+                }
+                CGSize pxSize = CGSizeScale([backgroundImage size], [backgroundImage scale]);
+                CGSize inSize = CGSizeScale(pxSize, 1 / [UIDevice ppi]);
+                pagePtSize = CGSizeScale(inSize, [MMPDF ppi]);
+                finalExportBounds = CGSizeFit(finalSize, pagePtSize);
+            }
+        }
     }
     
     if([[self.drawableView state] isStateLoaded]){
@@ -272,6 +288,11 @@
                     if(pdf){
                         // PDF background
                         [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
+                    }else if(backgroundImage){
+                        // image background
+                        CGContextSaveThenRestoreForBlock(pdfContext, ^{
+                            [backgroundImage drawInRect:CGRectFromSize(pagePtSize)];
+                        });
                     }else{
                         CGContextSetFillColorWithColor(pdfContext, [[UIColor whiteColor] CGColor]);
                         CGContextFillRect(pdfContext, finalExportBounds);
@@ -325,6 +346,7 @@
     } andErrorHandler:nil];
     
     MMPDF* pdf = nil;
+    UIImage* backgroundImage = nil;
     
     // default the page size to the screen dimensions in PDF ppi.
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
@@ -356,6 +378,18 @@
             //
             //            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
         }
+    }else if([self backgroundTexturePath]){
+        if([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundTexturePath]]){
+            backgroundAssetURL = [NSURL fileURLWithPath:[self backgroundTexturePath]];
+            backgroundImage = [UIImage imageWithContentsOfFile:[backgroundAssetURL path]];
+            if(backgroundImage){
+                if(backgroundImage.size.width > backgroundImage.size.height){
+                    // rotate
+                    backgroundImage = [[UIImage alloc] initWithCGImage:backgroundImage.CGImage scale:backgroundImage.scale orientation:([self isVert:backgroundImage] ? UIImageOrientationLeft : UIImageOrientationUp)];
+                }
+                finalExportBounds = CGSizeFill([backgroundImage size], finalExportBounds.size);
+            }
+        }
     }
     
     
@@ -377,6 +411,12 @@
                     CGContextSaveThenRestoreForBlock(context, ^{
                         // PDF background
                         [pdf renderPage:0 intoContext:context withSize:finalExportBounds.size];
+                    });
+                }else if(backgroundImage){
+                    // image background
+                    CGContextSaveThenRestoreForBlock(context, ^{
+                        CGRect rectForImage = CGSizeFill([backgroundImage size], finalExportBounds.size);
+                        [backgroundImage drawInRect:rectForImage];
                     });
                 }
                 
@@ -410,7 +450,8 @@
             UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
             [UIImagePNGRepresentation(outputImage) writeToFile:tmpPagePath atomically:YES];
 
-            CFRelease(context);
+            
+            UIGraphicsEndImageContext();
             
             NSURL* fullyRenderedImageURL = [NSURL fileURLWithPath:tmpPagePath];
             
