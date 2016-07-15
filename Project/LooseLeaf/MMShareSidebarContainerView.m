@@ -139,8 +139,8 @@
     
     if(exportAsImageButton.selected && !exportedImage){
         exportedImage = YES;
-        [self.shareDelegate exportToImage:^(NSURL *urlToImage) {
-            _imageURLToShare = urlToImage;
+        [self.shareDelegate exportToImage:^(NSURL *urlToShare) {
+            _imageURLToShare = urlToShare;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self updateShareOptions];
             });
@@ -152,8 +152,8 @@
     if(exportAsPDFButton.selected && !exportedPDF){
         exportedPDF = YES;
         
-        [self.shareDelegate exportToPDF:^(NSURL *urlToPDF) {
-            _pdfURLToShare = urlToPDF;
+        [self.shareDelegate exportToPDF:^(NSURL *urlToShare) {
+            _pdfURLToShare = urlToShare;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self updateShareOptions];
             });
@@ -342,8 +342,8 @@
             if(activeOptionsView){
                 [activeOptionsView reset];
                 CGRect frForOptions = buttonView.frame;
-                frForOptions.origin.y = buttonView.bounds.size.height;
-                frForOptions.size.height = sharingContentView.bounds.size.height - buttonView.frame.origin.y - buttonView.frame.size.height;
+                frForOptions.origin.y = CGRectGetMaxY([buttonView frame]);
+                frForOptions.size.height = sharingContentView.bounds.size.height - CGRectGetMaxY([buttonView frame]);
                 activeOptionsView.frame = frForOptions;
                 [shareItem setShowingOptionsView:YES];
                 [sharingContentView addSubview:activeOptionsView];

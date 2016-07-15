@@ -70,8 +70,6 @@
     // to/from the sidebar
     BOOL isAnimatingScrapToOrFromSidebar;
     
-    UIImageView* testImageView;
-
     MMDeletePageSidebarController* deleteScrapSidebar;
 }
 
@@ -1932,11 +1930,6 @@
 
 -(UIView*) viewForBlur{
     return [visibleStackHolder peekSubview];
-}
-
--(UIImage*) imageForBlur{
-    testImageView.image = [visibleStackHolder peekSubview].scrappedImgViewImage;
-    return [visibleStackHolder peekSubview].scrappedImgViewImage;
 }
 
 #pragma mark - MMShareSidebarDelegate

@@ -534,10 +534,6 @@
     return [currentStackView viewForBlur];
 }
 
--(UIImage*) imageForBlur{
-    return [currentStackView imageForBlur];
-}
-
 #pragma mark - MMImageSidebarContainerViewDelegate
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage{
