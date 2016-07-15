@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "MMGestureTouchOwnershipDelegate.h"
 #import "MMCancelableGestureRecognizer.h"
+#import "MMGestureTouchOwnershipDelegate.h"
 
 @interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer{
     // direction the user is panning

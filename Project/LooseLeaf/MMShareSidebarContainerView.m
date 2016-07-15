@@ -325,7 +325,6 @@
     return shareDelegate.cloudKitSenderInfo;
 }
 
-
 -(void) mayShare:(MMAbstractShareItem *)shareItem{
     // close out all of our sharing options views,
     // if any

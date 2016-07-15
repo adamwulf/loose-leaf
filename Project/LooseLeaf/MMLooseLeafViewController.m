@@ -190,6 +190,7 @@
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         [self.view addGestureRecognizer:[MMPalmGestureRecognizer sharedInstance]];
+        [MMPalmGestureRecognizer sharedInstance].panDelegate = self;
 
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];

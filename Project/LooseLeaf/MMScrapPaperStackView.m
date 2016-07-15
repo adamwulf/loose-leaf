@@ -40,6 +40,7 @@
 #import "MMAppDelegate.h"
 #import "MMPDFPageAsset.h"
 #import "MMImageInboxItem.h"
+#import "MMPalmGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -1469,7 +1470,16 @@
         // bezeling
         return NO;
     }
+    if([[MMPalmGestureRecognizer sharedInstance] hasSeenPalmDuringTouchSession]){
+        NSLog(@"Not Allowed To Pan");
+        return NO;
+    }
+    
     return handButton.selected;
+}
+
+-(BOOL) isAllowedToBezel{
+    return [super isAllowedToBezel] && ![[MMPalmGestureRecognizer sharedInstance] hasSeenPalmDuringTouchSession];
 }
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
