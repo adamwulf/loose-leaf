@@ -1193,7 +1193,8 @@
             indexNum = (int)[(arrayOfArrayOfViews[arrayNum]) count] - 1;
         }
         // fetch the most visible page
-        pageToDropScrap = [(arrayOfArrayOfViews[arrayNum]) objectAtIndex:indexNum];
+        NSArray* arrayOfViews = arrayOfArrayOfViews[arrayNum];
+        pageToDropScrap = (indexNum >= 0 && indexNum < [arrayOfViews count]) ? [arrayOfViews objectAtIndex:indexNum] : nil;
         if(!pageToDropScrap){
             // if we can't find a page, we're done
             break;
