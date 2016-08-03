@@ -98,8 +98,6 @@
         noThanksButton.bounds = b;
         [self addSubview:noThanksButton];
         
-        
-        
         thanksPanel = [[UILabel alloc] initWithFrame:self.bounds];
         thanksPanel.backgroundColor = [UIColor whiteColor];
         thanksPanel.textColor = [UIColor blackColor];
@@ -110,9 +108,6 @@
         [self addSubview:thanksPanel];
 
         [self didRotateToIdealOrientation:[[MMRotationManager sharedInstance] currentInterfaceOrientation] animated:NO];
-        
-        
-        
     }
     return self;
 }
@@ -241,7 +236,6 @@
                                 NSUInteger loc = [result.URL.absoluteString rangeOfString:@"mailto:"].location;
                                 if(loc != NSNotFound){
                                     matchedEmail = [result.URL.absoluteString substringFromIndex:[@"mailto:" length]];
-                                    NSLog(@"Match: %@", matchedEmail);
                                 }
                             }];
     

@@ -349,7 +349,7 @@
     UIImage* backgroundImage = nil;
     
     // default the page size to the screen dimensions in PDF ppi.
-    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+    CGSize screenSize = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size;
     CGSize pagePtSize = screenSize;
     CGRect finalExportBounds = CGRectFromSize(pagePtSize);
     CGFloat scale = [[UIScreen mainScreen] scale];
