@@ -339,6 +339,9 @@
     if(completionBlock) completionBlock(nil);
 }
 
+// NOTE: this method will always export a portrait image
+// of the canvas. Rotation to match the iPad's orientation
+// is handled in the MMShareSidebarContainerView
 -(void) exportToImage:(void(^)(NSURL* urlToImage))completionBlock{
     __block NSURL* backgroundAssetURL;
     

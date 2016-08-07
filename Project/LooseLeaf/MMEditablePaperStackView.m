@@ -124,15 +124,15 @@
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:redoButton extendFrame:YES];
 
-        MMTextButton* imageExportButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 5 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont systemFontOfSize:12] andLetter:@"PNG" andXOffset:0 andYOffset:0];
-        imageExportButton.delegate = self;
-        [imageExportButton addTarget:self action:@selector(exportAsImage:) forControlEvents:UIControlEventTouchUpInside];
-        [self.toolbar addButton:imageExportButton extendFrame:NO];
-        
-        MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        pdfExportButton.delegate = self;
-        [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
-        [self.toolbar addButton:pdfExportButton extendFrame:NO];
+//        MMTextButton* imageExportButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 5 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont systemFontOfSize:12] andLetter:@"PNG" andXOffset:0 andYOffset:0];
+//        imageExportButton.delegate = self;
+//        [imageExportButton addTarget:self action:@selector(exportAsImage:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.toolbar addButton:imageExportButton extendFrame:NO];
+//        
+//        MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+//        pdfExportButton.delegate = self;
+//        [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.toolbar addButton:pdfExportButton extendFrame:NO];
 
         
         //
