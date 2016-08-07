@@ -166,7 +166,7 @@ static MMAllStacksManager* _instance = nil;
        [[NSFileManager defaultManager] fileExistsAtPath:pagesDir]){
 
         MMUpgradeInProgressViewController* progressController = [[MMUpgradeInProgressViewController alloc] init];
-        upgradingWindow = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        upgradingWindow = [[UIWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
         upgradingWindow.rootViewController = progressController;
         [upgradingWindow makeKeyAndVisible];
         

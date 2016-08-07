@@ -32,7 +32,7 @@ static MMDebugDrawView* _instance = nil;
 
 +(MMDebugDrawView*) sharedInstance{
     if(!_instance){
-        _instance = [[MMDebugDrawView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        _instance = [[MMDebugDrawView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
     }
     return _instance;
 }

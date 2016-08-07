@@ -101,7 +101,7 @@ static UIImage* lockThumbnail;
     // make the lock icon
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CGRect imageBounds = [[UIScreen mainScreen] bounds];
+        CGRect imageBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
         if(imageBounds.size.width > imageBounds.size.height){
             // force portrait for lock page
             CGFloat oldW = imageBounds.size.width;

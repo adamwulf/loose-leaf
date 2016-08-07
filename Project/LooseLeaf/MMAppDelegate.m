@@ -76,10 +76,10 @@
 
     
     [[MMAllStacksManager sharedInstance] upgradeIfNecessary:^{
-        presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
         [presentationWindow makeKeyAndVisible];
         
-        CGRect screenBounds = [[UIScreen mainScreen] bounds];
+        CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
         self.window = [[MMWindow alloc] initWithFrame:screenBounds];
         // Override point for customization after application launch.
         self.viewController = [[MMLooseLeafViewController alloc] init];

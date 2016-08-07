@@ -219,7 +219,7 @@
     MMPDF* pdf = nil;
     UIImage* backgroundImage = nil;
 
-    CGSize pxSize = CGSizeScale([[UIScreen mainScreen] bounds].size, [[UIScreen mainScreen] scale]);
+    CGSize pxSize = CGSizeScale([[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size, [[UIScreen mainScreen] scale]);
     CGSize inSize = CGSizeScale(pxSize, 1 / [UIDevice ppi]);
     CGSize finalSize = CGSizeScale(inSize, [MMPDF ppi]);
     
