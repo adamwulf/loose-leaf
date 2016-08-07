@@ -226,7 +226,6 @@
     // default the page size to the screen dimensions in PDF ppi.
     CGSize pagePtSize = finalSize;
     CGRect finalExportBounds = CGRectFromSize(pagePtSize);
-    CGPDFDictionaryRef info = NULL;
     CGFloat defaultRotation = 0;
     
     if([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]){

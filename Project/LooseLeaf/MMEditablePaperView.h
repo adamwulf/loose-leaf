@@ -13,7 +13,7 @@
 #import <JotUI/JotUI.h>
 
 @interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
-    __weak JotView* drawableView;
+    JotView* drawableView;
     MMShapeBuilderView* shapeBuilderView;
     
     MMRulerToolGestureRecognizer* rulerGesture;
@@ -38,7 +38,7 @@
     BOOL fileExistsAtPlistPath;
 }
 
-@property (nonatomic, weak) JotView* drawableView;
+@property (nonatomic, strong) JotView* drawableView;
 @property (readonly) JotViewStateProxy* paperState;
 
 -(BOOL) hasEditsToSave;
