@@ -592,9 +592,8 @@
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     
-    
     void(^blockToAddScrapToPage)() = ^{
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:rotation andScale:startingScale];
         [scrapContainer addSubview:scrap];
         
         CGSize fullScaleScrapSize = scrapRect.size;

@@ -82,6 +82,10 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 
 #pragma mark - Public
 
+-(CGFloat) rotationForPage:(NSInteger)pageNumber{
+    return 0;
+}
+
 -(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim{
     return [self imageForPage:pageNumber forMaxDim:maxDim andSaveToDiskCache:maxDim == kThumbnailMaxDim];
 }

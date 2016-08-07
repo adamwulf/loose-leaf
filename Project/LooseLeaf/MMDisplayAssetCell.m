@@ -66,7 +66,7 @@
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(assetUpdated:) name:kDisplayAssetThumbnailGenerated object:result];
                 [bufferedImage setPreferredAspectRatioForEmptyImage:result.fullResolutionSize];
                 bufferedImage.image = result.aspectRatioThumbnail;
-                bufferedImage.rotation = RandomPhotoRotation(photoIndex);
+                bufferedImage.rotation = RandomPhotoRotation(photoIndex) + [result defaultRotation];
             }else{
                 // was an error. possibly syncing the ipad to iphoto,
                 // so the album is updated faster than we can enumerate.

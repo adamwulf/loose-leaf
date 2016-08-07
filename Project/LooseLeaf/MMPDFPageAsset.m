@@ -42,6 +42,10 @@ static UIImage* lockThumbnail;
     return [pdfItem imageForPage:pageNumber forMaxDim:maxDim];
 }
 
+-(CGFloat) defaultRotation{
+    return [pdfItem rotationForPage:pageNumber] * M_PI / 180.0;
+}
+
 -(CGSize) fullResolutionSize{
     if([pdfItem isEncrypted]){
         return lockThumbnail.size;

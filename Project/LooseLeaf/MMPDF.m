@@ -88,6 +88,33 @@
     return mediaRect.size;
 }
 
+-(CGFloat) rotationForPage:(NSUInteger)page{
+    // size isn't in the cache, so find out and return it
+    // we dont' update the cache ourselves though.
+    
+    if(page >= pageCount){
+        page = pageCount - 1;
+    }
+    /*
+     * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
+     */
+    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
+    
+    if(password){
+        const char *key = [password UTF8String];
+        CGPDFDocumentUnlockWithPassword(pdf, key);
+    }
+    
+    CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
+    
+    CGPDFDictionaryRef info = CGPDFPageGetDictionary(pageref);
+    CGPDFInteger rotation = 0;
+    CGPDFDictionaryGetInteger(info, "Rotate", &rotation);
+    
+    CGPDFDocumentRelease( pdf );
+    return rotation;
+}
+
 #pragma mark - Rendering
 
 -(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
