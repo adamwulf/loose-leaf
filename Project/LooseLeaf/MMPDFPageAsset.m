@@ -58,10 +58,11 @@ static UIImage* lockThumbnail;
     if(!pagePDFPath || ![[NSFileManager defaultManager] fileExistsAtPath:pagePDFPath]){
         NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
         
+        CGFloat defaultRotation = [self defaultRotation] * 180.0 / M_PI;
         CGSize pageSize = [self fullResolutionSize];
         CGRect rect = CGRectMake(0, 0, pageSize.width, pageSize.height);
         CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
-        CGPDFContextBeginPage(pdfContext, NULL);
+        CGPDFContextBeginPage(pdfContext, (CFDictionaryRef)@{ @"Rotate" : @(defaultRotation) });
 
         CGContextScaleCTM(pdfContext, 1, -1);
         CGContextTranslateCTM(pdfContext, 0, -pageSize.height);

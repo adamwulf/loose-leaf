@@ -226,11 +226,14 @@
     // default the page size to the screen dimensions in PDF ppi.
     CGSize pagePtSize = finalSize;
     CGRect finalExportBounds = CGRectFromSize(pagePtSize);
+    CGPDFDictionaryRef info = NULL;
+    CGFloat defaultRotation = 0;
     
     if([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]){
         pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
         if([pdf pageCount]){
             pagePtSize = [pdf sizeForPage:0];
+            defaultRotation = [pdf rotationForPage:0];
 //            CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
 //            
 //            NSLog(@"Screen size (pxs): %.2f %.2f", pxSize.width, pxSize.height);
@@ -275,7 +278,7 @@
             CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &exportedPageSize, NULL);
             UIGraphicsPushContext(pdfContext);
             
-            CGPDFContextBeginPage(pdfContext, NULL);
+            CGPDFContextBeginPage(pdfContext, (CFDictionaryRef)@{ @"Rotate" : @(defaultRotation) });
             
             CGContextSaveThenRestoreForBlock(pdfContext, ^{
                 // flip
