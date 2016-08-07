@@ -177,6 +177,8 @@ static UIWebView *pdfWebView;
     }
     [[[self visibleStackHolder] peekSubview] exportToPDF:^(NSURL *urlToPDF) {
         if(urlToPDF){
+            // https://openradar.appspot.com/25489061
+            // UIPDFPageRenderOperation object %p overreleased while already deallocating; break on objc_overrelease_during_dealloc_error to debug
             pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
             [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
             [[pdfWebView layer] setBorderWidth:2];
