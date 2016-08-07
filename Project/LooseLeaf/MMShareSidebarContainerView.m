@@ -141,6 +141,12 @@
         exportedImage = YES;
         [self.shareDelegate exportToImage:^(NSURL *urlToShare) {
             _imageURLToShare = urlToShare;
+            
+            // clear our rotated image cache
+            [[NSFileManager defaultManager] removeItemAtPath:[self pathForOrientation:UIImageOrientationRight givenURL:_imageURLToShare] error:nil];
+            [[NSFileManager defaultManager] removeItemAtPath:[self pathForOrientation:UIImageOrientationLeft givenURL:_imageURLToShare] error:nil];
+            [[NSFileManager defaultManager] removeItemAtPath:[self pathForOrientation:UIImageOrientationDown givenURL:_imageURLToShare] error:nil];
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self updateShareOptions];
             });
@@ -163,10 +169,60 @@
 
 -(NSURL*) urlToShare{
     if(exportAsImageButton.selected){
-        return _imageURLToShare;
+        
+        if(!_imageURLToShare){
+            return nil;
+        }
+        
+        NSString* pathOnDisk = [_imageURLToShare path];
+        
+        UIImageOrientation orientation = UIImageOrientationUp;
+        
+        if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeLeft){
+            orientation = UIImageOrientationRight;
+        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeRight){
+            orientation = UIImageOrientationLeft;
+        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationMaskPortraitUpsideDown){
+            orientation = UIImageOrientationDown;
+        }
+        
+#ifdef DEBUG
+        orientation = UIImageOrientationRight;
+#endif
+        
+        UIImage* imageToRotate = [UIImage imageWithContentsOfFile:pathOnDisk];
+        
+        if(!(orientation == UIImageOrientationUp || orientation == UIImageOrientationUpMirrored)){
+            
+            pathOnDisk = [self pathForOrientation:orientation givenURL:_imageURLToShare];
+
+            if(![[NSFileManager defaultManager] fileExistsAtPath:pathOnDisk]){
+                // export to disk for this orientation if we don't already have it.
+                // rotate it to match the ipad's current orientation
+                UIImage* rotatedImage = [UIImage imageWithCGImage:[imageToRotate CGImage] scale:imageToRotate.scale orientation:orientation];
+                
+                CGSize imgsize = rotatedImage.size;
+                UIGraphicsBeginImageContext(imgsize);
+                [rotatedImage drawInRect:CGRectMake(0.0, 0.0, imgsize.width, imgsize.height)];
+                rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                
+                
+                [UIImagePNGRepresentation(rotatedImage) writeToFile:pathOnDisk atomically:YES];
+                [UIImagePNGRepresentation(rotatedImage) writeToFile:@"/Users/adamwulf/Desktop/foo2.png" atomically:YES];
+            }
+        }
+        
+        return [NSURL fileURLWithPath:pathOnDisk];
     }else{
         return _pdfURLToShare;
     }
+}
+
+-(NSString*) pathForOrientation:(UIImageOrientation)orientation givenURL:(NSURL*)url{
+    NSString* fileNameForOrientation = [NSString stringWithFormat:@"%@%ld.png", [url lastPathComponent], (long)orientation];
+    return [NSTemporaryDirectory() stringByAppendingPathComponent:fileNameForOrientation];
+
 }
 
 -(void) startWatchingExportTutorials{
