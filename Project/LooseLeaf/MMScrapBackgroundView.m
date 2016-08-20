@@ -144,7 +144,7 @@ static int totalBackgroundBytes;
     // we need to swap the image out for another one, because the source image
     // might be deleted from disk soon. so this image needs to load
     // from its own assets
-    UIImage* replacementImage = [UIImage imageWithData:UIImagePNGRepresentation(self.backingImage)];
+    UIImage* replacementImage = [UIImage imageWithData:UIImagePNGRepresentation(self.backingImage) scale:[self.backingImage scale]];
     MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:replacementImage
                                                                            forScrapState:otherScrapState];
     backgroundView.backgroundRotation = self.backgroundRotation;

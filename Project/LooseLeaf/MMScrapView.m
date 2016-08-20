@@ -222,9 +222,9 @@
     selected = _selected;
     if(selected){
         self.layer.shadowColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1].CGColor;
-        self.layer.shadowRadius = 2.5;
+        self.layer.shadowRadius = MAX(1, 2.5 / [self scale]);
     }else{
-        self.layer.shadowRadius = 1.5;
+        self.layer.shadowRadius = MAX(1, 1.5 / [self scale]);
         self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
     }
 }
@@ -273,17 +273,15 @@
 #pragma mark - Postion, Scale, Rotation
 
 -(void) setScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{
-//    if(_scale > 2) _scale = 2;
-//    if(_scale * self.bounds.size.width < 100){
-//        _scale = 100 / self.bounds.size.width;
-//    }
-//    if(_scale * self.bounds.size.height < 100){
-//        _scale = 100 / self.bounds.size.height;
-//    }
     scale = _scale;
     rotation = _rotation;
     needsClippingPathUpdate = YES;
     self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
+    if(selected){
+        self.layer.shadowRadius = MAX(1, 2.5 / [self scale]);
+    }else{
+        self.layer.shadowRadius = MAX(1, 1.5 / [self scale]);
+    }
 }
 
 -(void) setScale:(CGFloat)_scale{
