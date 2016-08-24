@@ -9,6 +9,7 @@
 #import "MMScrapSidebarContentView.h"
 #import "MMScrapView.h"
 #import "MMScrapSidebarButton.h"
+#import "MMTrashButton.h"
 #import "Constants.h"
 
 #define kColumnSideMargin 10.0
@@ -25,6 +26,8 @@ typedef struct RowOfScrapsInSidebar{
     
     int countOfStoredRowData;
     RowOfScrapsInSidebar* rowData;
+    
+    MMTrashButton* trashButton;
 }
 
 @synthesize delegate;
@@ -112,6 +115,14 @@ typedef struct RowOfScrapsInSidebar{
         rowData[row].topY = currentYOffset;
         currentYOffset += maxHeightOfScrapsInRow;
     }
+    
+    if(!trashButton){
+        trashButton = [[MMTrashButton alloc] initWithFrame:CGRectMake(0, 0, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [trashButton addTarget:self action:@selector(tappedOnTrashButton:) forControlEvents:UIControlEventTouchUpInside];
+        [scrollView addSubview:trashButton];
+    }
+    
+    trashButton.center = CGPointMake(CGRectGetWidth(scrollView.bounds)/2, [self contentHeight] - 50);
 
     // set our content offset and make sure it's still valid
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, [self contentHeight]);
@@ -126,7 +137,7 @@ typedef struct RowOfScrapsInSidebar{
 -(CGFloat) contentHeight{
     if(rowData){
         RowOfScrapsInSidebar lastRow = rowData[countOfStoredRowData-1];
-        return lastRow.topY + lastRow.height + 4*kColumnTopMargin;
+        return lastRow.topY + lastRow.height + 4*kColumnTopMargin + 100; // add 100 for our trash button
     }
     return 0;
 }
@@ -139,6 +150,10 @@ typedef struct RowOfScrapsInSidebar{
 
 -(void) tappedOnScrapButton:(MMScrapSidebarButton*) button{
     [self.delegate didTapOnScrapFromMenu:button.scrap];
+}
+
+-(void) tappedOnTrashButton:(MMTrashButton*)button{
+    NSLog(@"trash");
 }
 
 

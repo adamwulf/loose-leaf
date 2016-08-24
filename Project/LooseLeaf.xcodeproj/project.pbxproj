@@ -456,6 +456,7 @@
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
+		C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */; };
 		C569DB441C3A50BB00ABFEC8 /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C569DB431C3A50BB00ABFEC8 /* stencil.fsh */; };
 		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
 		C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */; };
@@ -1432,6 +1433,8 @@
 		C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAllStacksManager.h; sourceTree = "<group>"; };
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
+		C56883A91D6D2B3500709FD8 /* MMTrashButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashButton.h; sourceTree = "<group>"; };
+		C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTrashButton.m; sourceTree = "<group>"; };
 		C569DB431C3A50BB00ABFEC8 /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = stencil.fsh; sourceTree = "<group>"; };
 		C569F42F1CD070C400C19BB0 /* MMVisibleStackHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVisibleStackHolderView.h; sourceTree = "<group>"; };
 		C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMVisibleStackHolderView.m; sourceTree = "<group>"; };
@@ -2784,6 +2787,7 @@
 		66A74630176B860900466AA4 /* Used */ = {
 			isa = PBXGroup;
 			children = (
+				C56883A81D6D2B1A00709FD8 /* Bezel */,
 				C570B5261CD46CEC00FAB432 /* Twitter */,
 				665F7F651AE0979200635D56 /* Tutorial Sidebar */,
 				66CE120117D3AD7C00882275 /* MMBounceButton.h */,
@@ -3557,6 +3561,15 @@
 			name = BackgroundView;
 			sourceTree = "<group>";
 		};
+		C56883A81D6D2B1A00709FD8 /* Bezel */ = {
+			isa = PBXGroup;
+			children = (
+				C56883A91D6D2B3500709FD8 /* MMTrashButton.h */,
+				C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */,
+			);
+			name = Bezel;
+			sourceTree = "<group>";
+		};
 		C569F42E1CD0709800C19BB0 /* Named Stack */ = {
 			isa = PBXGroup;
 			children = (
@@ -4193,6 +4206,7 @@
 				C5FC08401C23E01B00C88675 /* MPCATransform3DToNSDictionaryValueTransformer.m in Sources */,
 				66AC8D7D18E754FE00A65036 /* MMAbstractSidebarContentView.m in Sources */,
 				66343C571ABF9FCA00801962 /* MMRoundedButton.m in Sources */,
+				C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */,
 				666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */,
 				66A3AF8E15913B5E00F8A7A6 /* NSMutableSet+Extras.m in Sources */,
 				66BEBFFD19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m in Sources */,
