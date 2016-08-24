@@ -20,6 +20,8 @@
 
 -(void) flashScrollIndicators;
 
+-(void) viewWillHide;
+
 -(void) viewDidHide;
 
 @end

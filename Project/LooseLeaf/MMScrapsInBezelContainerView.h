@@ -43,4 +43,6 @@
 
 -(void) loadFromDisk;
 
+-(void) deleteAllScrapsFromSidebar;
+
 @end

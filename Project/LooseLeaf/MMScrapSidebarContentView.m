@@ -67,6 +67,12 @@ typedef struct RowOfScrapsInSidebar{
     }
 }
 
+-(void) viewWillHide{
+//    if(deleting all){
+        [self.delegate deleteAllScrapsFromSidebar];
+//    }
+}
+
 -(void) viewDidHide{
     for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
         if([subview isKindOfClass:[MMScrapSidebarButton class]]){

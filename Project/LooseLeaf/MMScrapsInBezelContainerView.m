@@ -17,6 +17,7 @@
 #import "MMRotationManager.h"
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
+#import "MMTrashManager.h"
 
 #define kAnimationDuration 0.3
 
@@ -422,6 +423,20 @@
     }
 }
 
+-(void) deleteAllScrapsFromSidebar{
+    NSLog(@"delete all scraps!");
+    for (MMScrapView* scrap  in [sidebarScrapState.allLoadedScraps copy]) {
+        [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
+        [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
+    }
+    for(MMScrapBubbleButton* otherBubble in self.subviews){
+        if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
+            [otherBubble removeFromSuperview];
+        }
+    }
+    [self saveScrapContainerToDisk];
+}
+
 #pragma mark - Rotation
 
 -(CGFloat) sidebarButtonRotation{
@@ -556,6 +571,7 @@ static NSString* bezelStatePath;
 
 -(void) sidebarCloseButtonWasTapped{
     if([self isVisible]){
+        [contentView viewWillHide];
         [self hide:YES onComplete:^(BOOL finished){
             [contentView viewDidHide];
         }];
@@ -565,6 +581,5 @@ static NSString* bezelStatePath;
         [self.delegate sidebarCloseButtonWasTapped];
     }
 }
-
 
 @end
