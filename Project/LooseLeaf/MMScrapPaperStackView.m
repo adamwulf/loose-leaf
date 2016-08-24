@@ -1836,15 +1836,16 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    // noop
+    [NSThread performBlockOnMainThread:^{
+        [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+            [bezelScrapContainer didRotateToIdealOrientation:orientation];
+        } completion:nil];
+    }];
 }
-
-
 
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
-//    DebugLog(@"did save page: %@", page.uuid);
     [super didSavePage:page];
     if(wantsExport == page){
         wantsExport = nil;

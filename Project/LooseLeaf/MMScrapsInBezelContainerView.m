@@ -418,6 +418,7 @@
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
         countButton.alpha = 0;
+        [contentView viewWillShow];
         [contentView prepareContentView];
         [self show:YES];
     }
@@ -459,8 +460,12 @@
             bubble.rotation = rotReading;
         }
     }
+    [contentView setRotation:rotReading];
 }
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    [contentView didRotateToIdealOrientation:orientation];
+}
 
 #pragma mark - Ignore Touches
 
