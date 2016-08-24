@@ -153,9 +153,13 @@ typedef struct RowOfScrapsInSidebar{
 }
 
 -(void) tappedOnTrashButton:(MMTrashButton*)button{
-    NSLog(@"trash");
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Delete All Scraps" message:@"Do you want to delete all scraps from the sidebar?" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        NSLog(@"trash");
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alert animated:YES completion:nil];
 }
-
 
 #pragma mark - UIScrollViewDelegate
 
@@ -175,11 +179,6 @@ typedef struct RowOfScrapsInSidebar{
     }
     return probableRow < 0 ? 0 : probableRow;
 }
-
-
-
-
-
 
 - (void)scrollViewDidScroll:(UIScrollView *)_scrollView{
     CheckMainThread;
