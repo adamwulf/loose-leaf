@@ -103,15 +103,15 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    CheckMainThread;
+    
     [super didRotateToIdealOrientation:orientation];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:.3 animations:^{
-            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
-            listViewTutorialButton.rotation = [self sidebarButtonRotation];
-            listViewTutorialButton.transform = rotationTransform;
-        }];
-    });
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
+        listViewTutorialButton.rotation = [self sidebarButtonRotation];
+        listViewTutorialButton.transform = rotationTransform;
+    }];
 }
 
 #pragma mark - List View Tutorial

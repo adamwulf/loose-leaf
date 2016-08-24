@@ -1836,11 +1836,9 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    [NSThread performBlockOnMainThread:^{
-        [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-            [bezelScrapContainer didRotateToIdealOrientation:orientation];
-        } completion:nil];
-    }];
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [bezelScrapContainer didRotateToIdealOrientation:orientation];
+    } completion:nil];
 }
 
 #pragma mark = Saving and Editing

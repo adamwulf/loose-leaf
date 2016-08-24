@@ -357,6 +357,7 @@
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+    CheckMainThread;
     [activeOptionsView updateInterfaceTo:orientation];
     [UIView animateWithDuration:.3 animations:^{
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);

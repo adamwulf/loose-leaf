@@ -501,12 +501,14 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient{
-    @autoreleasepool {
-        [sharePageSidebar updateInterfaceTo:toOrient];
-        [importImageSidebar updateInterfaceTo:toOrient];
-    }
-    [currentStackView didRotateToIdealOrientation:toOrient];
-    [tutorialView didRotateToIdealOrientation:toOrient];
+    [NSThread performBlockOnMainThread:^{
+        @autoreleasepool {
+            [sharePageSidebar updateInterfaceTo:toOrient];
+            [importImageSidebar updateInterfaceTo:toOrient];
+            [currentStackView didRotateToIdealOrientation:toOrient];
+            [tutorialView didRotateToIdealOrientation:toOrient];
+        }
+    }];
 }
 
 -(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{

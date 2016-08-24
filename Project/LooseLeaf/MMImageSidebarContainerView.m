@@ -22,7 +22,7 @@
 #import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
 #import "UIImage+MMColor.h"
-#import "UIView+Debug.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
@@ -315,6 +315,8 @@
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated{
+    CheckMainThread;
+    
     if(![self isVisible]) return;
     if(!cameraListContentView.hidden){
         [cameraListContentView updatePhotoRotation:animated];

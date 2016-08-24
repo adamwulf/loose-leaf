@@ -14,6 +14,8 @@
 #import "UIView+Animations.h"
 #import "UIImage+MMColor.h"
 #import "MMRotationManager.h"
+#import "MMAppDelegate.h"
+#import "MMPresentationWindow.h"
 
 #define kColumnSideMargin 10.0
 #define kColumnTopMargin 10.0
@@ -236,7 +238,8 @@ typedef struct RowOfScrapsInSidebar{
         scrollView.alpha = 0;
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alert animated:YES completion:nil];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [[presentationWindow rootViewController] presentViewController:alert animated:YES completion:nil];
 }
 
 -(void) undoDeleteAllScraps:(UIButton*)button{
