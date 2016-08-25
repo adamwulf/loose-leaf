@@ -397,10 +397,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     return;
                 }
                 [lock lock];
-                [JotViewStateProxy shouldPrintHasEdits:YES];
-//                DebugLog(@"(%@) checking edits", uuid);
-//                DebugLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
-                [JotViewStateProxy shouldPrintHasEdits:NO];
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     __block BOOL doneSavingBlockResult = YES;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
