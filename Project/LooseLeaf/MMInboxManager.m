@@ -111,7 +111,7 @@ static dispatch_queue_t fileSystemQueue;
         }
     }];
     [contents removeObject:inboxItemToRemove];
-    NSLog(@"removing inbox item: %@ contents now has %d items", inboxItemToRemove, (int) [contents count]);
+    DebugLog(@"removing inbox item: %@ contents now has %d items", inboxItemToRemove, (int) [contents count]);
     dispatch_async([MMInboxManager fileSystemQueue], ^{
         @autoreleasepool {
             //Clean up the inbox once the file has been processed

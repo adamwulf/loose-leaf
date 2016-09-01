@@ -73,7 +73,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
                                                                                 options:NSCaseInsensitiveSearch
                                                                                   range:NSMakeRange(0, [relativeToDocuments length])];
         NSString* pdfHash = [relativeToDocuments MD5Hash];
-//        NSLog(@"generating path: %@ to %@", relativeToDocuments, pdfHash);
+
         cachedAssetsPath = [[MMInboxItem cacheDirectory] stringByAppendingPathComponent:pdfHash];
         [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];
     }
@@ -100,7 +100,7 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
             if(saveToCache){
                 BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
                 if(!success){
-                    NSLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
+                    DebugLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
                 }
             }
             if(cachedImagePath){
@@ -188,12 +188,12 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
         [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
         
         if(errorCache){
-            NSLog(@"delete PDF cache erorr: %@", errorCache);
+            DebugLog(@"delete PDF cache erorr: %@", errorCache);
         }
     });
 
     if(errorURL){
-        NSLog(@"delete InboxItem erorr: %@", errorURL);
+        DebugLog(@"delete InboxItem erorr: %@", errorURL);
         return YES;
     }
     return NO;

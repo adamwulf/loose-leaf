@@ -513,29 +513,12 @@
 #pragma mark - Saving
 
 -(void) saveScrapToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
-//    DebugLog(@"asking scrap %@ to save", scrapState.uuid);
     if(scrapState){
         [scrapState saveScrapStateToDisk:doneSavingBlock];
     }else{
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"**********************************");
-        NSLog(@"**********************************");
-        NSLog(@"********************************** HANG!!!!!!!");
-        NSLog(@"**********************************");
-        NSLog(@"**********************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
         @throw [NSException exceptionWithName:@"ScrapSaveException" reason:@"saving scrap without a state" userInfo:nil];
-        //
-        // i think the right answer here is to just call the doneSavingBlock()
+        // i think the right answer here is to just call the doneSavingBlock(NO)
         // but i'm having trouble reproducing this code path.
-//        doneSavingBlock(NO);
     }
 }
 

@@ -105,7 +105,7 @@ static MMPalmGestureRecognizer* _instance = nil;
     if([palmTouches count]){
         [[self panDelegate] ownershipOfTouches:palmTouches isGesture:self];
         _hasSeenPalmDuringTouchSession = YES;
-        NSLog(@"**** %ld/%ld Palm Touches", (unsigned long)[palmTouches count], (unsigned long)[liveTouches count]);
+        DebugLog(@"**** %ld/%ld Palm Touches", (unsigned long)[palmTouches count], (unsigned long)[liveTouches count]);
     }
 }
 
@@ -150,7 +150,7 @@ static MMPalmGestureRecognizer* _instance = nil;
     if([palmTouches count]){
         [[self panDelegate] ownershipOfTouches:palmTouches isGesture:self];
         _hasSeenPalmDuringTouchSession = YES;
-        NSLog(@"**** %ld/%ld Palm Touches", (unsigned long)[palmTouches count], (unsigned long)[liveTouches count]);
+        DebugLog(@"**** %ld/%ld Palm Touches", (unsigned long)[palmTouches count], (unsigned long)[liveTouches count]);
     }
 }
 

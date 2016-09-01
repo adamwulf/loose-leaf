@@ -68,9 +68,6 @@
 #pragma mark - Saving and Loading
 
 -(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
-
-    NSLog(@"saving page");
-
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     __block BOOL hadEditsToSave;
@@ -101,8 +98,6 @@
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
-            
-            NSLog(@"done saving page");
 
             if(onComplete) onComplete(hadEditsToSave);
         }

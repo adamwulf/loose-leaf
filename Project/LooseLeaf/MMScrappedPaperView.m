@@ -1101,7 +1101,6 @@
     dispatch_semaphore_t sema2 = dispatch_semaphore_create(0);
     
     if(!sema1 || !sema2){
-        NSLog(@"what");
         @throw [NSException exceptionWithName:@"SemaphoreException" reason:@"could not allocate semaphore" userInfo:nil];
     }
 

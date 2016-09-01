@@ -58,8 +58,6 @@
         img = [[UIImage alloc] initWithCGImage:img.CGImage scale:img.scale orientation:([self isVert:img] ? UIImageOrientationLeft : UIImageOrientationUp)];
     }
     
-    NSLog(@"background: %@", self.pagesPath);
-
     if(!paperBackgroundView){
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
@@ -120,7 +118,6 @@
             if(img){
                 [[NSThread mainThread] performBlock:^{
                     if(wantsBackgroundTextureLoaded){
-                        NSLog(@"image loaded");
                         [self setPageBackgroundTexture:img andSaveToDisk:NO];
                         isLoadingBackgroundTexture = NO;
                     };
@@ -180,9 +177,6 @@
 
 -(void) newlyCutScrapFromPaperView:(MMScrapView*)addedScrap{
     if(self.pageBackgroundTexture){
-        
-        NSLog(@"scrap on page: %@", self.pagesPath);
-        
         MMGenericBackgroundView* pageBackground = [[MMGenericBackgroundView alloc] initWithImage:self.pageBackgroundTexture andDelegate:self];
         pageBackground.bounds = self.bounds;
         [pageBackground aspectFillBackgroundImageIntoView];

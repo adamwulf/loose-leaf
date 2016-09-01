@@ -143,7 +143,7 @@ static int count = 0;
             }
         }
     }else{
-        NSLog(@"nil path for image cache");
+        DebugLog(@"nil path for image cache");
     }
 }
 

@@ -262,14 +262,12 @@
 
 -(void) willResignActive{
     DebugLog(@"telling stack to cancel all gestures");
-    NSLog(@"willResignActive");
     [currentStackView willResignActive];
     [currentStackView cancelAllGestures];
     [[currentStackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
 -(void) didEnterBackground{
-    NSLog(@"didEnterBackground");
     [currentStackView didEnterBackground];
 }
 
@@ -338,7 +336,7 @@
         backdrop.alpha = 1;
         stackPropertiesView.alpha = 1;
     }];
-    NSLog(@"show stack id: %@", stackUUID);
+    DebugLog(@"showing stack id: %@", stackUUID);
 }
 
 -(void) addStack{
@@ -628,7 +626,7 @@
 #pragma mark - MMTutorialViewDelegate
 
 -(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    NSLog(@"user is watching %d", (int) stepNum);
+    DebugLog(@"user is watching %d", (int) stepNum);
 }
 
 -(void) didFinishTutorial{

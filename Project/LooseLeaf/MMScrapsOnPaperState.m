@@ -413,7 +413,7 @@
     CGFloat duration = [NSThread timeBlock:^{
         newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
     }];
-    NSLog(@"total = %f", duration);
+    DebugLog(@"time to build scrap = %f", duration);
     // timing end
 
 

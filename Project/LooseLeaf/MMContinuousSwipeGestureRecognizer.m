@@ -59,18 +59,15 @@
     CGPoint currLoc = [currTouch locationInView:self.view];
     CGPoint diff = CGPointMake(currLoc.x - startingLocation.x, currLoc.y - startingLocation.y);
     CGFloat theta = atan2f(diff.x, diff.y) * 180 / M_PI;
-//    NSLog(@"loc: %f %f    theta: %f", diff.x, diff.y, theta);
     
     if(self.state == UIGestureRecognizerStatePossible){
         if(diff.x < -distNeeded || diff.x > distNeeded){
             if((theta > -90-angleBuffer && theta < -90+angleBuffer) || (theta < 90+angleBuffer && theta > 90-angleBuffer)){
-                NSLog(@"MMContinuousSwipeGestureRecognizer began!");
                 self.state = UIGestureRecognizerStateBegan;
             }
         }
         if(DistanceBetweenTwoPoints(startingLocation, currLoc) > 2*distNeeded){
             if(self.state == UIGestureRecognizerStatePossible){
-                NSLog(@"MMContinuousSwipeGestureRecognizer failed!");
                 self.state = UIGestureRecognizerStateFailed;
             }
         }
@@ -82,7 +79,6 @@
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     if([touches containsObject:currTouch] && self.state == UIGestureRecognizerStateChanged){
-        NSLog(@"MMContinuousSwipeGestureRecognizer ended!");
         self.state = UIGestureRecognizerStateEnded;
         currTouch = nil;
     }else{
@@ -92,7 +88,6 @@
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     if([touches containsObject:currTouch] && self.state == UIGestureRecognizerStateChanged){
-        NSLog(@"MMContinuousSwipeGestureRecognizer cancelled!");
         self.state = UIGestureRecognizerStateCancelled;
         currTouch = nil;
     }else{

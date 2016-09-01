@@ -67,19 +67,19 @@
 }
 
 -(void) didLoadScrapInContainer:(MMScrapView*)scrap{
-    
+    // noop
 }
 
 -(void) didLoadScrapOutOfContainer:(MMScrapView*)scrap{
-    
+    // noop
 }
 
 -(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState{
-    NSLog(@"loaded all %ld scraps for: %@", (unsigned long)[[scrapState allLoadedScraps] count], [pagesPath lastPathComponent]);
+    // noop
 }
 
 -(void) didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState{
-    
+    // noop
 }
 
 

@@ -43,15 +43,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"Documents path: %@", [NSFileManager documentsPath]);
-    
+    DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
     
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
 
     isActive = YES;
     
-    DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
@@ -116,7 +114,7 @@
 // Handle deeplinking back to app from Pinterest
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    NSLog(@"Opened by handling url: %@", [url absoluteString]);
+    DebugLog(@"Opened by handling url: %@", [url absoluteString]);
     
     return YES;
 }
@@ -264,7 +262,7 @@
 -(void) logActiveAppDuration{
     if(durationTimer){
         NSNumber* amount = @((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0);
-        NSLog(@"duration tick: %@", amount);
+        DebugLog(@"duration tick: %@", amount);
         // sanity check, only log time if our timer is running
         [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:amount];
         sessionStartStamp = CFAbsoluteTimeGetCurrent();

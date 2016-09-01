@@ -292,7 +292,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                         }
                         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self]];
                     }else{
-                        NSLog(@"target was unloaded afterall %@", self.uuid);
+                        // target was unloaded afterall
                     }
                 }
             }

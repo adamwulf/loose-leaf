@@ -137,7 +137,7 @@
         UIGraphicsBeginImageContextWithOptions(sizeOfPage, NO, 0);
         CGContextRef cgContext = UIGraphicsGetCurrentContext();
         if(!cgContext){
-            NSLog(@"no context");
+            @throw [NSException exceptionWithName:@"MemoryException" reason:@"Could not create an image context" userInfo:nil];
         }
         [[UIColor whiteColor] setFill];
         CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
@@ -151,38 +151,33 @@
 -(void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size
 {
     @autoreleasepool {
-        @try {
-            CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-            
-            if(password){
-                const char *key = [password UTF8String];
-                CGPDFDocumentUnlockWithPassword(pdf, key);
-            }
-            
-            CGContextSaveGState(ctx);
-            /*
-             * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
-             */
-            CGContextGetCTM( ctx );
-            CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
-            
-            CGContextScaleCTM( ctx, 1, -1 );
-            CGContextTranslateCTM( ctx, 0, -size.height );
-            CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
-            
-            CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
-            CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
-            CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
-            
-            CGContextDrawPDFPage( ctx, pageref );
-            
-            CGContextRestoreGState(ctx);
-            
-            CGPDFDocumentRelease( pdf );
+        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
+        
+        if(password){
+            const char *key = [password UTF8String];
+            CGPDFDocumentUnlockWithPassword(pdf, key);
         }
-        @catch (NSException *exception) {
-            NSLog(@"error drawing PDF: %@", exception);
-        }
+        
+        CGContextSaveGState(ctx);
+        /*
+         * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
+         */
+        CGContextGetCTM( ctx );
+        CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
+        
+        CGContextScaleCTM( ctx, 1, -1 );
+        CGContextTranslateCTM( ctx, 0, -size.height );
+        CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
+        
+        CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
+        CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
+        CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
+        
+        CGContextDrawPDFPage( ctx, pageref );
+        
+        CGContextRestoreGState(ctx);
+        
+        CGPDFDocumentRelease( pdf );
     }
 }
 

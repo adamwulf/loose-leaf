@@ -421,9 +421,7 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
-    [page saveToDisk:^(BOOL didSaveEdits) {
-        NSLog(@"page saved ok: %d", didSaveEdits);
-    }];
+    [page saveToDisk:nil];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
     
@@ -1471,7 +1469,6 @@
         return NO;
     }
     if([[MMPalmGestureRecognizer sharedInstance] hasSeenPalmDuringTouchSession]){
-        NSLog(@"Not Allowed To Pan");
         return NO;
     }
     
@@ -2015,7 +2012,7 @@
     // 1. our top page has pending edits to save
     // 2. our top page is still loading in content
     // 3. there are ny OpenGL objects sitting in the trash
-    NSLog(@" - checking if page is ready to background: saving? %d  loading? %d  trash? %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+    DebugLog(@" - checking if page is ready to background: saving? %d  loading? %d  trash? %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash]);
     
     // we need to delay resigning active if our top page
     // is loading or saving any OpenGL content. Once we
@@ -2047,15 +2044,15 @@
                 // thread signals us with a new block to run
                 [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
-            NSLog(@" - exit status: %d %d %d %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash], ![[MMPageCacheManager sharedInstance] isEditablePageStable]);
+            DebugLog(@" - exit status: %d %d %d %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash], ![[MMPageCacheManager sharedInstance] isEditablePageStable]);
         }
-        NSLog(@" - completed save in %.2fs", [stopwatch read]);
+        DebugLog(@" - completed save in %.2fs", [stopwatch read]);
 
         BOOL topIsLoadedAndEditable = [[MMPageCacheManager sharedInstance] isEditablePageStable];
-        NSLog(@" - top is editable and loaded? %d", topIsLoadedAndEditable);
+        DebugLog(@" - top is editable and loaded? %d", topIsLoadedAndEditable);
 
     }
-    NSLog(@"stack: willResignActive end");
+    DebugLog(@"stack: willResignActive end");
 }
 
 -(void) didEnterBackground{

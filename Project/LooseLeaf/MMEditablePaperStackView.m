@@ -668,7 +668,7 @@ static UIWebView *pdfWebView;
     if(rulerView.rulerIsVisible){
         [rulerView liftRuler];
         numberOfRulerGesturesWithoutStroke++;
-        NSLog(@"numberOfRulerGesturesWithoutStroke: %d", (int)numberOfRulerGesturesWithoutStroke);
+
         if(numberOfRulerGesturesWithoutStroke > 2){
             [self bounceSidebarButton:handButton];
         }

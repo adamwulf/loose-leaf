@@ -425,7 +425,7 @@
 }
 
 -(void) deleteAllScrapsFromSidebar{
-    NSLog(@"delete all scraps!");
+    DebugLog(@"delete all scraps!");
     for (MMScrapView* scrap  in [sidebarScrapState.allLoadedScraps copy]) {
         [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
         [sidebarScrapState scrapIsRemovedFromSidebar:scrap];

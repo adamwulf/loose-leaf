@@ -392,15 +392,11 @@
 -(void) didStartToWriteWithStylus{
     fromRightBezelGesture.enabled = NO;
     fromLeftBezelGesture.enabled = NO;
-
-    NSLog(@"didStartToWriteWithStylus");
 }
 
 -(void) didEndWritingWithStylus{
     fromRightBezelGesture.enabled = YES;
     fromLeftBezelGesture.enabled = YES;
-    
-    NSLog(@"didEndWritingWithStylus");
 }
 
 /**
