@@ -126,6 +126,9 @@
         CGFloat ratio = maxDim / maxCurrDim;
         sizeOfPage.width *= ratio;
         sizeOfPage.height *= ratio;
+        
+        sizeOfPage.height = round(sizeOfPage.height);
+        sizeOfPage.width = round(sizeOfPage.width);
 
         if(CGSizeEqualToSize(sizeOfPage, CGSizeZero)){
             sizeOfPage = [UIScreen mainScreen].bounds.size;

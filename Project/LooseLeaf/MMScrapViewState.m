@@ -181,6 +181,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         drawableBounds = bezierPath.bounds;
         drawableBounds = CGRectInset(drawableBounds, -kScrapShadowBufferSize, -kScrapShadowBufferSize);
         drawableBounds.origin = CGPointMake(0, 0);
+        drawableBounds.size.width = round(drawableBounds.size.width);
+        drawableBounds.size.height = round(drawableBounds.size.height);
         
         // this content view will be used by the MMScrapView to show
         // the scrap's contents. we'll use this to swap between

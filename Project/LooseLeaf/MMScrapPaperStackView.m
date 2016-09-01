@@ -545,7 +545,6 @@
     
     CGRect scrapRect = CGRectZero;
     CGSize buttonSize = [bufferedImage visibleImageSize];
-    CGSize fullScaleSize = asset.fullResolutionSize;
 
     if(asPage){
         CGSize pageSize = hiddenStackHolder.bounds.size;
@@ -553,6 +552,13 @@
         return;
     }
 
+    // max image size in any direction
+    CGFloat maxDim = [asset preferredImportMaxDim];
+    
+    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
+    
+    CGSize fullScaleSize = scrapBacking.size;
+    
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
     CGFloat ratio = buttonSize.width / fullScaleSize.width;
@@ -575,20 +581,7 @@
     // bufferedImage's top left corner
     
     
-    // max image size in any direction is 300pts
-    CGFloat maxDim = [asset preferredImportMaxDim];
-    
-    if(fullScaleSize.width >= fullScaleSize.height && fullScaleSize.width > maxDim){
-        fullScaleSize.height = fullScaleSize.height / fullScaleSize.width * maxDim;
-        fullScaleSize.width = maxDim;
-    }else if(fullScaleSize.height >= fullScaleSize.width && fullScaleSize.height > maxDim){
-        fullScaleSize.width = fullScaleSize.width / fullScaleSize.height * maxDim;
-        fullScaleSize.height = maxDim;
-    }
-    
     CGFloat startingScale = scrapRect.size.width / fullScaleSize.width;
-    
-    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     
@@ -626,22 +619,29 @@
         // will reset after the sidebar is done hiding
         bufferedImage.alpha = 0;
         
+        CGSize targetSizeAfterBounce = fullScaleSize;
+        CGFloat targetScale = 1.0;
+        if(MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height) > 800){
+            targetSizeAfterBounce = CGSizeFit(targetSizeAfterBounce, CGSizeMake(800, 800)).size;
+        }
+        targetScale = targetSizeAfterBounce.width / fullScaleSize.width;
+        
         // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(fullScaleSize.width, fullScaleSize.height);
+        CGFloat bounceScale = 20 / MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height);
         
         [UIView animateWithDuration:.2
                               delay:.1
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              scrap.center = [visibleStackHolder peekSubview].center;
-                             [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
+                             [scrap setScale:(targetScale+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
                          }
                          completion:^(BOOL finished){
                              [UIView animateWithDuration:.1
                                                    delay:0
                                                  options:UIViewAnimationOptionCurveEaseIn
                                               animations:^{
-                                                  [scrap setScale:1];
+                                                  [scrap setScale:targetScale];
                                               }
                                               completion:^(BOOL finished){
                                                   bufferedImage.alpha = 1;
