@@ -551,11 +551,11 @@
     }
 
     // max image size in any direction
-    CGFloat maxDim = [asset preferredImportMaxDim];
+    CGFloat maxDim = [asset preferredImportMaxDim] * [[UIScreen mainScreen] scale];
     
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
     
-    CGSize fullScaleSize = scrapBacking.size;
+    CGSize fullScaleSize = CGSizeScale(scrapBacking.size, 1/[[UIScreen mainScreen] scale]);
     
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
