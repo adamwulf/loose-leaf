@@ -38,6 +38,7 @@
 		6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6612C88F1964CC76003A9575 /* MMUndoRedoStrokeItem.m */; };
 		6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */ = {isa = PBXBuildFile; fileRef = 6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */; };
 		66150769178333D500B181F3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 66150768178333D500B181F3 /* libz.dylib */; };
+		6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6616CCD018B6AE9700CAD0F3 /* JotUI.framework */; };
 		661708E61981B434006A73EF /* FXBlurView.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708E51981B434006A73EF /* FXBlurView.m */; };
 		661708EE19841988006A73EF /* MMTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 661708ED19841988006A73EF /* MMTrashManager.m */; };
 		661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 661885D018F9ABD70016A333 /* MMFlipCameraButton.m */; };
@@ -453,8 +454,6 @@
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
-		C53F80A11D6FEB0E00BA9A58 /* JotUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C53F80A01D6FEB0E00BA9A58 /* JotUI.framework */; };
-		C53F80A41D6FEB6300BA9A58 /* JotUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C53F80A01D6FEB0E00BA9A58 /* JotUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
 		C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */; };
 		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
@@ -594,20 +593,6 @@
 		C5FC08721C23E01B00C88675 /* UIView+MPHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC082D1C23E01B00C88675 /* UIView+MPHelpers.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		C53F80991D6FE96900BA9A58 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C53F80A41D6FEB6300BA9A58 /* JotUI.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-user-intro.png"; sourceTree = "<group>"; };
 		660116E419ABAAFC0065C1B4 /* MMCloudKitBaseState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitBaseState.h; sourceTree = "<group>"; };
@@ -669,6 +654,7 @@
 		6614DCC419CBE04100AF5D3D /* NSIndexSet+Map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexSet+Map.h"; sourceTree = "<group>"; };
 		6614DCC519CBE04100AF5D3D /* NSIndexSet+Map.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexSet+Map.m"; sourceTree = "<group>"; };
 		66150768178333D500B181F3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		6616CCD018B6AE9700CAD0F3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-hhwdxgyoymgwhwezrbyabmvqherf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		661708E41981B434006A73EF /* FXBlurView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FXBlurView.h; sourceTree = "<group>"; };
 		661708E51981B434006A73EF /* FXBlurView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FXBlurView.m; sourceTree = "<group>"; };
 		661708EC19841988006A73EF /* MMTrashManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashManager.h; sourceTree = "<group>"; };
@@ -1237,6 +1223,7 @@
 		66BEBFFC19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitInviteCollectionViewCell.m; sourceTree = "<group>"; };
 		66BEBFFE19BE55C30032D30C /* MMInviteUserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInviteUserButton.h; sourceTree = "<group>"; };
 		66BEBFFF19BE55C30032D30C /* MMInviteUserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInviteUserButton.m; sourceTree = "<group>"; };
+		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		66C0C9CE178386B8009491B3 /* MMLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLikeButton.h; sourceTree = "<group>"; };
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
 		66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAdonitButton.h; sourceTree = "<group>"; };
@@ -1435,7 +1422,6 @@
 		C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FXBlur.m"; sourceTree = "<group>"; };
 		C53F635B1CDA87F700091EF1 /* MMRotatingBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotatingBackgroundView.h; sourceTree = "<group>"; };
 		C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingBackgroundView.m; sourceTree = "<group>"; };
-		C53F80A01D6FEB0E00BA9A58 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-cemwdkmzpxcrmoafjcounebazjsc/Build/Products/Debug-iphonesimulator/JotUI.framework"; sourceTree = "<group>"; };
 		C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAllStacksManager.h; sourceTree = "<group>"; };
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
 		C567CFF91C23D732000098B4 /* Mixpanel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mixpanel.framework; path = "../Submodules/mixpanel/build/Debug-iphoneos/Mixpanel.framework"; sourceTree = "<group>"; };
@@ -1653,12 +1639,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C53F80A11D6FEB0E00BA9A58 /* JotUI.framework in Frameworks */,
 				C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */,
 				66AB56711B0DA010005E6FB1 /* ClippingBezier.framework in Frameworks */,
 				66AB566F1B0D9F6B005E6FB1 /* PerformanceBezier.framework in Frameworks */,
 				66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */,
 				6682FEF41A8DB41700187325 /* SimpleCloudKitManager.framework in Frameworks */,
+				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */,
 				6699904F185F74F8005581D9 /* TouchShape.framework in Frameworks */,
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
@@ -2640,6 +2626,7 @@
 		6695B6E1175008530069E61F /* JotUI */ = {
 			isa = PBXGroup;
 			children = (
+				66C0C9C91783645E009491B3 /* JotUI.framework */,
 				6695B6E2175008680069E61F /* OpenGLES.framework */,
 				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
@@ -3023,6 +3010,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				C584F8361C37C55A00413840 /* Shaders */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -3040,7 +3028,6 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C53F80A01D6FEB0E00BA9A58 /* JotUI.framework */,
 				C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */,
 				C506A3BD1C23DEC800236895 /* Mixpanel.framework */,
 				C506A39B1C23DD6100236895 /* SSKeychain.framework */,
@@ -3069,6 +3056,7 @@
 				666425C118CBC40000A306C1 /* CoreMedia.framework */,
 				666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */,
 				666425BD18CBC3DD00A306C1 /* AVFoundation.framework */,
+				6616CCD018B6AE9700CAD0F3 /* JotUI.framework */,
 				66B50FCD1862B7D30032F704 /* MessageUI.framework */,
 				6699904C185F74C1005581D9 /* LittleClipper */,
 				6699904D185F74DC005581D9 /* LooseLeaf */,
@@ -3599,6 +3587,13 @@
 			name = PDFs;
 			sourceTree = "<group>";
 		};
+		C584F8361C37C55A00413840 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
 		C5860E131C14CA1000CD079B /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
@@ -3771,7 +3766,6 @@
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
-				C53F80991D6FE96900BA9A58 /* Copy Frameworks */,
 				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
 				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
 				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
