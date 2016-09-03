@@ -58,7 +58,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             @autoreleasepool {
                 UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
-                printController.printingItem = self.delegate.imageToShare;
+                printController.printingItem = [self.delegate urlToShare];
                 
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                 [presentationWindow makeKeyAndVisible];
@@ -82,14 +82,16 @@
     }
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([UIPrintInteractionController isPrintingAvailable] &&
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([UIPrintInteractionController isPrintingAvailable] &&
        [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable){
         button.greyscale = NO;
     }else{

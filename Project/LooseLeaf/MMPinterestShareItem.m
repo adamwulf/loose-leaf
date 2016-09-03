@@ -49,8 +49,8 @@
     return button;
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 -(NSString*) exportDestinationName{
@@ -76,7 +76,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         button.greyscale = YES;
     }else if (![[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"pinterest://pin/"]]){
         button.greyscale = YES;

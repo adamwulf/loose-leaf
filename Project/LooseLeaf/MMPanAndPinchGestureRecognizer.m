@@ -180,7 +180,7 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [touches enumerateObjectsUsingBlock:^(UITouch*  _Nonnull obj, BOOL * _Nonnull stop) {
         if(obj.type == UITouchTypeIndirect){
-            NSLog(@"indirect touch!");
+            DebugLog(@"indirect touch!");
         }
     }];
     [self processSubStateForNextIteration];

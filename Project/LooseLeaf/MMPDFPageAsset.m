@@ -42,6 +42,10 @@ static UIImage* lockThumbnail;
     return [pdfItem imageForPage:pageNumber forMaxDim:maxDim];
 }
 
+-(CGFloat) defaultRotation{
+    return [pdfItem rotationForPage:pageNumber] * M_PI / 180.0;
+}
+
 -(CGSize) fullResolutionSize{
     if([pdfItem isEncrypted]){
         return lockThumbnail.size;
@@ -54,10 +58,11 @@ static UIImage* lockThumbnail;
     if(!pagePDFPath || ![[NSFileManager defaultManager] fileExistsAtPath:pagePDFPath]){
         NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
         
+        CGFloat defaultRotation = [self defaultRotation] * 180.0 / M_PI;
         CGSize pageSize = [self fullResolutionSize];
         CGRect rect = CGRectMake(0, 0, pageSize.width, pageSize.height);
         CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &rect, NULL);
-        CGPDFContextBeginPage(pdfContext, NULL);
+        CGPDFContextBeginPage(pdfContext, (CFDictionaryRef)@{ @"Rotate" : @(defaultRotation) });
 
         CGContextScaleCTM(pdfContext, 1, -1);
         CGContextTranslateCTM(pdfContext, 0, -pageSize.height);
@@ -96,7 +101,7 @@ static UIImage* lockThumbnail;
     // make the lock icon
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CGRect imageBounds = [[UIScreen mainScreen] bounds];
+        CGRect imageBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
         if(imageBounds.size.width > imageBounds.size.height){
             // force portrait for lock page
             CGFloat oldW = imageBounds.size.width;

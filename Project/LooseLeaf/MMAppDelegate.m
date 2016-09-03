@@ -24,6 +24,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
 #import "MMAllStacksManager.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
@@ -40,15 +43,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLog(@"Documents path: %@", [NSFileManager documentsPath]);
-    
+    DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
     
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
 
     isActive = YES;
     
-    DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
@@ -66,16 +67,17 @@
                                                         [MMAppDelegate userID], kMPID, nil]];
     
     [[Crashlytics sharedInstance] setDelegate:self];
-    [Fabric with:@[CrashlyticsKit, TwitterKit]];
+    [[Twitter sharedInstance] startWithConsumerKey:@"your_key" consumerSecret:@"your_secret"];
+    [Fabric with:@[CrashlyticsKit, [Twitter class]]];
 
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
     
     [[MMAllStacksManager sharedInstance] upgradeIfNecessary:^{
-        presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
         [presentationWindow makeKeyAndVisible];
         
-        CGRect screenBounds = [[UIScreen mainScreen] bounds];
+        CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
         self.window = [[MMWindow alloc] initWithFrame:screenBounds];
         // Override point for customization after application launch.
         self.viewController = [[MMLooseLeafViewController alloc] init];
@@ -112,7 +114,7 @@
 // Handle deeplinking back to app from Pinterest
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    NSLog(@"Opened by handling url: %@", [url absoluteString]);
+    DebugLog(@"Opened by handling url: %@", [url absoluteString]);
     
     return YES;
 }
@@ -260,7 +262,7 @@
 -(void) logActiveAppDuration{
     if(durationTimer){
         NSNumber* amount = @((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0);
-        NSLog(@"duration tick: %@", amount);
+        DebugLog(@"duration tick: %@", amount);
         // sanity check, only log time if our timer is running
         [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:amount];
         sessionStartStamp = CFAbsoluteTimeGetCurrent();

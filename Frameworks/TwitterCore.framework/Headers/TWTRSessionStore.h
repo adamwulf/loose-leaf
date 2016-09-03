@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param refreshedSession The refreshed session
  *  @param error            Error that will be non nil if the refresh request failed
  */
-typedef void (^TWTRSessionStoreRefreshCompletion)(id __twtr_nullable refreshedSession, NSError * __twtr_nullable error);
+typedef void (^TWTRSessionStoreRefreshCompletion)(id _Nullable refreshedSession, NSError * _Nullable error);
 
 /**
  *  Protocol for session stores that can refresh expired sessions.
@@ -36,7 +36,7 @@ typedef void (^TWTRSessionStoreRefreshCompletion)(id __twtr_nullable refreshedSe
  *  @param sessionID    ID of the session wherever applicable e.g. `userID` if it's a user session.
  *  @param completion   The completion block to call when the refresh request succeeds or fails.
  */
-- (void)refreshSessionClass:(Class)sessionClass sessionID:(twtr_nullable NSString *)sessionID completion:(TWTRSessionStoreRefreshCompletion)completion;
+- (void)refreshSessionClass:(Class)sessionClass sessionID:(nullable NSString *)sessionID completion:(TWTRSessionStoreRefreshCompletion)completion;
 
 /**
  *  Determines whether the given session has expired.
@@ -68,7 +68,7 @@ typedef void (^TWTRSessionStoreRefreshCompletion)(id __twtr_nullable refreshedSe
  *  @param session The saved session
  *  @param error   Error that will be non nil if the save request fails.
  */
-typedef void (^TWTRSessionStoreSaveCompletion)(id<TWTRAuthSession> __twtr_nullable session, NSError * __twtr_nullable error);
+typedef void (^TWTRSessionStoreSaveCompletion)(id<TWTRAuthSession> _Nullable session, NSError * _Nullable error);
 
 /**
  *  Completion block called when fetching all stored user sessions completes or fails.
@@ -82,7 +82,7 @@ typedef void (^TWTRSessionStoreBatchFetchCompletion)(NSArray *sessions);
  *
  *  @param session The deleted session or nil if none was found for the user.
  */
-typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> __twtr_nullable session);
+typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> _Nullable session);
 
 /**
  *  Protocol for session store that manages user sessions.
@@ -111,7 +111,7 @@ typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> __twtr_null
  *
  *  @param userID   The user ID to fetch session for.
  */
-- (twtr_nullable id<TWTRAuthSession>)sessionForUserID:(NSString *)userID;
+- (nullable id<TWTRAuthSession>)sessionForUserID:(NSString *)userID;
 
 /**
  *  Retrieve all logged in user sessions in ascending order of last saved date
@@ -125,7 +125,7 @@ typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> __twtr_null
  *
  *  @return The last logged in user session.
  */
-- (twtr_nullable id<TWTRAuthSession>)session;
+- (nullable id<TWTRAuthSession>)session;
 
 /**
  *  Deletes the local Twitter user session from this app. This will not remove the system Twitter account nor make a network request to invalidate the session.
@@ -144,7 +144,7 @@ typedef void (^TWTRSessionStoreDeleteCompletion)(id<TWTRAuthSession> __twtr_null
  *  @param guestSession The retrieved guest session
  *  @param error        Error that will be non nil if the save request fails.
  */
-typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession * __twtr_nullable guestSession, NSError * __twtr_nullable error);
+typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession * _Nullable guestSession, NSError * _Nullable error);
 
 /**
  *  Protocol for session stores that can manage guest sessions.
@@ -188,7 +188,7 @@ typedef void (^TWTRSessionGuestLogInCompletion)(TWTRGuestSession * __twtr_nullab
  */
 @interface TWTRSessionStore : NSObject <TWTRSessionStore>
 
-- (instancetype)init __unavailable;
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  * Provides a mechanism for reloading the session store. This method will force the session store

@@ -40,6 +40,7 @@
 #import "MMAppDelegate.h"
 #import "MMPDFPageAsset.h"
 #import "MMImageInboxItem.h"
+#import "MMPalmGestureRecognizer.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -70,8 +71,6 @@
     // to/from the sidebar
     BOOL isAnimatingScrapToOrFromSidebar;
     
-    UIImageView* testImageView;
-
     MMDeletePageSidebarController* deleteScrapSidebar;
 }
 
@@ -422,9 +421,7 @@
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
-    [page saveToDisk:^(BOOL didSaveEdits) {
-        NSLog(@"page saved ok: %d", didSaveEdits);
-    }];
+    [page saveToDisk:nil];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
     
@@ -546,7 +543,6 @@
     
     CGRect scrapRect = CGRectZero;
     CGSize buttonSize = [bufferedImage visibleImageSize];
-    CGSize fullScaleSize = asset.fullResolutionSize;
 
     if(asPage){
         CGSize pageSize = hiddenStackHolder.bounds.size;
@@ -554,6 +550,13 @@
         return;
     }
 
+    // max image size in any direction
+    CGFloat maxDim = [asset preferredImportMaxDim] * [[UIScreen mainScreen] scale];
+    
+    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
+    
+    CGSize fullScaleSize = CGSizeScale(scrapBacking.size, 1/[[UIScreen mainScreen] scale]);
+    
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
     CGFloat ratio = buttonSize.width / fullScaleSize.width;
@@ -576,26 +579,12 @@
     // bufferedImage's top left corner
     
     
-    // max image size in any direction is 300pts
-    CGFloat maxDim = [asset preferredImportMaxDim];
-    
-    if(fullScaleSize.width >= fullScaleSize.height && fullScaleSize.width > maxDim){
-        fullScaleSize.height = fullScaleSize.height / fullScaleSize.width * maxDim;
-        fullScaleSize.width = maxDim;
-    }else if(fullScaleSize.height >= fullScaleSize.width && fullScaleSize.height > maxDim){
-        fullScaleSize.width = fullScaleSize.width / fullScaleSize.height * maxDim;
-        fullScaleSize.height = maxDim;
-    }
-    
     CGFloat startingScale = scrapRect.size.width / fullScaleSize.width;
-    
-    UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
     
     MMUndoablePaperView* topPage = [visibleStackHolder peekSubview];
     
-    
     void(^blockToAddScrapToPage)() = ^{
-        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:0 andScale:startingScale];
+        MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:rotation andScale:startingScale];
         [scrapContainer addSubview:scrap];
         
         CGSize fullScaleScrapSize = scrapRect.size;
@@ -628,22 +617,29 @@
         // will reset after the sidebar is done hiding
         bufferedImage.alpha = 0;
         
+        CGSize targetSizeAfterBounce = fullScaleSize;
+        CGFloat targetScale = 1.0;
+        if(MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height) > 800){
+            targetSizeAfterBounce = CGSizeFit(targetSizeAfterBounce, CGSizeMake(800, 800)).size;
+        }
+        targetScale = targetSizeAfterBounce.width / fullScaleSize.width;
+        
         // bounce by 20px (10 on each side)
-        CGFloat bounceScale = 20 / MAX(fullScaleSize.width, fullScaleSize.height);
+        CGFloat bounceScale = 20 / MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height);
         
         [UIView animateWithDuration:.2
                               delay:.1
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              scrap.center = [visibleStackHolder peekSubview].center;
-                             [scrap setScale:(1+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
+                             [scrap setScale:(targetScale+bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
                          }
                          completion:^(BOOL finished){
                              [UIView animateWithDuration:.1
                                                    delay:0
                                                  options:UIViewAnimationOptionCurveEaseIn
                                               animations:^{
-                                                  [scrap setScale:1];
+                                                  [scrap setScale:targetScale];
                                               }
                                               completion:^(BOOL finished){
                                                   bufferedImage.alpha = 1;
@@ -1194,7 +1190,8 @@
             indexNum = (int)[(arrayOfArrayOfViews[arrayNum]) count] - 1;
         }
         // fetch the most visible page
-        pageToDropScrap = [(arrayOfArrayOfViews[arrayNum]) objectAtIndex:indexNum];
+        NSArray* arrayOfViews = arrayOfArrayOfViews[arrayNum];
+        pageToDropScrap = (indexNum >= 0 && indexNum < [arrayOfViews count]) ? [arrayOfViews objectAtIndex:indexNum] : nil;
         if(!pageToDropScrap){
             // if we can't find a page, we're done
             break;
@@ -1471,7 +1468,15 @@
         // bezeling
         return NO;
     }
+    if([[MMPalmGestureRecognizer sharedInstance] hasSeenPalmDuringTouchSession]){
+        return NO;
+    }
+    
     return handButton.selected;
+}
+
+-(BOOL) isAllowedToBezel{
+    return [super isAllowedToBezel] && ![[MMPalmGestureRecognizer sharedInstance] hasSeenPalmDuringTouchSession];
 }
 
 -(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
@@ -1828,15 +1833,14 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    // noop
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+        [bezelScrapContainer didRotateToIdealOrientation:orientation];
+    } completion:nil];
 }
-
-
 
 #pragma mark = Saving and Editing
 
 -(void) didSavePage:(MMPaperView*)page{
-//    DebugLog(@"did save page: %@", page.uuid);
     [super didSavePage:page];
     if(wantsExport == page){
         wantsExport = nil;
@@ -1934,71 +1938,33 @@
     return [visibleStackHolder peekSubview];
 }
 
--(UIImage*) imageForBlur{
-    testImageView.image = [visibleStackHolder peekSubview].scrappedImgViewImage;
-    return [visibleStackHolder peekSubview].scrappedImgViewImage;
+#pragma mark - MMShareSidebarDelegate
+
+-(void) exportToImage:(void (^)(NSURL *))completionBlock{
+    [[visibleStackHolder peekSubview] exportToImage:completionBlock];
 }
 
-#pragma mark - MMShareItemDelegate
-
--(UIImage*) imageToShare{
-    UIImage* retImage = [visibleStackHolder peekSubview].scrappedImgViewImage;
-    if(!retImage){
-        @autoreleasepool {
-            CGSize thumbSize = [[visibleStackHolder peekSubview] thumbnailSize];
-            UIGraphicsBeginImageContextWithOptions(thumbSize, YES, 0.0);
-            [[UIColor whiteColor] setFill];
-            CGContextFillRect(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, thumbSize.width, thumbSize.height));
-            
-            retImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-    }
-
-    UIImage *rotatedImage;
-    @autoreleasepool {
-        UIImageOrientation orientation = UIImageOrientationUp;
-        
-        if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeLeft){
-            orientation = UIImageOrientationRight;
-        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationLandscapeRight){
-            orientation = UIImageOrientationLeft;
-        }else if([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationMaskPortraitUpsideDown){
-            orientation = UIImageOrientationDown;
-        }
-        
-        // rotate it to match the ipad's current orientation
-        rotatedImage = [UIImage imageWithCGImage:[retImage CGImage] scale:retImage.scale orientation:orientation];
-        
-        if(!(rotatedImage.imageOrientation == UIImageOrientationUp || rotatedImage.imageOrientation == UIImageOrientationUpMirrored)){
-            CGSize imgsize = rotatedImage.size;
-            UIGraphicsBeginImageContext(imgsize);
-            [rotatedImage drawInRect:CGRectMake(0.0, 0.0, imgsize.width, imgsize.height)];
-            rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-        }
-    }
-    
-    return rotatedImage;
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+    [[visibleStackHolder peekSubview] exportToPDF:completionBlock];
 }
 
 -(NSDictionary*) cloudKitSenderInfo{
     return [[visibleStackHolder peekSubview] cloudKitSenderInfo];
 }
 
--(void) mayShare:(NSObject<MMShareItem> *)shareItem{
+-(void) mayShare:(MMAbstractShareItem *)shareItem{
     // noop
 }
 
--(void) wontShare:(NSObject<MMShareItem> *)shareItem{
+-(void) wontShare:(MMAbstractShareItem *)shareItem{
     // noop
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem{
+-(void) didShare:(MMAbstractShareItem *)shareItem{
     // noop
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
+-(void) didShare:(MMAbstractShareItem *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton{
     // noop
 }
 
@@ -2046,7 +2012,7 @@
     // 1. our top page has pending edits to save
     // 2. our top page is still loading in content
     // 3. there are ny OpenGL objects sitting in the trash
-    NSLog(@" - checking if page is ready to background: saving? %d  loading? %d  trash? %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash]);
+    DebugLog(@" - checking if page is ready to background: saving? %d  loading? %d  trash? %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash]);
     
     // we need to delay resigning active if our top page
     // is loading or saving any OpenGL content. Once we
@@ -2078,15 +2044,15 @@
                 // thread signals us with a new block to run
                 [[MMMainOperationQueue sharedQueue] waitFor:0.2];
             }
-            NSLog(@" - exit status: %d %d %d %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash], ![[MMPageCacheManager sharedInstance] isEditablePageStable]);
+            DebugLog(@" - exit status: %d %d %d %d", [currentEditablePage hasEditsToSave], isPageLoadingHuh(currentEditablePage), (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash], ![[MMPageCacheManager sharedInstance] isEditablePageStable]);
         }
-        NSLog(@" - completed save in %.2fs", [stopwatch read]);
+        DebugLog(@" - completed save in %.2fs", [stopwatch read]);
 
         BOOL topIsLoadedAndEditable = [[MMPageCacheManager sharedInstance] isEditablePageStable];
-        NSLog(@" - top is editable and loaded? %d", topIsLoadedAndEditable);
+        DebugLog(@" - top is editable and loaded? %d", topIsLoadedAndEditable);
 
     }
-    NSLog(@"stack: willResignActive end");
+    DebugLog(@"stack: willResignActive end");
 }
 
 -(void) didEnterBackground{

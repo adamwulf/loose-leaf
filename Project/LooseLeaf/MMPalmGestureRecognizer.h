@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMGestureTouchOwnershipDelegate.h"
 
 @interface MMPalmGestureRecognizer : UIGestureRecognizer
 
 +(MMPalmGestureRecognizer*) sharedInstance;
+
+@property (nonatomic, unsafe_unretained) NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
+@property (nonatomic, readonly) BOOL hasSeenPalmDuringTouchSession;
 
 @end

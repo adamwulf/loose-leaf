@@ -18,6 +18,4 @@
 
 -(UIView*) viewForBlur;
 
--(UIImage*) imageForBlur;
-
 @end

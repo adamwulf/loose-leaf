@@ -57,6 +57,10 @@
     @throw kAbstractMethodException;
 }
 
+-(CGFloat) defaultRotation{
+    return 0;
+}
+
 -(CGFloat) preferredImportMaxDim{
     return kPhotoImportMaxDim;
 }

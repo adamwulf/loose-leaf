@@ -209,11 +209,11 @@ static MMTrashManager* _instance = nil;
         return;
     }
 
+    DebugLog(@"deleting scrap at %@", [scrapCollectionState directoryPathForScrapUUID:scrapUUID]);
+    
     [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[scrapCollectionState directoryPathForScrapUUID:scrapUUID]];
     [scrapCollectionState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
-
 }
-
 
 
 @end

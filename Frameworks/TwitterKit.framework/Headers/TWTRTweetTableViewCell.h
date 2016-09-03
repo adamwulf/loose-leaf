@@ -5,9 +5,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TWTRTweetView.h"
 
 @class TWTRTweet;
-@class TWTRTweetView;
+
+NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  A table view cell subclass which displays a Tweet.
@@ -17,7 +19,7 @@
 /**
  *  The Tweet view inside this cell. Holds all relevant text and images.
  */
-@property (nonatomic, strong, readonly) TWTRTweetView *tweetView;
+@property (nonatomic, readonly) TWTRTweetView *tweetView;
 
 /**
  *  Configures the existing Tweet view with a Tweet. Updates labels, images, and thumbnails.
@@ -27,54 +29,25 @@
 - (void)configureWithTweet:(TWTRTweet *)tweet;
 
 /**
- *  Returns the height calculated using a given width. Usable from a background thread. This is the preferred approach to calculating height for tableview cells.
-
-     - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-         TWTRTweet *tweet = self.tweets[indexPath.row];
-         
-         // Grab the height for this cell
-         CGFloat height = [TWTRTweetTableViewCell heightForTweet:tweet width:CGRectGetWidth(self.view.bounds)];
-         return height;
-     }
- 
- *  @param width The table view cell width.
- */
-+ (CGFloat)heightForTweet:(TWTRTweet *)tweet width:(CGFloat)width showingActions:(BOOL)actionsAreVisible;
-
-/**
- *  Calculates the height for this Tweet assuming that actions are being shown (the default).
+ *  Returns how tall the Tweet view should be.
  *
- *  @param tweet The Tweet object desiring to be shown.
- *  @param width The width of the tableview.
+ *  Uses the system to calculate the Auto Layout height. This is the same as
+ *  calling sizeThatFits: on a cached TWTRTweetView instance to let the system
+ *  calculate how tall the resulting view will be including the image, Retweet
+ *  view, and optional action buttons.
  *
- *  @return The calculated height for this Tweet.
+ *  Note: The Auto Layout engine will throw an exception if this is called
+ *  on a background thread.
  *
- *  @note If this method is returning the incorrect height and .showActionButtons
- *        has been set to NO on your TWTRTweetView you will need to use
- *        heightForTweet:width:showingActions: instead.
+ *  @param tweet           the Tweet
+ *  @param style           the style of the Tweet view
+ *  @param width           the width of the Tweet
+ *  @param showingActions  whether the Tweet view will be displaying actions
+ *
+ *  @return the calculated height of the Tweet view
  */
-+ (CGFloat)heightForTweet:(TWTRTweet *)tweet width:(CGFloat)width;
-
-#pragma mark - Deprecated Methods
-
-/**
-  DEPRECATED
-
-  Returns the height calculated using a given width. Generally just for use with prototype 
-  cells. Calls `sizeThatFits:` internally to find height (which can be slow).
- 
-    - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-        TWTRTweet *tweet = self.tweets[indexPath.row];
-        
-        // Grab the height for this cell
-        CGFloat height = [TWTRTweetTableViewCell heightForTweet:tweet width:CGRectGetWidth(self.view.bounds)];
-        return height;
-    }
-
-  @deprecated Use +heightForTweet:width:showingActions: instead. Deprecated in version 1.3.0
-
-  @param width The table view cell width.
- */
-- (CGFloat)calculatedHeightForWidth:(CGFloat)width __attribute__((deprecated("Use +heightForTweet:width: instead.")));
++ (CGFloat)heightForTweet:(TWTRTweet *)tweet style:(TWTRTweetViewStyle)style width:(CGFloat)width showingActions:(BOOL)showActions;
 
 @end
+
+NS_ASSUME_NONNULL_END

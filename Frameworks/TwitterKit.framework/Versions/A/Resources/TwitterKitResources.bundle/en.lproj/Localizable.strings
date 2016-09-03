@@ -6,20 +6,8 @@
 "tw__share_tweet_generic_template_format" = "Check out @%1$@\'s Tweet: %2$@";
 /* Label for Sign in with Twitter button */
 "tw__sign_in_with_twitter_button" = "Log in with Twitter";
-/* Label Email Share Screen negative button */
-"tw__email_share_negative_button" = "Not now";
-/* Label Email Share Screen affirmative button */
-"tw__email_share_affirmative_button" = "Allow";
-/* Heading that appears above the detail message on the share your email screen */
-"tw__email_share_heading" = "Share your email address";
 /* Detail message that includes the app name and username on the share your email screen */
 "tw__email_share_detail_message_format" = "Get updates and other information from %@ when you allow them access to your email on your Twitter account @%@.";
-/* Detail message that includes the app name on the share your email screen, the app name is used in all the (%@) locations */
-"tw__email_share_detail_message_format_app_name_only" = "Allow %@ to access the email address associated with your Twitter account so that %@ can use it according to its privacy policy. For example, %@ could send you updates and other information at that address.";
-/* Fallback string for detail message in case the app name is not available */
-"tw__email_share_detail_message_this_app" = "this app";
-/* Fallback string for detail message in case the user is not signed in */
-"tw__email_share_detail_message_not_signed_in" = "(not signed in)";
 /* Label for attributing this Tweet was retweeted by the user %@ */
 "tw__tweet_retweeted_by_user" = "Retweeted by %@";
 /* Label for the Install button within the app promo card preview of the Tweet composer */
@@ -30,7 +18,12 @@
 "tw__card_composer_app_store" = "App Store";
 /* Placeholder text for the composer */
 "tw__composer_placeholder_text" = "What's Happening?";
-
+/* Label to explain this view contains sponsored ads. This is also spoken out with VoiceOver when an ad is shown. */
+"tw__view_is_sponsored_ad" = "This is a sponsored ad";
+/* Label to show users when a button will open a link in another app */
+"tw__open_in_text" = "Open in %@";
+/* Label for explaining that there were no matching Tweets found for a given timeline (User/Collection/Search, etc). */
+"tw__empty_timeline" = "Timeline is empty";
 
 /* Timestamps */
 
@@ -83,6 +76,10 @@
 "tw__tweet_liked_state" = "Liked";
 /* VoiceOver value for Like button on Tweet that has not yet been liked */
 "tw__tweet_not_liked_state" = "Not Liked";
+/* VoiceOver label for Share button */
+"tw__tweet_share_button" = "Share";
+/* VoiceOver for privacy button to bring up the privacy page URL for ads */
+"tw__privacy_information_button" = "Privacy information";
 
 /* Test String (just for unit tests) */
 "tw__test_string" = "Test";

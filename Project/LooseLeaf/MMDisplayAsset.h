@@ -20,6 +20,8 @@
 
 -(CGSize) fullResolutionSize;
 
+-(CGFloat) defaultRotation;
+
 -(CGFloat) preferredImportMaxDim;
 
 @end

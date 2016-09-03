@@ -120,7 +120,6 @@
 #pragma mark - Notifications
 
 -(void) tutorialViewWasTapped:(id)sender{
-    NSLog(@"tapped");
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     idx = MAX(0, MIN(idx, [tutorialList count] - 1));
     
@@ -287,7 +286,7 @@
             [scrollView addSubview:imgView];
             tutorialView = imgView;
         }else{
-            NSLog(@"failed: %@", tutorialURL);
+            // failed loading tutorialURL
         }
         tutorialView.wantsHiddenButtons = [[obj objectForKey:@"hide-buttons"] boolValue];
         

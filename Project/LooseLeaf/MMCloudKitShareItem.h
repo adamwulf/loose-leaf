@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMShareItem.h"
+#import "MMAbstractShareItem.h"
 #import <CloudKit/CloudKit.h>
 #import "MMCloudKitManagerDelegate.h"
 
-@interface MMCloudKitShareItem : NSObject<MMShareItem>
+@interface MMCloudKitShareItem : MMAbstractShareItem
 
 -(void) userIsAskingToShareTo:(NSDictionary*)userInfo fromButton:(MMBounceButton*)button;
 

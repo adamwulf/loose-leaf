@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMImgurShareItem.h"
-#import "MMShareItem.h"
 
-@interface MMPinterestShareItem : MMImgurShareItem<MMShareItem>
+@interface MMPinterestShareItem : MMImgurShareItem
 
 @end

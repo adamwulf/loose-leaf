@@ -181,6 +181,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         drawableBounds = bezierPath.bounds;
         drawableBounds = CGRectInset(drawableBounds, -kScrapShadowBufferSize, -kScrapShadowBufferSize);
         drawableBounds.origin = CGPointMake(0, 0);
+        drawableBounds.size.width = round(drawableBounds.size.width);
+        drawableBounds.size.height = round(drawableBounds.size.height);
         
         // this content view will be used by the MMScrapView to show
         // the scrap's contents. we'll use this to swap between
@@ -290,7 +292,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                         }
                         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self]];
                     }else{
-                        NSLog(@"target was unloaded afterall %@", self.uuid);
+                        // target was unloaded afterall
                     }
                 }
             }
@@ -397,10 +399,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     return;
                 }
                 [lock lock];
-                [JotViewStateProxy shouldPrintHasEdits:YES];
-//                DebugLog(@"(%@) checking edits", uuid);
-//                DebugLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
-                [JotViewStateProxy shouldPrintHasEdits:NO];
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     __block BOOL doneSavingBlockResult = YES;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);

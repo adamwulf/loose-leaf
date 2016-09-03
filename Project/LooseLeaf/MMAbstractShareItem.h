@@ -7,10 +7,27 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMShareItem.h"
+#import "MMShareOptionsView.h"
+#import "MMSidebarButton.h"
+#import "MMShareItemDelegate.h"
+#import "NSURL+UTI.h"
 
-@interface MMAbstractShareItem : NSObject<MMShareItem>
+@interface MMAbstractShareItem : NSObject
 
--(void) animateCompletionText:(NSString*)linkText withImage:(UIImage*)icon;
+@property (weak, nullable) NSObject<MMShareItemDelegate>* delegate;
+@property (nonatomic, assign, getter=isShowingOptionsView) BOOL showingOptionsView;
+@property (nullable, readonly) MMShareOptionsView* optionsView;
+
+-(MMSidebarButton * __nonnull) button;
+
+-(BOOL) isAtAllPossibleForMimeType:(NSString* __nonnull)mimeType;
+
+-(void) willShow;
+
+-(void) didHide;
+
+-(void) animateCompletionText:(NSString* __nonnull)linkText withImage:(UIImage* __nonnull)icon;
+
+-(void) updateButtonGreyscale;
 
 @end

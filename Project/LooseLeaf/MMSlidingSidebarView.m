@@ -190,7 +190,6 @@
             [blurContainerView addSubview:blurView];
             blurView.frame = blurContainerView.bounds;
             blurView.underlyingView = delegate.viewForBlur;
-            blurView.underlyingImage = delegate.imageForBlur;
 //            b = blurContainerView.bounds;
             
             // set the anchor to 0,0 for the sliding animations
@@ -212,7 +211,6 @@
 -(void) didHide{
     @autoreleasepool {
         blurView.underlyingView = nil;
-        blurView.underlyingImage = nil;
         [blurView removeFromSuperview];
         blurView = nil;
     }

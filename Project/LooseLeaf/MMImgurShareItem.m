@@ -71,7 +71,7 @@
     // so we need to dispatch async too
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
-            UIImage* image = self.delegate.imageToShare;
+            UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
             if(image && !conn){
                 lastProgress = 0;
                 targetSuccess = 0;
@@ -240,8 +240,8 @@
 
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Upload
@@ -341,7 +341,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

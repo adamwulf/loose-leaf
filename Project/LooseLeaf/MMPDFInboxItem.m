@@ -52,6 +52,10 @@
 
 #pragma mark Scaled Image Generation
 
+-(CGFloat) rotationForPage:(NSInteger)pageNumber{
+    return [pdf rotationForPage:pageNumber];
+}
+
 -(void) generatePageThumbnailCache{
     if(!self.isEncrypted){
         [super generatePageThumbnailCache];

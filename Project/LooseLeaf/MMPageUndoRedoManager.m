@@ -39,7 +39,6 @@
 
 -(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
     @synchronized(self){
-//        DebugLog(@"adding undo item %@", item);
         BOOL needsLoad = !isLoaded;
         if(needsLoad){
             [self loadFrom:page.undoStatePath];
@@ -53,11 +52,9 @@
             [item finalizeUndoableState];
         }
         hasEditsToSave = YES;
-        [self printDescription];
         if(needsLoad){
             [self saveTo:page.undoStatePath];
             [self unloadState];
-//            DebugLog(@"done saving unloaded undo manager");
         }
     }
 }
@@ -74,7 +71,6 @@
             [stackOfUndoneItems addObject:item];
         }
         hasEditsToSave = YES;
-        [self printDescription];
     }
 }
 
@@ -88,22 +84,7 @@
             [stackOfUndoableItems addObject:item];
         }
         hasEditsToSave = YES;
-        [self printDescription];
     }
-}
-
--(void) printDescription{
-//    return;
-//    DebugLog(@"***************************");
-//    DebugLog(@"stackOfUndoneItems:");
-//    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoneItems){
-//        DebugLog(@"%@", obj);
-//    }
-//    DebugLog(@"stackOfUndoableItems:");
-//    for(NSObject<MMUndoRedoItem>*obj in stackOfUndoableItems){
-//        DebugLog(@"%@", obj);
-//    }
-//    DebugLog(@"***************************");
 }
 
 -(void) saveTo:(NSString*)path{

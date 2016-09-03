@@ -19,6 +19,7 @@
 #import "MMTrashManager.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -412,7 +413,7 @@
     CGFloat duration = [NSThread timeBlock:^{
         newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
     }];
-    NSLog(@"total = %f", duration);
+    DebugLog(@"time to build scrap = %f", duration);
     // timing end
 
 

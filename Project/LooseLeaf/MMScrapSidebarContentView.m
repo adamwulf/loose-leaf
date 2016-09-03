@@ -9,7 +9,13 @@
 #import "MMScrapSidebarContentView.h"
 #import "MMScrapView.h"
 #import "MMScrapSidebarButton.h"
+#import "MMTrashButton.h"
 #import "Constants.h"
+#import "UIView+Animations.h"
+#import "UIImage+MMColor.h"
+#import "MMRotationManager.h"
+#import "MMAppDelegate.h"
+#import "MMPresentationWindow.h"
 
 #define kColumnSideMargin 10.0
 #define kColumnTopMargin 10.0
@@ -25,6 +31,11 @@ typedef struct RowOfScrapsInSidebar{
     
     int countOfStoredRowData;
     RowOfScrapsInSidebar* rowData;
+    
+    MMTrashButton* trashButton;
+    
+    UIView* deleteAllScrapsWarningView;
+    UILabel* deleteCountLabel;
 }
 
 @synthesize delegate;
@@ -47,6 +58,40 @@ typedef struct RowOfScrapsInSidebar{
         scrollView.delegate = self;
         [self addSubview:scrollView];
         
+        deleteAllScrapsWarningView = [[UIView alloc] initWithFrame:CGRectSquare(CGRectGetWidth(self.bounds))];
+        
+        deleteCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds) * 4 / 5, 100)];
+        [deleteCountLabel setNumberOfLines:2];
+        [deleteCountLabel setTextColor:[UIColor whiteColor]];
+        [deleteCountLabel setFont:[UIFont systemFontOfSize:24]];
+        [deleteCountLabel setTextAlignment:NSTextAlignmentCenter];
+        [deleteCountLabel setText:@"15 scraps have been deleted."];
+        
+        UIButton* undoDeleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds) * 4 / 5, 50)];
+        [undoDeleteButton addTarget:self action:@selector(undoDeleteAllScraps:) forControlEvents:UIControlEventTouchUpInside];
+        [undoDeleteButton setTitle:@"Undo" forState:UIControlStateNormal];
+        [undoDeleteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [undoDeleteButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.5]] forState:UIControlStateNormal];
+        [undoDeleteButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.7]] forState:UIControlStateHighlighted];
+        [undoDeleteButton setClipsToBounds:YES];
+        [[undoDeleteButton layer] setBorderColor:[[UIColor colorWithWhite:0 alpha:.6] CGColor]];
+        [[undoDeleteButton layer] setBorderWidth:2];
+        [[undoDeleteButton layer] setCornerRadius:8];
+        
+        CGFloat midpoint = CGRectGetWidth(self.bounds) / 2;
+        
+        [deleteAllScrapsWarningView addSubview:undoDeleteButton];
+        undoDeleteButton.center = CGPointMake(midpoint, midpoint + 60);
+        
+        [deleteCountLabel sizeToFit];
+        deleteCountLabel.center = CGPointMake(midpoint, midpoint - 60);
+        [deleteAllScrapsWarningView addSubview:deleteCountLabel];
+        
+        CGPoint messageLocation = CGRectGetMidPoint(self.bounds);
+        messageLocation.y -= 130;
+        deleteAllScrapsWarningView.center = messageLocation;
+        [self addSubview:deleteAllScrapsWarningView];
+
         columnCount = 2;
         
         // for clarity
@@ -57,10 +102,42 @@ typedef struct RowOfScrapsInSidebar{
     return self;
 }
 
+-(void) setRotation:(CGFloat)radians{
+    [trashButton setRotation:radians];
+    [trashButton setTransform:CGAffineTransformMakeRotation(radians)];
+}
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
+        deleteAllScrapsWarningView.transform = CGAffineTransformIdentity;
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
+        deleteAllScrapsWarningView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
+        deleteAllScrapsWarningView.transform = CGAffineTransformMakeRotation(M_PI_2);
+    }else{
+        deleteAllScrapsWarningView.transform = CGAffineTransformMakeRotation(M_PI);
+    }
+}
+
 -(void) setColumnCount:(NSInteger)_columnCount{
     columnCount = _columnCount;
     if([self.delegate isVisible]){
         [self prepareContentView];
+    }
+}
+
+-(void) viewWillShow{
+    scrollView.alpha = 1;
+    deleteAllScrapsWarningView.alpha = 0;
+}
+
+-(void) viewWillHide{
+    if([deleteAllScrapsWarningView alpha] == 1){
+        // if the undo delete-all option is still showing,
+        // then the user doesn't want to undo deleting
+        // all scraps, so tell our delegate to commit to
+        // deleting all scraps
+        [self.delegate deleteAllScrapsFromSidebar];
     }
 }
 
@@ -112,6 +189,14 @@ typedef struct RowOfScrapsInSidebar{
         rowData[row].topY = currentYOffset;
         currentYOffset += maxHeightOfScrapsInRow;
     }
+    
+    if(!trashButton){
+        trashButton = [[MMTrashButton alloc] initWithFrame:CGRectMake(0, 0, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [trashButton addTarget:self action:@selector(tappedOnTrashButton:) forControlEvents:UIControlEventTouchUpInside];
+        [scrollView addSubview:trashButton];
+    }
+    
+    trashButton.center = CGPointMake(CGRectGetWidth(scrollView.bounds)/2, [self contentHeight] - 50);
 
     // set our content offset and make sure it's still valid
     scrollView.contentSize = CGSizeMake(scrollView.bounds.size.width, [self contentHeight]);
@@ -126,7 +211,7 @@ typedef struct RowOfScrapsInSidebar{
 -(CGFloat) contentHeight{
     if(rowData){
         RowOfScrapsInSidebar lastRow = rowData[countOfStoredRowData-1];
-        return lastRow.topY + lastRow.height + 4*kColumnTopMargin;
+        return lastRow.topY + lastRow.height + 4*kColumnTopMargin + 100; // add 100 for our trash button
     }
     return 0;
 }
@@ -141,6 +226,26 @@ typedef struct RowOfScrapsInSidebar{
     [self.delegate didTapOnScrapFromMenu:button.scrap];
 }
 
+-(void) tappedOnTrashButton:(MMTrashButton*)button{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Delete All Scraps" message:@"Do you want to delete all scraps from the sidebar?" preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        deleteCountLabel.frame = CGRectFromSize(CGSizeMake(CGRectGetWidth(self.bounds) * 4 / 5, 100));
+        [deleteCountLabel setText:[NSString stringWithFormat:@"%ld scraps have been deleted.", (unsigned long)[self.delegate.scrapsInSidebar count]]];
+        [deleteCountLabel sizeToFit];
+        deleteCountLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetWidth(self.bounds) / 2 - 60);
+        
+        deleteAllScrapsWarningView.alpha = 1;
+        scrollView.alpha = 0;
+    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+    [[presentationWindow rootViewController] presentViewController:alert animated:YES completion:nil];
+}
+
+-(void) undoDeleteAllScraps:(UIButton*)button{
+    scrollView.alpha = 1;
+    deleteAllScrapsWarningView.alpha = 0;
+}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -160,11 +265,6 @@ typedef struct RowOfScrapsInSidebar{
     }
     return probableRow < 0 ? 0 : probableRow;
 }
-
-
-
-
-
 
 - (void)scrollViewDidScroll:(UIScrollView *)_scrollView{
     CheckMainThread;

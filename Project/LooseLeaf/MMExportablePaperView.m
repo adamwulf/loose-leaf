@@ -36,12 +36,11 @@
         [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
             @autoreleasepool {
                 if(isCurrentlySaving == YES){
-                    NSLog(@"already saving. will need to wait for a save too");
+                    // already saving. will need to wait for a save
                 }else{
                     [strongSelf saveToDisk:^(BOOL didSaveEdits){
                         if([self hasEditsToSave]){
                             // save failed, try again
-//                            NSLog(@"====================== kMPSaveFailedNeedsRetry");
                             waitingForSave = YES;
                             [strongSelf retrySaveOrExport];
                         }

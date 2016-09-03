@@ -11,6 +11,7 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "MMPresentationWindow.h"
+#import "NSURL+UTI.h"
 
 @implementation MMEmailShareItem{
     MMImageViewButton* button;
@@ -54,8 +55,9 @@
                 [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
                 [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
                 
-                NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-                [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
+                NSURL* urlToShare = [self.delegate urlToShare];
+                NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                [composer addAttachmentData:data mimeType:[urlToShare mimeType] fileName:[@"LooseLeaf" stringByAppendingString:[urlToShare pathExtension]]];
                 
                 [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
@@ -70,14 +72,16 @@
     });
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MFMailComposeViewController canSendMail]) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MFMailComposeViewController canSendMail]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

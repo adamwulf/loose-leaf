@@ -6,6 +6,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  *  The NSError domain of errors surfaced by the Twitter API.
  */
@@ -147,3 +149,4 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
     TWTRAPIErrorCodeTooManyRequests = 429
 };
 
+NS_ASSUME_NONNULL_END

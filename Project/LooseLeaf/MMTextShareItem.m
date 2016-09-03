@@ -11,6 +11,7 @@
 #import "MMImageViewButton.h"
 #import "Constants.h"
 #import "MMPresentationWindow.h"
+#import "NSURL+UTI.h"
 
 @implementation MMTextShareItem{
     MMImageViewButton* button;
@@ -51,8 +52,9 @@
             if([MFMessageComposeViewController canSendText] && composer) {
                 [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
                 
-                NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-                [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
+                NSURL* urlToShare = [self.delegate urlToShare];
+                NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                [composer addAttachmentData:data typeIdentifier:[urlToShare mimeType] filename:[@"LooseLeaf" stringByAppendingPathExtension:[urlToShare pathExtension]]];
                 
                 [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
@@ -63,7 +65,7 @@
     });
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
 }
 
@@ -78,7 +80,9 @@
 }
 
 -(void) updateButtonGreyscale{
-    if([MFMessageComposeViewController canSendText]) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MFMessageComposeViewController canSendText]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

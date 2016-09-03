@@ -53,7 +53,7 @@
         @autoreleasepool {
             ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
             
-            UIImage* image = self.delegate.imageToShare;
+            UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
             [self animateToPercent:.7 completion:^(BOOL didSucceed) {
                 if(didSucceed){
                     [self.delegate didShare:self];
@@ -177,14 +177,16 @@
     }
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusAuthorized) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

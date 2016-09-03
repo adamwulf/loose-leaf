@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUI.h>
-#import "MMShareItem.h"
+#import "MMAbstractShareItem.h"
 
-@interface MMEmailShareItem : NSObject<MMShareItem,MFMailComposeViewControllerDelegate>
+@interface MMEmailShareItem : MMAbstractShareItem<MFMailComposeViewControllerDelegate>
 
 
 @end

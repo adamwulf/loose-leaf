@@ -7,6 +7,9 @@
 //
 
 #import "MMPalmGestureRecognizer.h"
+#import "Constants.h"
+
+#define kDurationToWaitAfterPalm .3
 
 @interface MMPalmGestureRecognizer ()<UIGestureRecognizerDelegate>
 
@@ -14,7 +17,15 @@
 
 @implementation MMPalmGestureRecognizer{
     NSMutableSet* liveTouches;
+    NSMutableSet* suspectTouches;
+    NSMutableSet* palmTouches;
+    NSMutableDictionary* averageTouchRadius;
+    NSMutableDictionary* averageTouchRadiusCount;
+    
+    NSTimeInterval lastPalmSession;
 }
+
+@synthesize hasSeenPalmDuringTouchSession = _hasSeenPalmDuringTouchSession;
 
 #pragma mark - Singleton and Init
 
@@ -28,8 +39,12 @@ static MMPalmGestureRecognizer* _instance = nil;
         self.delaysTouchesEnded = NO;
         self.cancelsTouchesInView = NO;
         liveTouches = [NSMutableSet set];
+        suspectTouches = [NSMutableSet set];
+        palmTouches = [NSMutableSet set];
+        averageTouchRadius = [NSMutableDictionary dictionary];
+        averageTouchRadiusCount = [NSMutableDictionary dictionary];
         
-        self.enabled = NO;
+        self.enabled = YES;
     }
     return _instance;
 }
@@ -42,18 +57,8 @@ static MMPalmGestureRecognizer* _instance = nil;
     return _instance;
 }
 
-#pragma mark - Debug Helpers
-
--(void) printInfoForTouch:(UITouch*)touch inState:(NSString*)state{
-    CGPoint loc = [touch locationInView:nil];
-    NSLog(@"Touch %p %@: %.2f %.2f radius: %.2f tol: %.2f", touch, state, loc.x, loc.y, touch.majorRadius, touch.majorRadiusTolerance);
-}
-
--(void) signalPalmDetectedForTouch:(UITouch*)touch{
-    NSLog(@"****");
-    CGPoint loc = [touch locationInView:nil];
-    NSLog(@"Palm touch %p at: %.2f %.2f with radius: %.2f tol: %.2f", touch, loc.x, loc.y, touch.majorRadius, touch.majorRadiusTolerance);
-    NSLog(@"****");
+-(BOOL) hasSeenPalmDuringTouchSession{
+    return _hasSeenPalmDuringTouchSession || [NSDate timeIntervalSinceReferenceDate] - lastPalmSession < kDurationToWaitAfterPalm;
 }
 
 #pragma mark - Touch Lifecycle
@@ -62,35 +67,126 @@ static MMPalmGestureRecognizer* _instance = nil;
     for(UITouch* touch in touches){
         [liveTouches addObject:touch];
         
-        [self printInfoForTouch:touch inState:@"began"];
+        if([touch majorRadius] > 50){
+            [suspectTouches addObject:touch];
+        }
+        
+        if([touch majorRadius] < 2 || [touch force]){
+            // when using the apple pencil, always assume the palm is down
+            _hasSeenPalmDuringTouchSession = YES;
+        }
+        
+        if([touch majorRadius] > 90){
+            [palmTouches addObject:touch];
+        }else{
+            for(UITouch* suspect in [palmTouches copy]){
+                if(touch != suspect){
+                    if(DistanceBetweenTwoPoints([touch locationInView:self.view], [suspect locationInView:self.view]) < 90){
+                        [palmTouches addObject:touch];
+                        [palmTouches addObject:suspect];
+                    }
+                }
+            }
+            for(UITouch* suspect in [suspectTouches copy]){
+                if(touch != suspect){
+                    if(DistanceBetweenTwoPoints([touch locationInView:self.view], [suspect locationInView:self.view]) < 60){
+                        [palmTouches addObject:touch];
+                        [suspectTouches addObject:touch];
+                        [palmTouches addObject:suspect];
+                    }
+                }
+            }
+        }
+        
+        averageTouchRadius[@((int)touch)] = @([touch majorRadius]);
+        averageTouchRadiusCount[@((int)touch)] = @(0);
+    }
+    
+    if([palmTouches count]){
+        [[self panDelegate] ownershipOfTouches:palmTouches isGesture:self];
+        _hasSeenPalmDuringTouchSession = YES;
+        DebugLog(@"**** %ld/%ld Palm Touches", (unsigned long)[palmTouches count], (unsigned long)[liveTouches count]);
     }
 }
 
 -(void) touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
-        [self printInfoForTouch:touch inState:@"moved"];
-        for(UITouch* t in [event coalescedTouchesForTouch:touch]){
-            CGPoint loc = [t locationInView:nil];
-            NSLog(@"coalesced: %p %.2f %.2f", t, loc.x, loc.y);
+        for(UITouch* suspect in [palmTouches copy]){
+            if(touch != suspect){
+                if(DistanceBetweenTwoPoints([touch locationInView:self.view], [suspect locationInView:self.view]) < 90){
+                    [palmTouches addObject:suspect];
+                    [palmTouches addObject:touch];
+                }
+            }
         }
+        for(UITouch* suspect in [suspectTouches copy]){
+            if(touch != suspect){
+                if(DistanceBetweenTwoPoints([touch locationInView:self.view], [suspect locationInView:self.view]) < 60){
+                    [palmTouches addObject:suspect];
+                    [suspectTouches addObject:touch];
+                    [palmTouches addObject:touch];
+                }
+            }
+        }
+        
+        if(![suspectTouches containsObject:touch]){
+            if([averageTouchRadiusCount[@((int)touch)] integerValue] < 10){
+                NSInteger count = [averageTouchRadiusCount[@((int)touch)] integerValue];
+                CGFloat radius = [averageTouchRadius[@((int)touch)] floatValue];
+                radius = radius * [averageTouchRadiusCount[@((int)touch)] integerValue] + [touch majorRadius];
+                radius = radius / (count + 1);
+                
+                averageTouchRadius[@((int)touch)] = @(radius);
+                averageTouchRadiusCount[@((int)touch)] = @(count + 1);
+                
+                if(radius > 60){
+                    [suspectTouches addObject:touch];
+                    [palmTouches addObject:touch];
+                }
+            }
+        }
+    }
+    
+    if([palmTouches count]){
+        [[self panDelegate] ownershipOfTouches:palmTouches isGesture:self];
+        _hasSeenPalmDuringTouchSession = YES;
+        DebugLog(@"**** %ld/%ld Palm Touches", (unsigned long)[palmTouches count], (unsigned long)[liveTouches count]);
     }
 }
 
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         [liveTouches removeObject:touch];
-        [self printInfoForTouch:touch inState:@"ended"];
-        for(UITouch* t in [event coalescedTouchesForTouch:touch]){
-            CGPoint loc = [t locationInView:nil];
-            NSLog(@"coalesced: %p %.2f %.2f", t, loc.x, loc.y);
+        [suspectTouches removeObject:touch];
+        [palmTouches removeObject:touch];
+    }
+
+    if(![liveTouches count]){
+        if(_hasSeenPalmDuringTouchSession){
+            lastPalmSession = [NSDate timeIntervalSinceReferenceDate];
         }
+        _hasSeenPalmDuringTouchSession = NO;
     }
 }
 
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
+        if([suspectTouches containsObject:touch]){
+            // Apple cancel's UITouches if they detect a palm,
+            // so if we thought it was probably a palm too,
+            // then we should mark it as such.
+            _hasSeenPalmDuringTouchSession = YES;
+        }
         [liveTouches removeObject:touch];
-        [self printInfoForTouch:touch inState:@"cancelled"];
+        [suspectTouches removeObject:touch];
+        [palmTouches removeObject:touch];
+    }
+    
+    if(![liveTouches count]){
+        if(_hasSeenPalmDuringTouchSession){
+            lastPalmSession = [NSDate timeIntervalSinceReferenceDate];
+        }
+        _hasSeenPalmDuringTouchSession = NO;
     }
 }
 

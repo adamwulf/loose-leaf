@@ -114,17 +114,11 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
     [self killTimer];
     for(UITouch* touch in touches){
         [liveTouches addObject:touch];
-        NSLog(@"Touch Began: %p  living: %ld", touch,(long) [liveTouches count]);
         // initialize values for touch
         int indexOfTouch = [self indexForTouchInCache:touch];
         durationCache[indexOfTouch].instantaneousNormalizedVelocity = 1;
         durationCache[indexOfTouch].lastTimestamp = touch.timestamp;
         durationCache[indexOfTouch].totalDistance = 0;
-    }
-    if([liveTouches count]){
-        NSLog(@" - touches: %@", [[liveTouches allObjects] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-            return [NSString stringWithFormat:@"%p", obj];
-        }]);
     }
 }
 
@@ -135,12 +129,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 -(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         [liveTouches removeObject:touch];
-        NSLog(@"Touch Ended: %p  living: %ld", touch,(long) [liveTouches count]);
-    }
-    if([liveTouches count]){
-        NSLog(@" - touches: %@", [[liveTouches allObjects] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-            return [NSString stringWithFormat:@"%p", obj];
-        }]);
     }
 
     
@@ -159,12 +147,6 @@ static MMTouchVelocityGestureRecognizer* _instance = nil;
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     for(UITouch* touch in touches){
         [liveTouches removeObject:touch];
-        NSLog(@"Touch Cancelled: %p  living: %ld", touch, (long) [liveTouches count]);
-    }
-    if([liveTouches count]){
-        NSLog(@" - touches: %@", [[liveTouches allObjects] mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
-            return [NSString stringWithFormat:@"%p", obj];
-        }]);
     }
     
     [self touchesEnded:touches withEvent:event];

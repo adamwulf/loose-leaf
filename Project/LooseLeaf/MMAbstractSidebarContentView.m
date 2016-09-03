@@ -182,9 +182,6 @@
         }
         return NO;
     }]];
-    if(visibleItems){
-//        NSLog(@"update album row: %@", visibleItems);
-    }
 }
 
 #pragma mark - Row Management

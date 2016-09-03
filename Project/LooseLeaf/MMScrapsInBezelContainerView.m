@@ -17,6 +17,7 @@
 #import "MMRotationManager.h"
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
+#import "MMTrashManager.h"
 
 #define kAnimationDuration 0.3
 
@@ -417,9 +418,24 @@
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
         countButton.alpha = 0;
+        [contentView viewWillShow];
         [contentView prepareContentView];
         [self show:YES];
     }
+}
+
+-(void) deleteAllScrapsFromSidebar{
+    DebugLog(@"delete all scraps!");
+    for (MMScrapView* scrap  in [sidebarScrapState.allLoadedScraps copy]) {
+        [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
+        [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
+    }
+    for(MMScrapBubbleButton* otherBubble in self.subviews){
+        if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
+            [otherBubble removeFromSuperview];
+        }
+    }
+    [self saveScrapContainerToDisk];
 }
 
 #pragma mark - Rotation
@@ -444,8 +460,12 @@
             bubble.rotation = rotReading;
         }
     }
+    [contentView setRotation:rotReading];
 }
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    [contentView didRotateToIdealOrientation:orientation];
+}
 
 #pragma mark - Ignore Touches
 
@@ -556,6 +576,7 @@ static NSString* bezelStatePath;
 
 -(void) sidebarCloseButtonWasTapped{
     if([self isVisible]){
+        [contentView viewWillHide];
         [self hide:YES onComplete:^(BOOL finished){
             [contentView viewDidHide];
         }];
@@ -565,6 +586,5 @@ static NSString* bezelStatePath;
         [self.delegate sidebarCloseButtonWasTapped];
     }
 }
-
 
 @end

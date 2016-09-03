@@ -13,7 +13,7 @@
 
 @interface MMShareSidebarContainerView : MMFullScreenSidebarContainingView<MMShareItemDelegate>
 
-@property (weak) NSObject<MMShareItemDelegate>* shareDelegate;
+@property (weak) NSObject<MMShareSidebarDelegate>* shareDelegate;
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
 

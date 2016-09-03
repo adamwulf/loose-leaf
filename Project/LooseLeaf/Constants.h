@@ -28,6 +28,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
 #define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
+#define CGRectSquare(size) CGRectMake(0,0,size,size)
 #define CGSizeScale(size, scale)    CGSizeMake(size.width*scale,size.height*scale)
 #define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
 #define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
@@ -116,6 +117,7 @@ _Pragma("clang diagnostic pop") \
 // User Defaults
 
 #define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
+#define kExportAsPDFPreferenceDefault @"exportAsPDFPreferenceDefault"
 #define kHasEverImportedAPage @"hasEverImportedAPage"
 #define kMixpanelUUID @"mixpanel_uuid"
 #define kSelectedBrush @"selectedBrush"
@@ -247,8 +249,8 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 #define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
-#define kPhotoImportMaxDim (300 * [[UIScreen mainScreen] scale])
-#define kPDFImportMaxDim (400 * [[UIScreen mainScreen] scale])
+#define kPhotoImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
+#define kPDFImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
@@ -265,6 +267,7 @@ _Pragma("clang diagnostic pop") \
 extern "C" {
 #endif
 
+    void CGContextSaveThenRestoreForBlock(CGContextRef __nonnull context, void(^ __nonnull block)());
 
     CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 

@@ -18,8 +18,20 @@
     @throw kAbstractMethodException;
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     @throw kAbstractMethodException;
+}
+
+-(void) willShow{
+    // noop
+}
+
+-(void) didHide{
+    // noop
+}
+
+-(void) updateButtonGreyscale{
+    // noop
 }
 
 -(void) animateCompletionText:(NSString*)linkText withImage:(UIImage*)icon{

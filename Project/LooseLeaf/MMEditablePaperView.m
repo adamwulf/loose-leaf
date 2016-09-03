@@ -182,15 +182,19 @@ dispatch_queue_t importThumbnailQueue;
                 // if any
                 [drawableView.layer removeAllAnimations];
                 [drawableView loadState:paperState];
-                [self addDrawableViewToContentView];
-                // anchor the view to the top left,
-                // so that when we scale down, the drawable view
-                // stays in place
-                drawableView.layer.anchorPoint = CGPointMake(0,0);
-                drawableView.layer.position = CGPointMake(0,0);
                 drawableView.delegate = self;
-                [self setEditable:YES];
-                [self updateThumbnailVisibility];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(drawableView){
+                        [self addDrawableViewToContentView];
+                        // anchor the view to the top left,
+                        // so that when we scale down, the drawable view
+                        // stays in place
+                        drawableView.layer.anchorPoint = CGPointMake(0,0);
+                        drawableView.layer.position = CGPointMake(0,0);
+                        [self setEditable:YES];
+                        [self updateThumbnailVisibility];
+                    }
+                });
             }
         }else{
             [self generateDebugView:NO];

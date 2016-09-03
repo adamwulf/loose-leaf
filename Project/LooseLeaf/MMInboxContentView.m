@@ -93,9 +93,8 @@
     // remove any old objects from the cache
     NSArray* unseenURLs = [[albumForInboxItem allKeys] arrayByRemovingObjectsInArray:allSeenURLs];
     [albumForInboxItem removeObjectsForKeys:unseenURLs];
-    if([unseenURLs count]){
-        NSLog(@"why do i need to remove objects from cache? this should've been done when the item was deleted.... %d", (int)[unseenURLs count]);
-    }
+
+    NSAssert(![unseenURLs count], @"why do i need to remove objects from cache? this should've been done when the item was deleted.... %d", (int)[unseenURLs count]);
     
     [albumListScrollView reloadData];
     [super reset:animated];
@@ -181,7 +180,6 @@
     CGPoint p = [sender locationInView:albumListScrollView];
     
     if(sender.state == UIGestureRecognizerStateBegan){
-        NSLog(@"start delete gesture: %f %f", p.x, p.y);
         NSIndexPath* indexPath = [albumListScrollView indexPathForItemAtPoint:p];
         swipeToDeleteCell = (MMDisplayAssetGroupCell*) [albumListScrollView cellForItemAtIndexPath:indexPath];
         initialAdjustment = swipeToDeleteCell.squishFactor;
@@ -199,14 +197,12 @@
              sender.state == UIGestureRecognizerStateCancelled){
         albumListScrollView.scrollEnabled = YES;
         recentDeleteSwipe = [NSDate date];
-        NSLog(@"swipe gesture state: %d", (int) sender.state);
+
         if([swipeToDeleteCell finishSwipeToDelete]){
-            NSLog(@"delete immediately");
-            
+            // delete immediately
             [self deleteButtonWasTappedForCell:swipeToDeleteCell];
-            
         }else{
-            NSLog(@"don't delete, wait for tap");
+            // don't delete, wait for tap
         }
     }
 }
@@ -220,7 +216,6 @@
         [albumListScrollView performBatchUpdates:^{
             [[MMInboxManager sharedInstance] removeInboxItem:pdfAlbum.inboxItem.urlOnDisk onComplete:^(BOOL hasErr){
                 if(hasErr){
-                    NSLog(@"Error deleting PDF: %@", pdfAlbum.inboxItem.urlOnDisk);
                     @throw [NSException exceptionWithName:@"DeletePDFException" reason:[NSString stringWithFormat:@"Error deleting pdf"] userInfo:nil];
                 }
             }];
@@ -295,13 +290,10 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
     if(buttonIndex == 1){
         NSString* password = [[alertView textFieldAtIndex:0] text];
-        NSLog(@"password: %@", password);
         
         MMPDFAssetGroup* pdfAlbum = (MMPDFAssetGroup*) [self albumAtIndex:decryptingIndexPath.row];
         MMPDFInboxItem* pdfItem = (MMPDFInboxItem*) ([pdfAlbum isKindOfClass:[MMPDFAssetGroup class]] ? pdfAlbum.inboxItem : nil);
         if([pdfItem attemptToDecrypt:password]){
-            NSLog(@"congrats");
-            
             if([[albumListScrollView indexPathsForVisibleItems] containsObject:decryptingIndexPath]){
                 // if the cell is already visible, then animate that cell to non-decrypted
                 // otherwise nothing

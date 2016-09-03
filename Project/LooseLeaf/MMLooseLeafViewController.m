@@ -34,8 +34,9 @@
 #import "MMPalmGestureRecognizer.h"
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
+#import "MMAbstractShareItem.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareItemDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
 @end
 
@@ -189,6 +190,7 @@
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         [self.view addGestureRecognizer:[MMPalmGestureRecognizer sharedInstance]];
+        [MMPalmGestureRecognizer sharedInstance].panDelegate = self;
 
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
@@ -260,14 +262,12 @@
 
 -(void) willResignActive{
     DebugLog(@"telling stack to cancel all gestures");
-    NSLog(@"willResignActive");
     [currentStackView willResignActive];
     [currentStackView cancelAllGestures];
     [[currentStackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
 -(void) didEnterBackground{
-    NSLog(@"didEnterBackground");
     [currentStackView didEnterBackground];
 }
 
@@ -336,7 +336,7 @@
         backdrop.alpha = 1;
         stackPropertiesView.alpha = 1;
     }];
-    NSLog(@"show stack id: %@", stackUUID);
+    DebugLog(@"showing stack id: %@", stackUUID);
 }
 
 -(void) addStack{
@@ -499,12 +499,14 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient{
-    @autoreleasepool {
-        [sharePageSidebar updateInterfaceTo:toOrient];
-        [importImageSidebar updateInterfaceTo:toOrient];
-    }
-    [currentStackView didRotateToIdealOrientation:toOrient];
-    [tutorialView didRotateToIdealOrientation:toOrient];
+    [NSThread performBlockOnMainThread:^{
+        @autoreleasepool {
+            [sharePageSidebar updateInterfaceTo:toOrient];
+            [importImageSidebar updateInterfaceTo:toOrient];
+            [currentStackView didRotateToIdealOrientation:toOrient];
+            [tutorialView didRotateToIdealOrientation:toOrient];
+        }
+    }];
 }
 
 -(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
@@ -533,10 +535,6 @@
     return [currentStackView viewForBlur];
 }
 
--(UIImage*) imageForBlur{
-    return [currentStackView imageForBlur];
-}
-
 #pragma mark - MMImageSidebarContainerViewDelegate
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage{
@@ -547,30 +545,34 @@
     [currentStackView assetWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription andRequestsImportAsPage:asPage];
 }
 
-#pragma mark - MMShareItemDelegate
+#pragma mark - MMShareSidebarDelegate
 
--(UIImage*) imageToShare{
-    return [currentStackView imageToShare];
+-(void) exportToImage:(void (^)(NSURL *))completionBlock{
+    [currentStackView exportToImage:completionBlock];
+}
+
+-(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+    [currentStackView exportToPDF:completionBlock];
 }
 
 -(NSDictionary*) cloudKitSenderInfo{
     return [currentStackView cloudKitSenderInfo];
 }
 
--(void) didShare:(NSObject<MMShareItem>*)shareItem{
+-(void) didShare:(MMAbstractShareItem*)shareItem{
     [sharePageSidebar hide:YES onComplete:nil];
     [currentStackView didShare:shareItem];
 }
 
--(void) mayShare:(NSObject<MMShareItem>*)shareItem{
+-(void) mayShare:(MMAbstractShareItem*)shareItem{
     [currentStackView mayShare:shareItem];
 }
 
--(void) wontShare:(NSObject<MMShareItem>*)shareItem{
+-(void) wontShare:(MMAbstractShareItem*)shareItem{
     [currentStackView wontShare:shareItem];
 }
 
--(void) didShare:(NSObject<MMShareItem> *)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+-(void) didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
     [cloudKitExportView didShareTopPageToUser:userId fromButton:button];
     [sharePageSidebar hide:YES onComplete:nil];
 
@@ -624,7 +626,7 @@
 #pragma mark - MMTutorialViewDelegate
 
 -(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    NSLog(@"user is watching %d", (int) stepNum);
+    DebugLog(@"user is watching %d", (int) stepNum);
 }
 
 -(void) didFinishTutorial{
