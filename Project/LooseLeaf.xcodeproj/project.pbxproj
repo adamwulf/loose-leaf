@@ -521,6 +521,12 @@
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
+		C5C298C91D7B90E9009AE6BE /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */; };
+		C5C298CA1D7B90E9009AE6BE /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */; };
+		C5C298CB1D7B90E9009AE6BE /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C51D7B90E9009AE6BE /* quad.vsh */; };
+		C5C298CC1D7B90E9009AE6BE /* quad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C61D7B90E9009AE6BE /* quad.fsh */; };
+		C5C298CD1D7B90E9009AE6BE /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C71D7B90E9009AE6BE /* stencil.fsh */; };
+		C5C298CE1D7B90E9009AE6BE /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C81D7B90E9009AE6BE /* point.fsh */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1223,7 +1229,6 @@
 		66BEBFFC19BE55710032D30C /* MMCloudKitInviteCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCloudKitInviteCollectionViewCell.m; sourceTree = "<group>"; };
 		66BEBFFE19BE55C30032D30C /* MMInviteUserButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInviteUserButton.h; sourceTree = "<group>"; };
 		66BEBFFF19BE55C30032D30C /* MMInviteUserButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInviteUserButton.m; sourceTree = "<group>"; };
-		66C0C9C91783645E009491B3 /* JotUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JotUI.framework; path = "../DerivedData/LooseLeaf/Build/Products/Debug-iphoneos/JotUI.framework"; sourceTree = "<group>"; };
 		66C0C9CE178386B8009491B3 /* MMLikeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLikeButton.h; sourceTree = "<group>"; };
 		66C0C9CF178386B8009491B3 /* MMLikeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLikeButton.m; sourceTree = "<group>"; };
 		66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAdonitButton.h; sourceTree = "<group>"; };
@@ -1504,6 +1509,12 @@
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = colorlesspoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/colorlesspoint.vsh; sourceTree = "<group>"; };
+		C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = coloredpoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/coloredpoint.vsh; sourceTree = "<group>"; };
+		C5C298C51D7B90E9009AE6BE /* quad.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = quad.vsh; path = ../Submodules/JotUI/JotUI/JotUI/quad.vsh; sourceTree = "<group>"; };
+		C5C298C61D7B90E9009AE6BE /* quad.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = quad.fsh; path = ../Submodules/JotUI/JotUI/JotUI/quad.fsh; sourceTree = "<group>"; };
+		C5C298C71D7B90E9009AE6BE /* stencil.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = stencil.fsh; path = ../Submodules/JotUI/JotUI/JotUI/stencil.fsh; sourceTree = "<group>"; };
+		C5C298C81D7B90E9009AE6BE /* point.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = point.fsh; path = ../Submodules/JotUI/JotUI/JotUI/point.fsh; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -2626,7 +2637,7 @@
 		6695B6E1175008530069E61F /* JotUI */ = {
 			isa = PBXGroup;
 			children = (
-				66C0C9C91783645E009491B3 /* JotUI.framework */,
+				6616CCD018B6AE9700CAD0F3 /* JotUI.framework */,
 				6695B6E2175008680069E61F /* OpenGLES.framework */,
 				66DCFB8E1581BCEF00B4918C /* CoreGraphics.framework */,
 				66BD6E7C1593ACD400D4544C /* QuartzCore.framework */,
@@ -3010,6 +3021,12 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */,
+				C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */,
+				C5C298C51D7B90E9009AE6BE /* quad.vsh */,
+				C5C298C61D7B90E9009AE6BE /* quad.fsh */,
+				C5C298C71D7B90E9009AE6BE /* stencil.fsh */,
+				C5C298C81D7B90E9009AE6BE /* point.fsh */,
 				C584F8361C37C55A00413840 /* Shaders */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
@@ -3056,7 +3073,6 @@
 				666425C118CBC40000A306C1 /* CoreMedia.framework */,
 				666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */,
 				666425BD18CBC3DD00A306C1 /* AVFoundation.framework */,
-				6616CCD018B6AE9700CAD0F3 /* JotUI.framework */,
 				66B50FCD1862B7D30032F704 /* MessageUI.framework */,
 				6699904C185F74C1005581D9 /* LittleClipper */,
 				6699904D185F74DC005581D9 /* LooseLeaf */,
@@ -3844,6 +3860,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5C298C91D7B90E9009AE6BE /* colorlesspoint.vsh in Resources */,
+				C5C298CA1D7B90E9009AE6BE /* coloredpoint.vsh in Resources */,
+				C5C298CB1D7B90E9009AE6BE /* quad.vsh in Resources */,
+				C5C298CC1D7B90E9009AE6BE /* quad.fsh in Resources */,
+				C5C298CD1D7B90E9009AE6BE /* stencil.fsh in Resources */,
+				C5C298CE1D7B90E9009AE6BE /* point.fsh in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
