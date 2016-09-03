@@ -521,12 +521,6 @@
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
-		C5C298C91D7B90E9009AE6BE /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */; };
-		C5C298CA1D7B90E9009AE6BE /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */; };
-		C5C298CB1D7B90E9009AE6BE /* quad.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C51D7B90E9009AE6BE /* quad.vsh */; };
-		C5C298CC1D7B90E9009AE6BE /* quad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C61D7B90E9009AE6BE /* quad.fsh */; };
-		C5C298CD1D7B90E9009AE6BE /* stencil.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C71D7B90E9009AE6BE /* stencil.fsh */; };
-		C5C298CE1D7B90E9009AE6BE /* point.fsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298C81D7B90E9009AE6BE /* point.fsh */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -3782,6 +3776,7 @@
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
+				C5C298CF1D7B9273009AE6BE /* Copy Frameworks */,
 				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
 				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
 				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
@@ -3860,12 +3855,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5C298C91D7B90E9009AE6BE /* colorlesspoint.vsh in Resources */,
-				C5C298CA1D7B90E9009AE6BE /* coloredpoint.vsh in Resources */,
-				C5C298CB1D7B90E9009AE6BE /* quad.vsh in Resources */,
-				C5C298CC1D7B90E9009AE6BE /* quad.fsh in Resources */,
-				C5C298CD1D7B90E9009AE6BE /* stencil.fsh in Resources */,
-				C5C298CE1D7B90E9009AE6BE /* point.fsh in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
@@ -4102,6 +4091,20 @@
 			shellPath = /bin/sh;
 			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\n# GIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n# GIT_RELEASE_VERSION=`git rev-parse --short HEAD`\n# GIT_RELEASE_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
 			showEnvVarsInLog = 0;
+		};
+		C5C298CF1D7B9273009AE6BE /* Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir \"${BUILT_PRODUCTS_DIR}/LooseLeaf.app/Frameworks/\"\ncp -R \"${BUILT_PRODUCTS_DIR}/JotUI.framework\" \"${BUILT_PRODUCTS_DIR}/LooseLeaf.app/Frameworks/JotUI.framework\"\n\necho \"copying ${BUILT_PRODUCTS_DIR}/JotUI.framework\";\necho \"to ${BUILT_PRODUCTS_DIR}/LooseLeaf.app/Frameworks/JotUI.framework\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
