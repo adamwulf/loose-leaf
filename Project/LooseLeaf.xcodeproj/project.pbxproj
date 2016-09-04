@@ -527,6 +527,9 @@
 		C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */; };
 		C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */; };
 		C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */; };
+		C5C298F61D7BF915009AE6BE /* MMMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */; };
+		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.1.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */; };
+		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1510,6 +1513,9 @@
 		C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../Submodules/cloudkit-manager/SimpleCloudKitManager/build/Release-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
 		C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/ClippingBezier/Submodules/PerformanceBezier/build/Release-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../Submodules/ClippingBezier/build/Release-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
+		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-2.1.0.md"; sourceTree = "<group>"; };
+		C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMMarkdown.framework; path = "../Submodules/MMMarkdown/build/Debug-iphoneos/MMMarkdown.framework"; sourceTree = "<group>"; };
+		C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.license; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -1645,6 +1651,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5C298F61D7BF915009AE6BE /* MMMarkdown.framework in Frameworks */,
 				C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */,
 				C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */,
 				C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */,
@@ -2408,6 +2415,7 @@
 				6634856419DB41F000B5CF2D /* TemplateIcon2x.png */,
 				C51F68721C3B7DC2003C046F /* GPUImage.license */,
 				C504E6EB1CFAA86C00914A0E /* RHAdditions.license */,
+				C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */,
 			);
 			name = Licenses;
 			sourceTree = "<group>";
@@ -3033,6 +3041,7 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */,
 				C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */,
 				C506A39B1C23DD6100236895 /* SSKeychain.framework */,
 				C506A3921C23DAD800236895 /* TwitterCore.framework */,
@@ -3109,6 +3118,7 @@
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
+				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3857,6 +3867,7 @@
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
 				C5C298E81D7B9633009AE6BE /* stencil.fsh in Resources */,
 				C5C298E91D7B9633009AE6BE /* point.fsh in Resources */,
+				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.1.0.md in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
@@ -3994,6 +4005,7 @@
 				665244FF1995673900C36609 /* email.png in Resources */,
 				66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */,
 				6672EFE619C3A61E0076009F /* iCloudDrive@2x.png in Resources */,
+				C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */,
 				C58E6A3B1CDB1B4A00508F1D /* bg30.jpg in Resources */,
 				661C4B2A1A83F8D50014DB20 /* pinterest@2x.png in Resources */,
 				6652456D1996E69D00C36609 /* link.png in Resources */,

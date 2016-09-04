@@ -116,6 +116,8 @@ _Pragma("clang diagnostic pop") \
 
 // User Defaults
 
+#define kFirstKnownVersion @"kFirstKnownVersion"
+#define kLastOpenedVersion @"kLastOpenedVersion"
 #define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
 #define kExportAsPDFPreferenceDefault @"exportAsPDFPreferenceDefault"
 #define kHasEverImportedAPage @"hasEverImportedAPage"

@@ -13,6 +13,9 @@
 #import "Mixpanel.h"
 #import "MMTutorialManager.h"
 #import "MMLargeTutorialSidebarButton.h"
+#import "UIApplication+Version.h"
+#import "Constants.h"
+#import <MMMarkdown/MMMarkdown.h>
 
 @implementation MMTutorialStackView{
     MMTextButton* helpButton;
@@ -28,8 +31,30 @@
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:helpButton extendFrame:NO];
         
+        NSString* version = [UIApplication bundleShortVersionString];
+
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
+        } else if(version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]){
+            
+            NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:[NSString stringWithFormat:@"ReleaseNotes-%@", version] withExtension:@"md"];
+            NSString* releaseNotes = [NSString stringWithContentsOfURL:releaseNotesFile encoding:NSUTF8StringEncoding error:nil];
+            
+            if(releaseNotes){
+                NSString* htmlReleaseNotes = [MMMarkdown HTMLStringWithMarkdown:releaseNotes error:nil];
+                
+                if(htmlReleaseNotes){
+#ifndef DEBUG
+                    [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
+#endif
+                    
+                    
+                    NSLog(@"release html: %@", htmlReleaseNotes);
+                    
+                    
+                    
+                }
+            }
         }
         
         CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
