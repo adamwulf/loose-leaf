@@ -55,15 +55,6 @@
     }
 }
 
-#pragma mark - Private Methods
-
--(CGRect) adjustFrame:(CGRect)inFrame{
-    if(CGRectGetHeight(self.bounds) > 1024){
-        NSLog(@"need to adjust the frame if on an iPad Pro");
-    }
-    return inFrame;
-}
-
 #pragma mark - Tap Handling
 
 -(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
