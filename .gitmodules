@@ -43,3 +43,6 @@
 [submodule "Submodules/NSString-MD5"]
 	path = Submodules/NSString-MD5
 	url = git@github.com:H2CO3/NSString-MD5.git
+[submodule "Submodules/MMMarkdown"]
+	path = Submodules/MMMarkdown
+	url = git@github.com:mdiep/MMMarkdown.git
