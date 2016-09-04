@@ -450,6 +450,8 @@
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
+		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
+		C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19C1D7C0BDD00259558 /* logo@2x.png */; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
 		C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */; };
 		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
@@ -527,9 +529,17 @@
 		C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */; };
 		C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */; };
 		C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */; };
-		C5C298F61D7BF915009AE6BE /* MMMarkdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */; };
 		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.1.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */; };
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
+		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
+		C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29781D7C013A00D868EC /* MMMarkdown.m */; };
+		C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297C1D7C013A00D868EC /* MMDocument.m */; };
+		C5DA29941D7C013A00D868EC /* MMElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297E1D7C013A00D868EC /* MMElement.m */; };
+		C5DA29951D7C013A00D868EC /* MMGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29801D7C013A00D868EC /* MMGenerator.m */; };
+		C5DA29961D7C013A00D868EC /* MMHTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29821D7C013A00D868EC /* MMHTMLParser.m */; };
+		C5DA29971D7C013A00D868EC /* MMParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29841D7C013A00D868EC /* MMParser.m */; };
+		C5DA29981D7C013A00D868EC /* MMScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29861D7C013A00D868EC /* MMScanner.m */; };
+		C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29881D7C013A00D868EC /* MMSpanParser.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1416,6 +1426,8 @@
 		C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FXBlur.m"; sourceTree = "<group>"; };
 		C53F635B1CDA87F700091EF1 /* MMRotatingBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotatingBackgroundView.h; sourceTree = "<group>"; };
 		C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingBackgroundView.m; sourceTree = "<group>"; };
+		C55AC19A1D7C0AB100259558 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		C55AC19C1D7C0BDD00259558 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAllStacksManager.h; sourceTree = "<group>"; };
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
 		C56883A91D6D2B3500709FD8 /* MMTrashButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashButton.h; sourceTree = "<group>"; };
@@ -1516,6 +1528,26 @@
 		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-2.1.0.md"; sourceTree = "<group>"; };
 		C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMMarkdown.framework; path = "../Submodules/MMMarkdown/build/Debug-iphoneos/MMMarkdown.framework"; sourceTree = "<group>"; };
 		C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.license; sourceTree = "<group>"; };
+		C5C298FB1D7BFD2E009AE6BE /* MMReleaseNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesView.h; sourceTree = "<group>"; };
+		C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReleaseNotesView.m; sourceTree = "<group>"; };
+		C5DA29771D7C013A00D868EC /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMMarkdown.h; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.h; sourceTree = "<group>"; };
+		C5DA29781D7C013A00D868EC /* MMMarkdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMMarkdown.m; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.m; sourceTree = "<group>"; };
+		C5DA29791D7C013A00D868EC /* MMMarkdown-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MMMarkdown-Prefix.pch"; path = "../../Submodules/MMMarkdown/Source/MMMarkdown-Prefix.pch"; sourceTree = "<group>"; };
+		C5DA297A1D7C013A00D868EC /* MMDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDocument.h; path = ../../Submodules/MMMarkdown/Source/MMDocument.h; sourceTree = "<group>"; };
+		C5DA297B1D7C013A00D868EC /* MMDocument_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMDocument_Private.h; path = ../../Submodules/MMMarkdown/Source/MMDocument_Private.h; sourceTree = "<group>"; };
+		C5DA297C1D7C013A00D868EC /* MMDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMDocument.m; path = ../../Submodules/MMMarkdown/Source/MMDocument.m; sourceTree = "<group>"; };
+		C5DA297D1D7C013A00D868EC /* MMElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMElement.h; path = ../../Submodules/MMMarkdown/Source/MMElement.h; sourceTree = "<group>"; };
+		C5DA297E1D7C013A00D868EC /* MMElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMElement.m; path = ../../Submodules/MMMarkdown/Source/MMElement.m; sourceTree = "<group>"; };
+		C5DA297F1D7C013A00D868EC /* MMGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMGenerator.h; path = ../../Submodules/MMMarkdown/Source/MMGenerator.h; sourceTree = "<group>"; };
+		C5DA29801D7C013A00D868EC /* MMGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMGenerator.m; path = ../../Submodules/MMMarkdown/Source/MMGenerator.m; sourceTree = "<group>"; };
+		C5DA29811D7C013A00D868EC /* MMHTMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMHTMLParser.h; path = ../../Submodules/MMMarkdown/Source/MMHTMLParser.h; sourceTree = "<group>"; };
+		C5DA29821D7C013A00D868EC /* MMHTMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMHTMLParser.m; path = ../../Submodules/MMMarkdown/Source/MMHTMLParser.m; sourceTree = "<group>"; };
+		C5DA29831D7C013A00D868EC /* MMParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMParser.h; path = ../../Submodules/MMMarkdown/Source/MMParser.h; sourceTree = "<group>"; };
+		C5DA29841D7C013A00D868EC /* MMParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMParser.m; path = ../../Submodules/MMMarkdown/Source/MMParser.m; sourceTree = "<group>"; };
+		C5DA29851D7C013A00D868EC /* MMScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMScanner.h; path = ../../Submodules/MMMarkdown/Source/MMScanner.h; sourceTree = "<group>"; };
+		C5DA29861D7C013A00D868EC /* MMScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMScanner.m; path = ../../Submodules/MMMarkdown/Source/MMScanner.m; sourceTree = "<group>"; };
+		C5DA29871D7C013A00D868EC /* MMSpanParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMSpanParser.h; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.h; sourceTree = "<group>"; };
+		C5DA29881D7C013A00D868EC /* MMSpanParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMSpanParser.m; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -1651,7 +1683,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5C298F61D7BF915009AE6BE /* MMMarkdown.framework in Frameworks */,
 				C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */,
 				C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */,
 				C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */,
@@ -3024,6 +3055,7 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
+				C5DA295C1D7C012500D868EC /* MMMarkdown */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -3069,6 +3101,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				C5C298FA1D7BFCC9009AE6BE /* ReleaseNotesView */,
 				C5060FAF1CAA09F300B9721C /* RoundedSquareView */,
 				66FD31E71AE035AF00EDD1D5 /* Archiving Help */,
 				66343C681AC085F900801962 /* Newsletter */,
@@ -3108,6 +3141,8 @@
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
 				C518C87E1C8421B400F1895C /* highlighter.png */,
+				C55AC19A1D7C0AB100259558 /* logo.png */,
+				C55AC19C1D7C0BDD00259558 /* logo@2x.png */,
 				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
 				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
@@ -3630,6 +3665,41 @@
 			path = ..;
 			sourceTree = "<group>";
 		};
+		C5C298FA1D7BFCC9009AE6BE /* ReleaseNotesView */ = {
+			isa = PBXGroup;
+			children = (
+				C5C298FB1D7BFD2E009AE6BE /* MMReleaseNotesView.h */,
+				C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */,
+			);
+			name = ReleaseNotesView;
+			sourceTree = "<group>";
+		};
+		C5DA295C1D7C012500D868EC /* MMMarkdown */ = {
+			isa = PBXGroup;
+			children = (
+				C5DA29771D7C013A00D868EC /* MMMarkdown.h */,
+				C5DA29781D7C013A00D868EC /* MMMarkdown.m */,
+				C5DA29791D7C013A00D868EC /* MMMarkdown-Prefix.pch */,
+				C5DA297A1D7C013A00D868EC /* MMDocument.h */,
+				C5DA297B1D7C013A00D868EC /* MMDocument_Private.h */,
+				C5DA297C1D7C013A00D868EC /* MMDocument.m */,
+				C5DA297D1D7C013A00D868EC /* MMElement.h */,
+				C5DA297E1D7C013A00D868EC /* MMElement.m */,
+				C5DA297F1D7C013A00D868EC /* MMGenerator.h */,
+				C5DA29801D7C013A00D868EC /* MMGenerator.m */,
+				C5DA29811D7C013A00D868EC /* MMHTMLParser.h */,
+				C5DA29821D7C013A00D868EC /* MMHTMLParser.m */,
+				C5DA29831D7C013A00D868EC /* MMParser.h */,
+				C5DA29841D7C013A00D868EC /* MMParser.m */,
+				C5DA29851D7C013A00D868EC /* MMScanner.h */,
+				C5DA29861D7C013A00D868EC /* MMScanner.m */,
+				C5DA29871D7C013A00D868EC /* MMSpanParser.h */,
+				C5DA29881D7C013A00D868EC /* MMSpanParser.m */,
+			);
+			name = MMMarkdown;
+			path = LooseLeaf;
+			sourceTree = "<group>";
+		};
 		C5F4BE811C2676C100FFB640 /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -3863,6 +3933,7 @@
 			files = (
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
+				C55AC19B1D7C0AB100259558 /* logo.png in Resources */,
 				C5C298E61D7B9633009AE6BE /* quad.vsh in Resources */,
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
 				C5C298E81D7B9633009AE6BE /* stencil.fsh in Resources */,
@@ -4021,6 +4092,7 @@
 				665810891B6DAF0A00A2C603 /* hello.mp4 in Resources */,
 				C58E6A4B1CDB1B4A00508F1D /* bg46.jpg in Resources */,
 				C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */,
+				C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */,
 				C58E6A451CDB1B4A00508F1D /* bg40.jpg in Resources */,
 				66E2240D19D645BD000FCA96 /* ios8-settings-photos.png in Resources */,
 				665F7F621AE096D000635D56 /* list-view-delete-page.mov in Resources */,
@@ -4131,6 +4203,7 @@
 				66B8A4C9196E43C300E80009 /* MMScrapContainerView.m in Sources */,
 				66DCFBC21581C85B00B4918C /* MMPaperStackView.m in Sources */,
 				667D98BA192FC22A00625879 /* MMPDFButton.m in Sources */,
+				C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */,
 				66343C531ABF950E00801962 /* MMNewsletterSignupForm.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
 				6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */,
@@ -4179,6 +4252,7 @@
 				C5FC08311C23E01B00C88675 /* MPAbstractABTestDesignerMessage.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				C5FC085D1C23E01B00C88675 /* MPSurveyQuestionViewController.m in Sources */,
+				C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */,
 				C5FC08651C23E01B00C88675 /* MPUIEdgeInsetsToNSDictionaryValueTransformer.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
 				C5FC084F1C23E01B00C88675 /* MPNSAttributedStringToNSDictionaryValueTransformer.m in Sources */,
@@ -4219,6 +4293,7 @@
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */,
 				6663CC4A19DFC2280084F9FF /* MMImmutableScrapCollectionState.m in Sources */,
+				C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
@@ -4258,6 +4333,7 @@
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				C5FC084A1C23E01B00C88675 /* MPEnumDescription.m in Sources */,
 				C5FC08481C23E01B00C88675 /* MPDesignerEventBindingResponseMesssage.m in Sources */,
+				C5DA29941D7C013A00D868EC /* MMElement.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				6688D01F1A9BE5500084CA06 /* MMStopWatch.m in Sources */,
 				66B0FA6017FB68410079E7A3 /* MMScrapViewState.m in Sources */,
@@ -4298,15 +4374,18 @@
 				C5FC08531C23E01B00C88675 /* MPObjectSerializer.m in Sources */,
 				C5FC086C1C23E01B00C88675 /* NSInvocation+MPHelpers.m in Sources */,
 				660116FE19ABBBD70065C1B4 /* MMCloudKitLoggedInState.m in Sources */,
+				C5DA29971D7C013A00D868EC /* MMParser.m in Sources */,
 				C5FC08721C23E01B00C88675 /* UIView+MPHelpers.m in Sources */,
 				C5FC084B1C23E01B00C88675 /* MPEventBinding.m in Sources */,
 				66DF0B7E159BC30200C5C652 /* UIView+Animations.m in Sources */,
 				66E769CE18E4A4B9008D36F2 /* NSFileManager+DirectoryOptimizations.m in Sources */,
+				C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */,
 				C5FC08321C23E01B00C88675 /* MPABTestDesignerChangeRequestMessage.m in Sources */,
 				664C62F015A36DA40072736A /* MMListPaperStackView.mm in Sources */,
 				6640E6D917E390BE00EB3F7D /* MMTouchVelocityGestureRecognizer.m in Sources */,
 				C5FC08391C23E01B00C88675 /* MPABTestDesignerDisconnectMessage.m in Sources */,
 				66A790BC196899980037F01A /* MMUndoRedoPageItem.m in Sources */,
+				C5DA29981D7C013A00D868EC /* MMScanner.m in Sources */,
 				C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */,
 				66BEBFFA19BD6AAA0032D30C /* MMProgressedImageViewButton.m in Sources */,
 				C5FC08471C23E01B00C88675 /* MPDesignerEventBindingRequestMesssage.m in Sources */,
@@ -4404,6 +4483,7 @@
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				66E2241919D66F8B000FCA96 /* MMEmptyCollectionViewCell.m in Sources */,
+				C5DA29961D7C013A00D868EC /* MMHTMLParser.m in Sources */,
 				663C1878175538A800706A05 /* MMPencilEraserButton.m in Sources */,
 				665245621996DAB800C36609 /* AFHTTPRequestOperation.m in Sources */,
 				663C187D1755B63D00706A05 /* Eraser.m in Sources */,
@@ -4412,6 +4492,7 @@
 				66CE11FD17D2700E00882275 /* MMScrapsInBezelContainerView.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
+				C5DA29951D7C013A00D868EC /* MMGenerator.m in Sources */,
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMSingleStackManager.m in Sources */,

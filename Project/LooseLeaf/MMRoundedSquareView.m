@@ -46,6 +46,8 @@
         [self addSubview:rotateableSquareView];
         
         
+        self.rotateableSquareView.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
+        
         //
         // scrollview
         CGPoint boxOrigin = CGPointMake(buttonBuffer, buttonBuffer);
@@ -109,6 +111,5 @@
 -(void) tapToClose{
     [self.delegate didTapToCloseRoundedSquareView:self];
 }
-
 
 @end

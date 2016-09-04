@@ -35,6 +35,10 @@
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
 #import "MMAbstractShareItem.h"
+#import "MMReleaseNotesView.h"
+#import "UIApplication+Version.h"
+#import "Constants.h"
+#import "MMMarkdown.h"
 
 @interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
 
@@ -59,11 +63,17 @@
     MMStackPropertiesView* stackPropertiesView;
     // tutorials
     MMTutorialView* tutorialView;
+    MMReleaseNotesView* releaseNotesView;
     UIView* backdrop;
+    
+    // make sure to only check to show release notes once per launch
+    BOOL mightShowReleaseNotes;
 }
 
 - (id)init{
     if(self = [super init]){
+        
+        mightShowReleaseNotes = YES;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
@@ -257,6 +267,15 @@
     return NO;
 }
 
+-(void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if(mightShowReleaseNotes){
+        mightShowReleaseNotes = NO;
+        [self showReleaseNotesIfNeeded];
+    }
+}
+
 
 #pragma mark - application state
 
@@ -313,6 +332,10 @@
 
 -(BOOL) isShowingTutorial{
     return tutorialView != nil || tutorialView.alpha;
+}
+
+-(BOOL) isShowingReleaseNotes{
+    return releaseNotesView != nil || releaseNotesView.alpha;
 }
 
 #pragma mark - MMStackControllerViewDelegate
@@ -579,10 +602,56 @@
     [currentStackView didShare:shareItem toUser:userId fromButton:button];
 }
 
+#pragma mark - Release Notes
+
+-(void) showReleaseNotesIfNeeded{
+    if([self isShowingTutorial] || [self isShowingReleaseNotes]){
+        // tutorial is already showing, just return
+        return;
+    }
+
+    NSString* version = [UIApplication bundleShortVersionString];
+    
+#ifdef DEBUG
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+#endif
+    
+    if(version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]){
+        
+        NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:[NSString stringWithFormat:@"ReleaseNotes-%@", version] withExtension:@"md"];
+        NSString* releaseNotes = [NSString stringWithContentsOfURL:releaseNotesFile encoding:NSUTF8StringEncoding error:nil];
+        
+        if(releaseNotes){
+            NSString* htmlReleaseNotes = [MMMarkdown HTMLStringWithMarkdown:releaseNotes error:nil];
+            
+            if(htmlReleaseNotes){
+#ifndef DEBUG
+                [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
+#endif
+                
+                backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
+                backdrop.backgroundColor = [UIColor whiteColor];
+                backdrop.alpha = 0;
+                [self.view addSubview:backdrop];
+                
+                releaseNotesView = [[MMReleaseNotesView alloc] initWithFrame:self.view.bounds andReleaseNotes:htmlReleaseNotes];
+                releaseNotesView.delegate = self;
+                releaseNotesView.alpha = 0;
+                [self.view addSubview:releaseNotesView];
+                
+                [UIView animateWithDuration:.3 animations:^{
+                    backdrop.alpha = 1;
+                    releaseNotesView.alpha = 1;
+                }];
+            }
+        }
+    }
+}
+
 #pragma mark - Tutorial Notifications
 
 -(void) tutorialShouldOpen:(NSNotification*)note{
-    if([self isShowingTutorial]){
+    if([self isShowingTutorial] || [self isShowingReleaseNotes]){
         // tutorial is already showing, just return
         return;
     }
@@ -636,13 +705,16 @@
 #pragma mark - MMRoundedSquareViewDelegate
 
 -(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView *)squareView{
-    if(squareView == stackPropertiesView){
+    if(squareView == stackPropertiesView || squareView == releaseNotesView){
         [UIView animateWithDuration:.3 animations:^{
             backdrop.alpha = 0;
             stackPropertiesView.alpha = 0;
+            releaseNotesView.alpha = 0;
         } completion:^(BOOL finished) {
             [backdrop removeFromSuperview];
             backdrop = nil;
+            [releaseNotesView removeFromSuperview];
+            releaseNotesView = nil;
             [stackPropertiesView removeFromSuperview];
             stackPropertiesView = nil;
         }];
