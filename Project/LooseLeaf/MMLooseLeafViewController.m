@@ -35,8 +35,16 @@
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
 #import "MMAbstractShareItem.h"
+#import "MMReleaseNotesViewController.h"
+#import "MMReleaseNotesView.h"
+#import "UIApplication+Version.h"
+#import "MMAppDelegate.h"
+#import "MMPresentationWindow.h"
+#import "MMTutorialViewController.h"
+#import "Constants.h"
+#import "MMMarkdown.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMRoundedSquareViewDelegate>
 
 @end
 
@@ -58,12 +66,18 @@
     // stack properties
     MMStackPropertiesView* stackPropertiesView;
     // tutorials
-    MMTutorialView* tutorialView;
+    MMTutorialViewController* tutorialViewController;
+    MMReleaseNotesViewController* releaseNotesViewController;
     UIView* backdrop;
+    
+    // make sure to only check to show release notes once per launch
+    BOOL mightShowReleaseNotes;
 }
 
 - (id)init{
     if(self = [super init]){
+        
+        mightShowReleaseNotes = YES;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
@@ -257,6 +271,15 @@
     return NO;
 }
 
+-(void) viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if(mightShowReleaseNotes){
+        mightShowReleaseNotes = NO;
+        [self showReleaseNotesIfNeeded];
+    }
+}
+
 
 #pragma mark - application state
 
@@ -312,7 +335,11 @@
 }
 
 -(BOOL) isShowingTutorial{
-    return tutorialView != nil || tutorialView.alpha;
+    return tutorialViewController != nil;
+}
+
+-(BOOL) isShowingReleaseNotes{
+    return releaseNotesViewController != nil;
 }
 
 #pragma mark - MMStackControllerViewDelegate
@@ -504,7 +531,6 @@
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
-            [tutorialView didRotateToIdealOrientation:toOrient];
         }
     }];
 }
@@ -579,29 +605,90 @@
     [currentStackView didShare:shareItem toUser:userId fromButton:button];
 }
 
+#pragma mark - Release Notes
+
+-(void) showReleaseNotesIfNeeded{
+    if([self isShowingTutorial] || [self isShowingReleaseNotes]){
+        // tutorial is already showing, just return
+        return;
+    }
+
+    NSString* version = [UIApplication bundleShortVersionString];
+    
+#ifdef DEBUG
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+#endif
+    
+    if(version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]){
+        
+        NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:[NSString stringWithFormat:@"ReleaseNotes-%@", version] withExtension:@"md"];
+        NSString* releaseNotes = [NSString stringWithContentsOfURL:releaseNotesFile encoding:NSUTF8StringEncoding error:nil];
+        
+        if(releaseNotes){
+            NSString* htmlReleaseNotes = [MMMarkdown HTMLStringWithMarkdown:releaseNotes error:nil];
+            
+            if(htmlReleaseNotes){
+#ifndef DEBUG
+                [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
+#endif
+                
+                backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
+                backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
+                backdrop.alpha = 0;
+                [self.view addSubview:backdrop];
+                
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                
+                releaseNotesViewController = [[MMReleaseNotesViewController alloc] initWithReleaseNotes:htmlReleaseNotes andCompletionBlock:^{
+                    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+                        releaseNotesViewController = nil;
+                    }];
+                    [UIView animateWithDuration:.3 animations:^{
+                        backdrop.alpha = 0;
+                    }];
+                }];
+
+                [presentationWindow.rootViewController presentViewController:releaseNotesViewController animated:YES completion:nil];
+
+                [UIView animateWithDuration:.3 animations:^{
+                    backdrop.alpha = 1;
+                }];
+            }
+        }
+    }
+}
+
 #pragma mark - Tutorial Notifications
 
 -(void) tutorialShouldOpen:(NSNotification*)note{
-    if([self isShowingTutorial]){
+    if([self isShowingTutorial] || [self isShowingReleaseNotes]){
         // tutorial is already showing, just return
         return;
     }
     
     NSArray* tutorials = [note.userInfo objectForKey:@"tutorialList"];
     backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
-    backdrop.backgroundColor = [UIColor whiteColor];
+    backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
     backdrop.alpha = 0;
     [self.view addSubview:backdrop];
     
-    tutorialView = [[MMTutorialView alloc] initWithFrame:self.view.bounds andTutorials:tutorials];
-    tutorialView.delegate = self;
-    tutorialView.alpha = 0;
-    [self.view addSubview:tutorialView];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+
+    tutorialViewController = [[MMTutorialViewController alloc] initWithTutorials:tutorials andCompletionBlock:^{
+        [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+            tutorialViewController = nil;
+        }];
+        [UIView animateWithDuration:.3 animations:^{
+            backdrop.alpha = 0;
+        }];
+    }];
+    
+    [presentationWindow.rootViewController presentViewController:tutorialViewController animated:YES completion:nil];
     
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 1;
-        tutorialView.alpha = 1;
     }];
+    
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
@@ -610,27 +697,7 @@
         return;
     }
     
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 0;
-        tutorialView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [backdrop removeFromSuperview];
-        backdrop = nil;
-        [tutorialView unloadTutorials];
-        [tutorialView removeFromSuperview];
-        tutorialView = nil;
-    }];
-}
-
-
-#pragma mark - MMTutorialViewDelegate
-
--(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    DebugLog(@"user is watching %d", (int) stepNum);
-}
-
--(void) didFinishTutorial{
-    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
+    [tutorialViewController closeTutorials];
 }
 
 #pragma mark - MMRoundedSquareViewDelegate

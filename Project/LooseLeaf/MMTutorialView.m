@@ -32,7 +32,6 @@
     
     NSMutableArray* tutorialButtons;
     
-    UIView* fadedBackground;
     UIScrollView* scrollView;
     UIView* separator;
     UIButton* nextButton;
@@ -91,8 +90,6 @@
         
         [self.maskedScrollContainer addSubview:nextButton];
         
-        self.rotateableSquareView.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
-
         [self loadTutorials];
         
         
@@ -363,30 +360,18 @@
         [obj setAlpha:[firstTutorialView wantsHiddenButtons] ? 0 : 1];
     }];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotateToIdealOrientation:) name:UIKeyboardDidChangeFrameNotification object:nil];
 }
 
 
 #pragma mark - Rotation
 
--(CGFloat) interfaceRotationAngle{
-    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
-        return 0;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
-        return -M_PI_2;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
-        return M_PI_2;
+-(void) didRotateToIdealOrientation:(NSNotification*)notification{
+    if([[UIScreen mainScreen] bounds].size.width > [[UIScreen mainScreen] bounds].size.height){
+        [newsletterSignupForm didRotateToIdealOrientation:UIInterfaceOrientationLandscapeLeft];
     }else{
-        return M_PI;
+        [newsletterSignupForm didRotateToIdealOrientation:UIInterfaceOrientationPortrait];
     }
-}
-
-
-
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    [super didRotateToIdealOrientation:orientation];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [newsletterSignupForm didRotateToIdealOrientation:orientation];
-    });
 }
 
 #pragma mark - Button Helpers
@@ -428,16 +413,6 @@
 
 
 #pragma mark - Private Helpers
-
--(CGPoint) topLeftCornerForBoxSize:(CGFloat)width{
-    return CGPointMake((self.bounds.size.width - width) / 2, (self.bounds.size.height - width) / 2);
-}
-
--(UIBezierPath*) roundedRectPathForBoxSize:(CGFloat)width withOrigin:(CGPoint)boxOrigin{
-    return [UIBezierPath bezierPathWithRoundedRect:CGRectMake(boxOrigin.x, boxOrigin.y, width, width)
-                          byRoundingCorners:UIRectCornerAllCorners
-                                cornerRadii:CGSizeMake(width/10, width/10)];
-}
 
 -(void) didEnterBackground{
     CGFloat currX = scrollView.contentOffset.x + scrollView.bounds.size.width/2;

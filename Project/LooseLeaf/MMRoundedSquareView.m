@@ -9,16 +9,18 @@
 #import "MMRoundedSquareView.h"
 #import "MMRotationManager.h"
 #import "MMUntouchableTutorialView.h"
+#import "Constants.h"
 
-@implementation MMRoundedSquareView{
-    UIView* fadedBackground;
-}
+@implementation MMRoundedSquareView
 
 @synthesize rotateableSquareView;
 @synthesize maskedScrollContainer;
+@synthesize allowTappingOutsideToClose;
 
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
+        
+        allowTappingOutsideToClose = YES;
         
         // 10% buffer
         CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
@@ -26,16 +28,13 @@
         //
         // faded background
         
-        fadedBackground = [[UIView alloc] initWithFrame:self.bounds];
-        fadedBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
-        
         UIButton* backgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        backgroundButton.bounds = fadedBackground.bounds;
+        backgroundButton.bounds = self.bounds;
         [backgroundButton addTarget:self action:@selector(tapToClose) forControlEvents:UIControlEventTouchUpInside];
-        [fadedBackground addSubview:backgroundButton];
-        backgroundButton.center = fadedBackground.center;
+        backgroundButton.center = CGRectGetMidPoint([self bounds]);
+        backgroundButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        [self addSubview:fadedBackground];
+        [self addSubview:backgroundButton];
         
         
         CGFloat widthOfRotateableContainer = self.boxSize + 2 * buttonBuffer;
@@ -45,6 +44,8 @@
                                                                                                widthOfRotateableContainer)];
         [self addSubview:rotateableSquareView];
         
+        
+        self.rotateableSquareView.autoresizingMask = UIViewAutoresizingFlexibleAllMargins;
         
         //
         // scrollview
@@ -66,32 +67,6 @@
     return 600;
 }
 
-#pragma mark - Rotation
-
--(CGFloat) interfaceRotationAngle{
-    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
-        return 0;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
-        return -M_PI_2;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
-        return M_PI_2;
-    }else{
-        return M_PI;
-    }
-}
-
-
-
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            [UIView animateWithDuration:.2 animations:^{
-                rotateableSquareView.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
-            }];
-        }
-    });
-}
-
 #pragma mark - Private Helpers
 
 -(CGPoint) topLeftCornerForBoxSize:(CGFloat)width{
@@ -107,8 +82,9 @@
 #pragma mark - Actions
 
 -(void) tapToClose{
-    [self.delegate didTapToCloseRoundedSquareView:self];
+    if(self.allowTappingOutsideToClose){
+        [self.delegate didTapToCloseRoundedSquareView:self];
+    }
 }
-
 
 @end

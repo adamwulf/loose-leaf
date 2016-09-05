@@ -182,6 +182,12 @@
         }
         return NO;
     }]];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if([visibleItems count] && [albumListScrollView alpha] > 0){
+            [albumListScrollView reloadData];
+        }
+    });
 }
 
 #pragma mark - Row Management

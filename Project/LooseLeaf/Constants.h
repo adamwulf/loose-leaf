@@ -26,8 +26,10 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
     return CGRectMake((sizeToFill.width - scaledSize.width) / 2, (sizeToFill.height - scaledSize.height) / 2, scaledSize.width, scaledSize.height);
 }
 
+#define CGRectResizeBy(rect,dw,dh) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + dw, rect.size.height + dh)
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
 #define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
+#define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x,rect.origin.y,rect.size.width,height)
 #define CGRectSquare(size) CGRectMake(0,0,size,size)
 #define CGSizeScale(size, scale)    CGSizeMake(size.width*scale,size.height*scale)
 #define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
@@ -116,6 +118,8 @@ _Pragma("clang diagnostic pop") \
 
 // User Defaults
 
+#define kFirstKnownVersion @"kFirstKnownVersion"
+#define kLastOpenedVersion @"kLastOpenedVersion"
 #define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
 #define kExportAsPDFPreferenceDefault @"exportAsPDFPreferenceDefault"
 #define kHasEverImportedAPage @"hasEverImportedAPage"
@@ -191,6 +195,13 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 #define kMPFailedRotationReading @"Failed Rotation Reading"
+
+#define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
+#define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
+#define kMPUpgradeFeedback @"Upgrade Feedback"
+#define kMPUpgradeFeedbackResult @"Feedback"
+#define kMPUpgradeAppStoreReview @"App Store Review"
+#define kMPUpgradeFeedbackReply @"Text Reply"
 
 // tutorial
 #define kMPHasFinishedTutorial @"Has Finished Tutorial"

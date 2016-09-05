@@ -5,6 +5,9 @@
       location = "group:Project/LooseLeaf/../../Submodules/zip-archive/ZipArchive/ZipArchive.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Submodules/MMMarkdown/MMMarkdown.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Submodules/cloudkit-manager/SimpleCloudKitManager/SimpleCloudKitManager.xcodeproj">
    </FileRef>
    <FileRef
