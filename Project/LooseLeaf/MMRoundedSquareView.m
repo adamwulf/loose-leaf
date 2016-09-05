@@ -16,9 +16,12 @@
 
 @synthesize rotateableSquareView;
 @synthesize maskedScrollContainer;
+@synthesize allowTappingOutsideToClose;
 
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
+        
+        allowTappingOutsideToClose = YES;
         
         // 10% buffer
         CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
@@ -109,7 +112,9 @@
 #pragma mark - Actions
 
 -(void) tapToClose{
-    [self.delegate didTapToCloseRoundedSquareView:self];
+    if(self.allowTappingOutsideToClose){
+        [self.delegate didTapToCloseRoundedSquareView:self];
+    }
 }
 
 @end

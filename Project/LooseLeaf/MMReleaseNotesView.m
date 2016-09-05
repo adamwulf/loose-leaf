@@ -7,16 +7,18 @@
 //
 
 #import "MMReleaseNotesView.h"
+#import "MMReleaseNotesButtonPrompt.h"
 #import "Constants.h"
 #import "UIColor+Shadow.h"
 
 @implementation MMReleaseNotesView{
-    UIView* firstPromptView;
+    MMReleaseNotesButtonPrompt* firstPromptView;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes{
     if(self = [super initWithFrame:frame]){
         
+        self.allowTappingOutsideToClose = NO;
         
         UIView * content = [[UIView alloc] initWithFrame:[self.maskedScrollContainer bounds]];
         [content setBackgroundColor:[UIColor whiteColor]];
@@ -38,54 +40,27 @@
         [content addSubview:promptContainerView];
         
         
-        firstPromptView = [[UIView alloc] initWithFrame:promptContainerView.bounds];
-        
-        UILabel* areYouEnjoyingLabel = [[UILabel alloc] initWithFrame:CGRectWithHeight(firstPromptView.bounds, 60)];
-        areYouEnjoyingLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
-        areYouEnjoyingLabel.textAlignment = NSTextAlignmentCenter;
-        areYouEnjoyingLabel.text = @"Are you enjoying Loose Leaf?";
-        [firstPromptView addSubview:areYouEnjoyingLabel];
-        
-        UIButton* enjoyingButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 140, 50)];
-        enjoyingButton.backgroundColor = [topLine backgroundColor];
-        [[enjoyingButton layer] setCornerRadius:8];
-        [enjoyingButton setClipsToBounds:YES];
-        [enjoyingButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [enjoyingButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:.7] forState:UIControlStateNormal];
-        [enjoyingButton setTitle:@"Definitely!" forState:UIControlStateNormal];
-        [enjoyingButton addTarget:self action:@selector(isEnjoying:) forControlEvents:UIControlEventTouchUpInside];
-        
-        UIButton* notEnjoyingButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 140, 50)];
-        notEnjoyingButton.backgroundColor = [topLine backgroundColor];
-        [[notEnjoyingButton layer] setCornerRadius:8];
-        [notEnjoyingButton setClipsToBounds:YES];
-        [notEnjoyingButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [notEnjoyingButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:.7] forState:UIControlStateNormal];
-        [notEnjoyingButton setTitle:@"Not so much" forState:UIControlStateNormal];
-        [notEnjoyingButton addTarget:self action:@selector(notEnjoying:) forControlEvents:UIControlEventTouchUpInside];
-        
-        enjoyingButton.center = CGPointMake((CGRectGetWidth(firstPromptView.bounds) - CGRectGetWidth(enjoyingButton.bounds) - 60) / 2, 80);
-        notEnjoyingButton.center = CGPointMake((CGRectGetWidth(firstPromptView.bounds) + CGRectGetWidth(notEnjoyingButton.bounds) + 60) / 2, 80);
+        firstPromptView = [[MMReleaseNotesButtonPrompt alloc] initWithFrame:promptContainerView.bounds];
+        [firstPromptView setPrompt:@"Are you enjoying Loose Leaf?"];
+        [firstPromptView setConfirmAnswer:@"Definitely! 😄"];
+        [firstPromptView setDenyAnswer:@"Not so much 😞"];
         
         [promptContainerView addSubview:firstPromptView];
-        [promptContainerView addSubview:enjoyingButton];
-        [promptContainerView addSubview:notEnjoyingButton];
+        
+        [firstPromptView setConfirmBlock:^{
+            NSLog(@"yep!");
+        }];
+        
+        [firstPromptView setDenyBlock:^{
+            NSLog(@"nope!");
+        }];
         
         
+        
+        [content addSubview:promptContainerView];
     }
     return self;
 }
-
-#pragma mark - First Prompt
-
--(void) isEnjoying:(UIButton*)button{
-    
-}
-
--(void) notEnjoying:(UIButton*)button{
-    
-}
-
 
 
 #pragma mark - Helper

@@ -15,7 +15,7 @@
 @property (nonatomic, readonly) UIView* maskedScrollContainer;
 @property (nonatomic, readonly) CGFloat boxSize;
 @property (nonatomic, weak) NSObject<MMRoundedSquareViewDelegate>* delegate;
-
+@property (nonatomic, assign) BOOL allowTappingOutsideToClose;
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
