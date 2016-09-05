@@ -23,6 +23,8 @@
     MMReleaseNotesButtonPrompt* happyResponseView;
     
     UITextView* feedbackTextView;
+    
+    UIView* thanksView;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes{
@@ -116,6 +118,24 @@
         
         [[self maskedScrollContainer] addSubview:feedbackForm];
         
+        
+        
+        
+        thanksView = [[UIView alloc] initWithFrame:[self.maskedScrollContainer bounds]];
+        [thanksView setBackgroundColor:[UIColor whiteColor]];
+        thanksView.alpha = 0;
+        
+        UILabel* thanksLabel = [[UILabel alloc] initWithFrame:[thanksView bounds]];
+        thanksLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
+        thanksLabel.textAlignment = NSTextAlignmentCenter;
+        thanksLabel.text = @"Thanks for your feedback!\n😄";
+        thanksLabel.numberOfLines = 0;
+        
+        [thanksView addSubview:thanksLabel];
+        [[self maskedScrollContainer] addSubview:thanksView];
+
+        
+        
         __weak MMReleaseNotesView* weakSelf = self;
         __weak UIView* weakFirstPrompt = firstPromptView;
         __weak UIView* weakHappyPrompt = happyResponseView;
@@ -172,10 +192,16 @@
 #pragma mark - Feedback
 
 -(void) sendFeedback:(UIButton*)button{
-    [[self delegate] didTapToCloseRoundedSquareView:self];
-
     [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{kMPUpgradeFeedbackResult : @"Sad",
                                                                      kMPUpgradeFeedbackReply : feedbackTextView.text ?: @""}];
+    
+    [UIView animateWithDuration:.3 animations:^{
+        thanksView.alpha = 1;
+    } completion:^(BOOL finished) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [[self delegate] didTapToCloseRoundedSquareView:self];
+        });
+    }];
 }
 
 -(void) closeFeedbackForm:(UIButton*)button{
