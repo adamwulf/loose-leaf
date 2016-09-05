@@ -530,7 +530,6 @@
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
-            [tutorialView didRotateToIdealOrientation:toOrient];
         }
     }];
 }

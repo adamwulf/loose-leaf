@@ -67,32 +67,6 @@
     return 600;
 }
 
-#pragma mark - Rotation
-
--(CGFloat) interfaceRotationAngle{
-    if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait){
-        return 0;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft){
-        return -M_PI_2;
-    }else if([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight){
-        return M_PI_2;
-    }else{
-        return M_PI;
-    }
-}
-
-
-
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            [UIView animateWithDuration:.2 animations:^{
-                rotateableSquareView.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
-            }];
-        }
-    });
-}
-
 #pragma mark - Private Helpers
 
 -(CGPoint) topLeftCornerForBoxSize:(CGFloat)width{

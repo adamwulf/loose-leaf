@@ -22,7 +22,15 @@
     MMReleaseNotesButtonPrompt* firstPromptView;
     MMReleaseNotesButtonPrompt* happyResponseView;
     
+    CGRect idealFeedbackLabelFrame;
+    CGRect idealFeedbackTextViewFrame;
+    CGRect idealCloseButtonFrame;
+    CGRect idealSendButtonFrame;
+    
+    UILabel* feedbackPromptLabel;
     UITextView* feedbackTextView;
+    UIButton* closeAnywayButton;
+    UIButton* sendButton;
     
     UIView* thanksView;
 }
@@ -74,10 +82,10 @@
         feedbackForm.alpha = 0;
         
         CGRect promptFr = CGRectMake(100, 80, 400, 60);
-        UILabel* promptLabel = [[UILabel alloc] initWithFrame:promptFr];
-        promptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
-        promptLabel.textAlignment = NSTextAlignmentCenter;
-        promptLabel.text = @"What would make Loose Leaf better?";
+        feedbackPromptLabel = [[UILabel alloc] initWithFrame:promptFr];
+        feedbackPromptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
+        feedbackPromptLabel.textAlignment = NSTextAlignmentCenter;
+        feedbackPromptLabel.text = @"What would make Loose Leaf better?";
         
         CGRect feedbackFrame = CGRectMake(100, 160, 400, 240);
         feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
@@ -86,7 +94,7 @@
         [[feedbackTextView layer] setBorderWidth:1];
         [feedbackTextView setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         
-        UIButton* closeAnywayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+        closeAnywayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         [[closeAnywayButton layer] setBorderColor:[[[UIColor blueShadowColor] colorWithAlphaComponent:1] CGColor]];
         [[closeAnywayButton layer] setBorderWidth:1];
         [[closeAnywayButton layer] setCornerRadius:8];
@@ -97,7 +105,7 @@
         [[closeAnywayButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [closeAnywayButton addTarget:self action:@selector(closeFeedbackForm:) forControlEvents:UIControlEventTouchUpInside];
         
-        UIButton* sendButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+        sendButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         sendButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
         [[sendButton layer] setCornerRadius:8];
         [sendButton setClipsToBounds:YES];
@@ -111,15 +119,17 @@
         closeAnywayButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) - CGRectGetWidth([closeAnywayButton bounds]) - 60) / 2, yOffset);
         sendButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) + CGRectGetWidth([sendButton bounds]) + 60) / 2, yOffset);
         
-        [feedbackForm addSubview:promptLabel];
+        [feedbackForm addSubview:feedbackPromptLabel];
         [feedbackForm addSubview:feedbackTextView];
         [feedbackForm addSubview:closeAnywayButton];
         [feedbackForm addSubview:sendButton];
         
         [[self maskedScrollContainer] addSubview:feedbackForm];
         
-        
-        
+        idealFeedbackLabelFrame = feedbackPromptLabel.frame;
+        idealFeedbackTextViewFrame = feedbackTextView.frame;
+        idealCloseButtonFrame = closeAnywayButton.frame;;
+        idealSendButtonFrame = sendButton.frame;
         
         thanksView = [[UIView alloc] initWithFrame:[self.maskedScrollContainer bounds]];
         [thanksView setBackgroundColor:[UIColor whiteColor]];
@@ -185,8 +195,57 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [releaseNotesView flashScrollIndicators];
         });
+        
+        
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillShow:)
+                                                     name:UIKeyboardWillShowNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillHide:)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardFrameDidChange:)
+                                                     name:UIKeyboardDidChangeFrameNotification
+                                                   object:nil];
+
     }
     return self;
+}
+
+#pragma mark - Keyboard
+
+-(void) keyboardWillShow:(NSNotification*)notification{
+    if([[[UIScreen mainScreen] coordinateSpace] isEqual:[[UIScreen mainScreen] fixedCoordinateSpace]]){
+        
+    }else{
+        
+    }
+}
+
+-(void) keyboardWillHide:(NSNotification*)notification{
+    
+}
+
+-(void) keyboardFrameDidChange:(NSNotification*)notification{
+    NSValue* endFrame = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardFrame = [endFrame CGRectValue];
+    CGRect idealFeedbackFrameInWindow = [[self maskedScrollContainer] convertRect:idealFeedbackTextViewFrame toView:nil];
+
+    if(CGRectIntersectsRect(idealFeedbackFrameInWindow, keyboardFrame)){
+        feedbackPromptLabel.frame = CGRectOffset(idealFeedbackLabelFrame, 0, -40);
+        feedbackTextView.frame = CGRectOffset(CGRectResizeBy(idealFeedbackTextViewFrame, 0, -100), 0, -40);
+        closeAnywayButton.frame = CGRectOffset(idealCloseButtonFrame, 0, -140);
+        sendButton.frame = CGRectOffset(idealSendButtonFrame, 0, -140);
+    }else{
+        feedbackPromptLabel.frame = idealFeedbackLabelFrame;
+        feedbackTextView.frame = idealFeedbackTextViewFrame;
+        closeAnywayButton.frame = idealCloseButtonFrame;
+        sendButton.frame = idealSendButtonFrame;
+    }
 }
 
 #pragma mark - Feedback

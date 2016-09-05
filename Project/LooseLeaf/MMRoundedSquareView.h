@@ -17,6 +17,4 @@
 @property (nonatomic, weak) NSObject<MMRoundedSquareViewDelegate>* delegate;
 @property (nonatomic, assign) BOOL allowTappingOutsideToClose;
 
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
-
 @end

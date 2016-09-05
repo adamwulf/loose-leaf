@@ -362,16 +362,6 @@
 
 }
 
-
-#pragma mark - Rotation
-
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    [super didRotateToIdealOrientation:orientation];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [newsletterSignupForm didRotateToIdealOrientation:orientation];
-    });
-}
-
 #pragma mark - Button Helpers
 
 -(void) nextPressed:(UIButton*)_button{
