@@ -36,7 +36,7 @@
         [content setBackgroundColor:[UIColor whiteColor]];
         [[self maskedScrollContainer] addSubview:content];
         
-        UITextView* releaseNotesView =[[UITextView alloc] initWithFrame:[content bounds]];
+        UITextView* releaseNotesView = [[UITextView alloc] initWithFrame:[content bounds]];
         releaseNotesView.attributedText = [self formattedHTMLFromHTMLString:htmlReleaseNotes];
         releaseNotesView.textContainerInset = UIEdgeInsetsMake(40, 100, 140, 100);
         releaseNotesView.editable = NO;

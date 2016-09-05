@@ -9,10 +9,9 @@
 #import "MMRoundedSquareView.h"
 #import "MMRotationManager.h"
 #import "MMUntouchableTutorialView.h"
+#import "Constants.h"
 
-@implementation MMRoundedSquareView{
-    UIView* fadedBackground;
-}
+@implementation MMRoundedSquareView
 
 @synthesize rotateableSquareView;
 @synthesize maskedScrollContainer;
@@ -29,16 +28,13 @@
         //
         // faded background
         
-        fadedBackground = [[UIView alloc] initWithFrame:self.bounds];
-        fadedBackground.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.5];
-        
         UIButton* backgroundButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        backgroundButton.bounds = fadedBackground.bounds;
+        backgroundButton.bounds = self.bounds;
         [backgroundButton addTarget:self action:@selector(tapToClose) forControlEvents:UIControlEventTouchUpInside];
-        [fadedBackground addSubview:backgroundButton];
-        backgroundButton.center = fadedBackground.center;
+        backgroundButton.center = CGRectGetMidPoint([self bounds]);
+        backgroundButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
-        [self addSubview:fadedBackground];
+        [self addSubview:backgroundButton];
         
         
         CGFloat widthOfRotateableContainer = self.boxSize + 2 * buttonBuffer;
@@ -49,7 +45,7 @@
         [self addSubview:rotateableSquareView];
         
         
-        self.rotateableSquareView.transform = CGAffineTransformMakeRotation([self interfaceRotationAngle]);
+        self.rotateableSquareView.autoresizingMask = UIViewAutoresizingFlexibleAllMargins;
         
         //
         // scrollview

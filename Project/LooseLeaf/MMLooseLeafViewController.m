@@ -35,8 +35,11 @@
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
 #import "MMAbstractShareItem.h"
+#import "MMReleaseNotesViewController.h"
 #import "MMReleaseNotesView.h"
 #import "UIApplication+Version.h"
+#import "MMAppDelegate.h"
+#import "MMPresentationWindow.h"
 #import "Constants.h"
 #import "MMMarkdown.h"
 
@@ -63,7 +66,7 @@
     MMStackPropertiesView* stackPropertiesView;
     // tutorials
     MMTutorialView* tutorialView;
-    MMReleaseNotesView* releaseNotesView;
+    MMReleaseNotesViewController* releaseNotesViewController;
     UIView* backdrop;
     
     // make sure to only check to show release notes once per launch
@@ -335,7 +338,7 @@
 }
 
 -(BOOL) isShowingReleaseNotes{
-    return releaseNotesView != nil || releaseNotesView.alpha;
+    return releaseNotesViewController != nil;
 }
 
 #pragma mark - MMStackControllerViewDelegate
@@ -528,7 +531,6 @@
             [importImageSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
             [tutorialView didRotateToIdealOrientation:toOrient];
-            [releaseNotesView didRotateToIdealOrientation:toOrient];
         }
     }];
 }
@@ -631,18 +633,25 @@
 #endif
                 
                 backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
-                backdrop.backgroundColor = [UIColor whiteColor];
+                backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
                 backdrop.alpha = 0;
                 [self.view addSubview:backdrop];
                 
-                releaseNotesView = [[MMReleaseNotesView alloc] initWithFrame:self.view.bounds andReleaseNotes:htmlReleaseNotes];
-                releaseNotesView.delegate = self;
-                releaseNotesView.alpha = 0;
-                [self.view addSubview:releaseNotesView];
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                 
+                releaseNotesViewController = [[MMReleaseNotesViewController alloc] initWithReleaseNotes:htmlReleaseNotes andCompletionBlock:^{
+                    [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+                        releaseNotesViewController = nil;
+                    }];
+                    [UIView animateWithDuration:.3 animations:^{
+                        backdrop.alpha = 0;
+                    }];
+                }];
+
+                [presentationWindow.rootViewController presentViewController:releaseNotesViewController animated:YES completion:nil];
+
                 [UIView animateWithDuration:.3 animations:^{
                     backdrop.alpha = 1;
-                    releaseNotesView.alpha = 1;
                 }];
             }
         }
@@ -706,16 +715,13 @@
 #pragma mark - MMRoundedSquareViewDelegate
 
 -(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView *)squareView{
-    if(squareView == stackPropertiesView || squareView == releaseNotesView){
+    if(squareView == stackPropertiesView){
         [UIView animateWithDuration:.3 animations:^{
             backdrop.alpha = 0;
             stackPropertiesView.alpha = 0;
-            releaseNotesView.alpha = 0;
         } completion:^(BOOL finished) {
             [backdrop removeFromSuperview];
             backdrop = nil;
-            [releaseNotesView removeFromSuperview];
-            releaseNotesView = nil;
             [stackPropertiesView removeFromSuperview];
             stackPropertiesView = nil;
         }];
