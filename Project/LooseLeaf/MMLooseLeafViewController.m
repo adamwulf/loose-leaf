@@ -528,6 +528,7 @@
             [importImageSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
             [tutorialView didRotateToIdealOrientation:toOrient];
+            [releaseNotesView didRotateToIdealOrientation:toOrient];
         }
     }];
 }
