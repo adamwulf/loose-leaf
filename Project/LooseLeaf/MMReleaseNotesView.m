@@ -10,6 +10,7 @@
 #import "MMReleaseNotesButtonPrompt.h"
 #import "Constants.h"
 #import "UIColor+Shadow.h"
+#import "Mixpanel.h"
 
 #define kFeedbackPlaceholderText @"Any feedback is very much appreciated!"
 
@@ -20,6 +21,8 @@
 @implementation MMReleaseNotesView{
     MMReleaseNotesButtonPrompt* firstPromptView;
     MMReleaseNotesButtonPrompt* happyResponseView;
+    
+    UITextView* feedbackTextView;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes{
@@ -75,7 +78,7 @@
         promptLabel.text = @"What would make Loose Leaf better?";
         
         CGRect feedbackFrame = CGRectMake(100, 160, 400, 240);
-        UITextView* feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
+        feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
         [feedbackTextView setDelegate:self];
         [[feedbackTextView layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
         [[feedbackTextView layer] setBorderWidth:1];
@@ -121,11 +124,14 @@
             [UIView animateWithDuration:.3 animations:^{
                 weakFirstPrompt.alpha = 0;
                 weakHappyPrompt.alpha = 1;
+
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfHappyUpgrades by:@(1)];
             }];
         }];
         
         [firstPromptView setDenyBlock:^{
             [UIView animateWithDuration:.3 animations:^{
+                [[[Mixpanel sharedInstance] people] increment:kMPNumberOfSadUpgrades by:@(1)];
                 weakFirstPrompt.alpha = 0;
                 feedbackForm.alpha = 1;
             }];
@@ -137,12 +143,19 @@
             // according to http://stackoverflow.com/questions/18905686/itunes-review-url-and-ios-7-ask-user-to-rate-our-app-appstore-show-a-blank-pag
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=625659452&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"]];
 
+            [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{kMPUpgradeFeedbackResult : @"Happy",
+                                                                             kMPUpgradeAppStoreReview : @(YES)}];
+
             // below is the URL from itunes connect.
             // [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/loose-leaf/id625659452"]];
         }];
         
         [happyResponseView setDenyBlock:^{
             [[weakSelf delegate] didTapToCloseRoundedSquareView:weakSelf];
+            
+            [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{kMPUpgradeFeedbackResult : @"Happy",
+                                                                             kMPUpgradeAppStoreReview : @(NO)}];
+            
         }];
         
         [content addSubview:promptContainerView];
@@ -160,10 +173,16 @@
 
 -(void) sendFeedback:(UIButton*)button{
     [[self delegate] didTapToCloseRoundedSquareView:self];
+
+    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{kMPUpgradeFeedbackResult : @"Sad",
+                                                                     kMPUpgradeFeedbackReply : feedbackTextView.text ?: @""}];
 }
 
 -(void) closeFeedbackForm:(UIButton*)button{
     [[self delegate] didTapToCloseRoundedSquareView:self];
+
+    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{kMPUpgradeFeedbackResult : @"Sad",
+                                                                     kMPUpgradeFeedbackReply : feedbackTextView.text ?: @""}];
 }
 
 

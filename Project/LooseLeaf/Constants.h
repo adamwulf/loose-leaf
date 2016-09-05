@@ -195,6 +195,13 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 #define kMPFailedRotationReading @"Failed Rotation Reading"
 
+#define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
+#define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
+#define kMPUpgradeFeedback @"Upgrade Feedback"
+#define kMPUpgradeFeedbackResult @"Feedback"
+#define kMPUpgradeAppStoreReview @"App Store Review"
+#define kMPUpgradeFeedbackReply @"Text Reply"
+
 // tutorial
 #define kMPHasFinishedTutorial @"Has Finished Tutorial"
 #define kHasSignedUpForNewsletter @"kHasSignedUpForNewsletter"
