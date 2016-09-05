@@ -46,7 +46,7 @@
         
         UITextView* releaseNotesView = [[UITextView alloc] initWithFrame:[content bounds]];
         releaseNotesView.attributedText = [self formattedHTMLFromHTMLString:htmlReleaseNotes];
-        releaseNotesView.textContainerInset = UIEdgeInsetsMake(40, 100, 140, 100);
+        releaseNotesView.textContainerInset = UIEdgeInsetsMake(48, 100, 140, 100);
         releaseNotesView.editable = NO;
         releaseNotesView.scrollIndicatorInsets = UIEdgeInsetsMake(80, 0, 142, 0);
         [content addSubview:releaseNotesView];
@@ -192,7 +192,7 @@
         
         [self textViewDidEndEditing:feedbackTextView];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [releaseNotesView flashScrollIndicators];
         });
         
