@@ -13,6 +13,8 @@
 
 @implementation MMReleaseNotesView{
     MMReleaseNotesButtonPrompt* firstPromptView;
+    MMReleaseNotesButtonPrompt* happyResponseView;
+    MMReleaseNotesButtonPrompt* sadResponseView;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes{
@@ -47,15 +49,55 @@
         
         [promptContainerView addSubview:firstPromptView];
         
+        happyResponseView = [[MMReleaseNotesButtonPrompt alloc] initWithFrame:promptContainerView.bounds];
+        happyResponseView.alpha = 0;
+        [happyResponseView setPrompt:@"Awesome! Will you rate us on the App Store?"];
+        [happyResponseView setConfirmAnswer:@"⭐️⭐️⭐️⭐️⭐️"];
+        [happyResponseView setDenyAnswer:@"No Thanks"];
+        
+        [promptContainerView addSubview:happyResponseView];
+        
+        sadResponseView = [[MMReleaseNotesButtonPrompt alloc] initWithFrame:promptContainerView.bounds];
+        sadResponseView.alpha = 0;
+        [sadResponseView setPrompt:@"What could make Loose Leaf better?"];
+        [sadResponseView setConfirmAnswer:@"Not sure"];
+        [sadResponseView setDenyAnswer:@"I'll think about it"];
+        
+        [promptContainerView addSubview:sadResponseView];
+
+        
+        __weak MMReleaseNotesView* weakSelf = self;
+        __weak UIView* weakFirstPrompt = firstPromptView;
+        __weak UIView* weakHappyPrompt = happyResponseView;
+        __weak UIView* weakSadPrompt = sadResponseView;
+        
         [firstPromptView setConfirmBlock:^{
-            NSLog(@"yep!");
+            [UIView animateWithDuration:.3 animations:^{
+                weakFirstPrompt.alpha = 0;
+                weakHappyPrompt.alpha = 1;
+            }];
         }];
         
         [firstPromptView setDenyBlock:^{
-            NSLog(@"nope!");
+            [UIView animateWithDuration:.3 animations:^{
+                weakFirstPrompt.alpha = 0;
+                weakSadPrompt.alpha = 1;
+            }];
         }];
         
+        [happyResponseView setConfirmBlock:^{
+            [[weakSelf delegate] didTapToCloseRoundedSquareView:weakSelf];
+            // This URL opens the review page (as of iOS 9) and has worked for at least 2 years
+            // according to http://stackoverflow.com/questions/18905686/itunes-review-url-and-ios-7-ask-user-to-rate-our-app-appstore-show-a-blank-pag
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=625659452&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"]];
+
+            // below is the URL from itunes connect.
+            // [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://itunes.apple.com/us/app/loose-leaf/id625659452"]];
+        }];
         
+        [happyResponseView setDenyBlock:^{
+            [[weakSelf delegate] didTapToCloseRoundedSquareView:weakSelf];
+        }];
         
         [content addSubview:promptContainerView];
     }
