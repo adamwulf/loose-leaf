@@ -40,10 +40,11 @@
 #import "UIApplication+Version.h"
 #import "MMAppDelegate.h"
 #import "MMPresentationWindow.h"
+#import "MMTutorialViewController.h"
 #import "Constants.h"
 #import "MMMarkdown.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMTutorialViewDelegate,MMRoundedSquareViewDelegate>
+@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMRoundedSquareViewDelegate>
 
 @end
 
@@ -65,7 +66,7 @@
     // stack properties
     MMStackPropertiesView* stackPropertiesView;
     // tutorials
-    MMTutorialView* tutorialView;
+    MMTutorialViewController* tutorialViewController;
     MMReleaseNotesViewController* releaseNotesViewController;
     UIView* backdrop;
     
@@ -334,7 +335,7 @@
 }
 
 -(BOOL) isShowingTutorial{
-    return tutorialView != nil || tutorialView.alpha;
+    return tutorialViewController != nil;
 }
 
 -(BOOL) isShowingReleaseNotes{
@@ -667,19 +668,27 @@
     
     NSArray* tutorials = [note.userInfo objectForKey:@"tutorialList"];
     backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
-    backdrop.backgroundColor = [UIColor whiteColor];
+    backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
     backdrop.alpha = 0;
     [self.view addSubview:backdrop];
     
-    tutorialView = [[MMTutorialView alloc] initWithFrame:self.view.bounds andTutorials:tutorials];
-    tutorialView.delegate = self;
-    tutorialView.alpha = 0;
-    [self.view addSubview:tutorialView];
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+
+    tutorialViewController = [[MMTutorialViewController alloc] initWithTutorials:tutorials andCompletionBlock:^{
+        [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+            tutorialViewController = nil;
+        }];
+        [UIView animateWithDuration:.3 animations:^{
+            backdrop.alpha = 0;
+        }];
+    }];
+    
+    [presentationWindow.rootViewController presentViewController:tutorialViewController animated:YES completion:nil];
     
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 1;
-        tutorialView.alpha = 1;
     }];
+    
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
@@ -688,27 +697,7 @@
         return;
     }
     
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 0;
-        tutorialView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [backdrop removeFromSuperview];
-        backdrop = nil;
-        [tutorialView unloadTutorials];
-        [tutorialView removeFromSuperview];
-        tutorialView = nil;
-    }];
-}
-
-
-#pragma mark - MMTutorialViewDelegate
-
--(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    DebugLog(@"user is watching %d", (int) stepNum);
-}
-
--(void) didFinishTutorial{
-    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
+    [tutorialViewController closeTutorials];
 }
 
 #pragma mark - MMRoundedSquareViewDelegate

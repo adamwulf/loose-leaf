@@ -200,7 +200,6 @@
                                                  selector:@selector(keyboardFrameDidChange:)
                                                      name:UIKeyboardDidChangeFrameNotification
                                                    object:nil];
-
     }
     return self;
 }

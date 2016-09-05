@@ -360,6 +360,18 @@
         [obj setAlpha:[firstTutorialView wantsHiddenButtons] ? 0 : 1];
     }];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotateToIdealOrientation:) name:UIKeyboardDidChangeFrameNotification object:nil];
+}
+
+
+#pragma mark - Rotation
+
+-(void) didRotateToIdealOrientation:(NSNotification*)notification{
+    if([[UIScreen mainScreen] bounds].size.width > [[UIScreen mainScreen] bounds].size.height){
+        [newsletterSignupForm didRotateToIdealOrientation:UIInterfaceOrientationLandscapeLeft];
+    }else{
+        [newsletterSignupForm didRotateToIdealOrientation:UIInterfaceOrientationPortrait];
+    }
 }
 
 #pragma mark - Button Helpers
