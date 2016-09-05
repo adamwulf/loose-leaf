@@ -11,10 +11,15 @@
 #import "Constants.h"
 #import "UIColor+Shadow.h"
 
+#define kFeedbackPlaceholderText @"Any feedback is very much appreciated!"
+
+@interface MMReleaseNotesView ()<UITextViewDelegate>
+
+@end
+
 @implementation MMReleaseNotesView{
     MMReleaseNotesButtonPrompt* firstPromptView;
     MMReleaseNotesButtonPrompt* happyResponseView;
-    MMReleaseNotesButtonPrompt* sadResponseView;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes{
@@ -30,7 +35,7 @@
         releaseNotesView.attributedText = [self formattedHTMLFromHTMLString:htmlReleaseNotes];
         releaseNotesView.textContainerInset = UIEdgeInsetsMake(40, 100, 140, 100);
         releaseNotesView.editable = NO;
-        releaseNotesView.scrollIndicatorInsets = UIEdgeInsetsMake(80, 0, 80, 0);
+        releaseNotesView.scrollIndicatorInsets = UIEdgeInsetsMake(80, 0, 142, 0);
         [content addSubview:releaseNotesView];
         
         CGFloat promptHeight = 140;
@@ -57,19 +62,60 @@
         
         [promptContainerView addSubview:happyResponseView];
         
-        sadResponseView = [[MMReleaseNotesButtonPrompt alloc] initWithFrame:promptContainerView.bounds];
-        sadResponseView.alpha = 0;
-        [sadResponseView setPrompt:@"What could make Loose Leaf better?"];
-        [sadResponseView setConfirmAnswer:@"Not sure"];
-        [sadResponseView setDenyAnswer:@"I'll think about it"];
         
-        [promptContainerView addSubview:sadResponseView];
-
+        
+        UIView * feedbackForm = [[UIView alloc] initWithFrame:[self.maskedScrollContainer bounds]];
+        [feedbackForm setBackgroundColor:[UIColor whiteColor]];
+        feedbackForm.alpha = 0;
+        
+        CGRect promptFr = CGRectMake(100, 80, 400, 60);
+        UILabel* promptLabel = [[UILabel alloc] initWithFrame:promptFr];
+        promptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
+        promptLabel.textAlignment = NSTextAlignmentCenter;
+        promptLabel.text = @"What would make Loose Leaf better?";
+        
+        CGRect feedbackFrame = CGRectMake(100, 160, 400, 240);
+        UITextView* feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
+        [feedbackTextView setDelegate:self];
+        [[feedbackTextView layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
+        [[feedbackTextView layer] setBorderWidth:1];
+        [feedbackTextView setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
+        
+        UIButton* closeAnywayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+        [[closeAnywayButton layer] setBorderColor:[[[UIColor blueShadowColor] colorWithAlphaComponent:1] CGColor]];
+        [[closeAnywayButton layer] setBorderWidth:1];
+        [[closeAnywayButton layer] setCornerRadius:8];
+        [closeAnywayButton setClipsToBounds:YES];
+        [closeAnywayButton setTitleColor:[[UIColor blueShadowColor] colorWithAlphaComponent:1] forState:UIControlStateNormal];
+        [closeAnywayButton setTitleColor:[UIColor blueShadowColor] forState:UIControlStateNormal];
+        [closeAnywayButton setTitle:@"No Feedback" forState:UIControlStateNormal];
+        [[closeAnywayButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
+        [closeAnywayButton addTarget:self action:@selector(closeFeedbackForm:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIButton* sendButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
+        sendButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
+        [[sendButton layer] setCornerRadius:8];
+        [sendButton setClipsToBounds:YES];
+        [sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [sendButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:.7] forState:UIControlStateNormal];
+        [sendButton setTitle:@"Send Feedback" forState:UIControlStateNormal];
+        [[sendButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
+        [sendButton addTarget:self action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
+        
+        CGFloat yOffset = CGRectGetHeight([[self maskedScrollContainer] bounds]) - 140;
+        closeAnywayButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) - CGRectGetWidth([closeAnywayButton bounds]) - 60) / 2, yOffset);
+        sendButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) + CGRectGetWidth([sendButton bounds]) + 60) / 2, yOffset);
+        
+        [feedbackForm addSubview:promptLabel];
+        [feedbackForm addSubview:feedbackTextView];
+        [feedbackForm addSubview:closeAnywayButton];
+        [feedbackForm addSubview:sendButton];
+        
+        [[self maskedScrollContainer] addSubview:feedbackForm];
         
         __weak MMReleaseNotesView* weakSelf = self;
         __weak UIView* weakFirstPrompt = firstPromptView;
         __weak UIView* weakHappyPrompt = happyResponseView;
-        __weak UIView* weakSadPrompt = sadResponseView;
         
         [firstPromptView setConfirmBlock:^{
             [UIView animateWithDuration:.3 animations:^{
@@ -81,7 +127,7 @@
         [firstPromptView setDenyBlock:^{
             [UIView animateWithDuration:.3 animations:^{
                 weakFirstPrompt.alpha = 0;
-                weakSadPrompt.alpha = 1;
+                feedbackForm.alpha = 1;
             }];
         }];
         
@@ -100,8 +146,24 @@
         }];
         
         [content addSubview:promptContainerView];
+        
+        [self textViewDidEndEditing:feedbackTextView];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [releaseNotesView flashScrollIndicators];
+        });
     }
     return self;
+}
+
+#pragma mark - Feedback
+
+-(void) sendFeedback:(UIButton*)button{
+    [[self delegate] didTapToCloseRoundedSquareView:self];
+}
+
+-(void) closeFeedbackForm:(UIButton*)button{
+    [[self delegate] didTapToCloseRoundedSquareView:self];
 }
 
 
@@ -158,6 +220,26 @@
 
     
     return mutAttrStr;
+}
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:kFeedbackPlaceholderText]) {
+        textView.text = @"";
+        textView.textColor = [UIColor blackColor]; //optional
+    }
+    [textView becomeFirstResponder];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:@""]) {
+        textView.text = kFeedbackPlaceholderText;
+        textView.textColor = [UIColor lightGrayColor]; //optional
+    }
+    [textView resignFirstResponder];
 }
 
 @end
