@@ -71,7 +71,7 @@ static MMPalmGestureRecognizer* _instance = nil;
             [suspectTouches addObject:touch];
         }
         
-        if([touch majorRadius] < 2 || [touch force]){
+        if([touch force]){
             // when using the apple pencil, always assume the palm is down
             _hasSeenPalmDuringTouchSession = YES;
         }
