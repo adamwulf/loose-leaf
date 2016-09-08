@@ -615,9 +615,9 @@
 
     NSString* version = [UIApplication bundleShortVersionString];
     
-#ifdef DEBUG
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
-#endif
+//#ifdef DEBUG
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+//#endif
     
     if(version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]){
         
@@ -628,9 +628,9 @@
             NSString* htmlReleaseNotes = [MMMarkdown HTMLStringWithMarkdown:releaseNotes error:nil];
             
             if(htmlReleaseNotes){
-#ifndef DEBUG
+//#ifndef DEBUG
                 [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
-#endif
+//#endif
                 
                 backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
                 backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
