@@ -15,8 +15,6 @@
 
 @protocol MMPaperStackViewDelegate <NSObject>
 
-- (void)animatingToListView;
-
 - (void)animatingToPageView;
 
 - (MMScrapsInBezelContainerView*)bezelScrapContainer;

@@ -32,7 +32,7 @@
 @synthesize sidebarScrapState;
 
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
-    if (self = [super initWithFrame:frame andCountButton:_countButton]) {
+    if (self = [super initWithFrame:frame forReferenceButtonFrame:[_countButton frame] animateFromLeft:NO]) {
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         [slidingSidebarView addSubview:contentView];

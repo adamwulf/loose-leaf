@@ -157,6 +157,13 @@ static MMAllStacksManager* _instance = nil;
 #pragma mark - Upgrade to 2.0.0
 
 - (void)upgradeIfNecessary:(void (^)())upgradeCompleteBlock {
+    // upgrade to multiple stacks UI
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kIsShowingListView] || ![[NSUserDefaults standardUserDefaults] objectForKey:kCurrentViewMode]) {
+        [[NSUserDefaults standardUserDefaults] setObject:kViewModeCollapsed forKey:kCurrentViewMode];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kIsShowingListView];
+    }
+
+    // upgrade to multiple stacks file system
     NSString* documentsPath = [NSFileManager documentsPath];
     NSString* visiblePagesPlist = [[documentsPath stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
     NSString* hiddenPagesPlist = [[documentsPath stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];

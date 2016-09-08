@@ -37,6 +37,14 @@
 @synthesize insertImageButton;
 @synthesize shareButton;
 
++ (CGRect)insertImageButtonFrame {
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
+
++ (CGRect)shareButtonFrame {
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
+
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
@@ -70,7 +78,7 @@
         [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:addPageSidebarButton extendFrame:NO];
 
-        shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        shareButton = [[MMShareButton alloc] initWithFrame:[MMEditablePaperStackView shareButtonFrame]];
         shareButton.delegate = self;
         [self.toolbar addButton:shareButton extendFrame:NO];
 
@@ -96,7 +104,7 @@
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:scissorButton extendFrame:NO];
 
-        insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        insertImageButton = [[MMImageButton alloc] initWithFrame:[MMEditablePaperStackView insertImageButtonFrame]];
         insertImageButton.delegate = self;
         [self.toolbar addButton:insertImageButton extendFrame:NO];
 
@@ -557,11 +565,6 @@ static UIWebView* pdfWebView;
 
 #pragma mark = List View
 
-- (void)immediatelyTransitionToListView {
-    [super immediatelyTransitionToListView];
-    [self setButtonsVisible:NO animated:NO];
-}
-
 - (void)isBeginningToScaleReallySmall:(MMPaperView*)page {
     // make sure the currently edited page is being saved
     // to disk if need be
@@ -954,6 +957,15 @@ static UIWebView* pdfWebView;
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     [super scrollViewDidScroll:scrollView];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
+}
+
+#pragma mark - List View Enable / Disable Helper Methods
+
+- (void)immediatelyTransitionToListView {
+    if ([self isShowingPageView]) {
+        [super immediatelyTransitionToListView];
+        [self setButtonsVisible:NO animated:NO];
+    }
 }
 
 #pragma mark - Gestures for List View

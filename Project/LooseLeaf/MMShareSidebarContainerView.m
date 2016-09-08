@@ -57,8 +57,8 @@
 
 @synthesize shareDelegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft {
-    if (self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft]) {
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
+    if (self = [super initWithFrame:frame forReferenceButtonFrame:buttonFrame animateFromLeft:fromLeft]) {
         // Initialization code
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateShareOptions)

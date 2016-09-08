@@ -23,6 +23,7 @@
 #import "MMTutorialStackView.h"
 #import "MMEditablePaperView.h"
 #import "MMPagesSidebarButton.h"
+#import "MMCollapsableStackView.h"
 #import "NSArray+Map.h"
 
 #define kAnimationDuration 0.3

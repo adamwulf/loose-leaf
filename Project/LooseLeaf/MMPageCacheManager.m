@@ -283,10 +283,14 @@ static MMPageCacheManager* _instance = nil;
         }
     }
     for (MMEditablePaperView* page in visiblePages) {
-        [page loadCachedPreview];
+        [self loadPageThumbnailToCache:page];
     }
+}
+
+- (void)loadPageThumbnailToCache:(MMEditablePaperView*)page {
+    [page loadCachedPreview];
     @synchronized(stateLoadedPages) {
-        [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
+        [pagesWithLoadedCacheImages addObject:page];
     }
 }
 

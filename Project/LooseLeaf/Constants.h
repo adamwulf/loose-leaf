@@ -141,10 +141,18 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kBrushPencil @"pencil"
 #define kBrushHighlighter @"highlighter"
 #define kBrushMarker @"marker"
-#define kIsShowingListView @"ShowingListView"
 #define kMarkerColor @"markerColor"
 #define kPencilColor @"pencilColor"
 #define kHighlighterColor @"highlighterColor"
+
+#define kIsShowingListView @"ShowingListView" // old. use kCurrentViewMode instead.
+
+#define kCurrentViewMode @"CurrentViewMode"
+#define kViewModeList @"kViewModeList"
+#define kViewModePage @"kViewModePage"
+#define kViewModeCollapsed @"kViewModeCollapsed"
+
+#define kCurrentStack @"CurrentStack"
 
 // Camera
 #define kCameraMargin 10

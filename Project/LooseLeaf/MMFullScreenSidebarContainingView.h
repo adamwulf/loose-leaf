@@ -19,7 +19,7 @@
 
 @property (nonatomic, weak) NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft;
 
 - (void)sidebarCloseButtonWasTapped;
 

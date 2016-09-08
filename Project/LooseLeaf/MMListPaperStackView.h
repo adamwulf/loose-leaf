@@ -66,6 +66,8 @@
 
 - (void)immediatelyTransitionToListView;
 
+- (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated;
+
 - (void)beginUITransitionFromPageView;
 
 - (void)beginUITransitionFromListView;

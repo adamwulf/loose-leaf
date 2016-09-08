@@ -74,6 +74,21 @@ static const CGFloat frameBuffer = 20;
     return self;
 }
 
+- (BOOL)smoothBorder {
+    return self.layer.borderWidth > 0;
+}
+
+- (void)setSmoothBorder:(BOOL)smoothBorder {
+    if (smoothBorder) {
+        self.layer.borderWidth = 4;
+        self.layer.borderColor = [[UIColor clearColor] CGColor];
+        self.layer.shouldRasterize = YES;
+    } else {
+        self.layer.borderWidth = 0;
+        self.layer.shouldRasterize = NO;
+    }
+}
+
 
 /**
  * whenever the frame changes (from a scale)

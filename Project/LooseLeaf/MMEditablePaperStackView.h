@@ -69,6 +69,9 @@
     MMRulerView* rulerView;
 }
 
++ (CGRect)insertImageButtonFrame;
++ (CGRect)shareButtonFrame;
+
 @property (nonatomic, readonly) MMImageButton* insertImageButton;
 @property (nonatomic, readonly) MMShareButton* shareButton;
 @property (nonatomic, readonly) BOOL buttonsVisible;

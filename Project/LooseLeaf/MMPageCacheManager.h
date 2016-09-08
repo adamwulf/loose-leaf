@@ -53,4 +53,6 @@
 
 - (int)memoryOfStateLoadedPages;
 
+- (void)loadPageThumbnailToCache:(MMEditablePaperView*)page;
+
 @end
