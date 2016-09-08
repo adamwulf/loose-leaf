@@ -7,6 +7,7 @@
 5. Exported now pages mirror the current orientation of the iPad
 6. Reduced page content flicker when turning pages
 7. Fixed scrap background scale when cut from a PDF
+8. Fixed importing pages sent over iCloud from contacts
 
 
 # New since 2.0.0!
