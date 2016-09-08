@@ -124,6 +124,7 @@
         [redoButton addTarget:self action:@selector(redo:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:redoButton extendFrame:YES];
 
+#ifdef DEBUG
         MMTextButton* imageExportButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - 5 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont systemFontOfSize:12] andLetter:@"PNG" andXOffset:0 andYOffset:0];
         imageExportButton.delegate = self;
         [imageExportButton addTarget:self action:@selector(exportAsImage:) forControlEvents:UIControlEventTouchUpInside];
@@ -133,7 +134,7 @@
         pdfExportButton.delegate = self;
         [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:pdfExportButton extendFrame:NO];
-
+#endif
         
         //
         // accelerometer for rotating buttons

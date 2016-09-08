@@ -9,8 +9,6 @@
 		<dict>
 			<key>FooterText</key>
 			<string>Thanks</string>
-			<key>Title</key>
-			<string>Special Thanks</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
