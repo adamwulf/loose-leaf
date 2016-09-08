@@ -402,11 +402,18 @@
     bounceTimer = nil;
     
     if(coordinator.uuidOfIncomingPage){
-        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
-        page.delegate = stackView;
-        // this like will ensure the new page slides in with
-        // its preview properly loaded in time.
-        [page loadCachedPreviewAndDecompressImmediately:YES];
+
+        MMExportablePaperView* page;
+        
+        // move the page into this stack
+        if([coordinator movePageIntoStack:[[self stackView] uuid]]){
+            page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
+            page.delegate = stackView;
+            // this like will ensure the new page slides in with
+            // its preview properly loaded in time.
+            [page loadCachedPreviewAndDecompressImmediately:YES];
+        }
+        
         if(page){
             [stackView importAndShowPage:page];
         }else{

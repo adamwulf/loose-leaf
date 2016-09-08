@@ -25,4 +25,6 @@
 
 -(BOOL) matchesMessage:(SPRMessage*)message;
 
+-(BOOL) movePageIntoStack:(NSString*)stackUUID;
+
 @end

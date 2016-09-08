@@ -16,6 +16,7 @@
 #import "Mixpanel.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMReachabilityManager.h"
+#import "MMAllStacksManager.h"
 
 
 // step 1: fetch message from CloudKit
@@ -46,6 +47,7 @@
 -(id) initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_exportView{
     if(self = [super init]){
         DebugLog(@"creating new import for %@", importMessage.messageRecordID);
+        uuidOfIncomingPage = [[NSUUID UUID] UUIDString];
         message = importMessage;
         importExportView = _exportView;
         avatarButton = [[MMAvatarButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80) forLetter:message.initials];
@@ -75,6 +77,10 @@
             [self begin];
         }
     }
+}
+
+-(NSString*) inboxPathForPage{
+    return [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingPathComponent:uuidOfIncomingPage];
 }
 
 -(void) begin{
@@ -137,13 +143,12 @@
                                 // continue processing
                                 
                                 // we define our own UUID for the incoming page
-                                NSString* tmpUUIDOfIncomingPage = [NSString createStringUUID];
                                 // we'll put all the files into this directory for now
-                                NSString* tempPathOfIncomingPage = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"IncomingPages"] stringByAppendingPathComponent:tmpUUIDOfIncomingPage];
                                 
                                 ZipArchive* zip = [[ZipArchive alloc] init];
                                 if([zip unzipOpenFile:zipFileLocation]){
                                     // make sure target directory exists
+                                    NSString* tempPathOfIncomingPage = [self inboxPathForPage];
                                     [[NSFileManager defaultManager] createDirectoryAtPath:tempPathOfIncomingPage withIntermediateDirectories:YES attributes:nil error:nil];
                                     // unzip files
                                     [zip unzipFileTo:tempPathOfIncomingPage overWrite:NO];
@@ -221,20 +226,10 @@
                                         DebugLog(@"couldn't archive sender CloudKit account data");
                                     }
                                     
-                                    // move the page into position
-                                    NSString* documentsPath = [NSFileManager documentsPath];
-                                    targetPageLocation = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:tmpUUIDOfIncomingPage];
-                                    
-                                    err = nil;
-                                    [[NSFileManager defaultManager] moveItemAtPath:tempPathOfIncomingPage toPath:targetPageLocation error:&err];
-                                    
-                                    if(!err){
-                                        uuidOfIncomingPage = tmpUUIDOfIncomingPage;
-                                    }else{
-                                        uuidOfIncomingPage = nil;
-                                        targetPageLocation = nil;
-                                        DebugLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
-                                    }
+                                    // the page will be moved into its final position in a stack
+                                    // when the user taps the button. until then it'll stay in the
+                                    // IncomingPages directory
+
                                 }else{
                                     DebugLog(@"coordinator failed to unzip %@ with file %@", message.messageRecordID, zipFileLocation);
                                     [importExportView importCoordinatorFailedPermanently:self withCode:kMPEventImportInvalidZipErrorCode];
@@ -308,6 +303,22 @@
 
 -(NSString*) uuidOfIncomingPage{
     return uuidOfIncomingPage;
+}
+
+-(BOOL) movePageIntoStack:(NSString*)stackUUID{
+    NSString* tempPathOfIncomingPage = [self inboxPathForPage];
+    // move the page into position
+    targetPageLocation = [[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID] stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:uuidOfIncomingPage];
+    
+    NSError* err = nil;
+    [[NSFileManager defaultManager] moveItemAtPath:tempPathOfIncomingPage toPath:targetPageLocation error:&err];
+    
+    if(err){
+        DebugLog(@"couldn't move file from %@ to %@", tempPathOfIncomingPage, targetPageLocation);
+        return NO;
+    }
+    
+    return YES;
 }
 
 #pragma mark - Touch Event
