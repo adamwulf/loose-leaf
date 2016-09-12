@@ -31,6 +31,12 @@
         isEncrypted = CGPDFDocumentIsEncrypted(pdf);
         
         CGPDFDocumentRelease( pdf );
+        
+        if([self isEncrypted]){
+            // try with a blank password. Apple Preview does this
+            // to auto-open encrypted PDFs
+            [self attemptToDecrypt:@""];
+        }
     }
     return self;
 }

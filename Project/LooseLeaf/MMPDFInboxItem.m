@@ -30,7 +30,11 @@
 #pragma mark - Properties
 
 -(BOOL) attemptToDecrypt:(NSString*)_password{
-    return [pdf attemptToDecrypt:_password];
+    BOOL didDecrypt = [pdf attemptToDecrypt:_password];
+    if(didDecrypt){
+        [self generatePageThumbnailCache];
+    }
+    return didDecrypt;
 }
 
 -(BOOL) isEncrypted{
