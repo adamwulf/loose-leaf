@@ -1003,14 +1003,14 @@
     // noop
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    if(scrollView.contentOffset.y < -100){
-        initialScrollOffsetFromTransitionToListView = CGPointZero;
-        pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
-        [self organizePagesIntoSingleRowAnimated:YES];
-    }
-}
-
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+//    if(scrollView.contentOffset.y < -100){
+//        initialScrollOffsetFromTransitionToListView = CGPointZero;
+//        pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
+//        [self organizePagesIntoSingleRowAnimated:YES];
+//    }
+//}
+//
 #pragma mark - MMButtonAwareTapGestureRecognizer
 
 /**
