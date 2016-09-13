@@ -1,7 +1,7 @@
 # New in 2.1.0!
 
 1. Export pages as PDF or image
-2. Better palm rejection, particularly with the Apple Pencil
+2. Better palm rejection for the Apple Pencil
 3. Quickly delete all scraps in the sidebar with new delete button
 4. Increased resolution of imported background images
 5. Exported pages now mirror the current orientation of the iPad
