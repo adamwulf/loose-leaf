@@ -71,8 +71,8 @@ static MMNewsletterSignupHandler* _instance = nil;
     dispatch_async(lowQueue, ^{
         @synchronized(self){
             NSString* emailToSubscribe = [[NSUserDefaults standardUserDefaults] objectForKey:kPendingEmailToSubscribe];
-            [[Mixpanel sharedInstance] track:kMPNewsletterSignupAttemptEvent];
             if(emailToSubscribe){
+                [[Mixpanel sharedInstance] track:kMPNewsletterSignupAttemptEvent];
                 DebugLog(@"trying to subscribe: %@", emailToSubscribe);
                 if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
                     DebugLog(@" - internet is reachable");
