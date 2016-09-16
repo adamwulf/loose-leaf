@@ -41,6 +41,7 @@
 #import "MMPDFPageAsset.h"
 #import "MMImageInboxItem.h"
 #import "MMPalmGestureRecognizer.h"
+#import "NSURL+UTI.h"
 
 @implementation MMScrapPaperStackView{
     
@@ -221,7 +222,7 @@
     [[NSThread mainThread] performBlock:^{
         if([self imageMatchesPaperDimensions:scrapBacking]){
             CGSize pageSize = hiddenStackHolder.bounds.size;
-            [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url];
+            [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication];
             return;
         }
 
@@ -405,7 +406,7 @@
     [self enableAllGesturesForPageView];
 }
 
--(void) importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL{
+-(void) importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString *)containerDescription referringApp:(NSString*)sourceApplication{
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.isBrandNewPage = YES;
     page.delegate = self;
@@ -425,6 +426,18 @@
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
     
+    NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt : [assetURL fileExtension] ?: @"png",
+                                          kMPEventImportPropFileType : [assetURL universalTypeID] ?: [NSURL UTIForExtension:@"png"],
+                                          kMPEventImportPropResult: @"Success"} mutableCopy];
+    if(containerDescription){
+        properties[kMPEventImportPropSource] = containerDescription;
+    }
+    if(sourceApplication){
+        properties[kMPEventImportPropSourceApplication] = sourceApplication;
+    }
+    
+    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:properties];
+    
     [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
 }
 
@@ -432,11 +445,10 @@
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotosTaken by:@(1)];
     [[Mixpanel sharedInstance] track:kMPEventTakePhoto];
     
-    
     if(asPage){
         CGSize pageSize = hiddenStackHolder.bounds.size;
         img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
-        [self importImageAsNewPage:img withAssetURL:nil];
+        [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil];
         return;
     }
 
@@ -546,7 +558,7 @@
 
     if(asPage){
         CGSize pageSize = hiddenStackHolder.bounds.size;
-        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL];
+        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
         return;
     }
 

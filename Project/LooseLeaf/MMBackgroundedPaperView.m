@@ -72,10 +72,21 @@
         CGSize thumbSize = self.bounds.size;
         thumbSize.width = floorf(thumbSize.width / 2);
         thumbSize.height = floorf(thumbSize.height / 2);
-        UIImage* thumbImage = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:thumbSize interpolationQuality:kCGInterpolationMedium];
 
-        [UIImagePNGRepresentation(thumbImage) writeToFile:[self thumbnailPath] atomically:YES];
-        [UIImagePNGRepresentation(thumbImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+        // use same calculations to generate a thumbnail
+        // as the [export] methods below
+        CGFloat scale = [[UIScreen mainScreen] scale];
+        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
+
+        CGRect rectForImage = CGSizeFill([img size], thumbSize);
+        [img drawInRect:rectForImage];
+
+        UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+        
+        [UIImagePNGRepresentation(outputImage) writeToFile:[self thumbnailPath] atomically:YES];
+        [UIImagePNGRepresentation(outputImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
         [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
         [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
         
@@ -119,8 +130,8 @@
                 [[NSThread mainThread] performBlock:^{
                     if(wantsBackgroundTextureLoaded){
                         [self setPageBackgroundTexture:img andSaveToDisk:NO];
-                        isLoadingBackgroundTexture = NO;
                     };
+                    isLoadingBackgroundTexture = NO;
                 }];
             }else{
                 isLoadingBackgroundTexture = NO;
