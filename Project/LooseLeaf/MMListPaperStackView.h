@@ -18,7 +18,7 @@
 #import "MMInboxManagerDelegate.h"
 #import "MMButtonToolbarView.h"
 
-@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,UIScrollViewDelegate>{
+@interface MMListPaperStackView : MMPaperStackView<MMStretchPageGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,UIScrollViewDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating

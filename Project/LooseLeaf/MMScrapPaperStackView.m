@@ -1822,6 +1822,12 @@
     return nil;
 }
 
+#pragma mark - MMStretchPageGestureRecognizerDelegate
+
+-(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer *)gesture{
+    NSLog(@"clone!");
+}
+
 #pragma mark - MMRotationManagerDelegate
 
 -(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading{

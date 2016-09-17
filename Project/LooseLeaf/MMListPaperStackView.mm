@@ -1165,6 +1165,11 @@
     return CGSizeMake(screenWidth, screenHeight);
 }
 
+#pragma mark - MMStretchPageGestureRecognizerDelegate
+
+-(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer *)gesture{
+    @throw kAbstractMethodException;
+}
 
 #pragma mark - Private Helper Methods
 

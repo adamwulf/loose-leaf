@@ -1412,6 +1412,7 @@
 		C50A10201D8CC2AE00BA9438 /* MMStretchHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMStretchHelper.mm; sourceTree = "<group>"; };
 		C50A10221D8CD15200BA9438 /* MMDebugQuadrilateralView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugQuadrilateralView.h; sourceTree = "<group>"; };
 		C50A10231D8CD15200BA9438 /* MMDebugQuadrilateralView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugQuadrilateralView.m; sourceTree = "<group>"; };
+		C50A10251D8CEAC100BA9438 /* MMStretchPageGestureRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStretchPageGestureRecognizerDelegate.h; sourceTree = "<group>"; };
 		C50C0D6B1C3CE72D00DFC079 /* MMPaletteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaletteButton.h; sourceTree = "<group>"; };
 		C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaletteButton.m; sourceTree = "<group>"; };
 		C50C0D6E1C3CE7A600DFC079 /* MMPenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPenButton.h; sourceTree = "<group>"; };
@@ -2789,6 +2790,7 @@
 				C50A10231D8CD15200BA9438 /* MMDebugQuadrilateralView.m */,
 				C50A101C1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.h */,
 				C50A101D1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m */,
+				C50A10251D8CEAC100BA9438 /* MMStretchPageGestureRecognizerDelegate.h */,
 				6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */,
 				6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */,
 				6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */,
