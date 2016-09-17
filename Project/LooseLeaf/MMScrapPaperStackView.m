@@ -1836,6 +1836,36 @@
     NSString* uuidOfPageToDuplicate = [gesture.pinchedPage uuid];
     NSString* uuidOfNewPage = [[NSUUID UUID] UUIDString];
     
+    NSString* pagesPath = [MMEditablePaperView pagesPathForStackUUID:[self uuid] andPageUUID:uuidOfPageToDuplicate];
+    NSString* bundledPath = [MMEditablePaperView bundledPagesPathForPageUUID:uuidOfPageToDuplicate];
+    NSString* destinationPath = [MMEditablePaperView pagesPathForStackUUID:[self uuid] andPageUUID:uuidOfNewPage];
+    
+    
+    NSMutableArray* bundledContents = [[[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:bundledPath filesOnly:YES] mutableCopy];
+    NSMutableArray* pagesContents = [[[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:pagesPath filesOnly:YES] mutableCopy];
+    
+    // don't copy items from the bundle that are already
+    // overwritten in the modified page's contents
+    [bundledContents removeObjectsInArray:pagesContents];
+    
+    void(^moveItemIntoLocation)(NSString*, NSString*) = ^(NSString* fromPath, NSString* targetPath){
+        NSString* targetDirectory = [targetPath stringByDeletingLastPathComponent];
+        [NSFileManager ensureDirectoryExistsAtPath:targetDirectory];
+        [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:targetPath error:nil];
+    };
+    
+    for (NSString* item in bundledContents) {
+        NSString* fromPath = [bundledPath stringByAppendingPathComponent:item];
+        NSString* targetPath = [destinationPath stringByAppendingPathComponent:item];
+        moveItemIntoLocation(fromPath, targetPath);
+    }
+    
+    for (NSString* item in pagesContents) {
+        NSString* fromPath = [pagesPath stringByAppendingPathComponent:item];
+        NSString* targetPath = [destinationPath stringByAppendingPathComponent:item];
+        moveItemIntoLocation(fromPath, targetPath);
+    }
+    
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:self.bounds andUUID:uuidOfNewPage];
     page.delegate = self;
     // this like will ensure the new page slides in with

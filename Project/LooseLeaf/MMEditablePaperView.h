@@ -41,6 +41,10 @@
 @property (nonatomic, strong) JotView* drawableView;
 @property (readonly) JotViewStateProxy* paperState;
 
++(NSString*)pagesPathForStackUUID:(NSString*)stackUUID andPageUUID:(NSString*)pageUUID;
++(NSString*) bundledPagesPathForPageUUID:(NSString*)pageUUID;
+
+
 -(BOOL) hasEditsToSave;
 -(BOOL) isStateLoaded;
 -(BOOL) isStateLoading;

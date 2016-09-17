@@ -576,18 +576,26 @@ static int count = 0;
 
 #pragma mark - File Paths
 
++(NSString*)pagesPathForStackUUID:(NSString*)stackUUID andPageUUID:(NSString*)pageUUID{
+    NSString* documentsPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
+}
+
++(NSString*) bundledPagesPathForPageUUID:(NSString*)pageUUID{
+    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
+}
+
 -(NSString*) pagesPath{
     if(!pagesPath){
-        NSString* documentsPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.delegate.stackManager.uuid];
-        pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
+        pagesPath = [MMEditablePaperView pagesPathForStackUUID:self.delegate.stackManager.uuid andPageUUID:[self uuid]];
         [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
     }
     return pagesPath;
 }
 
 -(NSString*) bundledPagesPath{
-    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
-    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
+    return [MMEditablePaperView bundledPagesPathForPageUUID:[self uuid]];
 }
 
 -(NSString*) inkPath{
