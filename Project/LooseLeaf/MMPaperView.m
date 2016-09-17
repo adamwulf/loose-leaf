@@ -32,7 +32,9 @@
 }
 
 - (id)initWithFrame:(CGRect)frame{
-    return [self initWithFrame:frame andUUID:[NSString createStringUUID]];
+    id ret = [self initWithFrame:frame andUUID:[NSString createStringUUID]];
+    [ret setIsBrandNewPage:YES];
+    return ret;
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{

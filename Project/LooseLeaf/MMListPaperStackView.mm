@@ -2044,7 +2044,7 @@
                     closestDistance = distanceFromPage;
                 }
             }
-            
+
             page.frame = thePageToAddAfter.frame;
             if(!thePageToAddAfter){
                 // if list is empty

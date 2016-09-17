@@ -414,7 +414,6 @@
 
 -(void) importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString *)containerDescription referringApp:(NSString*)sourceApplication{
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-    page.isBrandNewPage = YES;
     page.delegate = self;
     [page setPageBackgroundTexture:imageToImport];
     if(!assetURL){
@@ -1831,15 +1830,12 @@
 #pragma mark - MMStretchPageGestureRecognizerDelegate
 
 -(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer *)gesture{
-    NSLog(@"clone!");
-    
     NSString* uuidOfPageToDuplicate = [gesture.pinchedPage uuid];
     NSString* uuidOfNewPage = [[NSUUID UUID] UUIDString];
     
     NSString* pagesPath = [MMEditablePaperView pagesPathForStackUUID:[self uuid] andPageUUID:uuidOfPageToDuplicate];
     NSString* bundledPath = [MMEditablePaperView bundledPagesPathForPageUUID:uuidOfPageToDuplicate];
     NSString* destinationPath = [MMEditablePaperView pagesPathForStackUUID:[self uuid] andPageUUID:uuidOfNewPage];
-    
     
     NSMutableArray* bundledContents = [[[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:bundledPath filesOnly:YES] mutableCopy];
     NSMutableArray* pagesContents = [[[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:pagesPath filesOnly:YES] mutableCopy];
@@ -1849,9 +1845,13 @@
     [bundledContents removeObjectsInArray:pagesContents];
     
     void(^moveItemIntoLocation)(NSString*, NSString*) = ^(NSString* fromPath, NSString* targetPath){
+        NSError* err = nil;
         NSString* targetDirectory = [targetPath stringByDeletingLastPathComponent];
         [NSFileManager ensureDirectoryExistsAtPath:targetDirectory];
-        [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:targetPath error:nil];
+        
+        [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:targetPath error:&err];
+
+        NSAssert(!err, @"shouldn't have any problem copying files");
     };
     
     for (NSString* item in bundledContents) {

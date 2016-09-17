@@ -63,8 +63,6 @@
 -(void) initializeStretch{
     
     stretchedPage = [pinchedPage snapshotViewAfterScreenUpdates:NO];
-    stretchedPage.layer.borderColor = [[UIColor redColor] CGColor];
-    stretchedPage.layer.borderWidth = 2;
     
     [[self view] addSubview:stretchedPage];
     CGRect pageFrame = [pinchedPage convertRect:[pinchedPage bounds] toView:[self view]];
