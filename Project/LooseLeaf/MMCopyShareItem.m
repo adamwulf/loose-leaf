@@ -44,18 +44,22 @@
 }
 
 -(void) performShareAction{
-    if(!targetProgress){
-        // only trigger if not already animating
-        [delegate mayShare:self];
-        
-        UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
-        [UIPasteboard generalPasteboard].image = imgToShare;
-        
-        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
-                                                                     kMPEventExportPropResult : @"Success"}];
-
-        [self animateToSuccess:YES];
+    if(!button.greyscale){
+        if(!targetProgress){
+            // only trigger if not already animating
+            [delegate mayShare:self];
+            
+            UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+            [UIPasteboard generalPasteboard].image = imgToShare;
+            
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
+                                                                         kMPEventExportPropResult : @"Success"}];
+            
+            [self animateToSuccess:YES];
+        }
+    }else{
+        [self animateToSuccess:NO];
     }
 }
 
@@ -133,7 +137,9 @@
         [UIView animateWithDuration:.3 animations:^{
             checkOrXView.alpha = 1;
         } completion:^(BOOL finished){
-            [delegate didShare:self];
+            if(succeeded){
+                [delegate didShare:self];
+            }
             [[NSThread mainThread] performBlock:^{
                 [checkOrXView removeFromSuperview];
                 [circle removeAnimationForKey:@"drawCircleAnimation"];

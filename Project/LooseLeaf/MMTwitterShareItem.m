@@ -65,7 +65,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
             SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-            if(tweetSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            if(tweetSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable && [self.delegate urlToShare]){
                 // TODO: fix twitter share when wifi enabled w/o any network
                 // this hung with the modal "open" in the window, no events triggered when tryign to draw
                 // even though the twitter dialog never showed. wifi was on but not connected.

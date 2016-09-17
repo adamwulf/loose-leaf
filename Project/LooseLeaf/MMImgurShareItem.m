@@ -60,59 +60,63 @@
 }
 
 -(void) performShareAction{
-    if(targetProgress){
-        // only try to share if not already sharing
-        return;
-    }
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
-            if(image && !conn){
-                lastProgress = 0;
-                targetSuccess = 0;
-                targetProgress = 0;
-                reason = nil;
-                [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
-                    progress *= .55; // leave last 10 % for when we get the URL
-                    if(progress > targetProgress){
-                        targetProgress = progress;
-                    }
-                    targetSuccess = YES;
-                } completionBlock:^(NSString *result) {
-                    lastLinkURL = result;
-                    targetProgress = 1.0;
-                    targetSuccess = YES;
-                    conn = nil;
-                    reason = nil;
-                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                 kMPEventExportPropResult : [self exportDestinationResult]}];
-                } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
-                    lastLinkURL = nil;
-                    targetProgress = 1.0;
-                    targetSuccess = NO;
-                    reason = error;
-                    conn = nil;
-                    
-                    NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
-                    if(failedReason){
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                     kMPEventExportPropResult : @"Failed",
-                                                                                     kMPEventExportPropReason : failedReason}];
-                    }else{
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                     kMPEventExportPropResult : @"Failed"}];
-                    }
-                }];
-                [self animateToPercent:.1 success:YES];
-            }
+    if(!button.greyscale){
+        if(targetProgress){
+            // only try to share if not already sharing
+            return;
         }
-    });
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+                if(image && !conn){
+                    lastProgress = 0;
+                    targetSuccess = 0;
+                    targetProgress = 0;
+                    reason = nil;
+                    [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
+                        progress *= .55; // leave last 10 % for when we get the URL
+                        if(progress > targetProgress){
+                            targetProgress = progress;
+                        }
+                        targetSuccess = YES;
+                    } completionBlock:^(NSString *result) {
+                        lastLinkURL = result;
+                        targetProgress = 1.0;
+                        targetSuccess = YES;
+                        conn = nil;
+                        reason = nil;
+                        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                     kMPEventExportPropResult : [self exportDestinationResult]}];
+                    } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
+                        lastLinkURL = nil;
+                        targetProgress = 1.0;
+                        targetSuccess = NO;
+                        reason = error;
+                        conn = nil;
+                        
+                        NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
+                        if(failedReason){
+                            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                         kMPEventExportPropResult : @"Failed",
+                                                                                         kMPEventExportPropReason : failedReason}];
+                        }else{
+                            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                         kMPEventExportPropResult : @"Failed"}];
+                        }
+                    }];
+                    [self animateToPercent:.1 success:YES];
+                }
+            }
+        });
+    }else{
+        [self animateToPercent:1.0 success:NO];
+    }
 }
 
 

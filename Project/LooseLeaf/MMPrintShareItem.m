@@ -46,8 +46,7 @@
 
 -(void) performShareAction{
     // only allow printing if we're enabled
-    if([UIPrintInteractionController isPrintingAvailable] &&
-       [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable){
+    if([UIPrintInteractionController isPrintingAvailable] && [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable && [self.delegate urlToShare]){
         [delegate mayShare:self];
         button.selected = YES;
         [button setNeedsDisplay];

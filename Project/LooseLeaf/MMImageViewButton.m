@@ -23,6 +23,10 @@
     return self;
 }
 
+-(BOOL) shouldBounce{
+    return ![self isGreyscale];
+}
+
 -(void) setImage:(UIImage*)img{
     image = img;
     [self setNeedsDisplay];

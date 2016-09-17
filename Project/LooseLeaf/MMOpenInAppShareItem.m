@@ -54,25 +54,27 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            controller = [UIDocumentInteractionController interactionControllerWithURL:[self.delegate urlToShare]];
-            controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
-            controller.delegate = self;
-            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-            UIView* presentationView = presentationWindow.rootViewController.view;
-            CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
-            [presentationWindow makeKeyAndVisible];
-            if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
-                [self performAirDropAction];
+    if(!button.greyscale){
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                controller = [UIDocumentInteractionController interactionControllerWithURL:[self.delegate urlToShare]];
+                controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
+                controller.delegate = self;
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                UIView* presentationView = presentationWindow.rootViewController.view;
+                CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
+                [presentationWindow makeKeyAndVisible];
+                if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
+                    [self performAirDropAction];
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 

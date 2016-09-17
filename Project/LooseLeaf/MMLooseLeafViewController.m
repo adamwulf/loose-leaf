@@ -618,9 +618,9 @@
     // hardcode version for a 2.1.1 updates
     version = @"2.1.0";
     
-#ifdef DEBUG
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
-#endif
+//#ifdef DEBUG
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+//#endif
     
     if(version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]){
         
