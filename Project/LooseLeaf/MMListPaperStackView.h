@@ -90,4 +90,6 @@
 
 -(void) tutorialShouldClose:(NSNotification*)note;
 
+-(CGRect) frameForIndexInList:(NSInteger)indexOfPage;
+
 @end

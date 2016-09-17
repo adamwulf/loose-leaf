@@ -170,7 +170,12 @@
             }
 
             if(touches1){
-                [[self pinchDelegate] didStretchToDuplicatePageWithGesture:self];
+                
+                CGPoint loc1 = [self averageLocationForTouches:touches1 inView:nil];
+                CGPoint loc2 = [self averageLocationForTouches:touches2 inView:nil];
+                CGPoint offset = CGPointMake(loc2.x - loc1.x, loc2.y - loc1.y);
+                
+                [[self pinchDelegate] didStretchToDuplicatePageWithGesture:self withOffset:offset];
                 
                 for (UITouch* touch in touches2) {
                     [self ignoreTouch:touch forEvent:event];
@@ -223,18 +228,22 @@
 
 #pragma mark - UIGestureRecognizerSubclass
 
--(CGPoint) locationInView:(UIView *)view{
+-(CGPoint) averageLocationForTouches:(NSOrderedSet<UITouch*>*)touches inView:(UIView*)view{
     CGPoint p = CGPointZero;
-    for (UITouch* touch in validTouches) {
+    for (UITouch* touch in touches) {
         CGPoint loc = [touch locationInView:view];
         p.x += loc.x;
         p.y += loc.y;
     }
-    if([validTouches count]){
-        p.x /= [validTouches count];
-        p.y /= [validTouches count];
+    if([touches count]){
+        p.x /= [touches count];
+        p.y /= [touches count];
     }
     return p;
+}
+
+-(CGPoint) locationInView:(UIView *)view{
+    return [self averageLocationForTouches:validTouches inView:view];
 }
 
 @end
