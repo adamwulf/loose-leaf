@@ -8,7 +8,7 @@
 
 #import "MMPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "MMStretchPageGestureRecognizer.h"
 #import "MMLongPressFromListViewGestureRecognizer.h"
 #import "MMListAddPageButton.h"
 #import "MMListAddPageButtonDelegate.h"
@@ -33,7 +33,7 @@
     CGFloat rowHeight;
     CGFloat bufferWidth;
     
-    MMPanAndPinchFromListViewGestureRecognizer* pinchGesture;
+    MMStretchPageGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
     
     CGPoint initialScrollOffsetFromTransitionToListView;

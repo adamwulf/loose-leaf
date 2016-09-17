@@ -12,6 +12,7 @@
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMExportablePaperView.h"
+#import "MMStretchPageGestureRecognizer.h"
 #import "NSArray+Map.h"
 #import "Mixpanel.h"
 #include <map>
@@ -67,7 +68,7 @@
         twoFingerTapGesture.enabled = NO;
         [self addGestureRecognizer:twoFingerTapGesture];
         
-        pinchGesture = [[MMPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPickUpAPageInListView:)];
+        pinchGesture = [[MMStretchPageGestureRecognizer alloc] initWithTarget:self action:@selector(didPickUpAPageInListView:)];
         pinchGesture.enabled = NO;
         pinchGesture.pinchDelegate = self;
         [pinchGesture requireGestureRecognizerToFail:twoFingerTapGesture];

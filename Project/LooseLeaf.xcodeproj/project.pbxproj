@@ -436,6 +436,8 @@
 		C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C506A3921C23DAD800236895 /* TwitterCore.framework */; };
 		C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B71C23DE3200236895 /* SSKeychain.m */; };
 		C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = C506A3B91C23DE3200236895 /* SSKeychainQuery.m */; };
+		C50A101E1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C50A101D1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m */; };
+		C50A10211D8CC2AE00BA9438 /* MMStretchHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = C50A10201D8CC2AE00BA9438 /* MMStretchHelper.mm */; };
 		C50C0D6D1C3CE72D00DFC079 /* MMPaletteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */; };
 		C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D6F1C3CE7A600DFC079 /* MMPenButton.m */; };
 		C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D721C3CE80A00DFC079 /* MMHighlighterButton.m */; };
@@ -1403,6 +1405,10 @@
 		C506A3B71C23DE3200236895 /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychain.m; path = ../../Submodules/sskeychain/SSKeychain/SSKeychain.m; sourceTree = "<group>"; };
 		C506A3B81C23DE3200236895 /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SSKeychainQuery.h; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.h; sourceTree = "<group>"; };
 		C506A3B91C23DE3200236895 /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SSKeychainQuery.m; path = ../../Submodules/sskeychain/SSKeychain/SSKeychainQuery.m; sourceTree = "<group>"; };
+		C50A101C1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStretchPageGestureRecognizer.h; sourceTree = "<group>"; };
+		C50A101D1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStretchPageGestureRecognizer.m; sourceTree = "<group>"; };
+		C50A101F1D8CC2AE00BA9438 /* MMStretchHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStretchHelper.h; sourceTree = "<group>"; };
+		C50A10201D8CC2AE00BA9438 /* MMStretchHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MMStretchHelper.mm; sourceTree = "<group>"; };
 		C50C0D6B1C3CE72D00DFC079 /* MMPaletteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaletteButton.h; sourceTree = "<group>"; };
 		C50C0D6C1C3CE72D00DFC079 /* MMPaletteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaletteButton.m; sourceTree = "<group>"; };
 		C50C0D6E1C3CE7A600DFC079 /* MMPenButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPenButton.h; sourceTree = "<group>"; };
@@ -2209,6 +2215,8 @@
 		664FB55E194E306E009C1EF9 /* Stack View */ = {
 			isa = PBXGroup;
 			children = (
+				C50A101F1D8CC2AE00BA9438 /* MMStretchHelper.h */,
+				C50A10201D8CC2AE00BA9438 /* MMStretchHelper.mm */,
 				6640E6D617E390A800EB3F7D /* Velocity */,
 				66EDA79317CA87D20067BA63 /* Scraps */,
 				66A13D3D1631E075002F5428 /* List View */,
@@ -2774,6 +2782,8 @@
 		66A13D3D1631E075002F5428 /* List View */ = {
 			isa = PBXGroup;
 			children = (
+				C50A101C1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.h */,
+				C50A101D1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m */,
 				6630ED9F15F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.h */,
 				6630EDA015F15324007E38AA /* MMPanAndPinchFromListViewGestureRecognizer.m */,
 				6630EDA215F1588E007E38AA /* MMPanAndPinchFromListViewGestureRecognizerDelegate.h */,
@@ -4305,6 +4315,7 @@
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
 				66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */,
+				C50A10211D8CC2AE00BA9438 /* MMStretchHelper.mm in Sources */,
 				66BD6E341591C37D00D4544C /* UIImage+MCDrawSubImage.m in Sources */,
 				C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */,
 				6663CC4A19DFC2280084F9FF /* MMImmutableScrapCollectionState.m in Sources */,
@@ -4405,6 +4416,7 @@
 				C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */,
 				66BEBFFA19BD6AAA0032D30C /* MMProgressedImageViewButton.m in Sources */,
 				C5FC08471C23E01B00C88675 /* MPDesignerEventBindingRequestMesssage.m in Sources */,
+				C50A101E1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66E2241619D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m in Sources */,
 				C5FC083E1C23E01B00C88675 /* MPApplicationStateSerializer.m in Sources */,
