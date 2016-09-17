@@ -1854,6 +1854,24 @@
         NSAssert(!err, @"shouldn't have any problem copying files");
     };
     
+    
+    CGRect targetFrame = gesture.pinchedPage.bounds;
+    targetFrame.origin = gesture.pinchedPage.frame.origin;
+    targetFrame.origin.x += offset.x - CGRectGetWidth(targetFrame) / 2;
+    targetFrame.origin.y += offset.y;
+    BOOL shouldSubOne = targetFrame.origin.x < 0;
+    targetFrame.origin.x = MIN(MAX(0, targetFrame.origin.x), CGRectGetWidth([self bounds]));
+    
+    CGPoint targetPoint = CGRectGetMidPoint(targetFrame);
+    
+    NSInteger row = (targetPoint.y) / (rowHeight + bufferWidth);
+    NSInteger col = targetPoint.x / ((columnWidth + bufferWidth) + bufferWidth / kNumberOfColumnsInListView);
+    NSInteger index = row * kNumberOfColumnsInListView + col - shouldSubOne;
+    if(col == kNumberOfColumnsInListView - 1){
+        index -= 1;
+    }
+    CGRect targetPageFrame = [self frameForIndexInList:index];
+    
     // copy all the files on a background thread
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
         for (NSString* item in bundledContents) {
@@ -1874,24 +1892,9 @@
             // this like will ensure the new page slides in with
             // its preview properly loaded in time.
             [page loadCachedPreviewAndDecompressImmediately:YES];
-            
-            CGRect fr = gesture.pinchedPage.bounds;
-            fr.origin = gesture.pinchedPage.frame.origin;
-            fr.origin.x += offset.x - CGRectGetWidth(fr) / 2;
-            fr.origin.y += offset.y;
-            fr.origin.x = MIN(MAX(0, fr.origin.x), CGRectGetWidth([self bounds]));
-            page.frame = fr;
-            
-            CGPoint targetPoint = CGRectGetMidPoint(fr);
-            
-            NSInteger row = (targetPoint.y) / (rowHeight + bufferWidth);
-            NSInteger col = targetPoint.x / ((columnWidth + bufferWidth) + bufferWidth / kNumberOfColumnsInListView);
-            NSInteger index = row * kNumberOfColumnsInListView + col;
-            if(col == kNumberOfColumnsInListView - 1){
-                index -= 1;
-            }
-            CGRect targetPageFrame = [self frameForIndexInList:index];
 
+            page.frame = targetFrame;
+            
             MMPaperView* pageToInsertAfter = [self pageForPointInList:CGRectGetMidPoint(targetPageFrame)];
             
             if([visibleStackHolder containsSubview:pageToInsertAfter]){
