@@ -43,6 +43,12 @@
 #import "MMPalmGestureRecognizer.h"
 #import "NSURL+UTI.h"
 
+@interface MMListPaperStackView (Protected)
+
+-(void) realignPagesInListView:(NSSet*)pagesToMove animated:(BOOL)animated forceRecalculateAll:(BOOL)recalculateAll;
+
+@end
+
 @implementation MMScrapPaperStackView{
     
     MMScrapsInBezelContainerView* bezelScrapContainer;
@@ -1826,6 +1832,30 @@
 
 -(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer *)gesture{
     NSLog(@"clone!");
+    
+    NSString* uuidOfPageToDuplicate = [gesture.pinchedPage uuid];
+    NSString* uuidOfNewPage = [[NSUUID UUID] UUIDString];
+    
+    MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:self.bounds andUUID:uuidOfNewPage];
+    page.delegate = self;
+    // this like will ensure the new page slides in with
+    // its preview properly loaded in time.
+    [page loadCachedPreviewAndDecompressImmediately:YES];
+
+    CGRect fr = gesture.pinchedPage.bounds;
+    fr.origin = gesture.pinchedPage.frame.origin;
+    page.frame = fr;
+    
+    [hiddenStackHolder pushSubview:page];
+    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+    [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+
+    NSMutableArray* pagesToMove = [[self findPagesInVisibleRowsOfListView] mutableCopy];
+    [pagesToMove removeObject:gesture.pinchedPage];
+    
+    [self realignPagesInListView:[NSSet setWithArray:pagesToMove] animated:YES forceRecalculateAll:YES];
+    
+    [self saveStacksToDisk];
 }
 
 #pragma mark - MMRotationManagerDelegate
