@@ -17,6 +17,8 @@
 // this method takes all valid touches, and sorts them in the OrderedSet
 // so that their touch locations are in clockwise order
 +(void) sortTouchesClockwise:(NSMutableOrderedSet<UITouch*>*)touches{
+    UITouch* firstTouch = [touches firstObject];
+    
     __block CGPoint center = CGPointZero;
     [touches enumerateObjectsUsingBlock:^(UITouch* touch, NSUInteger idx, BOOL *stop){
         CGPoint location = [touch locationInView:nil];
@@ -40,6 +42,19 @@
         int d2 = (b.x-center.x) * (b.x-center.x) + (b.y-center.y) * (b.y-center.y);
         return d1 > d2 ? NSOrderedAscending : NSOrderedDescending;
     }];
+    [MMStretchHelper rotateTouches:touches forFirstTouch:firstTouch];
+}
+
+// this method takes all valid touches, and sorts them in the OrderedSet
+// so that their touch locations are in clockwise order
++(void) rotateTouches:(NSMutableOrderedSet<UITouch*>*)touches forFirstTouch:(UITouch*)touch{
+    if([touches containsObject:touch]){
+        while([touches firstObject] != touch){
+            UITouch* t = [touches lastObject];
+            [touches removeObject:t];
+            [touches insertObject:t atIndex:0];
+        }
+    }
 }
 
 #pragma mark - Quadrilateral
@@ -199,6 +214,12 @@
     transform.m44 = matrix[8];
     
     return transform;
+}
+
+#pragma mark - Debug Helpers
+
++(void) logQuadrilateral:(Quadrilateral)quad{
+    NSLog(@"[(%.2f,%.2f)(%.2f,%.2f)(%.2f,%.2f)(%.2f,%.2f)]", quad.upperLeft.x, quad.upperLeft.y, quad.upperRight.x, quad.upperRight.y, quad.lowerLeft.x, quad.lowerLeft.y, quad.lowerRight.x, quad.lowerRight.y);
 }
 
 

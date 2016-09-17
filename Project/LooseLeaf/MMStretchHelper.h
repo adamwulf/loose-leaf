@@ -21,4 +21,7 @@
 
 + (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
 
+
++(void) logQuadrilateral:(Quadrilateral)quad;
+
 @end

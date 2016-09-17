@@ -112,5 +112,12 @@ static const CGFloat frameBuffer = 20;
     return CGPointMake(converted.x - frameBuffer, converted.y - frameBuffer);
 }
 
+- (UIView *)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets{
+    return [super resizableSnapshotViewFromRect:[MMShadowedView expandBounds:rect] afterScreenUpdates:afterUpdates withCapInsets:capInsets];
+}
+
+- (BOOL)drawViewHierarchyInRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates{
+    return [super drawViewHierarchyInRect:[MMShadowedView expandBounds:rect] afterScreenUpdates:afterUpdates];
+}
 
 @end
