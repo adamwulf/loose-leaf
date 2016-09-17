@@ -44,38 +44,44 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-            
-            UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
-            [self animateToPercent:.7 completion:^(BOOL didSucceed) {
-                if(didSucceed){
-                    [self.delegate didShare:self];
-                }
-            }];
-            [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
-                NSString* strResult = @"Failed";
-                [self updateButtonGreyscale];
-                if (error) {
-                    targetSuccess = NO;
-                    targetProgress = 1.0;
-                } else {
-                    strResult = @"Success";
-                    targetSuccess = YES;
-                    targetProgress = 1.0;
-                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                }
-                [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
-                                                                             kMPEventExportPropResult : strResult}];
-            }];
-        }
-    });
+    if(!button.greyscale){
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                
+                UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+                [self animateToPercent:.7 completion:^(BOOL didSucceed) {
+                    if(didSucceed){
+                        [self.delegate didShare:self];
+                    }
+                }];
+                [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:^(NSURL *assetURL, NSError *error){
+                    NSString* strResult = @"Failed";
+                    [self updateButtonGreyscale];
+                    if (error) {
+                        targetSuccess = NO;
+                        targetProgress = 1.0;
+                    } else {
+                        strResult = @"Success";
+                        targetSuccess = YES;
+                        targetProgress = 1.0;
+                        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                    }
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"PhotoAlbum",
+                                                                                 kMPEventExportPropResult : strResult}];
+                }];
+            }
+        });
+    }else{
+        targetSuccess = NO;
+        targetProgress = 1.0;
+        [self animateToPercent:1.0 completion:nil];
+    }
 }
 
 -(void) animateToPercent:(CGFloat)progress completion:(void (^)(BOOL targetSuccess))completion{

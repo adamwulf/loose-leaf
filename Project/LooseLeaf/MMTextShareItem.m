@@ -40,29 +40,31 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
-            [composer setMessageComposeDelegate:self];
-            if([MFMessageComposeViewController canSendText] && composer) {
-                [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-                
-                NSURL* urlToShare = [self.delegate urlToShare];
-                NSData *data = [NSData dataWithContentsOfURL:urlToShare];
-                [composer addAttachmentData:data typeIdentifier:[urlToShare mimeType] filename:[@"LooseLeaf" stringByAppendingPathExtension:[urlToShare pathExtension]]];
-                
-                [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
+    if(!button.greyscale){
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
+                [composer setMessageComposeDelegate:self];
+                if([MFMessageComposeViewController canSendText] && composer) {
+                    [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+                    
+                    NSURL* urlToShare = [self.delegate urlToShare];
+                    NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                    [composer addAttachmentData:data typeIdentifier:[urlToShare mimeType] filename:[@"LooseLeaf" stringByAppendingPathExtension:[urlToShare pathExtension]]];
+                    
+                    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+                    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                    [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
+                }
+                [delegate didShare:self];
             }
-            [delegate didShare:self];
-        }
-    });
+        });
+    }
 }
 
 -(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{

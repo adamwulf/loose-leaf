@@ -20,4 +20,6 @@
 
 -(void) bounceButton;
 
+-(BOOL) shouldBounce;
+
 @end

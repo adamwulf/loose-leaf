@@ -55,7 +55,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
             SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
-            if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable && [self.delegate urlToShare]){
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                 UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
                 [fbSheet addImage:imgToShare];
