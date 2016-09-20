@@ -525,6 +525,7 @@
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
+		C5C13E171D91FC5A0047B3EF /* clone-page.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C13E161D91FC4A0047B3EF /* clone-page.mp4 */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DE1D7B9633009AE6BE /* colorlesspoint.vsh */; };
 		C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DF1D7B9633009AE6BE /* coloredpoint.vsh */; };
@@ -1530,6 +1531,7 @@
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
 		C5C13E131D9108100047B3EF /* MMPageCloner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageCloner.h; sourceTree = "<group>"; };
 		C5C13E141D9108100047B3EF /* MMPageCloner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageCloner.m; sourceTree = "<group>"; };
+		C5C13E161D91FC4A0047B3EF /* clone-page.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clone-page.mp4"; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = colorlesspoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/colorlesspoint.vsh; sourceTree = "<group>"; };
 		C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = coloredpoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/coloredpoint.vsh; sourceTree = "<group>"; };
@@ -2420,6 +2422,7 @@
 		665F7F601AE096C900635D56 /* list-view */ = {
 			isa = PBXGroup;
 			children = (
+				C5C13E161D91FC4A0047B3EF /* clone-page.mp4 */,
 				665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */,
 				665F7F611AE096D000635D56 /* list-view-delete-page.mov */,
 			);
@@ -4096,6 +4099,7 @@
 				66CC2A9D1AEC3EAD00C6A3F9 /* scrap-to-sidebar.mov in Resources */,
 				66468E561B75D1C600DD90B0 /* pinch-to-list.mp4 in Resources */,
 				C58E6A2A1CDB1B4A00508F1D /* bg13.jpg in Resources */,
+				C5C13E171D91FC5A0047B3EF /* clone-page.mp4 in Resources */,
 				C58E6A4C1CDB1B4A00508F1D /* bg47.jpg in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */,
