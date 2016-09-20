@@ -147,6 +147,11 @@ static MMTutorialManager* _instance = nil;
             @"id": @"list-view-delete-page",
             @"title": @"Delete a Page",
             @"video": @"list-view-delete-page.mov"
+        },
+        @{
+            @"id": @"list-view-clone-page",
+            @"title": @"Duplicate a Page",
+            @"video": @"list-view-clone-page.mp4"
         }
     ];
 }
