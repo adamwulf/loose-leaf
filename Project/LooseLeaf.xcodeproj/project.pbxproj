@@ -530,6 +530,7 @@
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5C13E0F1D90C1D00047B3EF /* MMInboxImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6623C7EF1AB0D3A600192F95 /* MMInboxImage.m */; };
 		C5C13E101D90C2230047B3EF /* MMCloudKitAskingForPermissionState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6601170019ABC6710065C1B4 /* MMCloudKitAskingForPermissionState.m */; };
+		C5C13E111D90C5310047B3EF /* NSSet+Array.m in Sources */ = {isa = PBXBuildFile; fileRef = 6692B8A41A74606800CE73EF /* NSSet+Array.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DE1D7B9633009AE6BE /* colorlesspoint.vsh */; };
 		C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DF1D7B9633009AE6BE /* coloredpoint.vsh */; };
@@ -4299,6 +4300,7 @@
 				C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */,
 				66343C531ABF950E00801962 /* MMNewsletterSignupForm.m in Sources */,
 				6690EF1417CC64630009A0AC /* MMScrapBubbleButton.m in Sources */,
+				C5C13E111D90C5310047B3EF /* NSSet+Array.m in Sources */,
 				6688D1E41A994EA300EB17EC /* MMVideoLoopView.m in Sources */,
 				66DA827F1ABE18CD00E3314A /* MMTutorialManager.m in Sources */,
 				66DCFBCD1582BAED00B4918C /* MMPaperView.m in Sources */,
