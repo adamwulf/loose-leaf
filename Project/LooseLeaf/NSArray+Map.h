@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSArray (Map)
+@interface NSArray<ObjectType> (Map)
 
-- (NSArray *)mapObjectsUsingBlock:(id (^)(id obj, NSUInteger idx))block;
+- (NSArray *)mapObjectsUsingBlock:(id (^)(ObjectType obj, NSUInteger idx))block;
 
 - (NSArray *)mapObjectsUsingSelector:(SEL)selector;
 

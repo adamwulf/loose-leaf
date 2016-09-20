@@ -20,6 +20,7 @@
 #import "UIView+Debug.h"
 #import "MMAlbumGroupListLayout.h"
 #import "Constants.h"
+#import "MMBorderedCamView.h"
 
 @interface MMAbstractSidebarContentView (Protected)
 
@@ -221,6 +222,20 @@
 -(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
     [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
     [super touchesCancelled:touches withEvent:event];
+}
+
+#pragma mark - MMSinglePhotoCollectionViewCellDelegate
+
+-(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
+    lastCameraRollOffset = photoListScrollView.contentOffset;
+    [super pictureTakeWithCamera:img fromView:cameraView];
+}
+
+-(void) assetWasTapped:(MMDisplayAsset *)asset
+              fromView:(MMBufferedImageView *)bufferedImage
+          withRotation:(CGFloat)rotation{
+    lastCameraRollOffset = photoListScrollView.contentOffset;
+    [super assetWasTapped:asset fromView:bufferedImage withRotation:rotation];
 }
 
 @end

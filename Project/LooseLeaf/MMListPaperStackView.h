@@ -17,8 +17,9 @@
 #import "MMDeletePageSidebarController.h"
 #import "MMInboxManagerDelegate.h"
 #import "MMShadowHandView.h"
+#import "MMButtonToolbarView.h"
 
-@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate>{
+@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,UIScrollViewDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating
@@ -50,6 +51,8 @@
 }
 
 @property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
+@property (nonatomic, readonly) MMButtonToolbarView* toolbar;
+@property (nonatomic, readonly) BOOL isAnimatingTowardPageView;
 
 -(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
 -(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;

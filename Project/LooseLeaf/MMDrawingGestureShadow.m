@@ -7,6 +7,7 @@
 //
 
 #import "MMDrawingGestureShadow.h"
+#import <PerformanceBezier/PerformanceBezier.h>
 
 @implementation MMDrawingGestureShadow
 

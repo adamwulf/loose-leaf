@@ -41,7 +41,10 @@
     return self;
 }
 
-
+-(void) setGreyscale:(BOOL)greyscale{
+    _greyscale = greyscale;
+    [self setNeedsDisplay];
+}
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -63,14 +66,26 @@
     
     //// Gradient Declarations
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorSpaceRef colorSpace;
+    if(self.greyscale){
+        colorSpace = CGColorSpaceCreateDeviceGray();
+    }else{
+        colorSpace = CGColorSpaceCreateDeviceRGB();
+    }
     NSArray* faceGradientColors = [NSArray arrayWithObjects:
                                    (id)self.topBgColor.CGColor,
                                    (id)self.bottomBgColor.CGColor, nil];
     CGFloat faceGradientLocations[] = {0, 1};
     CGGradientRef faceGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)faceGradientColors, faceGradientLocations);
 
+    CGBlendMode normalBlendMode = kCGBlendModeNormal;
     
+    if(self.isGreyscale){
+        CGContextSaveGState(context);
+        CGContextSetBlendMode(context, kCGBlendModeLuminosity);
+        normalBlendMode = kCGBlendModeLuminosity;
+    }
+
     CGRect frame = [self drawableFrame];
     
     //// Oval
@@ -121,13 +136,17 @@
     [[UIColor whiteColor] setFill];
     [boxPath stroke];
     [arrowHeadPath stroke];
-    [arrowBodyPath stroke];
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
+    CGContextSetBlendMode(context, normalBlendMode);
 
-    
     [strokeColor setStroke];
     [boxPath stroke];
     [arrowHeadPath stroke];
+
+    CGContextSetBlendMode(context, kCGBlendModeClear);
+    [[UIColor whiteColor] setFill];
+    [arrowBodyPath stroke];
+    CGContextSetBlendMode(context, normalBlendMode);
+
     [arrowBodyPath stroke];
 
     
@@ -136,6 +155,10 @@
     [super drawRect:rect];
     CGColorSpaceRelease(colorSpace);
     CGGradientRelease(faceGradient);
+    
+    if(self.isGreyscale){
+        CGContextRestoreGState(context);
+    }
 }
 
 

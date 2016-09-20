@@ -9,7 +9,6 @@
 #import "MMSidebarButton.h"
 #import "Constants.h"
 #import "UIColor+Shadow.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <QuartzCore/QuartzCore.h>
 
 @implementation MMSidebarButton{
@@ -57,7 +56,7 @@
 }
 
 -(CGRect) drawableFrame{
-    CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
+    CGFloat smallest = floorf(MIN(self.bounds.size.width, self.bounds.size.height));
     return CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
 }
 

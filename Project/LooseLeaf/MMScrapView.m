@@ -10,7 +10,6 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
 #import "MMRotationManager.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "UIColor+Shadow.h"
 #import "MMDebugDrawView.h"
 #import "NSString+UUID.h"
@@ -20,6 +19,8 @@
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <PerformanceBezier/PerformanceBezier.h>
+#import <ClippingBezier/ClippingBezier.h>
 
 @implementation MMScrapView{
     // **
@@ -89,7 +90,7 @@
     // for us, but if not, then go ahead and build one
     MMScrapViewState* _scrapState = [[MMScrapViewState alloc] initWithUUID:[NSString createStringUUID] andBezierPath:originalPath andPaperState:paperState];
     _scrapState.delegate = self;
-    
+
     if(self = [self initWithScrapViewState:_scrapState]){
         // when we create a scrap state, it adjusts the path to have its corner in (0,0), so
         // we need to set our center after we create the state
@@ -118,7 +119,15 @@
         backgroundColorLayer.fillColor = [UIColor whiteColor].CGColor;
         backgroundColorLayer.masksToBounds = YES;
         backgroundColorLayer.frame = self.layer.bounds;
-        [self.layer addSublayer:backgroundColorLayer];
+        
+        CALayer* whiteLayer = [CALayer layer];
+        whiteLayer.backgroundColor = [UIColor whiteColor].CGColor;
+        whiteLayer.mask = backgroundColorLayer;
+        whiteLayer.frame = self.layer.bounds;
+        
+        
+        [self.layer addSublayer:whiteLayer];
+
         
         
         // only the path contents are opaque, but outside the path needs to be transparent
@@ -213,9 +222,9 @@
     selected = _selected;
     if(selected){
         self.layer.shadowColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1].CGColor;
-        self.layer.shadowRadius = 2.5;
+        self.layer.shadowRadius = MAX(1, 2.5 / [self scale]);
     }else{
-        self.layer.shadowRadius = 1.5;
+        self.layer.shadowRadius = MAX(1, 1.5 / [self scale]);
         self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:.5].CGColor;
     }
 }
@@ -264,17 +273,15 @@
 #pragma mark - Postion, Scale, Rotation
 
 -(void) setScale:(CGFloat)_scale andRotation:(CGFloat)_rotation{
-//    if(_scale > 2) _scale = 2;
-//    if(_scale * self.bounds.size.width < 100){
-//        _scale = 100 / self.bounds.size.width;
-//    }
-//    if(_scale * self.bounds.size.height < 100){
-//        _scale = 100 / self.bounds.size.height;
-//    }
     scale = _scale;
     rotation = _rotation;
     needsClippingPathUpdate = YES;
     self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(rotation),CGAffineTransformMakeScale(scale, scale));
+    if(selected){
+        self.layer.shadowRadius = MAX(1, 2.5 / [self scale]);
+    }else{
+        self.layer.shadowRadius = MAX(1, 1.5 / [self scale]);
+    }
 }
 
 -(void) setScale:(CGFloat)_scale{
@@ -465,8 +472,8 @@
 
 #pragma mark - JotView
 
--(void) addElements:(NSArray*)elements{
-    [scrapState addElements:elements];
+-(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture{
+    [scrapState addElements:elements withTexture:texture];
 }
 
 -(void) addUndoLevelAndFinishStroke{
@@ -506,29 +513,12 @@
 #pragma mark - Saving
 
 -(void) saveScrapToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock{
-//    DebugLog(@"asking scrap %@ to save", scrapState.uuid);
     if(scrapState){
         [scrapState saveScrapStateToDisk:doneSavingBlock];
     }else{
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"**********************************");
-        NSLog(@"**********************************");
-        NSLog(@"********************************** HANG!!!!!!!");
-        NSLog(@"**********************************");
-        NSLog(@"**********************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
-        NSLog(@"********************************************************");
         @throw [NSException exceptionWithName:@"ScrapSaveException" reason:@"saving scrap without a state" userInfo:nil];
-        //
-        // i think the right answer here is to just call the doneSavingBlock()
+        // i think the right answer here is to just call the doneSavingBlock(NO)
         // but i'm having trouble reproducing this code path.
-//        doneSavingBlock(NO);
     }
 }
 

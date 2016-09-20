@@ -45,8 +45,12 @@
     [self bounceButton:nil];
 }
 
+-(BOOL) shouldBounce{
+    return YES;
+}
+
 -(void) bounceButton:(id)sender{
-    if(self.enabled){
+    if(self.enabled && [self shouldBounce]){
         self.center = self.center;
         [self bounceWithTransform:[self rotationTransform]];
     }

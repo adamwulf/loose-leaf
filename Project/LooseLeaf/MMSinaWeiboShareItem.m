@@ -55,11 +55,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
             SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo];
-            if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            if(fbSheet && [MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable && [self.delegate urlToShare]){
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                [fbSheet setInitialText:@"Quick sketch drawn in Loose Leaf"];
-                [fbSheet addImage:self.delegate.imageToShare];
-                [fbSheet addURL:[NSURL URLWithString:@"http://getlooseleaf.com"]];
+                UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+                [fbSheet addImage:imgToShare];
                 fbSheet.completionHandler = ^(SLComposeViewControllerResult result){
                     NSString* strResult;
                     if(result == SLComposeViewControllerResultCancelled){
@@ -86,14 +85,16 @@
     });
 }
 
--(BOOL) isAtAllPossible{
-    return [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo] != nil;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"] && [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeSinaWeibo] != nil;
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         button.greyscale = YES;
     }else if(![SLComposeViewController isAvailableForServiceType:SLServiceTypeSinaWeibo]) {
         button.greyscale = YES;

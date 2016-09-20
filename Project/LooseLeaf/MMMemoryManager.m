@@ -18,7 +18,6 @@
 
 @implementation MMMemoryManager{
     NSOperationQueue* timerQueue;
-    MMScrapPaperStackView* stackView;
 
     // accountedBytes is the sum of
     // memoryOfStateLoadedPages, stackViewFullByteSize,
@@ -52,6 +51,8 @@
     int maxTotalBytesInTextures;
 }
 
+@synthesize delegate;
+
 @synthesize maxVirtualSize;
 @synthesize maxResidentSize;
 @synthesize maxAccountedResidentBytes;
@@ -75,14 +76,14 @@
 @synthesize totalBytesInVBOs;
 @synthesize totalBytesInTextures;
 
--(id) initWithStack:(MMScrapPaperStackView*)stack{
+-(id) initWithDelegate:(id<MMMemoryManagerDelegate>)_delegate{
     if(self = [super init]){
-        stackView = stack;
+        self.delegate = _delegate;
         timerQueue = [[NSOperationQueue alloc] init];
         MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(tick)];
         [self tick];
         [timerQueue addOperation:backgroundTimer];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(memoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;
@@ -106,7 +107,7 @@
     
     // bytes by logical ownership
     residentPageStateMemory = [[MMPageCacheManager sharedInstance] memoryOfStateLoadedPages];
-    residentStackViewMemory = stackView.fullByteSize;
+    residentStackViewMemory = self.delegate.fullByteSize;
     residentTrashMemory = [[JotTrashManager sharedInstance] knownBytesInTrash];
     residentImageCacheMemory = [[MMLoadImageCache sharedInstance] memoryOfLoadedImages];
     accountedResidentBytes = residentPageStateMemory + residentStackViewMemory + residentTrashMemory + residentImageCacheMemory;

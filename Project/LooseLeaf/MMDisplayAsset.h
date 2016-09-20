@@ -14,9 +14,13 @@
 
 -(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim;
 
+-(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio;
+
 -(NSURL*) fullResolutionURL;
 
 -(CGSize) fullResolutionSize;
+
+-(CGFloat) defaultRotation;
 
 -(CGFloat) preferredImportMaxDim;
 

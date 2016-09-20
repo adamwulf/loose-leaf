@@ -9,13 +9,15 @@
 #import "MMRulerView.h"
 #import "Constants.h"
 #import "MMVector.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import <ClippingBezier/ClippingBezier.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "UIDevice+PPI.h"
 #import "UIColor+Shadow.h"
+#import <PerformanceBezier/PerformanceBezier.h>
+#import <ClippingBezier/ClippingBezier.h>
+#import <Crashlytics/Crashlytics.h>
 
 @interface MMPointAndVector : NSObject
 @property (nonatomic) CGPoint point;
@@ -370,7 +372,9 @@ static NSDate* lastRender;
     CGFloat startAngle = calculateAngle(point2, center);
     
     // now draw the arc between the two points
+    CLS_LOG(@"building ruler 1 with center: %.2f %.2f radius %.2f startAngle: %.2f endAngle: %.2f", center.x, center.y, radius, startAngle, endAngle);
     UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:endAngle endAngle:startAngle clockwise:NO];
+    CLS_LOG(@"building ruler 2 with center: %.2f %.2f radius %.2f startAngle: %.2f endAngle: %.2f", center.x, center.y, radius, 0.f, M_PI*2);
     UIBezierPath* circle = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:0 endAngle:M_PI*2 clockwise:NO];
     UIBezierPath* tickMarks = [UIBezierPath bezierPath];
 
@@ -810,6 +814,8 @@ static NSDate* lastRender;
                 // be sure to set color/width/etc
                 newElement.color = element.color;
                 newElement.width = element.width;
+                newElement.stepWidth = element.stepWidth;
+                newElement.rotation = element.rotation;
                 [output addObject:newElement];
             }
         }];

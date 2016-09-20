@@ -11,7 +11,11 @@
 
 @protocol MMPencilAndPaletteViewDelegate <MMSidebarButtonDelegate>
 
--(void) penTapped:(UIButton*)button;
+-(void) highlighterTapped:(UIButton*)button;
+
+-(void) pencilTapped:(UIButton*)button;
+
+-(void) markerTapped:(UIButton*)button;
 
 -(void) didChangeColorTo:(UIColor*)color;
 

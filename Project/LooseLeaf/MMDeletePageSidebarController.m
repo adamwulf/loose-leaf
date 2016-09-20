@@ -12,7 +12,6 @@
 #import "MMTrashManager.h"
 
 #define kBorderWidth 3
-#define kBorderSpacing 2
 #define kStripeHeight 40.0
 
 @implementation MMDeletePageSidebarController{
@@ -28,7 +27,7 @@
 static CGFloat(^alphaForPercent)(CGFloat);
 static CGFloat(^clampPercent)(CGFloat);
 
--(id) initWithFrame:(CGRect)frame{
+-(id) initWithFrame:(CGRect)frame andDarkBorder:(BOOL)dark{
     if(self = [super init]){
         
         alphaForPercent = [^(CGFloat percent){
@@ -54,6 +53,9 @@ static CGFloat(^clampPercent)(CGFloat);
         CGFloat curveSize = 20.0;
         
         UIColor* borderColor = [[UIColor whiteColor] colorWithAlphaComponent:.9];
+        if(dark){
+            borderColor = [[UIColor blackColor] colorWithAlphaComponent:.1];
+        }
         
         deleteSidebarBackground = [[UIView alloc] initWithFrame:frame];
         deleteSidebarBackground.backgroundColor = [UIColor clearColor];
@@ -79,17 +81,36 @@ static CGFloat(^clampPercent)(CGFloat);
         rightBorderMask.fillRule = kCAFillRuleEvenOdd;
         rightBorder.mask = rightBorderMask;
         
+
+        UIView* stripes = [[UIView alloc] initWithFrame:deleteSidebarBackground.bounds];
+        stripes.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.2];
         
+        UIBezierPath* stripesPath = [UIBezierPath bezierPath];
+        for (int i=0; i<CGRectGetHeight(deleteSidebarBackground.bounds); i+=200) {
+            [stripesPath appendPath:[UIBezierPath bezierPathWithRect:CGRectMake(-1000, i, 3000, 100)]];
+        }
+        [stripesPath applyTransform:CGAffineTransformMakeRotation(M_PI / 4)];
+        [stripesPath applyTransform:CGAffineTransformMakeTranslation(500, -CGRectGetHeight(deleteSidebarBackground.bounds) / 2)];
+        CAShapeLayer* stripesMask = [CAShapeLayer layer];
+        stripesMask.frame = stripes.bounds;
+        stripesMask.fillColor = [UIColor whiteColor].CGColor;
+        stripesMask.path = stripesPath.CGPath;
+        stripes.layer.mask = stripesMask;
+
         // default fill w/o stripes
-        trashBackground = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"crumple.jpg"]];
+        trashBackground = [[UIView alloc] initWithFrame:deleteSidebarBackground.bounds];
+        trashBackground.backgroundColor = [UIColor colorWithWhite:1.0 alpha:.4];
         CGPoint center2 = CGPointMake(trashBackground.bounds.size.width-radius, frame.size.height/2);
-        UIBezierPath* fillPath = [UIBezierPath bezierPathWithArcCenter:center2 radius:radius - kBorderSpacing - kBorderWidth startAngle:0 endAngle:2*M_PI clockwise:YES];
+        UIBezierPath* fillPath = [UIBezierPath bezierPathWithArcCenter:center2 radius:radius - kBorderWidth startAngle:0 endAngle:2*M_PI clockwise:YES];
         trashBackground.alpha = 0.4;
         trashBackground.frame = CGRectMake(frame.size.width - trashBackground.bounds.size.width, 0, trashBackground.bounds.size.width, frame.size.height);
         CAShapeLayer* trashBackgroundMask = [CAShapeLayer layer];
-        trashBackgroundMask.backgroundColor = [UIColor whiteColor].CGColor;
+        trashBackgroundMask.fillColor = [UIColor whiteColor].CGColor;
         trashBackgroundMask.path = fillPath.CGPath;
         trashBackground.layer.mask = trashBackgroundMask;
+        
+        [trashBackground addSubview:stripes];
+        
         deleteSidebarBackground.layer.backgroundColor = [UIColor clearColor].CGColor;
         [deleteSidebarBackground.layer addSublayer:rightBorder];
         [deleteSidebarBackground addSubview:trashBackground];
@@ -121,17 +142,17 @@ static CGFloat(^clampPercent)(CGFloat);
 }
 
 -(void) showSidebarWithPercent:(CGFloat)percent withTargetView:(UIView*)targetView{
-    if(percent > 1.0){
-        // start slowing down until we hit 1.7
-        CGFloat ease = .7 - (percent - 1);
-        if(ease < 0) ease = 0;
-        ease /= .7;
-        // ease is now 0 < ease < 1
-        // and starts at 1 and works it way to 0
-        percent = 1.0 + .7 * (1-ease*ease);
-    }
-    
-    
+//    Math.easeOutCubic = function (t, b, c, d) {
+//        t /= d;
+//        t--;
+//        return c*(t*t*t + 1) + b;
+//    };
+
+    // start slowing down until we hit 1.7
+    CGFloat ease = percent / 1.7;
+    ease -= 1.0;
+    percent = 1.7 * (ease*ease*ease + 1.0);
+
     CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width + 200 * percent, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
     deleteSidebarBackground.frame = fr;
     
@@ -140,12 +161,18 @@ static CGFloat(^clampPercent)(CGFloat);
     
     CGFloat iconOpacity = (percent - .6) * 2;
     iconOpacity = clampPercent(iconOpacity);
-    
-    CGFloat movementDistance = 20.0;
+
+    CGFloat movementDistance = 10.0;
     
     CGPoint targetViewCenter = [deleteSidebarForeground convertPoint:targetView.center fromView:targetView.superview];
-    CGPoint trashIconCenter = CGPointMake(targetViewCenter.x + targetView.bounds.size.width / 2 - trashIcon.bounds.size.width / 4 + movementDistance,
+    CGPoint trashIconCenter = CGPointMake(trashIcon.bounds.size.width / 2 + movementDistance + 10,
                                           targetViewCenter.y - targetView.bounds.size.height / 2 - trashIcon.bounds.size.height / 2 - 2);
+    
+    if(trashIconCenter.y < CGRectGetHeight(trashIcon.bounds) / 2){
+        trashIconCenter.y = CGRectGetHeight(trashIcon.bounds) / 2;
+    }else if(trashIconCenter.y > CGRectGetHeight(deleteSidebarForeground.bounds) - CGRectGetHeight(trashIcon.bounds) / 2){
+        trashIconCenter.y = CGRectGetHeight(deleteSidebarForeground.bounds) - CGRectGetHeight(trashIcon.bounds) / 2;
+    }
 
     CGFloat(^easeOut)(CGFloat t) = ^(CGFloat t){
         return (CGFloat) - t*(t-2);
@@ -157,38 +184,41 @@ static CGFloat(^clampPercent)(CGFloat);
     trashIcon.center = trashIconCenter;
 }
 
--(BOOL) shouldDelete:(MMPaperView*)pageMightDelete{
+-(BOOL) shouldDelete:(UIView*)potentialViewToDelete{
     return trashIcon.alpha > .25;
 }
 
--(void) deletePage:(MMPaperView*)pageToDelete{
-    DebugLog(@"deleting page... %p", pageToDelete);
+-(void) deleteView:(UIView*)pageToDelete{
+    DebugLog(@"deleting view... %p", pageToDelete);
     
     CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
     [deleteSidebarForeground addSubview:pageToDelete];
     pageToDelete.center = center;
     
-    [UIView animateWithDuration:.3 animations:^{
+    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
         pageToDelete.center = CGPointMake(-100 - pageToDelete.bounds.size.width/2, pageToDelete.center.y);
     } completion:^(BOOL finished) {
         [pageToDelete removeFromSuperview];
+        if(self.deleteCompleteBlock){
+            self.deleteCompleteBlock(pageToDelete);
+        }
     }];
-
-    [[MMTrashManager sharedInstance] deletePage:pageToDelete];
 }
 
 -(void) closeSidebarAnimated{
     trashBackground.alpha = alphaForPercent(.1);
 
-    [UIView animateWithDuration:.20 animations:^{
-        CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
-        deleteSidebarBackground.frame = fr;
-        trashIcon.alpha = 0;
-
-        CGPoint c = trashIcon.center;
-        c.x -= 20;
-        trashIcon.center = c;
-    }];
+    CGRect fr = CGRectMake(-deleteSidebarForeground.bounds.size.width, 0, deleteSidebarForeground.bounds.size.width, deleteSidebarForeground.bounds.size.height);
+    if(!CGRectEqualToRect(deleteSidebarBackground.frame, fr)) {
+        [UIView animateWithDuration:.20 animations:^{
+            deleteSidebarBackground.frame = fr;
+            trashIcon.alpha = 0;
+            
+            CGPoint c = trashIcon.center;
+            c.x -= 20;
+            trashIcon.center = c;
+        }];
+    }
 }
 
 @end

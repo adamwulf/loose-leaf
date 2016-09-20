@@ -10,11 +10,19 @@
 #import <JotUI/JotUI.h>
 #import "MMGestureTouchOwnershipDelegate.h"
 
-@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapsInBezelContainerView;
+@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapsInBezelContainerView,MMSingleStackManager;
 
 @protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
 
+#pragma mark - Stylus
+
+-(void) didStartToWriteWithStylus;
+
+-(void) didEndWritingWithStylus;
+
 #pragma mark - Scale
+
+-(BOOL) isAnimatingTowardPageView;
 
 /**
  * return YES if we allow the input page to
@@ -60,7 +68,7 @@
  * the user has continued to scale the page down so far
  * that we can now take over and auto-scale it into list view
  */
--(void) finishedScalingReallySmall:(MMPaperView*)page;
+-(void) finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated;
 
 /**
  * the user has already begun to scale small (notification above),
@@ -159,6 +167,8 @@
 #pragma mark - Scrap Container for Sidebar
 
 -(MMScrapsInBezelContainerView*) bezelContainerView;
+
+-(MMSingleStackManager*) stackManager;
 
 #pragma mark Mixpanel
 

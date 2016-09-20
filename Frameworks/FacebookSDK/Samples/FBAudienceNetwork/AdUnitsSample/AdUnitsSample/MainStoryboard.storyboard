@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cXs-Xt-9qZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="cXs-Xt-9qZ">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
     </dependencies>
     <scenes>
         <!--Interstitial-->
@@ -70,7 +69,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qy8-hk-L7m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="922.5" y="767.95774647887322"/>
+            <point key="canvasLocation" x="922" y="767"/>
         </scene>
         <!--Medium Rect-->
         <scene sceneID="SCj-IH-H5g">
@@ -84,17 +83,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S6D-DC-n9d">
-                                <rect key="frame" x="16" y="86" width="568" height="250"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="Fgm-pn-PQd"/>
-                                </constraints>
-                            </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="top" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="250" text="Loading an ad..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="jIa-4f-XzP">
                                 <rect key="frame" x="156" y="28" width="288" height="50"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="288" id="aRI-h4-XbP"/>
+                                    <constraint firstAttribute="width" constant="288" id="jJF-fo-Mcc"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -103,19 +95,14 @@
                         </subviews>
                         <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="S6D-DC-n9d" secondAttribute="centerX" id="2v3-lF-42z"/>
-                            <constraint firstItem="fWN-H3-vDa" firstAttribute="top" secondItem="S6D-DC-n9d" secondAttribute="bottom" constant="215" id="8HG-CZ-lyI"/>
-                            <constraint firstAttribute="centerX" secondItem="jIa-4f-XzP" secondAttribute="centerX" id="Bfq-iq-H8G"/>
-                            <constraint firstItem="jIa-4f-XzP" firstAttribute="top" secondItem="QIX-Yu-ObV" secondAttribute="bottom" constant="8" id="EZg-jP-RW7"/>
-                            <constraint firstItem="S6D-DC-n9d" firstAttribute="top" secondItem="jIa-4f-XzP" secondAttribute="bottom" constant="8" id="HJS-WZ-eNs"/>
-                            <constraint firstItem="S6D-DC-n9d" firstAttribute="leading" secondItem="xPl-Ao-0h5" secondAttribute="leadingMargin" id="UuP-Yr-NlY"/>
-                            <constraint firstItem="S6D-DC-n9d" firstAttribute="trailing" secondItem="xPl-Ao-0h5" secondAttribute="trailingMargin" id="dJe-pE-yoJ"/>
+                            <constraint firstItem="fWN-H3-vDa" firstAttribute="top" secondItem="jIa-4f-XzP" secondAttribute="bottom" constant="473" id="9f2-4H-abG"/>
+                            <constraint firstItem="jIa-4f-XzP" firstAttribute="centerX" secondItem="xPl-Ao-0h5" secondAttribute="centerX" id="AvY-bb-lge"/>
+                            <constraint firstItem="jIa-4f-XzP" firstAttribute="top" secondItem="QIX-Yu-ObV" secondAttribute="bottom" constant="8" symbolic="YES" id="R18-Ei-Na1"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Medium Rect" image="TabMediumRect" id="mun-JE-D9f"/>
                     <connections>
                         <outlet property="adStatusLabel" destination="jIa-4f-XzP" id="Pwf-E0-1OW"/>
-                        <outlet property="adViewContainer" destination="S6D-DC-n9d" id="mk3-Ow-Eld"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7pz-Ll-UuV" userLabel="First Responder" sceneMemberID="firstResponder"/>

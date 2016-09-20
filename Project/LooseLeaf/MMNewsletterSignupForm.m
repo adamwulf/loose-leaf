@@ -89,7 +89,7 @@
 
         noThanksButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
-        [noThanksButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [noThanksButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         [noThanksButton sizeToFit];
         [noThanksButton addTarget:self action:@selector(noThanksButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         CGRect b = noThanksButton.bounds;
@@ -97,8 +97,6 @@
         b.size.height += 8;
         noThanksButton.bounds = b;
         [self addSubview:noThanksButton];
-        
-        
         
         thanksPanel = [[UILabel alloc] initWithFrame:self.bounds];
         thanksPanel.backgroundColor = [UIColor whiteColor];
@@ -110,9 +108,6 @@
         [self addSubview:thanksPanel];
 
         [self didRotateToIdealOrientation:[[MMRotationManager sharedInstance] currentInterfaceOrientation] animated:NO];
-        
-        
-        
     }
     return self;
 }
@@ -169,8 +164,8 @@
            orientation == UIInterfaceOrientationPortraitUpsideDown){
             emailInput.center = CGPointMake(self.bounds.size.width/2, 250);
             validateInput.center = CGPointMake(self.bounds.size.width/2, 280);
-            signUpButton.center = CGPointMake(self.bounds.size.width/2, 330);
-            noThanksButton.center = CGPointMake(self.bounds.size.width/2, 480);
+            signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width/2, 330);
+            noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width/2, 330);
             pitchLbl.center = CGPointMake(self.bounds.size.width/2, 195);
         }else{
             emailInput.center = CGPointMake(self.bounds.size.width/2, 220);
@@ -241,7 +236,6 @@
                                 NSUInteger loc = [result.URL.absoluteString rangeOfString:@"mailto:"].location;
                                 if(loc != NSNotFound){
                                     matchedEmail = [result.URL.absoluteString substringFromIndex:[@"mailto:" length]];
-                                    NSLog(@"Match: %@", matchedEmail);
                                 }
                             }];
     

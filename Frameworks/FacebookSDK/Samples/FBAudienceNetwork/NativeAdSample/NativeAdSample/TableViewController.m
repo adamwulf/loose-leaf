@@ -1,37 +1,32 @@
-/**
- * Copyright 2014 Facebook, Inc.
- *
- * You are hereby granted a non-exclusive, worldwide, royalty-free license to
- * use, copy, modify, and distribute this software in source code or binary
- * form for use in connection with the web and mobile services and APIs
- * provided by Facebook.
- *
- * As with any software that integrates with the Facebook platform, your use
- * of this software is subject to the Facebook Developer Principles and
- * Policies [http://developers.facebook.com/policy/]. This copyright notice
- * shall be included in all copies or substantial portions of the software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- *
- */
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "TableViewController.h"
 
-#import "NativeAdCell.h"
-
-static NSInteger const kRowForAdCell = 2;
+static NSInteger const kRowStrideForAdCell = 3;
 static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 
-@interface TableViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface TableViewController () <UITableViewDataSource, UITableViewDelegate, FBNativeAdsManagerDelegate, FBNativeAdDelegate>
 
-@property (strong, nonatomic) FBNativeAd *_nativeAd;
+@property (strong, nonatomic) FBNativeAdsManager *_adsManager;
+@property (strong, nonatomic) FBNativeAdTableViewCellProvider *_ads;
 @property (strong, nonatomic) NSMutableArray *_tableViewContentArray;
+@property (assign, nonatomic) BOOL adCellsCreated;
 
 @end
 
@@ -43,13 +38,14 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 {
   if (!self._tableViewContentArray) {
     self._tableViewContentArray = [NSMutableArray array];
-    for (int i = 1; i <= 10; i++) {
-      [self._tableViewContentArray addObject:[NSString stringWithFormat:@"TableView Cell #%d", i]];
+    for (NSUInteger i = 0; i < 10; i++) {
+      [self._tableViewContentArray addObject:[NSString stringWithFormat:@"TableView Cell #%lu", (unsigned long)(i + 1)]];
     }
   }
 
   return self._tableViewContentArray;
 }
+
 
 - (void)viewDidLoad
 {
@@ -77,60 +73,47 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 {
   [self.activityIndicator startAnimating];
 
-  // Create a native ad request with a unique placement ID (generate your own on the Facebook app settings).
-  // Use different ID for each ad placement in your app.
-  FBNativeAd *nativeAd = [[FBNativeAd alloc] initWithPlacementID:@"YOUR_PLACEMENT_ID"];
+  if (!self._adsManager) {
+    // Create a native ad manager with a unique placement ID (generate your own on the Facebook app settings)
+    // and how many ads you would like to create. Note that you may get fewer ads than you ask for.
+    // Use different ID for each ad placement in your app.
+    self._adsManager = [[FBNativeAdsManager alloc] initWithPlacementID:@"YOUR_PLACEMENT_ID"
+                                                   forNumAdsRequested:5];
+    // Set a delegate to get notified when the ads are loaded.
+    self._adsManager.delegate = self;
 
-  // Set a delegate to get notified when the ad was loaded.
-  nativeAd.delegate = self;
+    // When testing on a device, add its hashed ID to force test ads.
+    // The hash ID is printed to console when running on a device.
+    // [FBAdSettings addTestDevice:@"THE HASHED ID AS PRINTED TO CONSOLE"];
+  }
 
-  // When testing on a device, add its hashed ID to force test ads.
-  // The hash ID is printed to console when running on a device.
-  // [FBAdSettings addTestDevice:@"THE HASHED ID AS PRINTED TO CONSOLE"];
-
-  // Initiate a request to load an ad.
-  [nativeAd loadAd];
+  // Load some ads
+  [self._adsManager loadAds];
 }
 
-#pragma mark - FBNativeAdDelegate implementation
+#pragma mark FBNativeAdsManagerDelegate implementation
 
-- (void)nativeAdDidLoad:(FBNativeAd *)nativeAd
+- (void)nativeAdsLoaded
 {
   NSLog(@"Native ad was loaded, constructing native UI...");
 
-  if (self._nativeAd) {
-    // Since we re-use the same UITableViewCell to show different ads over time, we call
-    // unregisterView before registering the same view with a different   instance of FBNativeAd.
-    [self._nativeAd unregisterView];
-    [self.tableViewContentArray removeObjectAtIndex:kRowForAdCell];
-  }
-  self._nativeAd = nativeAd;
+  // After the native ads have loaded we create the native ad cell provider and let it take over
+  FBNativeAdsManager *manager = self._adsManager;
+  self._adsManager.delegate = nil;
+  self._adsManager = nil;
 
-  NativeAdCell *nativeAdCell = [[[NSBundle mainBundle] loadNibNamed:@"NativeAdCell"
-                                                              owner:self
-                                                            options:nil] objectAtIndex:0];
-  [nativeAdCell populate:nativeAd];
+  // The native ad cell provider operates over a loaded ads manager and can create table cells with native
+  // ad templates in them as well as help with the math to have a consistent distribution of ads within a table.
+  FBNativeAdTableViewCellProvider *cellProvider = [[FBNativeAdTableViewCellProvider alloc] initWithManager:manager forType:FBNativeAdViewTypeGenericHeight120];
+  self._ads = cellProvider;
+  self._ads.delegate = self;
 
-  NSLog(@"Register UIView for impression and click...");
 
-  // Wire up UIView with the native ad; the whole UIView will be clickable.
-  [nativeAd registerViewForInteraction:nativeAdCell
-                    withViewController:self];
-
-  // Or you can replace above call with following function, so you can specify the clickable areas.
-  // NSArray *clickableViews = @[nativeAdCell.adCallToActionButton];
-  // [nativeAd registerViewForInteraction:nativeAdCell
-  //                   withViewController:self
-  //                   withClickableViews:clickableViews];
-
-  [self.tableViewContentArray insertObject:nativeAdCell atIndex:kRowForAdCell];
   [self.tableView reloadData];
-
   [self.activityIndicator stopAnimating];
-
 }
 
-- (void)nativeAd:(FBNativeAd *)nativeAd didFailWithError:(NSError *)error
+- (void)nativeAdsFailedToLoadWithError:(NSError *)error
 {
   NSLog(@"Native ad failed to load with error: %@", error);
   [self.activityIndicator stopAnimating];
@@ -142,6 +125,8 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
                                         otherButtonTitles:nil];
   [alert show];
 }
+
+#pragma mark FBNativeAdDelegate
 
 - (void)nativeAdDidClick:(FBNativeAd *)nativeAd
 {
@@ -162,16 +147,21 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return [self.tableViewContentArray count];
+  // In this example the ads are evenly distributed within the table every kRowStrideForAdCell-th cell.
+  NSUInteger count = [self.tableViewContentArray count];
+  count = [self._ads adjustCount:count forStride:kRowStrideForAdCell] ?: count;
+  return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  id contectObject = [self.tableViewContentArray objectAtIndex:indexPath.row];
-  if ([contectObject isKindOfClass:[NativeAdCell class]]) {
-    return contectObject;
+  // For ad cells just as the ad cell provider, for normal cells do whatever you would do.
+  if ([self._ads isAdCellAtIndexPath:indexPath forStride:kRowStrideForAdCell]) {
+    return [self._ads tableView:tableView cellForRowAtIndexPath:indexPath];
   } else {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kDefaultCellIdentifier forIndexPath:indexPath];
+    // In this example we need to adjust the index back to the domain of the data.
+    indexPath = [self._ads adjustNonAdCellIndexPath:indexPath forStride:kRowStrideForAdCell] ?: indexPath;
     cell.textLabel.text = [self.tableViewContentArray objectAtIndex:indexPath.row];
     return cell;
   }
@@ -181,8 +171,19 @@ static NSString *const kDefaultCellIdentifier = @"kDefaultCellIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  id contectObject = [self.tableViewContentArray objectAtIndex:indexPath.row];
-  return [contectObject isKindOfClass:[NativeAdCell class]] ? 300 : 80;
+  // The ad cell provider knows the height of ad cells based on its configuration
+  if ([self._ads isAdCellAtIndexPath:indexPath forStride:kRowStrideForAdCell]) {
+    return [self._ads tableView:tableView heightForRowAtIndexPath:indexPath];
+  } else {
+    return 80;
+  }
+}
+
+#pragma mark - Orientation
+
+- (FBInterfaceOrientationMask)supportedInterfaceOrientations
+{
+  return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

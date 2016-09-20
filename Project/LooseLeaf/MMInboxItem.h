@@ -20,6 +20,8 @@
 
 -(CGSize) sizeForPage:(NSUInteger)page;
 
+-(CGFloat) rotationForPage:(NSInteger)pageNumber;
+
 -(UIImage*) thumbnailForPage:(NSUInteger)page;
 
 -(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim;

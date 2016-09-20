@@ -30,7 +30,7 @@
 }
 
 @synthesize delegate;
-@synthesize isShowingOptionsView;
+@synthesize showingOptionsView;
 
 -(id) init{
     if(self = [super init]){
@@ -49,11 +49,11 @@
     return self;
 }
 
--(void) setIsShowingOptionsView:(BOOL)_isShowingOptionsView{
-    isShowingOptionsView = _isShowingOptionsView;
-    button.selected = isShowingOptionsView;
+-(void) setShowingOptionsView:(BOOL)_isShowingOptionsView{
+    showingOptionsView = _isShowingOptionsView;
+    button.selected = showingOptionsView;
     [button setNeedsDisplay];
-    if(isShowingOptionsView){
+    if(showingOptionsView){
         [sharingOptionsView show];
     }else{
         [sharingOptionsView hide];
@@ -65,7 +65,7 @@
 }
 
 -(void) performShareAction{
-    if(!isShowingOptionsView){
+    if(!showingOptionsView){
         [sharingOptionsView reset];
         [delegate mayShare:self];
         // if a popover controller is dismissed, it
@@ -90,10 +90,9 @@
     // noop
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     // only show CloudKit if it exists
     return YES;
-//    return [MMCloudKitManager isCloudKitAvailable];
 }
 
 #pragma mark - Options Menu

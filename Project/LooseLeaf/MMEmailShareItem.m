@@ -11,6 +11,7 @@
 #import "Mixpanel.h"
 #import "Constants.h"
 #import "MMPresentationWindow.h"
+#import "NSURL+UTI.h"
 
 @implementation MMEmailShareItem{
     MMImageViewButton* button;
@@ -40,44 +41,49 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            composer = [[MFMailComposeViewController alloc] init];
-            [composer setMailComposeDelegate:self];
-            if([MFMailComposeViewController canSendMail] && composer) {
-                [composer setSubject:@"Quick sketch from Loose Leaf"];
-                [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
-                [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-                
-                NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-                [composer addAttachmentData:data  mimeType:@"image/png" fileName:@"LooseLeaf.png"];
-                
-                [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
-                    DebugLog(@"done");
-                }];
-            }else{
-                composer = nil;
+    if(!button.greyscale){
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                composer = [[MFMailComposeViewController alloc] init];
+                [composer setMailComposeDelegate:self];
+                if([MFMailComposeViewController canSendMail] && composer) {
+                    [composer setSubject:@"Quick sketch from Loose Leaf"];
+                    [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+                    [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+                    
+                    NSURL* urlToShare = [self.delegate urlToShare];
+                    NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                    [composer addAttachmentData:data mimeType:[urlToShare mimeType] fileName:[@"LooseLeaf" stringByAppendingString:[urlToShare pathExtension]]];
+                    
+                    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+                    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                    [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
+                        DebugLog(@"done");
+                    }];
+                }else{
+                    composer = nil;
+                }
+                [delegate didShare:self];
             }
-            [delegate didShare:self];
-        }
-    });
+        });
+    }
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MFMailComposeViewController canSendMail]) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MFMailComposeViewController canSendMail]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <MessageUI/MessageUI.h>
-#import "MMShareItem.h"
+#import "MMAbstractShareItem.h"
 
-@interface MMTextShareItem : NSObject<MMShareItem,MFMessageComposeViewControllerDelegate>
+@interface MMTextShareItem : MMAbstractShareItem<MFMessageComposeViewControllerDelegate>
 
 @end

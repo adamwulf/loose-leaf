@@ -60,59 +60,63 @@
 }
 
 -(void) performShareAction{
-    if(targetProgress){
-        // only try to share if not already sharing
-        return;
-    }
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            UIImage* image = self.delegate.imageToShare;
-            if(image && !conn){
-                lastProgress = 0;
-                targetSuccess = 0;
-                targetProgress = 0;
-                reason = nil;
-                [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
-                    progress *= .55; // leave last 10 % for when we get the URL
-                    if(progress > targetProgress){
-                        targetProgress = progress;
-                    }
-                    targetSuccess = YES;
-                } completionBlock:^(NSString *result) {
-                    lastLinkURL = result;
-                    targetProgress = 1.0;
-                    targetSuccess = YES;
-                    conn = nil;
-                    reason = nil;
-                    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                 kMPEventExportPropResult : [self exportDestinationResult]}];
-                } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
-                    lastLinkURL = nil;
-                    targetProgress = 1.0;
-                    targetSuccess = NO;
-                    reason = error;
-                    conn = nil;
-                    
-                    NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
-                    if(failedReason){
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                     kMPEventExportPropResult : @"Failed",
-                                                                                     kMPEventExportPropReason : failedReason}];
-                    }else{
-                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
-                                                                                     kMPEventExportPropResult : @"Failed"}];
-                    }
-                }];
-                [self animateToPercent:.1 success:YES];
-            }
+    if(!button.greyscale){
+        if(targetProgress){
+            // only try to share if not already sharing
+            return;
         }
-    });
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                UIImage* image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+                if(image && !conn){
+                    lastProgress = 0;
+                    targetSuccess = 0;
+                    targetProgress = 0;
+                    reason = nil;
+                    [self uploadPhoto:UIImagePNGRepresentation(image) title:@"Quick sketch from Loose Leaf" description:@"http://getlooseleaf.com" progressBlock:^(CGFloat progress) {
+                        progress *= .55; // leave last 10 % for when we get the URL
+                        if(progress > targetProgress){
+                            targetProgress = progress;
+                        }
+                        targetSuccess = YES;
+                    } completionBlock:^(NSString *result) {
+                        lastLinkURL = result;
+                        targetProgress = 1.0;
+                        targetSuccess = YES;
+                        conn = nil;
+                        reason = nil;
+                        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+                        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                     kMPEventExportPropResult : [self exportDestinationResult]}];
+                    } failureBlock:^(NSURLResponse *response, NSError *error, NSInteger status) {
+                        lastLinkURL = nil;
+                        targetProgress = 1.0;
+                        targetSuccess = NO;
+                        reason = error;
+                        conn = nil;
+                        
+                        NSString* failedReason = [error.userInfo valueForKey:NSLocalizedFailureReasonErrorKey];
+                        if(failedReason){
+                            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                         kMPEventExportPropResult : @"Failed",
+                                                                                         kMPEventExportPropReason : failedReason}];
+                        }else{
+                            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : [self exportDestinationName],
+                                                                                         kMPEventExportPropResult : @"Failed"}];
+                        }
+                    }];
+                    [self animateToPercent:.1 success:YES];
+                }
+            }
+        });
+    }else{
+        [self animateToPercent:1.0 success:NO];
+    }
 }
 
 
@@ -133,15 +137,12 @@
         }
     }
 
-    CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
-    if(button.contentScaleFactor == 2){
-        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
-    }
+    CGPoint center = CGPointMake(CGRectGetMidX(button.drawableFrame), CGRectGetMidY(button.drawableFrame));
 
-    CGFloat radius = button.drawableFrame.size.width / 2;
+    CGFloat radius = ceilf(button.drawableFrame.size.width / 2);
     CAShapeLayer *circle;
     if([button.layer.sublayers count]){
-        circle = [button.layer.sublayers firstObject];
+        circle = (CAShapeLayer*)[button.layer.sublayers firstObject];
     }else{
         circle=[CAShapeLayer layer];
         circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
@@ -242,8 +243,8 @@
 
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Upload
@@ -257,8 +258,8 @@
 {
     NSAssert(imageData, @"Image data is required");
     
-//    NSString *urlString = @"https://api.imgur.com/3/upload.json";
-    NSString *urlString = @"https://imgur-apiv3.p.mashape.com/3/upload.json";
+    NSString *urlString = @"https://api.imgur.com/3/upload.json";
+//    NSString *urlString = @"https://imgur-apiv3.p.mashape.com/3/upload.json";
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init] ;
     [request setURL:[NSURL URLWithString:urlString]];
     [request setHTTPMethod:@"POST"];
@@ -343,7 +344,9 @@
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

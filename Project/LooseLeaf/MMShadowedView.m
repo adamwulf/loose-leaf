@@ -12,25 +12,27 @@
 #import "UIColor+Shadow.h"
 #import <QuartzCore/QuartzCore.h>
 
+static const CGFloat frameBuffer = 20;
+
 @implementation MMShadowedView
 
 @synthesize contentView;
 
 +(CGRect) expandFrame:(CGRect)rect{
-    return CGRectMake(rect.origin.x - 10, rect.origin.y - 10, rect.size.width + 20, rect.size.height + 20);
+    return CGRectMake(rect.origin.x - frameBuffer, rect.origin.y - frameBuffer, rect.size.width + frameBuffer * 2, rect.size.height + frameBuffer * 2);
 }
 +(CGRect) contractFrame:(CGRect)rect{
-    return CGRectMake(rect.origin.x + 10, rect.origin.y + 10, rect.size.width - 20, rect.size.height - 20);
+    return CGRectMake(rect.origin.x + frameBuffer, rect.origin.y + frameBuffer, rect.size.width - frameBuffer * 2, rect.size.height - frameBuffer * 2);
 }
 +(CGRect) expandBounds:(CGRect)rect{
-    return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + 20, rect.size.height + 20);
+    return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + frameBuffer * 2, rect.size.height + frameBuffer * 2);
 }
 +(CGRect) contractBounds:(CGRect)rect{
-    return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width - 20, rect.size.height - 20);
+    return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width - frameBuffer * 2, rect.size.height - frameBuffer * 2);
 }
 
 +(CGFloat) shadowWidth{
-    return 10;
+    return frameBuffer;
 }
 
 
@@ -44,7 +46,7 @@
         CGRect contentFrame = self.bounds;
         // since our frame has been adjusted, we need to offset the
         // content view appropriately inside of our adjusted frame
-        contentFrame.origin = CGPointMake(10, 10);
+        contentFrame.origin = CGPointMake(frameBuffer, frameBuffer);
         contentView = [[UIView alloc] initWithFrame:contentFrame];
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.opaque = NO;
@@ -64,7 +66,7 @@
         [self addSubview:contentView];
 
         self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
-        self.layer.shadowRadius = 4;
+        self.layer.shadowRadius = 7;
         self.layer.shadowColor = shadowColor.CGColor;
         self.layer.shadowOpacity = 1;
         self.layer.shadowOffset = CGSizeMake(0, 0);
@@ -103,11 +105,11 @@
 
 - (CGPoint)convertPoint:(CGPoint)point toView:(UIView *)view{
     CGPoint converted = [super convertPoint:point toView:view];
-    return CGPointMake(converted.x + 10, converted.y + 10);
+    return CGPointMake(converted.x + frameBuffer, converted.y + frameBuffer);
 }
 - (CGPoint)convertPoint:(CGPoint)point fromView:(UIView *)view{
     CGPoint converted = [super convertPoint:point fromView:view];
-    return CGPointMake(converted.x - 10, converted.y - 10);
+    return CGPointMake(converted.x - frameBuffer, converted.y - frameBuffer);
 }
 
 

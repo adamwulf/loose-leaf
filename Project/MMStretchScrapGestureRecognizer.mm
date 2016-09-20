@@ -124,7 +124,7 @@
     [newPossibleTouches intersectSet:touches];
     [possibleTouches addObjectsInSet:newPossibleTouches];
     [ignoredTouches removeObjectsInSet:newPossibleTouches];
-    [self touchesBegan:newPossibleTouches withEvent:nil];
+    [self touchesBegan:newPossibleTouches];
 }
 
 #pragma mark - Helper Methods
@@ -428,6 +428,10 @@
 #pragma mark - Touch Methods
 
 -(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self touchesBegan:touches];
+}
+
+-(void) touchesBegan:(NSSet *)touches{
     if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches] &&
        !pinchScrapGesture1.scrap && !pinchScrapGesture2.scrap){
         // ignore touches in the possible set, b/c if they're already in there during

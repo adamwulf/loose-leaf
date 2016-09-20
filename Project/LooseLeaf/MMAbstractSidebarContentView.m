@@ -182,9 +182,12 @@
         }
         return NO;
     }]];
-    if(visibleItems){
-//        NSLog(@"update album row: %@", visibleItems);
-    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if([visibleItems count] && [albumListScrollView alpha] > 0){
+            [albumListScrollView reloadData];
+        }
+    });
 }
 
 #pragma mark - Row Management
@@ -299,11 +302,12 @@
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)asset
+-(void) assetWasTapped:(MMDisplayAsset *)asset
               fromView:(MMBufferedImageView *)bufferedImage
-          withRotation:(CGFloat)rotation{
+          withRotation:(CGFloat)rotation
+{
     MMAssetListLayout* layout = (MMAssetListLayout*) photoListScrollView.collectionViewLayout;
-    [delegate photoWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
+    [delegate assetWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
 }
 
 

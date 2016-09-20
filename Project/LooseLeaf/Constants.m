@@ -6,13 +6,18 @@
 //  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
+void CGContextSaveThenRestoreForBlock(CGContextRef __nullable context, void(^block)()){
+    CGContextSaveGState(context);
+    block();
+    CGContextRestoreGState(context);
+}
+
 CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2)
 {
     CGFloat dx = point2.x - point1.x;
     CGFloat dy = point2.y - point1.y;
     return sqrt(dx*dx + dy*dy );
 };
-
 
 //
 // useful when comparing to another squared distance

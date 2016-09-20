@@ -19,6 +19,7 @@
 #import "MMTrashManager.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @interface MMImmutableScrapsOnPaperState (Private)
 
@@ -56,17 +57,19 @@
 
 -(int) fullByteSize{
     int totalBytes = 0;
+    NSArray* scrapsToCountBytes;
     @synchronized(allLoadedScraps){
-        for(MMScrapView* scrap in allLoadedScraps){
-            totalBytes += scrap.fullByteSize;
-        }
+        scrapsToCountBytes = [allLoadedScraps copy];
+    }
+    for(MMScrapView* scrap in scrapsToCountBytes){
+        totalBytes += scrap.fullByteSize;
     }
     return totalBytes;
 }
 
 #pragma mark - Save and Load
 
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable{
+-(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable andAdjustForScale:(BOOL)adjustForScale{
     if(self.isForgetful){
         return;
     }
@@ -74,6 +77,7 @@
     if(![self isStateLoaded]){
         __block NSArray* scrapProps;
         __block NSArray* scrapIDsOnPage;
+        __block CGSize scrapStatePageSize;
         BOOL wasAlreadyLoading = isLoading;
         @synchronized(self){
             isLoading = YES;
@@ -109,10 +113,12 @@
                 }
                 scrapIDsOnPage = [allScrapStateInfo objectForKey:@"scrapsOnPageIDs"];
                 scrapProps = [allScrapStateInfo objectForKey:@"allScrapProperties"];
+                scrapStatePageSize = CGSizeMake([allScrapStateInfo[@"screenSize.width"] floatValue], [allScrapStateInfo[@"screenSize.height"] floatValue]);
             }
         };
         void (^blockForMainThread)() = ^{
             @autoreleasepool {
+                BOOL adjustForScaleWasNeededAfterAll = NO;
                 if(self.isForgetful){
                     return;
                 }
@@ -174,10 +180,38 @@
                 [scrapPropsWithState sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
                     return [scrapIDsOnPage indexOfObject:[obj1 objectForKey:@"uuid"]] < [scrapIDsOnPage indexOfObject:[obj2 objectForKey:@"uuid"]] ? NSOrderedAscending : NSOrderedDescending;
                 }];
-                for(NSDictionary* scrapProperties in scrapPropsWithState){
+                for(__strong NSDictionary* scrapProperties in scrapPropsWithState){
                     if(self.isForgetful){
                         return;
                     }
+                    
+                    if(adjustForScale || !CGSizeEqualToSize(scrapStatePageSize, CGSizeZero)){
+                        if(CGSizeEqualToSize(scrapStatePageSize, CGSizeZero)) {
+                            scrapStatePageSize.width = 768;
+                            scrapStatePageSize.height = 1024;
+                        }
+                        // https://github.com/adamwulf/loose-leaf/issues/1611
+                        // bundled pages are from 768x1024 pages, so we need to scale them for iPad Pro
+                        // this works as long as the width/height ratios are equal.
+                        // if/when Apple releases a device w/ different screen ratio then I'll need
+                        // to update this to handle aspect fill/fit/whatever
+                        
+                        CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
+                        if(CGRectGetWidth(screenBounds) != scrapStatePageSize.width && CGRectGetHeight(screenBounds) != scrapStatePageSize.height){
+                            CGFloat widthRatio = CGRectGetWidth(screenBounds) / scrapStatePageSize.width;
+                            CGFloat heightRatio = CGRectGetHeight(screenBounds) / scrapStatePageSize.height;
+
+                            NSMutableDictionary* adjustedProperties = [scrapProperties mutableCopy];
+                            adjustedProperties[@"center.x"] = @([scrapProperties[@"center.x"] floatValue] * widthRatio);
+                            adjustedProperties[@"center.y"] = @([scrapProperties[@"center.y"] floatValue] * heightRatio);
+                            adjustedProperties[@"scale"] = @([scrapProperties[@"scale"] floatValue] * widthRatio);
+                            
+                            scrapProperties = adjustedProperties;
+                            adjustForScaleWasNeededAfterAll = YES;
+                        }
+                    }
+                    
+                    
                     MMScrapView* scrap = nil;
                     if([scrapProperties objectForKey:@"scrap"]){
                         scrap = [scrapProperties objectForKey:@"scrap"];
@@ -224,7 +258,11 @@
                     isLoading = NO;
                     MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                     expectedUndoHash = [immutableState undoHash];
-                    lastSavedUndoHash = [immutableState undoHash];
+                    if(!adjustForScaleWasNeededAfterAll){
+                        // if we're adjusting for scale, then we'll need to
+                        // save our edits no matter what
+                        lastSavedUndoHash = [immutableState undoHash];
+                    }
                     //                        DebugLog(@"loaded scrapsOnPaperState at: %lu", (unsigned long)lastSavedUndoHash);
                 }
                 [self.delegate didLoadAllScrapsFor:self];
@@ -335,9 +373,9 @@
         // itself, so the load method below won't be run with pending blocks already
         // on the queue.
         if([[NSFileManager defaultManager] fileExistsAtPath:scrapIDsPath]){
-            [self loadStateAsynchronously:NO atPath:scrapIDsPath andMakeEditable:YES];
+            [self loadStateAsynchronously:NO atPath:scrapIDsPath andMakeEditable:YES andAdjustForScale:NO];
         }else{
-            [self loadStateAsynchronously:NO atPath:bundledScrapIDsPath andMakeEditable:YES];
+            [self loadStateAsynchronously:NO atPath:bundledScrapIDsPath andMakeEditable:YES andAdjustForScale:YES];
         }
     }
     block();
@@ -367,7 +405,18 @@
     if(![self isStateLoaded]){
         @throw [NSException exceptionWithName:@"ModifyingUnloadedScrapsOnPaperStateException" reason:@"cannot add scrap to unloaded ScrapsOnPaperState" userInfo:nil];
     }
-    MMScrapView* newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
+
+
+    __block MMScrapView* newScrap;
+
+    // timing start
+    CGFloat duration = [NSThread timeBlock:^{
+        newScrap = [[MMScrapView alloc] initWithBezierPath:path andScale:scale andRotation:rotation andPaperState:self];
+    }];
+    DebugLog(@"time to build scrap = %f", duration);
+    // timing end
+
+
     @synchronized(allLoadedScraps){
         [allLoadedScraps addObject:newScrap];
     }

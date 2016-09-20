@@ -32,8 +32,10 @@
             @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:@"ScrapContainerViews was given a scrap that doesn't belong" userInfo:nil];
         }
         [super addSubview:view];
+    }else if(view){
+        @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:[NSString stringWithFormat:@"ScrapContainerViews can only hold scraps, given %@", NSStringFromClass([view class])] userInfo:nil];
     }else{
-        @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:@"ScrapContainerViews can only hold scraps" userInfo:nil];
+        @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:@"ScrapContainerViews can only hold scraps, given (null)" userInfo:nil];
     }
 }
 

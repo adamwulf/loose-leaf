@@ -59,7 +59,7 @@
 
 -(UIImage*) activeThumbnailImage;
 
--(void) addElements:(NSArray*)elements;
+-(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture;
 -(void) addUndoLevelAndFinishStroke;
 
 -(JotGLTexture*) generateTexture;

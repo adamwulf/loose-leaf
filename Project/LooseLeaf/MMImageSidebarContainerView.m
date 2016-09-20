@@ -21,14 +21,15 @@
 #import "Constants.h"
 #import "MMCameraButton.h"
 #import "NSThread+BlockAdditions.h"
-#import "UIView+Debug.h"
+#import "UIImage+MMColor.h"
+#import <JotUI/JotUI.h>
 
 @implementation MMImageSidebarContainerView{
     MMCameraSidebarContentView* cameraListContentView;
     MMAlbumSidebarContentView* albumListContentView;
     MMFaceSidebarContentView* faceListContentView;
     MMEventSidebarContentView* eventListContentView;
-    MMInboxContentView* inboxListContent;
+    MMInboxContentView* inboxListContentView;
     
     NSArray* allListContentViews;
     
@@ -37,6 +38,9 @@
     MMFaceButton* iPhotoFacesButton;
     MMPalmTreeButton* iPhotoEventsButton;
     MMInboxButton* inboxButton;
+    
+    UIButton* importAsPageButton;
+    UIButton* importAsScrapButton;
 }
 
 @dynamic delegate;
@@ -44,14 +48,14 @@
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton *)_button animateFromLeft:(BOOL)fromLeft{
     self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
     if (self) {
-        
         CGRect contentBounds = [slidingSidebarView contentBounds];
         
         [MMPhotoManager sharedInstance].delegate = self;
         
         CGRect buttonBounds = CGRectZero;
-        buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height;
+        buttonBounds.origin.y = 0;
         buttonBounds.size.height = kWidthOfSidebarButton; // includes spacing buffer
+        buttonBounds.size.height += kHeightOfImportTypeButton + 10;
         buttonBounds.size.width = kWidthOfSidebarButton * 5;
         buttonBounds.origin.x = (contentBounds.size.width - buttonBounds.size.width)/2 + 10;
         
@@ -81,20 +85,35 @@
         [slidingSidebarView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
         
-        inboxListContent = [[MMInboxContentView alloc] initWithFrame:contentBounds];
-        inboxListContent.delegate = self;
-        [slidingSidebarView addSubview:inboxListContent];
-        inboxListContent.hidden = YES;
+        inboxListContentView = [[MMInboxContentView alloc] initWithFrame:contentBounds];
+        inboxListContentView.delegate = self;
+        [slidingSidebarView addSubview:inboxListContentView];
+        inboxListContentView.hidden = YES;
         
         
         allListContentViews = [NSArray arrayWithObjects:cameraListContentView,
                                albumListContentView, faceListContentView, eventListContentView,
-                               inboxListContent, nil];
+                               inboxListContentView, nil];
         //////////////////////////////////////////
         // buttons
         
+        
+        importAsPageButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [importAsPageButton setBackgroundImage:[UIImage imageNamed:@"importAsPage"] forState:UIControlStateNormal];
+        [importAsPageButton setBackgroundImage:[UIImage imageNamed:@"importAsPageHighlighted"] forState:UIControlStateSelected];
+        [importAsPageButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
+        importAsPageButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kImportAsPagePreferenceDefault];
+        [slidingSidebarView addSubview:importAsPageButton];
+
+        importAsScrapButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [importAsScrapButton setBackgroundImage:[UIImage imageNamed:@"importAsScrap"] forState:UIControlStateNormal];
+        [importAsScrapButton setBackgroundImage:[UIImage imageNamed:@"importAsScrapHighlighted"] forState:UIControlStateSelected];
+        [importAsScrapButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
+        importAsScrapButton.selected = ![[NSUserDefaults standardUserDefaults] boolForKey:kImportAsPagePreferenceDefault];
+        [slidingSidebarView addSubview:importAsScrapButton];
+        
         // camera
-        cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x, buttonBounds.origin.y,
+        cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds), CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                              kWidthOfSidebarButton, kWidthOfSidebarButton)];
         cameraAlbumButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         cameraAlbumButton.shadowInset = -1;
@@ -102,7 +121,7 @@
         [slidingSidebarView addSubview:cameraAlbumButton];
         
         // albums
-        iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + kWidthOfSidebarButton, buttonBounds.origin.y,
+        iPhotoAlbumButton = [[MMImageViewButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoAlbumButton setImage:[UIImage imageNamed:@"clearphotoalbum"]];
         [iPhotoAlbumButton addTarget:self action:@selector(albumButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -111,7 +130,7 @@
         [slidingSidebarView addSubview:iPhotoAlbumButton];
         
         // faces button
-        iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 2* kWidthOfSidebarButton, buttonBounds.origin.y,
+        iPhotoFacesButton = [[MMFaceButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + 2* kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                            kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoFacesButton addTarget:self action:@selector(faceButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoFacesButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -119,14 +138,14 @@
         [slidingSidebarView addSubview:iPhotoFacesButton];
         
         // event button
-        iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 3* kWidthOfSidebarButton, buttonBounds.origin.y,
+        iPhotoEventsButton = [[MMPalmTreeButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + 3* kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [iPhotoEventsButton addTarget:self action:@selector(eventButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         iPhotoEventsButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         iPhotoEventsButton.shadowInset = -1;
         [slidingSidebarView addSubview:iPhotoEventsButton];
         
-        inboxButton = [[MMInboxButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, buttonBounds.origin.y,
+        inboxButton = [[MMInboxButton alloc] initWithFrame:CGRectMake(buttonBounds.origin.x + 4* kWidthOfSidebarButton, CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton,
                                                                                 kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [inboxButton addTarget:self action:@selector(inboxButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         inboxButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -137,6 +156,13 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     }
     return self;
+}
+
+-(void) setImportType:(id)sender{
+    importAsPageButton.selected = (importAsPageButton == sender);
+    importAsScrapButton.selected = (importAsScrapButton == sender);
+
+    [[NSUserDefaults standardUserDefaults] setBool:importAsPageButton.selected forKey:kImportAsPagePreferenceDefault];
 }
 
 -(void) dealloc{
@@ -159,8 +185,8 @@
     if(!eventListContentView.hidden){
         [eventListContentView show:animated];
     }
-    if(!inboxListContent.hidden){
-        [inboxListContent show:animated];
+    if(!inboxListContentView.hidden){
+        [inboxListContentView show:animated];
     }
     [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
@@ -171,7 +197,7 @@
         [albumListContentView hide:animated];
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
-        [inboxListContent hide:animated];
+        [inboxListContentView hide:animated];
         
         if(onComplete){
             onComplete(finished);
@@ -180,11 +206,11 @@
 }
 
 -(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView{
-    [self.delegate pictureTakeWithCamera:img fromView:cameraView];
+    [self.delegate pictureTakeWithCamera:img fromView:cameraView andRequestsImportAsPage:importAsPageButton.selected];
 }
 
--(void) photoWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
-    [self.delegate photoWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description]];
+-(void) assetWasTapped:(MMDisplayAsset *)asset fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView *)container{
+    [self.delegate assetWasTapped:asset fromView:bufferedImage withRotation:rotation fromContainer:[container description] andRequestsImportAsPage:importAsPageButton.selected];
 }
 
 -(void) switchToListView:(MMAbstractSidebarContentView*)listView{
@@ -230,29 +256,30 @@
 }
 
 -(void) inboxButtonTapped:(MMSidebarButton*)button{
-    [self switchToListView:inboxListContent];
+    [self switchToListView:inboxListContentView];
     [self highlightButton:button];
 }
 
 -(void) showPDF:(MMInboxItem*)pdf{
-    [self switchToListView:inboxListContent];
-    [inboxListContent switchToPDFView:pdf];
+    [self switchToListView:inboxListContentView];
+    [inboxListContentView switchToPDFView:pdf];
     [self highlightButton:inboxButton];
 }
 
 -(void) refreshPDF{
-    [inboxListContent reset:NO];
+    [inboxListContentView reset:NO];
 }
 
 #pragma mark - MMPhotoManagerDelegate
 
--(void) doneLoadingPhotoAlbums;{
+-(void) doneLoadingPhotoAlbums{
     dispatch_async(dispatch_get_main_queue(), ^{
         @autoreleasepool {
             [cameraListContentView doneLoadingPhotoAlbums];
             [albumListContentView doneLoadingPhotoAlbums];
             [faceListContentView doneLoadingPhotoAlbums];
             [eventListContentView doneLoadingPhotoAlbums];
+            [inboxListContentView doneLoadingPhotoAlbums];
         }
     });
 }
@@ -288,6 +315,8 @@
 }
 
 -(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated{
+    CheckMainThread;
+    
     if(![self isVisible]) return;
     if(!cameraListContentView.hidden){
         [cameraListContentView updatePhotoRotation:animated];
@@ -297,8 +326,8 @@
         [faceListContentView updatePhotoRotation:animated];
     }else if(!eventListContentView.hidden){
         [eventListContentView updatePhotoRotation:animated];
-    }else if(!inboxListContent.hidden){
-        [inboxListContent updatePhotoRotation:animated];
+    }else if(!inboxListContentView.hidden){
+        [inboxListContentView updatePhotoRotation:animated];
     }
     
     void(^animations)() = ^{
@@ -317,6 +346,9 @@
         
         inboxButton.rotation = [self sidebarButtonRotation];
         inboxButton.transform = rotationTransform;
+        
+        importAsPageButton.transform = rotationTransform;
+        importAsScrapButton.transform = rotationTransform;
     };
     
     [[NSThread mainThread] performBlock:^{
@@ -337,7 +369,7 @@
         [albumListContentView killMemory];
         [faceListContentView killMemory];
         [eventListContentView killMemory];
-        [inboxListContent killMemory];
+        [inboxListContentView killMemory];
     }
 }
 

@@ -42,9 +42,15 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 -(id) initWithURL:(NSURL *)_itemURL andInitBlock:(void(^)())block{
     if(self = [super init]){
         itemURL = _itemURL;
-        pageSizeCache = [NSMutableDictionary dictionary];
+        pageSizeCache = [[NSKeyedUnarchiver unarchiveObjectWithFile:[self pathForSizeCache]] mutableCopy];
+        if(!pageSizeCache){
+            pageSizeCache = [NSMutableDictionary dictionary];
+        }
         if(block) block();
-        [self generatePageThumbnailCache];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self generatePageThumbnailCache];
+        });
     }
     return self;
 }
@@ -55,6 +61,10 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
     return itemURL;
 }
 
++(NSString*) cacheDirectory{
+    return [[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"];
+}
+
 -(NSString*) cachedAssetsPath{
     if(!cachedAssetsPath){
         NSString* relativeToDocuments = [itemURL path];
@@ -63,8 +73,8 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
                                                                                 options:NSCaseInsensitiveSearch
                                                                                   range:NSMakeRange(0, [relativeToDocuments length])];
         NSString* pdfHash = [relativeToDocuments MD5Hash];
-//        NSLog(@"generating path: %@ to %@", relativeToDocuments, pdfHash);
-        cachedAssetsPath = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"PDFCache"] stringByAppendingPathComponent:pdfHash];
+
+        cachedAssetsPath = [[MMInboxItem cacheDirectory] stringByAppendingPathComponent:pdfHash];
         [NSFileManager ensureDirectoryExistsAtPath:cachedAssetsPath];
     }
     return cachedAssetsPath;
@@ -72,18 +82,29 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 
 #pragma mark - Public
 
+-(CGFloat) rotationForPage:(NSInteger)pageNumber{
+    return 0;
+}
+
 -(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim{
+    return [self imageForPage:pageNumber forMaxDim:maxDim andSaveToDiskCache:maxDim == kThumbnailMaxDim];
+}
+
+-(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim andSaveToDiskCache:(BOOL)saveToCache{
     NSString* cachedImagePath = [self pathForPage:pageNumber forMaxDim:maxDim];
     
     UIImage* pageThumb = [self cachedImageAtPath:cachedImagePath];
     if(!pageThumb){
         @autoreleasepool {
             pageThumb = [self generateImageForPage:pageNumber withMaxDim:maxDim];
-            BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
-            if(!success){
-                NSLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
+            if(saveToCache){
+                BOOL success = [UIImagePNGRepresentation(pageThumb) writeToFile:cachedImagePath atomically:YES];
+                if(!success){
+                    DebugLog(@"generating %@ thumbnail failed", NSStringFromClass([self class]));
+                }
             }
             if(cachedImagePath){
+                // memory cache only
                 [[MMLoadImageCache sharedInstance] updateCacheForPath:cachedImagePath toImage:pageThumb];
             }
         }
@@ -96,10 +117,11 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
         // first check the cache and see if we have it
         // calculated already
         if([pageSizeCache objectForKey:@(page)]){
-            return [[pageSizeCache objectForKey:@(page)] CGSizeValue];
+            NSDictionary* d = [pageSizeCache objectForKey:@(page)];
+            return CGSizeMake([d[@"width"] floatValue], [d[@"height"] floatValue]);
         }else{
             CGSize calcSize = [self calculateSizeForPage:page];
-            [pageSizeCache setObject:[NSValue valueWithCGSize:calcSize] forKey:@(page)];
+            [pageSizeCache setObject:@{@"width": @(calcSize.width), @"height": @(calcSize.height) } forKey:@(page)];
             return calcSize;
         }
     }
@@ -111,6 +133,11 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
     return cachedImagePath;
 }
 
+-(NSString*) pathForSizeCache{
+    NSString* cachedSizePath = [NSString stringWithFormat:@"sizeCache.plist"];
+    cachedSizePath = [[self cachedAssetsPath] stringByAppendingPathComponent:cachedSizePath];
+    return cachedSizePath;
+}
 
 #pragma mark - Override
 
@@ -133,17 +160,17 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 -(void) generatePageThumbnailCache{
     dispatch_async([MMInboxItem assetQueue], ^{
         @autoreleasepool {
-            @synchronized(self){
-                [pageSizeCache removeAllObjects];
-            }
-//            NSLog(@"generating page thumbnails: %d",(int) [self pageCount]);
             for(int pageNumber=0;pageNumber<[self pageCount];pageNumber++){
-                [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
+                if(![[NSFileManager defaultManager] fileExistsAtPath:[self pathForPage:pageNumber forMaxDim:kThumbnailMaxDim]]){
+                    [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
+                }
                 @synchronized(self){
-                    [pageSizeCache setObject:[NSValue valueWithCGSize:[self sizeForPage:pageNumber]] forKey:@(pageNumber)];
+                    CGSize s = [self sizeForPage:pageNumber];
+                    [pageSizeCache setObject:@{@"width": @(s.width), @"height": @(s.height) } forKey:@(pageNumber)];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:kInboxItemThumbnailGenerated object:self userInfo:@{@"pageNumber":@(pageNumber)}];
             }
+            [NSKeyedArchiver archiveRootObject:[pageSizeCache copy] toFile:[self pathForSizeCache]];
         }
     });
 }
@@ -161,12 +188,12 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
         [[NSFileManager defaultManager] removeItemAtPath:[self cachedAssetsPath] error:&errorCache];
         
         if(errorCache){
-            NSLog(@"delete PDF cache erorr: %@", errorCache);
+            DebugLog(@"delete PDF cache erorr: %@", errorCache);
         }
     });
 
     if(errorURL){
-        NSLog(@"delete InboxItem erorr: %@", errorURL);
+        DebugLog(@"delete InboxItem erorr: %@", errorURL);
         return YES;
     }
     return NO;
@@ -177,7 +204,8 @@ static const void *const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 -(UIImage*) cachedImageAtPath:(NSString*)cachedImagePath{
     UIImage* pageThumb = nil;
     @autoreleasepool {
-        if(cachedImagePath && [[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
+        BOOL containsPathAlready = [[MMLoadImageCache sharedInstance] containsPathInCache:cachedImagePath];
+        if(cachedImagePath && (containsPathAlready || [[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath])){
             return [[MMLoadImageCache sharedInstance] imageAtPath:cachedImagePath];
         }
     }

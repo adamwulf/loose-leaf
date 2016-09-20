@@ -1,0 +1,292 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		890468C91BE40C4700D0DF91 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 890468C81BE40C4700D0DF91 /* LoginViewController.m */; };
+		890468D21BE41DC800D0DF91 /* EmailLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 890468D11BE41DC800D0DF91 /* EmailLoginViewController.m */; };
+		890468D51BE41FCC00D0DF91 /* PhoneLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 890468D41BE41FCC00D0DF91 /* PhoneLoginViewController.m */; };
+		890468D81BE4242300D0DF91 /* AccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 890468D71BE4242300D0DF91 /* AccountViewController.m */; };
+		891731DA1BE402F80003ED91 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 891731D91BE402F80003ED91 /* Foundation.framework */; };
+		891731DC1BE402FF0003ED91 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 891731DB1BE402FF0003ED91 /* CoreGraphics.framework */; };
+		891731DE1BE403080003ED91 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 891731DD1BE403080003ED91 /* UIKit.framework */; };
+		895A5CA31BE7B95900EEE412 /* AccountsAlphaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A5CA21BE7B95900EEE412 /* AccountsAlphaKit.framework */; };
+		89B219A51BE3FA83000CD02C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 89B219A41BE3FA83000CD02C /* main.m */; };
+		89B219A81BE3FA83000CD02C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 89B219A71BE3FA83000CD02C /* AppDelegate.m */; };
+		89B219AE1BE3FA83000CD02C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 89B219AC1BE3FA83000CD02C /* Main.storyboard */; };
+		89B219B01BE3FA83000CD02C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89B219AF1BE3FA83000CD02C /* Assets.xcassets */; };
+		89B219B31BE3FA83000CD02C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 89B219B11BE3FA83000CD02C /* LaunchScreen.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		890468C31BE4068000D0DF91 /* Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Application.xcconfig; path = ../Configurations/Application.xcconfig; sourceTree = "<group>"; };
+		890468C41BE4068000D0DF91 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Project-Debug.xcconfig"; path = "../Configurations/Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		890468C51BE4068000D0DF91 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Project-Release.xcconfig"; path = "../Configurations/Project-Release.xcconfig"; sourceTree = "<group>"; };
+		890468C61BE4068000D0DF91 /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = ../Configurations/Project.xcconfig; sourceTree = "<group>"; };
+		890468C71BE40C4700D0DF91 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		890468C81BE40C4700D0DF91 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		890468D01BE41DC800D0DF91 /* EmailLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmailLoginViewController.h; sourceTree = "<group>"; };
+		890468D11BE41DC800D0DF91 /* EmailLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmailLoginViewController.m; sourceTree = "<group>"; };
+		890468D31BE41FCC00D0DF91 /* PhoneLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneLoginViewController.h; sourceTree = "<group>"; };
+		890468D41BE41FCC00D0DF91 /* PhoneLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneLoginViewController.m; sourceTree = "<group>"; };
+		890468D61BE4242300D0DF91 /* AccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountViewController.h; sourceTree = "<group>"; };
+		890468D71BE4242300D0DF91 /* AccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountViewController.m; sourceTree = "<group>"; };
+		891731D91BE402F80003ED91 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		891731DB1BE402FF0003ED91 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		891731DD1BE403080003ED91 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		895A5CA21BE7B95900EEE412 /* AccountsAlphaKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AccountsAlphaKit.framework; path = ../../build/AccountsAlphaKit.framework; sourceTree = "<group>"; };
+		89B219A01BE3FA83000CD02C /* HelloAccounts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloAccounts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89B219A41BE3FA83000CD02C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		89B219A61BE3FA83000CD02C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		89B219A71BE3FA83000CD02C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		89B219AD1BE3FA83000CD02C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		89B219AF1BE3FA83000CD02C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		89B219B21BE3FA83000CD02C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		89B219B41BE3FA83000CD02C /* HelloAccounts-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HelloAccounts-Info.plist"; sourceTree = "<group>"; };
+		89B219BF1BE40229000CD02C /* HelloAccounts-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloAccounts-Prefix.pch"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		89B2199D1BE3FA83000CD02C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				895A5CA31BE7B95900EEE412 /* AccountsAlphaKit.framework in Frameworks */,
+				891731DC1BE402FF0003ED91 /* CoreGraphics.framework in Frameworks */,
+				891731DA1BE402F80003ED91 /* Foundation.framework in Frameworks */,
+				891731DE1BE403080003ED91 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		891731DF1BE404360003ED91 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				895A5CA21BE7B95900EEE412 /* AccountsAlphaKit.framework */,
+				891731DB1BE402FF0003ED91 /* CoreGraphics.framework */,
+				891731D91BE402F80003ED91 /* Foundation.framework */,
+				891731DD1BE403080003ED91 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		89B219971BE3FA83000CD02C = {
+			isa = PBXGroup;
+			children = (
+				89B219BA1BE3FAAB000CD02C /* Configurations */,
+				891731DF1BE404360003ED91 /* Frameworks */,
+				89B219A21BE3FA83000CD02C /* HelloAccounts */,
+				89B219A11BE3FA83000CD02C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		89B219A11BE3FA83000CD02C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				89B219A01BE3FA83000CD02C /* HelloAccounts.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		89B219A21BE3FA83000CD02C /* HelloAccounts */ = {
+			isa = PBXGroup;
+			children = (
+				89B219A61BE3FA83000CD02C /* AppDelegate.h */,
+				89B219A71BE3FA83000CD02C /* AppDelegate.m */,
+				89B219AF1BE3FA83000CD02C /* Assets.xcassets */,
+				89B219B11BE3FA83000CD02C /* LaunchScreen.storyboard */,
+				89B219AC1BE3FA83000CD02C /* Main.storyboard */,
+				89B219A31BE3FA83000CD02C /* Supporting Files */,
+				890468C71BE40C4700D0DF91 /* LoginViewController.h */,
+				890468C81BE40C4700D0DF91 /* LoginViewController.m */,
+				890468D01BE41DC800D0DF91 /* EmailLoginViewController.h */,
+				890468D11BE41DC800D0DF91 /* EmailLoginViewController.m */,
+				890468D31BE41FCC00D0DF91 /* PhoneLoginViewController.h */,
+				890468D41BE41FCC00D0DF91 /* PhoneLoginViewController.m */,
+				890468D61BE4242300D0DF91 /* AccountViewController.h */,
+				890468D71BE4242300D0DF91 /* AccountViewController.m */,
+			);
+			path = HelloAccounts;
+			sourceTree = "<group>";
+		};
+		89B219A31BE3FA83000CD02C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				89B219B41BE3FA83000CD02C /* HelloAccounts-Info.plist */,
+				89B219A41BE3FA83000CD02C /* main.m */,
+				89B219BF1BE40229000CD02C /* HelloAccounts-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		89B219BA1BE3FAAB000CD02C /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				890468C31BE4068000D0DF91 /* Application.xcconfig */,
+				890468C41BE4068000D0DF91 /* Project-Debug.xcconfig */,
+				890468C51BE4068000D0DF91 /* Project-Release.xcconfig */,
+				890468C61BE4068000D0DF91 /* Project.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		89B2199F1BE3FA83000CD02C /* HelloAccounts */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89B219B71BE3FA83000CD02C /* Build configuration list for PBXNativeTarget "HelloAccounts" */;
+			buildPhases = (
+				89B2199C1BE3FA83000CD02C /* Sources */,
+				89B2199D1BE3FA83000CD02C /* Frameworks */,
+				89B2199E1BE3FA83000CD02C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HelloAccounts;
+			productName = HelloAccounts;
+			productReference = 89B219A01BE3FA83000CD02C /* HelloAccounts.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		89B219981BE3FA83000CD02C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Facebook, Inc";
+				TargetAttributes = {
+					89B2199F1BE3FA83000CD02C = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = 89B2199B1BE3FA83000CD02C /* Build configuration list for PBXProject "HelloAccounts" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 89B219971BE3FA83000CD02C;
+			productRefGroup = 89B219A11BE3FA83000CD02C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				89B2199F1BE3FA83000CD02C /* HelloAccounts */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		89B2199E1BE3FA83000CD02C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89B219B31BE3FA83000CD02C /* LaunchScreen.storyboard in Resources */,
+				89B219B01BE3FA83000CD02C /* Assets.xcassets in Resources */,
+				89B219AE1BE3FA83000CD02C /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		89B2199C1BE3FA83000CD02C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				890468C91BE40C4700D0DF91 /* LoginViewController.m in Sources */,
+				890468D21BE41DC800D0DF91 /* EmailLoginViewController.m in Sources */,
+				89B219A81BE3FA83000CD02C /* AppDelegate.m in Sources */,
+				89B219A51BE3FA83000CD02C /* main.m in Sources */,
+				890468D81BE4242300D0DF91 /* AccountViewController.m in Sources */,
+				890468D51BE41FCC00D0DF91 /* PhoneLoginViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		89B219AC1BE3FA83000CD02C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				89B219AD1BE3FA83000CD02C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		89B219B11BE3FA83000CD02C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				89B219B21BE3FA83000CD02C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		89B219B51BE3FA83000CD02C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 890468C41BE4068000D0DF91 /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		89B219B61BE3FA83000CD02C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 890468C51BE4068000D0DF91 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		89B219B81BE3FA83000CD02C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 890468C31BE4068000D0DF91 /* Application.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		89B219B91BE3FA83000CD02C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 890468C31BE4068000D0DF91 /* Application.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		89B2199B1BE3FA83000CD02C /* Build configuration list for PBXProject "HelloAccounts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89B219B51BE3FA83000CD02C /* Debug */,
+				89B219B61BE3FA83000CD02C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		89B219B71BE3FA83000CD02C /* Build configuration list for PBXNativeTarget "HelloAccounts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89B219B81BE3FA83000CD02C /* Debug */,
+				89B219B91BE3FA83000CD02C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 89B219981BE3FA83000CD02C /* Project object */;
+}

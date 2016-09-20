@@ -11,9 +11,37 @@
 
 #import "AuthConstants.h"
 
+
 #define kDeletingInboxItemGesture @"kDeletingInboxItemGesture"
 #define kDeletingInboxItemTapped @"kDeletingInboxItemTapped"
 #define kDeletingInboxItemTappedDown @"kDeletingInboxItemTappedDown"
+
+static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill, BOOL fill){
+    CGFloat horizontalRatio = sizeToFill.width / sizeToScale.width;
+    CGFloat verticalRatio = sizeToFill.height / sizeToScale.height;
+    CGFloat ratio;
+    if(fill){
+        ratio = MAX(horizontalRatio, verticalRatio); //AspectFill
+    }else{
+        ratio = MIN(horizontalRatio, verticalRatio); //AspectFill
+    }
+    
+    CGSize scaledSize = CGSizeMake(sizeToScale.width * ratio, sizeToScale.height * ratio);
+    
+    return CGRectMake((sizeToFill.width - scaledSize.width) / 2, (sizeToFill.height - scaledSize.height) / 2, scaledSize.width, scaledSize.height);
+}
+
+#define CGRectResizeBy(rect,dw,dh) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + dw, rect.size.height + dh)
+#define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
+#define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
+#define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x,rect.origin.y,rect.size.width,height)
+#define CGRectSquare(size) CGRectMake(0,0,size,size)
+#define CGSizeScale(size, scale)    CGSizeMake(size.width*scale,size.height*scale)
+#define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
+#define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
+
+
+#define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)
 
 #define kURLAddedToDirectoryKey (&NSURLAddedToDirectoryDateKey ? NSURLAddedToDirectoryDateKey : NSURLCreationDateKey)
 
@@ -66,8 +94,8 @@ _Pragma("clang diagnostic pop") \
 
 
 // List View
-#define kNumberOfColumnsInListView 3
-#define kListPageZoom .25
+#define kNumberOfColumnsInListView 4
+#define kListPageZoom (1.0 / (kNumberOfColumnsInListView + 1.0))
 
 // List View Gesture
 #define kZoomToListPageZoom .4
@@ -84,6 +112,7 @@ _Pragma("clang diagnostic pop") \
 #define kWidthOfSidebarButton 60.0
 #define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
+#define kHeightOfImportTypeButton 80.0
 #define kMinScaleDelta .0
 #define kShadowDepth 7
 #define kShadowBend 3
@@ -91,6 +120,23 @@ _Pragma("clang diagnostic pop") \
 #define kUndoLimit 10 // TODO: make sure this defines the jot undo level
 #define kMaxButtonBounceHeight .4
 #define kMinButtonBounceHeight -.2
+
+// User Defaults
+
+#define kFirstKnownVersion @"kFirstKnownVersion"
+#define kLastOpenedVersion @"kLastOpenedVersion"
+#define kImportAsPagePreferenceDefault @"importAsPagePreferenceDefault"
+#define kExportAsPDFPreferenceDefault @"exportAsPDFPreferenceDefault"
+#define kHasEverImportedAPage @"hasEverImportedAPage"
+#define kMixpanelUUID @"mixpanel_uuid"
+#define kSelectedBrush @"selectedBrush"
+#define kBrushPencil @"pencil"
+#define kBrushHighlighter @"highlighter"
+#define kBrushMarker @"marker"
+#define kIsShowingListView @"ShowingListView"
+#define kMarkerColor @"markerColor"
+#define kPencilColor @"pencilColor"
+#define kHighlighterColor @"highlighterColor"
 
 // Camera
 #define kCameraMargin 10
@@ -153,6 +199,14 @@ _Pragma("clang diagnostic pop") \
 #define kMPDistanceErased @"Distance Erased (m)"
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
+#define kMPFailedRotationReading @"Failed Rotation Reading"
+
+#define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
+#define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
+#define kMPUpgradeFeedback @"Upgrade Feedback"
+#define kMPUpgradeFeedbackResult @"Feedback"
+#define kMPUpgradeAppStoreReview @"App Store Review"
+#define kMPUpgradeFeedbackReply @"Text Reply"
 
 // tutorial
 #define kMPHasFinishedTutorial @"Has Finished Tutorial"
@@ -160,6 +214,8 @@ _Pragma("clang diagnostic pop") \
 #define kPendingEmailToSubscribe @"kPendingEmailToSubscribe"
 #define kHasIgnoredNewsletter @"kHasIgnoredNewsletter"
 #define kMPDurationWatchingTutorial @"Duration Watching Tutorial"
+#define kMPDidBackgroundDuringTutorial @"Did Background During Tutorial"
+#define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
 
@@ -174,8 +230,13 @@ _Pragma("clang diagnostic pop") \
 #define kMPEventGestureBug @"Gesture Bug"
 
 // MixPanel Events Properties
+#define kMPNewsletterSignupAttemptEvent @"Submit Email Attempt"
+#define kMPNewsletterSignupSuccessEvent @"Submit Email Success"
+#define kMPNewsletterSignupFailedEvent @"Submit Email Failed"
 #define kMPEventLaunch @"App Launch"
 #define kMPEventResume @"App Resume"
+#define kMPEventResign @"App Resign"
+#define kMPEventActiveSession @"Active Session"
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventImportPage @"Import Page"
@@ -204,8 +265,8 @@ _Pragma("clang diagnostic pop") \
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 #define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
-#define kPhotoImportMaxDim (300 * [[UIScreen mainScreen] scale])
-#define kPDFImportMaxDim (400 * [[UIScreen mainScreen] scale])
+#define kPhotoImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
+#define kPDFImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
@@ -222,6 +283,7 @@ _Pragma("clang diagnostic pop") \
 extern "C" {
 #endif
 
+    void CGContextSaveThenRestoreForBlock(CGContextRef __nonnull context, void(^ __nonnull block)());
 
     CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
 

@@ -21,7 +21,6 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMTrashManager.h"
 #import "MMStatTracker.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <ClippingBezier/ClippingBezier.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 
@@ -69,7 +68,6 @@
 #pragma mark - Saving and Loading
 
 -(void) saveToDiskHelper:(void (^)(BOOL))onComplete{
-    
     // track if our back ground page has saved
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
     __block BOOL hadEditsToSave;
@@ -100,7 +98,7 @@
         @autoreleasepool {
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             dispatch_semaphore_wait(sema2, DISPATCH_TIME_FOREVER);
-            
+
             if(onComplete) onComplete(hadEditsToSave);
         }
     });
@@ -161,9 +159,9 @@
     // track scissor cuts:
     [[MMStatTracker trackerWithName:kMPStatScissorSegments] trackValue:[scissorPath elementCount]];
     
-    
+
     MMScissorResult* result = [super completeScissorsCutWithPath:scissorPath];
-    
+
     if([result.addedScraps count] || [result.removedScraps count]){
         NSMutableArray* undoItems = [NSMutableArray array];
         if([result didAddFillStroke]){
@@ -188,14 +186,14 @@
     [self.undoRedoManager addUndoItem:[MMUndoRedoStrokeItem itemForPage:self]];
 }
 
--(void) didEndStrokeWithTouch:(JotTouch *)touch{
-    [super didEndStrokeWithTouch:touch];
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     [self addStandardStrokeUndoItem];
     [self debugPrintUndoStatus];
 }
 
--(void) didCancelStroke:(JotStroke *)stroke withTouch:(JotTouch *)touch{
-    [super didCancelStroke:stroke withTouch:touch];
+-(void) didCancelStroke:(JotStroke *)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
     // no undo change needed
     [self debugPrintUndoStatus];
 }

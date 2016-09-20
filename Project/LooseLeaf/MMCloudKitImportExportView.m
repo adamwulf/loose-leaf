@@ -17,6 +17,7 @@
 #import "Constants.h"
 #import "MMUnknownObject.h"
 #import "Mixpanel.h"
+#import "Constants.h"
 
 @implementation MMCloudKitImportExportView{
     NSMutableSet* disappearingButtons;
@@ -377,7 +378,7 @@
     [self animateAndAlignAllButtons];
     
     
-    if(![[NSUserDefaults standardUserDefaults] objectForKey:@"hasEverImportedAPage"]){
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:kHasEverImportedAPage]){
         if(!bounceTimer){
             bounceTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(bounceMostRecentImport) userInfo:nil repeats:YES];
         }
@@ -396,16 +397,23 @@
 }
 
 -(void) importWasTapped:(MMCloudKitImportCoordinator*)coordinator{
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:@"hasEverImportedAPage"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kHasEverImportedAPage];
     [bounceTimer invalidate];
     bounceTimer = nil;
     
     if(coordinator.uuidOfIncomingPage){
-        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
-        page.delegate = stackView;
-        // this like will ensure the new page slides in with
-        // its preview properly loaded in time.
-        [page loadCachedPreviewAndDecompressImmediately:YES];
+
+        MMExportablePaperView* page;
+        
+        // move the page into this stack
+        if([coordinator movePageIntoStack:[[self stackView] uuid]]){
+            page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds andUUID:coordinator.uuidOfIncomingPage];
+            page.delegate = stackView;
+            // this like will ensure the new page slides in with
+            // its preview properly loaded in time.
+            [page loadCachedPreviewAndDecompressImmediately:YES];
+        }
+        
         if(page){
             [stackView importAndShowPage:page];
         }else{

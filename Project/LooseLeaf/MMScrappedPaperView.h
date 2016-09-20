@@ -23,6 +23,14 @@
 @interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
     MMScrapsOnPaperState* scrapsOnPaperState;
     UIImageView* cachedImgView;
+    
+    // this defaults to NO, which means we'll try to
+    // load a thumbnail. if an image does not exist
+    // on disk, then we'll set this to YES which will
+    // prevent any more thumbnail loads until this page
+    // is saved
+    BOOL definitelyDoesNotHaveAScrappedThumbnail;
+    BOOL isLoadingCachedScrappedThumbnailFromDisk;
 }
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
@@ -64,10 +72,16 @@
 
 #pragma mark - protected
 
+-(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize;
+
 -(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
 -(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail;
 
 -(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize;
+
+-(void) setThumbnailTo:(UIImage*)img;
+
+-(void) newlyCutScrapFromPaperView:(MMScrapView*)scrap;
 
 @end

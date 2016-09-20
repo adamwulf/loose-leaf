@@ -11,8 +11,14 @@
 
 @interface NSURL (UTI)
 
++(NSString*) UTIForExtension:(NSString*)fileExtension;
+
 -(NSString*) universalTypeID;
 
++(NSString*) mimeForExtension:(NSString*)fileExtension;
+
 -(NSString*) fileExtension;
+
+-(NSString*) mimeType;
 
 @end

@@ -11,6 +11,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMImageViewButton.h"
 #import "Constants.h"
+#import "NSURL+UTI.h"
 
 @implementation MMCopyShareItem{
     CGFloat lastProgress;
@@ -43,28 +44,30 @@
 }
 
 -(void) performShareAction{
-    if(!targetProgress){
-        // only trigger if not already animating
-        [delegate mayShare:self];
-        
-        [UIPasteboard generalPasteboard].image = self.delegate.imageToShare;
-        
-        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-        [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
-                                                                     kMPEventExportPropResult : @"Success"}];
-
-        [self animateToSuccess:YES];
+    if(!button.greyscale){
+        if(!targetProgress){
+            // only trigger if not already animating
+            [delegate mayShare:self];
+            
+            UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
+            [UIPasteboard generalPasteboard].image = imgToShare;
+            
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
+                                                                         kMPEventExportPropResult : @"Success"}];
+            
+            [self animateToSuccess:YES];
+        }
+    }else{
+        [self animateToSuccess:NO];
     }
 }
 
 -(void) animateToSuccess:(BOOL)succeeded{
-    CGPoint center = CGPointMake(button.bounds.size.width/2, button.bounds.size.height/2);
-    if(button.contentScaleFactor == 2){
-        center = CGPointMake(button.bounds.size.width/2-.5, button.bounds.size.height/2-.5);
-    }
+    CGPoint center = CGPointMake(CGRectGetMidX(button.drawableFrame), CGRectGetMidY(button.drawableFrame));
     
     CAShapeLayer *circle=[CAShapeLayer layer];
-    CGFloat radius = button.drawableFrame.size.width / 2;
+    CGFloat radius = ceilf(button.drawableFrame.size.width / 2);
     circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
     circle.fillColor=[UIColor clearColor].CGColor;
     circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
@@ -134,7 +137,9 @@
         [UIView animateWithDuration:.3 animations:^{
             checkOrXView.alpha = 1;
         } completion:^(BOOL finished){
-            [delegate didShare:self];
+            if(succeeded){
+                [delegate didShare:self];
+            }
             [[NSThread mainThread] performBlock:^{
                 [checkOrXView removeFromSuperview];
                 [circle removeAnimationForKey:@"drawCircleAnimation"];
@@ -144,14 +149,16 @@
     } afterDelay:.3];
 }
 
--(BOOL) isAtAllPossible{
-    return YES;
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+    return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Notification
 
 -(void) updateButtonGreyscale{
-    if([UIPrintInteractionController isPrintingAvailable]){
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([UIPrintInteractionController isPrintingAvailable]){
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

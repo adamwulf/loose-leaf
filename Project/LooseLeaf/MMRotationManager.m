@@ -55,7 +55,6 @@ static MMRotationManager* _instance = nil;
 }
 
 -(void) startAccelNotifications{
-    
     [motionManager startAccelerometerUpdatesToQueue:opQueue withHandler:^(CMAccelerometerData* data, NSError* error){
         if(shouldIgnoreEvents){
             return;

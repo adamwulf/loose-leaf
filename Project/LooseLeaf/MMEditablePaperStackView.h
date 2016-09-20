@@ -28,7 +28,7 @@
 #import "NSThread+BlockAdditions.h"
 #import "MMRotationManager.h"
 #import "MMRotationManagerDelegate.h"
-#import "MMStackManager.h"
+#import "MMSingleStackManager.h"
 #import "Constants.h"
 #import "Pen.h"
 #import "Eraser.h"
@@ -40,42 +40,29 @@
 
 @class MMMemoryProfileView;
 
-struct SidebarButton{
-    void* button;
-    CGRect originalRect;
-} SidebarButton;
-
 /**
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,UIScrollViewDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
-    
-    NSUInteger numberOfButtons;
-    struct SidebarButton buttons[20];
-    
-    // managers
-    MMStackManager* stackManager;
+@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
     
     // toolbar
-    MMPaperButton* documentBackgroundSidebarButton;
     MMPlusButton* addPageSidebarButton;
-    MMPolylineButton* polylineButton;
     MMImageButton* insertImageButton;
     MMScissorButton* scissorButton;
-    MMTextButton* textButton;
     MMPencilAndPaletteView* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
     MMTextButton* settingsButton;
-    MMMapButton* mapButton;
-    
+
     MMUndoRedoButton* undoButton;
     MMUndoRedoButton* redoButton;
 
     MMRulerButton* rulerButton;
     MMHandButton* handButton;
 
+    Pen* highlighter;
+    Pen* marker;
     Pen* pen;
     Eraser* eraser;
     MMScissorTool* scissor;
@@ -83,17 +70,20 @@ struct SidebarButton{
     MMRulerView* rulerView;
 }
 
+@property (nonatomic, readonly) MMImageButton* insertImageButton;
+@property (nonatomic, readonly) MMShareButton* shareButton;
+
 -(void) saveStacksToDisk;
 
 -(void) loadStacksFromDisk;
 
 -(BOOL) hasPages;
 
+-(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated;
+
 // protected
 
 -(void) addPageButtonTapped:(UIButton*)_button;
-
--(void) setButtonsVisible:(BOOL)visible;
 
 -(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 

@@ -10,27 +10,17 @@
 #import "MMLoadImageCache.h"
 #import "Constants.h"
 #import "MMInboxItem+Protected.h"
+#import "MMPDF.h"
 
-@implementation MMPDFInboxItem{
-    NSUInteger pageCount;
-    
-    BOOL isEncrypted;
-    NSString* password;
-}
+@implementation MMPDFInboxItem
+
+@synthesize pdf;
 
 #pragma mark - Init
 
 -(id) initWithURL:(NSURL*)pdfURL{
     if(self = [super initWithURL:pdfURL andInitBlock:^{
-        // initialize anything that could be affected by
-        // race condition generating thumbnails
-        // fetch page count
-        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-        
-        pageCount = CGPDFDocumentGetNumberOfPages( pdf );
-        isEncrypted = CGPDFDocumentIsEncrypted(pdf);
-        
-        CGPDFDocumentRelease( pdf );
+        pdf = [[MMPDF alloc] initWithURL:pdfURL];
     }]){
         // noop
     }
@@ -40,62 +30,35 @@
 #pragma mark - Properties
 
 -(BOOL) attemptToDecrypt:(NSString*)_password{
-    BOOL success = password != nil;
-    if(!password){
-        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-        
-        const char *key = [_password UTF8String];
-        success = CGPDFDocumentUnlockWithPassword(pdf, key);
-        CGPDFDocumentRelease( pdf );
-        
-        if(success){
-            password = _password;
-            [self generatePageThumbnailCache];
-        }
+    BOOL didDecrypt = [pdf attemptToDecrypt:_password];
+    if(didDecrypt){
+        [self generatePageThumbnailCache];
     }
-
-    return success;
+    return didDecrypt;
 }
 
 -(BOOL) isEncrypted{
-    return isEncrypted && !password;
+    return [pdf isEncrypted];
 }
 
 #pragma mark - Override
 
 -(NSUInteger) pageCount{
     
-    return pageCount;
+    return [pdf pageCount];
 }
 
 -(CGSize) calculateSizeForPage:(NSUInteger)page{
-    // size isn't in the cache, so find out and return it
-    // we dont' update the cache ourselves though.
-    
-    if(page >= pageCount){
-        page = pageCount - 1;
-    }
-    /*
-     * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
-     */
-    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-
-    if(password){
-        const char *key = [password UTF8String];
-        CGPDFDocumentUnlockWithPassword(pdf, key);
-    }
-
-    CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
-    
-    CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
-    
-    CGPDFDocumentRelease( pdf );
-    return mediaRect.size;
+    return [pdf sizeForPage:page];
 }
 
 #pragma mark - Private
 
 #pragma mark Scaled Image Generation
+
+-(CGFloat) rotationForPage:(NSInteger)pageNumber{
+    return [pdf rotationForPage:pageNumber];
+}
 
 -(void) generatePageThumbnailCache{
     if(!self.isEncrypted){
@@ -104,70 +67,8 @@
 }
 
 -(UIImage*) generateImageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
-    UIImage *image;
-    NSLog(@"%@ generating image for page %d with size: %f", [self.urlOnDisk lastPathComponent], (int)page, maxDim);
-    @autoreleasepool {
-        CGSize sizeOfPage = [self sizeForPage:page];
-        if(sizeOfPage.width > maxDim || sizeOfPage.height > maxDim){
-            CGFloat maxCurrDim = MAX(sizeOfPage.width, sizeOfPage.height);
-            CGFloat ratio = maxDim / maxCurrDim;
-            sizeOfPage.width *= ratio;
-            sizeOfPage.height *= ratio;
-        }
-        if(CGSizeEqualToSize(sizeOfPage, CGSizeZero)){
-            sizeOfPage = [UIScreen mainScreen].bounds.size;
-        }
-        
-        UIGraphicsBeginImageContextWithOptions(sizeOfPage, NO, 1);
-        CGContextRef cgContext = UIGraphicsGetCurrentContext();
-        if(!cgContext){
-            NSLog(@"no context");
-        }
-        [[UIColor whiteColor] setFill];
-        CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
-        [self renderIntoContext:cgContext size:sizeOfPage page:page];
-        image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-    }
-    return image;
+    return [pdf imageForPage:page withMaxDim:maxDim];
 }
-
--(void)renderIntoContext:(CGContextRef)ctx size:(CGSize)size page:(NSUInteger)page
-{
-    @autoreleasepool {
-        @try {
-            CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL( (__bridge CFURLRef) self.urlOnDisk );
-
-            if(password){
-                const char *key = [password UTF8String];
-                CGPDFDocumentUnlockWithPassword(pdf, key);
-            }
-            
-            /*
-             * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
-             */
-            CGContextGetCTM( ctx );
-            CGContextSetInterpolationQuality(ctx, kCGInterpolationHigh);
-            
-            CGContextScaleCTM( ctx, 1, -1 );
-            CGContextTranslateCTM( ctx, 0, -size.height );
-            CGPDFPageRef pageref = CGPDFDocumentGetPage( pdf, page + 1 ); // pdfs are index 1 at the start!
-            
-            CGRect mediaRect = CGPDFPageGetBoxRect( pageref, kCGPDFCropBox );
-            CGContextScaleCTM( ctx, size.width / mediaRect.size.width, size.height / mediaRect.size.height );
-            CGContextTranslateCTM( ctx, -mediaRect.origin.x, -mediaRect.origin.y );
-            
-            CGContextDrawPDFPage( ctx, pageref );
-                        
-            CGPDFDocumentRelease( pdf );
-        }
-        @catch (NSException *exception) {
-            NSLog(@"error drawing PDF: %@", exception);
-        }
-    }
-}
-
-
 
 
 @end

@@ -28,6 +28,22 @@ static MMTutorialManager* _instance = nil;
 -(id) init{
     if(_instance) return _instance;
     if((self = [super init])){
+        
+#ifdef DEBUG
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
+//
+//        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
+//            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
+//        }
+//        
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
+//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+//        
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+
+#endif
+
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
         currentTutorialStep = [[NSUserDefaults standardUserDefaults] integerForKey:kCurrentTutorialStep];
@@ -37,16 +53,6 @@ static MMTutorialManager* _instance = nil;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
-#ifdef DEBUG
-        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
-        }
-        
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
-        
-#endif
     }
     return self;
 }
@@ -80,15 +86,28 @@ static MMTutorialManager* _instance = nil;
     return [possiblyPendingTutorials count] - numCompleted;
 }
 
+-(NSArray*) allTutorialStepsEver{
+    return [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self listViewTutorialSteps]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]];
+}
+
 -(NSArray*) appIntroTutorialSteps{
+    return [@[@{
+                 @"id":@"app-welcome",
+                 @"title":@"",
+                 @"video":@"new-user-intro.png",
+                 @"hide-buttons":@(YES)
+                 }] arrayByAddingObjectsFromArray:[self appHelpButtonTutorialSteps]];
+}
+
+-(NSArray*) appHelpButtonTutorialSteps{
     return @[@{
                  @"id":@"app-intro-pen",
                  @"title":@"Draw and Erase",
-                 @"video":@"hello.mov"
+                 @"video":@"hello.mp4"
                  },@{
                  @"id":@"app-intro-pinch",
                  @"title":@"Pinch to See Your Pages",
-                 @"video":@"pinch-to-list.mov"
+                 @"video":@"pinch-to-list.mp4"
                  },@{
                  @"id":@"app-intro-import-scissor",
                  @"title":@"Import and Crop Your Photos",
@@ -153,6 +172,7 @@ static MMTutorialManager* _instance = nil;
     timeSpentInTutorial = [stopwatch stop];
     [[[Mixpanel sharedInstance] people] set:kMPDurationWatchingTutorial to:@(timeSpentInTutorial)];
     [[NSUserDefaults standardUserDefaults] setFloat:timeSpentInTutorial forKey:kMPDurationWatchingTutorial];
+    [[Mixpanel sharedInstance] flush];
 }
 
 -(void) finishWatchingTutorial{
@@ -160,6 +180,8 @@ static MMTutorialManager* _instance = nil;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kMPHasFinishedTutorial];
     [[[Mixpanel sharedInstance] people] set:kMPHasFinishedTutorial to:@(YES)];
     [[NSNotificationCenter defaultCenter] postNotificationName:kTutorialClosedNotification object:self];
+    hasFinishedTutorial = YES;
+    [[Mixpanel sharedInstance] flush];
 }
 
 
@@ -175,12 +197,14 @@ static MMTutorialManager* _instance = nil;
 -(void) optOutOfNewsletter{
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasIgnoredNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Opt Out"];
+    [[Mixpanel sharedInstance] flush];
 }
 
 -(void) signUpForNewsletter:(NSString*)email{
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
     [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];
+    [[Mixpanel sharedInstance] flush];
 }
 
 

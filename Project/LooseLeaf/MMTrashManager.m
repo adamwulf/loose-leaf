@@ -66,8 +66,6 @@ static MMTrashManager* _instance = nil;
 }
 
 -(void) deletePage:(MMExportablePaperView*)page{
-    DebugLog(@"asking to delete %@", page.uuid);
-
     NSObject<MMPaperViewDelegate>* pageOriginalDelegate = page.delegate;
     page.delegate = nil;
     [[MMPageCacheManager sharedInstance] forgetAboutPage:page];
@@ -82,7 +80,7 @@ static MMTrashManager* _instance = nil;
             while(page.hasEditsToSave || page.isStateLoading || page.isCurrentlySaving){
                 if(page.hasEditsToSave){
                     //                DebugLog(@"deleting a page with active edits");
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                         @autoreleasepool {
                             if(page.hasEditsToSave){
                                 [page saveToDisk:^(BOOL didSaveEdits) {
@@ -90,7 +88,7 @@ static MMTrashManager* _instance = nil;
                                 }];
                             }
                         }
-                    });
+                    }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                 }else if(page.isStateLoading){
                     //                DebugLog(@"waiting for page to finish loading before deleting...");
@@ -105,9 +103,7 @@ static MMTrashManager* _instance = nil;
                 }
             }
             // build some directories
-            NSString* documentsPath = [NSFileManager documentsPath];
-            NSString* allPagesPath = [documentsPath stringByAppendingPathComponent:@"Pages"];
-            NSString* thisPagesPath = [allPagesPath stringByAppendingPathComponent:page.uuid];
+            NSString* thisPagesPath = [page pagesPath];
             NSString* thisPagesScrapsPath = [thisPagesPath stringByAppendingPathComponent:@"Scraps"];
 
             [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:thisPagesPath];
@@ -165,7 +161,8 @@ static MMTrashManager* _instance = nil;
                     // Step 4: Delete the rest of the page assets
                     BOOL isDirectory = NO;
                     if([[NSFileManager defaultManager] fileExistsAtPath:thisPagesPath isDirectory:&isDirectory] &&
-                       ![thisPagesPath isEqualToString:allPagesPath] && thisPagesPath.length > allPagesPath.length){
+                       ![[thisPagesPath lastPathComponent] isEqualToString:@"Pages"] &&
+                       [thisPagesPath containsString:@"/Pages/"]){
                         if(isDirectory){
                             NSError* err = nil;
                             if([[NSFileManager defaultManager] removeItemAtPath:thisPagesPath error:&err]){
@@ -179,14 +176,14 @@ static MMTrashManager* _instance = nil;
                             //                    DebugLog(@"found path, but it isn't a directory %@", thisPagesPath);
                         }
                     }else{
-                        //                DebugLog(@"path to delete doesn't exist %@", thisPagesPath);
+                        DebugLog(@"path to delete doesn't exist %@", thisPagesPath);
                     }
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                         @autoreleasepool {
                             [page setDrawableView:nil];
                             [[MMPageCacheManager sharedInstance] pageWasDeleted:page];
                         }
-                    });
+                    }];
                 }
             });
         }
@@ -212,11 +209,11 @@ static MMTrashManager* _instance = nil;
         return;
     }
 
+    DebugLog(@"deleting scrap at %@", [scrapCollectionState directoryPathForScrapUUID:scrapUUID]);
+    
     [[JotDiskAssetManager sharedManager] blockUntilCompletedForDirectory:[scrapCollectionState directoryPathForScrapUUID:scrapUUID]];
     [scrapCollectionState deleteScrapWithUUID:scrapUUID shouldRespectOthers:respectOthers];
-
 }
-
 
 
 @end

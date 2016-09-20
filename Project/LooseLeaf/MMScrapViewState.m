@@ -9,7 +9,6 @@
 #import "MMScrapViewState.h"
 #import "NSThread+BlockAdditions.h"
 #import "MMLoadImageCache.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <JotUI/JotUI.h>
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMScrapBackgroundView.h"
@@ -182,6 +181,8 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         drawableBounds = bezierPath.bounds;
         drawableBounds = CGRectInset(drawableBounds, -kScrapShadowBufferSize, -kScrapShadowBufferSize);
         drawableBounds.origin = CGPointMake(0, 0);
+        drawableBounds.size.width = round(drawableBounds.size.width);
+        drawableBounds.size.height = round(drawableBounds.size.height);
         
         // this content view will be used by the MMScrapView to show
         // the scrap's contents. we'll use this to swap between
@@ -291,7 +292,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                         }
                         [self setActiveThumbnailImage:[[MMDecompressImagePromise alloc] initForImage:thumb andDelegate:self]];
                     }else{
-                        NSLog(@"target was unloaded afterall %@", self.uuid);
+                        // target was unloaded afterall
                     }
                 }
             }
@@ -323,7 +324,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
         }
         targetIsLoadedThumbnail = NO;
         if(activeThumbnailImage){
-            DebugLog(@"unload thumb for %@", self.uuid);
+//            DebugLog(@"unload thumb for %@", self.uuid);
             [activeThumbnailImage cancel];
             activeThumbnailImage = nil;
         }
@@ -398,10 +399,6 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     return;
                 }
                 [lock lock];
-                [JotViewStateProxy shouldPrintHasEdits:YES];
-//                DebugLog(@"(%@) checking edits", uuid);
-//                DebugLog(@"(%@) saving with edits: %d %d", uuid, [drawableViewState hasEditsToSave], backingImageHolder.backingViewHasChanged);
-                [JotViewStateProxy shouldPrintHasEdits:NO];
                 if(drawableViewState && ([drawableViewState hasEditsToSave] || backingImageHolder.backingViewHasChanged)){
                     __block BOOL doneSavingBlockResult = YES;
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
@@ -644,7 +641,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
                     [NSThread performBlockOnMainThread:^{
                         [drawableView removeFromSuperview];
-                        [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                        [drawableView invalidate];
                         [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
                         drawableViewState = nil;
                         drawableView = nil;
@@ -771,12 +768,12 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 
 #pragma mark - OpenGL
 
--(void) addElements:(NSArray*)elements{
+-(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture{
     if(!drawableViewState){
         // https://github.com/adamwulf/loose-leaf/issues/258
         DebugLog(@"trying to draw on an unloaded scrap");
     }
-    [drawableView addElements:elements];
+    [drawableView addElements:elements withTexture:texture];
 }
 -(void) addUndoLevelAndFinishStroke{
     [drawableView addUndoLevelAndFinishStroke];
@@ -840,7 +837,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                 [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
             }
             if(drawableView){
-                [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                [drawableView invalidate];
             }
             drawableViewState = nil;
             drawableView = nil;
@@ -871,7 +868,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
                             [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];
                         }
                         if(drawableView){
-                            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+                            [drawableView invalidate];
                         }
                         drawableViewState = nil;
                         drawableView = nil;
@@ -903,7 +900,7 @@ static const void *const kImportExportScrapStateQueueIdentifier = &kImportExport
 -(void) dealloc{
     if(self.isScrapStateLoaded){
         if(drawableView){
-            [[JotTrashManager sharedInstance] addObjectToDealloc:drawableView];
+            [drawableView invalidate];
         }
         if(drawableViewState){
             [[JotTrashManager sharedInstance] addObjectToDealloc:drawableViewState];

@@ -33,15 +33,14 @@
 -(void) retrySaveOrExport{
     if(waitingForSave){
         __block __strong MMExportablePaperView* strongSelf = self;
-        dispatch_async(dispatch_get_main_queue(), ^{
+        [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
             @autoreleasepool {
                 if(isCurrentlySaving == YES){
-                    NSLog(@"already saving. will need to wait for a save too");
+                    // already saving. will need to wait for a save
                 }else{
                     [strongSelf saveToDisk:^(BOOL didSaveEdits){
                         if([self hasEditsToSave]){
                             // save failed, try again
-                            NSLog(@"====================== kMPSaveFailedNeedsRetry");
                             waitingForSave = YES;
                             [strongSelf retrySaveOrExport];
                         }
@@ -49,15 +48,15 @@
                 }
                 strongSelf = nil;
             }
-        });
+        }];
     }else if(waitingForExport){
         [self exportAsynchronouslyToZipFile];
     }else if(waitingForUnload){
-        dispatch_async(dispatch_get_main_queue(), ^{
+        [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
             @autoreleasepool {
                 [self unloadState];
             }
-        });
+        }];
     }
 }
 
@@ -426,7 +425,7 @@
         dispatch_async([self serialBackgroundQueue], ^{
             @autoreleasepool {
                 if([self isStateLoaded]){
-                    DebugLog(@"only check this if our state is loaded");
+//                    DebugLog(@"only check this if our state is loaded");
                     existsOnItsPage = [[self.scrapsOnPaper filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                         return [[evaluatedObject uuid] isEqualToString:scrapUUID];
                     }]] count] > 0;
@@ -475,10 +474,10 @@
                 [self.scrapsOnPaperState removeScrapWithUUID:scrapUUID];
                 [self.delegate.bezelContainerView.sidebarScrapState stealScrap:scrapUUID fromScrapCollectionState:self.scrapsOnPaperState];
                 NSObject<MMPaperViewDelegate>* pageOriginalDelegate = self.delegate;
-                dispatch_async(dispatch_get_main_queue(), ^{
+                [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                     [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
                     [self saveToDisk:nil];
-                });
+                }];
                 return;
             }
             
@@ -525,11 +524,11 @@
                 // if we respect it
                 if(respectOthers){
                     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                         [self saveToDisk:^(BOOL didSaveEdits) {
                             dispatch_semaphore_signal(sema1);
                         }];
-                    });
+                    }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                 }
             }
@@ -539,7 +538,7 @@
             //
             // Step 4: remove former owner ScrapsOnPaperState
             dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
-            dispatch_async(dispatch_get_main_queue(), ^{
+            [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                 @autoreleasepool {
                     // we need to remove the scraps on paper state delegate,
                     // otherwise it will recieve notifiactions when this
@@ -553,7 +552,7 @@
                     }
                 }
                 dispatch_semaphore_signal(sema1);
-            });
+            }];
             dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
             
             
@@ -564,7 +563,7 @@
             // that it is already 100% unloaded
             while(scrapThatIsBeingDeleted.state.hasEditsToSave || scrapThatIsBeingDeleted.state.isScrapStateLoading){
                 if(scrapThatIsBeingDeleted.state.hasEditsToSave){
-                    dispatch_async(dispatch_get_main_queue(), ^{
+                    [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
                         @autoreleasepool {
                             if(scrapThatIsBeingDeleted.state.hasEditsToSave){
                                 [scrapThatIsBeingDeleted saveScrapToDisk:^(BOOL hadEditsToSave) {
@@ -572,7 +571,7 @@
                                 }];
                             }
                         }
-                    });
+                    }];
                     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
                 }else if(scrapThatIsBeingDeleted.state.isScrapStateLoading){
                     //                DebugLog(@"waiting for scrap to finish loading before deleting...");
@@ -595,7 +594,7 @@
                 if(isDirectory){
                     NSError* err = nil;
                     if([[NSFileManager defaultManager] removeItemAtPath:scrapPath error:&err]){
-                        DebugLog(@"deleted scrap %@", scrapUUID);
+//                        DebugLog(@"deleted scrap %@", scrapUUID);
                     }
                     if(err){
                         //                    DebugLog(@"error deleting %@: %@", scrapPath, err);

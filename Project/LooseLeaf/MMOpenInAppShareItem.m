@@ -19,6 +19,7 @@
 #import "MMAppDelegate.h"
 #import "MMRotationManager.h"
 #import "MMPresentationWindow.h"
+#import "MMImageButton.h"
 
 @implementation MMOpenInAppShareItem{
     MMShareButton* button;
@@ -53,32 +54,27 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            NSDate *now = [[NSDate alloc] init];
-            NSString *theDate = [dateFormatter stringFromDate:now];
-            NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"LooseLeaf-%@.jpg", theDate]];
-            UIImage* imageToShare = self.delegate.imageToShare;
-            [UIImageJPEGRepresentation(imageToShare, .9) writeToFile:filePath atomically:YES];
-            NSURL* fileLocation = [NSURL fileURLWithPath:filePath];
-            
-            controller = [UIDocumentInteractionController interactionControllerWithURL:fileLocation];
-            controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
-            controller.delegate = self;
-            MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-            UIView* presentationView = presentationWindow.rootViewController.view;
-            CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
-            [presentationWindow makeKeyAndVisible];
-            if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
-                [self performAirDropAction];
+    if(!button.greyscale){
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                controller = [UIDocumentInteractionController interactionControllerWithURL:[self.delegate urlToShare]];
+                controller.UTI = (__bridge NSString *)(kUTTypeJPEG);
+                controller.delegate = self;
+                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                UIView* presentationView = presentationWindow.rootViewController.view;
+                CGRect presentationRect = [button convertRect:button.bounds toView:presentationView];
+                [presentationWindow makeKeyAndVisible];
+                if(![controller presentOpenInMenuFromRect:presentationRect inView:presentationView animated:YES]){
+                    [self performAirDropAction];
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 
@@ -88,7 +84,7 @@
     [button setNeedsDisplay];
 
     UIActivityViewController *activityViewController =
-    [[UIActivityViewController alloc] initWithActivityItems:@[self.delegate.imageToShare]
+    [[UIActivityViewController alloc] initWithActivityItems:@[[self.delegate urlToShare]]
                                       applicationActivities:nil];
     
     activityViewController.excludedActivityTypes = @[UIActivityTypePostToFacebook,
@@ -131,7 +127,7 @@
         [self.delegate didShare:self];
         button.selected = NO;
         [button setNeedsDisplay];
-        activityViewController.completionHandler = ^(NSString *activityType, BOOL completed){
+        activityViewController.completionWithItemsHandler = ^(NSString * __nullable activityType, BOOL completed, NSArray * __nullable returnedItems, NSError * __nullable activityError){
             block(activityType, completed);
         };
     }
@@ -159,8 +155,19 @@
     // noop
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
+}
+
+#pragma mark - Notification
+
+-(void) updateButtonGreyscale{
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else{
+        button.greyscale = NO;
+    }
+    [button setNeedsDisplay];
 }
 
 #pragma mark - UIDocumentInteractionControllerDelegate

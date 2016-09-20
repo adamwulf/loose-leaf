@@ -10,8 +10,12 @@
 
 @implementation MMScissorTool
 
-- (NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement *)previousElement{
+- (NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
     return elements;
+}
+
+-(BOOL) supportsRotation{
+    return NO;
 }
 
 @end

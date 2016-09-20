@@ -43,4 +43,9 @@
 
 -(void) loadFromDisk;
 
+-(void) deleteAllScrapsFromSidebar;
+
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
+
+
 @end

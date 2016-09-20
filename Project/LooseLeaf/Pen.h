@@ -30,7 +30,6 @@
 @property (nonatomic, assign) CGFloat minAlpha;
 @property (nonatomic, assign) CGFloat maxAlpha;
 @property (nonatomic, strong) UIColor* color;
-@property (nonatomic, readonly) UIImage* texture;
 /**
  * the velocity of the last touch, between 0 and 1
  *

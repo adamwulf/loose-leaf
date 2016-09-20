@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MMShareItem.h"
+#import "MMAbstractShareItem.h"
 
-@interface MMTencentWeiboShareItem : NSObject<MMShareItem>
+@interface MMTencentWeiboShareItem : MMAbstractShareItem
 
 @end

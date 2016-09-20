@@ -23,31 +23,38 @@
 #import "UIApplication+Version.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import <JotUI/JotUI.h>
-#import <FacebookSDK/FacebookSDK.h>
 #import "MMShadowHandView.h"
 #import "MMUnknownObject.h"
 #import "Constants.h"
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "MMUnknownObject.h"
+#import "MMAllStacksManager.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+#import <TwitterKit/TwitterKit.h>
 
 @implementation MMAppDelegate{
     CFAbsoluteTime sessionStartStamp;
     NSTimer* durationTimer;
     CFAbsoluteTime resignedActiveAtStamp;
     BOOL didRecieveReportFromCrashlytics;
+    BOOL isActive;
 }
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize presentationWindow;
+@synthesize isActive=isActive;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
+    
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
 
+    isActive = YES;
     
-    
-    DebugLog(@"DID FINISH LAUNCHING");
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
@@ -57,7 +64,7 @@
         NSInteger loc1 = [str rangeOfString:@"-"].location;
         NSInteger loc2 = [str rangeOfString:@"-" options:NSLiteralSearch range:NSMakeRange(loc1+1, [str length]-loc1-1)].location;
         str = [str substringToIndex:loc2];
-        [[NSUserDefaults standardUserDefaults] setObject:str forKey:@"mixpanel_uuid"];
+        [[NSUserDefaults standardUserDefaults] setObject:str forKey:kMixpanelUUID];
         [[NSUserDefaults standardUserDefaults] synchronize];
     });
     
@@ -65,41 +72,47 @@
                                                         [MMAppDelegate userID], kMPID, nil]];
     
     [[Crashlytics sharedInstance] setDelegate:self];
-    [Fabric with:@[CrashlyticsKit, TwitterKit]];
 
-    [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
-    [FBAppEvents activateApp];
-    
-    presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [presentationWindow makeKeyAndVisible];
+    [[Twitter sharedInstance] startWithConsumerKey:@"your_key" consumerSecret:@"your_secret"];
+    [Fabric with:@[CrashlyticsKit, [Twitter class]]];
 
-    self.window = [[MMWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.viewController = [[MMLooseLeafViewController alloc] init];
-    self.window.rootViewController = self.viewController;
-    [self.window makeKeyAndVisible];
-    
-//    [self.window.layer setSpeed:.5f];
-    MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
-    [self.window addSubview:blueDots];
-//    [self.window.layer setSpeed:0.1f];
-    
-    MMShadowHandView* silhouetteView = [[MMShadowHandView alloc] initWithFrame:self.window.bounds];
-    [self.window addSubview:silhouetteView];
-    self.viewController.stackView.silhouette = silhouetteView;
+    [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
-    // fire timer each minute
-    [self setupTimer];
+    [[MMAllStacksManager sharedInstance] upgradeIfNecessary:^{
+        presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
+        [presentationWindow makeKeyAndVisible];
+        
+        CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
+        self.window = [[MMWindow alloc] initWithFrame:screenBounds];
+        // Override point for customization after application launch.
+        self.viewController = [[MMLooseLeafViewController alloc] init];
+        self.window.rootViewController = self.viewController;
+        [self.window makeKeyAndVisible];
+        
+        MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
+        [self.window addSubview:blueDots];
+        
+        MMShadowHandView* silhouetteView = [[MMShadowHandView alloc] initWithFrame:self.window.bounds];
+        [self.window addSubview:silhouetteView];
+        self.viewController.stackView.silhouette = silhouetteView;
+        
 
-    if (launchOptions != nil)
-    {
-        NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        if (dictionary != nil)
+        
+        //    [self.window.layer setSpeed:0.1f];
+        
+        // setup the timer that will help log session duration
+        [self setupTimer];
+        
+        if (launchOptions != nil)
         {
-            [self checkForNotificationToHandleWithNotificationInfo:dictionary];
+            NSDictionary *dictionary = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            if (dictionary != nil)
+            {
+                [self checkForNotificationToHandleWithNotificationInfo:dictionary];
+            }
         }
-    }
-    
+    }];
+
     NSDate* dateOfCrash = [self dateOfDeathIfAny];
     [[NSThread mainThread] performBlock:^{
         if(dateOfCrash && !didRecieveReportFromCrashlytics){
@@ -115,7 +128,7 @@
 // Handle deeplinking back to app from Pinterest
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    NSLog(@"Opened by handling url: %@", [url absoluteString]);
+    DebugLog(@"Opened by handling url: %@", [url absoluteString]);
     
     return YES;
 }
@@ -125,12 +138,18 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     DebugLog(@"WILL RESIGN ACTIVE");
-    [self.viewController willResignActive];
+    isActive = NO;
     [[MMRotationManager sharedInstance] willResignActive];
+    [self.viewController willResignActive];
+    // stop the timer once "App Close" event is called
+    [[Mixpanel sharedInstance] track:kMPEventActiveSession];
+    [[Mixpanel sharedInstance] track:kMPEventResign];
+    [[Mixpanel sharedInstance] flush];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    isActive = NO;
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     resignedActiveAtStamp = CFAbsoluteTimeGetCurrent();
@@ -138,18 +157,22 @@
     [self stopTimer];
     [[MMRotationManager sharedInstance] applicationDidBackground];
     [self removeDateOfLaunch];
+    [self.viewController didEnterBackground];
     [[JotDiskAssetManager sharedManager] blockUntilAllWritesHaveFinished];
     DebugLog(@"DID ENTER BACKGROUND");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    isActive = YES;
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     DebugLog(@"WILL ENTER FOREGROUND");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    [FBSDKAppEvents activateApp];
+    isActive = YES;
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [self setupTimer];
     if((CFAbsoluteTimeGetCurrent() - resignedActiveAtStamp) / 60.0 > 5){
@@ -165,6 +188,9 @@
     }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
+    // start the timer for the event "App Close"
+    [[Mixpanel sharedInstance] timeEvent:kMPEventActiveSession];
+
     DebugLog(@"DID BECOME ACTIVE");
     DebugLog(@"***************************************************************************");
     DebugLog(@"***************************************************************************");
@@ -176,11 +202,17 @@
     [self logActiveAppDuration];
     [self stopTimer];
     [self removeDateOfLaunch];
+    [[Mixpanel sharedInstance] flush];
     DebugLog(@"WILL TERMINATE");
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                   openURL:url
+                                         sourceApplication:sourceApplication
+                                                annotation:annotation];
+
     if (url) {
         [self importFileFrom:url fromApp:sourceApplication];
     }
@@ -188,7 +220,7 @@
 }
 
 -(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
-    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:nil];
+    [self application:application didReceiveRemoteNotification:userInfo fetchCompletionHandler:^(UIBackgroundFetchResult noop){ /* noop */ }];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)info fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler{
@@ -234,6 +266,7 @@
     // calling url.pathExtension seems to immediately dealloc
     // the path extension when i pass it into the dict below
     [self.viewController importFileFrom:url fromApp:sourceApplication];
+    [[Mixpanel sharedInstance] flush];
 }
 
 
@@ -243,10 +276,11 @@
 -(void) logActiveAppDuration{
     if(durationTimer){
         NSNumber* amount = @((CFAbsoluteTimeGetCurrent() - sessionStartStamp) / 60.0);
-        NSLog(@"duration tick: %@", amount);
+        DebugLog(@"duration tick: %@", amount);
         // sanity check, only log time if our timer is running
         [[[Mixpanel sharedInstance] people] increment:kMPDurationAppOpen by:amount];
         sessionStartStamp = CFAbsoluteTimeGetCurrent();
+        [[Mixpanel sharedInstance] flush];
     }
 }
 
@@ -304,6 +338,7 @@
     }@catch(id e){
         // noop
     }
+    [[Mixpanel sharedInstance] flush];
 }
 
 
@@ -360,6 +395,7 @@
     
     @try{
         [[Mixpanel sharedInstance] track:kMPEventCrash properties:mappedCrashProperties];
+        [[Mixpanel sharedInstance] flush];
     }@catch(id e){
         // noop
     }

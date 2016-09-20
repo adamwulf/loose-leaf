@@ -7,22 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMGenericBackgroundView.h"
 
 @class MMScrapViewState;
 
-@interface MMScrapBackgroundView : UIView{
-    CGFloat backgroundRotation;
-    CGFloat backgroundScale;
-    CGPoint backgroundOffset;
-    BOOL backingViewHasChanged;
-}
+@interface MMScrapBackgroundView : MMGenericBackgroundView
 
 @property (nonatomic, readonly) UIImageView* backingContentView;
-@property (nonatomic, assign) CGFloat backgroundRotation;
-@property (nonatomic, assign) CGFloat backgroundScale;
-@property (nonatomic, assign) CGPoint backgroundOffset;
 @property (nonatomic, assign) BOOL backingViewHasChanged;
-@property (nonatomic, retain) UIImage* backingImage;
 
 +(int) totalBackgroundBytes;
 
@@ -37,7 +29,5 @@
 #pragma mark Duplication
 
 -(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState;
-
--(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)otherScrapState;
 
 @end

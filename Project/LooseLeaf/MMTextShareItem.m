@@ -11,6 +11,7 @@
 #import "MMImageViewButton.h"
 #import "Constants.h"
 #import "MMPresentationWindow.h"
+#import "NSURL+UTI.h"
 
 @implementation MMTextShareItem{
     MMImageViewButton* button;
@@ -39,35 +40,34 @@
 }
 
 -(void) performShareAction{
-    [delegate mayShare:self];
-    // if a popover controller is dismissed, it
-    // adds the dismissal to the main queue async
-    // so we need to add our next steps /after that/
-    // so we need to dispatch async too
-    dispatch_async(dispatch_get_main_queue(), ^{
-        @autoreleasepool {
-            MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
-            [composer setMessageComposeDelegate:self];
-            if([MFMessageComposeViewController canSendText] && composer) {
-                if([MFMessageComposeViewController canSendSubject]){
-                    [composer setSubject:@"Quick sketch from Loose Leaf"];
+    if(!button.greyscale){
+        [delegate mayShare:self];
+        // if a popover controller is dismissed, it
+        // adds the dismissal to the main queue async
+        // so we need to add our next steps /after that/
+        // so we need to dispatch async too
+        dispatch_async(dispatch_get_main_queue(), ^{
+            @autoreleasepool {
+                MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
+                [composer setMessageComposeDelegate:self];
+                if([MFMessageComposeViewController canSendText] && composer) {
+                    [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
+                    
+                    NSURL* urlToShare = [self.delegate urlToShare];
+                    NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                    [composer addAttachmentData:data typeIdentifier:[urlToShare mimeType] filename:[@"LooseLeaf" stringByAppendingPathExtension:[urlToShare pathExtension]]];
+                    
+                    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+                    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+                    [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
                 }
-                [composer setBody:@"\nDrawn with Loose Leaf. http://getlooseleaf.com"];
-                [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-                
-                NSData *data = UIImagePNGRepresentation(self.delegate.imageToShare);
-                [composer addAttachmentData:data typeIdentifier:@"image/png" filename:@"LooseLeaf.png"];
-                
-                [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-                MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
+                [delegate didShare:self];
             }
-            [delegate didShare:self];
-        }
-    });
+        });
+    }
 }
 
--(BOOL) isAtAllPossible{
+-(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
     return YES;
 }
 
@@ -82,7 +82,9 @@
 }
 
 -(void) updateButtonGreyscale{
-    if([MFMessageComposeViewController canSendText]) {
+    if(![self.delegate urlToShare]){
+        button.greyscale = YES;
+    }else if([MFMessageComposeViewController canSendText]) {
         button.greyscale = NO;
     }else{
         button.greyscale = YES;

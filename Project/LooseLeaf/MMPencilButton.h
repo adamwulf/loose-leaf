@@ -6,12 +6,8 @@
 //  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMSidebarButton.h"
+#import "MMPaletteButton.h"
 
-@class MMPencilAndPaletteView;
-
-@interface MMPencilButton : MMSidebarButton
-
-@property (weak) MMPencilAndPaletteView* tool;
+@interface MMPencilButton : MMPaletteButton
 
 @end

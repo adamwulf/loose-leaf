@@ -13,8 +13,6 @@
 
 @implementation MMPencilButton
 
-@synthesize tool;
-
 - (id)initWithFrame:(CGRect)frame
 {
     // adjust the frame so that 

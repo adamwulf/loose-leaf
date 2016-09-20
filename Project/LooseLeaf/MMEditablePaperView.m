@@ -11,7 +11,6 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "NSThread+BlockAdditions.h"
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import "DKUIBezierPathClippedSegment+PathElement.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMPageCacheManager.h"
@@ -19,9 +18,13 @@
 #import "UIView+Animations.h"
 #import "Mixpanel.h"
 #import "MMEditablePaperViewSubclass.h"
+#import "MMSingleStackManager.h"
+#import "MMAllStacksManager.h"
 
 dispatch_queue_t importThumbnailQueue;
 
+#define kMinimumStrokeLengthAfterStylus 10.0
+#define kLightStrokeUndoDurationAfterStylus 3.0
 
 @implementation MMEditablePaperView{
     // cached static values
@@ -31,22 +34,8 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
     
-    // we want to be able to track extremely
-    // efficiently 1) if we have a thumbnail loaded,
-    // and 2) if we have (or don't) a thumbnail at all
-    UIImage* cachedImgViewImage;
-    // this defaults to NO, which means we'll try to
-    // load a thumbnail. if an image does not exist
-    // on disk, then we'll set this to YES which will
-    // prevent any more thumbnail loads until this page
-    // is saved
-    BOOL definitelyDoesNotHaveAnInkThumbnail;
-    BOOL isLoadingCachedInkThumbnailFromDisk;
-    
-    // YES if the file exists at the path, NO
-    // if it *might* exist
-    BOOL fileExistsAtInkPath;
-    BOOL fileExistsAtPlistPath;
+    BOOL isWaitingToNotifyDelegateOfStylusEnd;
+    NSTimeInterval stylusDidDrawTimestamp;
 }
 
 @synthesize drawableView;
@@ -193,15 +182,19 @@ dispatch_queue_t importThumbnailQueue;
                 // if any
                 [drawableView.layer removeAllAnimations];
                 [drawableView loadState:paperState];
-                [self addDrawableViewToContentView];
-                // anchor the view to the top left,
-                // so that when we scale down, the drawable view
-                // stays in place
-                drawableView.layer.anchorPoint = CGPointMake(0,0);
-                drawableView.layer.position = CGPointMake(0,0);
                 drawableView.delegate = self;
-                [self setEditable:YES];
-                [self updateThumbnailVisibility];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if(drawableView){
+                        [self addDrawableViewToContentView];
+                        // anchor the view to the top left,
+                        // so that when we scale down, the drawable view
+                        // stays in place
+                        drawableView.layer.anchorPoint = CGPointMake(0,0);
+                        drawableView.layer.position = CGPointMake(0,0);
+                        [self setEditable:YES];
+                        [self updateThumbnailVisibility];
+                    }
+                });
             }
         }else{
             [self generateDebugView:NO];
@@ -261,11 +254,9 @@ dispatch_queue_t importThumbnailQueue;
 //        DebugLog(@"saved excess");
     }
     if([paperState hasEditsToSave]){
-        NSLog(@"======== hasEditsToSave %@", self.uuid);
         // something has changed since the last time we saved,
         // so ask the JotView to save out the png of its data
         if(drawableView){
-            NSLog(@"======== drawableview %@", self.uuid);
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
@@ -283,23 +274,19 @@ dispatch_queue_t importThumbnailQueue;
                                      [paperState wasSavedAtImmutableState:immutableState];
                                      [[MMLoadImageCache sharedInstance] updateCacheForPath:[self thumbnailPath] toImage:thumbnail];
                                      cachedImgViewImage = thumbnail;
-                                     onComplete(YES);
-//                                     DebugLog(@"saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
+                                     onComplete(YES); // saved backing store ok at the immutableState.undoHash hash
                                  }else{
                                      // NOTE!
                                      // https://github.com/adamwulf/loose-leaf/issues/658
                                      // it's important to anyone listening to us that they potentially
                                      // wait for a pending save
                                      onComplete(NO);
-//                                     DebugLog(@"duplicate saved backing store for %@ at %lu", self.uuid, (unsigned long)immutableState.undoHash);
                                  }
                              }];
         }else{
-            NSLog(@"======== !drawableview %@", self.uuid);
             onComplete(NO);
         }
     }else{
-        NSLog(@"======== !hasEditsToSave %@", self.uuid);
         // already saved, but don't need to write
         // anything new to disk
         onComplete(NO);
@@ -417,57 +404,125 @@ static int count = 0;
 
 #pragma mark - JotViewDelegate
 
--(BOOL) willBeginStrokeWithTouch:(JotTouch*)touch{
-    if(panGesture.state == UIGestureRecognizerStateBegan ||
+-(void) didFinishWithStylus{
+    [[self delegate] didEndWritingWithStylus];
+    isWaitingToNotifyDelegateOfStylusEnd = NO;
+    self.panGesture.enabled = YES;
+}
+
+-(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if(touch.type != UITouchTypeStylus && isWaitingToNotifyDelegateOfStylusEnd){
+        // if our delegate thinks the stylus is down, then we shouldn't allow non-stylus writing.
+        return NO;
+    }else if(touch.type != UITouchTypeStylus && now - stylusDidDrawTimestamp < 1.0){
+        // don't allow drawing with finger within 1 second of stylus
+        return NO;
+    }else if(panGesture.state == UIGestureRecognizerStateBegan ||
        panGesture.state == UIGestureRecognizerStateChanged){
-        if([panGesture containsTouch:touch.touch]){
+        if([panGesture containsTouch:touch]){
             return NO;
         }
     }
-    return [delegate willBeginStrokeWithTouch:touch];
+    
+    if([delegate willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch]){
+        if(touch.type == UITouchTypeStylus){
+            // disable gestures while writing with the stylus
+            if(!isWaitingToNotifyDelegateOfStylusEnd){
+                [[self delegate] didStartToWriteWithStylus];
+            }else{
+                [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishWithStylus) object:nil];
+            }
+            panGesture.enabled = NO;
+        }
+
+        return YES;
+    }
+    
+    return NO;
 }
 
--(void) willMoveStrokeWithTouch:(JotTouch*)touch{
-    [delegate willMoveStrokeWithTouch:touch];
+-(void) willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) willEndStrokeWithTouch:(JotTouch*)touch{
-    [delegate willEndStrokeWithTouch:touch];
+-(void) willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
+    [delegate willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding];
 }
 
--(void) didEndStrokeWithTouch:(JotTouch*)touch{
-    [delegate didEndStrokeWithTouch:touch];
+-(void) didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
     [self saveToDisk:nil];
+    
+    if(touch.type == UITouchTypeStylus){
+        stylusDidDrawTimestamp = [NSDate timeIntervalSinceReferenceDate];
+
+        isWaitingToNotifyDelegateOfStylusEnd = YES;
+        [self performSelector:@selector(didFinishWithStylus) withObject:nil afterDelay:.5];
+    }
+    
+    JotStroke* recentStroke = [[[[self drawableView] state] everyVisibleStroke] lastObject];
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if(touch.type != UITouchTypeStylus && now - stylusDidDrawTimestamp < kLightStrokeUndoDurationAfterStylus){
+        
+        CGFloat len = 0;
+        for (AbstractBezierPathElement* ele in [recentStroke segments]) {
+            len += [ele lengthOfElement];
+            if(len > kMinimumStrokeLengthAfterStylus){
+                break;
+            }
+        }
+        
+        if(len < kMinimumStrokeLengthAfterStylus){
+            [self undo];
+        }
+    }
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [delegate willCancelStroke:stroke withTouch:touch];
+-(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withTouch:(JotTouch*)touch{
-    [delegate didCancelStroke:stroke withTouch:touch];
+-(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    [delegate didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+
+    if(touch.type == UITouchTypeStylus){
+        isWaitingToNotifyDelegateOfStylusEnd = YES;
+        [self performSelector:@selector(didFinishWithStylus) withObject:nil afterDelay:.5];
+    }
 }
 
--(UIColor*) colorForTouch:(JotTouch *)touch{
-    return [delegate colorForTouch:touch];
+-(JotBrushTexture*)textureForStroke{
+    return [delegate textureForStroke];
 }
 
--(CGFloat) widthForTouch:(JotTouch*)touch{
-    //
+-(CGFloat)stepWidthForStroke{
+    return [delegate stepWidthForStroke];
+}
+
+-(BOOL) supportsRotation{
+    return [delegate supportsRotation];
+}
+
+-(UIColor*) colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [delegate colorForCoalescedTouch:coalescedTouch fromTouch:touch];
+}
+
+-(CGFloat) widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [delegate widthForTouch:touch] / self.scale;
+    return [delegate widthForCoalescedTouch:coalescedTouch fromTouch:touch] / self.scale;
 }
 
--(CGFloat) smoothnessForTouch:(JotTouch *)touch{
-    return [delegate smoothnessForTouch:touch];
+-(CGFloat) smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch{
+    return [delegate smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch];
 }
 
--(NSArray*) willAddElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement{
+-(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
     
-    NSArray* modifiedElements = [self.delegate willAddElementsToStroke:elements fromPreviousElement:previousElement];
+    NSArray* modifiedElements = [self.delegate willAddElements:elements toStroke:stroke fromPreviousElement:previousElement];
     
     NSMutableArray* croppedElements = [NSMutableArray array];
     for(AbstractBezierPathElement* element in modifiedElements){
@@ -502,7 +557,9 @@ static int count = 0;
                     [croppedElements addObjectsFromArray:[segment convertToPathElementsFromColor:previousElement.color
                                                                                          toColor:element.color
                                                                                        fromWidth:previousElement.width
-                                                                                         toWidth:element.width]];
+                                                                                         toWidth:element.width
+                                                                                    andStepWidth:element.stepWidth
+                                                                                     andRotation:element.rotation]];
                     
                 }
             }
@@ -517,30 +574,11 @@ static int count = 0;
     return croppedElements;
 }
 
-
--(void) jotSuggestsToDisableGestures{
-    DebugLog(@"disable gestures!");
-}
-
--(void) jotSuggestsToEnableGestures{
-    DebugLog(@"enable gestures!");
-}
-
 #pragma mark - File Paths
-
-+(NSString*) pagesPathForUUID:(NSString*)uuidOfPage{
-    NSString* documentsPath = [NSFileManager documentsPath];
-    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:uuidOfPage];
-}
-
-+(NSString*) bundledPagesPathForUUID:(NSString*)uuidOfPage{
-    NSString* documentsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
-    return [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:uuidOfPage];
-}
 
 -(NSString*) pagesPath{
     if(!pagesPath){
-        NSString* documentsPath = [NSFileManager documentsPath];
+        NSString* documentsPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.delegate.stackManager.uuid];
         pagesPath = [[documentsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:[self uuid]];
         [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
     }

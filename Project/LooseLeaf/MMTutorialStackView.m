@@ -15,23 +15,18 @@
 #import "MMLargeTutorialSidebarButton.h"
 
 @implementation MMTutorialStackView{
-    UIView* backdrop;
-    MMTutorialView* tutorialView;
     MMTextButton* helpButton;
     MMLargeTutorialSidebarButton* listViewTutorialButton;
 }
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
-        helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2 - 2*60, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
-            return [[MMTutorialManager sharedInstance] appIntroTutorialSteps];
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid{
+    if(self = [super initWithFrame:frame andUUID:_uuid]){
+        helpButton = [[MMTutorialSidebarButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton)/2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton)/2, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray *{
+            return [[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps];
         }];
         helpButton.delegate = self;
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:helpButton];
-        buttons[numberOfButtons].button = (__bridge void *)(helpButton);
-        buttons[numberOfButtons].originalRect = helpButton.frame;
-        numberOfButtons++;
+        [self.toolbar addButton:helpButton extendFrame:NO];
         
         if(![[MMTutorialManager sharedInstance] hasFinishedTutorial]){
             [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
@@ -55,64 +50,24 @@
 }
 
 
-#pragma mark - Private Helpers
-
--(BOOL) isShowingTutorial{
-    return tutorialView != nil || tutorialView.alpha;
-}
-
 #pragma mark - Tutorial Notifications
 
 -(void) tutorialShouldOpen:(NSNotification*)note{
     [super tutorialShouldOpen:note];
-    
-    if([self isShowingTutorial]){
-        // tutorial is already showing, just return
-        return;
-    }
-    
-    NSArray* tutorials = [note.userInfo objectForKey:@"tutorialList"];
-    backdrop = [[UIView alloc] initWithFrame:self.bounds];
-    backdrop.backgroundColor = [UIColor whiteColor];
-    backdrop.alpha = 0;
-    [self addSubview:backdrop];
-    
-    tutorialView = [[MMTutorialView alloc] initWithFrame:self.bounds andTutorials:tutorials];
-    tutorialView.delegate = self;
-    tutorialView.alpha = 0;
-    [self addSubview:tutorialView];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 1;
-        tutorialView.alpha = 1;
-    }];
     
     self.scrollEnabled = NO;
     [self disableAllGesturesForPageView];
 }
 
 -(void) tutorialShouldClose:(NSNotification*)note{
-    if(![self isShowingTutorial]){
-        // tutorial is already hidden, just return
-        return;
-    }
-
     [super tutorialShouldClose:note];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 0;
-        tutorialView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [backdrop removeFromSuperview];
-        backdrop = nil;
-        [tutorialView unloadTutorials];
-        [tutorialView removeFromSuperview];
-        tutorialView = nil;
-        NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSInteger numPendingTutorials = [[MMTutorialManager sharedInstance] numberOfPendingTutorials:[[MMTutorialManager sharedInstance] appHelpButtonTutorialSteps]];
         if(numPendingTutorials){
             [self performSelector:@selector(bounceSidebarButton:) withObject:helpButton afterDelay:.3];
         }
-    }];
+    });
     
     if(!self.isShowingPageView){
         self.scrollEnabled = YES;
@@ -121,18 +76,6 @@
     }
 }
 
-
-#pragma mark - MMTutorialViewDelegate
-
--(void) userIsViewingTutorialStep:(NSInteger)stepNum{
-    NSLog(@"user is watching %d", (int) stepNum);
-}
-
--(void) didFinishTutorial{
-    [[MMTutorialManager sharedInstance] finishWatchingTutorial];
-}
-
-
 #pragma mark - Rotation Manager Delegate
 
 -(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
@@ -140,15 +83,11 @@
         CGFloat rotationValue = [self sidebarButtonRotation];
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation(rotationValue);
         addPageSidebarButton.transform = rotationTransform;
-        documentBackgroundSidebarButton.transform = rotationTransform;
         helpButton.transform = rotationTransform;
         helpButton.rotation = rotationValue;
-
-        // this'll let super's call run entirely on the main thread,
-        // instead both us + them adding blocks to the main thread's
-        // queue
-        [super didUpdateAccelerometerWithReading:currentRawReading];
     }];
+
+    [super didUpdateAccelerometerWithReading:currentRawReading];
 }
 
 -(CGFloat) listViewButtonRotation{
@@ -164,16 +103,15 @@
 }
 
 -(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
-    [super didRotateToIdealOrientation:orientation];
-    [tutorialView didRotateToIdealOrientation:orientation];
+    CheckMainThread;
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:.3 animations:^{
-            CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
-            listViewTutorialButton.rotation = [self sidebarButtonRotation];
-            listViewTutorialButton.transform = rotationTransform;
-        }];
-    });
+    [super didRotateToIdealOrientation:orientation];
+    
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
+        listViewTutorialButton.rotation = [self sidebarButtonRotation];
+        listViewTutorialButton.transform = rotationTransform;
+    }];
 }
 
 #pragma mark - List View Tutorial
@@ -219,7 +157,7 @@
 #pragma mark - tap control
 
 -(BOOL) shouldPrioritizeSidebarButtonsForTaps{
-    if([self isShowingTutorial]){
+    if([self.stackDelegate isShowingTutorial]){
         return NO;
     }
     return [super shouldPrioritizeSidebarButtonsForTaps];

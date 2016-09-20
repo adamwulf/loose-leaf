@@ -5,6 +5,9 @@
       location = "group:Project/LooseLeaf/../../Submodules/zip-archive/ZipArchive/ZipArchive.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:Submodules/MMMarkdown/MMMarkdown.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Submodules/cloudkit-manager/SimpleCloudKitManager/SimpleCloudKitManager.xcodeproj">
    </FileRef>
    <FileRef
@@ -17,10 +20,7 @@
       location = "group:Submodules/touch-chart/TouchChart/TouchShape.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Submodules/ClippingBezier/Submodules/DrawKit-iOS/DrawKit-iOS.xcodeproj">
+      location = "group:Submodules/ClippingBezier/Submodules/PerformanceBezier/PerformanceBezier.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Submodules/ClippingBezier/ClippingBezier.xcodeproj">

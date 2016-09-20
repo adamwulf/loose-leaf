@@ -64,7 +64,7 @@ typedef enum{
 -(BOOL) isStateLoaded;
 -(BOOL) isCollectionStateLoading;
 
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable;
+-(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable andAdjustForScale:(BOOL)adjustForScale;
 
 -(void) unloadPaperState;
 

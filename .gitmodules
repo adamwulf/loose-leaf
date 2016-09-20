@@ -21,7 +21,7 @@
 	url = git@github.com:soffes/sskeychain.git
 [submodule "Submodules/FXBlurView"]
 	path = Submodules/FXBlurView
-	url = git@github.com:nicklockwood/FXBlurView.git
+	url = git@github.com:adamwulf/FXBlurView.git
 [submodule "Submodules/AFNetworking"]
 	path = Submodules/AFNetworking
 	url = git@github.com:AFNetworking/AFNetworking.git
@@ -43,3 +43,6 @@
 [submodule "Submodules/NSString-MD5"]
 	path = Submodules/NSString-MD5
 	url = git@github.com:H2CO3/NSString-MD5.git
+[submodule "Submodules/MMMarkdown"]
+	path = Submodules/MMMarkdown
+	url = git@github.com:adamwulf/MMMarkdown.git

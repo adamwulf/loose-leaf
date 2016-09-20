@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <DrawKit-iOS/DrawKit-iOS.h>
+#import <PerformanceBezier/PerformanceBezier.h>
+#import <ClippingBezier/ClippingBezier.h>
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
@@ -24,5 +25,7 @@
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
                              withTransform:(CGAffineTransform)transform
-                                  andScale:(CGFloat)scale;
+                                   andScale:(CGFloat)scale
+                               andStepWidth:(CGFloat)stepWidth
+                                andRotation:(CGFloat)rotation;
 @end

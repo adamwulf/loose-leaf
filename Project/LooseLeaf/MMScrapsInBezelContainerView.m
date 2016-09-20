@@ -17,6 +17,9 @@
 #import "MMRotationManager.h"
 #import "UIView+Debug.h"
 #import "MMImmutableScrapsInSidebarState.h"
+#import "MMTrashManager.h"
+
+#define kAnimationDuration 0.3
 
 @interface MMSidebarButtonTapGestureRecognizer : UITapGestureRecognizer
 
@@ -415,9 +418,24 @@
 -(void) countButtonTapped:(UIButton*)button{
     if(countButton.alpha){
         countButton.alpha = 0;
+        [contentView viewWillShow];
         [contentView prepareContentView];
         [self show:YES];
     }
+}
+
+-(void) deleteAllScrapsFromSidebar{
+    DebugLog(@"delete all scraps!");
+    for (MMScrapView* scrap  in [sidebarScrapState.allLoadedScraps copy]) {
+        [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
+        [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
+    }
+    for(MMScrapBubbleButton* otherBubble in self.subviews){
+        if([otherBubble isKindOfClass:[MMScrapBubbleButton class]]){
+            [otherBubble removeFromSuperview];
+        }
+    }
+    [self saveScrapContainerToDisk];
 }
 
 #pragma mark - Rotation
@@ -442,8 +460,12 @@
             bubble.rotation = rotReading;
         }
     }
+    [contentView setRotation:rotReading];
 }
 
+-(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation{
+    [contentView didRotateToIdealOrientation:orientation];
+}
 
 #pragma mark - Ignore Touches
 
@@ -508,7 +530,7 @@ static NSString* bezelStatePath;
 }
 
 -(void) loadFromDisk{
-    [sidebarScrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO];
+    [sidebarScrapState loadStateAsynchronously:YES atPath:self.scrapIDsPath andMakeEditable:NO andAdjustForScale:NO];
 }
 
 
@@ -554,12 +576,15 @@ static NSString* bezelStatePath;
 
 -(void) sidebarCloseButtonWasTapped{
     if([self isVisible]){
+        [contentView viewWillHide];
         [self hide:YES onComplete:^(BOOL finished){
             [contentView viewDidHide];
         }];
+        [UIView animateWithDuration:kAnimationDuration animations:^{
+            [self setAlpha:1];
+        } completion:nil];
         [self.delegate sidebarCloseButtonWasTapped];
     }
 }
-
 
 @end

@@ -275,7 +275,7 @@ struct TouchInterval{
     [validTouches addObjectsInSet:touches];
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
-    [self touchesBegan:touches withEvent:nil];
+    [self touchesBegan:touches];
     
     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
 
@@ -293,7 +293,7 @@ struct TouchInterval{
     [newPossibleTouches intersectSet:touches];
     [possibleTouches addObjectsInSet:newPossibleTouches];
     [ignoredTouches removeObjectsInSet:newPossibleTouches];
-    [self touchesBegan:newPossibleTouches withEvent:nil];
+    [self touchesBegan:newPossibleTouches];
     
     [self processPossibleTouches];
     if([validTouches count] >= mmMinimumNumberOfScrapTouches){
@@ -367,6 +367,10 @@ struct TouchInterval{
  * to match that of the animation.
  */
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    [self touchesBegan:touches];
+}
+
+- (void)touchesBegan:(NSSet *)touches{
 //    [self say:@"began" ISee:touches];
     isShaking = NO;
     for(UITouch* touch in touches){

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <QuartzCore/QuartzCore.h>
-#import <DrawKit-iOS/DrawKit-iOS.h>
 
 @interface MMDrawingGestureShadow : NSObject{
     CGRect boundingBox;
