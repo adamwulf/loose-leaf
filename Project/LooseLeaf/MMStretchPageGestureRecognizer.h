@@ -13,5 +13,7 @@
 @interface MMStretchPageGestureRecognizer : MMPanAndPinchFromListViewGestureRecognizer
 
 @property (nonatomic, assign) NSObject<MMStretchPageGestureRecognizerDelegate>* pinchDelegate;
+@property (nonatomic, readonly) NSArray* additionalTouches;
+
 
 @end

@@ -52,6 +52,10 @@
 
 #pragma mark - Touch Methods
 
+- (NSOrderedSet*)additionalTouches {
+    return [additionalTouches array];
+}
+
 - (NSOrderedSet<UITouch*>*)allFourTouches {
     NSMutableOrderedSet* allFourTouches = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
 

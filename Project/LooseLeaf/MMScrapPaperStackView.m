@@ -1953,6 +1953,20 @@
                    gesture.state == UIGestureRecognizerStateCancelled) {
             [silhouette endPanningObject:gesture.view];
         }
+
+
+        if ([gesture isKindOfClass:[MMStretchPageGestureRecognizer class]]) {
+            MMStretchPageGestureRecognizer* stretchGesture = (MMStretchPageGestureRecognizer*)gesture;
+
+            if ([[stretchGesture additionalTouches] count] == 2) {
+                if (gesture.state == UIGestureRecognizerStateChanged) {
+                    [silhouette continuePanningObject:pageCloner withTouches:stretchGesture.additionalTouches];
+                } else if (gesture.state == UIGestureRecognizerStateEnded ||
+                           gesture.state == UIGestureRecognizerStateCancelled) {
+                    [silhouette endPanningObject:pageCloner];
+                }
+            }
+        }
     } else {
         if (gesture.state == UIGestureRecognizerStateBegan) {
             [silhouette startDrawingAtTouch:[gesture.validTouches firstObject] immediately:NO];
@@ -1975,6 +1989,7 @@
 }
 
 - (void)didCancelStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture {
+    [silhouette endPanningObject:pageCloner];
     [pageCloner abortClone];
     pageCloner = nil;
 }
@@ -1982,6 +1997,7 @@
 - (void)didBeginStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture {
     pageCloner = [[MMPageCloner alloc] initWithOriginalUUID:[gesture.pinchedPage uuid] clonedUUID:[[NSUUID UUID] UUIDString] inStackUUID:[self uuid]];
     [pageCloner beginClone];
+    [silhouette startPanningObject:pageCloner withTouches:gesture.additionalTouches];
 }
 
 - (void)didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture withOffset:(CGPoint)offset {
