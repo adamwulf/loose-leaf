@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
+
 @interface SPRMessage (Initials)
 
--(NSString*) initials;
+- (NSString*)initials;
 
 @end

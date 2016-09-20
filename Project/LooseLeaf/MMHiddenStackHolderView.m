@@ -8,6 +8,7 @@
 
 #import "MMHiddenStackHolderView.h"
 
+
 @implementation MMHiddenStackHolderView
 
 @end

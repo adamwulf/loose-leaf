@@ -15,10 +15,10 @@
 // ownership of touches can only be asked for as long as the Ended or Cancelled
 // event for that touch has never been called. a gesture cannot ever take
 // ownership of a touch inside of its Ended or Cancelled event.
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
--(BOOL) isAllowedToPan;
+- (BOOL)isAllowedToPan;
 
--(BOOL) isAllowedToBezel;
+- (BOOL)isAllowedToBezel;
 
 @end

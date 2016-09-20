@@ -10,7 +10,8 @@
 #import "MMDisplayAssetGroup.h"
 #import "MMDisplayAssetGroupCellDelegate.h"
 
-@interface MMDisplayAssetGroupCell : UICollectionViewCell{
+
+@interface MMDisplayAssetGroupCell : UICollectionViewCell {
     MMDisplayAssetGroup* album;
     CGFloat initialX[5];
     CGFloat finalX[5];
@@ -25,15 +26,15 @@
 @property (nonatomic) CGFloat squishFactor;
 @property (nonatomic, weak) NSObject<MMDisplayAssetGroupCellDelegate>* delegate;
 
--(void) loadedPreviewPhotos;
+- (void)loadedPreviewPhotos;
 
--(void) updatePhotoRotation;
+- (void)updatePhotoRotation;
 
--(void) resetDeleteAdjustment:(BOOL)animated;
+- (void)resetDeleteAdjustment:(BOOL)animated;
 
--(void) adjustForDelete:(CGFloat)adjustment;
+- (void)adjustForDelete:(CGFloat)adjustment;
 
 // returns YES if should immediately delete, NO otherwise
--(BOOL) finishSwipeToDelete;
+- (BOOL)finishSwipeToDelete;
 
 @end

@@ -10,7 +10,8 @@
 #import "MMAlbumRowViewDelegate.h"
 #import "MMPhotoAlbum.h"
 
-@interface MMAlbumRowView : UIView{
+
+@interface MMAlbumRowView : UIView {
     __weak NSObject<MMAlbumRowViewDelegate>* delegate;
 }
 
@@ -18,8 +19,8 @@
 @property (nonatomic, strong) MMPhotoAlbum* album;
 @property (readonly) NSArray* bufferedImageViews;
 
--(void) loadedPreviewPhotos;
+- (void)loadedPreviewPhotos;
 
--(void) updatePhotoRotation;
+- (void)updatePhotoRotation;
 
 @end

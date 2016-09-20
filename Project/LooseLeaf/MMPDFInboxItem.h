@@ -10,16 +10,17 @@
 #import "MMInboxItem.h"
 #import "MMPDF.h"
 
+
 @interface MMPDFInboxItem : MMInboxItem
 
 @property (readonly) BOOL isEncrypted;
 @property (readonly) MMPDF* pdf;
 
 
--(BOOL) attemptToDecrypt:(NSString*)password;
+- (BOOL)attemptToDecrypt:(NSString*)password;
 
--(id) init NS_UNAVAILABLE;
+- (id)init NS_UNAVAILABLE;
 
--(id) initWithURL:(NSURL*)pdfURL;
+- (id)initWithURL:(NSURL*)pdfURL;
 
 @end

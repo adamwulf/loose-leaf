@@ -9,6 +9,7 @@
 #import "MMPanAndPinchFromListViewGestureRecognizer.h"
 #import "MMStretchPageGestureRecognizerDelegate.h"
 
+
 @interface MMStretchPageGestureRecognizer : MMPanAndPinchFromListViewGestureRecognizer
 
 @property (nonatomic, assign) NSObject<MMStretchPageGestureRecognizerDelegate>* pinchDelegate;

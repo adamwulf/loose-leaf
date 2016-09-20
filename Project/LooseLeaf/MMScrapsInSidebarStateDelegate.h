@@ -13,6 +13,6 @@
 
 @protocol MMScrapsInSidebarStateDelegate <MMScrapCollectionStateDelegate>
 
--(MMScrapsOnPaperState*) paperStateForPageUUID:(NSString*)uuidOfPage;
+- (MMScrapsOnPaperState*)paperStateForPageUUID:(NSString*)uuidOfPage;
 
 @end

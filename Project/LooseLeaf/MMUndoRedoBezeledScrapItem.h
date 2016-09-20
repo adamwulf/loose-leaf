@@ -8,12 +8,13 @@
 
 #import "MMUndoRedoPageItem.h"
 
+
 @interface MMUndoRedoBezeledScrapItem : MMUndoRedoPageItem
 
 @property (readonly) NSString* scrapUUID;
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties;
++ (id)itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties;
 
--(id) initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties;
+- (id)initForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)scrapProperties;
 
 @end

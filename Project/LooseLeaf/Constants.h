@@ -11,27 +11,27 @@
 
 #import "AuthConstants.h"
 
-static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill, BOOL fill){
+static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill, BOOL fill) {
     CGFloat horizontalRatio = sizeToFill.width / sizeToScale.width;
     CGFloat verticalRatio = sizeToFill.height / sizeToScale.height;
     CGFloat ratio;
-    if(fill){
+    if (fill) {
         ratio = MAX(horizontalRatio, verticalRatio); //AspectFill
-    }else{
+    } else {
         ratio = MIN(horizontalRatio, verticalRatio); //AspectFill
     }
-    
+
     CGSize scaledSize = CGSizeMake(sizeToScale.width * ratio, sizeToScale.height * ratio);
-    
+
     return CGRectMake((sizeToFill.width - scaledSize.width) / 2, (sizeToFill.height - scaledSize.height) / 2, scaledSize.width, scaledSize.height);
 }
 
-#define CGRectResizeBy(rect,dw,dh) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + dw, rect.size.height + dh)
+#define CGRectResizeBy(rect, dw, dh) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + dw, rect.size.height + dh)
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
-#define CGRectFromSize(size) CGRectMake(0,0,size.width,size.height)
-#define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x,rect.origin.y,rect.size.width,height)
-#define CGRectSquare(size) CGRectMake(0,0,size,size)
-#define CGSizeScale(size, scale)    CGSizeMake(size.width*scale,size.height*scale)
+#define CGRectFromSize(size) CGRectMake(0, 0, size.width, size.height)
+#define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, height)
+#define CGRectSquare(size) CGRectMake(0, 0, size, size)
+#define CGSizeScale(size, scale) CGSizeMake(size.width* scale, size.height* scale)
 #define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
 #define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
 
@@ -42,24 +42,34 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 
 #define dispatch_get_background_queue() dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
-#define CheckAnyThreadExcept(__THREAD_CHECK__) {if(__THREAD_CHECK__){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
+#define CheckAnyThreadExcept(__THREAD_CHECK__)                                                                                                                                                          \
+    {                                                                                                                                                                                                   \
+        if (__THREAD_CHECK__) {                                                                                                                                                                         \
+            @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; \
+        }                                                                                                                                                                                               \
+    }
 
-#define CheckThreadMatches(__THREAD_CHECK__) {if(!(__THREAD_CHECK__)){ @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; }}
+#define CheckThreadMatches(__THREAD_CHECK__)                                                                                                                                                            \
+    {                                                                                                                                                                                                   \
+        if (!(__THREAD_CHECK__)) {                                                                                                                                                                      \
+            @throw [NSException exceptionWithName:@"InconsistentQueueException" reason:[NSString stringWithFormat:@"Must execute %@ in an approved thread.", NSStringFromSelector(_cmd)] userInfo:nil]; \
+        }                                                                                                                                                                                               \
+    }
 
 #ifdef DEBUG
 //#define DebugLog(__FORMAT__, ...)
-#define DebugLog(__FORMAT__, ...) NSLog(__FORMAT__, ## __VA_ARGS__)
+#define DebugLog(__FORMAT__, ...) NSLog(__FORMAT__, ##__VA_ARGS__)
 #else
 #define DebugLog(__FORMAT__, ...)
 #endif
 
-#define SuppressPerformSelectorLeakWarning(Stuff) \
-do { \
-_Pragma("clang diagnostic push") \
-_Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
-Stuff; \
-_Pragma("clang diagnostic pop") \
-} while (0)
+#define SuppressPerformSelectorLeakWarning(Stuff)                               \
+    do {                                                                        \
+        _Pragma("clang diagnostic push")                                        \
+            _Pragma("clang diagnostic ignored \"-Warc-performSelector-leaks\"") \
+                Stuff;                                                          \
+        _Pragma("clang diagnostic pop")                                         \
+    } while (0)
 
 #define SIGN(__var__) (__var__ / ABS(__var__))
 
@@ -173,9 +183,9 @@ _Pragma("clang diagnostic pop") \
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
 #define kMPNumberOfRulerUses @"Number of Ruler Uses"
 #define kMPNumberOfImports @"Number of Imports"
-#define kMPNumberOfCloudKitImports @"Number of CloudKit Imports"  // import page sent via cloudkit
-#define kMPNumberOfPhotoImports @"Number of Photo Imports"  // import existing photo
-#define kMPNumberOfPhotosTaken @"Number of Photos Taken"    // take new photo with camera
+#define kMPNumberOfCloudKitImports @"Number of CloudKit Imports" // import page sent via cloudkit
+#define kMPNumberOfPhotoImports @"Number of Photo Imports" // import existing photo
+#define kMPNumberOfPhotosTaken @"Number of Photos Taken" // take new photo with camera
 #define kMPNumberOfExports @"Number of Exports"
 #define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
 #define kMPNumberOfOpenInExports @"Number of Open In Exports"
@@ -266,9 +276,19 @@ _Pragma("clang diagnostic pop") \
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
 
-#define RandomPhotoRotation(a) (^float(NSInteger b){srand((unsigned)b); float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees/2)) / 360.0 * M_PI; srand((unsigned)time(NULL)); return output;})(a)
+#define RandomPhotoRotation(a) (^float(NSInteger b) {                                                              \
+    srand((unsigned)b);                                                                                            \
+    float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees / 2)) / 360.0 * M_PI; \
+    srand((unsigned)time(NULL));                                                                                   \
+    return output;                                                                                                 \
+})(a)
 
-#define RandomMod(a,b) (^float(NSInteger seed, int mod){srand((unsigned)seed); int output = (rand() % mod); srand((unsigned)time(NULL)); return output;})(a, b)
+#define RandomMod(a, b) (^float(NSInteger seed, int mod) { \
+    srand((unsigned)seed);                                 \
+    int output = (rand() % mod);                           \
+    srand((unsigned)time(NULL));                           \
+    return output;                                         \
+})(a, b)
 
 // cache sizes
 #define kMMLoadImageCacheSize 10
@@ -278,36 +298,36 @@ _Pragma("clang diagnostic pop") \
 extern "C" {
 #endif
 
-    void CGContextSaveThenRestoreForBlock(CGContextRef __nonnull context, void(^ __nonnull block)());
+void CGContextSaveThenRestoreForBlock(CGContextRef __nonnull context, void (^__nonnull block)());
 
-    CGFloat DistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+CGFloat DistanceBetweenTwoPoints(CGPoint point1, CGPoint point2);
 
-    CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1,CGPoint point2);
+CGFloat SquaredDistanceBetweenTwoPoints(CGPoint point1, CGPoint point2);
 
-    CGPoint NormalizePointTo(CGPoint point1, CGSize size);
-    
-    CGPoint DenormalizePointTo(CGPoint point1, CGSize size);
-    
-    CGPoint AveragePoints(CGPoint point1, CGPoint point2);
-    
+CGPoint NormalizePointTo(CGPoint point1, CGSize size);
+
+CGPoint DenormalizePointTo(CGPoint point1, CGSize size);
+
+CGPoint AveragePoints(CGPoint point1, CGPoint point2);
+
 #ifdef __cplusplus
 }
 #endif
 
-    
+
 enum {
     MMBezelDirectionNone = 0,
-    MMBezelDirectionRight  = 1 << 0,
-    MMBezelDirectionLeft   = 1 << 1,
-    MMBezelDirectionUp    = 1 << 2,
+    MMBezelDirectionRight = 1 << 0,
+    MMBezelDirectionLeft = 1 << 1,
+    MMBezelDirectionUp = 1 << 2,
     MMBezelDirectionDown = 1 << 3
 };
 typedef NSUInteger MMBezelDirection;
 
 enum {
     MMScaleDirectionNone = 0,
-    MMScaleDirectionLarger  = 1 << 0,
-    MMScaleDirectionSmaller   = 1 << 1
+    MMScaleDirectionLarger = 1 << 0,
+    MMScaleDirectionSmaller = 1 << 1
 };
 typedef NSUInteger MMBezelScaleDirection;
 
@@ -315,18 +335,17 @@ typedef NSUInteger MMBezelScaleDirection;
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
-    typedef struct Quadrilateral{
-        CGPoint upperLeft;
-        CGPoint upperRight;
-        CGPoint lowerRight;
-        CGPoint lowerLeft;
-    } Quadrilateral;
-    
-#ifdef __cplusplus
-}  // extern "C"
-#endif
 
+typedef struct Quadrilateral {
+    CGPoint upperLeft;
+    CGPoint upperRight;
+    CGPoint lowerRight;
+    CGPoint lowerLeft;
+} Quadrilateral;
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
 
 
 #pragma mark - Math Interpolation Helpers
@@ -334,19 +353,18 @@ extern "C" {
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
-    // interpolate between min/max with 0<=t<=1
-    CGFloat logTransform(CGFloat min, CGFloat max, CGFloat t);
 
-    CGFloat sqrtTransform(CGFloat min, CGFloat max, CGFloat t);
+// interpolate between min/max with 0<=t<=1
+CGFloat logTransform(CGFloat min, CGFloat max, CGFloat t);
 
-    CGFloat sqTransform(CGFloat min, CGFloat max, CGFloat t);
-    
+CGFloat sqrtTransform(CGFloat min, CGFloat max, CGFloat t);
+
+CGFloat sqTransform(CGFloat min, CGFloat max, CGFloat t);
+
 #ifdef __cplusplus
-    }  // extern "C"
+} // extern "C"
 
 #endif
 
-    
-    
+
 #endif

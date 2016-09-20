@@ -9,18 +9,19 @@
 #import "MMUntouchableTutorialView.h"
 #import "Constants.h"
 
+
 @implementation MMUntouchableTutorialView
 
--(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     CGFloat buttonBuffer = kWidthOfSidebarButton + 2 * kWidthOfSidebarButtonBuffer;
 
-    if(point.x < buttonBuffer){
+    if (point.x < buttonBuffer) {
         return NO;
-    }else if(point.y < 0){
+    } else if (point.y < 0) {
         return NO;
-    }else if(point.x > self.bounds.size.width - buttonBuffer){
+    } else if (point.x > self.bounds.size.width - buttonBuffer) {
         return NO;
-    }else if(point.y > self.bounds.size.height - buttonBuffer){
+    } else if (point.y > self.bounds.size.height - buttonBuffer) {
         return NO;
     }
     return YES;

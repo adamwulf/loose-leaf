@@ -11,16 +11,17 @@
 #import "UIBezierPath+PathElement.h"
 #import <ClippingBezier/ClippingBezier.h>
 
+
 @implementation DKUIBezierPathClippedSegment (PathElement)
 
--(NSArray*) convertToPathElementsFromColor:(UIColor*)fromColor
+- (NSArray*)convertToPathElementsFromColor:(UIColor*)fromColor
                                    toColor:(UIColor*)toColor
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
                              withTransform:(CGAffineTransform)transform
                                   andScale:(CGFloat)scale
                               andStepWidth:(CGFloat)stepWidth
-                               andRotation:(CGFloat)rotation{
+                               andRotation:(CGFloat)rotation {
     return [self.pathSegment1 convertToPathElementsFromTValue:self.startIntersection.tValue1
                                                      toTValue:self.endIntersection.tValue1
                                                     fromColor:fromColor
@@ -33,7 +34,7 @@
                                                   andRotation:rotation];
 }
 
--(NSArray*) convertToPathElementsFromColor:(UIColor*)fromColor toColor:(UIColor*)toColor fromWidth:(CGFloat)fromWidth toWidth:(CGFloat)toWidth andStepWidth:(CGFloat)stepWidth andRotation:(CGFloat)rotation{
+- (NSArray*)convertToPathElementsFromColor:(UIColor*)fromColor toColor:(UIColor*)toColor fromWidth:(CGFloat)fromWidth toWidth:(CGFloat)toWidth andStepWidth:(CGFloat)stepWidth andRotation:(CGFloat)rotation {
     return [self convertToPathElementsFromColor:fromColor toColor:toColor fromWidth:fromWidth toWidth:toWidth withTransform:CGAffineTransformIdentity andScale:1.0 andStepWidth:stepWidth andRotation:rotation];
 }
 

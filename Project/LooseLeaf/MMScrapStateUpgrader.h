@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMScrapStateUpgrader : NSObject
 
--(instancetype) initWithPagesPath:(NSString*)pagesPath;
+- (instancetype)initWithPagesPath:(NSString*)pagesPath;
 
--(void) upgradeWithCompletionBlock:(void(^)())onComplete;
+- (void)upgradeWithCompletionBlock:(void (^)())onComplete;
 
 @end

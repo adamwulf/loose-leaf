@@ -13,7 +13,8 @@
 #import "NSString+UUID.h"
 #import "UIView+Debug.h"
 
-@implementation MMPaperView{
+
+@implementation MMPaperView {
     CGRect originalUnscaledBounds;
 }
 
@@ -27,24 +28,24 @@
 @synthesize originalUnscaledBounds;
 @synthesize panGesture;
 
--(void) setIsBeingPannedAndZoomed:(BOOL)_isBeingPannedAndZoomed{
+- (void)setIsBeingPannedAndZoomed:(BOOL)_isBeingPannedAndZoomed {
     isBeingPannedAndZoomed = _isBeingPannedAndZoomed;
 }
 
-- (id)initWithFrame:(CGRect)frame{
+- (id)initWithFrame:(CGRect)frame {
     id ret = [self initWithFrame:frame andUUID:[NSString createStringUUID]];
     [ret setIsBrandNewPage:YES];
     return ret;
 }
 
-- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid{
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     originalUnscaledBounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
     if (self = [super initWithFrame:frame]) {
         // Initialization code
         uuid = _uuid;
         originalUnscaledBounds = self.bounds;
 
-        [self.layer setMasksToBounds:YES ];
+        [self.layer setMasksToBounds:YES];
         self.scale = 1;
 
         //
@@ -58,14 +59,14 @@
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
-//        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
-//        tap.numberOfTapsRequired = 1;
-//        tap.numberOfTouchesRequired = 2;
-//        //
-//        // only allow tap if the long press fails, otherwise
-//        // we'll get a double positive
-//        [tap requireGestureRecognizerToFail:longPress];
-//        [self addGestureRecognizer:tap];
+        //        tap = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleFingerDoubleTap:)];
+        //        tap.numberOfTapsRequired = 1;
+        //        tap.numberOfTouchesRequired = 2;
+        //        //
+        //        // only allow tap if the long press fails, otherwise
+        //        // we'll get a double positive
+        //        [tap requireGestureRecognizerToFail:longPress];
+        //        [self addGestureRecognizer:tap];
 
         //
         // This pan gesture is used to pan/scale the page itself.
@@ -77,27 +78,27 @@
         // and the tap gesture, and only allow page pan/scale if
         // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
-//        [panGesture requireGestureRecognizerToFail:tap];
+        //        [panGesture requireGestureRecognizerToFail:tap];
         [self addGestureRecognizer:panGesture];
     }
     return self;
 }
 
--(int) fullByteSize{
+- (int)fullByteSize {
     return 0;
 }
 
 
--(void) setScale:(CGFloat)_scale{
-    if(_scale == 0){
+- (void)setScale:(CGFloat)_scale {
+    if (_scale == 0) {
         DebugLog(@"what: scale for page is 0");
     }
     scale = _scale;
 }
 
 
--(void) setFrame:(CGRect)_frame{
-    if(!_frame.size.width){
+- (void)setFrame:(CGRect)_frame {
+    if (!_frame.size.width) {
         DebugLog(@"what: zero width");
     }
     [super setFrame:_frame];
@@ -111,31 +112,30 @@
 
 #pragma mark - Gestures
 
--(void) longPress:(MMObjectSelectLongPressGestureRecognizer*)pressGesture{
-    if(pressGesture.state == UIGestureRecognizerStateBegan){
+- (void)longPress:(MMObjectSelectLongPressGestureRecognizer*)pressGesture {
+    if (pressGesture.state == UIGestureRecognizerStateBegan) {
         [self.delegate didLongPressPage:self withTouches:pressGesture.activeTouches];
     }
 }
 
--(void) doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture{
-    DebugLog(@"tap! %d", (int) tapGesture.state);
+- (void)doubleFingerDoubleTap:(UITapGestureRecognizer*)tapGesture {
+    DebugLog(@"tap! %d", (int)tapGesture.state);
 }
 
 
 /**
  * helpful when testing visible vs hidden pages
  */
--(void)didMoveToSuperview{
+- (void)didMoveToSuperview {
     return;
-//    if(isBrandNewPage){
-//        self.backgroundColor = [UIColor blueColor];
-//    }else if([self.delegate isInVisibleStack:self]){
-//        self.backgroundColor = [UIColor greenColor];
-//    }else{
-//        self.backgroundColor = [UIColor redColor];
-//    }
+    //    if(isBrandNewPage){
+    //        self.backgroundColor = [UIColor blueColor];
+    //    }else if([self.delegate isInVisibleStack:self]){
+    //        self.backgroundColor = [UIColor greenColor];
+    //    }else{
+    //        self.backgroundColor = [UIColor redColor];
+    //    }
 }
- 
 
 
 /**
@@ -146,8 +146,8 @@
  * this means a valid bezel gesture will return false here
  * if it has ended.
  */
--(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection{
-    if(self.scale < kMinPageZoom){
+- (BOOL)willExitToBezel:(MMBezelDirection)bezelDirection {
+    if (self.scale < kMinPageZoom) {
         return NO;
     }
     BOOL isBezel = (panGesture.didExitToBezel & bezelDirection) != MMBezelDirectionNone;
@@ -159,13 +159,13 @@
  * but only if the page is currently being exited bezel. If the
  * user has pulled it back in, then 0 is returned.
  */
--(NSInteger) numberOfTimesExitedBezel{
-    if(self.scale < kMinPageZoom){
+- (NSInteger)numberOfTimesExitedBezel {
+    if (self.scale < kMinPageZoom) {
         return 0;
     }
     BOOL isBezeled = (panGesture.didExitToBezel & panGesture.bezelDirectionMask) != MMBezelDirectionNone;
     BOOL willExit = isBezeled && (panGesture.subState == UIGestureRecognizerStateChanged || panGesture.subState == UIGestureRecognizerStateEnded || panGesture.subState == UIGestureRecognizerStateCancelled);
-    if(willExit){
+    if (willExit) {
         return 1;
     }
     return 0;
@@ -176,11 +176,11 @@
  * cancels all gestures attached to
  * this page, if they are cancelable
  */
--(void) cancelAllGestures{
-    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
-        if([gesture respondsToSelector:@selector(cancel)]){
-            if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-//                DebugLog(@"gesture is active %@", gesture);
+- (void)cancelAllGestures {
+    for (UIGestureRecognizer* gesture in self.gestureRecognizers) {
+        if ([gesture respondsToSelector:@selector(cancel)]) {
+            if (gesture.enabled && gesture.state != UIGestureRecognizerStatePossible) {
+                //                DebugLog(@"gesture is active %@", gesture);
             }
             [(MMCancelableGestureRecognizer*)gesture cancel];
         }
@@ -189,32 +189,32 @@
 /**
  * disables all gestures on this page
  */
--(void) disableAllGestures{
-    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
-        if(gesture.enabled && gesture.state != UIGestureRecognizerStatePossible){
-//            DebugLog(@"gesture is active %@ %d", gesture, gesture.state);
+- (void)disableAllGestures {
+    for (UIGestureRecognizer* gesture in self.gestureRecognizers) {
+        if (gesture.enabled && gesture.state != UIGestureRecognizerStatePossible) {
+            //            DebugLog(@"gesture is active %@ %d", gesture, gesture.state);
         }
         [gesture setEnabled:NO];
     }
     textLabel.text = @"disabled";
-//    if([self.uuid hasPrefix:@"41B98"]){
-//        DebugLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
-//    }
+    //    if([self.uuid hasPrefix:@"41B98"]){
+    //        DebugLog(@"disabled: %@ %d", self.uuid, panGesture.enabled);
+    //    }
 }
 /**
  * enables all gestures on this page
  */
--(void) enableAllGestures{
-    for(UIGestureRecognizer* gesture in self.gestureRecognizers){
+- (void)enableAllGestures {
+    for (UIGestureRecognizer* gesture in self.gestureRecognizers) {
         [gesture setEnabled:YES];
     }
     textLabel.text = @"enabled";
-//    if([self.uuid hasPrefix:@"41B98"]){
-//        DebugLog(@"enabled: %@", self.uuid);
-//    }
+    //    if([self.uuid hasPrefix:@"41B98"]){
+    //        DebugLog(@"enabled: %@", self.uuid);
+    //    }
 }
 
--(BOOL) areGesturesEnabled{
+- (BOOL)areGesturesEnabled {
     return panGesture.enabled;
 }
 
@@ -251,47 +251,47 @@
  * instead of state thats kept in this page object. then i can refactor to have both of my
  * pan gestures use proper state control etc to zoom a page in and out.
  */
--(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture{
-    if(![self.delegate shouldAllowPan:self]){
+- (void)panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture {
+    if (![self.delegate shouldAllowPan:self]) {
         return;
     }
     //
     // procede with the pan gesture
     CGPoint lastLocationInSuper = [panGesture locationInView:self.superview];
-    
-//    DebugLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
-    
-//    DebugLog(@"panAndScale cancelled: %d   ended: %d   began: %d   failed: %d", panGesture.state == UIGestureRecognizerStateCancelled,
-//          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
-//          panGesture.state == UIGestureRecognizerStateFailed);
-    
-    if(panGesture.state == UIGestureRecognizerStateCancelled ||
-       panGesture.state == UIGestureRecognizerStateEnded ||
-       panGesture.state == UIGestureRecognizerStateFailed ||
-       ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)){
-        if(panGesture.hasPannedOrScaled){
-            if(isBeingPannedAndZoomed){
+
+    //    DebugLog(@"pan: %d %f %f", panGesture.state, lastLocationInSuper.x, lastLocationInSuper.y);
+
+    //    DebugLog(@"panAndScale cancelled: %d   ended: %d   began: %d   failed: %d", panGesture.state == UIGestureRecognizerStateCancelled,
+    //          panGesture.state == UIGestureRecognizerStateEnded, panGesture.state == UIGestureRecognizerStateBegan,
+    //          panGesture.state == UIGestureRecognizerStateFailed);
+
+    if (panGesture.state == UIGestureRecognizerStateCancelled ||
+        panGesture.state == UIGestureRecognizerStateEnded ||
+        panGesture.state == UIGestureRecognizerStateFailed ||
+        ([_panGesture.validTouches count] == 0 && isBeingPannedAndZoomed)) {
+        if (panGesture.hasPannedOrScaled) {
+            if (isBeingPannedAndZoomed) {
                 self.isBeingPannedAndZoomed = NO;
-                if(scale < (kMinPageZoom + kZoomToListPageZoom)/2 && panGesture.didExitToBezel == MMBezelDirectionNone){
-                    if((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller){
+                if (scale < (kMinPageZoom + kZoomToListPageZoom) / 2 && panGesture.didExitToBezel == MMBezelDirectionNone) {
+                    if ((_panGesture.scaleDirection & MMScaleDirectionSmaller) == MMScaleDirectionSmaller) {
                         [self.delegate finishedScalingReallySmall:self animated:YES];
-                    }else{
+                    } else {
                         [self.delegate cancelledScalingReallySmall:self];
                     }
-                }else{
-                    if(scale < kMinPageZoom){
+                } else {
+                    if (scale < kMinPageZoom) {
                         [self.delegate cancelledScalingReallySmall:self];
                     }
-                    
-                    if(panGesture.state == UIGestureRecognizerStateCancelled){
+
+                    if (panGesture.state == UIGestureRecognizerStateCancelled) {
                         // when cancelling, the page should go back to its
                         // original frame
-//                        DebugLog(@"cancelled pan, should push it back onto visible stack");
+                        //                        DebugLog(@"cancelled pan, should push it back onto visible stack");
                         [self.delegate finishedPanningAndScalingPage:self
                                                            intoBezel:MMBezelDirectionNone
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture
                                                              toFrame:panGesture.frameOfPageAtBeginningOfGesture];
-                    }else{
+                    } else {
                         [self.delegate finishedPanningAndScalingPage:self
                                                            intoBezel:panGesture.didExitToBezel
                                                            fromFrame:panGesture.frameOfPageAtBeginningOfGesture
@@ -301,16 +301,16 @@
             }
         }
         return;
-    }else if(panGesture.subState == UIGestureRecognizerStatePossible){
+    } else if (panGesture.subState == UIGestureRecognizerStatePossible) {
         //
         // the gesture requires 2 fingers. it may still say it only has 1 touch if the user
-        // started the gesture with 2 fingers but then lifted a finger. in that case, 
+        // started the gesture with 2 fingers but then lifted a finger. in that case,
         // don't continue the gesture at all, just wait till they finish it proper or re-put
         // that 2nd touch down
         self.isBeingPannedAndZoomed = NO;
         return;
-    }else if(!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
-                                         panGesture.subState == UIGestureRecognizerStateChanged)){
+    } else if (!isBeingPannedAndZoomed && (panGesture.subState == UIGestureRecognizerStateBegan ||
+                                           panGesture.subState == UIGestureRecognizerStateChanged)) {
         self.isBeingPannedAndZoomed = YES;
         //
         // if the user had 1 finger down and re-touches with the 2nd finger, then this
@@ -325,58 +325,60 @@
                  toPanAndScalePage:self
                          fromFrame:panGesture.frameOfPageAtBeginningOfGesture
                            toFrame:panGesture.frameOfPageAtBeginningOfGesture
-                           withTouches:panGesture.validTouches];
+                       withTouches:panGesture.validTouches];
         return;
     }
-    
-    if([_panGesture.validTouches count] < 2){
-//        DebugLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
+
+    if ([_panGesture.validTouches count] < 2) {
+        //        DebugLog(@"skipping pan gesture: has %d valid touches and substate %d", (int) [_panGesture.validTouches count], (int) _panGesture.subState);
         return;
     }
 
     //
     // to track panning, we collect the first location of the pan gesture, and calculate the offset
     // of the current location of the gesture. that distance is the amount moved for the pan.
-    if([self.delegate allowsScaleForPage:self]){
+    if ([self.delegate allowsScaleForPage:self]) {
         CGFloat gestureScale = panGesture.scale;
         CGFloat targetScale = panGesture.preGestureScale * gestureScale;
         CGFloat scaleDiff = ABS((float)(targetScale - scale));
-        
+
         //
         // to track scaling, the scale value has to be a value between kMinPageZoom and kMaxPageZoom of the /superview/'s size
         // if i begin scaling an already zoomed in page, the gesture's default is the re-begin the zoom at 1.0x
         // even though it may be 2x of our page size. so we need to remember the current scale in preGestureScale
         // and multiply that by the gesture's scale value. this gives us the scale value as a factor of the superview
-        
+
         BOOL didCancelSmallScale = NO;
-        if(targetScale >= kMinPageZoom && scale < kMinPageZoom){
+        if (targetScale >= kMinPageZoom && scale < kMinPageZoom) {
             didCancelSmallScale = YES;
         }
-        if(targetScale > kMaxPageZoom){
+        if (targetScale > kMaxPageZoom) {
             self.scale = kMaxPageZoom;
-            if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
-        }else if(targetScale < kMinPageZoom && scale >= kMinPageZoom){
+            if (didCancelSmallScale)
+                [self.delegate cancelledScalingReallySmall:self];
+        } else if (targetScale < kMinPageZoom && scale >= kMinPageZoom) {
             // doesn't count if the bezel is exiting.
             //
             // this tracks if the user is zooming out far enough to trigger a zoom into
             // list mode
             self.scale = targetScale;
             [self.delegate isBeginningToScaleReallySmall:self];
-        }else if((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
-                 (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)){
+        } else if ((targetScale >= 1 && scaleDiff > kMinScaleDelta) ||
+                   (targetScale < 1 && scaleDiff > kMinScaleDelta / 2)) {
             self.scale = targetScale;
-            if(didCancelSmallScale) [self.delegate cancelledScalingReallySmall:self];
+            if (didCancelSmallScale)
+                [self.delegate cancelledScalingReallySmall:self];
         }
     }
-    
-    if(CGPointEqualToPoint(panGesture.normalizedLocationOfScale, CGPointZero)){
+
+    if (CGPointEqualToPoint(panGesture.normalizedLocationOfScale, CGPointZero)) {
         // somehow the pan gesture doesn't always get initialized above as it
         // should when it changes from < 2 touches to 2 touches. i'm having a very
         // hard time reproing after the last fix (chaging to < 2 from == 1 above)
         // but occassionally the page still jumps when panning while drawing.
         @throw [NSException exceptionWithName:@"Pan Exception" reason:@"location of pan gesture is unknown" userInfo:nil];
     }
-    
+
     //
     // now, with our pan offset and new scale, we need to calculate the new frame location.
     //
@@ -394,26 +396,26 @@
                                                     scale * panGesture.normalizedLocationOfScale.y * superviewSize.height);
     CGSize newSizeOfView = CGSizeMake(superviewSize.width * scale, superviewSize.height * scale);
 
-    
+
     //
     // now calculate our final frame given our pan and zoom
     CGRect fr = self.frame;
     CGPoint newOriginOfView = CGPointMake(lastLocationInSuper.x - locationOfPinchAfterScale.x,
-                                 lastLocationInSuper.y - locationOfPinchAfterScale.y);
+                                          lastLocationInSuper.y - locationOfPinchAfterScale.y);
     fr.origin = newOriginOfView;
     fr.size = newSizeOfView;
-    
+
     //
     // now, notify delegate that we're about to set the frame of the page during a gesture,
     // and give it a chance to modify the frame if at all needed.
     fr = [self.delegate isBeginning:NO
                   toPanAndScalePage:self
-                      fromFrame:panGesture.frameOfPageAtBeginningOfGesture
-                        toFrame:fr
+                          fromFrame:panGesture.frameOfPageAtBeginningOfGesture
+                            toFrame:fr
                         withTouches:panGesture.validTouches];
-    
-    if(panGesture.subState == UIGestureRecognizerStateBegan ||
-       panGesture.subState == UIGestureRecognizerStateChanged){
+
+    if (panGesture.subState == UIGestureRecognizerStateBegan ||
+        panGesture.subState == UIGestureRecognizerStateChanged) {
         //
         // now we're ready, set the frame!
         //
@@ -427,27 +429,27 @@
 
 #pragma mark - PaintableViewDelegate
 
--(NSArray*) paintableViewsAbove:(UIView*)aView{
+- (NSArray*)paintableViewsAbove:(UIView*)aView {
     return [NSArray array];
 }
 
--(BOOL) shouldDrawClipPath{
+- (BOOL)shouldDrawClipPath {
     return NO;
 }
 
--(CGAffineTransform) transform{
+- (CGAffineTransform)transform {
     return CGAffineTransformIdentity;
 }
 
 
 #pragma mark - List View
 
--(NSInteger) rowInListView{
+- (NSInteger)rowInListView {
     NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
     return [self.delegate rowInListViewGivenIndex:indexOfPage];
 }
 
--(NSInteger) columnInListView{
+- (NSInteger)columnInListView {
     NSInteger indexOfPage = [self.delegate indexOfPageInCompleteStack:self];
     return [self.delegate columnInListViewGivenIndex:indexOfPage];
 }
@@ -455,16 +457,16 @@
 
 #pragma mark - description
 
--(NSString*) description{
+- (NSString*)description {
     return [NSString stringWithFormat:@"[%@ %@]", NSStringFromClass(self.class), self.uuid];
 }
 
--(NSDictionary*) dictionaryDescription{
+- (NSDictionary*)dictionaryDescription {
     return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass(self.class), @"class",
-            self.uuid, @"uuid", nil];
+                                                      self.uuid, @"uuid", nil];
 }
 
--(void) dealloc{    
+- (void)dealloc {
     DebugLog(@"page dealloc'd %@", self.uuid);
 }
 

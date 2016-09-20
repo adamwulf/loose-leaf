@@ -8,8 +8,9 @@
 
 #import "MMLoopView.h"
 
+
 @interface MMImageLoopView : MMLoopView
 
--(id) initForImage:(NSURL*)imageURL withTitle:(NSString*)title forTutorialId:(NSString*)tutorialId;
+- (id)initForImage:(NSURL*)imageURL withTitle:(NSString*)title forTutorialId:(NSString*)tutorialId;
 
 @end

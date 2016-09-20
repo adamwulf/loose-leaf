@@ -15,11 +15,12 @@
 #import "MMScrapViewOwnershipDelegate.h"
 #import "MMCloudKitImportExportView.h"
 
-@interface MMScrapPaperStackView : MMEditablePaperStackView<MMScrapViewOwnershipDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMShareSidebarDelegate,MMInboxManagerDelegate>{
+
+@interface MMScrapPaperStackView : MMEditablePaperStackView <MMScrapViewOwnershipDelegate, MMPanAndPinchScrapGestureRecognizerDelegate, MMScrapSidebarContainerViewDelegate, MMStretchScrapGestureRecognizerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMInboxManagerDelegate> {
 }
 
--(void) willResignActive;
+- (void)willResignActive;
 
--(void) didEnterBackground;
+- (void)didEnterBackground;
 
 @end

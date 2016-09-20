@@ -12,10 +12,11 @@
 #import "MMShapeBuilderView.h"
 #import <JotUI/JotUI.h>
 
-@interface MMEditablePaperView : MMPaperView<JotViewDelegate,JotViewStateProxyDelegate>{
+
+@interface MMEditablePaperView : MMPaperView <JotViewDelegate, JotViewStateProxyDelegate> {
     JotView* drawableView;
     MMShapeBuilderView* shapeBuilderView;
-    
+
     MMRulerToolGestureRecognizer* rulerGesture;
 
     JotViewStateProxy* paperState;
@@ -41,28 +42,28 @@
 @property (nonatomic, strong) JotView* drawableView;
 @property (readonly) JotViewStateProxy* paperState;
 
-+(NSString*)pagesPathForStackUUID:(NSString*)stackUUID andPageUUID:(NSString*)pageUUID;
-+(NSString*) bundledPagesPathForPageUUID:(NSString*)pageUUID;
++ (NSString*)pagesPathForStackUUID:(NSString*)stackUUID andPageUUID:(NSString*)pageUUID;
++ (NSString*)bundledPagesPathForPageUUID:(NSString*)pageUUID;
 
 
--(BOOL) hasEditsToSave;
--(BOOL) isStateLoaded;
--(BOOL) isStateLoading;
--(void) unloadCachedPreview;
--(void) loadCachedPreview;
--(void) loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context;
--(void) unloadState;
--(void) updateThumbnailVisibility;
--(void) setEditable:(BOOL)isEditable;
--(BOOL) isEditable;
--(void) cancelCurrentStrokeIfAny;
+- (BOOL)hasEditsToSave;
+- (BOOL)isStateLoaded;
+- (BOOL)isStateLoading;
+- (void)unloadCachedPreview;
+- (void)loadCachedPreview;
+- (void)loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context;
+- (void)unloadState;
+- (void)updateThumbnailVisibility;
+- (void)setEditable:(BOOL)isEditable;
+- (BOOL)isEditable;
+- (void)cancelCurrentStrokeIfAny;
 
 // abstract
--(void) saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
--(NSString*) bundledPagesPath;
--(NSString*) pagesPath;
--(NSString*) thumbnailPath;
--(UIImage*) cachedImgViewImage;
--(void) addDrawableViewToContentView;
+- (void)saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
+- (NSString*)bundledPagesPath;
+- (NSString*)pagesPath;
+- (NSString*)thumbnailPath;
+- (UIImage*)cachedImgViewImage;
+- (void)addDrawableViewToContentView;
 
 @end

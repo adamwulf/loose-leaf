@@ -8,6 +8,7 @@
 
 #import "NSArray+MapReduce.h"
 
+
 @implementation NSArray (MapReduce)
 
 //NSArray* arr            = [NSArray arrayWithObjects:@"Apple", @"Banana", @"Peanut", @"Tree", NULL];
@@ -15,12 +16,12 @@
 //    return [NSString stringWithFormat:@"%@ Butter", obj];
 //}];
 - (NSArray*)map:(id (^)(id obj, NSUInteger index))mapfunc {
-	NSMutableArray* result = [[NSMutableArray alloc] init];
-	NSUInteger index;
-	for( index = 0; index < [self count]; index++ ) {
-		[result addObject:mapfunc( [self objectAtIndex:index], index )];
-	}
-	return result;
+    NSMutableArray* result = [[NSMutableArray alloc] init];
+    NSUInteger index;
+    for (index = 0; index < [self count]; index++) {
+        [result addObject:mapfunc([self objectAtIndex:index], index)];
+    }
+    return result;
 }
 
 //NSNumber* sum = [numbers reduce:^(id obj, NSUInteger idx, id accum) {
@@ -30,12 +31,12 @@
 //    return (id)[NSNumber numberWithInt:[obj intValue] + [accum intValue]];
 //}];
 - (id)reduce:(id (^)(id obj, NSUInteger index, id accum))reducefunc {
-	id result = NULL;
-	NSUInteger index;
-	for( index = 0; index < [self count]; index++ ) {
-		result = reducefunc( [self objectAtIndex:index], index, result );
-	}
-	return result;
+    id result = NULL;
+    NSUInteger index;
+    for (index = 0; index < [self count]; index++) {
+        result = reducefunc([self objectAtIndex:index], index, result);
+    }
+    return result;
 }
 
 @end

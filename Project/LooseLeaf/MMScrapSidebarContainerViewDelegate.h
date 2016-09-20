@@ -12,18 +12,18 @@
 
 @protocol MMScrapSidebarContainerViewDelegate <NSObject>
 
--(void) willAddScrapToBezelSidebar:(MMScrapView*)scrap;
+- (void)willAddScrapToBezelSidebar:(MMScrapView*)scrap;
 
--(void) didAddScrapToBezelSidebar:(MMScrapView*)scrap;
+- (void)didAddScrapToBezelSidebar:(MMScrapView*)scrap;
 
--(void) willAddScrapBackToPage:(MMScrapView *)scrap;
+- (void)willAddScrapBackToPage:(MMScrapView*)scrap;
 
--(MMUndoablePaperView*) didAddScrapBackToPage:(MMScrapView *)originalScrap atIndex:(NSUInteger)index;
+- (MMUndoablePaperView*)didAddScrapBackToPage:(MMScrapView*)originalScrap atIndex:(NSUInteger)index;
 
--(CGPoint) positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
+- (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
 
--(CGFloat) scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;
+- (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;
 
--(MMScrappedPaperView*) pageForUUID:(NSString*)uuid;
+- (MMScrappedPaperView*)pageForUUID:(NSString*)uuid;
 
 @end

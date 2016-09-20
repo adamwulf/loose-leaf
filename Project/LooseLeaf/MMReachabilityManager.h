@@ -8,10 +8,11 @@
 
 #import "Reachability.h"
 
+
 @interface MMReachabilityManager : Reachability
 
-+(Reachability*) sharedManager;
++ (Reachability*)sharedManager;
 
-+(Reachability*) sharedLocalNetwork;
++ (Reachability*)sharedLocalNetwork;
 
 @end

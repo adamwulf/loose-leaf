@@ -10,8 +10,9 @@
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 
+
 @interface UIFont (UIBezierCurve)
 
--(UIBezierPath*) bezierPathForString:(NSString*) letter;
+- (UIBezierPath*)bezierPathForString:(NSString*)letter;
 
 @end

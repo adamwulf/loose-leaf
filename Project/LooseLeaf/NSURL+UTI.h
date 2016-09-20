@@ -9,16 +9,17 @@
 #import <Foundation/Foundation.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
+
 @interface NSURL (UTI)
 
-+(NSString*) UTIForExtension:(NSString*)fileExtension;
++ (NSString*)UTIForExtension:(NSString*)fileExtension;
 
--(NSString*) universalTypeID;
+- (NSString*)universalTypeID;
 
-+(NSString*) mimeForExtension:(NSString*)fileExtension;
++ (NSString*)mimeForExtension:(NSString*)fileExtension;
 
--(NSString*) fileExtension;
+- (NSString*)fileExtension;
 
--(NSString*) mimeType;
+- (NSString*)mimeType;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "MMPageUndoRedoManager.h"
 
+
 @interface MMPageUndoRedoManager (Trash)
 
 @property (nonatomic, assign) BOOL isForgetful;

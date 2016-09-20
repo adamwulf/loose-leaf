@@ -10,20 +10,21 @@
 #import "MMScrapsInSidebarStateDelegate.h"
 #import "MMScrapCollectionState.h"
 
+
 @interface MMScrapsInSidebarState : MMScrapCollectionState
 
 @property (nonatomic, readonly) NSObject<MMScrapsInSidebarStateDelegate>* delegate;
 @property (readonly) NSString* scrapIDsPath;
 
--(id) initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)delegate;
+- (id)initWithDelegate:(NSObject<MMScrapsInSidebarStateDelegate>*)delegate;
 
 #pragma mark - Manage Scraps
 
 // returns the scrap for the specified uuid, or nil if there's no match
--(MMScrapView*) scrapForUUID:(NSString*)uuid;
+- (MMScrapView*)scrapForUUID:(NSString*)uuid;
 
--(void) scrapIsAddedToSidebar:(MMScrapView*)scrap;
+- (void)scrapIsAddedToSidebar:(MMScrapView*)scrap;
 
--(void) scrapIsRemovedFromSidebar:(MMScrapView*)scrap;
+- (void)scrapIsRemovedFromSidebar:(MMScrapView*)scrap;
 
 @end

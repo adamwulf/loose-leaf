@@ -8,6 +8,7 @@
 
 #import "MMInboxItem.h"
 
+
 @interface MMImageInboxItem : MMInboxItem
 
 @end

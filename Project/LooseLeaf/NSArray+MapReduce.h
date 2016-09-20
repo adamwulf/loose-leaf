@@ -8,8 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSArray<ObjectType> (MapReduce)
-- (NSArray*)map:(id (^)(ObjectType obj, NSUInteger index))mapfunc;
+
+@interface NSArray <ObjectType> (MapReduce) - (NSArray*)map : (id (^)(ObjectType obj, NSUInteger index))mapfunc;
 - (id)reduce:(id (^)(ObjectType obj, NSUInteger index, id accum))reducefunc;
 @end
-

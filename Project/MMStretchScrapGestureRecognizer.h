@@ -13,7 +13,8 @@
 #import "MMStretchScrapGestureRecognizerDelegate.h"
 #import "MMCancelableGestureRecognizer.h"
 
-@interface MMStretchScrapGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>
+
+@interface MMStretchScrapGestureRecognizer : MMCancelableGestureRecognizer <UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture1;
 @property (nonatomic, weak) MMPanAndPinchScrapGestureRecognizer* pinchScrapGesture2;
@@ -24,10 +25,10 @@
 @property (nonatomic, readonly) NSDictionary* startingScrapProperties;
 @property (nonatomic, readonly) MMUndoablePaperView* startingPageForScrap;
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
--(void) blessTouches:(NSSet*)touches;
+- (void)blessTouches:(NSSet*)touches;
 
--(CATransform3D) transformForBounceAtScale:(CGFloat) scale;
+- (CATransform3D)transformForBounceAtScale:(CGFloat)scale;
 
 @end

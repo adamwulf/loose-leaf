@@ -10,12 +10,12 @@
 
 @protocol MMSlidingSidebarContainerViewDelegate <NSObject>
 
--(void) sidebarCloseButtonWasTapped;
+- (void)sidebarCloseButtonWasTapped;
 
--(void) sidebarWillShow;
+- (void)sidebarWillShow;
 
--(void) sidebarWillHide;
+- (void)sidebarWillHide;
 
--(UIView*) viewForBlur;
+- (UIView*)viewForBlur;
 
 @end

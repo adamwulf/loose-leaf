@@ -11,6 +11,7 @@
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < 80000
 
+
 @implementation NSString (Contains)
 
 
@@ -28,10 +29,9 @@
 }
 
 // containsString: has been added in iOS 8. We dynamically add this if we run on iOS 7.
-- (BOOL)pspdf_containsString:(NSString *)aString {
+- (BOOL)pspdf_containsString:(NSString*)aString {
     return [self rangeOfString:aString].location != NSNotFound;
 }
-
 
 
 @end

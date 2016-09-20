@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface NSArray (IndexSetAddition)
 
-- (NSArray *)subarrayWithIndexes: (NSIndexSet *)indexes;
+- (NSArray*)subarrayWithIndexes:(NSIndexSet*)indexes;
 
 @end

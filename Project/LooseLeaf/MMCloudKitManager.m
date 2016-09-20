@@ -25,14 +25,15 @@
 
 #define kMessagesSinceLastFetchKey @"messagesSinceLastFetch"
 
-@implementation MMCloudKitManager{
+
+@implementation MMCloudKitManager {
     MMCloudKitBaseState* currentState;
     NSString* cachePath;
-    
+
     NSMutableDictionary* incomingMessageState;
-    
+
     BOOL needsBootstrap;
-    CKModifyBadgeOperation * lastBadgeOp;
+    CKModifyBadgeOperation* lastBadgeOp;
 }
 
 @synthesize delegate;
@@ -40,8 +41,8 @@
 
 static dispatch_queue_t messageQueue;
 
-+(dispatch_queue_t) messageQueue{
-    if(!messageQueue){
++ (dispatch_queue_t)messageQueue {
+    if (!messageQueue) {
         messageQueue = dispatch_queue_create("com.milestonemade.looseleaf.cloudkit.messageQueue", DISPATCH_QUEUE_SERIAL);
     }
     return messageQueue;
@@ -49,17 +50,17 @@ static dispatch_queue_t messageQueue;
 
 static NSString* cloudKitFilesPath;
 
-+(NSString*) cloudKitFilesPath{
-    if(!cloudKitFilesPath){
++ (NSString*)cloudKitFilesPath {
+    if (!cloudKitFilesPath) {
         cloudKitFilesPath = [[NSFileManager documentsPath] stringByAppendingPathComponent:@"CloudKit"];
         [NSFileManager ensureDirectoryExistsAtPath:cloudKitFilesPath];
     }
     return cloudKitFilesPath;
 }
 
-+ (MMCloudKitManager *) sharedManager {
++ (MMCloudKitManager*)sharedManager {
     static dispatch_once_t onceToken;
-    static MMCloudKitManager *manager;
+    static MMCloudKitManager* manager;
     dispatch_once(&onceToken, ^{
         manager = [[MMCloudKitManager alloc] init];
     });
@@ -75,31 +76,31 @@ static NSString* cloudKitFilesPath;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityDidChange) name:kReachabilityChangedNotification object:nil];
-        
+
         [MMCloudKitBaseState clearCache];
         currentState = [[MMCloudKitBaseState alloc] init];
-        
+
         dispatch_async([MMCloudKitManager messageQueue], ^{
             @autoreleasepool {
                 incomingMessageState = [NSMutableDictionary dictionaryWithContentsOfFile:[[self cachePath] stringByAppendingPathComponent:@"messages.plist"]];
-                if(!incomingMessageState){
+                if (!incomingMessageState) {
                     incomingMessageState = [NSMutableDictionary dictionary];
                     [incomingMessageState setObject:@[] forKey:kMessagesSinceLastFetchKey];
                 }
             }
         });
-        
+
         // the UIApplicationDidBecomeActiveNotification will kickstart the process when the app launches
     }
     return self;
 }
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(NSString*) cachePath{
-    if(!cachePath){
+- (NSString*)cachePath {
+    if (!cachePath) {
         NSString* documentsPath = [NSFileManager documentsPath];
         cachePath = [documentsPath stringByAppendingPathComponent:@"CloudKit"];
         [NSFileManager ensureDirectoryExistsAtPath:cachePath];
@@ -109,55 +110,55 @@ static NSString* cloudKitFilesPath;
 
 #pragma mark - Status
 
-+(BOOL) isCloudKitAvailable{
++ (BOOL)isCloudKitAvailable {
     return [CKContainer class] != nil;
 }
 
--(BOOL) isLoggedInAndReadyForAnything{
+- (BOOL)isLoggedInAndReadyForAnything {
     return [currentState isLoggedInAndReadyForAnything];
 }
 
 #pragma mark - Events
 
--(void) userRequestedToLogin{
-    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+- (void)userRequestedToLogin {
+    if ([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]) {
         [(MMCloudKitWaitingForLoginState*)currentState didAskToLogin];
     }
 }
 
--(void) didBecomeActive{
-    if(needsBootstrap){
+- (void)didBecomeActive {
+    if (needsBootstrap) {
         needsBootstrap = NO;
         [currentState runState];
     }
 }
 
--(void) fetchAllNewMessages{
-    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesAndMarkAsReadWithCompletionHandler:^(NSArray *messages, NSError *error) {
-        if(!error){
-            DebugLog(@"CloudKit fetched all new messages: %d", (int) [messages count]);
-            for(SPRMessage* message in messages){
+- (void)fetchAllNewMessages {
+    [[SPRSimpleCloudKitManager sharedManager] fetchNewMessagesAndMarkAsReadWithCompletionHandler:^(NSArray* messages, NSError* error) {
+        if (!error) {
+            DebugLog(@"CloudKit fetched all new messages: %d", (int)[messages count]);
+            for (SPRMessage* message in messages) {
                 [self processIncomingMessage:message];
             }
             [currentState cloudKitDidCheckForNotifications];
-            
+
             // clear out any messages that we're tracking
             // since our last fetch-all-notifications
             dispatch_async([MMCloudKitManager messageQueue], ^{
                 @autoreleasepool {
-                    @synchronized(incomingMessageState){
+                    @synchronized(incomingMessageState) {
                         [incomingMessageState setObject:[NSArray array] forKey:kMessagesSinceLastFetchKey];
                     }
                 }
             });
-        }else{
+        } else {
             [currentState cloudKitDidCheckForNotifications];
         }
     }];
 }
 
 
--(void) processIncomingMessage:(SPRMessage*)unprocessedMessage{
+- (void)processIncomingMessage:(SPRMessage*)unprocessedMessage {
     dispatch_semaphore_t sema1 = dispatch_semaphore_create(0);
 
     __block BOOL hadAlreadyProcessedThisMessage = NO;
@@ -166,10 +167,10 @@ static NSString* cloudKitFilesPath;
     // bail out here.
     dispatch_async([MMCloudKitManager messageQueue], ^{
         @autoreleasepool {
-            @synchronized(incomingMessageState){
+            @synchronized(incomingMessageState) {
                 NSArray* messagesSinceLastFetch = [incomingMessageState objectForKey:kMessagesSinceLastFetchKey];
                 hadAlreadyProcessedThisMessage = [messagesSinceLastFetch containsObject:unprocessedMessage];
-                if(!hadAlreadyProcessedThisMessage){
+                if (!hadAlreadyProcessedThisMessage) {
                     // if we haven't processed it yet, then go ahead
                     // and mark it as processed
                     [incomingMessageState setObject:[messagesSinceLastFetch arrayByAddingObject:unprocessedMessage] forKey:kMessagesSinceLastFetchKey];
@@ -179,8 +180,8 @@ static NSString* cloudKitFilesPath;
         dispatch_semaphore_signal(sema1);
     });
     dispatch_semaphore_wait(sema1, DISPATCH_TIME_FOREVER);
-    
-    if(hadAlreadyProcessedThisMessage){
+
+    if (hadAlreadyProcessedThisMessage) {
         // we'd already handle this message, so we can
         // safely bail out here. this happens when we
         // recieve the push notificatio, and also recieve it
@@ -194,7 +195,7 @@ static NSString* cloudKitFilesPath;
 #pragma mark - State Management
 
 
--(void) changeToState:(MMCloudKitBaseState*)state{
+- (void)changeToState:(MMCloudKitBaseState*)state {
     // cancel any pending calls to the old state
     [currentState killState];
     currentState = state;
@@ -202,17 +203,17 @@ static NSString* cloudKitFilesPath;
     [self.delegate cloudKitDidChangeState:currentState];
 }
 
--(void) retryStateAfterDelay:(NSTimeInterval)delay{
+- (void)retryStateAfterDelay:(NSTimeInterval)delay {
     [self performSelector:@selector(delayedRunStateFor:) withObject:currentState afterDelay:delay];
 }
 
--(void) delayedRunStateFor:(MMCloudKitBaseState*)aState{
-    if(currentState == aState){
+- (void)delayedRunStateFor:(MMCloudKitBaseState*)aState {
+    if (currentState == aState) {
         [aState runState];
     }
 }
 
--(void) changeToStateBasedOnError:(NSError*)err{
+- (void)changeToStateBasedOnError:(NSError*)err {
     DebugLog(@"changeToStateBasedOnError: %@", err);
     [MMCloudKitBaseState clearCache];
     switch (err.code) {
@@ -240,27 +241,27 @@ static NSString* cloudKitFilesPath;
 
 #pragma mark - Notifications
 
--(void) cloudKitInfoDidChange{
+- (void)cloudKitInfoDidChange {
     // handle change in cloudkit
     [MMCloudKitBaseState clearCache];
     [currentState cloudKitInfoDidChange];
 }
 
--(void) applicationWillEnterForeground{
+- (void)applicationWillEnterForeground {
     DebugLog(@"applicationWillEnterForeground - cloudkit manager");
     [MMCloudKitBaseState clearCache];
     [self changeToState:[[MMCloudKitBaseState alloc] initWithCachedFriendList:currentState.friendList]];
     [self fetchAllNewMessages];
 }
 
--(void) reachabilityDidChange{
+- (void)reachabilityDidChange {
     [currentState reachabilityDidChange];
 }
 
 #pragma mark - Remote Notification
 
--(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification{
-    [[SPRSimpleCloudKitManager sharedManager] messageForQueryNotification:remoteNotification withCompletionHandler:^(SPRMessage *message, NSError *error) {
+- (void)handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification {
+    [[SPRSimpleCloudKitManager sharedManager] messageForQueryNotification:remoteNotification withCompletionHandler:^(SPRMessage* message, NSError* error) {
         // notify that we're going to fetch message details
         [self processIncomingMessage:message];
     }];
@@ -268,16 +269,16 @@ static NSString* cloudKitFilesPath;
     [self fetchAllNewMessages];
 }
 
--(void) resetBadgeCountTo:(NSUInteger)number{
-    if(!lastBadgeOp){
-        CKModifyBadgeOperation *oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
-        oper.modifyBadgeCompletionBlock = ^(NSError* err){
+- (void)resetBadgeCountTo:(NSUInteger)number {
+    if (!lastBadgeOp) {
+        CKModifyBadgeOperation* oper = [[CKModifyBadgeOperation alloc] initWithBadgeValue:number];
+        oper.modifyBadgeCompletionBlock = ^(NSError* err) {
             lastBadgeOp = nil;
-            if(!err){
+            if (!err) {
                 UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-                if (notificationSettings.types & UIUserNotificationTypeBadge){
+                if (notificationSettings.types & UIUserNotificationTypeBadge) {
                     [UIApplication sharedApplication].applicationIconBadgeNumber = number;
-                    DebugLog(@"reset badge count to: %d", (int) number);
+                    DebugLog(@"reset badge count to: %d", (int)number);
                     [self.delegate didResetBadgeCountTo:number];
                 }
             }
@@ -288,24 +289,24 @@ static NSString* cloudKitFilesPath;
 
 #pragma mark - Description
 
--(NSString*) description{
-    if([currentState isKindOfClass:[MMCloudKitFetchingAccountInfoState class]]){
+- (NSString*)description {
+    if ([currentState isKindOfClass:[MMCloudKitFetchingAccountInfoState class]]) {
         return @"loading account info";
-    }else if([currentState isKindOfClass:[MMCloudKitFetchFriendsState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitFetchFriendsState class]]) {
         return @"loading friends";
-    }else if([currentState isKindOfClass:[MMCloudKitLoggedInState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitLoggedInState class]]) {
         return @"logged in";
-    }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]) {
         return @"Needs User to Login";
-    }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]) {
         return @"Asking for permission";
-    }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitOfflineState class]]) {
         return @"Network Offline";
-    }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]) {
         return @"No Account";
-    }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]) {
         return @"Permission Denied";
-    }else{
+    } else {
         return @"initializing cloudkit";
     }
 }

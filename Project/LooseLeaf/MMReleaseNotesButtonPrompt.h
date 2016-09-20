@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMReleaseNotesButtonPrompt : UIView
 
 @property (nonatomic, strong) NSString* prompt;
 @property (nonatomic, strong) NSString* confirmAnswer;
 @property (nonatomic, strong) NSString* denyAnswer;
 
-@property (nonatomic, strong) void(^confirmBlock)();
-@property (nonatomic, strong) void(^denyBlock)();
+@property (nonatomic, strong) void (^confirmBlock)();
+@property (nonatomic, strong) void (^denyBlock)();
 
 @end

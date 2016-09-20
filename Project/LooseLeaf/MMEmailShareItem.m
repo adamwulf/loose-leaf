@@ -13,22 +13,24 @@
 #import "MMPresentationWindow.h"
 #import "NSURL+UTI.h"
 
-@implementation MMEmailShareItem{
+
+@implementation MMEmailShareItem {
     MMImageViewButton* button;
     MFMailComposeViewController* composer;
 }
 
 @synthesize delegate;
 
--(id) init{
-    if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+- (id)init {
+    if (self = [super init]) {
+        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"email"]];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
-                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
 
         [self updateButtonGreyscale];
@@ -36,12 +38,12 @@
     return self;
 }
 
--(MMSidebarButton*) button{
+- (MMSidebarButton*)button {
     return button;
 }
 
--(void) performShareAction{
-    if(!button.greyscale){
+- (void)performShareAction {
+    if (!button.greyscale) {
         [delegate mayShare:self];
         // if a popover controller is dismissed, it
         // adds the dismissal to the main queue async
@@ -51,21 +53,21 @@
             @autoreleasepool {
                 composer = [[MFMailComposeViewController alloc] init];
                 [composer setMailComposeDelegate:self];
-                if([MFMailComposeViewController canSendMail] && composer) {
+                if ([MFMailComposeViewController canSendMail] && composer) {
                     [composer setSubject:@"Quick sketch from Loose Leaf"];
                     [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
                     [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-                    
+
                     NSURL* urlToShare = [self.delegate urlToShare];
-                    NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                    NSData* data = [NSData dataWithContentsOfURL:urlToShare];
                     [composer addAttachmentData:data mimeType:[urlToShare mimeType] fileName:[@"LooseLeaf" stringByAppendingString:[urlToShare pathExtension]]];
-                    
+
                     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
                     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                     [presentationWindow.rootViewController presentViewController:composer animated:YES completion:^{
                         DebugLog(@"done");
                     }];
-                }else{
+                } else {
                     composer = nil;
                 }
                 [delegate didShare:self];
@@ -74,48 +76,48 @@
     }
 }
 
--(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+- (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
     return YES;
 }
 
 #pragma mark - Notification
 
--(void) updateButtonGreyscale{
-    if(![self.delegate urlToShare]){
+- (void)updateButtonGreyscale {
+    if (![self.delegate urlToShare]) {
         button.greyscale = YES;
-    }else if([MFMailComposeViewController canSendMail]) {
+    } else if ([MFMailComposeViewController canSendMail]) {
         button.greyscale = NO;
-    }else{
+    } else {
         button.greyscale = YES;
     }
     [button setNeedsDisplay];
-    
-    if([MFMailComposeViewController canSendMail] && [MFMailComposeViewController class]) {
+
+    if ([MFMailComposeViewController canSendMail] && [MFMailComposeViewController class]) {
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusEmail to:kMPShareStatusAvailable];
-    }else{
+    } else {
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusEmail to:kMPShareStatusUnavailable];
     }
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate
 
--(void) mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error{
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
     NSString* strResult;
-    if(result == MFMailComposeResultCancelled){
+    if (result == MFMailComposeResultCancelled) {
         strResult = @"Cancelled";
-    }else if(result == MFMailComposeResultFailed){
+    } else if (result == MFMailComposeResultFailed) {
         strResult = @"Failed";
-    }else if(result == MFMailComposeResultSaved){
+    } else if (result == MFMailComposeResultSaved) {
         strResult = @"Saved";
-    }else{
+    } else {
         strResult = @"Sent";
     }
-    if(result == MFMailComposeResultSent || result == MFMailComposeResultSaved){
+    if (result == MFMailComposeResultSent || result == MFMailComposeResultSaved) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
     }
-    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Email",
-                                                                 kMPEventExportPropResult : strResult}];
-    
+    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{ kMPEventExportPropDestination: @"Email",
+                                                                  kMPEventExportPropResult: strResult }];
+
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
     composer.delegate = nil;
@@ -124,7 +126,7 @@
 
 #pragma mark - Dealloc
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

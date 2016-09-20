@@ -8,6 +8,7 @@
 
 #import "MMDarkSidebarButton.h"
 
+
 @interface MMTrashButton : MMDarkSidebarButton
 
 @end

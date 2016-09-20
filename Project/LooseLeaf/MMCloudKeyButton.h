@@ -8,20 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMCloudKeyButton : UIButton
 
 @property (nonatomic, readonly) BOOL isShowingKey;
 
--(void) setupTimer;
+- (void)setupTimer;
 
--(void) tearDownTimer;
+- (void)tearDownTimer;
 
--(void) flipImmediatelyToCloud;
+- (void)flipImmediatelyToCloud;
 
--(void) flipAnimatedToKeyWithCompletion:(void (^)())completion;
+- (void)flipAnimatedToKeyWithCompletion:(void (^)())completion;
 
--(void) animateToBrokenCloud;
+- (void)animateToBrokenCloud;
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated;
 
 @end

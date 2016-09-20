@@ -40,7 +40,7 @@ IndentFunctionDeclarationAfterType: false
 MaxEmptyLinesToKeep: 2
 KeepEmptyLinesAtTheStartOfBlocks: false
 NamespaceIndentation: Inner
-ObjCSpaceAfterProperty: false
+ObjCSpaceAfterProperty: true
 ObjCSpaceBeforeProtocolList: true
 ObjCBlockIndentWidth: 4
 PenaltyBreakBeforeFirstCallParameter: 10000

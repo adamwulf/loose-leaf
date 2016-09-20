@@ -8,46 +8,47 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMVector : NSObject
 
 @property (nonatomic) CGFloat x;
 @property (nonatomic) CGFloat y;
 
-+(MMVector*) vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
++ (MMVector*)vectorWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
 
-+(MMVector*) vectorWithX:(CGFloat)x andY:(CGFloat)y;
++ (MMVector*)vectorWithX:(CGFloat)x andY:(CGFloat)y;
 
-+(MMVector*) vectorWithAngle:(CGFloat)angle;
++ (MMVector*)vectorWithAngle:(CGFloat)angle;
 
--(id) initWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
+- (id)initWithPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
 
--(id) initWithX:(CGFloat)x andY:(CGFloat)y;
+- (id)initWithX:(CGFloat)x andY:(CGFloat)y;
 
--(MMVector*) normal;
+- (MMVector*)normal;
 
--(MMVector*) normalizedTo:(CGFloat)someLength;
+- (MMVector*)normalizedTo:(CGFloat)someLength;
 
--(MMVector*) perpendicular;
+- (MMVector*)perpendicular;
 
--(MMVector*) flip;
+- (MMVector*)flip;
 
--(CGFloat) magnitude;
+- (CGFloat)magnitude;
 
--(CGFloat) angle;
+- (CGFloat)angle;
 
--(CGPoint) pointFromPoint:(CGPoint)point distance:(CGFloat)distance;
+- (CGPoint)pointFromPoint:(CGPoint)point distance:(CGFloat)distance;
 
--(MMVector*) averageWith:(MMVector*)vector;
+- (MMVector*)averageWith:(MMVector*)vector;
 
--(MMVector*) addVector:(MMVector*)vector;
+- (MMVector*)addVector:(MMVector*)vector;
 
--(MMVector*) rotateBy:(CGFloat)angle;
+- (MMVector*)rotateBy:(CGFloat)angle;
 
--(MMVector*) mirrorAround:(MMVector*)normal;
+- (MMVector*)mirrorAround:(MMVector*)normal;
 
--(CGPoint) mirrorPoint:(CGPoint)point aroundPoint:(CGPoint)startPoint;
+- (CGPoint)mirrorPoint:(CGPoint)point aroundPoint:(CGPoint)startPoint;
 
--(CGFloat) angleBetween:(MMVector*)otherVector;
+- (CGFloat)angleBetween:(MMVector*)otherVector;
 
--(CGPoint) asCGPoint;
+- (CGPoint)asCGPoint;
 @end

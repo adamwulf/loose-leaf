@@ -8,10 +8,11 @@
 
 #import "MMBackgroundTimer.h"
 
+
 @implementation MMBackgroundTimer
 
--(id) initWithInterval:(NSTimeInterval)_interval andTarget:(id)_target andSelector:(SEL)_action{
-    if(self = [super init]){
+- (id)initWithInterval:(NSTimeInterval)_interval andTarget:(id)_target andSelector:(SEL)_action {
+    if (self = [super init]) {
         target = _target;
         action = _action;
         interval = _interval;
@@ -20,25 +21,23 @@
     return self;
 }
 
--(void) main
-{
-    if ([self isCancelled])
-    {
+- (void)main {
+    if ([self isCancelled]) {
         return;
     }
-    
-    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:interval
+
+    NSTimer* timer = [NSTimer scheduledTimerWithTimeInterval:interval
                                                       target:target
                                                     selector:action
                                                     userInfo:nil
                                                      repeats:YES];
-    
+
     [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-    
+
     //keep the runloop going as long as needed
     while (!done && [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
-                                              beforeDate:[NSDate distantFuture]]);
-    
+                                             beforeDate:[NSDate distantFuture]])
+        ;
 }
 
 @end

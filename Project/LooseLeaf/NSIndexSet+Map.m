@@ -8,11 +8,12 @@
 
 #import "NSIndexSet+Map.h"
 
+
 @implementation NSIndexSet (Map)
 
-- (NSIndexSet *)mapIndexesUsingBlock:(NSUInteger (^)(NSUInteger idx))block {
-    NSMutableIndexSet *result = [NSMutableIndexSet indexSet];
-    [self enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+- (NSIndexSet*)mapIndexesUsingBlock:(NSUInteger (^)(NSUInteger idx))block {
+    NSMutableIndexSet* result = [NSMutableIndexSet indexSet];
+    [self enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL* stop) {
         [result addIndex:block(idx)];
     }];
     return result;

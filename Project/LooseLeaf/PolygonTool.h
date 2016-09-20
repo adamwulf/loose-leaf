@@ -9,14 +9,15 @@
 #import "Tool.h"
 #import "PolygonToolDelegate.h"
 
-@interface PolygonTool : Tool{
+
+@interface PolygonTool : Tool {
     NSObject<PolygonToolDelegate>* __weak delegate;
 }
 
 @property (nonatomic, weak) NSObject<PolygonToolDelegate>* delegate;
 
--(void) cancelPolygonForTouch:(UITouch*)touch;
+- (void)cancelPolygonForTouch:(UITouch*)touch;
 
--(void) cancelAllTouches;
+- (void)cancelAllTouches;
 
 @end

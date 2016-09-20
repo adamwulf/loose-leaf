@@ -13,7 +13,8 @@
 #import "MMScrapCollectionState.h"
 #import "MMDecompressImagePromiseDelegate.h"
 
-@interface MMScrapViewState : NSObject<JotViewStateProxyDelegate,MMDecompressImagePromiseDelegate>{
+
+@interface MMScrapViewState : NSObject <JotViewStateProxyDelegate, MMDecompressImagePromiseDelegate> {
     // unloadable state
     // this state can be loaded and unloaded
     // to conserve memeory as needed
@@ -24,7 +25,7 @@
     __weak MMScrapCollectionState* scrapsOnPaperState;
 }
 
-+(BOOL) isImportExportScrapStateQueue;
++ (BOOL)isImportExportScrapStateQueue;
 
 @property (weak) NSObject<MMScrapViewStateDelegate>* delegate;
 @property (readonly) UIBezierPath* bezierPath;
@@ -38,39 +39,39 @@
 @property (nonatomic, readonly) int fullByteSize;
 @property (readonly) NSUInteger lastSavedUndoHash;
 
--(id) initWithUUID:(NSString*)uuid andPaperState:(MMScrapCollectionState*)scrapsOnPaperState;
+- (id)initWithUUID:(NSString*)uuid andPaperState:(MMScrapCollectionState*)scrapsOnPaperState;
 
--(id) initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath andPaperState:(MMScrapCollectionState*)scrapsOnPaperState;
+- (id)initWithUUID:(NSString*)uuid andBezierPath:(UIBezierPath*)bezierPath andPaperState:(MMScrapCollectionState*)scrapsOnPaperState;
 
--(void) saveScrapStateToDisk:(void(^)(BOOL hadEditsToSave))doneSavingBlock;
+- (void)saveScrapStateToDisk:(void (^)(BOOL hadEditsToSave))doneSavingBlock;
 
--(void) loadCachedScrapPreview;
--(void) unloadCachedScrapPreview;
--(UIImage*) oneOffLoadedThumbnailImage;
+- (void)loadCachedScrapPreview;
+- (void)unloadCachedScrapPreview;
+- (UIImage*)oneOffLoadedThumbnailImage;
 
--(void) loadScrapStateAsynchronously:(BOOL)async;
+- (void)loadScrapStateAsynchronously:(BOOL)async;
 
--(void) unloadState;
--(void) unloadStateButKeepThumbnailIfAny;
+- (void)unloadState;
+- (void)unloadStateButKeepThumbnailIfAny;
 
--(BOOL) isScrapStateLoaded;
--(BOOL) isScrapStateLoading;
--(BOOL) hasEditsToSave;
+- (BOOL)isScrapStateLoaded;
+- (BOOL)isScrapStateLoading;
+- (BOOL)hasEditsToSave;
 
--(UIImage*) activeThumbnailImage;
+- (UIImage*)activeThumbnailImage;
 
--(void) addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture;
--(void) addUndoLevelAndFinishStroke;
+- (void)addElements:(NSArray*)elements withTexture:(JotBrushTexture*)texture;
+- (void)addUndoLevelAndFinishStroke;
 
--(JotGLTexture*) generateTexture;
--(void) importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 withTextureSize:(CGSize)textureSize;
+- (JotGLTexture*)generateTexture;
+- (void)importTexture:(JotGLTexture*)texture atP1:(CGPoint)p1 andP2:(CGPoint)p2 andP3:(CGPoint)p3 andP4:(CGPoint)p4 withTextureSize:(CGSize)textureSize;
 
 
--(MMScrapBackgroundView*) backgroundView;
--(void) setBackgroundView:(MMScrapBackgroundView*)backgroundView;
--(CGPoint) currentCenterOfScrapBackground;
--(void) reloadBackgroundView;
+- (MMScrapBackgroundView*)backgroundView;
+- (void)setBackgroundView:(MMScrapBackgroundView*)backgroundView;
+- (CGPoint)currentCenterOfScrapBackground;
+- (void)reloadBackgroundView;
 
--(UIView*) contentView;
+- (UIView*)contentView;
 
 @end

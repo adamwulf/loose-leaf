@@ -8,36 +8,37 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMTutorialManager : NSObject
 
 @property (readonly) BOOL isWatchingTutorial;
 @property (readonly) BOOL hasFinishedTutorial;
 @property (readonly) BOOL hasSignedUpForNewsletter;
 
-+(MMTutorialManager*) sharedInstance;
++ (MMTutorialManager*)sharedInstance;
 
--(NSArray*) appIntroTutorialSteps;
+- (NSArray*)appIntroTutorialSteps;
 
--(NSArray*) appHelpButtonTutorialSteps;
+- (NSArray*)appHelpButtonTutorialSteps;
 
--(NSArray*) shareTutorialSteps;
+- (NSArray*)shareTutorialSteps;
 
--(NSArray*) listViewTutorialSteps;
+- (NSArray*)listViewTutorialSteps;
 
--(BOOL) hasCompletedStep:(NSString*)stepID;
+- (BOOL)hasCompletedStep:(NSString*)stepID;
 
--(void) didCompleteStep:(NSString*)stepID;
+- (void)didCompleteStep:(NSString*)stepID;
 
--(void) startWatchingTutorials:(NSArray*)tutorialList;
+- (void)startWatchingTutorials:(NSArray*)tutorialList;
 
--(void) pauseWatchingTutorial;
+- (void)pauseWatchingTutorial;
 
--(void) finishWatchingTutorial;
+- (void)finishWatchingTutorial;
 
--(NSInteger) numberOfPendingTutorials:(NSArray*)possiblyPendingTutorials;
+- (NSInteger)numberOfPendingTutorials:(NSArray*)possiblyPendingTutorials;
 
--(void) optOutOfNewsletter;
+- (void)optOutOfNewsletter;
 
--(void) signUpForNewsletter:(NSString*)email;
+- (void)signUpForNewsletter:(NSString*)email;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "MMScrapPaperStackView.h"
 
+
 @interface MMTutorialStackView : MMScrapPaperStackView
 
 @end

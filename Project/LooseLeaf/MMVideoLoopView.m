@@ -13,9 +13,10 @@
 #import "MMTutorialManager.h"
 #import "NSURL+UTI.h"
 
-@implementation MMVideoLoopView{
+
+@implementation MMVideoLoopView {
     NSURL* videoURL;
-    
+
     UIView* videoHolder;
     AVPlayer* avPlayer;
     AVPlayerLayer* avPlayerLayer;
@@ -23,21 +24,21 @@
     id timeObserver;
 }
 
-+(BOOL) supportsURL:(NSURL*)url{
++ (BOOL)supportsURL:(NSURL*)url {
     NSString* uti = [url universalTypeID];
     return UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeVideo) ||
         UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeMovie);
 }
 
--(id) initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId{
-    if(self = [super initWithTitle:_title forTutorialId:_tutorialId]){
+- (id)initForVideo:(NSURL*)_videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId {
+    if (self = [super initWithTitle:_title forTutorialId:_tutorialId]) {
         videoURL = _videoURL;
-        
+
         self.backgroundColor = [UIColor whiteColor];
 
         UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         [self insertSubview:imageView atIndex:0];
-        
+
         videoHolder = [[UIView alloc] initWithFrame:self.bounds];
         videoHolder.backgroundColor = [UIColor clearColor];
         [self insertSubview:videoHolder atIndex:1];
@@ -46,46 +47,43 @@
         AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
         UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
         imageView.image = image;
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(playerItemDidReachEnd:)
                                                      name:AVPlayerItemDidPlayToEndTimeNotification
                                                    object:[avPlayer currentItem]];
-        
-
-
     }
     return self;
 }
 
--(void) didBecomeActive{
-    if(avPlayer){
+- (void)didBecomeActive {
+    if (avPlayer) {
         [avPlayer play];
     }
 }
 
--(BOOL) isAnimating{
+- (BOOL)isAnimating {
     // return true if the player is playing
     // from http://stackoverflow.com/questions/5655864/check-play-state-of-avplayer
     return (avPlayer.rate > 0 && !avPlayer.error);
 }
 
--(BOOL) isBuffered{
+- (BOOL)isBuffered {
     return avPlayer != nil;
 }
 
--(void) startAnimating{
-    if(![self isAnimating]){
+- (void)startAnimating {
+    if (![self isAnimating]) {
         [self performSelector:@selector(itemDidFinishPlaying) withObject:nil afterDelay:1];
-        if(!avPlayer){
+        if (!avPlayer) {
             avPlayer = [AVPlayer playerWithURL:videoURL];
             avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:avPlayer];
             avPlayerLayer.frame = self.layer.bounds;
-            [videoHolder.layer addSublayer: avPlayerLayer];
+            [videoHolder.layer addSublayer:avPlayerLayer];
             avPlayer.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-            
+
             __weak AVPlayer* weakPlayer = avPlayer;
             __weak MMVideoLoopView* weakSelf = self;
             rateObserver = [avPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(0.015, 100)
@@ -95,32 +93,32 @@
                                                                  CGFloat duration = CMTimeGetSeconds(weakPlayer.currentItem.duration);
                                                                  CGFloat percentDur = MAX(0, (currTime / duration));
                                                                  [weakSelf setDuration:percentDur];
-                                                 }];
+                                                             }];
         }
         [avPlayer play];
     }
 }
 
--(void) itemDidFinishPlaying{
-    if(![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]){
+- (void)itemDidFinishPlaying {
+    if (![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]) {
         NSLog(@"done playing!");
         [[MMTutorialManager sharedInstance] didCompleteStep:self.tutorialId];
         [self fadeDurationBar];
     }
 }
 
--(BOOL) wantsNextButton{
+- (BOOL)wantsNextButton {
     return YES;
 }
 
--(void) pauseAnimating{
-    if([self isAnimating]){
+- (void)pauseAnimating {
+    if ([self isAnimating]) {
         [avPlayer pause];
     }
 }
 
--(void) stopAnimating{
-    if([self isBuffered]){
+- (void)stopAnimating {
+    if ([self isBuffered]) {
         [avPlayerLayer removeFromSuperlayer];
         avPlayerLayer = nil;
         [avPlayer pause];
@@ -130,12 +128,12 @@
     }
 }
 
-- (void)playerItemDidReachEnd:(NSNotification *)notification {
-    AVPlayerItem *p = [notification object];
+- (void)playerItemDidReachEnd:(NSNotification*)notification {
+    AVPlayerItem* p = [notification object];
     [p seekToTime:kCMTimeZero];
 }
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

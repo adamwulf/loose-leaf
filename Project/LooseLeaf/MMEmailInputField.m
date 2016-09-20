@@ -8,10 +8,11 @@
 
 #import "MMEmailInputField.h"
 
+
 @implementation MMEmailInputField
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         self.placeholder = @"email";
         self.layer.borderWidth = 1;
         self.layer.borderColor = [UIColor lightGrayColor].CGColor;
@@ -28,19 +29,19 @@
 }
 
 
-- (CGRect)textRectForBounds:(CGRect)bounds{
-    if(bounds.size.width > 20){
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    if (bounds.size.width > 20) {
         bounds.origin.x += 10;
         bounds.size.width -= 20;
     }
     return bounds;
 }
 
-- (CGRect)editingRectForBounds:(CGRect)bounds{
+- (CGRect)editingRectForBounds:(CGRect)bounds {
     return [self textRectForBounds:bounds];
 }
 
--(CGRect) placeholderRectForBounds:(CGRect)bounds{
+- (CGRect)placeholderRectForBounds:(CGRect)bounds {
     return [self textRectForBounds:bounds];
 }
 

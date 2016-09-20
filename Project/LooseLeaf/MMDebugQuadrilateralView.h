@@ -14,6 +14,6 @@
 // transform the image
 @interface MMDebugQuadrilateralView : UIView
 
--(void) setQuadrilateral:(Quadrilateral)q;
+- (void)setQuadrilateral:(Quadrilateral)q;
 
 @end

@@ -13,18 +13,19 @@
 
 @class MMCloudKitImportExportView;
 
+
 @interface MMCloudKitExportCoordinator : NSObject
 
 @property (nonatomic, strong) MMAvatarButton* avatarButton;
 @property (readonly) MMExportablePaperView* page;
 
--(id) initWithPage:(MMUndoablePaperView*)page andRecipient:(CKRecordID*)userId withButton:(MMAvatarButton*)avatarButton forExportView:(MMCloudKitImportExportView*)exportView;
+- (id)initWithPage:(MMUndoablePaperView*)page andRecipient:(CKRecordID*)userId withButton:(MMAvatarButton*)avatarButton forExportView:(MMCloudKitImportExportView*)exportView;
 
--(void) zipGenerationIsCompleteAt:(NSString*)pathToZipFile;
--(void) zipGenerationFailed;
--(void) zipGenerationIsPercentComplete:(CGFloat)complete;
+- (void)zipGenerationIsCompleteAt:(NSString*)pathToZipFile;
+- (void)zipGenerationFailed;
+- (void)zipGenerationIsPercentComplete:(CGFloat)complete;
 
--(void) begin;
+- (void)begin;
 
 
 @end

@@ -12,15 +12,16 @@
 #import "NSArray+Map.h"
 #import "Constants.h"
 
-@implementation MMImmutableScrapsInSidebarState{
+
+@implementation MMImmutableScrapsInSidebarState {
     MMScrapCollectionState* ownerState;
     NSArray* allScrapProperties;
     NSString* scrapIDsPath;
     NSUInteger cachedUndoHash;
 }
 
--(id) initWithScrapIDsPath:(NSString *)_scrapIDsPath andAllScrapProperties:(NSArray*)_allScrapProperties andOwnerState:(MMScrapCollectionState *)_ownerState{
-    if(self = [super init]){
+- (id)initWithScrapIDsPath:(NSString*)_scrapIDsPath andAllScrapProperties:(NSArray*)_allScrapProperties andOwnerState:(MMScrapCollectionState*)_ownerState {
+    if (self = [super init]) {
         ownerState = _ownerState;
         scrapIDsPath = _scrapIDsPath;
         allScrapProperties = [_allScrapProperties mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
@@ -33,24 +34,24 @@
     return self;
 }
 
--(BOOL) isStateLoaded{
+- (BOOL)isStateLoaded {
     return YES;
 }
 
--(NSArray*) allScrapProperties{
+- (NSArray*)allScrapProperties {
     return [allScrapProperties copy];
 }
 
--(BOOL) saveStateToDiskBlocking{
+- (BOOL)saveStateToDiskBlocking {
     CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue]);
 
     __block BOOL hadAnyEditsToSaveAtAll = NO;
-    if(ownerState.lastSavedUndoHash != self.undoHash){
+    if (ownerState.lastSavedUndoHash != self.undoHash) {
         NSDictionary* scrapsOnPaperInfo = [NSDictionary dictionaryWithObjectsAndKeys:allScrapProperties, @"allScrapProperties", nil];
-        if([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]){
-    //        DebugLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
-    //        DebugLog(@"saved to: %@", scrapIDsPath);
-        }else{
+        if ([scrapsOnPaperInfo writeToFile:scrapIDsPath atomically:YES]) {
+            //        DebugLog(@"saved bezel scrap state for %d scraps", [allScrapProperties count]);
+            //        DebugLog(@"saved to: %@", scrapIDsPath);
+        } else {
             DebugLog(@"couldn't save");
         }
         [ownerState wasSavedAtUndoHash:self.undoHash];
@@ -58,11 +59,11 @@
     return hadAnyEditsToSaveAtAll;
 }
 
--(NSUInteger) undoHash{
-    if(!cachedUndoHash){
+- (NSUInteger)undoHash {
+    if (!cachedUndoHash) {
         NSUInteger prime = 31;
         NSUInteger hashVal = 1;
-        for(NSDictionary* scrapDict in allScrapProperties){
+        for (NSDictionary* scrapDict in allScrapProperties) {
             hashVal = prime * hashVal + [[scrapDict objectForKey:@"uuid"] hash];
             hashVal = prime * hashVal + [[scrapDict objectForKey:@"pageUUID"] hash];
             hashVal = prime * hashVal + [[scrapDict objectForKey:@"subviewIndex"] hash];
@@ -75,7 +76,6 @@
     }
     return cachedUndoHash;
 }
-
 
 
 @end

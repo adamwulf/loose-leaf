@@ -13,13 +13,14 @@
 
 @class MMLooseLeafViewController, MMPresentationWindow;
 
-@interface MMAppDelegate : UIResponder <UIApplicationDelegate,CrashlyticsDelegate>
+
+@interface MMAppDelegate : UIResponder <UIApplicationDelegate, CrashlyticsDelegate>
 
 @property (readonly) BOOL isActive;
-@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) UIWindow* window;
 
-@property (nonatomic, readonly) MMPresentationWindow *presentationWindow;
+@property (nonatomic, readonly) MMPresentationWindow* presentationWindow;
 
-@property (strong, nonatomic) MMLooseLeafViewController *viewController;
+@property (strong, nonatomic) MMLooseLeafViewController* viewController;
 
 @end

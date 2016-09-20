@@ -14,29 +14,30 @@
 #import "MMShadowedView.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMRulerToolGestureRecognizer{
+
+@implementation MMRulerToolGestureRecognizer {
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* rulerDelegate;
 }
 
 #pragma mark - Properties
 
--(CGFloat) initialDistance{
+- (CGFloat)initialDistance {
     return initialDistance;
 }
 
 
 #pragma mark - Init
 
--(id) init{
-    if(self = [super init]){
+- (id)init {
+    if (self = [super init]) {
         self.cancelsTouchesInView = NO;
         self.scrapDelegate = self;
     }
     return self;
 }
 
--(id) initWithTarget:(id)target action:(SEL)action{
-    if(self = [super initWithTarget:target action:action]){
+- (id)initWithTarget:(id)target action:(SEL)action {
+    if (self = [super initWithTarget:target action:action]) {
         self.cancelsTouchesInView = NO;
         self.scrapDelegate = self;
     }
@@ -45,10 +46,10 @@
 
 #pragma mark - Helper Methods
 
--(void) setScrapDelegate:(NSObject<MMPanAndPinchScrapGestureRecognizerDelegate> *)_scrapDelegate{
-    if(!self.scrapDelegate){
+- (void)setScrapDelegate:(NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>*)_scrapDelegate {
+    if (!self.scrapDelegate) {
         [super setScrapDelegate:_scrapDelegate];
-    }else{
+    } else {
         rulerDelegate = _scrapDelegate;
     }
 }
@@ -56,7 +57,7 @@
 
 #pragma mark - Public Interface
 
--(BOOL) containsTouch:(UITouch*)touch{
+- (BOOL)containsTouch:(UITouch*)touch {
     return [validTouches containsObject:touch];
 }
 
@@ -64,11 +65,11 @@
  * return the two locations of the ruler in
  * the input view
  */
--(CGPoint) point1InView:(UIView*)view{
+- (CGPoint)point1InView:(UIView*)view {
     return [[validTouches firstObject] locationInView:view];
 }
 
--(CGPoint) point2InView:(UIView*)view{
+- (CGPoint)point2InView:(UIView*)view {
     return [[validTouches lastObject] locationInView:view];
 }
 
@@ -76,8 +77,8 @@
 #pragma mark - Private Helpers
 
 
--(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
-    if([touches count] >= 2){
+- (CGFloat)distanceBetweenTouches:(NSOrderedSet*)touches {
+    if ([touches count] >= 2) {
         UITouch* touch1 = [touches objectAtIndex:0];
         UITouch* touch2 = [touches objectAtIndex:1];
         CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
@@ -89,33 +90,33 @@
 
 #pragma mark - MMPanAndPinchScrapGestureRecognizerDelegate
 
--(NSArray*) scrapsToPan{
+- (NSArray*)scrapsToPan {
     // ruler works when used over scraps, so send an empty/nil array
     // so we don't filter any touches out that occur over scraps
     return nil;
 }
 
--(BOOL) panScrapRequiresLongPress{
+- (BOOL)panScrapRequiresLongPress {
     return [rulerDelegate panScrapRequiresLongPress];
 }
 
--(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap{
+- (CGFloat)topVisiblePageScaleForScrap:(MMScrapView*)scrap {
     return [rulerDelegate topVisiblePageScaleForScrap:scrap];
 }
 
--(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap{
+- (CGPoint)convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap {
     return [rulerDelegate convertScrapCenterToScrapContainerCoordinate:scrap];
 }
 
--(BOOL) isAllowedToPan{
+- (BOOL)isAllowedToPan {
     return ![rulerDelegate isAllowedToPan] && [rulerDelegate isAllowedToBezel];
 }
 
--(BOOL) isAllowedToBezel{
+- (BOOL)isAllowedToBezel {
     return [rulerDelegate isAllowedToBezel];
 }
 
--(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+- (BOOL)allowsHoldingScrapsWithTouch:(UITouch*)touch {
     return [rulerDelegate allowsHoldingScrapsWithTouch:touch];
 }
 

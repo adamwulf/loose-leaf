@@ -12,19 +12,20 @@
 
 @class MMCloudKitImportExportView;
 
-@interface MMCloudKitImportCoordinator : NSObject<NSCoding>
+
+@interface MMCloudKitImportCoordinator : NSObject <NSCoding>
 
 @property (nonatomic, strong) MMAvatarButton* avatarButton;
 @property (readonly) NSString* uuidOfIncomingPage;
 @property (readonly) BOOL isReady;
 @property (nonatomic, strong) MMCloudKitImportExportView* importExportView;
 
--(id) initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_importExportView;
+- (id)initWithImport:(SPRMessage*)importMessage forImportExportView:(MMCloudKitImportExportView*)_importExportView;
 
--(void) begin;
+- (void)begin;
 
--(BOOL) matchesMessage:(SPRMessage*)message;
+- (BOOL)matchesMessage:(SPRMessage*)message;
 
--(BOOL) movePageIntoStack:(NSString*)stackUUID;
+- (BOOL)movePageIntoStack:(NSString*)stackUUID;
 
 @end

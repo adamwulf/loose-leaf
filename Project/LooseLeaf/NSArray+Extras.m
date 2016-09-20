@@ -8,40 +8,41 @@
 
 #import "NSArray+Extras.h"
 
+
 @implementation NSArray (Extras)
 
--(NSArray*) reversedArray{
+- (NSArray*)reversedArray {
     NSMutableArray* outArray = [NSMutableArray array];
-    for(id obj in self.reverseObjectEnumerator){
+    for (id obj in self.reverseObjectEnumerator) {
         [outArray addObject:obj];
     }
     return [NSArray arrayWithArray:outArray];
 }
 
--(NSArray*) arrayByRemovingObject:(id)obj{
+- (NSArray*)arrayByRemovingObject:(id)obj {
     NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
     [ret removeObject:obj];
     return ret;
 }
 
--(NSArray*) arrayByRemovingObjectsInArray:(NSArray*)arr{
+- (NSArray*)arrayByRemovingObjectsInArray:(NSArray*)arr {
     NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
-    for(NSObject* obj in arr){
+    for (NSObject* obj in arr) {
         [ret removeObject:obj];
     }
     return ret;
 }
 
--(NSArray*) shuffledArray{
-    NSMutableArray *temp = [[NSMutableArray alloc] initWithArray:self];
-    for(NSUInteger i = [self count]; i > 1; i--) {
+- (NSArray*)shuffledArray {
+    NSMutableArray* temp = [[NSMutableArray alloc] initWithArray:self];
+    for (NSUInteger i = [self count]; i > 1; i--) {
         NSUInteger j = arc4random_uniform((unsigned int)i);
-        [temp exchangeObjectAtIndex:i-1 withObjectAtIndex:j];
+        [temp exchangeObjectAtIndex:i - 1 withObjectAtIndex:j];
     }
     return [NSArray arrayWithArray:temp];
 }
 
--(NSSet*) asSet{
+- (NSSet*)asSet {
     return [NSSet setWithArray:self];
 }
 
@@ -50,10 +51,10 @@
 
 @implementation NSMutableArray (Extras)
 
--(void) shuffle{
-    for(NSUInteger i = [self count]; i > 1; i--) {
+- (void)shuffle {
+    for (NSUInteger i = [self count]; i > 1; i--) {
         NSUInteger j = arc4random_uniform((unsigned int)i);
-        [self exchangeObjectAtIndex:i-1 withObjectAtIndex:j];
+        [self exchangeObjectAtIndex:i - 1 withObjectAtIndex:j];
     }
 }
 

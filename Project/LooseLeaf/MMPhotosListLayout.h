@@ -8,8 +8,9 @@
 
 #import "MMAssetListLayout.h"
 
+
 @interface MMPhotosListLayout : MMAssetListLayout
 
--(BOOL) hasPermission;
+- (BOOL)hasPermission;
 
 @end

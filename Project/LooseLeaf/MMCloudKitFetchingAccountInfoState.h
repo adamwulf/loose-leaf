@@ -8,8 +8,9 @@
 
 #import "MMCloudKitBaseState.h"
 
+
 @interface MMCloudKitFetchingAccountInfoState : MMCloudKitBaseState
 
-+(void) clearAccountCache;
++ (void)clearAccountCache;
 
 @end

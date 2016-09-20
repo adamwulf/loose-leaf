@@ -9,10 +9,11 @@
 #import "MMScrapsOnPaperState.h"
 #import "MMImmutableScrapCollectionState.h"
 
+
 @interface MMImmutableScrapsOnPaperState : MMImmutableScrapCollectionState
 
 @property (nonatomic, readonly) NSArray* scraps;
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScraps:(NSArray*)allScraps andScrapsOnPage:(NSArray*)scrapsOnPage andOwnerState:(MMScrapCollectionState*)ownerState;
+- (id)initWithScrapIDsPath:(NSString*)scrapIDsPath andAllScraps:(NSArray*)allScraps andScrapsOnPage:(NSArray*)scrapsOnPage andOwnerState:(MMScrapCollectionState*)ownerState;
 
 @end

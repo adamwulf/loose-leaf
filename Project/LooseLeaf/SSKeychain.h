@@ -14,40 +14,40 @@
  platform.
  */
 typedef NS_ENUM(OSStatus, SSKeychainErrorCode) {
-	/** Some of the arguments were invalid. */
-	SSKeychainErrorBadArguments = -1001,
+    /** Some of the arguments were invalid. */
+    SSKeychainErrorBadArguments = -1001,
 };
 
 /** SSKeychain error domain */
-extern NSString *const kSSKeychainErrorDomain;
+extern NSString* const kSSKeychainErrorDomain;
 
 /** Account name. */
-extern NSString *const kSSKeychainAccountKey;
+extern NSString* const kSSKeychainAccountKey;
 
 /**
  Time the item was created.
 
  The value will be a string.
  */
-extern NSString *const kSSKeychainCreatedAtKey;
+extern NSString* const kSSKeychainCreatedAtKey;
 
 /** Item class. */
-extern NSString *const kSSKeychainClassKey;
+extern NSString* const kSSKeychainClassKey;
 
 /** Item description. */
-extern NSString *const kSSKeychainDescriptionKey;
+extern NSString* const kSSKeychainDescriptionKey;
 
 /** Item label. */
-extern NSString *const kSSKeychainLabelKey;
+extern NSString* const kSSKeychainLabelKey;
 
 /** Time the item was last modified.
 
  The value will be a string.
  */
-extern NSString *const kSSKeychainLastModifiedKey;
+extern NSString* const kSSKeychainLastModifiedKey;
 
 /** Where the item was created. */
-extern NSString *const kSSKeychainWhereKey;
+extern NSString* const kSSKeychainWhereKey;
 
 /**
  Simple wrapper for accessing accounts, getting passwords, setting passwords, and deleting passwords using the system
@@ -71,8 +71,8 @@ extern NSString *const kSSKeychainWhereKey;
  @return Returns a string containing the password for a given account and service, or `nil` if the Keychain doesn't
  have a password for the given parameters.
  */
-+ (NSString *)passwordForService:(NSString *)serviceName account:(NSString *)account;
-+ (NSString *)passwordForService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error;
++ (NSString*)passwordForService:(NSString*)serviceName account:(NSString*)account;
++ (NSString*)passwordForService:(NSString*)serviceName account:(NSString*)account error:(NSError**)error;
 
 
 /**
@@ -84,8 +84,8 @@ extern NSString *const kSSKeychainWhereKey;
 
  @return Returns `YES` on success, or `NO` on failure.
  */
-+ (BOOL)deletePasswordForService:(NSString *)serviceName account:(NSString *)account;
-+ (BOOL)deletePasswordForService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error;
++ (BOOL)deletePasswordForService:(NSString*)serviceName account:(NSString*)account;
++ (BOOL)deletePasswordForService:(NSString*)serviceName account:(NSString*)account error:(NSError**)error;
 
 
 /**
@@ -99,8 +99,8 @@ extern NSString *const kSSKeychainWhereKey;
 
  @return Returns `YES` on success, or `NO` on failure.
  */
-+ (BOOL)setPassword:(NSString *)password forService:(NSString *)serviceName account:(NSString *)account;
-+ (BOOL)setPassword:(NSString *)password forService:(NSString *)serviceName account:(NSString *)account error:(NSError **)error;
++ (BOOL)setPassword:(NSString*)password forService:(NSString*)serviceName account:(NSString*)account;
++ (BOOL)setPassword:(NSString*)password forService:(NSString*)serviceName account:(NSString*)account error:(NSError**)error;
 
 
 /**
@@ -112,7 +112,7 @@ extern NSString *const kSSKeychainWhereKey;
  @return An array of dictionaries containing the Keychain's accounts, or `nil` if the Keychain doesn't have any
  accounts. The order of the objects in the array isn't defined.
  */
-+ (NSArray *)allAccounts;
++ (NSArray*)allAccounts;
 
 
 /**
@@ -127,7 +127,7 @@ extern NSString *const kSSKeychainWhereKey;
  @return An array of dictionaries containing the Keychain's accountsfor a given `serviceName`, or `nil` if the Keychain
  doesn't have any accounts for the given `serviceName`. The order of the objects in the array isn't defined.
  */
-+ (NSArray *)accountsForService:(NSString *)serviceName;
++ (NSArray*)accountsForService:(NSString*)serviceName;
 
 
 #pragma mark - Configuration

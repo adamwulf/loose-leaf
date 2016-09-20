@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMCloudKitNoAccountHelpView : UIView
 
--(void) animateIntoView;
+- (void)animateIntoView;
 
 @end

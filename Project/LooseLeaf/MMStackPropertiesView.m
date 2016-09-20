@@ -11,20 +11,22 @@
 #import "MMSingleStackManager.h"
 #import "MMStackIconView.h"
 
-@interface MMStackPropertiesView ()<UITextFieldDelegate>
+
+@interface MMStackPropertiesView () <UITextFieldDelegate>
 
 @end
 
-@implementation MMStackPropertiesView{
+
+@implementation MMStackPropertiesView {
     NSString* stackUUID;
     UITextField* nameInput;
     MMStackIconView* icon;
 }
 
--(instancetype) initWithFrame:(CGRect)frame andStackUUID:(NSString*)_stackUUID{
-    if(self = [super initWithFrame:frame]){
+- (instancetype)initWithFrame:(CGRect)frame andStackUUID:(NSString*)_stackUUID {
+    if (self = [super initWithFrame:frame]) {
         stackUUID = _stackUUID;
-        
+
         UIView* contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.boxSize, self.boxSize)];
         contentView.backgroundColor = [UIColor whiteColor];
         [self.maskedScrollContainer addSubview:contentView];
@@ -39,9 +41,9 @@
         nameInput.returnKeyType = UIReturnKeyDone;
         nameInput.delegate = self;
         [contentView addSubview:nameInput];
-        
+
         nameInput.text = [[MMAllStacksManager sharedInstance] nameOfStack:stackUUID];
-        
+
         CGFloat stackIconHeight = 340;
         CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
         CGFloat scale = stackIconHeight / CGRectGetHeight(screenBounds);
@@ -49,7 +51,7 @@
         icon = [[MMStackIconView alloc] initWithFrame:thumbFrame andStackUUID:stackUUID andStyle:MMStackIconViewStyleLight];
         [icon loadThumbs];
         [contentView addSubview:icon];
-        
+
         icon.center = CGPointMake(CGRectGetMidX(contentView.bounds), CGRectGetMidY(contentView.bounds));
     }
     return self;
@@ -57,12 +59,12 @@
 
 #pragma mark - UITextViewDelegate
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+- (BOOL)textFieldShouldReturn:(UITextField*)textField {
     [textField resignFirstResponder];
     return NO;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField{
+- (void)textFieldDidEndEditing:(UITextField*)textField {
     [[MMAllStacksManager sharedInstance] updateName:textField.text forStack:stackUUID];
 }
 

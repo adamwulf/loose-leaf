@@ -9,20 +9,21 @@
 #import <Foundation/Foundation.h>
 #import "MMInboxManagerDelegate.h"
 
+
 @interface MMInboxManager : NSObject
 
 @property (nonatomic, weak) NSObject<MMInboxManagerDelegate>* delegate;
 
-+(MMInboxManager*) sharedInstance;
++ (MMInboxManager*)sharedInstance;
 
--(void) processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
+- (void)processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication;
 
-- (void)removeInboxItem:(NSURL *)itemURL onComplete:(void(^)(BOOL error))onComplete;
+- (void)removeInboxItem:(NSURL*)itemURL onComplete:(void (^)(BOOL error))onComplete;
 
--(NSInteger) itemsInInboxCount;
+- (NSInteger)itemsInInboxCount;
 
--(MMInboxItem*) itemAtIndex:(NSInteger)idx;
+- (MMInboxItem*)itemAtIndex:(NSInteger)idx;
 
--(NSInteger) indexOfItem:(MMInboxItem*)item;
+- (NSInteger)indexOfItem:(MMInboxItem*)item;
 
 @end

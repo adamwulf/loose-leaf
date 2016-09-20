@@ -8,9 +8,10 @@
 
 #import "SPRMessage+Initials.h"
 
+
 @implementation SPRMessage (Initials)
 
--(NSString*) initials{
+- (NSString*)initials {
     NSString* firstLetter = self.senderFirstName.length > 1 ? [self.senderFirstName substringToIndex:1] : @"";
     NSString* lastLetter = self.senderLastName.length > 1 ? [self.senderLastName substringToIndex:1] : @"";
     return [[firstLetter stringByAppendingString:lastLetter] uppercaseString];

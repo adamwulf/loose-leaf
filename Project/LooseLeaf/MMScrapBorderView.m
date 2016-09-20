@@ -11,13 +11,13 @@
 /**
  * used to draw a border around a scrap in a bezel button
  */
-@implementation MMScrapBorderView{
+@implementation MMScrapBorderView {
     UIBezierPath* bezierPath;
     CAShapeLayer* shapeBorderLayer;
 }
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         self.opaque = NO;
         self.contentScaleFactor = 1.0;
         shapeBorderLayer = [CAShapeLayer layer];
@@ -30,11 +30,11 @@
 }
 
 
--(UIColor*) borderColor{
-    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
+- (UIColor*)borderColor {
+    return [UIColor colorWithRed:0.26 green:0.26 blue:0.26 alpha:0.35];
 }
 
--(void) setBezierPath:(UIBezierPath*)path{
+- (void)setBezierPath:(UIBezierPath*)path {
     bezierPath = [path copy];
     shapeBorderLayer.path = bezierPath.CGPath;
 }

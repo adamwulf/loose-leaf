@@ -9,10 +9,11 @@
 #import "MMCloudKitBaseState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
+
 @interface MMCloudKitLoggedInState : MMCloudKitBaseState
 
 @property (readonly) NSArray* friendList;
 
--(id) initWithUserRecord:(CKRecordID*)userRecord andUserInfo:(NSDictionary*) userInfo andFriendList:(NSArray*)friendList;
+- (id)initWithUserRecord:(CKRecordID*)userRecord andUserInfo:(NSDictionary*)userInfo andFriendList:(NSArray*)friendList;
 
 @end

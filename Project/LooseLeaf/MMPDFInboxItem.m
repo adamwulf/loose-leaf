@@ -12,16 +12,17 @@
 #import "MMInboxItem+Protected.h"
 #import "MMPDF.h"
 
+
 @implementation MMPDFInboxItem
 
 @synthesize pdf;
 
 #pragma mark - Init
 
--(id) initWithURL:(NSURL*)pdfURL{
-    if(self = [super initWithURL:pdfURL andInitBlock:^{
-        pdf = [[MMPDF alloc] initWithURL:pdfURL];
-    }]){
+- (id)initWithURL:(NSURL*)pdfURL {
+    if (self = [super initWithURL:pdfURL andInitBlock:^{
+            pdf = [[MMPDF alloc] initWithURL:pdfURL];
+        }]) {
         // noop
     }
     return self;
@@ -29,26 +30,25 @@
 
 #pragma mark - Properties
 
--(BOOL) attemptToDecrypt:(NSString*)_password{
+- (BOOL)attemptToDecrypt:(NSString*)_password {
     BOOL didDecrypt = [pdf attemptToDecrypt:_password];
-    if(didDecrypt){
+    if (didDecrypt) {
         [self generatePageThumbnailCache];
     }
     return didDecrypt;
 }
 
--(BOOL) isEncrypted{
+- (BOOL)isEncrypted {
     return [pdf isEncrypted];
 }
 
 #pragma mark - Override
 
--(NSUInteger) pageCount{
-    
+- (NSUInteger)pageCount {
     return [pdf pageCount];
 }
 
--(CGSize) calculateSizeForPage:(NSUInteger)page{
+- (CGSize)calculateSizeForPage:(NSUInteger)page {
     return [pdf sizeForPage:page];
 }
 
@@ -56,17 +56,17 @@
 
 #pragma mark Scaled Image Generation
 
--(CGFloat) rotationForPage:(NSInteger)pageNumber{
+- (CGFloat)rotationForPage:(NSInteger)pageNumber {
     return [pdf rotationForPage:pageNumber];
 }
 
--(void) generatePageThumbnailCache{
-    if(!self.isEncrypted){
+- (void)generatePageThumbnailCache {
+    if (!self.isEncrypted) {
         [super generatePageThumbnailCache];
     }
 }
 
--(UIImage*) generateImageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim{
+- (UIImage*)generateImageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim {
     return [pdf imageForPage:page withMaxDim:maxDim];
 }
 

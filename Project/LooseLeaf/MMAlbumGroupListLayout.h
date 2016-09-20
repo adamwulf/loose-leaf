@@ -8,6 +8,7 @@
 
 #import "MMAssetGroupListLayout.h"
 
+
 @interface MMAlbumGroupListLayout : MMAssetGroupListLayout
 
 @end

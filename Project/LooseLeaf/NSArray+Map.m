@@ -8,22 +8,23 @@
 
 #import "NSArray+Map.h"
 
+
 @implementation NSArray (Map)
 
-- (NSArray *)mapObjectsUsingBlock:(id (^)(id obj, NSUInteger idx))block {
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:[self count]];
-    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+- (NSArray*)mapObjectsUsingBlock:(id (^)(id obj, NSUInteger idx))block {
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity:[self count]];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL* stop) {
         obj = block(obj, idx);
-        if(obj){
+        if (obj) {
             [result addObject:obj];
         }
     }];
     return result;
 }
 
-- (NSArray *)mapObjectsUsingSelector:(SEL)selector{
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:[self count]];
-    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+- (NSArray*)mapObjectsUsingSelector:(SEL)selector {
+    NSMutableArray* result = [NSMutableArray arrayWithCapacity:[self count]];
+    [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL* stop) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         // suppress selector warning:

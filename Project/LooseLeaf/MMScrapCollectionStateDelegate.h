@@ -13,7 +13,7 @@
 
 @protocol MMScrapCollectionStateDelegate <MMScrapViewOwnershipDelegate>
 
--(NSString*) uuidOfScrapCollectionStateOwner;
+- (NSString*)uuidOfScrapCollectionStateOwner;
 
 #pragma mark - Loading and Unloading
 
@@ -21,18 +21,18 @@
  * triggered when a scrap is laoded from disk that is
  * actively showing on the page
  */
--(void) didLoadScrapInContainer:(MMScrapView*)scrap;
+- (void)didLoadScrapInContainer:(MMScrapView*)scrap;
 
 /**
  * triggered when a scrap is laoded from disk that is
  * NOT actively showing on the page, and is only
  * available inside the page's undo/redo stacks
  */
--(void) didLoadScrapOutOfContainer:(MMScrapView*)scrap;
+- (void)didLoadScrapOutOfContainer:(MMScrapView*)scrap;
 
--(void) didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState;
+- (void)didLoadAllScrapsFor:(MMScrapCollectionState*)scrapState;
 
--(void) didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState;
+- (void)didUnloadAllScrapsFor:(MMScrapCollectionState*)scrapState;
 
 
 @end

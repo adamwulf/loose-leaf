@@ -9,10 +9,11 @@
 #import "MMCloudKitBaseState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
+
 @interface MMCloudKitWaitingForLoginState : MMCloudKitBaseState
 
--(id) initWithAccountStatus:(SCKMAccountStatus) accountStatus;
+- (id)initWithAccountStatus:(SCKMAccountStatus)accountStatus;
 
--(void) didAskToLogin;
+- (void)didAskToLogin;
 
 @end

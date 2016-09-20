@@ -8,6 +8,7 @@
 
 #import "MMPaletteButton.h"
 
+
 @interface MMPenButton : MMPaletteButton
 
 @end

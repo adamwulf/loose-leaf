@@ -10,28 +10,31 @@
 #import "MMBlockOperation.h"
 #import "NSThread+BlockAdditions.h"
 
+
 @interface MMImageView : UIImageView
 
 @end
 
+
 @implementation MMImageView
 
--(id)initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
-//        self.layer.borderColor = [UIColor redColor].CGColor;
-//        self.layer.borderWidth = 100;
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        //        self.layer.borderColor = [UIColor redColor].CGColor;
+        //        self.layer.borderWidth = 100;
     }
     return self;
 }
 
--(void) setHidden:(BOOL)hidden{
-//    DebugLog(@"setting %p hidden: %d", self, hidden);
+- (void)setHidden:(BOOL)hidden {
+    //    DebugLog(@"setting %p hidden: %d", self, hidden);
     [super setHidden:hidden];
 }
 
 @end
 
-@implementation MMCachedPreviewManager{
+
+@implementation MMCachedPreviewManager {
     NSMutableArray* arrayOfImageViews;
     NSMutableArray* toDealloc;
     NSOperationQueue* queue;
@@ -39,9 +42,10 @@
 
 static MMCachedPreviewManager* _instance = nil;
 
--(id) init{
-    if(_instance) return _instance;
-    if((self = [super init])){
+- (id)init {
+    if (_instance)
+        return _instance;
+    if ((self = [super init])) {
         _instance = self;
         arrayOfImageViews = [NSMutableArray array];
         queue = [[NSOperationQueue alloc] init];
@@ -51,16 +55,16 @@ static MMCachedPreviewManager* _instance = nil;
     return _instance;
 }
 
-+(MMCachedPreviewManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMCachedPreviewManager alloc]init];
++ (MMCachedPreviewManager*)sharedInstance {
+    if (!_instance) {
+        _instance = [[MMCachedPreviewManager alloc] init];
     }
     return _instance;
 }
 
 
--(UIImageView*) requestCachedImageViewForView:(UIView*)aView{
-    if([arrayOfImageViews count]){
+- (UIImageView*)requestCachedImageViewForView:(UIView*)aView {
+    if ([arrayOfImageViews count]) {
         UIImageView* cachedImgView = [arrayOfImageViews lastObject];
         [arrayOfImageViews removeLastObject];
         cachedImgView.frame = aView.bounds;
@@ -76,17 +80,17 @@ static MMCachedPreviewManager* _instance = nil;
     return cachedImgView;
 }
 
--(void) giveBackCachedImageView:(UIImageView*)imageView{
+- (void)giveBackCachedImageView:(UIImageView*)imageView {
     [imageView removeFromSuperview];
     imageView.image = nil;
-    if([arrayOfImageViews count] < 3){
+    if ([arrayOfImageViews count] < 3) {
         [arrayOfImageViews addObject:imageView];
-    }else{
-        @synchronized(self){
+    } else {
+        @synchronized(self) {
             [toDealloc addObject:imageView];
         }
         [queue addOperationWithBlock:^{
-            @synchronized(self){
+            @synchronized(self) {
                 [toDealloc removeLastObject];
             }
         }];

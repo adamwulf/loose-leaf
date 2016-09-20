@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMPapersIcon : UIView{
+
+@interface MMPapersIcon : UIView {
     NSInteger numberToShowIfApplicable;
 }
 

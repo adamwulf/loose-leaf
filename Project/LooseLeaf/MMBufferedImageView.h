@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMBufferedImageView : UIView
 
 @property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, strong) UIImage* image;
 
--(CGSize) visibleImageSize;
+- (CGSize)visibleImageSize;
 
--(CGPoint) visibleImageOrigin;
+- (CGPoint)visibleImageOrigin;
 
--(void) setPreferredAspectRatioForEmptyImage:(CGSize)size;
+- (void)setPreferredAspectRatioForEmptyImage:(CGSize)size;
 
 @end

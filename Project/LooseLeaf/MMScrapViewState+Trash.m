@@ -12,20 +12,21 @@
 
 static char SHOULD_FORGET;
 
+
 @implementation MMScrapViewState (Trash)
 
 #pragma mark - Property
 
--(void) freeIsForgetfulProperty{
+- (void)freeIsForgetfulProperty {
     objc_setAssociatedObject(self, &SHOULD_FORGET, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
--(void)setIsForgetful:(BOOL)_forgetful{
+- (void)setIsForgetful:(BOOL)_forgetful {
     [self freeIsForgetfulProperty];
     objc_setAssociatedObject(self, &SHOULD_FORGET, [NSNumber numberWithBool:_forgetful], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     drawableViewState.isForgetful = _forgetful;
 }
 
--(BOOL)isForgetful{
+- (BOOL)isForgetful {
     NSNumber* ret = objc_getAssociatedObject(self, &SHOULD_FORGET);
     return [ret boolValue];
 }
@@ -33,8 +34,8 @@ static char SHOULD_FORGET;
 
 #pragma mark - Forget Edits
 
--(BOOL) swizzle_hasEditsToSave{
-    if([self isForgetful]){
+- (BOOL)swizzle_hasEditsToSave {
+    if ([self isForgetful]) {
         return NO;
     }
     return [self swizzle_hasEditsToSave];
@@ -43,7 +44,7 @@ static char SHOULD_FORGET;
 
 #pragma mark - Dealloc
 
--(void) swizzle_dealloc{
+- (void)swizzle_dealloc {
     [self freeIsForgetfulProperty];
     [self swizzle_dealloc];
 }
@@ -52,9 +53,9 @@ static char SHOULD_FORGET;
 #pragma mark - Swizzle
 
 
-+(void)load{
++ (void)load {
     @autoreleasepool {
-        NSError *error = nil;
+        NSError* error = nil;
         [MMScrapViewState jr_swizzleMethod:@selector(hasEditsToSave)
                                 withMethod:@selector(swizzle_hasEditsToSave)
                                      error:&error];

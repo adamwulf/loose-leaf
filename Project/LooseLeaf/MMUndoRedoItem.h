@@ -12,22 +12,22 @@
 
 @protocol MMUndoRedoItem <NSObject>
 
--(void) undo;
+- (void)undo;
 
--(void) redo;
+- (void)redo;
 
--(void) finalizeUndoableState;
+- (void)finalizeUndoableState;
 
--(void) finalizeRedoableState;
+- (void)finalizeRedoableState;
 
 #pragma mark - Save and Load
 
--(NSDictionary*) asDictionary;
+- (NSDictionary*)asDictionary;
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page;
+- (id)initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)page;
 
--(BOOL) shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem;
+- (BOOL)shouldMergeWith:(NSObject<MMUndoRedoItem>*)otherItem;
 
--(NSObject<MMUndoRedoItem>*) mergedItemWith:(NSObject<MMUndoRedoItem>*)otherItem;
+- (NSObject<MMUndoRedoItem>*)mergedItemWith:(NSObject<MMUndoRedoItem>*)otherItem;
 
 @end

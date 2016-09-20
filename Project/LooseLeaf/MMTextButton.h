@@ -9,7 +9,8 @@
 #import "MMDarkSidebarButton.h"
 #import <CoreText/CoreText.h>
 
-@interface MMTextButton : MMSidebarButton{
+
+@interface MMTextButton : MMSidebarButton {
     NSString* letter;
     CGFloat pointSize;
     CTFontSymbolicTraits traits;

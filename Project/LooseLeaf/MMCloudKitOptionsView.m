@@ -29,45 +29,46 @@
 #import "UIView+Debug.h"
 #import "Mixpanel.h"
 
-@implementation MMCloudKitOptionsView{
+
+@implementation MMCloudKitOptionsView {
     UILabel* cloudKitLabel;
     UICollectionView* listOfFriendsView;
     MMOfflineIconView* offlineView;
     MMCloudKeyButton* cloudKeyButton;
-    
+
     MMCloudKitNoAccountHelpView* noAccountHelpView;
     MMCloudKitDeclinedPermissionHelpView* declinedHelpView;
-    
+
     NSArray* allKnownFriends;
     NSArray* allFriendsExceptSender;
 }
 
 @synthesize shareItem;
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         CGRect lblFr = self.bounds;
         lblFr.origin.y = kWidthOfSidebarButtonBuffer;
-        
+
         cloudKitLabel = [[UILabel alloc] initWithFrame:lblFr];
         cloudKitLabel.backgroundColor = [UIColor clearColor];
         cloudKitLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         cloudKitLabel.text = @"cloudkit!";
         cloudKitLabel.numberOfLines = 0;
         [self addSubview:cloudKitLabel];
-        
+
         offlineView = [[MMOfflineIconView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
         offlineView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        offlineView.center = CGPointMake(self.bounds.size.width/2, offlineView.bounds.size.height * 2 / 3);
+        offlineView.center = CGPointMake(self.bounds.size.width / 2, offlineView.bounds.size.height * 2 / 3);
         [self addSubview:offlineView];
-        
+
         cloudKeyButton = [[MMCloudKeyButton alloc] initWithFrame:CGRectMake(0, 0, 180, 180)];
         cloudKeyButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        cloudKeyButton.center = CGPointMake(self.bounds.size.width/2, cloudKeyButton.bounds.size.height * 2 / 3);
+        cloudKeyButton.center = CGPointMake(self.bounds.size.width / 2, cloudKeyButton.bounds.size.height * 2 / 3);
         [cloudKeyButton addTarget:self action:@selector(loginButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         cloudKeyButton.enabled = NO;
         [self addSubview:cloudKeyButton];
-        
+
         noAccountHelpView = [[MMCloudKitNoAccountHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height - 14,
                                                                                           self.bounds.size.width, 570)];
         noAccountHelpView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -96,23 +97,23 @@
         [self addSubview:listOfFriendsView];
 
         [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];
-        
+
         [self updateInterfaceBasedOniCloudStatus];
     }
     return self;
 }
 
--(void) loginButtonPressed{
+- (void)loginButtonPressed {
     [[MMCloudKitManager sharedManager] userRequestedToLogin];
 }
 
 #pragma mark - MMShareOptionsView
 
--(void) reset{
+- (void)reset {
     [super reset];
 }
 
--(void) show{
+- (void)show {
     [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation]];
     [super show];
     UICollectionViewLayout* layout = [self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation];
@@ -122,33 +123,34 @@
     [self updateCloudKeyBounceTimer];
 }
 
--(void) hide{
+- (void)hide {
     [super hide];
     [cloudKeyButton tearDownTimer];
     DebugLog(@"hiding cloudkit view");
 }
 
--(void) updateCloudKeyBounceTimer{
+- (void)updateCloudKeyBounceTimer {
     [[NSThread mainThread] performBlock:^{
-        if(self.alpha && [[MMCloudKitManager sharedManager].currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+        if (self.alpha && [[MMCloudKitManager sharedManager].currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]) {
             [cloudKeyButton setupTimer];
         }
     } afterDelay:1.3];
 }
 
--(void) updateDataSource{
+- (void)updateDataSource {
     allKnownFriends = [MMCloudKitManager sharedManager].currentState.friendList;
-    allFriendsExceptSender = [allKnownFriends filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+    allFriendsExceptSender = [allKnownFriends filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary* bindings) {
         return ![[evaluatedObject objectForKey:@"recordId"] isEqual:[shareItem.cloudKitSenderInfo objectForKey:@"recordId"]];
     }]];
-    
-    #ifdef DEBUG
-        [self addExtraUsers];
-    #endif
-    
+
+#ifdef DEBUG
+    [self addExtraUsers];
+#endif
+
     allFriendsExceptSender = [allFriendsExceptSender sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSComparisonResult lastResult = [[obj1 objectForKey:@"lastName"] compare:[obj2 objectForKey:@"lastName"] options:NSCaseInsensitiveSearch];
-        if(lastResult != NSOrderedSame) return lastResult;
+        if (lastResult != NSOrderedSame)
+            return lastResult;
         return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
     }];
     [listOfFriendsView reloadData];
@@ -157,49 +159,48 @@
 #pragma mark - CloudKit UI
 
 BOOL hasSent = NO;
--(void) updateInterfaceBasedOniCloudStatus{
+- (void)updateInterfaceBasedOniCloudStatus {
     NSString* cloudKitInfo = [[MMCloudKitManager sharedManager] description];
-    
+
     cloudKitLabel.text = cloudKitInfo;
     [cloudKitLabel sizeToFit];
-    
+
     CGRect lblFr = cloudKitLabel.frame;
     lblFr.origin.y = kWidthOfSidebarButtonBuffer;
     lblFr.size.width = self.bounds.size.width;
     cloudKitLabel.frame = lblFr;
-    
-//    DebugLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
-//    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-    
-//    
-//    [[NSThread mainThread] performBlock:^{
-//        if(!hasSent){
-//            NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-//            if ([[UIApplication sharedApplication] canOpenURL:appSettings]) {
-//                // make sure to use in iOS8, not iOS7
-//                [[UIApplication sharedApplication] openURL:appSettings];
-//            }            hasSent = YES;
-//        }
-//    }afterDelay:3];
-    
+
+    //    DebugLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
+    //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+
+    //
+    //    [[NSThread mainThread] performBlock:^{
+    //        if(!hasSent){
+    //            NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+    //            if ([[UIApplication sharedApplication] canOpenURL:appSettings]) {
+    //                // make sure to use in iOS8, not iOS7
+    //                [[UIApplication sharedApplication] openURL:appSettings];
+    //            }            hasSent = YES;
+    //        }
+    //    }afterDelay:3];
 }
 
 #pragma mark - Cloud Kit
 
--(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState{
+- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState {
     // always disable the cloud button, except
     // during the ask permissions state...
     cloudKeyButton.enabled = NO;
-    
+
     // handle the timer for the key bouncing
-    if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+    if ([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]) {
         [self updateCloudKeyBounceTimer];
-    }else{
+    } else {
         [cloudKeyButton tearDownTimer];
     }
 
     // show update what's being shown in our UI
-    if([currentState isMemberOfClass:[MMCloudKitBaseState class]]){
+    if ([currentState isMemberOfClass:[MMCloudKitBaseState class]]) {
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
         listOfFriendsView.hidden = YES;
@@ -207,7 +208,7 @@ BOOL hasSent = NO;
         offlineView.hidden = YES;
         cloudKeyButton.hidden = NO;
         [cloudKeyButton flipImmediatelyToCloud];
-    }else if([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]) {
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
         listOfFriendsView.hidden = YES;
@@ -218,7 +219,7 @@ BOOL hasSent = NO;
             cloudKeyButton.enabled = YES;
         }];
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
-    }else if([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]) {
         listOfFriendsView.hidden = YES;
         declinedHelpView.hidden = YES;
         cloudKitLabel.hidden = YES;
@@ -227,7 +228,7 @@ BOOL hasSent = NO;
         [noAccountHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
-    }else if([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]) {
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
@@ -236,7 +237,7 @@ BOOL hasSent = NO;
         [declinedHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
-    }else if([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]) {
         // don't need to manually flip key here
         // since it was flipped to cloud when tapped
         listOfFriendsView.hidden = YES;
@@ -245,14 +246,14 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = NO;
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
-    }else if([currentState isKindOfClass:[MMCloudKitOfflineState class]]){
+    } else if ([currentState isKindOfClass:[MMCloudKitOfflineState class]]) {
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = NO;
         cloudKeyButton.hidden = YES;
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
-    }else if(currentState.friendList){
+    } else if (currentState.friendList) {
         [self updateDataSource];
         listOfFriendsView.hidden = NO;
         cloudKitLabel.hidden = YES;
@@ -261,7 +262,7 @@ BOOL hasSent = NO;
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusAvailable];
-    }else{
+    } else {
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
         offlineView.hidden = YES;
@@ -274,47 +275,47 @@ BOOL hasSent = NO;
 
 #pragma mark - UICollectionViewDataSource
 
--(BOOL) friendListContainsSender{
-    if(!shareItem.cloudKitSenderInfo){
+- (BOOL)friendListContainsSender {
+    if (!shareItem.cloudKitSenderInfo) {
         return NO;
     }
     MMCloudKitBaseState* currentState = [MMCloudKitManager sharedManager].currentState;
     for (NSDictionary* friend in currentState.friendList) {
-        if([[shareItem.cloudKitSenderInfo objectForKey:@"recordId"] isEqual:[friend objectForKey:@"recordId"]]){
+        if ([[shareItem.cloudKitSenderInfo objectForKey:@"recordId"] isEqual:[friend objectForKey:@"recordId"]]) {
             return YES;
         }
     }
     return NO;
 }
 
--(NSDictionary*) userInfoForIndexPath:(NSIndexPath*)indexPath{
-    if(shareItem.cloudKitSenderInfo && indexPath.section == 0){
+- (NSDictionary*)userInfoForIndexPath:(NSIndexPath*)indexPath {
+    if (shareItem.cloudKitSenderInfo && indexPath.section == 0) {
         return shareItem.cloudKitSenderInfo;
     }
-    if([allFriendsExceptSender count] > indexPath.row){
+    if ([allFriendsExceptSender count] > indexPath.row) {
         return [allFriendsExceptSender objectAtIndex:indexPath.row];
     }
     return nil;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    if(shareItem.cloudKitSenderInfo && section == 0){
+- (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section {
+    if (shareItem.cloudKitSenderInfo && section == 0) {
         return 1;
     }
     return [allFriendsExceptSender count] + 1; // add 1 for the invite button
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    if(shareItem.cloudKitSenderInfo){
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView*)collectionView {
+    if (shareItem.cloudKitSenderInfo) {
         return 2;
     }
     return 1;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    if(!shareItem.cloudKitSenderInfo || indexPath.section == 1){
+- (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
+    if (!shareItem.cloudKitSenderInfo || indexPath.section == 1) {
         // if we're in the firend list
-        if(indexPath.row == [allFriendsExceptSender count]){
+        if (indexPath.row == [allFriendsExceptSender count]) {
             // invite button
             MMCloudKitInviteCollectionViewCell* invite = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitInviteCollectionViewCell" forIndexPath:indexPath];
             invite.delegate = self;
@@ -323,9 +324,9 @@ BOOL hasSent = NO;
     }
     MMCloudKitFriendCollectionViewCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMCloudKitFriendCollectionViewCell" forIndexPath:indexPath];
     [cell setUserInfo:[self userInfoForIndexPath:indexPath] forIndex:indexPath.row];
-    if(shareItem.cloudKitSenderInfo && indexPath.section == 0){
+    if (shareItem.cloudKitSenderInfo && indexPath.section == 0) {
         cell.shouldShowReplyIcon = YES;
-    }else{
+    } else {
         cell.shouldShowReplyIcon = NO;
     }
     return cell;
@@ -333,9 +334,9 @@ BOOL hasSent = NO;
 
 #pragma mark - UICollectionViewDelegate
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    MMCloudKitFriendCollectionViewCell* cell = (MMCloudKitFriendCollectionViewCell*) [collectionView cellForItemAtIndexPath:indexPath];
-    if([cell isKindOfClass:[MMCloudKitFriendCollectionViewCell class]]){
+- (void)collectionView:(UICollectionView*)collectionView didSelectItemAtIndexPath:(NSIndexPath*)indexPath {
+    MMCloudKitFriendCollectionViewCell* cell = (MMCloudKitFriendCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[MMCloudKitFriendCollectionViewCell class]]) {
         MMAvatarButton* avatarButton = [cell stealAvatarButton];
         [shareItem userIsAskingToShareTo:[self userInfoForIndexPath:indexPath] fromButton:avatarButton];
         [cell bounce];
@@ -344,42 +345,42 @@ BOOL hasSent = NO;
 
 #pragma mark - Rotation
 
--(UICollectionViewLayout*) idealLayoutForOrientation:(UIInterfaceOrientation)orientation{
-    if(orientation == UIDeviceOrientationLandscapeLeft){
+- (UICollectionViewLayout*)idealLayoutForOrientation:(UIInterfaceOrientation)orientation {
+    if (orientation == UIDeviceOrientationLandscapeLeft) {
         return [[MMCloudKitShareListHorizontalLayout alloc] initWithFlip:YES];
-    }else if(orientation == UIDeviceOrientationLandscapeRight){
+    } else if (orientation == UIDeviceOrientationLandscapeRight) {
         return [[MMCloudKitShareListHorizontalLayout alloc] initWithFlip:NO];
-    }else if(orientation == UIDeviceOrientationPortraitUpsideDown){
+    } else if (orientation == UIDeviceOrientationPortraitUpsideDown) {
         return [[MMCloudKitShareListVerticalLayout alloc] initWithFlip:YES];
-    }else{
+    } else {
         return [[MMCloudKitShareListVerticalLayout alloc] initWithFlip:NO];
     }
 }
 
--(CGFloat) idealRotationForOrientation:(UIInterfaceOrientation)orientation{
+- (CGFloat)idealRotationForOrientation:(UIInterfaceOrientation)orientation {
     CGFloat visiblePhotoRotation = 0;
-    if(orientation == UIInterfaceOrientationLandscapeRight){
+    if (orientation == UIInterfaceOrientationLandscapeRight) {
         visiblePhotoRotation = M_PI / 2;
-    }else if(orientation == UIInterfaceOrientationPortraitUpsideDown){
+    } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
         visiblePhotoRotation = M_PI;
-    }else if(orientation == UIInterfaceOrientationLandscapeLeft){
+    } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
         visiblePhotoRotation = -M_PI / 2;
-    }else{
+    } else {
         visiblePhotoRotation = 0;
     }
     return visiblePhotoRotation;
 }
 
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
-    if(self.alpha){
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation {
+    if (self.alpha) {
         [self updateDataSource];
         [listOfFriendsView setCollectionViewLayout:[self idealLayoutForOrientation:orientation] animated:YES];
-        
+
         [UIView animateWithDuration:.2 animations:^{
             offlineView.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
         }];
-    }else{
+    } else {
         offlineView.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
     }
     [cloudKeyButton updateInterfaceTo:orientation animated:(self.alpha != 0)];
@@ -389,46 +390,48 @@ BOOL hasSent = NO;
 #pragma mark - Debug
 
 #ifdef DEBUG
--(void) addExtraUsers{
-    NSArray* extra = @[@{@"firstName" : @"Tim",
-                         @"lastName" : @"Cook",
-                         @"initials" : @"TC"},
-                       @{@"firstName" : @"Angela",
-                         @"lastName" : @"Ahrendts",
-                         @"initials" : @"AA"},
-                       @{@"firstName" : @"Eddy",
-                         @"lastName" : @"Cue",
-                         @"initials" : @"EC"},
-                       @{@"firstName" : @"Craig",
-                         @"lastName" : @"Federighi",
-                         @"initials" : @"CF"},
-                       @{@"firstName" : @"Jony",
-                         @"lastName" : @"Ive",
-                         @"initials" : @"JI"},
-                       @{@"firstName" : @"Luca",
-                         @"lastName" : @"Maestri",
-                         @"initials" : @"LM"},
-                       @{@"firstName" : @"Dan",
-                         @"lastName" : @"Riccio",
-                         @"initials" : @"DR"},
-                       @{@"firstName" : @"Phil",
-                         @"lastName" : @"Schiller",
-                         @"initials" : @"PS"},
-                       @{@"firstName" : @"Bruce",
-                         @"lastName" : @"Sewell",
-                         @"initials" : @"BS"},
-                       @{@"firstName" : @"Jeff",
-                         @"lastName" : @"Williams",
-                         @"initials" : @"JW"}];
-    
-    allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];;
-    allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];;
+- (void)addExtraUsers {
+    NSArray* extra = @[@{ @"firstName": @"Tim",
+                          @"lastName": @"Cook",
+                          @"initials": @"TC" },
+                       @{ @"firstName": @"Angela",
+                          @"lastName": @"Ahrendts",
+                          @"initials": @"AA" },
+                       @{ @"firstName": @"Eddy",
+                          @"lastName": @"Cue",
+                          @"initials": @"EC" },
+                       @{ @"firstName": @"Craig",
+                          @"lastName": @"Federighi",
+                          @"initials": @"CF" },
+                       @{ @"firstName": @"Jony",
+                          @"lastName": @"Ive",
+                          @"initials": @"JI" },
+                       @{ @"firstName": @"Luca",
+                          @"lastName": @"Maestri",
+                          @"initials": @"LM" },
+                       @{ @"firstName": @"Dan",
+                          @"lastName": @"Riccio",
+                          @"initials": @"DR" },
+                       @{ @"firstName": @"Phil",
+                          @"lastName": @"Schiller",
+                          @"initials": @"PS" },
+                       @{ @"firstName": @"Bruce",
+                          @"lastName": @"Sewell",
+                          @"initials": @"BS" },
+                       @{ @"firstName": @"Jeff",
+                          @"lastName": @"Williams",
+                          @"initials": @"JW" }];
+
+    allKnownFriends = [allKnownFriends arrayByAddingObjectsFromArray:extra];
+    ;
+    allFriendsExceptSender = [allFriendsExceptSender arrayByAddingObjectsFromArray:extra];
+    ;
 }
 #endif
 
 #pragma mark - MMInviteUserButtonDelegate
 
--(void) didTapInviteButton{
+- (void)didTapInviteButton {
     [shareItem didTapInviteButton];
     [shareItem.delegate didShare:shareItem];
 }

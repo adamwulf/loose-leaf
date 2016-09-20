@@ -9,25 +9,26 @@
 #import <UIKit/UIKit.h>
 #import "MMScrapsInBezelContainerView.h"
 
-@interface MMScrapSidebarContentView : UIView<UIScrollViewDelegate>{
+
+@interface MMScrapSidebarContentView : UIView <UIScrollViewDelegate> {
     __weak MMScrapsInBezelContainerView* delegate;
 }
 
 @property (nonatomic, weak) MMScrapsInBezelContainerView* delegate;
 @property (nonatomic, assign) NSInteger columnCount;
 
--(void) setRotation:(CGFloat)radians;
+- (void)setRotation:(CGFloat)radians;
 
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
--(void) prepareContentView;
+- (void)prepareContentView;
 
--(void) flashScrollIndicators;
+- (void)flashScrollIndicators;
 
--(void) viewWillShow;
+- (void)viewWillShow;
 
--(void) viewWillHide;
+- (void)viewWillHide;
 
--(void) viewDidHide;
+- (void)viewDidHide;
 
 @end

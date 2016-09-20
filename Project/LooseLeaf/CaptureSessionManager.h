@@ -10,21 +10,22 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MMCamViewDelegate.h"
 
-@interface CaptureSessionManager : NSObject{
+
+@interface CaptureSessionManager : NSObject {
     __weak NSObject<MMCamViewDelegate>* delegate;
 }
 
-@property (retain) AVCaptureVideoPreviewLayer *previewLayer;
-@property (retain) AVCaptureSession *captureSession;
+@property (retain) AVCaptureVideoPreviewLayer* previewLayer;
+@property (retain) AVCaptureSession* captureSession;
 @property (weak) NSObject<MMCamViewDelegate>* delegate;
 
 - (id)initWithPosition:(AVCaptureDevicePosition)preferredPosition;
 
--(void) changeCamera;
--(void) snapPicture;
--(void) addPreviewLayerTo:(CALayer*)layer;
+- (void)changeCamera;
+- (void)snapPicture;
+- (void)addPreviewLayerTo:(CALayer*)layer;
 
-+(BOOL) hasCamera;
-+(BOOL) hasCameraPermission;
++ (BOOL)hasCamera;
++ (BOOL)hasCameraPermission;
 
 @end

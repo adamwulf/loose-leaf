@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "MMScrapView.h"
 
+
 @interface MMScrapSidebarButton : UIButton
 
 @property (nonatomic) MMScrapView* scrap;
 @property (nonatomic, assign) NSInteger rowNumber;
 
-+(CGSize) sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width;
++ (CGSize)sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width;
 
 @end

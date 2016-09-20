@@ -8,19 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMAssetListLayout : UICollectionViewLayout
 
--(id) init NS_UNAVAILABLE;
+- (id)init NS_UNAVAILABLE;
 
--(id) initForRotation:(CGFloat)rotation;
+- (id)initForRotation:(CGFloat)rotation;
 
 @property (nonatomic, readonly) CGFloat rotation;
 
 
 // protected
 
--(CGFloat) cameraRowHeight;
+- (CGFloat)cameraRowHeight;
 
--(CGFloat) photoRowHeight;
+- (CGFloat)photoRowHeight;
 
 @end

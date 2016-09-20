@@ -10,8 +10,9 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "MMDisplayAsset.h"
 
+
 @interface MMPhoto : MMDisplayAsset
 
--(id) initWithALAsset:(ALAsset*)asset;
+- (id)initWithALAsset:(ALAsset*)asset;
 
 @end

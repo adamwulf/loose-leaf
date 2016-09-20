@@ -16,7 +16,8 @@
 #import <mach/mach.h>
 #import "Mixpanel.h"
 
-@implementation MMMemoryManager{
+
+@implementation MMMemoryManager {
     NSOperationQueue* timerQueue;
 
     // accountedBytes is the sum of
@@ -76,8 +77,8 @@
 @synthesize totalBytesInVBOs;
 @synthesize totalBytesInTextures;
 
--(id) initWithDelegate:(id<MMMemoryManagerDelegate>)_delegate{
-    if(self = [super init]){
+- (id)initWithDelegate:(id<MMMemoryManagerDelegate>)_delegate {
+    if (self = [super init]) {
         self.delegate = _delegate;
         timerQueue = [[NSOperationQueue alloc] init];
         MMBackgroundTimer* backgroundTimer = [[MMBackgroundTimer alloc] initWithInterval:1 andTarget:self andSelector:@selector(tick)];
@@ -89,89 +90,90 @@
     return self;
 }
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void) tick{
+- (void)tick {
     // top level process information
     struct task_basic_info info;
     mach_msg_type_number_t size = sizeof(info);
     kern_return_t kerr = task_info(mach_task_self(), TASK_BASIC_INFO, (task_info_t)&info, &size);
-    if(kerr != KERN_SUCCESS){
+    if (kerr != KERN_SUCCESS) {
         size = 0;
     }
-    
+
     virtualSize = (int)info.virtual_size;
     residentSize = (int)info.resident_size;
-    
+
     // bytes by logical ownership
     residentPageStateMemory = [[MMPageCacheManager sharedInstance] memoryOfStateLoadedPages];
     residentStackViewMemory = self.delegate.fullByteSize;
     residentTrashMemory = [[JotTrashManager sharedInstance] knownBytesInTrash];
     residentImageCacheMemory = [[MMLoadImageCache sharedInstance] memoryOfLoadedImages];
     accountedResidentBytes = residentPageStateMemory + residentStackViewMemory + residentTrashMemory + residentImageCacheMemory;
-    unaccountedResidentBytes = residentSize - accountedResidentBytes;;
-    
+    unaccountedResidentBytes = residentSize - accountedResidentBytes;
+    ;
+
     // additional information
-    numberInImageCache = (int) [[MMLoadImageCache sharedInstance] numberOfItemsHeldInCache];
-    numberOfLoadedPagePreviews = (int) [[MMPageCacheManager sharedInstance] numberOfPagesWithLoadedPreviewImage];
-    numberOfLoadedPageStates = (int) [[MMPageCacheManager sharedInstance] numberOfStateLoadedPages];
-    numberOfItemsInTrash = (int) [[JotTrashManager sharedInstance] numberOfItemsInTrash];
-    
+    numberInImageCache = (int)[[MMLoadImageCache sharedInstance] numberOfItemsHeldInCache];
+    numberOfLoadedPagePreviews = (int)[[MMPageCacheManager sharedInstance] numberOfPagesWithLoadedPreviewImage];
+    numberOfLoadedPageStates = (int)[[MMPageCacheManager sharedInstance] numberOfStateLoadedPages];
+    numberOfItemsInTrash = (int)[[JotTrashManager sharedInstance] numberOfItemsInTrash];
+
     // bytes by object
     totalBytesInScrapBackgrounds = [MMScrapBackgroundView totalBackgroundBytes];
     totalBytesInVBOs = [[[[JotBufferManager sharedInstance] cacheMemoryStats] objectForKey:kVBOCacheSize] intValue];
     totalBytesInTextures = [JotGLTexture totalTextureBytes];
-    
-    if(virtualSize > maxVirtualSize){
+
+    if (virtualSize > maxVirtualSize) {
         maxVirtualSize = virtualSize;
     }
-    if(residentSize > maxResidentSize){
+    if (residentSize > maxResidentSize) {
         maxResidentSize = residentSize;
     }
-    if(accountedResidentBytes > maxAccountedResidentBytes){
+    if (accountedResidentBytes > maxAccountedResidentBytes) {
         maxAccountedResidentBytes = accountedResidentBytes;
     }
-    if(unaccountedResidentBytes > maxUnaccountedResidentBytes){
+    if (unaccountedResidentBytes > maxUnaccountedResidentBytes) {
         maxUnaccountedResidentBytes = unaccountedResidentBytes;
     }
-    if(totalBytesInScrapBackgrounds > maxTotalBytesInScrapBackgrounds){
+    if (totalBytesInScrapBackgrounds > maxTotalBytesInScrapBackgrounds) {
         maxTotalBytesInScrapBackgrounds = totalBytesInScrapBackgrounds;
     }
-    if(totalBytesInTextures > maxTotalBytesInTextures){
+    if (totalBytesInTextures > maxTotalBytesInTextures) {
         maxTotalBytesInTextures = totalBytesInTextures;
     }
-    if(totalBytesInVBOs > maxTotalBytesInVBOs){
+    if (totalBytesInVBOs > maxTotalBytesInVBOs) {
         maxTotalBytesInVBOs = totalBytesInVBOs;
     }
 
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@(virtualSize), @"Virtual Size",
-                                                        @(residentSize), @"Resident Size",
-                                                        @(residentPageStateMemory), @"Resident Page State Memory",
-                                                        @(residentStackViewMemory), @"Resident Stack View Memory",
-                                                        @(residentTrashMemory), @"Resident Trash Memory",
-                                                        @(residentImageCacheMemory), @"Resident Image Cache Memory",
-                                                        @(accountedResidentBytes), @"Resident Accounted Bytes",
-                                                        @(unaccountedResidentBytes), @"Resident Unaccounted Bytes",
-                                                        @(numberInImageCache), @"Number In Image Cache",
-                                                        @(numberOfLoadedPagePreviews), @"Number Of Loaded Page Previews",
-                                                        @(numberOfLoadedPageStates), @"Number Of Loaded Page States",
-                                                        @(numberOfItemsInTrash), @"Number Of Items In Trash",
-                                                        @(totalBytesInScrapBackgrounds), @"Total Bytes In Scrap Backgrounds",
-                                                        @(totalBytesInVBOs), @"Total Bytes In VBOs",
-                                                        @(totalBytesInTextures), @"Total Bytes In Textures",
-                                                        @(maxTotalBytesInScrapBackgrounds), @"Max Total Bytes In Scrap Backgrounds",
-                                                        @(maxTotalBytesInVBOs), @"Max Total Bytes In VBOs",
-                                                        @(maxTotalBytesInTextures), @"Max Total Bytes In Textures",
-                                                        @(maxVirtualSize), @"Max Virtual Size",
-                                                        @(maxResidentSize), @"Max Resident Size",
-                                                        @(maxAccountedResidentBytes), @"Max Resident Accounted Bytes",
-                                                        @(maxUnaccountedResidentBytes), @"Max Resident Unaccounted Bytes",
-                                                        nil]];
+                                                                                                  @(residentSize), @"Resident Size",
+                                                                                                  @(residentPageStateMemory), @"Resident Page State Memory",
+                                                                                                  @(residentStackViewMemory), @"Resident Stack View Memory",
+                                                                                                  @(residentTrashMemory), @"Resident Trash Memory",
+                                                                                                  @(residentImageCacheMemory), @"Resident Image Cache Memory",
+                                                                                                  @(accountedResidentBytes), @"Resident Accounted Bytes",
+                                                                                                  @(unaccountedResidentBytes), @"Resident Unaccounted Bytes",
+                                                                                                  @(numberInImageCache), @"Number In Image Cache",
+                                                                                                  @(numberOfLoadedPagePreviews), @"Number Of Loaded Page Previews",
+                                                                                                  @(numberOfLoadedPageStates), @"Number Of Loaded Page States",
+                                                                                                  @(numberOfItemsInTrash), @"Number Of Items In Trash",
+                                                                                                  @(totalBytesInScrapBackgrounds), @"Total Bytes In Scrap Backgrounds",
+                                                                                                  @(totalBytesInVBOs), @"Total Bytes In VBOs",
+                                                                                                  @(totalBytesInTextures), @"Total Bytes In Textures",
+                                                                                                  @(maxTotalBytesInScrapBackgrounds), @"Max Total Bytes In Scrap Backgrounds",
+                                                                                                  @(maxTotalBytesInVBOs), @"Max Total Bytes In VBOs",
+                                                                                                  @(maxTotalBytesInTextures), @"Max Total Bytes In Textures",
+                                                                                                  @(maxVirtualSize), @"Max Virtual Size",
+                                                                                                  @(maxResidentSize), @"Max Resident Size",
+                                                                                                  @(maxAccountedResidentBytes), @"Max Resident Accounted Bytes",
+                                                                                                  @(maxUnaccountedResidentBytes), @"Max Resident Unaccounted Bytes",
+                                                                                                  nil]];
 }
 
--(void) memoryWarning{
+- (void)memoryWarning {
     [[Mixpanel sharedInstance] track:kMPEventMemoryWarning];
 }
 

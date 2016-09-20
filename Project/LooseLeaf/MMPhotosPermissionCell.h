@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMPhotosPermissionCell : UICollectionViewCell
 
-+(CGFloat) idealPhotoRowHeight;
++ (CGFloat)idealPhotoRowHeight;
 
 @property (nonatomic, assign) BOOL shouldShowLine;
 
--(void) showCameraSteps;
--(void) showPhotosSteps;
+- (void)showCameraSteps;
+- (void)showPhotosSteps;
 
 @end

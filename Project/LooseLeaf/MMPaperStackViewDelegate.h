@@ -12,20 +12,20 @@
 
 @protocol MMPaperStackViewDelegate <NSObject>
 
--(void) animatingToListView;
+- (void)animatingToListView;
 
--(void) animatingToPageView;
+- (void)animatingToPageView;
 
--(MMImageSidebarContainerView*) importImageSidebar;
+- (MMImageSidebarContainerView*)importImageSidebar;
 
--(MMShareSidebarContainerView*) sharePageSidebar;
+- (MMShareSidebarContainerView*)sharePageSidebar;
 
--(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
+- (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
--(void) didFailToExportPage:(MMPaperView*)page;
+- (void)didFailToExportPage:(MMPaperView*)page;
 
--(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+- (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
 
--(BOOL) isShowingTutorial;
+- (BOOL)isShowingTutorial;
 
 @end

@@ -8,8 +8,9 @@
 
 #import <TouchShape/TouchShape.h>
 
+
 @interface SYShape (Bezier)
 
--(UIBezierPath*) bezierPath;
+- (UIBezierPath*)bezierPath;
 
 @end

@@ -8,32 +8,33 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMCloudKitBaseState : NSObject
 
 @property (readonly) NSArray* friendList;
 
--(id) initWithCachedFriendList:(NSArray*)friendList;
+- (id)initWithCachedFriendList:(NSArray*)friendList;
 
 #pragma mark - Cache
 
-+(void) clearCache;
++ (void)clearCache;
 
 #pragma mark - State
 
--(void) runState;
+- (void)runState;
 
--(void) killState;
+- (void)killState;
 
--(BOOL) isLoggedInAndReadyForAnything;
+- (BOOL)isLoggedInAndReadyForAnything;
 
 #pragma mark - Notifications
 
--(void) cloudKitInfoDidChange;
+- (void)cloudKitInfoDidChange;
 
--(void) reachabilityDidChange;
+- (void)reachabilityDidChange;
 
--(void) cloudKitDidRecievePush;
+- (void)cloudKitDidRecievePush;
 
--(void) cloudKitDidCheckForNotifications;
+- (void)cloudKitDidCheckForNotifications;
 
 @end

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMPermissionCameraPhotosCollectionViewCell : UICollectionViewCell
 
 @end

@@ -10,7 +10,7 @@
 #import "MMSidebarButton.h"
 #import "MMPencilAndPaletteView.h"
 
-struct SidebarButton{
+struct SidebarButton {
     void* button;
     CGRect originalRect;
 } SidebarButton;
@@ -19,12 +19,12 @@ struct SidebarButton{
 @interface MMButtonToolbarView : UIView
 
 @property (nonatomic, readonly) NSUInteger numberOfButtons;
-@property (nonatomic, readonly) struct SidebarButton * buttons;
+@property (nonatomic, readonly) struct SidebarButton* buttons;
 
--(void) addButton:(UIView *)button extendFrame:(BOOL)extend;
+- (void)addButton:(UIView*)button extendFrame:(BOOL)extend;
 
--(void) addPencilTool:(MMPencilAndPaletteView*)pencilTool;
+- (void)addPencilTool:(MMPencilAndPaletteView*)pencilTool;
 
--(void) setButtonsVisible:(BOOL)visible;
+- (void)setButtonsVisible:(BOOL)visible;
 
 @end

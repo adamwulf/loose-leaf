@@ -10,8 +10,9 @@
 #import "MMScrapCollectionState.h"
 #import "MMImmutableScrapCollectionState.h"
 
+
 @interface MMImmutableScrapsInSidebarState : MMImmutableScrapCollectionState
 
--(id) initWithScrapIDsPath:(NSString *)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties andOwnerState:(MMScrapCollectionState*)ownerState;
+- (id)initWithScrapIDsPath:(NSString*)scrapIDsPath andAllScrapProperties:(NSArray*)allScrapProperties andOwnerState:(MMScrapCollectionState*)ownerState;
 
 @end

@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMNewsletterSignupHandler : NSObject
 
-+(MMNewsletterSignupHandler*) sharedInstance;
++ (MMNewsletterSignupHandler*)sharedInstance;
 
 @end

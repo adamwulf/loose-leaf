@@ -10,12 +10,12 @@
 
 @protocol MMStackControllerViewDelegate <NSObject>
 
--(void) addStack;
+- (void)addStack;
 
--(void) switchToStack:(NSString*)stackUUID;
+- (void)switchToStack:(NSString*)stackUUID;
 
--(void) deleteStack:(NSString*)stackUUID;
+- (void)deleteStack:(NSString*)stackUUID;
 
--(void) didTapNameForStack:(NSString*)stackUUID;
+- (void)didTapNameForStack:(NSString*)stackUUID;
 
 @end

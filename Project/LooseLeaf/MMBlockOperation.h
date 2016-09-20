@@ -8,13 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MMBlockOperation : NSOperation{
 
-@private
+@interface MMBlockOperation : NSOperation {
+   @private
     void (^_block)();
-    
 }
 
-- (id) initWithBlock: (void (^)()) block;
+- (id)initWithBlock:(void (^)())block;
 
 @end

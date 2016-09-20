@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMImmutableScrapCollectionState : NSObject
 
 // returns YES if any changes actually saved,
 // NO otherwise
--(BOOL) saveStateToDiskBlocking;
+- (BOOL)saveStateToDiskBlocking;
 
--(NSUInteger) undoHash;
+- (NSUInteger)undoHash;
 
 @end

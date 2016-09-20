@@ -9,9 +9,10 @@
 #import "UIImage+FXBlur.h"
 #import "FXBlurView.h"
 
+
 @implementation UIImage (FXBlur)
 
--(UIImage*) imageWithBackgroundBlur{
+- (UIImage*)imageWithBackgroundBlur {
     return [self blurredImageWithRadius:60 iterations:3 tintColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:.25]];
 }
 

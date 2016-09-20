@@ -10,13 +10,14 @@
 #import "MMAbstractShareItem.h"
 #import "MMImageViewButton.h"
 
-@interface MMImgurShareItem : MMAbstractShareItem{
+
+@interface MMImgurShareItem : MMAbstractShareItem {
     MMImageViewButton* button;
 }
 
 // protected
 
--(NSString*) exportDestinationName;
--(void) performShareAction;
+- (NSString*)exportDestinationName;
+- (void)performShareAction;
 
 @end

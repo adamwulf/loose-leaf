@@ -8,10 +8,11 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+
 @interface MMCloudErrorIconLayer : CALayer
 
--(id) initWithFrame:(CGRect)frame;
+- (id)initWithFrame:(CGRect)frame;
 
--(CGPoint) centerOfErrorCircle;
+- (CGPoint)centerOfErrorCircle;
 
 @end

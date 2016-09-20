@@ -12,10 +12,10 @@
 
 @protocol MMSinglePhotoCollectionViewCellDelegate <NSObject>
 
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(UIView*)cameraView;
+- (void)pictureTakeWithCamera:(UIImage*)img fromView:(UIView*)cameraView;
 
--(void) assetWasTapped:(MMDisplayAsset *)photo
-              fromView:(MMBufferedImageView *)bufferedImage
+- (void)assetWasTapped:(MMDisplayAsset*)photo
+              fromView:(MMBufferedImageView*)bufferedImage
           withRotation:(CGFloat)rotation;
 
 @end

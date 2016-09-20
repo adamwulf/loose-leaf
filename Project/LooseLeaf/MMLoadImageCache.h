@@ -9,20 +9,21 @@
 #import <Foundation/Foundation.h>
 #import "MMDecompressImagePromise.h"
 
+
 @interface MMLoadImageCache : NSObject
 
-+(MMLoadImageCache*) sharedInstance;
++ (MMLoadImageCache*)sharedInstance;
 
--(UIImage*) imageAtPath:(NSString*)path;
+- (UIImage*)imageAtPath:(NSString*)path;
 
--(void) clearCacheForPath:(NSString*)path;
+- (void)clearCacheForPath:(NSString*)path;
 
--(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image;
+- (void)updateCacheForPath:(NSString*)path toImage:(UIImage*)image;
 
--(BOOL) containsPathInCache:(NSString*)path;
+- (BOOL)containsPathInCache:(NSString*)path;
 
--(NSInteger) numberOfItemsHeldInCache;
+- (NSInteger)numberOfItemsHeldInCache;
 
--(int) memoryOfLoadedImages;
+- (int)memoryOfLoadedImages;
 
 @end

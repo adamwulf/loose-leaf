@@ -10,6 +10,6 @@
 
 @protocol MMNewsletterSignupFormDelegate <NSObject>
 
--(void) didCompleteNewsletterStep;
+- (void)didCompleteNewsletterStep;
 
 @end

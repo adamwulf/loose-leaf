@@ -26,15 +26,15 @@
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 //  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Provides interpolation between 2 UIColors, useful for frame animations etc. 
+// Provides interpolation between 2 UIColors, useful for frame animations etc.
 
 #import <UIKit/UIKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+
 @interface UIColor (RHInterpolationAdditions)
 
 //if color spaces are not compatible, returns nil;
--(UIColor*)blendedColorWithFraction:(CGFloat)fraction ofColor:(UIColor*)color;
+- (UIColor*)blendedColorWithFraction:(CGFloat)fraction ofColor:(UIColor*)color;
 
 @end
-

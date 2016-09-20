@@ -10,13 +10,14 @@
 #import "MMScrappedPaperView.h"
 #import "MMScrapView.h"
 
-@implementation MMScrapContainerView{
+
+@implementation MMScrapContainerView {
     // must be weak, otherwise its a circular ref
     // with the page
     __weak MMScrapsOnPaperState* scrapsOnPaperState;
 }
 
-- (id)initWithFrame:(CGRect)frame forScrapsOnPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState{
+- (id)initWithFrame:(CGRect)frame forScrapsOnPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -25,16 +26,16 @@
     return self;
 }
 
--(void) addSubview:(UIView *)view{
-    if([view isKindOfClass:[MMScrapView class]]){
+- (void)addSubview:(UIView*)view {
+    if ([view isKindOfClass:[MMScrapView class]]) {
         MMScrapView* scrap = (MMScrapView*)view;
-        if(scrapsOnPaperState && scrap.state.scrapsOnPaperState != scrapsOnPaperState){
+        if (scrapsOnPaperState && scrap.state.scrapsOnPaperState != scrapsOnPaperState) {
             @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:@"ScrapContainerViews was given a scrap that doesn't belong" userInfo:nil];
         }
         [super addSubview:view];
-    }else if(view){
+    } else if (view) {
         @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:[NSString stringWithFormat:@"ScrapContainerViews can only hold scraps, given %@", NSStringFromClass([view class])] userInfo:nil];
-    }else{
+    } else {
         @throw [NSException exceptionWithName:@"InvalidSubviewException" reason:@"ScrapContainerViews can only hold scraps, given (null)" userInfo:nil];
     }
 }

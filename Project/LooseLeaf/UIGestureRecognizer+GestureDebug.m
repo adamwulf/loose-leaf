@@ -12,27 +12,28 @@
 #import "Constants.h"
 #import "MMPaperView.h"
 
+
 @implementation UIGestureRecognizer (GestureDebug)
 
--(void) swizzle_setState:(UIGestureRecognizerState)state{
-    if(state == UIGestureRecognizerStateBegan){
+- (void)swizzle_setState:(UIGestureRecognizerState)state {
+    if (state == UIGestureRecognizerStateBegan) {
         DebugLog(@"%@ began", [self description]);
-    }else if(state == UIGestureRecognizerStateCancelled){
+    } else if (state == UIGestureRecognizerStateCancelled) {
         DebugLog(@"%@ cancelled", [self description]);
-    }else if(state == UIGestureRecognizerStateEnded){
+    } else if (state == UIGestureRecognizerStateEnded) {
         DebugLog(@"%@ ended", [self description]);
-    }else if(state == UIGestureRecognizerStateFailed){
+    } else if (state == UIGestureRecognizerStateFailed) {
         DebugLog(@"%@ failed", [self description]);
     }
 
     [self swizzle_setState:state];
 }
 
--(NSString*) swizzle_description{
+- (NSString*)swizzle_description {
     return [NSString stringWithFormat:@"[%@ %p]", NSStringFromClass([self class]), self];
 }
 
--(void) swizzle_reset{
+- (void)swizzle_reset {
     DebugLog(@"reset %@", [self description]);
     [self swizzle_reset];
 }

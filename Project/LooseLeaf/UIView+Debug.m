@@ -14,47 +14,47 @@
 
 @implementation UIView (Debug)
 
--(void) showDebugBorder{
+- (void)showDebugBorder {
     self.layer.borderColor = [UIColor redColor].CGColor;
     self.layer.borderWidth = 2;
 }
 
--(int) fullByteSize{
+- (int)fullByteSize {
     return self.bounds.size.width * self.contentScaleFactor * self.bounds.size.height * self.contentScaleFactor * 4;
 }
 
 #ifdef DEBUG
 
--(void) swizzle_addSubview:(UIView *)view{
+- (void)swizzle_addSubview:(UIView*)view {
     CheckMainThread;
     [self swizzle_addSubview:view];
 }
 
--(void) swizzle_insertSubview:(UIView *)view aboveSubview:(UIView *)siblingSubview{
+- (void)swizzle_insertSubview:(UIView*)view aboveSubview:(UIView*)siblingSubview {
     CheckMainThread;
     [self swizzle_insertSubview:view aboveSubview:siblingSubview];
 }
 
--(void) swizzle_insertSubview:(UIView *)view atIndex:(NSInteger)index{
+- (void)swizzle_insertSubview:(UIView*)view atIndex:(NSInteger)index {
     CheckMainThread;
     [self swizzle_insertSubview:view atIndex:index];
 }
 
--(void) swizzle_insertSubview:(UIView *)view belowSubview:(UIView *)siblingSubview{
+- (void)swizzle_insertSubview:(UIView*)view belowSubview:(UIView*)siblingSubview {
     CheckMainThread;
     [self swizzle_insertSubview:view belowSubview:siblingSubview];
 }
 
--(void) swizzle_removeFromSuperview{
+- (void)swizzle_removeFromSuperview {
     CheckMainThread;
     [self swizzle_removeFromSuperview];
 }
 
-+(void)load{
-    NSError *error = nil;
-	[UIView jr_swizzleMethod:@selector(removeFromSuperview)
-                        withMethod:@selector(swizzle_removeFromSuperview)
-                             error:&error];
++ (void)load {
+    NSError* error = nil;
+    [UIView jr_swizzleMethod:@selector(removeFromSuperview)
+                  withMethod:@selector(swizzle_removeFromSuperview)
+                       error:&error];
     [UIView jr_swizzleMethod:@selector(addSubview:)
                   withMethod:@selector(swizzle_addSubview:)
                        error:&error];

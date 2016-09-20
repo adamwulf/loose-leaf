@@ -8,10 +8,11 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+
 @interface MMBrokenCloudLayer : CALayer
 
--(id) initWithFrame:(CGRect)frame;
+- (id)initWithFrame:(CGRect)frame;
 
--(void) animatePiecesApart;
+- (void)animatePiecesApart;
 
 @end

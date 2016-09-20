@@ -9,30 +9,31 @@
 #import "MMPhoto.h"
 #import "ALAsset+Thumbnail.h"
 
-@implementation MMPhoto{
+
+@implementation MMPhoto {
     ALAsset* asset;
 }
 
--(id) initWithALAsset:(ALAsset*)_asset{
-    if(self = [super init]){
+- (id)initWithALAsset:(ALAsset*)_asset {
+    if (self = [super init]) {
         asset = _asset;
     }
     return self;
 }
 
--(UIImage*) aspectRatioThumbnail{
+- (UIImage*)aspectRatioThumbnail {
     return [UIImage imageWithCGImage:asset.aspectRatioThumbnail];
 }
 
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim {
     return [asset aspectThumbnailWithMaxPixelSize:maxDim];
 }
 
--(NSURL*) fullResolutionURL{
+- (NSURL*)fullResolutionURL {
     return asset.defaultRepresentation.url;
 }
 
--(CGSize) fullResolutionSize{
+- (CGSize)fullResolutionSize {
     return asset.defaultRepresentation.dimensions;
 }
 

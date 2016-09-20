@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMCloudLoadingIconLayer : CALayer
 
--(id) initWithFrame:(CGRect)frame;
+- (id)initWithFrame:(CGRect)frame;
 
 @end

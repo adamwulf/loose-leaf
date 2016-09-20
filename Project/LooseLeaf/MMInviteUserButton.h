@@ -10,7 +10,7 @@
 
 @protocol MMInviteUserButtonDelegate
 
--(void) didTapInviteButton;
+- (void)didTapInviteButton;
 
 @end
 

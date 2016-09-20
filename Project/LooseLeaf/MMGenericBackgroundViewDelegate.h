@@ -12,10 +12,10 @@
 
 @protocol MMGenericBackgroundViewDelegate <NSObject>
 
--(UIView*) contextViewForGenericBackground:(MMGenericBackgroundView*)backgroundView;
+- (UIView*)contextViewForGenericBackground:(MMGenericBackgroundView*)backgroundView;
 
--(CGFloat) contextRotationForGenericBackground:(MMGenericBackgroundView*)backgroundView;
+- (CGFloat)contextRotationForGenericBackground:(MMGenericBackgroundView*)backgroundView;
 
--(CGPoint) currentCenterOfBackgroundForGenericBackground:(MMGenericBackgroundView*)backgroundView;
+- (CGPoint)currentCenterOfBackgroundForGenericBackground:(MMGenericBackgroundView*)backgroundView;
 
 @end

@@ -12,6 +12,6 @@
 
 @interface MMInboxAssetGroupCell : MMDisplayAssetGroupCell
 
--(MMBufferedImageView*) firstImageView;
+- (MMBufferedImageView*)firstImageView;
 
 @end
