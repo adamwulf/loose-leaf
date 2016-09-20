@@ -410,7 +410,6 @@ static UIWebView *pdfWebView;
     [super addPageButtonTapped:_button];
     
     MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-    page.isBrandNewPage = YES;
     page.delegate = self;
     [hiddenStackHolder pushSubview:page];
     [[visibleStackHolder peekSubview] enableAllGestures];

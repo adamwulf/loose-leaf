@@ -147,33 +147,33 @@
 }
 
 +(UIImage*) hasThumbail:(BOOL*)thumbExists forPage:(NSString*)pageUUID forStack:(NSString*)stackUUID{
-    NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
-    NSString* pagePath = [[stackPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
-    NSString* thumbPath = [pagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
-    
-    NSString* bundledDocsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
-    NSString* bundledPagePath = [[bundledDocsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
-    NSString* bundledThumbPath = [bundledPagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:thumbPath] || [[NSFileManager defaultManager] fileExistsAtPath:bundledThumbPath]){
-        UIImage* thumb = [UIImage imageWithContentsOfFile:thumbPath];
-        if(!thumb){
-            thumb = [UIImage imageWithContentsOfFile:bundledThumbPath];
-        }
-        if(thumb){
-            *thumbExists = YES;
-            return thumb;
-        }else{
-            *thumbExists = YES;
-            return nil;
-        }
-    }else if([[NSFileManager defaultManager] fileExistsAtPath:pagePath]){
-        *thumbExists = YES;
-        return nil;
-    }else{
-        *thumbExists = NO;
-        return nil;
-    }
+//    NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:stackUUID];
+//    NSString* pagePath = [[stackPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
+//    NSString* thumbPath = [pagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
+//    
+//    NSString* bundledDocsPath = [[NSBundle mainBundle] pathForResource:@"Documents" ofType:nil];
+//    NSString* bundledPagePath = [[bundledDocsPath stringByAppendingPathComponent:@"Pages"] stringByAppendingPathComponent:pageUUID];
+//    NSString* bundledThumbPath = [bundledPagePath stringByAppendingPathComponent:@"scrapped.thumb.png"];
+//    
+//    if([[NSFileManager defaultManager] fileExistsAtPath:thumbPath] || [[NSFileManager defaultManager] fileExistsAtPath:bundledThumbPath]){
+//        UIImage* thumb = [UIImage imageWithContentsOfFile:thumbPath];
+//        if(!thumb){
+//            thumb = [UIImage imageWithContentsOfFile:bundledThumbPath];
+//        }
+//        if(thumb){
+//            *thumbExists = YES;
+//            return thumb;
+//        }else{
+//            *thumbExists = YES;
+//            return nil;
+//        }
+//    }else if([[NSFileManager defaultManager] fileExistsAtPath:pagePath]){
+//        *thumbExists = YES;
+//        return nil;
+//    }else{
+//        *thumbExists = NO;
+//        return nil;
+//    }
     *thumbExists = NO;
     return nil;
 }

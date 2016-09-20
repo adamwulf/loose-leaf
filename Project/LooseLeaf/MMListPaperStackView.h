@@ -8,7 +8,7 @@
 
 #import "MMPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "MMStretchPageGestureRecognizer.h"
 #import "MMLongPressFromListViewGestureRecognizer.h"
 #import "MMListAddPageButton.h"
 #import "MMListAddPageButtonDelegate.h"
@@ -18,7 +18,7 @@
 #import "MMInboxManagerDelegate.h"
 #import "MMButtonToolbarView.h"
 
-@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,UIScrollViewDelegate>{
+@interface MMListPaperStackView : MMPaperStackView<MMStretchPageGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,UIScrollViewDelegate>{
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating
@@ -33,7 +33,7 @@
     CGFloat rowHeight;
     CGFloat bufferWidth;
     
-    MMPanAndPinchFromListViewGestureRecognizer* pinchGesture;
+    MMStretchPageGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
     
     CGPoint initialScrollOffsetFromTransitionToListView;
@@ -89,5 +89,7 @@
 -(void) tutorialShouldOpen:(NSNotification*)note;
 
 -(void) tutorialShouldClose:(NSNotification*)note;
+
+-(CGRect) frameForIndexInList:(NSInteger)indexOfPage;
 
 @end

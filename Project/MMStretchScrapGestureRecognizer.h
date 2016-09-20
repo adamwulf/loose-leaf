@@ -24,11 +24,7 @@
 @property (nonatomic, readonly) NSDictionary* startingScrapProperties;
 @property (nonatomic, readonly) MMUndoablePaperView* startingPageForScrap;
 
-+ (CATransform3D)transformQuadrilateral:(Quadrilateral)origin toQuadrilateral:(Quadrilateral)destination;
-
 -(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
-
--(Quadrilateral) getQuad;
 
 -(void) blessTouches:(NSSet*)touches;
 

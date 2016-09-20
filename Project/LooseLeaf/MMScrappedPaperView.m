@@ -1453,7 +1453,6 @@
     return [[[self bundledPagesPath] stringByAppendingPathComponent:@"scrapIDs"] stringByAppendingPathExtension:@"plist"];
 }
 
-
 #pragma mark - dealloc
 
 -(void) dealloc{

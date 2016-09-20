@@ -12,6 +12,7 @@
 #import "MMShadowManager.h"
 #import "MMScrappedPaperView.h"
 #import "MMExportablePaperView.h"
+#import "MMStretchPageGestureRecognizer.h"
 #import "NSArray+Map.h"
 #import "Mixpanel.h"
 #include <map>
@@ -67,7 +68,7 @@
         twoFingerTapGesture.enabled = NO;
         [self addGestureRecognizer:twoFingerTapGesture];
         
-        pinchGesture = [[MMPanAndPinchFromListViewGestureRecognizer alloc] initWithTarget:self action:@selector(didPickUpAPageInListView:)];
+        pinchGesture = [[MMStretchPageGestureRecognizer alloc] initWithTarget:self action:@selector(didPickUpAPageInListView:)];
         pinchGesture.enabled = NO;
         pinchGesture.pinchDelegate = self;
         [pinchGesture requireGestureRecognizerToFail:twoFingerTapGesture];
@@ -1164,6 +1165,11 @@
     return CGSizeMake(screenWidth, screenHeight);
 }
 
+#pragma mark - MMStretchPageGestureRecognizerDelegate
+
+-(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer *)gesture withOffset:(CGPoint)offset{
+    @throw kAbstractMethodException;
+}
 
 #pragma mark - Private Helper Methods
 
@@ -1205,7 +1211,7 @@
         // clear our cache of frame locations
         mapOfFinalFramesForPagesBeingZoomed->clear();
         
-        [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES];
+        [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES forceRecalculateAll:NO];
         [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
         
         // the user might've pinched us up
@@ -1218,7 +1224,7 @@
             [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
             [allOtherPages removeObjectsInSet:pagesBeingAnimatedDuringDeleteGesture];
             // find the pages to align
-            [self realignPagesInListView:allOtherPages animated:NO];
+            [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
             addPageButtonInListView.frame = [self frameForAddPageButton];
             [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
             [self moveAddButtonToTop];
@@ -1307,7 +1313,7 @@
                 NSSet* pagesNoLongerAnimating = [pagesBeingAnimatedDuringDeleteGesture filteredSetUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
                     return ![pagesToMove containsObject:evaluatedObject];
                 }]];
-                [self realignPagesInListView:pagesNoLongerAnimating animated:YES];
+                [self realignPagesInListView:pagesNoLongerAnimating animated:YES forceRecalculateAll:NO];
                 [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
                 [pagesBeingAnimatedDuringDeleteGesture addObjectsInSet:pagesToMove];
                 
@@ -1360,7 +1366,7 @@
             }
         }else{
             if([pagesBeingAnimatedDuringDeleteGesture count]){
-                [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES];
+                [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES forceRecalculateAll:NO];
                 [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
             }
             [deleteSidebar showSidebarWithPercent:0.0 withTargetView:nil];
@@ -1515,7 +1521,7 @@
     // ok, pages are in the right order, so animate them
     // to their new home
     if([pagesToAnimate count]){
-        [self realignPagesInListView:pagesToAnimate animated:YES];
+        [self realignPagesInListView:pagesToAnimate animated:YES forceRecalculateAll:NO];
         [self saveStacksToDisk];
     }
     return currentIndex != newIndex;
@@ -1768,8 +1774,12 @@
 
 #pragma mark Animations
 
--(void) realignPagesInListView:(NSSet*)pagesToMove animated:(BOOL)animated{
+-(void) realignPagesInListView:(NSSet*)pagesToMove animated:(BOOL)animated forceRecalculateAll:(BOOL)recalculateAll{
     if(![pagesToMove count]) return;
+    
+    if(recalculateAll){
+        mapOfFinalFramesForPagesBeingZoomed->clear();
+    }
     
     void(^block)() = ^{
         for(MMPaperView* aPage in pagesToMove){
@@ -2034,7 +2044,7 @@
                     closestDistance = distanceFromPage;
                 }
             }
-            
+
             page.frame = thePageToAddAfter.frame;
             if(!thePageToAddAfter){
                 // if list is empty
@@ -2045,7 +2055,7 @@
                 [self addPage:page belowPage:thePageToAddAfter];
             }
             [self ensurePageIsAtTopOfVisibleStack:page];
-//            [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:NO];
+//            [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:NO forceRecalculateAll:NO];
             [[NSThread mainThread] performBlock:^{
                 // run on the next dispatch, that way our frame
                 // is definitley set to list view size, and our

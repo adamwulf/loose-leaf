@@ -43,6 +43,12 @@
 #import "MMPalmGestureRecognizer.h"
 #import "NSURL+UTI.h"
 
+@interface MMListPaperStackView (Protected)
+
+-(void) realignPagesInListView:(NSSet*)pagesToMove animated:(BOOL)animated forceRecalculateAll:(BOOL)recalculateAll;
+
+@end
+
 @implementation MMScrapPaperStackView{
     
     MMScrapsInBezelContainerView* bezelScrapContainer;
@@ -408,7 +414,6 @@
 
 -(void) importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString *)containerDescription referringApp:(NSString*)sourceApplication{
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
-    page.isBrandNewPage = YES;
     page.delegate = self;
     [page setPageBackgroundTexture:imageToImport];
     if(!assetURL){
@@ -1820,6 +1825,95 @@
 // and don't fall within any scrap above the input scrap
 -(NSSet*) setOfTouchesFrom:(NSOrderedSet *)touches inScrap:(MMScrapView *)scrap{
     return nil;
+}
+
+#pragma mark - MMStretchPageGestureRecognizerDelegate
+
+-(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer *)gesture withOffset:(CGPoint)offset{
+    NSString* uuidOfPageToDuplicate = [gesture.pinchedPage uuid];
+    NSString* uuidOfNewPage = [[NSUUID UUID] UUIDString];
+    
+    NSString* pagesPath = [MMEditablePaperView pagesPathForStackUUID:[self uuid] andPageUUID:uuidOfPageToDuplicate];
+    NSString* bundledPath = [MMEditablePaperView bundledPagesPathForPageUUID:uuidOfPageToDuplicate];
+    NSString* destinationPath = [MMEditablePaperView pagesPathForStackUUID:[self uuid] andPageUUID:uuidOfNewPage];
+    
+    NSMutableArray* bundledContents = [[[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:bundledPath filesOnly:YES] mutableCopy];
+    NSMutableArray* pagesContents = [[[NSFileManager defaultManager] recursiveContentsOfDirectoryAtPath:pagesPath filesOnly:YES] mutableCopy];
+    
+    // don't copy items from the bundle that are already
+    // overwritten in the modified page's contents
+    [bundledContents removeObjectsInArray:pagesContents];
+    
+    void(^moveItemIntoLocation)(NSString*, NSString*) = ^(NSString* fromPath, NSString* targetPath){
+        NSError* err = nil;
+        NSString* targetDirectory = [targetPath stringByDeletingLastPathComponent];
+        [NSFileManager ensureDirectoryExistsAtPath:targetDirectory];
+        
+        [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:targetPath error:&err];
+
+        NSAssert(!err, @"shouldn't have any problem copying files");
+    };
+    
+    
+    CGRect targetFrame = gesture.pinchedPage.bounds;
+    targetFrame.origin = gesture.pinchedPage.frame.origin;
+    targetFrame.origin.x += offset.x - CGRectGetWidth(targetFrame) / 2;
+    targetFrame.origin.y += offset.y;
+    BOOL shouldSubOne = targetFrame.origin.x < 0;
+    targetFrame.origin.x = MIN(MAX(0, targetFrame.origin.x), CGRectGetWidth([self bounds]));
+    
+    CGPoint targetPoint = CGRectGetMidPoint(targetFrame);
+    
+    NSInteger row = (targetPoint.y) / (rowHeight + bufferWidth);
+    NSInteger col = targetPoint.x / ((columnWidth + bufferWidth) + bufferWidth / kNumberOfColumnsInListView);
+    NSInteger index = row * kNumberOfColumnsInListView + col - shouldSubOne;
+    if(col == kNumberOfColumnsInListView - 1){
+        index -= 1;
+    }
+    CGRect targetPageFrame = [self frameForIndexInList:index];
+    
+    // copy all the files on a background thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),^{
+        for (NSString* item in bundledContents) {
+            NSString* fromPath = [bundledPath stringByAppendingPathComponent:item];
+            NSString* targetPath = [destinationPath stringByAppendingPathComponent:item];
+            moveItemIntoLocation(fromPath, targetPath);
+        }
+        
+        for (NSString* item in pagesContents) {
+            NSString* fromPath = [pagesPath stringByAppendingPathComponent:item];
+            NSString* targetPath = [destinationPath stringByAppendingPathComponent:item];
+            moveItemIntoLocation(fromPath, targetPath);
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:self.bounds andUUID:uuidOfNewPage];
+            page.delegate = self;
+            // this like will ensure the new page slides in with
+            // its preview properly loaded in time.
+            [page loadCachedPreviewAndDecompressImmediately:YES];
+
+            page.frame = targetFrame;
+            
+            MMPaperView* pageToInsertAfter = [self pageForPointInList:CGRectGetMidPoint(targetPageFrame)];
+            
+            if([visibleStackHolder containsSubview:pageToInsertAfter]){
+                [visibleStackHolder insertPage:page abovePage:pageToInsertAfter];
+            }else{
+                [hiddenStackHolder insertPage:page abovePage:pageToInsertAfter];
+            }
+            
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+            [[[Mixpanel sharedInstance] people] set:@{kMPHasAddedPage : @(YES)}];
+            
+            NSMutableArray* pagesToMove = [[self findPagesInVisibleRowsOfListView] mutableCopy];
+            [pagesToMove removeObject:gesture.pinchedPage];
+            
+            [self realignPagesInListView:[NSSet setWithArray:pagesToMove] animated:YES forceRecalculateAll:YES];
+            
+            [self saveStacksToDisk];
+        });
+    });
 }
 
 #pragma mark - MMRotationManagerDelegate

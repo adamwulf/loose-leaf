@@ -129,7 +129,6 @@
 -(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
     while([stackView.subviews count] < numberOfPagesToEnsure){
         MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds];
-        page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
@@ -175,7 +174,6 @@
  * and adds to the bottom of the subviews
  */
 -(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page{
-    page.isBrandNewPage = YES;
     page.delegate = self;
     [page disableAllGestures];
     [hiddenStackHolder addSubviewToBottomOfStack:page];
