@@ -1981,6 +1981,7 @@
     if (gesture.state == UIGestureRecognizerStateEnded ||
         gesture.state == UIGestureRecognizerStateFailed ||
         gesture.state == UIGestureRecognizerStateCancelled) {
+        [silhouette endPanningObject:pageCloner];
         [pageCloner abortClone];
         pageCloner = nil;
     }
@@ -1998,6 +1999,7 @@
     pageCloner = [[MMPageCloner alloc] initWithOriginalUUID:[gesture.pinchedPage uuid] clonedUUID:[[NSUUID UUID] UUIDString] inStackUUID:[self uuid]];
     [pageCloner beginClone];
     [silhouette startPanningObject:pageCloner withTouches:gesture.additionalTouches];
+    [self.window.layer setSpeed:0.5f];
 }
 
 - (void)didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture withOffset:(CGPoint)offset {
@@ -2051,6 +2053,7 @@
 
         [self saveStacksToDisk];
 
+        [silhouette endPanningObject:pageCloner];
         pageCloner = nil;
     }];
 }

@@ -1411,7 +1411,6 @@
 		66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBrokenCloudLayer.m; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 		66FC3BB61ABA631B00F2DE37 /* silly-face.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "silly-face.mov"; sourceTree = "<group>"; };
-		66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = hello.mov; sourceTree = "<group>"; };
 		66FD2E971A76C7B100ED7DFA /* MMThumbAndIndexShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMThumbAndIndexShadow.h; sourceTree = "<group>"; };
 		66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMThumbAndIndexShadow.m; sourceTree = "<group>"; };
 		66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUnknownObject.h; sourceTree = "<group>"; };
@@ -2444,7 +2443,6 @@
 			isa = PBXGroup;
 			children = (
 				66CC2A981AEB01F900C6A3F9 /* scrap-to-sidebar.mov */,
-				66FC3BBA1ABCC2CF00F2DE37 /* hello.mov */,
 				6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */,
 				665810881B6DAF0A00A2C603 /* hello.mp4 */,
 				66468E551B75D1C600DD90B0 /* pinch-to-list.mp4 */,
