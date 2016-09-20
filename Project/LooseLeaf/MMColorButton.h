@@ -8,6 +8,7 @@
 
 #import "MMSidebarButton.h"
 
+
 @interface MMColorButton : MMSidebarButton
 
 @property (nonatomic) UIColor* color;

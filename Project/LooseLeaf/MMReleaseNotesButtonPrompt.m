@@ -10,20 +10,20 @@
 #import "UIColor+Shadow.h"
 #import "Constants.h"
 
-@implementation MMReleaseNotesButtonPrompt{
+
+@implementation MMReleaseNotesButtonPrompt {
     UILabel* promptLabel;
     UIButton* confirmButton;
     UIButton* denyButton;
 }
 
--(instancetype) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
-        
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         promptLabel = [[UILabel alloc] initWithFrame:CGRectWithHeight(frame, 60)];
         promptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
         promptLabel.textAlignment = NSTextAlignmentCenter;
         promptLabel.text = @"Are you enjoying Loose Leaf?";
-        
+
         confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         confirmButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
         [[confirmButton layer] setCornerRadius:8];
@@ -33,7 +33,7 @@
         [confirmButton setTitle:@"Definitely!" forState:UIControlStateNormal];
         [[confirmButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [confirmButton addTarget:self action:@selector(isEnjoying:) forControlEvents:UIControlEventTouchUpInside];
-        
+
         denyButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         denyButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
         [[denyButton layer] setCornerRadius:8];
@@ -43,10 +43,10 @@
         [denyButton setTitle:@"Not so much" forState:UIControlStateNormal];
         [[denyButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [denyButton addTarget:self action:@selector(notEnjoying:) forControlEvents:UIControlEventTouchUpInside];
-        
+
         confirmButton.center = CGPointMake((CGRectGetWidth(frame) - CGRectGetWidth([confirmButton bounds]) - 60) / 2, 80);
         denyButton.center = CGPointMake((CGRectGetWidth(frame) + CGRectGetWidth([denyButton bounds]) + 60) / 2, 80);
-        
+
         [self addSubview:promptLabel];
         [self addSubview:confirmButton];
         [self addSubview:denyButton];
@@ -56,40 +56,40 @@
 
 #pragma mark - Properties
 
--(NSString*) prompt{
+- (NSString*)prompt {
     return [promptLabel text];
 }
 
--(void) setPrompt:(NSString *)prompt{
+- (void)setPrompt:(NSString*)prompt {
     [promptLabel setText:prompt];
 }
 
--(NSString*) confirmAnswer{
+- (NSString*)confirmAnswer {
     return [confirmButton titleForState:UIControlStateNormal];
 }
 
--(void) setConfirmAnswer:(NSString *)confirmAnswer{
+- (void)setConfirmAnswer:(NSString*)confirmAnswer {
     [confirmButton setTitle:confirmAnswer forState:UIControlStateNormal];
 }
 
--(NSString*) denyAnswer{
+- (NSString*)denyAnswer {
     return [denyButton titleForState:UIControlStateNormal];
 }
 
--(void) setDenyAnswer:(NSString *)denyAnswer{
+- (void)setDenyAnswer:(NSString*)denyAnswer {
     [denyButton setTitle:denyAnswer forState:UIControlStateNormal];
 }
 
 #pragma mark - Actions
 
--(void) isEnjoying:(UIButton*)button{
-    if(self.confirmBlock){
+- (void)isEnjoying:(UIButton*)button {
+    if (self.confirmBlock) {
         self.confirmBlock();
     }
 }
 
--(void) notEnjoying:(UIButton*)button{
-    if(self.denyBlock){
+- (void)notEnjoying:(UIButton*)button {
+    if (self.denyBlock) {
         self.denyBlock();
     }
 }

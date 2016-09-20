@@ -11,7 +11,8 @@
 #import "MMReachabilityManager.h"
 #import "NSThread+BlockAdditions.h"
 
-@implementation MMProgressedImageViewButton{
+
+@implementation MMProgressedImageViewButton {
     CGFloat targetProgress;
     BOOL targetSuccess;
     CGFloat lastProgress;
@@ -22,55 +23,54 @@
 @synthesize targetProgress;
 
 
-
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion{
+- (void)animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion {
     targetProgress = progress;
     targetSuccess = succeeded;
-    
-    if(lastProgress < targetProgress){
+
+    if (lastProgress < targetProgress) {
         lastProgress += (targetProgress / 10.0);
-        if(lastProgress > targetProgress){
+        if (lastProgress > targetProgress) {
             lastProgress = targetProgress;
         }
     }
-    
+
     CGPoint center = CGPointMake(CGRectGetMidX(self.drawableFrame), CGRectGetMidY(self.drawableFrame));
-    
+
     CGFloat radius = ceilf(self.drawableFrame.size.width / 2);
-    CAShapeLayer *circle;
-    if([self.layer.sublayers count]){
+    CAShapeLayer* circle;
+    if ([self.layer.sublayers count]) {
         circle = (CAShapeLayer*)[self.layer.sublayers firstObject];
-    }else{
-        circle=[CAShapeLayer layer];
-        circle.fillColor=[UIColor clearColor].CGColor;
-        circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
-        CAShapeLayer *mask=[CAShapeLayer layer];
+    } else {
+        circle = [CAShapeLayer layer];
+        circle.fillColor = [UIColor clearColor].CGColor;
+        circle.strokeColor = [[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
+        CAShapeLayer* mask = [CAShapeLayer layer];
         circle.mask = mask;
         [self.layer addSublayer:circle];
     }
-    if(radius != lastRadius){
+    if (radius != lastRadius) {
         lastRadius = radius;
-        circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-        circle.lineWidth=radius*2;
-        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        circle.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+        circle.lineWidth = radius * 2;
+        ((CAShapeLayer*)circle.mask).path = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 2 startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
     }
-    
+
     circle.strokeEnd = lastProgress;
-    
-    if(lastProgress >= 1.0){
-        CAShapeLayer *mask2=[CAShapeLayer layer];
-        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-2 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-        
+
+    if (lastProgress >= 1.0) {
+        CAShapeLayer* mask2 = [CAShapeLayer layer];
+        mask2.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 2 startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+
         UIView* checkOrXView = [[UIView alloc] initWithFrame:self.bounds];
         checkOrXView.backgroundColor = [UIColor whiteColor];
         checkOrXView.layer.mask = mask2;
-        
+
         [[NSThread mainThread] performBlock:^{
             CAShapeLayer* checkMarkOrXLayer = [CAShapeLayer layer];
             checkMarkOrXLayer.anchorPoint = CGPointZero;
             checkMarkOrXLayer.bounds = self.bounds;
             UIBezierPath* path = nil;
-            if(succeeded){
+            if (succeeded) {
                 path = [UIBezierPath bezierPath];
                 CGPoint start = CGPointMake(28, 39);
                 CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
@@ -78,7 +78,7 @@
                 [path moveToPoint:start];
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
-            }else if([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable){
+            } else if ([MMReachabilityManager sharedManager].currentReachabilityStatus != NotReachable) {
                 path = [UIBezierPath bezierPath];
                 CGFloat size = 14;
                 CGPoint start = CGPointMake(31, 31);
@@ -89,15 +89,15 @@
                 end = CGPointMake(start.x - size, start.y + size);
                 [path moveToPoint:start];
                 [path addLineToPoint:end];
-            }else{
+            } else {
                 CGRect iconFrame = CGRectInset(self.drawableFrame, 6, 6);
                 iconFrame.origin.y += 4;
                 MMOfflineIconView* offlineIcon = [[MMOfflineIconView alloc] initWithFrame:iconFrame];
                 offlineIcon.shouldDrawOpaque = YES;
                 [checkOrXView addSubview:offlineIcon];
             }
-            
-            if(path){
+
+            if (path) {
                 checkMarkOrXLayer.path = path.CGPath;
                 checkMarkOrXLayer.strokeColor = [UIColor blackColor].CGColor;
                 checkMarkOrXLayer.lineWidth = 6;
@@ -108,12 +108,12 @@
                 checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
                 [checkOrXView.layer addSublayer:checkMarkOrXLayer];
             }
-            
+
             checkOrXView.alpha = 0;
             [self addSubview:checkOrXView];
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;
-            } completion:^(BOOL finished){
+            } completion:^(BOOL finished) {
                 [[NSThread mainThread] performBlock:^{
                     [checkOrXView.layer insertSublayer:circle atIndex:0];
                     [UIView animateWithDuration:.3 animations:^{
@@ -123,7 +123,8 @@
                         [circle removeAnimationForKey:@"drawCircleAnimation"];
                         [circle removeFromSuperlayer];
                         // reset state
-                        if(completion) completion(targetSuccess);
+                        if (completion)
+                            completion(targetSuccess);
                         lastProgress = 0;
                         targetSuccess = 0;
                         targetProgress = 0;
@@ -132,7 +133,7 @@
                 } afterDelay:1];
             }];
         } afterDelay:.3];
-    }else{
+    } else {
         [[NSThread mainThread] performBlock:^{
             [self animateToPercent:targetProgress success:targetSuccess completion:completion];
         } afterDelay:.03];

@@ -8,20 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMDisplayAsset : NSObject
 
--(UIImage*) aspectRatioThumbnail;
+- (UIImage*)aspectRatioThumbnail;
 
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim;
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim;
 
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio;
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio;
 
--(NSURL*) fullResolutionURL;
+- (NSURL*)fullResolutionURL;
 
--(CGSize) fullResolutionSize;
+- (CGSize)fullResolutionSize;
 
--(CGFloat) defaultRotation;
+- (CGFloat)defaultRotation;
 
--(CGFloat) preferredImportMaxDim;
+- (CGFloat)preferredImportMaxDim;
 
 @end

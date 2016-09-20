@@ -10,8 +10,8 @@
 
 @protocol MMStackButtonViewDelegate <NSObject>
 
--(void) switchToStackAction:(NSString*)stackUUID;
+- (void)switchToStackAction:(NSString*)stackUUID;
 
--(void) didTapNameForStack:(NSString*)stackUUID;
+- (void)didTapNameForStack:(NSString*)stackUUID;
 
 @end

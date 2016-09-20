@@ -8,12 +8,13 @@
 
 #import "MMTextButton.h"
 
+
 @interface MMTutorialButton : MMTextButton
 
-@property (nonatomic,getter=isFinished) BOOL finished;
+@property (nonatomic, getter=isFinished) BOOL finished;
 
--(id) initWithFrame:(CGRect)frame andFont:(UIFont *)font andLetter:(NSString *)letter andXOffset:(CGFloat)xOffset andYOffset:(CGFloat)yOffset NS_UNAVAILABLE;
+- (id)initWithFrame:(CGRect)frame andFont:(UIFont*)font andLetter:(NSString*)letter andXOffset:(CGFloat)xOffset andYOffset:(CGFloat)yOffset NS_UNAVAILABLE;
 
--(id) initWithFrame:(CGRect)frame forStepNumber:(NSInteger)stepNumber;
+- (id)initWithFrame:(CGRect)frame forStepNumber:(NSInteger)stepNumber;
 
 @end

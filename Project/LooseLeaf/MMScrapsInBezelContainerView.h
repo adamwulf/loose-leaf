@@ -16,7 +16,8 @@
 #import "MMSidebarButtonDelegate.h"
 #import "MMScrapsInSidebarState.h"
 
-@interface MMScrapsInBezelContainerView : MMFullScreenSidebarContainingView<MMScrapsInSidebarStateDelegate,MMSidebarButtonDelegate>{
+
+@interface MMScrapsInBezelContainerView : MMFullScreenSidebarContainingView <MMScrapsInSidebarStateDelegate, MMSidebarButtonDelegate> {
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }
 
@@ -25,27 +26,27 @@
 @property (readonly) NSArray* scrapsInSidebar;
 @property (readonly) MMScrapsInSidebarState* sidebarScrapState;
 
--(id) initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton *)countButton;
+- (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)countButton;
 
--(void) addScrapToBezelSidebar:(MMScrapView *)scrap animated:(BOOL)animated;
+- (void)addScrapToBezelSidebar:(MMScrapView*)scrap animated:(BOOL)animated;
 
--(BOOL) containsScrap:(MMScrapView*)scrap;
+- (BOOL)containsScrap:(MMScrapView*)scrap;
 
--(BOOL) containsScrapUUID:(NSString*)scrapUUID;
+- (BOOL)containsScrapUUID:(NSString*)scrapUUID;
 
--(void) didUpdateAccelerometerWithReading:(MMVector *)currentRawReading;
+- (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
 
--(void) saveScrapContainerToDisk;
+- (void)saveScrapContainerToDisk;
 
--(void) didTapOnScrapFromMenu:(MMScrapView*)scrap;
+- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap;
 
--(void) didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
+- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
 
--(void) loadFromDisk;
+- (void)loadFromDisk;
 
--(void) deleteAllScrapsFromSidebar;
+- (void)deleteAllScrapsFromSidebar;
 
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
 
 @end

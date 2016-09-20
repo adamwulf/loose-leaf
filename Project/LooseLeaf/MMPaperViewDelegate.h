@@ -10,33 +10,33 @@
 #import <JotUI/JotUI.h>
 #import "MMGestureTouchOwnershipDelegate.h"
 
-@class MMPaperView,MMRulerToolGestureRecognizer,MMScrapView,MMScrapsInBezelContainerView,MMSingleStackManager;
+@class MMPaperView, MMRulerToolGestureRecognizer, MMScrapView, MMScrapsInBezelContainerView, MMSingleStackManager;
 
-@protocol MMPaperViewDelegate <JotViewDelegate,MMGestureTouchOwnershipDelegate>
+@protocol MMPaperViewDelegate <JotViewDelegate, MMGestureTouchOwnershipDelegate>
 
 #pragma mark - Stylus
 
--(void) didStartToWriteWithStylus;
+- (void)didStartToWriteWithStylus;
 
--(void) didEndWritingWithStylus;
+- (void)didEndWritingWithStylus;
 
 #pragma mark - Scale
 
--(BOOL) isAnimatingTowardPageView;
+- (BOOL)isAnimatingTowardPageView;
 
 /**
  * return YES if we allow the input page to
  * be scaled with a pinch gesture (top page),
  * otherwise return NO (non-top page)
  */
--(BOOL) allowsScaleForPage:(MMPaperView*)page;
+- (BOOL)allowsScaleForPage:(MMPaperView*)page;
 
 /**
  * a notification that the input page is actively
  * being scaled and moved from the fromFrame to the
  * toFrame
  */
--(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches;
+- (CGRect)isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches;
 
 /**
  * this notification is triggered when the user finishes
@@ -45,16 +45,16 @@
  * included. the velocity of the page is also sent in, so that any
  * animation of "throwing" the page can be calculated
  */
--(void) finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
+- (void)finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame;
 
 /**
  * notifies when a longpress happens, so that we can tell 
  * the scrap selection gestures which touches they're
  * allowed to use in ruler mode
  */
--(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches;
+- (void)didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches;
 
--(BOOL) panScrapRequiresLongPress;
+- (BOOL)panScrapRequiresLongPress;
 
 /**
  * this is triggered when the page has been scaled small
@@ -62,20 +62,20 @@
  * still have control of the page's zoom, but other pages will
  * begin to follow its scale into list view
  */
--(void) isBeginningToScaleReallySmall:(MMPaperView*)page;
+- (void)isBeginningToScaleReallySmall:(MMPaperView*)page;
 
 /**
  * the user has continued to scale the page down so far
  * that we can now take over and auto-scale it into list view
  */
--(void) finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated;
+- (void)finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated;
 
 /**
  * the user has already begun to scale small (notification above),
  * but now they've scaled large enough to cancel any auto
  * scale that we're doing for other nearby pages
  */
--(void) cancelledScalingReallySmall:(MMPaperView*)page;
+- (void)cancelledScalingReallySmall:(MMPaperView*)page;
 
 /**
  * this is the parallel to finishedScalingReallySmall, except
@@ -83,7 +83,7 @@
  * view into page view. once it hits this method we will
  * auto-scale it into full page view.
  */
--(void) finishedScalingBackToPageView:(MMPaperView*)page;
+- (void)finishedScalingBackToPageView:(MMPaperView*)page;
 
 #pragma mark - List View
 
@@ -105,25 +105,25 @@
  * all visible pages + the index in the hidden
  * stack
  */
--(NSInteger) indexOfPageInCompleteStack:(MMPaperView*)page;
+- (NSInteger)indexOfPageInCompleteStack:(MMPaperView*)page;
 
 /**
  * this will return the row number of this page, if we were to
  * find it in list view
  */
--(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage;
+- (NSInteger)rowInListViewGivenIndex:(NSInteger)indexOfPage;
 
 /**
  * this will return the column number of the page, if we were to
  * find it in list view
  */
--(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage;
+- (NSInteger)columnInListViewGivenIndex:(NSInteger)indexOfPage;
 
 /**
  * returns true if the page is in the logical "lefthand" stack
  * of the two stacks.
  */
--(BOOL) isInVisibleStack:(MMPaperView*)page;
+- (BOOL)isInVisibleStack:(MMPaperView*)page;
 
 #pragma mark - Saving and Drawing
 
@@ -131,47 +131,47 @@
  * called after a page gets saved
  * to disk
  */
--(void) didSavePage:(MMPaperView*)page;
+- (void)didSavePage:(MMPaperView*)page;
 
 
--(BOOL) isPageEditable:(MMPaperView*)page;
+- (BOOL)isPageEditable:(MMPaperView*)page;
 
 #pragma mark - Ruler
 
 /**
  * return YES if the page should allow pan
  */
--(BOOL) shouldAllowPan:(MMPaperView*)page;
+- (BOOL)shouldAllowPan:(MMPaperView*)page;
 
--(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
+- (BOOL)allowsHoldingScrapsWithTouch:(UITouch*)touch;
 
 /**
  * called when the ruler begins and when it moves
  */
--(void) didMoveRuler:(MMRulerToolGestureRecognizer*)gesture;
+- (void)didMoveRuler:(MMRulerToolGestureRecognizer*)gesture;
 
 /**
  * called when the user stops the ruler gesture
  */
--(void) didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
+- (void)didStopRuler:(MMRulerToolGestureRecognizer*)gesture;
 
 #pragma mark - Export
 
--(void) didFailToExportPage:(MMPaperView*)page;
+- (void)didFailToExportPage:(MMPaperView*)page;
 
--(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
+- (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
--(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+- (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
 
 
 #pragma mark - Scrap Container for Sidebar
 
--(MMScrapsInBezelContainerView*) bezelContainerView;
+- (MMScrapsInBezelContainerView*)bezelContainerView;
 
--(MMSingleStackManager*) stackManager;
+- (MMSingleStackManager*)stackManager;
 
 #pragma mark Mixpanel
 
--(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters;
+- (void)didDrawStrokeOfCm:(CGFloat)distanceInCentimeters;
 
 @end

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMCancelableGestureRecognizer : UIGestureRecognizer<UIGestureRecognizerDelegate>
 
--(void) cancel;
+@interface MMCancelableGestureRecognizer : UIGestureRecognizer <UIGestureRecognizerDelegate>
+
+- (void)cancel;
 
 @end

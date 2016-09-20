@@ -12,9 +12,9 @@
 
 @protocol MMPanAndPinchFromListViewGestureRecognizerDelegate <NSObject>
 
--(MMPaperView*) pageForPointInList:(CGPoint) point;
+- (MMPaperView*)pageForPointInList:(CGPoint)point;
 
--(CGSize) sizeOfFullscreenPage;
+- (CGSize)sizeOfFullscreenPage;
 
 
 @end

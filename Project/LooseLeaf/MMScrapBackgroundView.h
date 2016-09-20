@@ -11,23 +11,24 @@
 
 @class MMScrapViewState;
 
+
 @interface MMScrapBackgroundView : MMGenericBackgroundView
 
 @property (nonatomic, readonly) UIImageView* backingContentView;
 @property (nonatomic, assign) BOOL backingViewHasChanged;
 
-+(int) totalBackgroundBytes;
++ (int)totalBackgroundBytes;
 
--(id) initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)scrapState;
+- (id)initWithImage:(UIImage*)img forScrapState:(MMScrapViewState*)scrapState;
 
 #pragma mark Saving and Loading
 
--(void) loadBackgroundFromDiskWithProperties:(NSDictionary*)properties;
+- (void)loadBackgroundFromDiskWithProperties:(NSDictionary*)properties;
 
--(NSDictionary*) saveBackgroundToDisk;
+- (NSDictionary*)saveBackgroundToDisk;
 
 #pragma mark Duplication
 
--(MMScrapBackgroundView*) duplicateFor:(MMScrapViewState*)otherScrapState;
+- (MMScrapBackgroundView*)duplicateFor:(MMScrapViewState*)otherScrapState;
 
 @end

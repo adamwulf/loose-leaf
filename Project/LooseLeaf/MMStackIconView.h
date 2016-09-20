@@ -13,10 +13,11 @@ typedef enum NSInteger {
     MMStackIconViewStyleLight
 } MMStackIconViewStyle;
 
+
 @interface MMStackIconView : UIView
 
--(instancetype) initWithFrame:(CGRect)frame andStackUUID:(NSString*)stackUUID andStyle:(MMStackIconViewStyle)style;
+- (instancetype)initWithFrame:(CGRect)frame andStackUUID:(NSString*)stackUUID andStyle:(MMStackIconViewStyle)style;
 
--(void) loadThumbs;
+- (void)loadThumbs;
 
 @end

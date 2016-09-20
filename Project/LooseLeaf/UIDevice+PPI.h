@@ -8,18 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIDevice (PPI)
 
-+(BOOL) isMetric;
++ (BOOL)isMetric;
 
-+(CGFloat) ppi;
++ (CGFloat)ppi;
 
-+(CGFloat) ppc;
++ (CGFloat)ppc;
 
-+(CGFloat) idealUnitLength;
++ (CGFloat)idealUnitLength;
 
-+(NSInteger) majorVersion;
++ (NSInteger)majorVersion;
 
-+(NSString*) buildVersion;
++ (NSString*)buildVersion;
 
 @end

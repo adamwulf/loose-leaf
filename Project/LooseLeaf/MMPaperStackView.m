@@ -21,17 +21,17 @@
 
 #define kBounceThreshhold .1
 
-@implementation MMPaperStackView{
+
+@implementation MMPaperStackView {
     MMPapersIcon* papersIcon;
     MMPaperIcon* paperIcon;
     MMPlusIcon* plusIcon;
     MMLeftArrow* leftArrow;
     MMRightArrow* rightArrow;
-    
+
     // track if we're currently pulling in a page
     // from the bezel
     MMPaperView* inProgressOfBezeling;
-    
 }
 
 @synthesize uuid;
@@ -41,8 +41,7 @@
 @synthesize hiddenStackHolder = hiddenStackHolder;
 @synthesize bezelStackHolder = bezelStackHolder;
 
-- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid
-{
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
@@ -55,22 +54,22 @@
         visibleStackHolder = [[MMVisibleStackHolderView alloc] initWithFrame:self.bounds];
         hiddenStackHolder = [[MMHiddenStackHolderView alloc] initWithFrame:self.bounds];
         bezelStackHolder = [[MMBezelStackHolderView alloc] initWithFrame:self.bounds];
-        
+
         bezelStackHolder.userInteractionEnabled = NO;
-        
+
         visibleStackHolder.tag = 0;
         bezelStackHolder.tag = 1;
         hiddenStackHolder.tag = 2;
-        
+
         CGRect frameOfHiddenStack = hiddenStackHolder.frame;
         frameOfHiddenStack.origin.x += hiddenStackHolder.bounds.size.width + 10;
         hiddenStackHolder.frame = frameOfHiddenStack;
         bezelStackHolder.frame = frameOfHiddenStack;
-        
+
         hiddenStackHolder.clipsToBounds = YES;
         visibleStackHolder.clipsToBounds = YES;
         bezelStackHolder.clipsToBounds = NO;
-        
+
         _stackManager = [[MMSingleStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
 
         //
@@ -93,7 +92,7 @@
         leftArrow.alpha = 0;
         rightArrow.alpha = 0;
         plusIcon.alpha = 0;
-        
+
         fromRightBezelGesture = [[MMBezelInGestureRecognizer alloc] initWithTarget:self action:@selector(isBezelingInRightWithGesture:)];
         fromRightBezelGesture.gestureIsFromRightBezel = YES;
         [self addGestureRecognizer:fromRightBezelGesture];
@@ -104,18 +103,18 @@
     return self;
 }
 
--(int) fullByteSize{
+- (int)fullByteSize {
     return papersIcon.fullByteSize + paperIcon.fullByteSize + plusIcon.fullByteSize + leftArrow.fullByteSize + rightArrow.fullByteSize;
 }
 
--(NSString*) activeGestureSummary{
+- (NSString*)activeGestureSummary {
     @throw kAbstractMethodException;
 }
 
 
 #pragma mark - Gesture Helpers
 
--(void) cancelAllGestures{
+- (void)cancelAllGestures {
     [fromLeftBezelGesture cancel];
     [fromRightBezelGesture cancel];
 }
@@ -126,10 +125,9 @@
  * this function makes sure there's at least numberOfPagesToEnsure pages
  * in the hidden stack, and returns the top page
  */
--(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView{
-    while([stackView.subviews count] < numberOfPagesToEnsure){
+- (void)ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView {
+    while ([stackView.subviews count] < numberOfPagesToEnsure) {
         MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:stackView.bounds];
-        page.isBrandNewPage = YES;
         page.delegate = self;
         [stackView addSubviewToBottomOfStack:page];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
@@ -140,7 +138,7 @@
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
  */
--(void) addPaperToBottomOfStack:(MMPaperView*)page{
+- (void)addPaperToBottomOfStack:(MMPaperView*)page {
     page.isBrandNewPage = NO;
     page.delegate = self;
     [page enableAllGestures];
@@ -151,18 +149,18 @@
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
  */
--(void) addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage{
+- (void)addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage {
     page.isBrandNewPage = NO;
     page.delegate = self;
     [page enableAllGestures];
-    if([bezelStackHolder containsSubview:otherPage]){
+    if ([bezelStackHolder containsSubview:otherPage]) {
         [visibleStackHolder pushSubview:page];
-    }else if([visibleStackHolder containsSubview:otherPage]){
+    } else if ([visibleStackHolder containsSubview:otherPage]) {
         // this will convert the frame of the newly inserted page
         [visibleStackHolder pushSubview:page];
         // and this will position it at the correct index
         [visibleStackHolder insertSubview:page belowSubview:otherPage];
-    }else if([hiddenStackHolder containsSubview:otherPage]){
+    } else if ([hiddenStackHolder containsSubview:otherPage]) {
         // this will convert the frame of the newly inserted page
         [hiddenStackHolder pushSubview:page];
         // and this will position it at the correct index
@@ -174,8 +172,7 @@
  * adds the page to the bottom of the stack
  * and adds to the bottom of the subviews
  */
--(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page{
-    page.isBrandNewPage = YES;
+- (void)addPaperToBottomOfHiddenStack:(MMPaperView*)page {
     page.delegate = self;
     [page disableAllGestures];
     [hiddenStackHolder addSubviewToBottomOfStack:page];
@@ -192,7 +189,7 @@
  * this is the + <= => icons on the right side of the screen
  * when a page is being panned
  */
--(void) updateIconAnimations{
+- (void)updateIconAnimations {
     // YES if we're pulling pages in from the hidden stack, NO otherwise
     BOOL bezelingFromRight = fromRightBezelGesture.subState == UIGestureRecognizerStateBegan || fromRightBezelGesture.subState == UIGestureRecognizerStateChanged;
     // YES if the top page will bezel right, NO otherwise
@@ -201,189 +198,188 @@
     BOOL topPageWillBezelLeft = [[visibleStackHolder peekSubview] willExitToBezel:MMBezelDirectionLeft];
     // number of times the top page has been bezeled
     NSInteger numberOfTimesTheTopPageHasExitedBezel = [[visibleStackHolder peekSubview] numberOfTimesExitedBezel];
-    
+
     // YES if a non top page is will exit bezel
     BOOL nonTopPageWillExitBezel = inProgressOfBezeling != [visibleStackHolder peekSubview] && ([inProgressOfBezeling numberOfTimesExitedBezel] > 0);
     // YES if we should show the right arrow (push pages to hidden stack)
     BOOL showRightArrow = NO;
-    if([setOfPagesBeingPanned count] > 1 ||
-       (topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
-       nonTopPageWillExitBezel){
-        showRightArrow  = YES;
+    if ([setOfPagesBeingPanned count] > 1 ||
+        (topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
+        nonTopPageWillExitBezel) {
+        showRightArrow = YES;
     }
     // YES if we should show the left arrow (pulling pages in from hidden stack)
     BOOL showLeftArrow = NO;
-    if(topPageWillBezelLeft && numberOfTimesTheTopPageHasExitedBezel > 0){
+    if (topPageWillBezelLeft && numberOfTimesTheTopPageHasExitedBezel > 0) {
         showLeftArrow = YES;
     }
-    if(bezelingFromRight){
-        if((fromRightBezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
+    if (bezelingFromRight) {
+        if ((fromRightBezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft) {
             showLeftArrow = YES;
-        }else if((fromRightBezelGesture.panDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
+        } else if ((fromRightBezelGesture.panDirection & MMBezelDirectionRight) == MMBezelDirectionRight) {
             showRightArrow = YES;
         }
     }
-    
+
     MMPaperView* topPage = [visibleStackHolder peekSubview];
-    if([self shouldPushPageOntoVisibleStack:topPage withFrame:topPage.frame]){
+    if ([self shouldPushPageOntoVisibleStack:topPage withFrame:topPage.frame]) {
         showLeftArrow = YES;
     }
-    if([self shouldPopPageFromVisibleStack:topPage withFrame:topPage.frame]){
+    if ([self shouldPopPageFromVisibleStack:topPage withFrame:topPage.frame]) {
         showRightArrow = YES;
     }
-    
-    if([visibleStackHolder peekSubview].scale < kMinPageZoom){
+
+    if ([visibleStackHolder peekSubview].scale < kMinPageZoom) {
         //
         // ok, we're in zoomed out mode, looking at the list
         // of all the pages, so hide all the icons
         showLeftArrow = NO;
         showRightArrow = NO;
     }
-    
+
     //
     // now all the variables are set, we know our state
     // so update the actual icons
-    if((showLeftArrow || showRightArrow) &&
-       ((!showLeftArrow && leftArrow.alpha) ||
-        (!showRightArrow && rightArrow.alpha) ||
-        (!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
-        (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
-        (!paperIcon.alpha && topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
-        (!paperIcon.alpha && nonTopPageWillExitBezel) ||
-        bezelingFromRight)){
-           
-           [papersIcon removeAllAnimationsAndPreservePresentationFrame];
+    if ((showLeftArrow || showRightArrow) &&
+        ((!showLeftArrow && leftArrow.alpha) ||
+         (!showRightArrow && rightArrow.alpha) ||
+         (!paperIcon.alpha && [setOfPagesBeingPanned count] == 1) ||
+         (!papersIcon.alpha && [setOfPagesBeingPanned count] > 1) ||
+         (!paperIcon.alpha && topPageWillBezelRight && numberOfTimesTheTopPageHasExitedBezel > 0) ||
+         (!paperIcon.alpha && nonTopPageWillExitBezel) ||
+         bezelingFromRight)) {
+        [papersIcon removeAllAnimationsAndPreservePresentationFrame];
 
-           __block CGFloat papersIconAlpha = 0;
-           __block CGFloat paperIconAlpha = 0;
-           __block CGFloat leftArrowAlpha = 0;
-           __block CGFloat plusIconAlpha = 0;
-           __block CGFloat rightArrowAlpha = 0;
+        __block CGFloat papersIconAlpha = 0;
+        __block CGFloat paperIconAlpha = 0;
+        __block CGFloat leftArrowAlpha = 0;
+        __block CGFloat plusIconAlpha = 0;
+        __block CGFloat rightArrowAlpha = 0;
 
-           if(([setOfPagesBeingPanned count] > 1 && !nonTopPageWillExitBezel)){
-               //
-               // user is holding the top page
-               // plus at least 1 other
-               //
-               // calculate the number of pages that will be sent
-               // to the hidden stack if the user stops panning
-               // the top page
-               NSInteger numberToShowOnPagesIconIfNeeded = 0;
-               for(MMPaperView* page in [[visibleStackHolder.subviews copy] reverseObjectEnumerator]){
-                   if([page isBeingPannedAndZoomed] && page != [visibleStackHolder peekSubview]){
-                       break;
-                   }else{
-                       numberToShowOnPagesIconIfNeeded++;
-                   }
-               }
-               
-               //
-               // update the icons as necessary
-               papersIconAlpha = numberToShowOnPagesIconIfNeeded > 1 ? 1 : 0;
-               paperIconAlpha = numberToShowOnPagesIconIfNeeded > 1 ? 0 : 1;
-               papersIcon.numberToShowIfApplicable = numberToShowOnPagesIconIfNeeded;
-               
-               //
-               // show right arrow since this gesture can only send pages
-               // to the hidden stack
-               plusIconAlpha = 0;
-               leftArrowAlpha = 0;
-               rightArrowAlpha = 1;
-           }else{
-               if(bezelingFromRight && fromRightBezelGesture.numberOfRepeatingBezels > 1){
-                   //
-                   // show the number of pages that the user
-                   // is bezeling in
-                   papersIcon.numberToShowIfApplicable = fromRightBezelGesture.numberOfRepeatingBezels;
-                   papersIconAlpha = 1;
-                   paperIconAlpha = 0;
-               }else if(numberOfTimesTheTopPageHasExitedBezel > 1){
-                   //
-                   // show pages icon w/ numbers if the user is exiting
-                   // bezel more than once
-                   if(numberOfTimesTheTopPageHasExitedBezel > 50){
-                       @throw [NSException exceptionWithName:@"BezelException" reason:@"Too many pages being bezeled" userInfo:nil];
-                   }
-                   papersIcon.numberToShowIfApplicable = numberOfTimesTheTopPageHasExitedBezel;
-                   papersIconAlpha = 1;
-                   paperIconAlpha = 0;
-               }else{
-                   //
-                   // ok, we're dealing with only
-                   // panning the top most page
-                   papersIconAlpha = 0;
-                   paperIconAlpha = 1;
-               }
-               
-               if(showLeftArrow && bezelingFromRight && ![bezelStackHolder peekSubview].isBrandNewPage){
-                   leftArrowAlpha = 1;
-                   plusIconAlpha = 0;
-               }else if(showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage){
-                   leftArrowAlpha = 1;
-                   plusIconAlpha = 0;
-               }else if(showLeftArrow){
-                   leftArrowAlpha = 0;
-                   plusIconAlpha = 1;
-               }else if(!showLeftArrow){
-                   leftArrowAlpha = 0;
-                   plusIconAlpha = 0;
-               }
-               if(showRightArrow){
-                   rightArrowAlpha = 1;
-               }else{
-                   rightArrowAlpha = 0;
-               }
-           }
+        if (([setOfPagesBeingPanned count] > 1 && !nonTopPageWillExitBezel)) {
+            //
+            // user is holding the top page
+            // plus at least 1 other
+            //
+            // calculate the number of pages that will be sent
+            // to the hidden stack if the user stops panning
+            // the top page
+            NSInteger numberToShowOnPagesIconIfNeeded = 0;
+            for (MMPaperView* page in [[visibleStackHolder.subviews copy] reverseObjectEnumerator]) {
+                if ([page isBeingPannedAndZoomed] && page != [visibleStackHolder peekSubview]) {
+                    break;
+                } else {
+                    numberToShowOnPagesIconIfNeeded++;
+                }
+            }
 
-           if(papersIcon.alpha == papersIconAlpha &&
-              paperIcon.alpha == paperIconAlpha &&
-              leftArrow.alpha == leftArrowAlpha &&
-              plusIcon.alpha == plusIconAlpha &&
-              rightArrow.alpha == rightArrowAlpha){
-//               DebugLog(@"duplicate animation");
-           }else{
-               [UIView animateWithDuration:0.2
-                                     delay:0 options:UIViewAnimationOptionBeginFromCurrentState
-                                animations:^{
-                                    papersIcon.alpha = papersIconAlpha;
-                                    paperIcon.alpha = paperIconAlpha;
-                                    leftArrow.alpha = leftArrowAlpha;
-                                    plusIcon.alpha = plusIconAlpha;
-                                    rightArrow.alpha = rightArrowAlpha;
-                                }
-                                completion:nil];
-           }
-       }else if(!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)){
-           if(papersIcon.alpha == 0 &&
-              paperIcon.alpha == 0 &&
-              leftArrow.alpha == 0 &&
-              plusIcon.alpha == 0 &&
-              rightArrow.alpha == 0){
-               //               DebugLog(@"duplicate animation");
-           }else{
-               
-               [UIView animateWithDuration:0.3
-                                     delay:0
-                                   options:UIViewAnimationOptionBeginFromCurrentState
-                                animations:^{
-                                    papersIcon.alpha = 0;
-                                    paperIcon.alpha = 0;
-                                    leftArrow.alpha = 0;
-                                    plusIcon.alpha = 0;
-                                    rightArrow.alpha = 0;
-                                }
-                                completion:nil];
-           }
-       }
+            //
+            // update the icons as necessary
+            papersIconAlpha = numberToShowOnPagesIconIfNeeded > 1 ? 1 : 0;
+            paperIconAlpha = numberToShowOnPagesIconIfNeeded > 1 ? 0 : 1;
+            papersIcon.numberToShowIfApplicable = numberToShowOnPagesIconIfNeeded;
+
+            //
+            // show right arrow since this gesture can only send pages
+            // to the hidden stack
+            plusIconAlpha = 0;
+            leftArrowAlpha = 0;
+            rightArrowAlpha = 1;
+        } else {
+            if (bezelingFromRight && fromRightBezelGesture.numberOfRepeatingBezels > 1) {
+                //
+                // show the number of pages that the user
+                // is bezeling in
+                papersIcon.numberToShowIfApplicable = fromRightBezelGesture.numberOfRepeatingBezels;
+                papersIconAlpha = 1;
+                paperIconAlpha = 0;
+            } else if (numberOfTimesTheTopPageHasExitedBezel > 1) {
+                //
+                // show pages icon w/ numbers if the user is exiting
+                // bezel more than once
+                if (numberOfTimesTheTopPageHasExitedBezel > 50) {
+                    @throw [NSException exceptionWithName:@"BezelException" reason:@"Too many pages being bezeled" userInfo:nil];
+                }
+                papersIcon.numberToShowIfApplicable = numberOfTimesTheTopPageHasExitedBezel;
+                papersIconAlpha = 1;
+                paperIconAlpha = 0;
+            } else {
+                //
+                // ok, we're dealing with only
+                // panning the top most page
+                papersIconAlpha = 0;
+                paperIconAlpha = 1;
+            }
+
+            if (showLeftArrow && bezelingFromRight && ![bezelStackHolder peekSubview].isBrandNewPage) {
+                leftArrowAlpha = 1;
+                plusIconAlpha = 0;
+            } else if (showLeftArrow && [hiddenStackHolder.subviews count] && ![hiddenStackHolder peekSubview].isBrandNewPage) {
+                leftArrowAlpha = 1;
+                plusIconAlpha = 0;
+            } else if (showLeftArrow) {
+                leftArrowAlpha = 0;
+                plusIconAlpha = 1;
+            } else if (!showLeftArrow) {
+                leftArrowAlpha = 0;
+                plusIconAlpha = 0;
+            }
+            if (showRightArrow) {
+                rightArrowAlpha = 1;
+            } else {
+                rightArrowAlpha = 0;
+            }
+        }
+
+        if (papersIcon.alpha == papersIconAlpha &&
+            paperIcon.alpha == paperIconAlpha &&
+            leftArrow.alpha == leftArrowAlpha &&
+            plusIcon.alpha == plusIconAlpha &&
+            rightArrow.alpha == rightArrowAlpha) {
+            //               DebugLog(@"duplicate animation");
+        } else {
+            [UIView animateWithDuration:0.2
+                                  delay:0
+                                options:UIViewAnimationOptionBeginFromCurrentState
+                             animations:^{
+                                 papersIcon.alpha = papersIconAlpha;
+                                 paperIcon.alpha = paperIconAlpha;
+                                 leftArrow.alpha = leftArrowAlpha;
+                                 plusIcon.alpha = plusIconAlpha;
+                                 rightArrow.alpha = rightArrowAlpha;
+                             }
+                             completion:nil];
+        }
+    } else if (!showLeftArrow && !showRightArrow && (paperIcon.alpha || papersIcon.alpha)) {
+        if (papersIcon.alpha == 0 &&
+            paperIcon.alpha == 0 &&
+            leftArrow.alpha == 0 &&
+            plusIcon.alpha == 0 &&
+            rightArrow.alpha == 0) {
+            //               DebugLog(@"duplicate animation");
+        } else {
+            [UIView animateWithDuration:0.3
+                                  delay:0
+                                options:UIViewAnimationOptionBeginFromCurrentState
+                             animations:^{
+                                 papersIcon.alpha = 0;
+                                 paperIcon.alpha = 0;
+                                 leftArrow.alpha = 0;
+                                 plusIcon.alpha = 0;
+                                 rightArrow.alpha = 0;
+                             }
+                             completion:nil];
+        }
+    }
 }
 
 
 #pragma mark - Bezel Left and Right Gestures
 
--(void) addPageButtonTapped:(UIButton*)button{
-    if([setOfPagesBeingPanned count]){
+- (void)addPageButtonTapped:(UIButton*)button {
+    if ([setOfPagesBeingPanned count]) {
         DebugLog(@"adding new page, but pages are being panned.");
-        for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+        for (MMPaperView* page in [setOfPagesBeingPanned copy]) {
             [page cancelAllGestures];
         }
     }
@@ -397,29 +393,27 @@
  * stack. either one at a time, or multiple if the gesture is repeated
  * without interruption.
  */
--(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
+- (void)isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture {
     CGPoint translation = [bezelGesture translationInView:self];
-    
-    if([bezelGesture isActivelyBezeling] &&
-       !bezelGesture.hasSeenSubstateBegin &&
-       (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
-        
-        
+
+    if ([bezelGesture isActivelyBezeling] &&
+        !bezelGesture.hasSeenSubstateBegin &&
+        (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)) {
         // a bezel might begin while a page is being actively
         // panned. in this case, the pan gesture (or ruler, etc) should be cancelled
         // so that bezel will own the entire touch state except for scrap panning
         // and/or drawing
-        if([setOfPagesBeingPanned count]){
+        if ([setOfPagesBeingPanned count]) {
             DebugLog(@"Wanting to bezel from left, but pages are being panned.");
-            for(MMPaperView* page in [setOfPagesBeingPanned copy]){
+            for (MMPaperView* page in [setOfPagesBeingPanned copy]) {
                 [page cancelAllGestures];
             }
         }
-        
+
         // make sure to disable all gestures on the top page.
         // this will cancel any strokes / ruler / etc
         [[visibleStackHolder peekSubview] disableAllGestures];
-        
+
         // this flag is an ugly hack because i'm using substates in gestures.
         // ideally, i could handle this gesture entirely inside of the state,
         // but i get an odd sitation where the gesture steals touches even
@@ -437,19 +431,19 @@
         // left hand bezel. we need to push a page from the visible
         // stack onto the bezel stack, and then we'll move that bezel
         // stack with the user's fingers
-        if([bezelStackHolder.subviews count]){
+        if ([bezelStackHolder.subviews count]) {
             // uh oh, we still have views in the bezel gesture
             // that haven't compeleted their animation.
             //
             // we need to cancel all of their animations
             // and move them immediately to the visible view
             // being sure to maintain proper order
-            while([bezelStackHolder.subviews count]){
+            while ([bezelStackHolder.subviews count]) {
                 MMPaperView* page = [bezelStackHolder.subviews firstObject];
                 [page.layer removeAllAnimations];
                 [page enableAllGestures];
                 [visibleStackHolder pushSubview:page];
-                if([bezelStackHolder.subviews count] != 1){
+                if ([bezelStackHolder.subviews count] != 1) {
                     // this will immediately move all pages
                     // that are already in the bezel stack, but
                     // won't immediately move the new page that
@@ -460,7 +454,7 @@
         }
         [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
         bezelStackHolder.frame = visibleStackHolder.frame;
-        
+
         // make sure we have two pages, the one we're pulling, and
         // the one below it
         [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
@@ -477,9 +471,9 @@
             bezelStackHolder.frame = newFrame;
             [bezelStackHolder peekSubview].frame = bezelStackHolder.bounds;
         } completion:nil];
-    }else if([bezelGesture isActivelyBezeling] &&
-             (bezelGesture.subState == UIGestureRecognizerStateCancelled || bezelGesture.subState == UIGestureRecognizerStateFailed ||
-              (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft)))){
+    } else if ([bezelGesture isActivelyBezeling] &&
+               (bezelGesture.subState == UIGestureRecognizerStateCancelled || bezelGesture.subState == UIGestureRecognizerStateFailed ||
+                (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft)))) {
         //
         // ok, the user has completed a bezel gesture, so we should take all
         // the pages in the bezel view and push them onto the hidden stack
@@ -487,26 +481,26 @@
         // to do that, we'll just pop all of the bezel stack straight over
         // to the hidden stack
 
-        if([bezelStackHolder.subviews count]){
+        if ([bezelStackHolder.subviews count]) {
             NSArray* pagesToDisable = [bezelStackHolder.subviews copy];
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
-            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished){
-                if(!finished){
+            [self emptyBezelStackToHiddenStackAnimated:YES onComplete:^(BOOL finished) {
+                if (!finished) {
                     DebugLog(@"not finished4!");
                 }
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off
-                for(MMPaperView* page in pagesToDisable){
+                for (MMPaperView* page in pagesToDisable) {
                     [page disableAllGestures];
                 }
             }];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
-    }else if([bezelGesture isActivelyBezeling] &&
-             bezelGesture.subState == UIGestureRecognizerStateEnded &&
-             ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
+    } else if ([bezelGesture isActivelyBezeling] &&
+               bezelGesture.subState == UIGestureRecognizerStateEnded &&
+               ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)) {
         //
         // they cancelled the bezel. so push all the views from the bezel back
         // onto the visible stack, then animate them back into position.
@@ -519,22 +513,22 @@
         // begins a new bezel gesture but the animations for the previous bezel
         // haven't completed.
         [[visibleStackHolder peekSubview] enableAllGestures];
-        if([bezelStackHolder.subviews count]){
+        if ([bezelStackHolder.subviews count]) {
             [self willNotChangeTopPageTo:[visibleStackHolder peekSubview]];
             NSArray* pagesToEnable = [bezelStackHolder.subviews copy];
-            while([bezelStackHolder.subviews count]){
+            while ([bezelStackHolder.subviews count]) {
                 // this will translate the frame from the bezel stack to the
                 // hidden stack, so that the pages appear in the same place
                 // to the user, the pop calls next will animate them to the
                 // visible stack
                 [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             }
-            void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
+            void (^finishedBlock)(BOOL finished) = ^(BOOL finished) {
                 bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off
-                for(MMPaperView* page in pagesToEnable){
+                for (MMPaperView* page in pagesToEnable) {
                     [page enableAllGestures];
                 }
             };
@@ -542,7 +536,7 @@
             // each of these came from the visible stack initially, so
             // we don't need to toggle their gestures enabled/disabled
             [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
-            
+
             //
             // successful gesture complete, so reset the gesture count
             // we only reset on the successful gesture, not a cancelled gesture
@@ -551,9 +545,9 @@
             // immediately back on bezel, then it'll increment count correctly
             [bezelGesture resetPageCount];
         }
-    }else if([bezelGesture isActivelyBezeling] &&
-             bezelGesture.subState == UIGestureRecognizerStateChanged &&
-             bezelGesture.numberOfRepeatingBezels){
+    } else if ([bezelGesture isActivelyBezeling] &&
+               bezelGesture.subState == UIGestureRecognizerStateChanged &&
+               bezelGesture.numberOfRepeatingBezels) {
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -563,41 +557,41 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         BOOL needsAnimationUpdate = bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count];
-        while(bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count]){
+        while (bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count]) {
             //
             // we need to add another page
             [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
-            if([[visibleStackHolder peekSubview] isBeingPannedAndZoomed]){
+            if ([[visibleStackHolder peekSubview] isBeingPannedAndZoomed]) {
                 [[visibleStackHolder peekSubview] cancelAllGestures];
             }
             [bezelStackHolder insertSubview:[visibleStackHolder peekSubview]];
             [[visibleStackHolder peekSubview] disableAllGestures];
         }
-        if(needsAnimationUpdate){
+        if (needsAnimationUpdate) {
             //
             // we just added a new page to the bezel gesture,
             // so make sure we've notified that it may be the new top
             [self mayChangeTopPageTo:[visibleStackHolder peekSubview]];
-            
+
             //
             // ok, animate them all into place
             NSInteger numberOfPages = [bezelStackHolder.subviews count];
             CGFloat delta;
-            if(numberOfPages < 10){
+            if (numberOfPages < 10) {
                 delta = 10;
-            }else{
+            } else {
                 delta = 100 / numberOfPages;
             }
             CGFloat currOffset = 0;
-            for(MMPaperView* page in bezelStackHolder.subviews){
+            for (MMPaperView* page in bezelStackHolder.subviews) {
                 CGRect fr = page.frame;
-                if(fr.origin.x != currOffset){
+                if (fr.origin.x != currOffset) {
                     fr.origin.x = currOffset;
-                    if(page == [bezelStackHolder.subviews firstObject]){
+                    if (page == [bezelStackHolder.subviews firstObject]) {
                         [UIView animateWithDuration:0.2 animations:^{
                             page.frame = fr;
                         }];
-                    }else{
+                    } else {
                         page.frame = fr;
                     }
                 }
@@ -609,14 +603,14 @@
                                      visibleStackHolder.frame.size.width,
                                      visibleStackHolder.frame.size.height);
         bezelStackHolder.frame = newFrame;
-        
+
         // in some cases, the top page on the visible stack will
         // think it's also being panned at the same time as this bezel
         // gesture
         //
         // double check and cancel it if needbe.
         MMPaperView* topPage = [visibleStackHolder peekSubview];
-        if([topPage isBeingPannedAndZoomed]){
+        if ([topPage isBeingPannedAndZoomed]) {
             [topPage cancelAllGestures];
         }
     }
@@ -631,13 +625,12 @@
  * stack. either one at a time, or multiple if the gesture is repeated
  * without interruption.
  */
--(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture{
+- (void)isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture {
     CGPoint translation = [bezelGesture translationInView:self];
-    
-    if([bezelGesture isActivelyBezeling] &&
-       !bezelGesture.hasSeenSubstateBegin &&
-       (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)){
-        
+
+    if ([bezelGesture isActivelyBezeling] &&
+        !bezelGesture.hasSeenSubstateBegin &&
+        (bezelGesture.subState == UIGestureRecognizerStateBegan || bezelGesture.subState == UIGestureRecognizerStateChanged)) {
         // cancel panning all pages, if any
         // this will make sure to cancel pages from back to front,
         // so that the top held page will fall back onto the visible stack.
@@ -649,19 +642,19 @@
         // by the bezel.
         [[[setOfPagesBeingPanned allObjects] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             // put the top visible page last
-            if(obj1 == [visibleStackHolder peekSubview]){
+            if (obj1 == [visibleStackHolder peekSubview]) {
                 return NSOrderedDescending;
-            }else if(obj2 == [visibleStackHolder peekSubview]){
+            } else if (obj2 == [visibleStackHolder peekSubview]) {
                 return NSOrderedAscending;
             }
             return NSOrderedSame;
-        }] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        }] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL* stop) {
             // now cancel all of those pages pan gestures
-            if([obj panGesture].subState != UIGestureRecognizerStatePossible){
+            if ([obj panGesture].subState != UIGestureRecognizerStatePossible) {
                 [[obj panGesture] cancel];
             }
         }];
-        
+
         // make sure there's a page to bezel
         [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
         // this flag is an ugly hack because i'm using substates in gestures.
@@ -681,7 +674,7 @@
         // right hand bezel. we need to push a page from the hidden
         // stack onto the bezel stack, and then we'll move that bezel
         // stack with the user's fingers
-        if([bezelStackHolder.subviews count]){
+        if ([bezelStackHolder.subviews count]) {
             // uh oh, we still have views in the bezel gesture
             // that haven't compeleted their animation.
             //
@@ -691,19 +684,19 @@
             // we need to cancel all of their animations
             // and move them immediately to the hidden view
             // being sure to maintain proper order
-//            DebugLog(@"empty bezel stack");
-            while([bezelStackHolder.subviews count]){
+            //            DebugLog(@"empty bezel stack");
+            while ([bezelStackHolder.subviews count]) {
                 MMPaperView* page = [bezelStackHolder peekSubview];
                 [page.layer removeAllAnimations];
                 [hiddenStackHolder pushSubview:page];
                 page.frame = hiddenStackHolder.bounds;
-//                DebugLog(@"pushing %@ onto hidden", page.uuid);
+                //                DebugLog(@"pushing %@ onto hidden", page.uuid);
             }
-        }else{
-//            DebugLog(@"get top of hidden stack");
+        } else {
+            //            DebugLog(@"get top of hidden stack");
         }
         [[visibleStackHolder peekSubview] disableAllGestures];
-//        DebugLog(@"right bezelling %@", [hiddenStackHolder peekSubview].uuid);
+        //        DebugLog(@"right bezelling %@", [hiddenStackHolder peekSubview].uuid);
         [self mayChangeTopPageTo:[hiddenStackHolder peekSubview]];
         [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
@@ -714,9 +707,9 @@
             bezelStackHolder.frame = newFrame;
             [bezelStackHolder peekSubview].frame = bezelStackHolder.bounds;
         } completion:nil];
-    }else if([bezelGesture isActivelyBezeling] &&
-             (bezelGesture.subState == UIGestureRecognizerStateCancelled || bezelGesture.subState == UIGestureRecognizerStateFailed ||
-              (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft)))){
+    } else if ([bezelGesture isActivelyBezeling] &&
+               (bezelGesture.subState == UIGestureRecognizerStateCancelled || bezelGesture.subState == UIGestureRecognizerStateFailed ||
+                (bezelGesture.subState == UIGestureRecognizerStateEnded && ((bezelGesture.panDirection & MMBezelDirectionLeft) != MMBezelDirectionLeft)))) {
         //
         // they cancelled the bezel. so push all the views from the bezel back
         // onto the hidden stack, then animate them back into position.
@@ -729,15 +722,15 @@
         // begins a new bezel gesture but the animations for the previous bezel
         // haven't completed.
 
-        if([bezelStackHolder.subviews count]){
+        if ([bezelStackHolder.subviews count]) {
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
             [[visibleStackHolder peekSubview] enableAllGestures];
         }
-    }else if([bezelGesture isActivelyBezeling] &&
-             bezelGesture.subState == UIGestureRecognizerStateEnded &&
-             ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)){
-        if([bezelStackHolder.subviews count]){
+    } else if ([bezelGesture isActivelyBezeling] &&
+               bezelGesture.subState == UIGestureRecognizerStateEnded &&
+               ((bezelGesture.panDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft)) {
+        if ([bezelStackHolder.subviews count]) {
             //
             // ok, the user has completed a bezel gesture, so we should take all
             // the pages in the bezel view and push them onto the visible stack
@@ -751,24 +744,24 @@
             NSArray* pagesToEnable = [bezelStackHolder.subviews copy];
             [[visibleStackHolder peekSubview] enableAllGestures];
             [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
-            while([bezelStackHolder.subviews count]){
+            while ([bezelStackHolder.subviews count]) {
                 // this will translate the frame from the bezel stack to the
                 // hidden stack, so that the pages appear in the same place
                 // to the user, the pop calls next will animate them to the
                 // visible stack
                 [hiddenStackHolder pushSubview:[bezelStackHolder peekSubview]];
             }
-            void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
+            void (^finishedBlock)(BOOL finished) = ^(BOOL finished) {
                 bezelStackHolder.frame = hiddenStackHolder.frame;
                 [self didChangeTopPage];
                 // since we've added pages to the hidden stack, make sure
                 // all of their gestures are turned off
-                for(MMPaperView* page in pagesToEnable){
+                for (MMPaperView* page in pagesToEnable) {
                     [page enableAllGestures];
                 }
             };
             [self popHiddenStackForPages:bezelGesture.numberOfRepeatingBezels onComplete:finishedBlock];
-            
+
             //
             // successful gesture complete, so reset the gesture count
             // we only reset on the successful gesture, not a cancelled gesture
@@ -777,9 +770,9 @@
             // immediately back on bezel, then it'll increment count correctly
             [bezelGesture resetPageCount];
         }
-    }else if([bezelGesture isActivelyBezeling] &&
-             bezelGesture.subState == UIGestureRecognizerStateChanged &&
-             bezelGesture.numberOfRepeatingBezels){
+    } else if ([bezelGesture isActivelyBezeling] &&
+               bezelGesture.subState == UIGestureRecognizerStateChanged &&
+               bezelGesture.numberOfRepeatingBezels) {
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -789,37 +782,37 @@
         // c) add correct number of pages to the bezelStackHolder
         // d) update the offset for the bezelStackHolder so they all move in tandem
         BOOL needsAnimationUpdate = bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count];
-        while(bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count]){
+        while (bezelGesture.numberOfRepeatingBezels > [bezelStackHolder.subviews count]) {
             // if we want more pages than are in the stack, then
             // we need to add another page
             // make sure there's a page to bezel
             [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         }
-        if(needsAnimationUpdate){
+        if (needsAnimationUpdate) {
             // we just added a new page to the bezel gesture,
             // so make sure we've notified that it may be the new top
             [self mayChangeTopPageTo:[bezelStackHolder peekSubview]];
-            
+
             //
             // ok, animate them all into place
             NSInteger numberOfPages = [bezelStackHolder.subviews count];
             CGFloat delta;
-            if(numberOfPages < 10){
+            if (numberOfPages < 10) {
                 delta = 10;
-            }else{
+            } else {
                 delta = 100 / numberOfPages;
             }
             CGFloat currOffset = 0;
-            for(MMPaperView* page in bezelStackHolder.subviews){
+            for (MMPaperView* page in bezelStackHolder.subviews) {
                 CGRect fr = page.frame;
-                if(fr.origin.x != currOffset){
+                if (fr.origin.x != currOffset) {
                     fr.origin.x = currOffset;
-                    if(page == [bezelStackHolder peekSubview]){
+                    if (page == [bezelStackHolder peekSubview]) {
                         [UIView animateWithDuration:.2 animations:^{
                             page.frame = fr;
                         }];
-                    }else{
+                    } else {
                         page.frame = fr;
                     }
                 }
@@ -831,97 +824,102 @@
                                      hiddenStackHolder.frame.size.width,
                                      hiddenStackHolder.frame.size.height);
         bezelStackHolder.frame = newFrame;
-        
+
         // in some cases, the top page on the visible stack will
         // think it's also being panned at the same time as this bezel
         // gesture
         //
         // double check and cancel it if needbe.
         MMPaperView* topPage = [visibleStackHolder peekSubview];
-        if([topPage isBeingPannedAndZoomed]){
+        if ([topPage isBeingPannedAndZoomed]) {
             [topPage cancelAllGestures];
         }
     }
     [self updateIconAnimations];
 }
 
--(void) emptyBezelStackToVisibleStackOnComplete:(void(^)(BOOL finished))completionBlock{
+- (void)emptyBezelStackToVisibleStackOnComplete:(void (^)(BOOL finished))completionBlock {
     [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
     CGFloat delay = 0;
-    if([bezelStackHolder.subviews count] == 0){
-        if(completionBlock) completionBlock(YES);
-    }else{
-        while([bezelStackHolder.subviews count]){
+    if ([bezelStackHolder.subviews count] == 0) {
+        if (completionBlock)
+            completionBlock(YES);
+    } else {
+        while ([bezelStackHolder.subviews count]) {
             BOOL isLastToAnimate = [bezelStackHolder.subviews count] == 1;
             MMPaperView* aPage = [bezelStackHolder.subviews objectAtIndex:0];
             [aPage removeAllAnimationsAndPreservePresentationFrame];
             [aPage enableAllGestures];
             [visibleStackHolder pushSubview:aPage];
-            [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished){
+            [self animatePageToFullScreen:aPage withDelay:delay withBounce:NO onComplete:(isLastToAnimate ? ^(BOOL finished) {
                 bezelStackHolder.frame = hiddenStackHolder.frame;
-                if(completionBlock) completionBlock(finished);
+                if (completionBlock)
+                    completionBlock(finished);
             } : nil)];
             delay += kAnimationDelay;
         }
     }
 }
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock{
+- (void)emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void (^)(BOOL finished))completionBlock {
     [self emptyBezelStackToHiddenStackAnimated:animated andPreservePageFrame:NO onComplete:completionBlock];
 }
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock{
+- (void)emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void (^)(BOOL finished))completionBlock {
     [bezelStackHolder removeAllAnimationsAndPreservePresentationFrame];
-    if(animated){
+    if (animated) {
         CGFloat delay = 0;
-        if([bezelStackHolder.subviews count] == 0){
-            if(completionBlock) completionBlock(YES);
-        }else{
-            for(MMPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]){
+        if ([bezelStackHolder.subviews count] == 0) {
+            if (completionBlock)
+                completionBlock(YES);
+        } else {
+            for (MMPaperView* page in [bezelStackHolder.subviews reverseObjectEnumerator]) {
                 BOOL isLastToAnimate = page == [bezelStackHolder.subviews objectAtIndex:0];
-                [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished){
+                [self animateBackToHiddenStack:page withDelay:delay onComplete:(isLastToAnimate ? ^(BOOL finished) {
                     // since we're  moving the bezel frame for the drag animation, be sure to re-hide it
                     // above the hidden stack off screen after all the pages animate
                     // back to the hidden stack
                     bezelStackHolder.frame = hiddenStackHolder.frame;
-                    if(completionBlock) completionBlock(finished);
+                    if (completionBlock)
+                        completionBlock(finished);
                 } : nil)];
                 delay += kAnimationDelay;
             }
         }
-    }else{
-        for(MMPaperView* page in [[bezelStackHolder.subviews copy] reverseObjectEnumerator]){
+    } else {
+        for (MMPaperView* page in [[bezelStackHolder.subviews copy] reverseObjectEnumerator]) {
             [page removeAllAnimationsAndPreservePresentationFrame];
             [hiddenStackHolder pushSubview:page];
-            if(!preserveFrame){
+            if (!preserveFrame) {
                 page.frame = hiddenStackHolder.bounds;
             }
         }
         bezelStackHolder.frame = hiddenStackHolder.frame;
-        if(completionBlock) completionBlock(YES);
+        if (completionBlock)
+            completionBlock(YES);
     }
 }
 
 #pragma mark - MMPaperViewDelegate
 
--(BOOL) isAnimatingTowardPageView{
+- (BOOL)isAnimatingTowardPageView {
     @throw kAbstractMethodException;
 }
 
--(void) didStartToWriteWithStylus{
+- (void)didStartToWriteWithStylus {
     @throw kAbstractMethodException;
 }
 
--(void) didEndWritingWithStylus{
+- (void)didEndWritingWithStylus {
     @throw kAbstractMethodException;
 }
 
--(void) didDrawStrokeOfCm:(CGFloat)distanceInCentimeters{
+- (void)didDrawStrokeOfCm:(CGFloat)distanceInCentimeters {
     @throw kAbstractMethodException;
 }
 
 /**
  * notify that we just long pressed
  */
--(void) didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches{
+- (void)didLongPressPage:(MMPaperView*)page withTouches:(NSSet*)touches {
     @throw kAbstractMethodException;
 }
 
@@ -929,19 +927,19 @@
  * return true if we should require a long press
  * before picking up a scrap
  */
--(BOOL) panScrapRequiresLongPress{
+- (BOOL)panScrapRequiresLongPress {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isAllowedToPan{
+- (BOOL)isAllowedToPan {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isAllowedToBezel{
+- (BOOL)isAllowedToBezel {
     return ![fromLeftBezelGesture isActivelyBezeling] && ![fromRightBezelGesture isActivelyBezeling];
 }
 
--(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch{
+- (BOOL)allowsHoldingScrapsWithTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
@@ -949,25 +947,25 @@
 /**
  * these are implemented in MMEditablePaperStackView
  */
--(void) didMoveRuler:(MMRulerToolGestureRecognizer *)gesture{
+- (void)didMoveRuler:(MMRulerToolGestureRecognizer*)gesture {
     @throw kAbstractMethodException;
 }
 
--(void) didStopRuler:(MMRulerToolGestureRecognizer *)gesture{
+- (void)didStopRuler:(MMRulerToolGestureRecognizer*)gesture {
     @throw kAbstractMethodException;
 }
 
 /**
  * return YES if we're in hand mode, no otherwise
  */
--(BOOL) shouldAllowPan:(MMPaperView*)page{
+- (BOOL)shouldAllowPan:(MMPaperView*)page {
     return YES;
 }
 
 /**
  * let's only allow scaling the top most page
  */
--(BOOL) allowsScaleForPage:(MMPaperView*)page{
+- (BOOL)allowsScaleForPage:(MMPaperView*)page {
     return [visibleStackHolder peekSubview] == page;
 }
 
@@ -975,46 +973,45 @@
  * during a pan, we'll need to show different icons
  * depending on where they drag a page
  */
--(CGRect) isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView *)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches{
-
+- (CGRect)isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches {
     BOOL isPanningTopPage = page == [visibleStackHolder peekSubview];
 
-    if(page == [visibleStackHolder.subviews objectAtIndex:0]){
+    if (page == [visibleStackHolder.subviews objectAtIndex:0]) {
         // they're panning the bottom page in the visible stack,
         // so add another
         [self ensureAtLeast:[visibleStackHolder.subviews count] + 1 pagesInStack:visibleStackHolder];
     }
-    
+
     //
     // resume normal behavior for any pages
     // of normal scale
-    if([page numberOfTimesExitedBezel] > 0){
+    if ([page numberOfTimesExitedBezel] > 0) {
         inProgressOfBezeling = page;
     }
-    if(![setOfPagesBeingPanned containsObject:page]){
+    if (![setOfPagesBeingPanned containsObject:page]) {
         [setOfPagesBeingPanned addObject:page];
     }
     [self updateIconAnimations];
-    
+
     //
     // with the pinch/pan gesture, pages may be
     // loading or unloading. so we should notify
     // when to start pushing pages in or out of
     // caches.
-    if(isBeginningGesture && isPanningTopPage){
+    if (isBeginningGesture && isPanningTopPage) {
         // if they're panning the top page
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
-    }else if(isBeginningGesture){
+    } else if (isBeginningGesture) {
         [self mayChangeTopPageTo:page];
     }
-    
+
     //
     // the user is bezeling a page to the left, which will pop
     // in pages from the hidden stack if they let go
     //
     // let's animate a small pop in
-    if(isPanningTopPage && ([page willExitToBezel:MMBezelDirectionLeft] ||
-                            [self shouldPushPageOntoVisibleStack:page withFrame:page.frame])){
+    if (isPanningTopPage && ([page willExitToBezel:MMBezelDirectionLeft] ||
+                             [self shouldPushPageOntoVisibleStack:page withFrame:page.frame])) {
         //
         // we're in progress of a bezel gesture from the right
         //
@@ -1025,13 +1022,13 @@
         // d) update the offset for the bezelStackHolder so they all move in tandem
         NSInteger numberOfPagesToAnimateFromRightBezel = 1;
         BOOL needsToUpdateAnimations = numberOfPagesToAnimateFromRightBezel > [bezelStackHolder.subviews count];
-        while(numberOfPagesToAnimateFromRightBezel > [bezelStackHolder.subviews count]){
+        while (numberOfPagesToAnimateFromRightBezel > [bezelStackHolder.subviews count]) {
             [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             //
             // we need to add another page
             [bezelStackHolder pushSubview:[hiddenStackHolder peekSubview]];
         }
-        if(needsToUpdateAnimations){
+        if (needsToUpdateAnimations) {
             [self mayChangeTopPageTo:[bezelStackHolder peekSubview]];
             MMPaperView* topPage = [bezelStackHolder peekSubview];
             CGRect topPageFrame = topPage.frame;
@@ -1041,21 +1038,21 @@
             // ok, animate them all into place
             NSInteger numberOfPages = [bezelStackHolder.subviews count];
             CGFloat delta;
-            if(numberOfPages < 10){
+            if (numberOfPages < 10) {
                 delta = 10;
-            }else{
+            } else {
                 delta = 100 / numberOfPages;
             }
             CGFloat currOffset = 0;
-            for(MMPaperView* page in bezelStackHolder.subviews){
+            for (MMPaperView* page in bezelStackHolder.subviews) {
                 CGRect fr = page.frame;
-                if(fr.origin.x != currOffset){
+                if (fr.origin.x != currOffset) {
                     fr.origin.x = currOffset;
-                    if(page == [bezelStackHolder peekSubview]){
+                    if (page == [bezelStackHolder peekSubview]) {
                         [UIView animateWithDuration:.2 animations:^{
                             page.frame = fr;
                         }];
-                    }else{
+                    } else {
                         page.frame = fr;
                     }
                 }
@@ -1065,23 +1062,23 @@
                                          hiddenStackHolder.frame.origin.y,
                                          hiddenStackHolder.frame.size.width,
                                          hiddenStackHolder.frame.size.height);
-            
-            if(!CGRectEqualToRect(bezelStackHolder.frame, newFrame) ||
-               CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
-                if(CGRectEqualToRect([bezelStackHolder.layer.presentationLayer frame], hiddenStackHolder.frame)){
+
+            if (!CGRectEqualToRect(bezelStackHolder.frame, newFrame) ||
+                CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)) {
+                if (CGRectEqualToRect([bezelStackHolder.layer.presentationLayer frame], hiddenStackHolder.frame)) {
                     // bounce
                     [UIView animateWithDuration:.1 animations:^{
                         CGRect bounceFrame = newFrame;
                         bounceFrame.origin.x -= 10;
                         bezelStackHolder.frame = bounceFrame;
-                    } completion:^(BOOL finished){
-                        if(finished){
+                    } completion:^(BOOL finished) {
+                        if (finished) {
                             [UIView animateWithDuration:.2 animations:^{
                                 bezelStackHolder.frame = newFrame;
                             }];
                         }
                     }];
-                }else{
+                } else {
                     // expand
                     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                         bezelStackHolder.frame = newFrame;
@@ -1089,8 +1086,8 @@
                 }
             }
         }
-    }else if(isPanningTopPage){
-        if([page willExitToBezel:MMBezelDirectionRight] && page.numberOfTimesExitedBezel > 1){
+    } else if (isPanningTopPage) {
+        if ([page willExitToBezel:MMBezelDirectionRight] && page.numberOfTimesExitedBezel > 1) {
             //
             // ok, the user is bezeling the top page to the right,
             // so find the page that's page.numberOfTimesExitedBezel
@@ -1101,24 +1098,24 @@
             // we'll have already notified about the page immediately below
             // the top page when the user first picked up the top page
             MMPaperView* pageMayPopTo = page;
-            for(int i=0;i<page.numberOfTimesExitedBezel;i++){
+            for (int i = 0; i < page.numberOfTimesExitedBezel; i++) {
                 pageMayPopTo = [visibleStackHolder getPageBelow:pageMayPopTo];
             }
-            if(pageMayPopTo){
+            if (pageMayPopTo) {
                 [self mayChangeTopPageTo:pageMayPopTo];
             }
-        }else{
+        } else {
             MMPaperView* pageBelow = [visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]];
-            if(pageBelow){
+            if (pageBelow) {
                 [self mayChangeTopPageTo:pageBelow];
             }
         }
-        if(!CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
+        if (!CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)) {
             // ok, the user isn't bezeling left anymore
             [UIView animateWithDuration:.2 delay:.5 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 bezelStackHolder.frame = hiddenStackHolder.frame;
-            } completion:^(BOOL finished){
-                if(finished && CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)){
+            } completion:^(BOOL finished) {
+                if (finished && CGRectEqualToRect(bezelStackHolder.frame, hiddenStackHolder.frame)) {
                     // empty the bezel stack to the hidden stack,
                     // animates are all offscreen and complete now
                     [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
@@ -1127,7 +1124,7 @@
             }];
         }
     }
-    
+
     return toFrame;
 }
 
@@ -1140,65 +1137,66 @@
  * b) user is done with top page
  * c) user is done with non-top page
  */
--(void) finishedPanningAndScalingPage:(MMPaperView*)page
+- (void)finishedPanningAndScalingPage:(MMPaperView*)page
                             intoBezel:(MMBezelDirection)bezelDirection
                             fromFrame:(CGRect)fromFrame
-                              toFrame:(CGRect)toFrame{
+                              toFrame:(CGRect)toFrame {
     // check if we finished the in progress bezel
-    if(page == inProgressOfBezeling) inProgressOfBezeling = nil;
+    if (page == inProgressOfBezeling)
+        inProgressOfBezeling = nil;
     // check if we finished the top page
     BOOL justFinishedPanningTheTopPage = [visibleStackHolder peekSubview] == page;
     // this finished page isn't panned anymore...
     [setOfPagesBeingPanned removeObject:page];
     // ok, update the icons
     [self updateIconAnimations];
-    
-    if(justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft){
-        [[[Mixpanel sharedInstance] people] set:@{kMPHasBookTurnedPage : @(YES)}];
-//        DebugLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
+
+    if (justFinishedPanningTheTopPage && (bezelDirection & MMBezelDirectionLeft) == MMBezelDirectionLeft) {
+        [[[Mixpanel sharedInstance] people] set:@{ kMPHasBookTurnedPage: @(YES) }];
+        //        DebugLog(@"finished bezelling top page left %d %d", (int) (bezelDirection & MMBezelDirectionLeft), (int) (bezelDirection & MMBezelDirectionRight));
         //
         // CASE 1:
         // left bezel by top page
         // ============================================================================
         //
         // cancel any other gestures going on
-        if([setOfPagesBeingPanned count]){
+        if ([setOfPagesBeingPanned count]) {
             // need to cancel pages being panned (?)
-            for(MMPaperView* aPage in setOfPagesBeingPanned){
+            for (MMPaperView* aPage in setOfPagesBeingPanned) {
                 [aPage cancelAllGestures];
             }
         }
-        
+
         MMScrappedPaperView* oldTopVisiblePage = [visibleStackHolder peekSubview];
         //
         // the bezelStackHolder was been filled during the pan, so add
         // the top page of the visible stack to the bottom of the bezelGestureHolder,
         // then animate
-        if([bezelStackHolder peekSubview]){
+        if ([bezelStackHolder peekSubview]) {
             [self willChangeTopPageTo:[bezelStackHolder peekSubview]];
-            [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished){
+            [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished) {
                 [self didChangeTopPage];
             }];
-            [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished){
+            [self emptyBezelStackToVisibleStackOnComplete:^(BOOL finished) {
                 [self updateIconAnimations];
                 [oldTopVisiblePage saveToDisk:nil];
             }];
-        }else{
+        } else {
             // we just picked up the top page close to the bezel,
             // and tossed it over the bezel.
             // time to send a page from the hidden stack to the
             // visible stack
             [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
             [self willChangeTopPageTo:[hiddenStackHolder peekSubview]];
-            [self popHiddenStackForPages:1 onComplete:^(BOOL completed){
+            [self popHiddenStackForPages:1 onComplete:^(BOOL completed) {
                 page.frame = self.bounds;
                 [self didChangeTopPage];
                 [oldTopVisiblePage saveToDisk:nil];
             }];
         }
         return;
-    }else if(justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]){
-//        DebugLog(@"finished top page, but still holding other pages");
+    } else if (justFinishedPanningTheTopPage && [setOfPagesBeingPanned count]) {
+        //        DebugLog(@"finished top page, but still holding other pages");
         //
         // CASE 2:
         // they released the top page, but are still panning
@@ -1208,24 +1206,24 @@
         // find the top most page that we're still panning,
         // and pop until there.
         MMPaperView* popUntil = nil;
-        for(MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]){
-            if(aPage != page){
+        for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
+            if (aPage != page) {
                 // don't adjust the page we just dropped
                 // obviously :)
-                if([aPage isBeingPannedAndZoomed]){
+                if ([aPage isBeingPannedAndZoomed]) {
                     popUntil = aPage;
                     break;
                 }
             }
         }
-        if(popUntil){
+        if (popUntil) {
             [self willChangeTopPageTo:popUntil];
             [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:popUntil]];
-            [self popStackUntilPage:popUntil onComplete:^(BOOL finished){
+            [self popStackUntilPage:popUntil onComplete:^(BOOL finished) {
                 [self updateIconAnimations];
                 [self didChangeTopPage];
             }];
-        }else{
+        } else {
             for (MMPaperView* page in setOfPagesBeingPanned) {
                 [page cancelAllGestures];
             }
@@ -1233,8 +1231,8 @@
             [self cancelAllGestures];
         }
         return;
-    }else if(!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-//        DebugLog(@"didn't release top page but need to pop a page");
+    } else if (!justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]) {
+        //        DebugLog(@"didn't release top page but need to pop a page");
         //
         // CASE 3:
         // they release a non-top page near the right bezel (but didn't bezel)
@@ -1242,7 +1240,7 @@
         // ============================================================================
         [self willNotChangeTopPageTo:page];
         [page removeAllAnimationsAndPreservePresentationFrame];
-        if([visibleStackHolder.subviews containsObject:page]){
+        if ([visibleStackHolder.subviews containsObject:page]) {
             // need to animate with animateBackToHiddenStack:withDelay:onComplete:
             // to keep this page in the visible stack while it animates to the hidden stack.
             // this would prevent the page from snapping in front of the top page during the animation
@@ -1250,16 +1248,16 @@
             //
             // i used to use [self sendPageToHiddenStack:page onComplete:], but this would put the page in
             // the bezel stack, which would pop it in front of the top held page
-            [self animateBackToHiddenStack:page withDelay:0 onComplete:^(BOOL finished){
+            [self animateBackToHiddenStack:page withDelay:0 onComplete:^(BOOL finished) {
                 [self updateIconAnimations];
                 [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
             }];
         }
         [self mayChangeTopPageTo:[visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]]];
         return;
-    }else if((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight){
-        [[[Mixpanel sharedInstance] people] set:@{kMPHasBookTurnedPage : @(YES)}];
-//        DebugLog(@"finished top page, bezel right");
+    } else if ((bezelDirection & MMBezelDirectionRight) == MMBezelDirectionRight) {
+        [[[Mixpanel sharedInstance] people] set:@{ kMPHasBookTurnedPage: @(YES) }];
+        //        DebugLog(@"finished top page, bezel right");
         //
         // CASE 4:
         // right bezel by any page
@@ -1269,29 +1267,29 @@
         //
         // either, i bezeled right the top page and am not bezeling anything else
         // or, i bezeled right a bottom page and am holding the top page
-        if(justFinishedPanningTheTopPage){
+        if (justFinishedPanningTheTopPage) {
             MMScrappedPaperView* oldTopVisiblePage = [visibleStackHolder peekSubview];
             //
             // we bezeled right the top page.
             // send as many as necessary to the hidden stack
-            if(page.numberOfTimesExitedBezel > 1){
+            if (page.numberOfTimesExitedBezel > 1) {
                 MMPaperView* pageToPopUntil = page;
-                for(int i=0;i<page.numberOfTimesExitedBezel && (![pageToPopUntil isBeingPannedAndZoomed] || pageToPopUntil == page);i++){
-                    if(pageToPopUntil == [visibleStackHolder.subviews objectAtIndex:0]){
+                for (int i = 0; i < page.numberOfTimesExitedBezel && (![pageToPopUntil isBeingPannedAndZoomed] || pageToPopUntil == page); i++) {
+                    if (pageToPopUntil == [visibleStackHolder.subviews objectAtIndex:0]) {
                         // make sure the visible stack has enough pages in it
                         [self ensureAtLeast:[visibleStackHolder.subviews count] + 1 pagesInStack:visibleStackHolder];
                     }
                     pageToPopUntil = [visibleStackHolder getPageBelow:pageToPopUntil];
                 }
                 [self willChangeTopPageTo:pageToPopUntil];
-                [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished){
+                [self popStackUntilPage:pageToPopUntil onComplete:^(BOOL finished) {
                     [self updateIconAnimations];
                     [self didChangeTopPage];
                     [oldTopVisiblePage saveToDisk:nil];
                 }];
-            }else{
+            } else {
                 [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
-                [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
+                [self sendPageToHiddenStack:page onComplete:^(BOOL finished) {
                     [self updateIconAnimations];
                     [self didChangeTopPage];
                     [oldTopVisiblePage saveToDisk:nil];
@@ -1301,22 +1299,22 @@
             // now that pages are sent to the hidden stack,
             // realign anything left in the visible stack
             [self realignPagesInVisibleStackExcept:page animated:YES];
-        }else{
+        } else {
             //
             // they bezeled right a non-top page, just get
             // rid of it
             [page removeAllAnimationsAndPreservePresentationFrame];
-            [self sendPageToHiddenStack:page onComplete:^(BOOL finished){
+            [self sendPageToHiddenStack:page onComplete:^(BOOL finished) {
                 [self updateIconAnimations];
-                if([page isKindOfClass:[MMEditablePaperView class]]){
+                if ([page isKindOfClass:[MMEditablePaperView class]]) {
                     MMEditablePaperView* editablePage = (MMEditablePaperView*)page;
                     [editablePage saveToDisk:nil];
                 }
             }];
         }
         return;
-    }else if(!justFinishedPanningTheTopPage){
-//        DebugLog(@"finished panning non-top page");
+    } else if (!justFinishedPanningTheTopPage) {
+        //        DebugLog(@"finished panning non-top page");
         //
         // CASE 5:
         //
@@ -1326,7 +1324,7 @@
         // send it anywhere. just exit as long
         // as we're still holding the top page
         // ============================================================================
-        if(![[visibleStackHolder peekSubview] isBeingPannedAndZoomed]){
+        if (![[visibleStackHolder peekSubview] isBeingPannedAndZoomed]) {
             //
             // odd, no idea how this happened. but we
             // just released a non-top page and the top
@@ -1337,14 +1335,14 @@
             // though no fingers are touching the screen
             //
             // just realign and log
-            
-//            NSString* reasonAndDebugInfo = [self activeGestureSummary];
-//            reasonAndDebugInfo = [NSString stringWithFormat:@"released non-top page while top page was not held\n%@", reasonAndDebugInfo];
-//            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:reasonAndDebugInfo userInfo:nil];
-            
-            
+
+            //            NSString* reasonAndDebugInfo = [self activeGestureSummary];
+            //            reasonAndDebugInfo = [NSString stringWithFormat:@"released non-top page while top page was not held\n%@", reasonAndDebugInfo];
+            //            @throw [NSException exceptionWithName:@"InvalidPageStack" reason:reasonAndDebugInfo userInfo:nil];
+
+
             NSString* errorToLogToMixpanel = @"released non-top page while top page was not held";
-            [[Mixpanel sharedInstance] track:kMPEventGestureBug properties:@{@"Gesture Description" : errorToLogToMixpanel}];
+            [[Mixpanel sharedInstance] track:kMPEventGestureBug properties:@{ @"Gesture Description": errorToLogToMixpanel }];
 
             //
             // as a backup, i think realignPagesInVisibleStackExcept:nil: would have "worked"... but hard to test
@@ -1362,8 +1360,8 @@
         return;
     }
 
-//    DebugLog(@"just released the top page, and no other pages being panned");
-    
+    //    DebugLog(@"just released the top page, and no other pages being panned");
+
     //
     // CASE 6:
     //
@@ -1376,18 +1374,18 @@
     // so it's safe to realign allothers
     [self realignPagesInVisibleStackExcept:page animated:YES];
 
-    if(justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]){
-//        DebugLog(@"should pop from visible");
+    if (justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]) {
+        //        DebugLog(@"should pop from visible");
         //
         // bezelStackHolder debugging DONE
         // pop the top page, it's close to the right bezel
         [self willChangeTopPageTo:[visibleStackHolder getPageBelow:page]];
-        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:^(BOOL finished){
+        [self popStackUntilPage:[visibleStackHolder getPageBelow:page] onComplete:^(BOOL finished) {
             [self updateIconAnimations];
             [self didChangeTopPage];
         }];
-    }else if(justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]){
-//        DebugLog(@"should pop to visible");
+    } else if (justFinishedPanningTheTopPage && [self shouldPushPageOntoVisibleStack:page withFrame:toFrame]) {
+        //        DebugLog(@"should pop to visible");
         //
         // bezelStackHolder debugging DONE
         //
@@ -1398,26 +1396,26 @@
         // the gesture inside the screen (which should only push 1 page).
         //
         // so check the bezelStackHolder
-        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished){
+        [self animatePageToFullScreen:page withDelay:0.1 withBounce:NO onComplete:^(BOOL finished) {
             [self updateIconAnimations];
         }];
-        if([bezelStackHolder.subviews count]){
+        if ([bezelStackHolder.subviews count]) {
             // pull the view onto the visible stack
             MMPaperView* pageToPushToVisible = [bezelStackHolder.subviews objectAtIndex:0];
             [self willChangeTopPageTo:pageToPushToVisible];
             [pageToPushToVisible removeAllAnimationsAndPreservePresentationFrame];
             [visibleStackHolder pushSubview:pageToPushToVisible];
-            [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:^(BOOL finished){
+            [self animatePageToFullScreen:pageToPushToVisible withDelay:0 withBounce:NO onComplete:^(BOOL finished) {
                 [self didChangeTopPage];
             }];
             [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
             [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
-        }else{
+        } else {
             // the pop method will notify us about the change
             // in top page, so we won't do it here.
             [self popTopPageOfHiddenStack];
         }
-    }else{
+    } else {
         // bounce it back to full screen
         [bezelStackHolder.subviews makeObjectsPerformSelector:@selector(removeAllAnimationsAndPreservePresentationFrame)];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:nil];
@@ -1426,63 +1424,63 @@
     }
 }
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture {
     // noop
 }
 
--(void) isBeginningToScaleReallySmall:(MMPaperView *)page{
+- (void)isBeginningToScaleReallySmall:(MMPaperView*)page {
     [self updateIconAnimations];
 }
 
--(void) finishedScalingReallySmall:(MMPaperView *)page animated:(BOOL)animated{
+- (void)finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated {
     [self updateIconAnimations];
 }
 
--(void) cancelledScalingReallySmall:(MMPaperView *)page{
+- (void)cancelledScalingReallySmall:(MMPaperView*)page {
     [self updateIconAnimations];
 }
 
--(void) finishedScalingBackToPageView:(MMPaperView*)page{
+- (void)finishedScalingBackToPageView:(MMPaperView*)page {
     [self updateIconAnimations];
 }
 
--(NSInteger) indexOfPageInCompleteStack:(MMPaperView*)page{
+- (NSInteger)indexOfPageInCompleteStack:(MMPaperView*)page {
     @throw kAbstractMethodException;
 }
 
--(NSInteger) rowInListViewGivenIndex:(NSInteger) indexOfPage{
+- (NSInteger)rowInListViewGivenIndex:(NSInteger)indexOfPage {
     @throw kAbstractMethodException;
 }
 
--(NSInteger) columnInListViewGivenIndex:(NSInteger) indexOfPage{
+- (NSInteger)columnInListViewGivenIndex:(NSInteger)indexOfPage {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isInVisibleStack:(MMPaperView *)page{
+- (BOOL)isInVisibleStack:(MMPaperView*)page {
     @throw kAbstractMethodException;
 }
 
--(void) didSavePage:(MMPaperView*)page{
+- (void)didSavePage:(MMPaperView*)page {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isPageEditable:(MMPaperView *)page{
+- (BOOL)isPageEditable:(MMPaperView*)page {
     @throw kAbstractMethodException;
 }
 
--(MMScrapsInBezelContainerView*) bezelContainerView{
+- (MMScrapsInBezelContainerView*)bezelContainerView {
     @throw kAbstractMethodException;
 }
 
--(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+- (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk {
     @throw kAbstractMethodException;
 }
 
--(void) didFailToExportPage:(MMPaperView*)page{
+- (void)didFailToExportPage:(MMPaperView*)page {
     @throw kAbstractMethodException;
 }
 
--(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+- (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk {
     @throw kAbstractMethodException;
 }
 
@@ -1495,9 +1493,9 @@
  * returns NO if the page should just bounce
  * instead
  */
--(BOOL) shouldInterialSlideThePage:(MMPaperView*)page toFrame:(CGRect)frame{
-    if(frame.origin.y <= 0 && frame.origin.y + frame.size.height > self.superview.frame.size.height &&
-       frame.origin.x <= 0 && frame.origin.x + frame.size.width > self.superview.frame.size.width){
+- (BOOL)shouldInterialSlideThePage:(MMPaperView*)page toFrame:(CGRect)frame {
+    if (frame.origin.y <= 0 && frame.origin.y + frame.size.height > self.superview.frame.size.height &&
+        frame.origin.x <= 0 && frame.origin.x + frame.size.width > self.superview.frame.size.width) {
         return YES;
     }
     return NO;
@@ -1509,7 +1507,7 @@
  *
  * this is used when a user drags a page to the left/right
  */
--(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
+- (BOOL)shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame {
     return frame.origin.x > self.frame.size.width - kGutterWidthToDragPages;
 }
 
@@ -1519,7 +1517,7 @@
  *
  * this is used when a user drags a page to the left/right
  */
--(BOOL) shouldPushPageOntoVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame{
+- (BOOL)shouldPushPageOntoVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame {
     return frame.origin.x + frame.size.width < kGutterWidthToDragPages;
 }
 
@@ -1527,14 +1525,14 @@
  * this will realign all the pages except the input page
  * to be scale 1 and (0,0) in the visibleStackHolder
  */
--(void) realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated{
-    for(MMPaperView* aPage in [visibleStackHolder.subviews copy]){
-        if(aPage != page){
-            if(!CGRectEqualToRect(aPage.frame, self.bounds)){
+- (void)realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated {
+    for (MMPaperView* aPage in [visibleStackHolder.subviews copy]) {
+        if (aPage != page) {
+            if (!CGRectEqualToRect(aPage.frame, self.bounds)) {
                 [aPage cancelAllGestures];
-                if(animated){
+                if (animated) {
                     [self animatePageToFullScreen:aPage withDelay:0 withBounce:NO onComplete:nil];
-                }else{
+                } else {
                     aPage.frame = self.bounds;
                 }
             }
@@ -1543,16 +1541,14 @@
 }
 
 
-
-
 #pragma mark - Page Animations
 
 /**
  * immediately animates the page from the visible stack
  * to the hidden stack
  */
--(void) sendPageToHiddenStack:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
-    if([visibleStackHolder.subviews containsObject:page]){
+- (void)sendPageToHiddenStack:(MMPaperView*)page onComplete:(void (^)(BOOL finished))completionBlock {
+    if ([visibleStackHolder.subviews containsObject:page]) {
         [page removeAllAnimationsAndPreservePresentationFrame];
         [bezelStackHolder addSubviewToBottomOfStack:page];
         [self emptyBezelStackToHiddenStackAnimated:YES onComplete:completionBlock];
@@ -1567,12 +1563,12 @@
  * if a page does not exist, it will create one
  * so that it has something to pop.
  */
--(void) popTopPageOfHiddenStack{
+- (void)popTopPageOfHiddenStack {
     [self ensureAtLeast:1 pagesInStack:hiddenStackHolder];
     MMPaperView* page = [hiddenStackHolder peekSubview];
     [self willChangeTopPageTo:page];
     page.isBrandNewPage = NO;
-    [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:^(BOOL finished){
+    [self popHiddenStackUntilPage:[hiddenStackHolder getPageBelow:page] onComplete:^(BOOL finished) {
         [self didChangeTopPage];
     }];
 }
@@ -1584,17 +1580,17 @@
  *
  * these pages will be pushed over to the invisible stack
  */
--(void) popStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
-    if(page == nil){
+- (void)popStackUntilPage:(MMPaperView*)page onComplete:(void (^)(BOOL finished))completionBlock {
+    if (page == nil) {
         DebugLog(@"what9");
         @throw [NSException exceptionWithName:@"popping to nil page" reason:@"unknown" userInfo:nil];
     }
-    if([visibleStackHolder.subviews containsObject:page] || page == nil){
+    if ([visibleStackHolder.subviews containsObject:page] || page == nil) {
         // list of pages from bottom to top
         NSArray* pages = [visibleStackHolder peekSubviewFromSubview:page];
         // enumerage backwards, so top pages stay on top,
         // and all are below anything already in the bezelStackHolder
-        for(MMPaperView* pageToPop in [pages reverseObjectEnumerator]){
+        for (MMPaperView* pageToPop in [pages reverseObjectEnumerator]) {
             [pageToPop removeAllAnimationsAndPreservePresentationFrame];
             [bezelStackHolder addSubviewToBottomOfStack:pageToPop];
         }
@@ -1610,10 +1606,10 @@
  *
  * these pages will be pushed over to the invisible stack
  */
--(void) popHiddenStackUntilPage:(MMPaperView*)page onComplete:(void(^)(BOOL finished))completionBlock{
-    if([hiddenStackHolder.subviews containsObject:page] || page == nil){
+- (void)popHiddenStackUntilPage:(MMPaperView*)page onComplete:(void (^)(BOOL finished))completionBlock {
+    if ([hiddenStackHolder.subviews containsObject:page] || page == nil) {
         CGFloat delay = 0;
-        while([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]){
+        while ([hiddenStackHolder peekSubview] != page && [hiddenStackHolder.subviews count]) {
             //
             // since we're manually popping the stack outside of an
             // animation, we need to make sure the page still exists
@@ -1639,12 +1635,12 @@
  * and call the completionBlock once they're all
  * animated
  */
--(void) popHiddenStackForPages:(NSInteger)numberOfPages onComplete:(void(^)(BOOL finished))completionBlock{
+- (void)popHiddenStackForPages:(NSInteger)numberOfPages onComplete:(void (^)(BOOL finished))completionBlock {
     [self ensureAtLeast:numberOfPages pagesInStack:hiddenStackHolder];
     NSInteger index = [hiddenStackHolder.subviews count] - 1 - numberOfPages;
-    if(index >= 0){
+    if (index >= 0) {
         [self popHiddenStackUntilPage:[hiddenStackHolder.subviews objectAtIndex:index] onComplete:completionBlock];
-    }else{
+    } else {
         // pop entire stack
         [self popHiddenStackUntilPage:nil onComplete:completionBlock];
     }
@@ -1658,63 +1654,63 @@
  * in this case, we want to animate the page to the edge
  * then bounce it like a scrollview would
  */
--(void) bouncePageToEdge:(MMPaperView*)page toFrame:(CGRect)toFrame intertialFrame:(CGRect)inertialFrame{
+- (void)bouncePageToEdge:(MMPaperView*)page toFrame:(CGRect)toFrame intertialFrame:(CGRect)inertialFrame {
     //
     //
     // first, check to see if the frame is already out of bounds
     // the toFrame represents where the paper is pre-inertia, so if
     // the toFrame is wrong, then just animate it back to an edge straight away
-    if(toFrame.origin.x > 0 || toFrame.origin.y > 0 || toFrame.origin.x + toFrame.size.width < self.superview.frame.size.width || toFrame.origin.y + toFrame.size.height < self.superview.frame.size.height){
+    if (toFrame.origin.x > 0 || toFrame.origin.y > 0 || toFrame.origin.x + toFrame.size.width < self.superview.frame.size.width || toFrame.origin.y + toFrame.size.height < self.superview.frame.size.height) {
         CGRect newInertialFrame = inertialFrame;
-        if(inertialFrame.origin.x > 0){
+        if (inertialFrame.origin.x > 0) {
             newInertialFrame.origin.x = 0;
         }
-        if(inertialFrame.origin.y > 0){
+        if (inertialFrame.origin.y > 0) {
             newInertialFrame.origin.y = 0;
         }
-        if(inertialFrame.origin.x + inertialFrame.size.width < self.superview.frame.size.width){
+        if (inertialFrame.origin.x + inertialFrame.size.width < self.superview.frame.size.width) {
             newInertialFrame.origin.x = self.superview.frame.size.width - toFrame.size.width;
         }
-        if(inertialFrame.origin.y + inertialFrame.size.height < self.superview.frame.size.height){
+        if (inertialFrame.origin.y + inertialFrame.size.height < self.superview.frame.size.height) {
             newInertialFrame.origin.y = self.superview.frame.size.height - toFrame.size.height;
         }
-        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
+        [UIView animateWithDuration:0.3 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void) {
             page.frame = newInertialFrame;
         } completion:nil];
         return;
     }
-    
+
     //
     // ok, the paper is currently in the correct view, but the inertia
     // will carry it to an invalid location. for this, lets get the inertia
     // to carry it a 10px difference, then bounce it back to the edige
     CGRect newInertiaFrame = inertialFrame;
     CGRect postInertialFrame = inertialFrame;
-    if(inertialFrame.origin.x > 10){
+    if (inertialFrame.origin.x > 10) {
         postInertialFrame.origin.x = 0;
         newInertiaFrame.origin.x = 10;
     }
-    if(inertialFrame.origin.y > 10){
+    if (inertialFrame.origin.y > 10) {
         postInertialFrame.origin.y = 0;
         newInertiaFrame.origin.y = 10;
     }
-    if(inertialFrame.origin.x + inertialFrame.size.width < self.superview.frame.size.width - 10){
+    if (inertialFrame.origin.x + inertialFrame.size.width < self.superview.frame.size.width - 10) {
         postInertialFrame.origin.x = self.superview.frame.size.width - toFrame.size.width;
         newInertiaFrame.origin.x = postInertialFrame.origin.x - 10;
-        
     }
-    if(inertialFrame.origin.y + inertialFrame.size.height < self.superview.frame.size.height - 10){
+    if (inertialFrame.origin.y + inertialFrame.size.height < self.superview.frame.size.height - 10) {
         postInertialFrame.origin.y = self.superview.frame.size.height - toFrame.size.height;
         newInertiaFrame.origin.y = postInertialFrame.origin.y - 10;
     }
-    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void){
+    [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut animations:^(void) {
         page.frame = newInertiaFrame;
-    } completion:^(BOOL finished){
-        if(finished && !CGRectEqualToRect(newInertiaFrame, postInertialFrame)){
+    } completion:^(BOOL finished) {
+        if (finished && !CGRectEqualToRect(newInertiaFrame, postInertialFrame)) {
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionAllowUserInteraction
-                             animations:^(void){
+                             animations:^(void) {
                                  page.frame = postInertialFrame;
-                             } completion:nil];
+                             }
+                             completion:nil];
         }
     }];
 }
@@ -1728,23 +1724,23 @@
  *
  * this animation is interruptable
  */
--(void) animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock{
-    
-    void(^finishedBlock)(BOOL finished)  = ^(BOOL finished){
-        if(finished){
+- (void)animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void (^)(BOOL finished))completionBlock {
+    void (^finishedBlock)(BOOL finished) = ^(BOOL finished) {
+        if (finished) {
             [page enableAllGestures];
-            if(![visibleStackHolder containsSubview:page]){
+            if (![visibleStackHolder containsSubview:page]) {
                 [visibleStackHolder pushSubview:page];
             }
         }
-        if(completionBlock) completionBlock(finished);
+        if (completionBlock)
+            completionBlock(finished);
     };
-    
+
     [page enableAllGestures];
-    if(bounce){
+    if (bounce) {
         CGFloat duration = .3;
         CGFloat bounceHeight = 10;
-        if(page.scale > 1){
+        if (page.scale > 1) {
             // this will cause it to bounce in
             // the correct direction of the scale
             bounceHeight = -5;
@@ -1753,60 +1749,62 @@
         // we also need to animate the shadow so that it doesn't "pop"
         // into place. it's not taken care of automatically in the
         // UIView animationWithDuration call...
-        CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+        CABasicAnimation* theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
         theAnimation.duration = duration / 2;
         theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-        theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
+        theAnimation.fromValue = (id)page.contentView.layer.shadowPath;
+        theAnimation.toValue = (id)[[MMShadowManager sharedInstance] getShadowForSize:[MMShadowedView expandBounds:self.bounds].size];
         [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-        [UIView animateWithDuration:duration/2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
-                         animations:^(void){
-                             page.scale = 1;
-                             CGRect bounceFrame = self.bounds;
-                             bounceFrame.origin.x = bounceFrame.origin.x-bounceHeight;
-                             bounceFrame.origin.y = bounceFrame.origin.y-bounceHeight;
-                             bounceFrame.size.width = bounceFrame.size.width+bounceHeight*2;
-                             bounceFrame.size.height = bounceFrame.size.height+bounceHeight*2;
-                             page.frame = bounceFrame;
-                         } completion:^(BOOL finished){
-                             if(finished){
-                                 //
-                                 // ok, here the page is bounced too large for the screen, so
-                                 // complete the bounce and put the zoom at 100% exactly.
-                                 // first the shadow, then the frame
-                                 CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
-                                 theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
-                                 theAnimation.duration = duration / 2;
-                                 theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-                                 theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
-                                 [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
-                                 [UIView animateWithDuration:duration/2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
-                                                  animations:^(void){
-                                                      page.frame = self.bounds;
-                                                      page.scale = 1;
-                                                  } completion:finishedBlock];
-                             }
-                         }];
-    }else{
+        [UIView animateWithDuration:duration / 2 delay:delay options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
+            animations:^(void) {
+                page.scale = 1;
+                CGRect bounceFrame = self.bounds;
+                bounceFrame.origin.x = bounceFrame.origin.x - bounceHeight;
+                bounceFrame.origin.y = bounceFrame.origin.y - bounceHeight;
+                bounceFrame.size.width = bounceFrame.size.width + bounceHeight * 2;
+                bounceFrame.size.height = bounceFrame.size.height + bounceHeight * 2;
+                page.frame = bounceFrame;
+            }
+            completion:^(BOOL finished) {
+                if (finished) {
+                    //
+                    // ok, here the page is bounced too large for the screen, so
+                    // complete the bounce and put the zoom at 100% exactly.
+                    // first the shadow, then the frame
+                    CABasicAnimation* theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+                    theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
+                    theAnimation.duration = duration / 2;
+                    theAnimation.fromValue = (id)page.contentView.layer.shadowPath;
+                    theAnimation.toValue = (id)[[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
+                    [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+                    [UIView animateWithDuration:duration / 2 delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseIn
+                                     animations:^(void) {
+                                         page.frame = self.bounds;
+                                         page.scale = 1;
+                                     }
+                                     completion:finishedBlock];
+                }
+            }];
+    } else {
         CGFloat duration = .15;
         [[NSThread mainThread] performBlock:^{
             //
             // always animate the shadow and the frame
-            CABasicAnimation *theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+            CABasicAnimation* theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
             theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
             theAnimation.duration = duration;
-            theAnimation.fromValue = (id) page.contentView.layer.shadowPath;
-            theAnimation.toValue = (id) [[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
+            theAnimation.fromValue = (id)page.contentView.layer.shadowPath;
+            theAnimation.toValue = (id)[[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
             [page.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveEaseOut
-                             animations:^(void){
+                             animations:^(void) {
                                  page.frame = self.bounds;
                                  page.scale = 1;
-                             } completion:finishedBlock];
+                             }
+                             completion:finishedBlock];
         } afterDelay:delay];
     }
 }
-
 
 
 /**
@@ -1816,40 +1814,40 @@
  * if the page is already offscreen, then it won't
  * animate
  */
--(void) animateBackToHiddenStack:(MMPaperView*)page withDelay:(CGFloat)delay onComplete:(void(^)(BOOL finished))completionBlock{
+- (void)animateBackToHiddenStack:(MMPaperView*)page withDelay:(CGFloat)delay onComplete:(void (^)(BOOL finished))completionBlock {
     //
     // the page may be sent to the hidden stack from ~90px away vs ~760px away
     // this math makes the speed of the exit look more consistent
     CGRect frInVisibleStack = [visibleStackHolder convertRect:page.frame fromView:page.superview];
-    if(frInVisibleStack.origin.x >= visibleStackHolder.frame.size.width){
+    if (frInVisibleStack.origin.x >= visibleStackHolder.frame.size.width) {
         // it's invisible already, just push it on
         page.frame = hiddenStackHolder.bounds;
         page.scale = 1;
         [page disableAllGestures];
         [hiddenStackHolder pushSubview:page];
-        if(completionBlock) completionBlock(YES);
-    }else{
+        if (completionBlock)
+            completionBlock(YES);
+    } else {
         // the time spent on the animation should depend on how far away the page is from its final position.
         // if the page is very very close to the hidden stack, then the distance will be short so the duration will be tiny.
         // if the page is far away from the hidden stack, the animation duration will be closer to 0.2
-        CGFloat dist =  MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
+        CGFloat dist = MAX((visibleStackHolder.frame.size.width - frInVisibleStack.origin.x), visibleStackHolder.frame.size.width / 2);
         [UIView animateWithDuration:0.2 * (dist / visibleStackHolder.frame.size.width) delay:delay options:UIViewAnimationOptionCurveEaseOut
-                         animations:^(void){
-                             CGRect toFrame = [page.superview convertRect:hiddenStackHolder.bounds fromView:hiddenStackHolder];
-                             page.frame = toFrame;
-                             page.scale = 1;
-                         } completion:^(BOOL finished){
-                             if(finished){
-                                 [page disableAllGestures];
-                                 [hiddenStackHolder pushSubview:page];
-                             }
-                             if(completionBlock) completionBlock(finished);
-                         }];
+            animations:^(void) {
+                CGRect toFrame = [page.superview convertRect:hiddenStackHolder.bounds fromView:hiddenStackHolder];
+                page.frame = toFrame;
+                page.scale = 1;
+            }
+            completion:^(BOOL finished) {
+                if (finished) {
+                    [page disableAllGestures];
+                    [hiddenStackHolder pushSubview:page];
+                }
+                if (completionBlock)
+                    completionBlock(finished);
+            }];
     }
 }
-
-
-
 
 
 #pragma mark - Page Loading and Unloading
@@ -1860,7 +1858,7 @@
  * the cached image of the page, and writing the memcache
  * to disk
  */
--(void) mayChangeTopPageTo:(MMPaperView*)page{
+- (void)mayChangeTopPageTo:(MMPaperView*)page {
     [[MMPageCacheManager sharedInstance] mayChangeTopPageTo:page];
 }
 
@@ -1870,17 +1868,17 @@
  * any OpenGL / graphics memory for other pages.
  * get this into static mode asap.
  */
--(void) willChangeTopPageTo:(MMPaperView*)page{
+- (void)willChangeTopPageTo:(MMPaperView*)page {
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:page];
 }
 
 // convenience method
--(void) didChangeTopPage{
+- (void)didChangeTopPage {
     [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
 }
 
--(void) didChangeTopPageTo:(MMPaperView*)topPage{
-    if([[MMPageCacheManager sharedInstance] didChangeToTopPage:topPage]){
+- (void)didChangeTopPageTo:(MMPaperView*)topPage {
+    if ([[MMPageCacheManager sharedInstance] didChangeToTopPage:topPage]) {
         [self saveStacksToDisk];
     }
 }
@@ -1891,83 +1889,83 @@
  * any OpenGL / graphics memory for other pages.
  * get this into static mode asap.
  */
--(void) willNotChangeTopPageTo:(MMPaperView*)page{
+- (void)willNotChangeTopPageTo:(MMPaperView*)page {
     [[MMPageCacheManager sharedInstance] willNotChangeTopPageTo:page];
 }
 
--(void) saveStacksToDisk{
+- (void)saveStacksToDisk {
     @throw kAbstractMethodException;
 }
 
 #pragma mark - JotViewDelegate
--(BOOL) willBeginStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(void) willMoveStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding {
     @throw kAbstractMethodException;
 }
 
--(void) didEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(JotBrushTexture*) textureForStroke{
+- (JotBrushTexture*)textureForStroke {
     @throw kAbstractMethodException;
 }
 
--(CGFloat) stepWidthForStroke{
+- (CGFloat)stepWidthForStroke {
     @throw kAbstractMethodException;
 }
 
--(BOOL) supportsRotation{
+- (BOOL)supportsRotation {
     @throw kAbstractMethodException;
 }
 
--(UIColor*) colorForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(CGFloat) widthForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(CGFloat) smoothnessForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
+- (CGFloat)rotationForSegment:(AbstractBezierPathElement*)segment fromPreviousSegment:(AbstractBezierPathElement*)previousSegment {
     @throw kAbstractMethodException;
 }
 
--(NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement {
     @throw kAbstractMethodException;
 }
 
 #pragma mark - Check for Active Gestures
 
--(BOOL) isActivelyGesturing{
+- (BOOL)isActivelyGesturing {
     return [fromLeftBezelGesture isActivelyBezeling] || [fromRightBezelGesture isActivelyBezeling] || [setOfPagesBeingPanned count];
 }
 
--(void) disableAllGesturesForPageView{
+- (void)disableAllGesturesForPageView {
     [fromLeftBezelGesture setEnabled:NO];
     [fromRightBezelGesture setEnabled:NO];
 }
 
--(void) enableAllGesturesForPageView{
+- (void)enableAllGesturesForPageView {
     [fromLeftBezelGesture setEnabled:YES];
     [fromRightBezelGesture setEnabled:YES];
 }

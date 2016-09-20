@@ -8,15 +8,16 @@
 
 #import "MMDarkSidebarButton.h"
 
-@interface MMImageViewButton : MMDarkSidebarButton{
+
+@interface MMImageViewButton : MMDarkSidebarButton {
     BOOL darkBg;
     BOOL greyscale;
     UIImage* image;
 }
 
-@property (assign, getter = isDarkBg) BOOL darkBg;
-@property (assign, getter = isGreyscale) BOOL greyscale;
+@property (assign, getter=isDarkBg) BOOL darkBg;
+@property (assign, getter=isGreyscale) BOOL greyscale;
 
--(void) setImage:(UIImage*)img;
+- (void)setImage:(UIImage*)img;
 
 @end

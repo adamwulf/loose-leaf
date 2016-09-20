@@ -11,10 +11,10 @@
 
 @protocol MMCamViewDelegate <NSObject>
 
--(void) didTakePicture:(UIImage*)img;
+- (void)didTakePicture:(UIImage*)img;
 
--(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition;
+- (void)didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition;
 
--(void) sessionStarted;
+- (void)sessionStarted;
 
 @end

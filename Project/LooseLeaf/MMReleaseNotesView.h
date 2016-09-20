@@ -8,10 +8,11 @@
 
 #import "MMRoundedSquareView.h"
 
+
 @interface MMReleaseNotesView : MMRoundedSquareView
 
--(instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
--(instancetype) initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes;
+- (instancetype)initWithFrame:(CGRect)frame andReleaseNotes:(NSString*)htmlReleaseNotes;
 
 @end

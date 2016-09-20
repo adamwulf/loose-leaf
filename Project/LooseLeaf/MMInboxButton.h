@@ -8,6 +8,7 @@
 
 #import "MMDarkSidebarButton.h"
 
+
 @interface MMInboxButton : MMDarkSidebarButton
 
 @property (nonatomic) UIColor* arrowColor;

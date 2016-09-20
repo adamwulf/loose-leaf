@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMCloudKitShareListHorizontalLayout : UICollectionViewLayout
 
--(id) initWithFlip:(BOOL)shouldFlip;
+- (id)initWithFlip:(BOOL)shouldFlip;
 
 @end

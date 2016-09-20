@@ -8,8 +8,9 @@
 
 #import "MMPhotoAlbum.h"
 
+
 @interface MMDefaultPhotoAlbum : MMPhotoAlbum
 
--(id) initWithPhotosInDirectory:(NSString*)directoryPath;
+- (id)initWithPhotosInDirectory:(NSString*)directoryPath;
 
 @end

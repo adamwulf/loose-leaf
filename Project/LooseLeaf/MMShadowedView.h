@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MMShadowedView : UIView{
+
+@interface MMShadowedView : UIView {
     UIView* contentView;
 }
 @property (nonatomic, readonly) UIView* contentView;
 
-+(CGRect) expandFrame:(CGRect)rect;
-+(CGRect) contractFrame:(CGRect)rect;
-+(CGRect) expandBounds:(CGRect)rect;
-+(CGRect) contractBounds:(CGRect)rect;
++ (CGRect)expandFrame:(CGRect)rect;
++ (CGRect)contractFrame:(CGRect)rect;
++ (CGRect)expandBounds:(CGRect)rect;
++ (CGRect)contractBounds:(CGRect)rect;
 
-+(CGFloat) shadowWidth;
++ (CGFloat)shadowWidth;
 @end

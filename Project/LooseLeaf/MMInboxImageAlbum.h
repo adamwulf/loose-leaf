@@ -9,10 +9,11 @@
 #import "MMInboxAssetGroup.h"
 #import "MMInboxItem.h"
 
+
 @interface MMInboxImageAlbum : MMInboxAssetGroup
 
--(id) init NS_UNAVAILABLE;
+- (id)init NS_UNAVAILABLE;
 
--(id) initWithInboxItem:(MMInboxItem*)inboxItem;
+- (id)initWithInboxItem:(MMInboxItem*)inboxItem;
 
 @end

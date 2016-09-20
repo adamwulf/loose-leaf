@@ -10,34 +10,35 @@
 #import "MMInboxImage.h"
 #import "Constants.h"
 
-@implementation MMInboxImageAlbum{
+
+@implementation MMInboxImageAlbum {
     MMInboxImage* cachedImageAsset;
 }
 
--(id) initWithInboxItem:(MMInboxItem*)_inboxItem{
-    if(self = [super initWithInboxItem:_inboxItem]){
+- (id)initWithInboxItem:(MMInboxItem*)_inboxItem {
+    if (self = [super initWithInboxItem:_inboxItem]) {
         // noop
     }
     return self;
 }
 
--(short) numberOfPreviewPhotos{
+- (short)numberOfPreviewPhotos {
     return cachedImageAsset ? 1 : 0;
 }
 
--(NSArray*) previewPhotos{
+- (NSArray*)previewPhotos {
     return cachedImageAsset ? @[cachedImageAsset] : @[];
 }
 
--(void) loadPreviewPhotos{
+- (void)loadPreviewPhotos {
     cachedImageAsset = [[MMInboxImage alloc] initWithImageItem:self.inboxItem];
 }
 
--(void) unloadPreviewPhotos{
+- (void)unloadPreviewPhotos {
     cachedImageAsset = nil;
 }
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
+- (void)loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock {
     BOOL stop;
     enumerationBlock(cachedImageAsset, 0, &stop);
 }

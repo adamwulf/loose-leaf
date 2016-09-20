@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "MMDecompressImagePromiseDelegate.h"
 
-@interface MMDecompressImagePromise : NSObject{
+
+@interface MMDecompressImagePromise : NSObject {
     UIImage* image;
     __weak NSObject<MMDecompressImagePromiseDelegate>* delegate;
 }
@@ -20,9 +21,9 @@
 
 - (instancetype)init NS_UNAVAILABLE;
 
--(id) initForDecompressedImage:(UIImage*)imageToDecompress andDelegate:(NSObject<MMDecompressImagePromiseDelegate>*)delegate;
--(id) initForImage:(UIImage*)imageToDecompress andDelegate:(NSObject<MMDecompressImagePromiseDelegate>*)delegate;
+- (id)initForDecompressedImage:(UIImage*)imageToDecompress andDelegate:(NSObject<MMDecompressImagePromiseDelegate>*)delegate;
+- (id)initForImage:(UIImage*)imageToDecompress andDelegate:(NSObject<MMDecompressImagePromiseDelegate>*)delegate;
 
--(void) cancel;
+- (void)cancel;
 
 @end

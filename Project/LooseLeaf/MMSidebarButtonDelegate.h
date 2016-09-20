@@ -10,6 +10,6 @@
 
 @protocol MMSidebarButtonDelegate <NSObject>
 
--(CGFloat) sidebarButtonRotation;
+- (CGFloat)sidebarButtonRotation;
 
 @end

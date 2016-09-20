@@ -8,6 +8,7 @@
 
 #import "MMScrapBubbleButton.h"
 
+
 @interface MMCountBubbleButton : MMScrapBubbleButton
 
 @property (nonatomic, assign) NSInteger count;

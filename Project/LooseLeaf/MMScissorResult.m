@@ -8,7 +8,8 @@
 
 #import "MMScissorResult.h"
 
-@implementation MMScissorResult{
+
+@implementation MMScissorResult {
     NSArray* addedScraps;
     NSArray* removedScraps;
     NSArray* removedScrapProperties;
@@ -20,9 +21,9 @@
 @synthesize removedScrapProperties;
 @synthesize didAddFillStroke;
 
--(id) initWithAddedScraps:(NSArray*)_added andRemovedScraps:(NSArray*)_removed andRemovedScrapProperties:(NSArray*)_removedProps andDidFillStroke:(BOOL)_didFill{
-    if(self = [super init]){
-        if([_removed count] != [_removedProps count]){
+- (id)initWithAddedScraps:(NSArray*)_added andRemovedScraps:(NSArray*)_removed andRemovedScrapProperties:(NSArray*)_removedProps andDidFillStroke:(BOOL)_didFill {
+    if (self = [super init]) {
+        if ([_removed count] != [_removedProps count]) {
             @throw [NSException exceptionWithName:@"InvalidArgumentsException" reason:@"number of scraps and scrap properties must match" userInfo:nil];
         }
         addedScraps = _added;

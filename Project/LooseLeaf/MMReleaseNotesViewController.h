@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMReleaseNotesViewController : UIViewController
 
--(instancetype) initWithReleaseNotes:(NSString*)releaseNotes andCompletionBlock:(void(^)())completionBlock;
+- (instancetype)initWithReleaseNotes:(NSString*)releaseNotes andCompletionBlock:(void (^)())completionBlock;
 
 @end

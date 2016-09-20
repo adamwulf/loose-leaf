@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "MMPaperStackView.h"
 
-@interface MMSingleStackManager : NSObject{
+
+@interface MMSingleStackManager : NSObject {
     UIView* visibleStack;
     UIView* bezelStack;
     UIView* hiddenStack;
-    
+
     NSOperationQueue* opQueue;
 }
 
@@ -21,16 +22,16 @@
 @property (nonatomic, readonly) NSString* visiblePlistPath;
 @property (nonatomic, readonly) NSString* hiddenPlistPath;
 
--(id) initWithUUID:(NSString*)uuid visibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
+- (id)initWithUUID:(NSString*)uuid visibleStack:(UIView*)_visibleStack andHiddenStack:(UIView*)_hiddenStack andBezelStack:(UIView*)_bezelStack;
 
--(void) saveStacksToDisk;
+- (void)saveStacksToDisk;
 
--(BOOL) hasStateToLoad;
+- (BOOL)hasStateToLoad;
 
--(NSDictionary*) loadFromDiskWithBounds:(CGRect)bounds;
+- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds;
 
-+(NSDictionary*) loadFromDiskForStackUUID:(NSString*)stackUUID;
++ (NSDictionary*)loadFromDiskForStackUUID:(NSString*)stackUUID;
 
-+(UIImage*) hasThumbail:(BOOL*)thumbExists forPage:(NSString*)pageUUID forStack:(NSString*)stackUUID;
++ (UIImage*)hasThumbail:(BOOL*)thumbExists forPage:(NSString*)pageUUID forStack:(NSString*)stackUUID;
 
 @end

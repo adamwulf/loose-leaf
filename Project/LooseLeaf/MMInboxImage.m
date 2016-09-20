@@ -10,30 +10,31 @@
 #import "MMInboxItem.h"
 #import "Constants.h"
 
-@implementation MMInboxImage{
+
+@implementation MMInboxImage {
     MMInboxItem* asset;
 }
 
--(id) initWithImageItem:(MMInboxItem*)imageItem{
-    if(self = [super init]){
+- (id)initWithImageItem:(MMInboxItem*)imageItem {
+    if (self = [super init]) {
         asset = imageItem;
     }
     return self;
 }
 
--(UIImage*) aspectRatioThumbnail{
+- (UIImage*)aspectRatioThumbnail {
     return [asset imageForPage:0 forMaxDim:kThumbnailMaxDim];
 }
 
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim {
     return [asset imageForPage:0 forMaxDim:maxDim];
 }
 
--(NSURL*) fullResolutionURL{
+- (NSURL*)fullResolutionURL {
     return asset.urlOnDisk;
 }
 
--(CGSize) fullResolutionSize{
+- (CGSize)fullResolutionSize {
     return [asset sizeForPage:0];
 }
 

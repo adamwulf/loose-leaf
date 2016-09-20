@@ -13,13 +13,14 @@
 #import "UIFont+UIBezierCurve.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMAvatarButton{
+
+@implementation MMAvatarButton {
     NSString* letter;
     CGPoint offset;
     CGFloat pointSize;
     CTFontSymbolicTraits traits;
     UIFont* font;
-    
+
     CGFloat targetProgress;
     BOOL targetSuccess;
     CGFloat lastProgress;
@@ -29,7 +30,7 @@
 @synthesize targetSuccess;
 @synthesize targetProgress;
 
-- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter andOffset:(CGPoint)_offset{
+- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter andOffset:(CGPoint)_offset {
     self = [super initWithFrame:_frame];
     if (self) {
         // Initialization code
@@ -44,92 +45,91 @@
 }
 
 
-- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter{
+- (id)initWithFrame:(CGRect)_frame forLetter:(NSString*)_letter {
     return [self initWithFrame:_frame forLetter:_letter andOffset:CGPointZero];
 }
 
--(UIColor*) backgroundColor{
-    if(self.shouldDrawDarkBackground){
+- (UIColor*)backgroundColor {
+    if (self.shouldDrawDarkBackground) {
         return [UIColor colorWithRed:.4 green:.4 blue:.4 alpha:.9];
-    }else{
+    } else {
         return [[UIColor whiteColor] colorWithAlphaComponent:.7];
     }
 }
 
--(UIColor*) fontColor{
-    if(self.shouldDrawDarkBackground){
+- (UIColor*)fontColor {
+    if (self.shouldDrawDarkBackground) {
         return [[UIColor whiteColor] colorWithAlphaComponent:.7];
-    }else{
+    } else {
         return [self borderColor];
     }
 }
 
--(NSString*) letter{
+- (NSString*)letter {
     return letter;
 }
 
--(void) setLetter:(NSString *)_letter{
+- (void)setLetter:(NSString*)_letter {
     letter = _letter;
     [self setNeedsDisplay];
 }
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGFloat smallest = MIN(self.bounds.size.width, self.bounds.size.height);
-    CGFloat drawingWidth = (smallest - 2*kWidthOfSidebarButtonBuffer);
+    CGFloat drawingWidth = (smallest - 2 * kWidthOfSidebarButtonBuffer);
     CGRect frame = CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, drawingWidth, drawingWidth);
-    CGFloat scaledPointSize = drawingWidth * pointSize / (kWidthOfSidebarButton - 2*kWidthOfSidebarButtonBuffer);
-    
+    CGFloat scaledPointSize = drawingWidth * pointSize / (kWidthOfSidebarButton - 2 * kWidthOfSidebarButtonBuffer);
+
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
     UIColor* halfGreyFill = [self backgroundColor];
-    
-    
+
+
     CGContextSaveGState(context);
-    
-    
+
+
     UIBezierPath* glyphPath = [[font fontWithSize:scaledPointSize] bezierPathForString:letter];
     CGRect glyphRect = [glyphPath bounds];
-    if(!CGRectIsNull(glyphRect) && !CGRectIsEmpty(glyphRect)){
+    if (!CGRectIsNull(glyphRect) && !CGRectIsEmpty(glyphRect)) {
         // if the glyphPath is empty (possibly b/c letter is @"")
         // then we shouldn't draw the path
         glyphRect = glyphPath.bounds;
         CGFloat maxTextWidth = self.drawableFrame.size.width - 10;
-        if(glyphRect.size.width > maxTextWidth){
+        if (glyphRect.size.width > maxTextWidth) {
             CGFloat ratio = maxTextWidth / glyphRect.size.width;
             [glyphPath applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
             glyphRect = glyphPath.bounds;
             [glyphPath applyTransform:CGAffineTransformMakeTranslation(-glyphRect.origin.x, -glyphRect.origin.y)];
             glyphRect = glyphPath.bounds;
         }
-        
+
         [glyphPath applyTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-glyphRect.origin.x - .5, -glyphRect.size.height),
                                                           CGAffineTransformMakeScale(1.f, -1.f))];
         [glyphPath applyTransform:CGAffineTransformMakeTranslation((drawingWidth - glyphRect.size.width) / 2 + kWidthOfSidebarButtonBuffer + offset.x,
                                                                    (drawingWidth - glyphRect.size.height) / 2 + kWidthOfSidebarButtonBuffer + offset.y)];
-    }else{
+    } else {
         glyphPath = nil;
     }
 
     //// Oval Drawing
-    
+
     CGRect ovalFrame = CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0));
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:ovalFrame];
-    if(glyphPath){
+    if (glyphPath) {
         [ovalPath appendPath:glyphPath];
     }
     [ovalPath closePath];
     [halfGreyFill setFill];
     [ovalPath fill];
-    
+
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
-    
-    if(self.shouldDrawDarkBackground){
+
+    if (self.shouldDrawDarkBackground) {
         UIBezierPath* stripe = [UIBezierPath bezierPathWithOvalInRect:ovalFrame];
         CGContextSetBlendMode(context, kCGBlendModeClear);
         [[UIColor whiteColor] setStroke];
@@ -139,8 +139,8 @@
         [stripe stroke];
     }
 
-    
-    if(glyphPath){
+
+    if (glyphPath) {
         //
         // clear the arrow and box, then fill with
         // border color
@@ -148,16 +148,16 @@
         [[UIColor whiteColor] setFill];
         [glyphPath fill];
         CGContextSetBlendMode(context, kCGBlendModeNormal);
-        
+
         [[self fontColor] setFill];
         [glyphPath fill];
     }
-    
+
     CGContextRestoreGState(context);
 }
 
 
--(void) animateOffScreenWithCompletion:(void (^)(BOOL finished))completion{
+- (void)animateOffScreenWithCompletion:(void (^)(BOOL finished))completion {
     CheckMainThread;
     CGPoint offscreen = CGPointMake(self.center.x, self.center.y - self.bounds.size.height / 2);
     [UIView animateWithDuration:.3 animations:^{
@@ -165,11 +165,12 @@
         self.center = offscreen;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
-        if(completion) completion(finished);
+        if (completion)
+            completion(finished);
     }];
 }
 
--(void) animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion{
+- (void)animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion {
     CheckMainThread;
     CGPoint onscreen = self.center;
     self.center = offscreen;
@@ -177,46 +178,46 @@
     [UIView animateKeyframesWithDuration:.7 delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
         [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
             self.alpha = 1;
-            self.center = CGPointMake(onscreen.x, onscreen.y+12);
+            self.center = CGPointMake(onscreen.x, onscreen.y + 12);
         }];
         [UIView addKeyframeWithRelativeStartTime:.25 relativeDuration:.25 animations:^{
             self.center = onscreen;
         }];
         [UIView addKeyframeWithRelativeStartTime:.5 relativeDuration:.25 animations:^{
-            self.center = CGPointMake(onscreen.x, onscreen.y+8);
+            self.center = CGPointMake(onscreen.x, onscreen.y + 8);
         }];
         [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
             self.center = onscreen;
         }];
-    } completion:^(BOOL finished){
-        if(completion) completion(finished);
+    } completion:^(BOOL finished) {
+        if (completion)
+            completion(finished);
     }];
 }
 
--(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc
+- (void)animateBounceToTopOfScreenAtX:(CGFloat)xLoc
                          withDuration:(CGFloat)duration
                    withTargetRotation:(CGFloat)targetRotation
-                           completion:(void (^)(BOOL finished))completion{
-    
+                           completion:(void (^)(BOOL finished))completion {
     CGFloat targetSize = 80;
-    
+
     CGFloat rotStart = self.rotation;
     CGFloat rotDiff = targetRotation - rotStart;
-    
+
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeLinear animations:^{
 
-        
-//        NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
-//                                    [NSNumber numberWithFloat:0.0],
-//                                    [NSNumber numberWithFloat:0.4],
-//                                    [NSNumber numberWithFloat:0.7],
-//                                    [NSNumber numberWithFloat:1.0], nil];
-//        bounceAnimation.keyTimes = keyTimes;
-//        bounceAnimation.values = [NSArray arrayWithObjects:
-//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
-//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+max, 1.0+max, 1.0))],
-//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+min, 1.0+min, 1.0))],
-//                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+
+        //        NSMutableArray* keyTimes = [NSMutableArray arrayWithObjects:
+        //                                    [NSNumber numberWithFloat:0.0],
+        //                                    [NSNumber numberWithFloat:0.4],
+        //                                    [NSNumber numberWithFloat:0.7],
+        //                                    [NSNumber numberWithFloat:1.0], nil];
+        //        bounceAnimation.keyTimes = keyTimes;
+        //        bounceAnimation.values = [NSArray arrayWithObjects:
+        //                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
+        //                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+max, 1.0+max, 1.0))],
+        //                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0+min, 1.0+min, 1.0))],
+        //                                  [NSValue valueWithCATransform3D:CATransform3DConcat(transform3d, CATransform3DMakeScale(1.0, 1.0, 1.0))],
         //
         // total bounce duration: .3 of the .8s of the total animation: so .375 of keyframe
         //
@@ -242,32 +243,32 @@
             // rotate to target
             self.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(targetRotation), CGAffineTransformMakeScale(1.0, 1.0));
         }];
-        
+
         CGPoint originalCenter = self.center;
-        CGPoint targetCenter = CGPointMake(xLoc + targetSize/2, targetSize/2);
-        
+        CGPoint targetCenter = CGPointMake(xLoc + targetSize / 2, targetSize / 2);
+
         int firstDrop = 14;
         int topOfBounce = 18;
         int maxSteps = 20;
         CGFloat bounceHeight = 25;
-        
+
         for (int foo = 1; foo <= maxSteps; foo += 1) {
-            [UIView addKeyframeWithRelativeStartTime:((foo-1)/(float)maxSteps) relativeDuration:1/(float)maxSteps animations:^{
+            [UIView addKeyframeWithRelativeStartTime:((foo - 1) / (float)maxSteps) relativeDuration:1 / (float)maxSteps animations:^{
                 CGFloat x;
                 CGFloat y;
                 CGFloat t;
-                if(foo <= firstDrop){
-                    t = foo/(float)firstDrop;
+                if (foo <= firstDrop) {
+                    t = foo / (float)firstDrop;
                     x = logTransform(originalCenter.x, targetCenter.x, t);
                     y = sqTransform(originalCenter.y, targetCenter.y, t);
-                }else if(foo <= topOfBounce){
+                } else if (foo <= topOfBounce) {
                     // 7, 8
-                    t = (foo-firstDrop)/(float)(topOfBounce - firstDrop);
+                    t = (foo - firstDrop) / (float)(topOfBounce - firstDrop);
                     x = targetCenter.x;
                     y = sqrtTransform(targetCenter.y, targetCenter.y + bounceHeight, t);
-                }else{
+                } else {
                     // 9
-                    t = (foo-topOfBounce) / (float)(maxSteps - topOfBounce);
+                    t = (foo - topOfBounce) / (float)(maxSteps - topOfBounce);
                     x = targetCenter.x;
                     y = sqTransform(targetCenter.y + bounceHeight, targetCenter.y, t);
                 }
@@ -275,67 +276,68 @@
                 self.center = CGPointMake(x, y);
             }];
         }
-        
+
     } completion:^(BOOL finished) {
-        if(completion) completion(finished);
+        if (completion)
+            completion(finished);
     }];
 }
 
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion{
+- (void)animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion {
     targetProgress = progress;
     targetSuccess = YES;
-    
-    if(lastProgress < targetProgress){
+
+    if (lastProgress < targetProgress) {
         lastProgress += (targetProgress / 10.0);
-        if(lastProgress > targetProgress){
+        if (lastProgress > targetProgress) {
             lastProgress = targetProgress;
         }
     }
-    
+
     CGPoint center = CGPointMake(CGRectGetMidX(self.drawableFrame), CGRectGetMidY(self.drawableFrame));
-    
+
     CGFloat radius = ceilf(self.drawableFrame.size.width / 2 + 1);
-    CAShapeLayer *circle;
-    if([self.layer.sublayers count]){
+    CAShapeLayer* circle;
+    if ([self.layer.sublayers count]) {
         circle = (CAShapeLayer*)[self.layer.sublayers firstObject];
-    }else{
-        circle=[CAShapeLayer layer];
-        circle.fillColor=[UIColor clearColor].CGColor;
-        circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
-        CAShapeLayer *mask=[CAShapeLayer layer];
+    } else {
+        circle = [CAShapeLayer layer];
+        circle.fillColor = [UIColor clearColor].CGColor;
+        circle.strokeColor = [[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
+        CAShapeLayer* mask = [CAShapeLayer layer];
         circle.mask = mask;
         [self.layer addSublayer:circle];
     }
-    if(radius != lastRadius){
+    if (radius != lastRadius) {
         lastRadius = radius;
-        circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-        circle.lineWidth=radius*2;
-        ((CAShapeLayer*)circle.mask).path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
+        circle.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+        circle.lineWidth = radius * 2;
+        ((CAShapeLayer*)circle.mask).path = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 1.5 startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
     }
-    
+
     circle.strokeEnd = lastProgress;
-    
-    if(lastProgress >= 1.0){
-        CAShapeLayer *mask2=[CAShapeLayer layer];
-        mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-        
+
+    if (lastProgress >= 1.0) {
+        CAShapeLayer* mask2 = [CAShapeLayer layer];
+        mask2.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 1.5 startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+
         UIView* checkOrXView = [[UIView alloc] initWithFrame:self.bounds];
         checkOrXView.backgroundColor = [UIColor whiteColor];
         checkOrXView.layer.mask = mask2;
-        
+
         [[NSThread mainThread] performBlock:^{
             CAShapeLayer* checkMarkOrXLayer = [CAShapeLayer layer];
             checkMarkOrXLayer.anchorPoint = CGPointZero;
             checkMarkOrXLayer.bounds = self.bounds;
             UIBezierPath* path = [UIBezierPath bezierPath];
-            if(succeeded){
+            if (succeeded) {
                 CGPoint start = CGPointMake(30, 41);
                 CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
                 CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
                 [path moveToPoint:start];
                 [path addLineToPoint:corner];
                 [path addLineToPoint:end];
-            }else{
+            } else {
                 CGFloat size = 14;
                 CGPoint start = CGPointMake(33, 33);
                 CGPoint end = CGPointMake(start.x + size, start.y + size);
@@ -355,16 +357,17 @@
             checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
             checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
             [checkOrXView.layer addSublayer:checkMarkOrXLayer];
-            
+
             checkOrXView.alpha = 0;
             [self addSubview:checkOrXView];
             [UIView animateWithDuration:.3 animations:^{
                 checkOrXView.alpha = 1;
-            } completion:^(BOOL finished){
-                if(completion) completion(targetSuccess);
+            } completion:^(BOOL finished) {
+                if (completion)
+                    completion(targetSuccess);
             }];
         } afterDelay:.3];
-    }else{
+    } else {
         [[NSThread mainThread] performBlock:^{
             [self animateToPercent:targetProgress success:targetSuccess completion:completion];
         } afterDelay:.03];

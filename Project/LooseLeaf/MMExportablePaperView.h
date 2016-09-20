@@ -8,11 +8,12 @@
 
 #import "MMBackgroundedPaperView.h"
 
+
 @interface MMExportablePaperView : MMBackgroundedPaperView
 
 @property (nonatomic, readonly) NSDictionary* cloudKitSenderInfo;
 @property (nonatomic, readonly) BOOL isCurrentlySaving;
 
--(void) exportAsynchronouslyToZipFile;
+- (void)exportAsynchronouslyToZipFile;
 
 @end

@@ -10,6 +10,6 @@
 
 @protocol MMListAddPageButtonDelegate <NSObject>
 
--(void) didTapAddButtonInListView;
+- (void)didTapAddButtonInListView;
 
 @end

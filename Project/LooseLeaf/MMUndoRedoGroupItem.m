@@ -9,31 +9,33 @@
 #import "MMUndoRedoGroupItem.h"
 #import "NSArray+Map.h"
 
+
 @interface MMUndoRedoGroupItem (Private)
 
 @property (readonly) NSArray* undoableItems;
 
 @end
 
-@implementation MMUndoRedoGroupItem{
+
+@implementation MMUndoRedoGroupItem {
     NSArray* undoableItems;
 }
 
-+(id) itemForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)undoableItems{
++ (id)itemForPage:(MMUndoablePaperView*)_page withItems:(NSArray*)undoableItems {
     return [[MMUndoRedoGroupItem alloc] initForPage:_page withItems:undoableItems];
 }
 
--(id) initForPage:(MMUndoablePaperView *)_page withItems:(NSArray *)_undoableItems{
+- (id)initForPage:(MMUndoablePaperView*)_page withItems:(NSArray*)_undoableItems {
     __weak MMUndoRedoGroupItem* weakSelf = self;
-    if(self = [super initWithUndoBlock:^{
-        for(NSObject<MMUndoRedoItem>*obj in weakSelf.undoableItems){
-            [obj undo];
-        }
-    } andRedoBlock:^{
-        for(NSObject<MMUndoRedoItem>*obj in [weakSelf.undoableItems reverseObjectEnumerator]){
-            [obj redo];
-        }
-    } forPage:_page]){
+    if (self = [super initWithUndoBlock:^{
+            for (NSObject<MMUndoRedoItem>* obj in weakSelf.undoableItems) {
+                [obj undo];
+            }
+        } andRedoBlock:^{
+            for (NSObject<MMUndoRedoItem>* obj in [weakSelf.undoableItems reverseObjectEnumerator]) {
+                [obj redo];
+            }
+        } forPage:_page]) {
         // noop
         undoableItems = _undoableItems;
     };
@@ -43,13 +45,13 @@
 
 #pragma mark - Finalize
 
--(void) finalizeUndoableState{
+- (void)finalizeUndoableState {
     // we need to pass through this notification to all the items
     // that we're holding
     [undoableItems makeObjectsPerformSelector:@selector(finalizeUndoableState)];
 }
 
--(void) finalizeRedoableState{
+- (void)finalizeRedoableState {
     // we need to pass through this notification to all the items
     // that we're holding
     [undoableItems makeObjectsPerformSelector:@selector(finalizeRedoableState)];
@@ -57,24 +59,24 @@
 
 #pragma mark - Serialize
 
--(NSDictionary*) asDictionary{
+- (NSDictionary*)asDictionary {
     NSArray* undoItems = [undoableItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
         return [obj asDictionary];
     }];
     return [NSDictionary dictionaryWithObjectsAndKeys:NSStringFromClass([self class]), @"class",
-            [NSNumber numberWithBool:self.canUndo], @"canUndo",
-            undoItems, @"undoItems",
-            nil];
+                                                      [NSNumber numberWithBool:self.canUndo], @"canUndo",
+                                                      undoItems, @"undoItems",
+                                                      nil];
 }
 
--(id) initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page{
+- (id)initFromDictionary:(NSDictionary*)dict forPage:(MMUndoablePaperView*)_page {
     NSArray* undoItems = [dict objectForKey:@"undoItems"];
     undoItems = [undoItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
         NSString* className = [obj objectForKey:@"class"];
         Class class = NSClassFromString(className);
         return [[class alloc] initFromDictionary:obj forPage:_page];
     }];
-    if(self = [self initForPage:_page withItems:undoItems]){
+    if (self = [self initForPage:_page withItems:undoItems]) {
         canUndo = [[dict objectForKey:@"canUndo"] boolValue];
     }
     return self;
@@ -82,10 +84,10 @@
 
 #pragma mark - Description
 
--(NSString*) description{
+- (NSString*)description {
     NSString* str = @"";
-    for(NSObject<MMUndoRedoItem>*obj in undoableItems){
-        if(str.length){
+    for (NSObject<MMUndoRedoItem>* obj in undoableItems) {
+        if (str.length) {
             str = [str stringByAppendingString:@",\n"];
         }
         str = [str stringByAppendingString:[obj description]];
@@ -95,15 +97,15 @@
 
 #pragma mark - Private Properties
 
--(NSArray*) undoableItems{
+- (NSArray*)undoableItems {
     return undoableItems;
 }
 
 #pragma mark - Scrap Checking
 
--(BOOL) containsScrapUUID:(NSString*)_scrapUUID{
-    for(MMUndoRedoPageItem* item in undoableItems){
-        if([item containsScrapUUID:_scrapUUID]){
+- (BOOL)containsScrapUUID:(NSString*)_scrapUUID {
+    for (MMUndoRedoPageItem* item in undoableItems) {
+        if ([item containsScrapUUID:_scrapUUID]) {
             return YES;
         }
     }

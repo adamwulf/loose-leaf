@@ -8,16 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMShareOptionsView : UIView
 
 @property (nonatomic, readonly) BOOL shouldCloseWhenSidebarHides;
 
--(void) reset;
+- (void)reset;
 
--(void) show;
+- (void)show;
 
--(void) hide;
+- (void)hide;
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
 @end

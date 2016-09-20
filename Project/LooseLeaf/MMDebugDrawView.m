@@ -9,16 +9,18 @@
 #import "MMDebugDrawView.h"
 #import "AVHexColor.h"
 
-@implementation MMDebugDrawView{
+
+@implementation MMDebugDrawView {
     NSMutableArray* curves;
     NSMutableArray* colors;
 }
 
 static MMDebugDrawView* _instance = nil;
 
--(id) initWithFrame:(CGRect)frame{
-    if(_instance) return _instance;
-    if((self = [super initWithFrame:frame])){
+- (id)initWithFrame:(CGRect)frame {
+    if (_instance)
+        return _instance;
+    if ((self = [super initWithFrame:frame])) {
         _instance = self;
         curves = [NSMutableArray array];
         colors = [NSMutableArray array];
@@ -30,8 +32,8 @@ static MMDebugDrawView* _instance = nil;
     return _instance;
 }
 
-+(MMDebugDrawView*) sharedInstance{
-    if(!_instance){
++ (MMDebugDrawView*)sharedInstance {
+    if (!_instance) {
         _instance = [[MMDebugDrawView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
     }
     return _instance;
@@ -39,27 +41,26 @@ static MMDebugDrawView* _instance = nil;
 
 #pragma mark - Draw
 
--(void) clear{
+- (void)clear {
     [curves removeAllObjects];
     [self setNeedsDisplay];
 }
 
--(void) addCurve:(UIBezierPath*)path{
-    
+- (void)addCurve:(UIBezierPath*)path {
     path = [path copy];
     CGAffineTransform flippedTransform = CGAffineTransformMake(1, 0, 0, -1, 0, self.bounds.size.height);
     [path applyTransform:flippedTransform];
 
     [curves addObject:path];
-    if([curves count] > [colors count]){
+    if ([curves count] > [colors count]) {
         [colors addObject:[AVHexColor randomColor]];
     }
     [self setNeedsDisplay];
     [self setNeedsDisplayInRect:path.bounds];
 }
 
--(void) drawRect:(CGRect)rect{
-    for(int i=0;i<[curves count];i++){
+- (void)drawRect:(CGRect)rect {
+    for (int i = 0; i < [curves count]; i++) {
         UIBezierPath* path = [curves objectAtIndex:i];
         UIColor* color = [colors objectAtIndex:i];
         [color setStroke];
@@ -68,10 +69,10 @@ static MMDebugDrawView* _instance = nil;
     }
 }
 
--(void) drawPoint:(CGPoint)p{
-    UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:p radius:2 startAngle:0 endAngle:2*M_PI clockwise:YES];
+- (void)drawPoint:(CGPoint)p {
+    UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:p radius:2 startAngle:0 endAngle:2 * M_PI clockwise:YES];
     [curves addObject:path];
-    if([curves count] > [colors count]){
+    if ([curves count] > [colors count]) {
         [colors addObject:[AVHexColor randomColor]];
     }
     [self setNeedsDisplay];
@@ -84,11 +85,11 @@ static MMDebugDrawView* _instance = nil;
  * can never intercept any touch input. instead it will
  * effectively pass through this view to the views behind it
  */
--(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     return nil;
 }
 
--(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     return NO;
 }
 

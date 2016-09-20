@@ -14,13 +14,14 @@
 #import "MMCloudKitFetchFriendsState.h"
 #import "Constants.h"
 
+
 @implementation MMCloudKitDeclinedPermissionState
 
--(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+- (void)runState {
+    if ([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
+    } else {
         [MMCloudKitFetchingAccountInfoState clearAccountCache];
         [MMCloudKitFetchFriendsState clearFriendsCache];
     }
@@ -28,7 +29,7 @@
 
 #pragma mark - Notifications
 
--(void) cloudKitInfoDidChange{
+- (void)cloudKitInfoDidChange {
     DebugLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }

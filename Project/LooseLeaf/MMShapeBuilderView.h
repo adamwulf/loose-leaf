@@ -8,14 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMShapeBuilderView : UIView
 
-+(MMShapeBuilderView*) staticShapeBuilderViewWithFrame:(CGRect)frame andScale:(CGFloat)scale;
++ (MMShapeBuilderView*)staticShapeBuilderViewWithFrame:(CGRect)frame andScale:(CGFloat)scale;
 
--(BOOL) addTouchPoint:(CGPoint)point;
+- (BOOL)addTouchPoint:(CGPoint)point;
 
--(void) clear;
+- (void)clear;
 
--(UIBezierPath*) completeAndGenerateShape;
+- (UIBezierPath*)completeAndGenerateShape;
 
 @end

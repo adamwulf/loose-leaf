@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMScrapBorderView : UIView
 
--(void) setBezierPath:(UIBezierPath*)path;
+- (void)setBezierPath:(UIBezierPath*)path;
 
 @end

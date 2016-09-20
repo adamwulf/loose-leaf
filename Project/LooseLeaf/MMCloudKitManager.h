@@ -18,28 +18,28 @@
 @property (nonatomic, weak) NSObject<MMCloudKitManagerDelegate>* delegate;
 @property (nonatomic, readonly) MMCloudKitBaseState* currentState;
 
-+ (MMCloudKitManager *) sharedManager;
++ (MMCloudKitManager*)sharedManager;
 
-+(NSString*) cloudKitFilesPath;
++ (NSString*)cloudKitFilesPath;
 //
 //+(dispatch_queue_t) fileSystemQueue;
 
-+(BOOL) isCloudKitAvailable;
++ (BOOL)isCloudKitAvailable;
 
--(void) userRequestedToLogin;
+- (void)userRequestedToLogin;
 
--(void) changeToState:(MMCloudKitBaseState*)state;
+- (void)changeToState:(MMCloudKitBaseState*)state;
 
--(void) retryStateAfterDelay:(NSTimeInterval)delay;
+- (void)retryStateAfterDelay:(NSTimeInterval)delay;
 
--(void) changeToStateBasedOnError:(NSError*)err;
+- (void)changeToStateBasedOnError:(NSError*)err;
 
--(BOOL) isLoggedInAndReadyForAnything;
+- (BOOL)isLoggedInAndReadyForAnything;
 
--(void) handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification;
+- (void)handleIncomingMessageNotification:(CKQueryNotification*)remoteNotification;
 
--(void) fetchAllNewMessages;
+- (void)fetchAllNewMessages;
 
--(void) resetBadgeCountTo:(NSUInteger)number;
+- (void)resetBadgeCountTo:(NSUInteger)number;
 
 @end

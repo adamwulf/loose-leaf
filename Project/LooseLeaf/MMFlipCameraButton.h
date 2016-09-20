@@ -8,8 +8,9 @@
 
 #import "MMDarkSidebarButton.h"
 
+
 @interface MMFlipCameraButton : MMDarkSidebarButton
 
--(void) updatePhotoRotation:(BOOL)animated;
+- (void)updatePhotoRotation:(BOOL)animated;
 
 @end

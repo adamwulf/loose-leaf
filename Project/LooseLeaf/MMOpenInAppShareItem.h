@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMAbstractShareItem.h"
 
-@interface MMOpenInAppShareItem : MMAbstractShareItem<UIDocumentInteractionControllerDelegate>
+
+@interface MMOpenInAppShareItem : MMAbstractShareItem <UIDocumentInteractionControllerDelegate>
 
 @end

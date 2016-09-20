@@ -8,13 +8,14 @@
 
 #import "UIApplication+Version.h"
 
+
 @implementation UIApplication (Version)
 
-+(id) bundleVersion{
++ (id)bundleVersion {
     return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
 }
 
-+(id) bundleShortVersionString{
++ (id)bundleShortVersionString {
     return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
 

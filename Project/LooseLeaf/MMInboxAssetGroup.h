@@ -9,10 +9,11 @@
 #import "MMDisplayAssetGroup.h"
 #import "MMInboxItem.h"
 
+
 @interface MMInboxAssetGroup : MMDisplayAssetGroup
 
 @property (readonly) MMInboxItem* inboxItem;
 
--(id) initWithInboxItem:(MMInboxItem*)inboxItem;
+- (id)initWithInboxItem:(MMInboxItem*)inboxItem;
 
 @end

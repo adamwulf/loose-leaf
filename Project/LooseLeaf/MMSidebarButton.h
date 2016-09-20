@@ -10,7 +10,8 @@
 #import "MMSidebarButtonDelegate.h"
 #import "MMBounceButton.h"
 
-@interface MMSidebarButton : MMBounceButton{
+
+@interface MMSidebarButton : MMBounceButton {
     NSObject<MMSidebarButtonDelegate>* __weak delegate;
 }
 
@@ -20,11 +21,11 @@
 @property (nonatomic) UIColor* shadowColor;
 @property (nonatomic) CGFloat shadowInset;
 
--(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2;
--(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;
+- (CGPoint)perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint)p2;
+- (UIBezierPath*)pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint)p2 andVector:(CGPoint)pv andWidth:(CGFloat)width;
 
--(CGRect) drawableFrame;
--(UIBezierPath*) ovalPath;
--(void) drawDropshadowIfSelected;
+- (CGRect)drawableFrame;
+- (UIBezierPath*)ovalPath;
+- (void)drawDropshadowIfSelected;
 
 @end

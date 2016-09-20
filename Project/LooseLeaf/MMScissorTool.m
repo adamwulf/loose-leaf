@@ -8,13 +8,14 @@
 
 #import "MMScissorTool.h"
 
+
 @implementation MMScissorTool
 
-- (NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement {
     return elements;
 }
 
--(BOOL) supportsRotation{
+- (BOOL)supportsRotation {
     return NO;
 }
 

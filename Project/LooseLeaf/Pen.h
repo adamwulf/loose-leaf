@@ -10,8 +10,8 @@
 #import <JotUI/JotUI.h>
 #import "Tool.h"
 
-@interface Pen : Tool{
 
+@interface Pen : Tool {
     CGFloat defaultMinSize;
     CGFloat defaultMaxSize;
 
@@ -19,9 +19,9 @@
     CGFloat maxSize;
     CGFloat minAlpha;
     CGFloat maxAlpha;
-    
+
     CGFloat velocity;
-    
+
     __strong UIColor* color;
 }
 
@@ -42,6 +42,6 @@
 
 @property (nonatomic, readonly) BOOL shouldUseVelocity;
 
--(id) initWithMinSize:(CGFloat)_minSize andMaxSize:(CGFloat)_maxSize andMinAlpha:(CGFloat)_minAlpha andMaxAlpha:(CGFloat)_maxAlpha;
+- (id)initWithMinSize:(CGFloat)_minSize andMaxSize:(CGFloat)_maxSize andMinAlpha:(CGFloat)_minAlpha andMaxAlpha:(CGFloat)_maxAlpha;
 
 @end

@@ -9,10 +9,11 @@
 #import "MMDisplayAsset.h"
 #import "MMInboxItem.h"
 
+
 @interface MMInboxImage : MMDisplayAsset
 
--(id) init NS_UNAVAILABLE;
+- (id)init NS_UNAVAILABLE;
 
--(id) initWithImageItem:(MMInboxItem*)imageItem;
+- (id)initWithImageItem:(MMInboxItem*)imageItem;
 
 @end

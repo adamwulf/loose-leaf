@@ -10,24 +10,25 @@
 
 @class CLLocation;
 
+
 @interface ALAsset (Thumbnail)
 
--(NSString*) type;
+- (NSString*)type;
 
--(NSURL*) url;
+- (NSURL*)url;
 
--(NSDictionary*) urls;
+- (NSDictionary*)urls;
 
--(CLLocation*) location;
+- (CLLocation*)location;
 
--(NSNumber*) duration;
+- (NSNumber*)duration;
 
--(NSNumber*) orientation;
+- (NSNumber*)orientation;
 
--(NSDate*) date;
+- (NSDate*)date;
 
--(NSArray*) representations;
+- (NSArray*)representations;
 
-- (UIImage *)aspectThumbnailWithMaxPixelSize:(int)size;
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)size;
 
 @end

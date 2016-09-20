@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "MMDisplayAsset.h"
 
-typedef void (^MMDisplayAssetGroupEnumerationResultsBlock)(MMDisplayAsset *result, NSUInteger index, BOOL *stop);
+typedef void (^MMDisplayAssetGroupEnumerationResultsBlock)(MMDisplayAsset* result, NSUInteger index, BOOL* stop);
+
 
 @interface MMDisplayAssetGroup : NSObject
 
@@ -21,10 +22,10 @@ typedef void (^MMDisplayAssetGroupEnumerationResultsBlock)(MMDisplayAsset *resul
 @property (assign) BOOL reversed;
 @property (assign) short numberOfPreviewPhotos;
 
--(void) loadPreviewPhotos;
+- (void)loadPreviewPhotos;
 
--(void) unloadPreviewPhotos;
+- (void)unloadPreviewPhotos;
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock;
+- (void)loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock;
 
 @end

@@ -13,34 +13,36 @@
 #import "MMPresentationWindow.h"
 #import "NSURL+UTI.h"
 
-@implementation MMTextShareItem{
+
+@implementation MMTextShareItem {
     MMImageViewButton* button;
 }
 
 @synthesize delegate;
 
--(id) init{
-    if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+- (id)init {
+    if (self = [super init]) {
+        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"text"]];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didBecomeActive)
-                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
-        
+
         [self updateButtonGreyscale];
     }
     return self;
 }
 
--(MMSidebarButton*) button{
+- (MMSidebarButton*)button {
     return button;
 }
 
--(void) performShareAction{
-    if(!button.greyscale){
+- (void)performShareAction {
+    if (!button.greyscale) {
         [delegate mayShare:self];
         // if a popover controller is dismissed, it
         // adds the dismissal to the main queue async
@@ -50,13 +52,13 @@
             @autoreleasepool {
                 MFMessageComposeViewController* composer = [[MFMessageComposeViewController alloc] init];
                 [composer setMessageComposeDelegate:self];
-                if([MFMessageComposeViewController canSendText] && composer) {
+                if ([MFMessageComposeViewController canSendText] && composer) {
                     [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
-                    
+
                     NSURL* urlToShare = [self.delegate urlToShare];
-                    NSData *data = [NSData dataWithContentsOfURL:urlToShare];
+                    NSData* data = [NSData dataWithContentsOfURL:urlToShare];
                     [composer addAttachmentData:data typeIdentifier:[urlToShare mimeType] filename:[@"LooseLeaf" stringByAppendingPathExtension:[urlToShare pathExtension]]];
-                    
+
                     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
                     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                     [presentationWindow.rootViewController presentViewController:composer animated:YES completion:nil];
@@ -67,13 +69,13 @@
     }
 }
 
--(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+- (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
     return YES;
 }
 
 #pragma mark - Notification
 
--(void) didBecomeActive{
+- (void)didBecomeActive {
     [self updateButtonGreyscale];
     [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:2];
     [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:4];
@@ -81,40 +83,40 @@
     [self performSelector:@selector(updateButtonGreyscale) withObject:nil afterDelay:10];
 }
 
--(void) updateButtonGreyscale{
-    if(![self.delegate urlToShare]){
+- (void)updateButtonGreyscale {
+    if (![self.delegate urlToShare]) {
         button.greyscale = YES;
-    }else if([MFMessageComposeViewController canSendText]) {
+    } else if ([MFMessageComposeViewController canSendText]) {
         button.greyscale = NO;
-    }else{
+    } else {
         button.greyscale = YES;
     }
     [button setNeedsDisplay];
-    
-    if([MFMessageComposeViewController canSendText]) {
+
+    if ([MFMessageComposeViewController canSendText]) {
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusSMS to:kMPShareStatusAvailable];
-    }else{
+    } else {
         [[[Mixpanel sharedInstance] people] set:kMPShareStatusSMS to:kMPShareStatusUnavailable];
     }
 }
 
 #pragma mark - MFMessageComposeViewControllerDelegate
 
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result{
+- (void)messageComposeViewController:(MFMessageComposeViewController*)controller didFinishWithResult:(MessageComposeResult)result {
     NSString* strResult;
-    if(result == MessageComposeResultCancelled){
+    if (result == MessageComposeResultCancelled) {
         strResult = @"Cancelled";
-    }else if(result == MessageComposeResultFailed){
+    } else if (result == MessageComposeResultFailed) {
         strResult = @"Failed";
-    }else{
+    } else {
         strResult = @"Sent";
     }
-    if(result == MessageComposeResultSent){
+    if (result == MessageComposeResultSent) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
     }
-    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"SMS",
-                                                                 kMPEventExportPropResult : strResult}];
-    
+    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{ kMPEventExportPropDestination: @"SMS",
+                                                                  kMPEventExportPropResult: strResult }];
+
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:nil];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
@@ -122,7 +124,7 @@
 
 #pragma mark - Dealloc
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

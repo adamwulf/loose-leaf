@@ -8,8 +8,9 @@
 
 #import "MMExportablePaperView.h"
 
+
 @interface MMExportablePaperView (Trash)
 
--(void) forgetAllPendingEdits;
+- (void)forgetAllPendingEdits;
 
 @end

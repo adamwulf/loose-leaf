@@ -11,8 +11,8 @@
 
 @protocol MMTutorialViewDelegate <MMRoundedSquareViewDelegate>
 
--(void) userIsViewingTutorialStep:(NSInteger)stepNum;
+- (void)userIsViewingTutorialStep:(NSInteger)stepNum;
 
--(void) didFinishTutorial;
+- (void)didFinishTutorial;
 
 @end

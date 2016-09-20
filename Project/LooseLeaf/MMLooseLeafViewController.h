@@ -13,7 +13,8 @@
 #import <TwitterKit/TwitterKit.h>
 #import "MMMemoryManager.h"
 
-@interface MMLooseLeafViewController : UIViewController<MMMemoryManagerDelegate>{
+
+@interface MMLooseLeafViewController : UIViewController <MMMemoryManagerDelegate> {
     MMTutorialStackView* currentStackView;
 }
 
@@ -23,10 +24,10 @@
 @property (readonly) MMScrapPaperStackView* stackView;
 @property (readonly) MMShadowHandView* silhouette;
 
--(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
+- (void)importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
--(void) willResignActive;
+- (void)willResignActive;
 
--(void) didEnterBackground;
+- (void)didEnterBackground;
 
 @end

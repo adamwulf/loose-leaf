@@ -10,26 +10,27 @@
 
 #define kMMAllStacksManagerUpgradeStartNotification @"kMMAllStacksManagerUpgradeStartNotification"
 
+
 @interface MMAllStacksManager : NSObject
 
-+(MMAllStacksManager*) sharedInstance;
++ (MMAllStacksManager*)sharedInstance;
 
--(void) upgradeIfNecessary:(void(^)())upgradeCompleteBlock;
+- (void)upgradeIfNecessary:(void (^)())upgradeCompleteBlock;
 
--(NSString*) stackDirectoryPathForUUID:(NSString*)uuid;
+- (NSString*)stackDirectoryPathForUUID:(NSString*)uuid;
 
--(NSString*) createStack;
+- (NSString*)createStack;
 
--(void) deleteStack:(NSString*)stackUUID;
+- (void)deleteStack:(NSString*)stackUUID;
 
--(NSArray*)stackIDs;
+- (NSArray*)stackIDs;
 
--(NSString*) nameOfStack:(NSString*)stackUUID;
+- (NSString*)nameOfStack:(NSString*)stackUUID;
 
--(NSArray*) cachedPagesForStack:(NSString*)stackUUID;
+- (NSArray*)cachedPagesForStack:(NSString*)stackUUID;
 
--(void) updateCachedPages:(NSArray*)allPages forStackUUID:(NSString*)stackUUID;
+- (void)updateCachedPages:(NSArray*)allPages forStackUUID:(NSString*)stackUUID;
 
--(void) updateName:(NSString*)name forStack:(NSString*)stackUUID;
+- (void)updateName:(NSString*)name forStack:(NSString*)stackUUID;
 
 @end

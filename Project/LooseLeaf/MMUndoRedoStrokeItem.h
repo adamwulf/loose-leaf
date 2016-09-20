@@ -11,10 +11,11 @@
 
 @class MMUndoablePaperView;
 
+
 @interface MMUndoRedoStrokeItem : MMUndoRedoPageItem
 
-+(id) itemForPage:(MMUndoablePaperView*)_page;
++ (id)itemForPage:(MMUndoablePaperView*)_page;
 
--(id) initForPage:(MMUndoablePaperView*)page;
+- (id)initForPage:(MMUndoablePaperView*)page;
 
 @end

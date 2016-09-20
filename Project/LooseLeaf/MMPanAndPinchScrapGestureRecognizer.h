@@ -15,7 +15,8 @@
 #import "MMCancelableGestureRecognizer.h"
 #import "MMUndoablePaperView.h"
 
-@interface MMPanAndPinchScrapGestureRecognizer : MMCancelableGestureRecognizer<UIGestureRecognizerDelegate>{
+
+@interface MMPanAndPinchScrapGestureRecognizer : MMCancelableGestureRecognizer <UIGestureRecognizerDelegate> {
     // the initial distance between
     // the touches. to be used to calculate
     // scale
@@ -32,15 +33,15 @@
     MMBezelDirection didExitToBezel;
     // track the direction of the scale
     MMBezelScaleDirection scaleDirection;
-    
+
     //
     // don't allow both the 2nd to last touch
     // and the last touch to trigger a repeat
     // of the bezel
     BOOL secondToLastTouchDidBezel;
-    
+
     __weak NSObject<MMPanAndPinchScrapGestureRecognizerDelegate>* scrapDelegate;
-    
+
     // will hold the original page that the scrap was on
     // before it was panned
     __weak MMUndoablePaperView* startingPageForScrap;
@@ -64,18 +65,18 @@
 @property (nonatomic, readonly) NSDictionary* startingScrapProperties;
 @property (nonatomic, readonly) MMUndoablePaperView* startingPageForScrap;
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
--(void) relinquishOwnershipOfTouches:(NSSet*)touches;
--(void) giveUpScrap;
--(void) blessTouches:(NSSet*)touches;
--(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap;
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+- (void)relinquishOwnershipOfTouches:(NSSet*)touches;
+- (void)giveUpScrap;
+- (void)blessTouches:(NSSet*)touches;
+- (void)forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap;
 
--(NSArray*) possibleTouches;
--(NSArray*) ignoredTouches;
+- (NSArray*)possibleTouches;
+- (NSArray*)ignoredTouches;
 
 
--(BOOL) paused;
--(void) pause;
--(BOOL) begin;
+- (BOOL)paused;
+- (void)pause;
+- (BOOL)begin;
 
 @end

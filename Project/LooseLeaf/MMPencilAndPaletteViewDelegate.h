@@ -11,14 +11,14 @@
 
 @protocol MMPencilAndPaletteViewDelegate <MMSidebarButtonDelegate>
 
--(void) highlighterTapped:(UIButton*)button;
+- (void)highlighterTapped:(UIButton*)button;
 
--(void) pencilTapped:(UIButton*)button;
+- (void)pencilTapped:(UIButton*)button;
 
--(void) markerTapped:(UIButton*)button;
+- (void)markerTapped:(UIButton*)button;
 
--(void) didChangeColorTo:(UIColor*)color;
+- (void)didChangeColorTo:(UIColor*)color;
 
--(void) colorMenuToggled;
+- (void)colorMenuToggled;
 
 @end

@@ -15,11 +15,11 @@
 
 @protocol MMCloudKitManagerDelegate <NSObject>
 
--(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
+- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
--(void) didFetchMessage:(SPRMessage*)message;
+- (void)didFetchMessage:(SPRMessage*)message;
 
--(void) didResetBadgeCountTo:(NSUInteger)badgeNumber;
+- (void)didResetBadgeCountTo:(NSUInteger)badgeNumber;
 
 @end
 

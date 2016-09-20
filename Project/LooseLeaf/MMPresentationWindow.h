@@ -9,10 +9,11 @@
 #import "MMWindow.h"
 #import "MMAppDelegate.h"
 
+
 @interface MMPresentationWindow : MMWindow
 
 @property (nonatomic, assign) BOOL shouldRespectKeyWindowRequest;
 
--(void) killPresentationWindow;
+- (void)killPresentationWindow;
 
 @end

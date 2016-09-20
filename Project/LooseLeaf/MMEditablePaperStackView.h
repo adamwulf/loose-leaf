@@ -44,8 +44,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView<MMPaperViewDelegate,MMPencilAndPaletteViewDelegate,MMRotationManagerDelegate,PolygonToolDelegate,MMPageCacheManagerDelegate>{
-    
+@interface MMEditablePaperStackView : MMListPaperStackView <MMPaperViewDelegate, MMPencilAndPaletteViewDelegate, MMRotationManagerDelegate, PolygonToolDelegate, MMPageCacheManagerDelegate> {
     // toolbar
     MMPlusButton* addPageSidebarButton;
     MMImageButton* insertImageButton;
@@ -66,33 +65,33 @@
     Pen* pen;
     Eraser* eraser;
     MMScissorTool* scissor;
-    
+
     MMRulerView* rulerView;
 }
 
 @property (nonatomic, readonly) MMImageButton* insertImageButton;
 @property (nonatomic, readonly) MMShareButton* shareButton;
 
--(void) saveStacksToDisk;
+- (void)saveStacksToDisk;
 
--(void) loadStacksFromDisk;
+- (void)loadStacksFromDisk;
 
--(BOOL) hasPages;
+- (BOOL)hasPages;
 
--(void) setButtonsVisible:(BOOL)visible animated:(BOOL)animated;
+- (void)setButtonsVisible:(BOOL)visible animated:(BOOL)animated;
 
 // protected
 
--(void) addPageButtonTapped:(UIButton*)_button;
+- (void)addPageButtonTapped:(UIButton*)_button;
 
--(void) setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
+- (void)setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 
--(void) setMemoryView:(MMMemoryProfileView*)_memoryView;
+- (void)setMemoryView:(MMMemoryProfileView*)_memoryView;
 
--(void) finishedLoading;
+- (void)finishedLoading;
 
--(BOOL) shouldPrioritizeSidebarButtonsForTaps;
+- (BOOL)shouldPrioritizeSidebarButtonsForTaps;
 
--(void) bounceSidebarButton:(MMSidebarButton*)button;
+- (void)bounceSidebarButton:(MMSidebarButton*)button;
 
 @end

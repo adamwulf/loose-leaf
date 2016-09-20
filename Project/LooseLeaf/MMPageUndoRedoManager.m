@@ -15,7 +15,8 @@
 #import "MMUndoRedoAddScrapItem.h"
 #import "MMUndoRedoBezeledScrapItem.h"
 
-@implementation MMPageUndoRedoManager{
+
+@implementation MMPageUndoRedoManager {
     __weak MMUndoablePaperView* page;
     NSMutableArray* stackOfUndoableItems;
     NSMutableArray* stackOfUndoneItems;
@@ -26,8 +27,8 @@
 @synthesize hasEditsToSave;
 @synthesize isLoaded;
 
--(id) initForDelegatePage:(MMUndoablePaperView*)_page{
-    if(self = [super init]){
+- (id)initForDelegatePage:(MMUndoablePaperView*)_page {
+    if (self = [super init]) {
         page = _page;
         stackOfUndoableItems = [NSMutableArray array];
         stackOfUndoneItems = [NSMutableArray array];
@@ -37,22 +38,22 @@
     return self;
 }
 
--(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item{
-    @synchronized(self){
+- (void)addUndoItem:(NSObject<MMUndoRedoItem>*)item {
+    @synchronized(self) {
         BOOL needsLoad = !isLoaded;
-        if(needsLoad){
+        if (needsLoad) {
             [self loadFrom:page.undoStatePath];
         }
         [stackOfUndoneItems makeObjectsPerformSelector:@selector(finalizeRedoableState)];
         [stackOfUndoneItems removeAllObjects];
         [stackOfUndoableItems addObject:item];
-        while([stackOfUndoableItems count] > kUndoLimit){
+        while ([stackOfUndoableItems count] > kUndoLimit) {
             NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems firstObject];
             [stackOfUndoableItems removeObject:item];
             [item finalizeUndoableState];
         }
         hasEditsToSave = YES;
-        if(needsLoad){
+        if (needsLoad) {
             [self saveTo:page.undoStatePath];
             [self unloadState];
         }
@@ -60,12 +61,12 @@
 }
 
 
--(void) undo{
+- (void)undo {
     CheckMainThread;
-    
-    @synchronized(self){
+
+    @synchronized(self) {
         NSObject<MMUndoRedoItem>* item = [stackOfUndoableItems lastObject];
-        if(item){
+        if (item) {
             [stackOfUndoableItems removeLastObject];
             [item undo];
             [stackOfUndoneItems addObject:item];
@@ -74,11 +75,11 @@
     }
 }
 
--(void) redo{
+- (void)redo {
     CheckMainThread;
-    @synchronized(self){
+    @synchronized(self) {
         NSObject<MMUndoRedoItem>* item = [stackOfUndoneItems lastObject];
-        if(item){
+        if (item) {
             [stackOfUndoneItems removeLastObject];
             [item redo];
             [stackOfUndoableItems addObject:item];
@@ -87,17 +88,17 @@
     }
 }
 
--(void) saveTo:(NSString*)path{
-    if(!isLoaded){
+- (void)saveTo:(NSString*)path {
+    if (!isLoaded) {
         @throw [NSException exceptionWithName:@"SavingUnloadedUndoManager" reason:@"Cannot save unloaded undo manager" userInfo:nil];
     }
-    if(!self.hasEditsToSave){
-//        DebugLog(@"no edits to save for undo state: %@", path);
+    if (!self.hasEditsToSave) {
+        //        DebugLog(@"no edits to save for undo state: %@", path);
         return;
     }
     NSArray* saveableStackOfUndoneItems;
     NSArray* saveableStackOfUndoableItems;
-    @synchronized(self){
+    @synchronized(self) {
         saveableStackOfUndoneItems = [stackOfUndoneItems mapObjectsUsingSelector:@selector(asDictionary)];
         saveableStackOfUndoableItems = [stackOfUndoableItems mapObjectsUsingSelector:@selector(asDictionary)];
         hasEditsToSave = NO;
@@ -106,25 +107,25 @@
     [objectsToSave writeToFile:path atomically:YES];
 }
 
--(void) loadFrom:(NSString*)path{
+- (void)loadFrom:(NSString*)path {
     isLoaded = YES;
     NSDictionary* loadedInfo = [NSDictionary dictionaryWithContentsOfFile:path];
-    if(loadedInfo){
-        @synchronized(self){
+    if (loadedInfo) {
+        @synchronized(self) {
             [stackOfUndoneItems removeAllObjects];
             [stackOfUndoableItems removeAllObjects];
             NSArray* loadedUndoneItems = [loadedInfo objectForKey:@"saveableStackOfUndoneItems"];
             NSArray* loadedUndoableItems = [loadedInfo objectForKey:@"saveableStackOfUndoableItems"];
-            
-            if(loadedUndoneItems){
+
+            if (loadedUndoneItems) {
                 [stackOfUndoneItems addObjectsFromArray:[loadedUndoneItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                     NSString* className = [obj objectForKey:@"class"];
                     Class class = NSClassFromString(className);
                     return [[class alloc] initFromDictionary:obj forPage:page];
                 }]];
             }
-            
-            if(loadedUndoableItems){
+
+            if (loadedUndoableItems) {
                 [stackOfUndoableItems addObjectsFromArray:[loadedUndoableItems mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
                     NSString* className = [obj objectForKey:@"class"];
                     Class class = NSClassFromString(className);
@@ -136,9 +137,9 @@
     }
 }
 
--(void) unloadState{
-    @synchronized(self){
-        if(hasEditsToSave){
+- (void)unloadState {
+    @synchronized(self) {
+        if (hasEditsToSave) {
             @throw [NSException exceptionWithName:@"UnloadUndoStateException" reason:@"Unloading Undo State that has edits to save" userInfo:nil];
         }
         isLoaded = NO;
@@ -149,10 +150,10 @@
 
 #pragma mark - Scrap Checking
 
--(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID{
-    @synchronized(self){
-        for(MMUndoRedoPageItem* undoItem in [stackOfUndoneItems arrayByAddingObjectsFromArray:stackOfUndoableItems]){
-            if([undoItem containsScrapUUID:scrapUUID]){
+- (BOOL)containsItemForScrapUUID:(NSString*)scrapUUID {
+    @synchronized(self) {
+        for (MMUndoRedoPageItem* undoItem in [stackOfUndoneItems arrayByAddingObjectsFromArray:stackOfUndoableItems]) {
+            if ([undoItem containsScrapUUID:scrapUUID]) {
                 return YES;
             }
         }

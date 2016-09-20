@@ -14,22 +14,22 @@
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMShadowedView.h"
 
-@interface MMPaperView : MMShadowedView{
-    
+
+@interface MMPaperView : MMShadowedView {
     NSString* uuid;
-    
+
     NSObject<MMPaperViewDelegate>* __weak delegate;
-    
+
     BOOL isBeingPannedAndZoomed;
-    
+
     UILabel* textLabel;
-    
+
     MMObjectSelectLongPressGestureRecognizer* longPress;
-//    MMImmovableTapGestureRecognizer* tap;
+    //    MMImmovableTapGestureRecognizer* tap;
     MMPanAndPinchGestureRecognizer* panGesture;
-    
+
     BOOL isBrandNewPage;
-    
+
     UIBezierPath* unitShadowPath;
 }
 
@@ -54,15 +54,15 @@
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
 
--(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection;
--(void) cancelAllGestures;
--(void) disableAllGestures;
--(void) enableAllGestures;
+- (BOOL)willExitToBezel:(MMBezelDirection)bezelDirection;
+- (void)cancelAllGestures;
+- (void)disableAllGestures;
+- (void)enableAllGestures;
 
--(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture;
+- (void)panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture;
 
--(NSDictionary*) dictionaryDescription;
+- (NSDictionary*)dictionaryDescription;
 
--(BOOL) areGesturesEnabled;
+- (BOOL)areGesturesEnabled;
 
 @end

@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMRulerAdjustment : NSObject
 
 @property (nonatomic, readonly) NSArray* elements;
 @property (nonatomic, readonly) BOOL didAdjust;
 
--(id) __unavailable init;
+- (id)__unavailable init;
 
--(id) initWithAdjustments:(NSArray*)elements andDidAdjust:(BOOL)adjust;
+- (id)initWithAdjustments:(NSArray*)elements andDidAdjust:(BOOL)adjust;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "MMScrapViewState.h"
 
+
 @interface MMScrapViewState (Trash)
 
 @property (nonatomic, assign) BOOL isForgetful;

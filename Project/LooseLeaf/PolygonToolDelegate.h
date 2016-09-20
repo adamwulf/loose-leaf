@@ -12,12 +12,12 @@
 
 @protocol PolygonToolDelegate <NSObject>
 
--(void) beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
+- (void)beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
--(void) continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
+- (void)continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
--(void) finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
+- (void)finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
--(void) cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
+- (void)cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool;
 
 @end

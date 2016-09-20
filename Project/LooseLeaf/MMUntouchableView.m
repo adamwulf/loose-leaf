@@ -8,10 +8,10 @@
 
 #import "MMUntouchableView.h"
 
+
 @implementation MMUntouchableView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -26,11 +26,11 @@
  * can never intercept any touch input. instead it will
  * effectively pass through this view to the views behind it
  */
--(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     return nil;
 }
 
--(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     return NO;
 }
 

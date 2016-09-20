@@ -11,39 +11,38 @@
 #import "UIColor+Shadow.h"
 #import "MMTutorialManager.h"
 
-@implementation MMLoopView{
-    
+
+@implementation MMLoopView {
     UILabel* titleLabel;
     UIView* durationBar;
-
 }
 
 @synthesize title;
 @synthesize tutorialId;
 
-+(BOOL) supportsURL:(NSURL*)url{
++ (BOOL)supportsURL:(NSURL*)url {
     return NO;
 }
 
--(id) initWithTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId{
-    if(self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]){
+- (id)initWithTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId {
+    if (self = [super initWithFrame:CGRectMake(0, 0, 600, 600)]) {
         title = _title;
         tutorialId = _tutorialId;
-        
-        if(title){
+
+        if (title) {
             titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];
             titleLabel.backgroundColor = [UIColor clearColor];
             titleLabel.text = _title;
             titleLabel.textAlignment = NSTextAlignmentCenter;
             [self addSubview:titleLabel];
         }
-        
+
         durationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 4)];
         durationBar.clipsToBounds = YES;
         durationBar.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
         [self addSubview:durationBar];
 
-        if(title){
+        if (title) {
             UILabel* durationTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, 40)];
             durationTitleLabel.backgroundColor = [UIColor clearColor];
             durationTitleLabel.textColor = [UIColor whiteColor];
@@ -55,43 +54,44 @@
     return self;
 }
 
--(void) setDuration:(CGFloat)duration{
-    if(!tutorialId) return;
+- (void)setDuration:(CGFloat)duration {
+    if (!tutorialId)
+        return;
     CGFloat maxWidth = self.bounds.size.width;
     CGRect fr = durationBar.frame;
     fr.size.width = maxWidth * duration;
-    if(![[MMTutorialManager sharedInstance] hasCompletedStep:tutorialId]){
+    if (![[MMTutorialManager sharedInstance] hasCompletedStep:tutorialId]) {
         durationBar.frame = fr;
     }
 }
 
--(void) fadeDurationBar{
+- (void)fadeDurationBar {
     [UIView animateWithDuration:.3 animations:^{
         durationBar.alpha = 0;
     }];
 }
 
--(BOOL) wantsNextButton{
+- (BOOL)wantsNextButton {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isBuffered{
+- (BOOL)isBuffered {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isAnimating{
+- (BOOL)isAnimating {
     @throw kAbstractMethodException;
 }
 
--(void) startAnimating{
+- (void)startAnimating {
     @throw kAbstractMethodException;
 }
 
--(void) pauseAnimating{
+- (void)pauseAnimating {
     @throw kAbstractMethodException;
 }
 
--(void) stopAnimating{
+- (void)stopAnimating {
     @throw kAbstractMethodException;
 }
 

@@ -12,12 +12,13 @@
 #import "MMPhoto.h"
 #import "MMDisplayAssetGroup.h"
 
+
 @interface MMPhotoAlbum : MMDisplayAssetGroup
 
 @property (readonly) ALAssetsGroupType type;
 
--(id) initWithAssetGroup:(ALAssetsGroup*)group;
+- (id)initWithAssetGroup:(ALAssetsGroup*)group;
 
--(void) refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group;
+- (void)refreshAlbumContentsWithGroup:(ALAssetsGroup*)_group;
 
 @end

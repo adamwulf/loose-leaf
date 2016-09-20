@@ -10,21 +10,22 @@
 #import "MMCancelableGestureRecognizer.h"
 #import "MMGestureTouchOwnershipDelegate.h"
 
-@interface MMDrawingTouchGestureRecognizer : MMCancelableGestureRecognizer{
+
+@interface MMDrawingTouchGestureRecognizer : MMCancelableGestureRecognizer {
     NSMutableSet* ignoredTouches;
     NSMutableOrderedSet* possibleTouches;
     NSMutableOrderedSet* validTouches;
-    
+
     __weak NSObject<MMGestureTouchOwnershipDelegate>* touchDelegate;
 }
 
 @property (nonatomic, weak) NSObject<MMGestureTouchOwnershipDelegate>* touchDelegate;
 @property (readonly) NSArray* validTouches;
 
-+(MMDrawingTouchGestureRecognizer*) sharedInstance;
++ (MMDrawingTouchGestureRecognizer*)sharedInstance;
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture;
 
--(BOOL) isDrawing;
+- (BOOL)isDrawing;
 
 @end

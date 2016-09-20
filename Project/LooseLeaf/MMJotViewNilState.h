@@ -8,8 +8,9 @@
 
 #import <JotUI/JotUI.h>
 
+
 @interface MMJotViewNilState : JotViewStateProxy
 
-+(MMJotViewNilState*) sharedInstance;
++ (MMJotViewNilState*)sharedInstance;
 
 @end

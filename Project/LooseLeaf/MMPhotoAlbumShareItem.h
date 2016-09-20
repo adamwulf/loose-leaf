@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMAbstractShareItem.h"
 
+
 @interface MMPhotoAlbumShareItem : MMAbstractShareItem
 
 @end

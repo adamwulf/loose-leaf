@@ -17,7 +17,8 @@
 
 @class MMImageSidebarContainerView;
 
-@interface MMAbstractSidebarContentView : UIView<UICollectionViewDataSource,MMSinglePhotoCollectionViewCellDelegate,MMPhotoManagerDelegate,UICollectionViewDelegate>{
+
+@interface MMAbstractSidebarContentView : UIView <UICollectionViewDataSource, MMSinglePhotoCollectionViewCellDelegate, MMPhotoManagerDelegate, UICollectionViewDelegate> {
     MMDisplayAssetGroup* currentAlbum;
     UICollectionView* albumListScrollView;
     UICollectionView* photoListScrollView;
@@ -29,26 +30,26 @@
 @property (nonatomic, readonly) BOOL isShowing;
 @property (readonly) CGFloat rowHeight;
 
--(void) reset:(BOOL)animated;
+- (void)reset:(BOOL)animated;
 
--(void) show:(BOOL)animated;
+- (void)show:(BOOL)animated;
 
--(void) hide:(BOOL)animated;
+- (void)hide:(BOOL)animated;
 
--(void) killMemory;
+- (void)killMemory;
 
--(void) updatePhotoRotation:(BOOL)animated;
+- (void)updatePhotoRotation:(BOOL)animated;
 
--(CGFloat) idealRotationForOrientation;
+- (CGFloat)idealRotationForOrientation;
 
 // abstract
 
--(NSInteger) indexForAlbum:(MMDisplayAssetGroup*)album;
+- (NSInteger)indexForAlbum:(MMDisplayAssetGroup*)album;
 
--(MMDisplayAssetGroup*) albumAtIndex:(NSInteger)index;
+- (MMDisplayAssetGroup*)albumAtIndex:(NSInteger)index;
 
--(UICollectionViewLayout*) photosLayout;
+- (UICollectionViewLayout*)photosLayout;
 
--(BOOL) hasPermission;
+- (BOOL)hasPermission;
 
 @end

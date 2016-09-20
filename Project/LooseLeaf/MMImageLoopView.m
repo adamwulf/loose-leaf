@@ -11,14 +11,15 @@
 #import "Constants.h"
 #import "MMTutorialManager.h"
 
-@implementation MMImageLoopView{
+
+@implementation MMImageLoopView {
     BOOL isAnimating;
 }
 
--(id) initForImage:(NSURL*)imageURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId{
-    if(self = [super initWithTitle:_title forTutorialId:_tutorialId]){
+- (id)initForImage:(NSURL*)imageURL withTitle:(NSString*)_title forTutorialId:(NSString*)_tutorialId {
+    if (self = [super initWithTitle:_title forTutorialId:_tutorialId]) {
         UIImage* img = [UIImage imageWithContentsOfFile:[imageURL path]];
-        
+
         UIImageView* imgView = [[UIImageView alloc] initWithFrame:self.bounds];
         imgView.image = img;
         [self insertSubview:imgView atIndex:0];
@@ -26,41 +27,41 @@
     return self;
 }
 
-+(BOOL) supportsURL:(NSURL*)url{
++ (BOOL)supportsURL:(NSURL*)url {
     NSString* uti = [url universalTypeID];
     return UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage);
 }
 
--(void) userFinishedImageTutorial{
-    if(![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]){
+- (void)userFinishedImageTutorial {
+    if (![[MMTutorialManager sharedInstance] hasCompletedStep:self.tutorialId]) {
         [[MMTutorialManager sharedInstance] didCompleteStep:self.tutorialId];
     }
 }
 
 #pragma mark - MMLoopView
 
--(BOOL) wantsNextButton{
+- (BOOL)wantsNextButton {
     return YES;
 }
 
--(BOOL) isBuffered{
+- (BOOL)isBuffered {
     return NO;
 }
 
--(BOOL) isAnimating{
+- (BOOL)isAnimating {
     return isAnimating;
 }
 
--(void) startAnimating{
+- (void)startAnimating {
     isAnimating = YES;
     [self performSelector:@selector(userFinishedImageTutorial) withObject:nil afterDelay:1];
 }
 
--(void) pauseAnimating{
+- (void)pauseAnimating {
     [self stopAnimating];
 }
 
--(void) stopAnimating{
+- (void)stopAnimating {
     isAnimating = NO;
 }
 

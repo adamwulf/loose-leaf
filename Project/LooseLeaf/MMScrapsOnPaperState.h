@@ -13,39 +13,40 @@
 
 @class MMImmutableScrapsOnPaperState;
 
+
 @interface MMScrapsOnPaperState : MMScrapCollectionState
 
 @property (nonatomic, readonly) NSObject<MMScrapsOnPaperStateDelegate>* delegate;
 @property (nonatomic, readonly) MMScrapContainerView* scrapContainerView;
 
--(id) initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate withScrapContainerSize:(CGSize)scrapContainerSize;
+- (id)initWithDelegate:(NSObject<MMScrapsOnPaperStateDelegate>*)delegate withScrapContainerSize:(CGSize)scrapContainerSize;
 
--(MMImmutableScrapsOnPaperState*) immutableStateForPath:(NSString*)scrapIDsPath;
+- (MMImmutableScrapsOnPaperState*)immutableStateForPath:(NSString*)scrapIDsPath;
 
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block onBlockComplete:(void(^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload;
+- (void)performBlockForUnloadedScrapStateSynchronously:(void (^)())block onBlockComplete:(void (^)())onComplete andLoadFrom:(NSString*)scrapIDsPath withBundledScrapIDsPath:(NSString*)bundledScrapIDsPath andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload;
 
 #pragma mark - Add Scraps
 
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
+- (MMScrapView*)addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
 #pragma mark - Manage Scraps
 
--(NSArray*) scrapsOnPaper;
+- (NSArray*)scrapsOnPaper;
 
--(void) showScrap:(MMScrapView*)scrap;
--(void) showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;
--(void) hideScrap:(MMScrapView*)scrap;
--(BOOL) isScrapVisible:(MMScrapView*)scrap;
+- (void)showScrap:(MMScrapView*)scrap;
+- (void)showScrap:(MMScrapView*)scrap atIndex:(NSUInteger)subviewIndex;
+- (void)hideScrap:(MMScrapView*)scrap;
+- (BOOL)isScrapVisible:(MMScrapView*)scrap;
 
--(MMScrapView*) mostRecentScrap;
+- (MMScrapView*)mostRecentScrap;
 
--(MMScrapView*) removeScrapWithUUID:(NSString*)scrapUUID;
+- (MMScrapView*)removeScrapWithUUID:(NSString*)scrapUUID;
 
 #pragma mark - Paths
 
--(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
+- (NSString*)directoryPathForScrapUUID:(NSString*)uuid;
 
--(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
+- (NSString*)bundledDirectoryPathForScrapUUID:(NSString*)uuid;
 
 
 @end

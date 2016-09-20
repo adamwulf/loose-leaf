@@ -12,8 +12,8 @@
 
 @protocol MMPhotoManagerDelegate <NSObject>
 
--(void) doneLoadingPhotoAlbums;
+- (void)doneLoadingPhotoAlbums;
 
--(void) albumUpdated:(MMPhotoAlbum*)updatedAlbum;
+- (void)albumUpdated:(MMPhotoAlbum*)updatedAlbum;
 
 @end

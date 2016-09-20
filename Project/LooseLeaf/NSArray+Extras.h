@@ -8,22 +8,24 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface NSArray (Extras)
 
--(NSArray*) reversedArray;
+- (NSArray*)reversedArray;
 
--(NSArray*) arrayByRemovingObject:(id)obj;
+- (NSArray*)arrayByRemovingObject:(id)obj;
 
--(NSArray*) arrayByRemovingObjectsInArray:(NSArray*)arr;
+- (NSArray*)arrayByRemovingObjectsInArray:(NSArray*)arr;
 
--(NSArray*) shuffledArray;
+- (NSArray*)shuffledArray;
 
--(NSSet*) asSet;
+- (NSSet*)asSet;
 
 @end
 
+
 @interface NSMutableArray (Extras)
 
--(void) shuffle;
+- (void)shuffle;
 
 @end

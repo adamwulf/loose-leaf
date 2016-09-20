@@ -13,16 +13,16 @@
 
 @protocol MMScrapsOnPaperStateDelegate <MMScrapCollectionStateDelegate>
 
--(MMScrappedPaperView*) page;
+- (MMScrappedPaperView*)page;
 
--(BOOL) isEditable;
+- (BOOL)isEditable;
 
--(NSString*) pagesPath;
+- (NSString*)pagesPath;
 
--(NSString*) bundledPagesPath;
+- (NSString*)bundledPagesPath;
 
 #pragma mark - Scrap Container for Sidebar
 
--(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
+- (void)deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
 
 @end

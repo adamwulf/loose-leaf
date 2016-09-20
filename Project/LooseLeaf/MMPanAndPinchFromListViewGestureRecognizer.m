@@ -9,6 +9,7 @@
 #import "MMPanAndPinchFromListViewGestureRecognizer.h"
 #import "MMLongPressFromListViewGestureRecognizer.h"
 
+
 @implementation MMPanAndPinchFromListViewGestureRecognizer
 
 #pragma mark - Properties
@@ -22,9 +23,9 @@
 
 #pragma mark - Init
 
--(id) init{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         validTouches = [[NSMutableOrderedSet alloc] init];
         [self reset];
         self.delegate = self;
@@ -32,9 +33,9 @@
     return self;
 }
 
--(id) initWithTarget:(id)target action:(SEL)action{
+- (id)initWithTarget:(id)target action:(SEL)action {
     self = [super initWithTarget:target action:action];
-    if(self){
+    if (self) {
         validTouches = [[NSMutableOrderedSet alloc] init];
         [self reset];
         self.delegate = self;
@@ -42,28 +43,28 @@
     return self;
 }
 
--(NSArray*) validTouches{
+- (NSArray*)validTouches {
     return [validTouches array];
 }
 
 #pragma mark - Touch Methods
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    [touches enumerateObjectsUsingBlock:^(id obj, BOOL *stop){
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    [touches enumerateObjectsUsingBlock:^(id obj, BOOL* stop) {
         UITouch* touch = obj;
         MMPaperView* page = [pinchDelegate pageForPointInList:[touch locationInView:self.view]];
-        if(page && (!pinchedPage || pinchedPage == page)){
-            if(!pinchedPage){
+        if (page && (!pinchedPage || pinchedPage == page)) {
+            if (!pinchedPage) {
                 pinchedPage = page;
             }
-            if([validTouches count] == 2){
+            if ([validTouches count] == 2) {
                 [self ignoreTouch:touch forEvent:event];
-            }else if([validTouches count] < 2){
+            } else if ([validTouches count] < 2) {
                 [validTouches addObject:touch];
             }
-            if([validTouches count] == 2 && self.state == UIGestureRecognizerStatePossible){
+            if ([validTouches count] == 2 && self.state == UIGestureRecognizerStatePossible) {
                 CGPoint lastLocationInPage = [self locationInView:pinchedPage];
-                if([pinchedPage isKindOfClass:[MMShadowedView class]]){
+                if ([pinchedPage isKindOfClass:[MMShadowedView class]]) {
                     // the location needs to take into account the shadow
                     lastLocationInPage.x -= [MMShadowedView shadowWidth];
                     lastLocationInPage.y -= [MMShadowedView shadowWidth];
@@ -77,56 +78,55 @@
                 scale = initialPageScale;
                 self.state = UIGestureRecognizerStateBegan;
             }
-        }else{
+        } else {
             [self ignoreTouch:touch forEvent:event];
         }
     }];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    if([validTouches count] == 2 && self.state != UIGestureRecognizerStateBegan){
-//        DebugLog(@"touchesMoved");
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    if ([validTouches count] == 2 && self.state != UIGestureRecognizerStateBegan) {
+        //        DebugLog(@"touchesMoved");
         CGFloat newScale = initialPageScale * [self distanceBetweenTouches:validTouches] / initialDistance;
-        if(newScale > scale){
+        if (newScale > scale) {
             scaleDirection = MMScaleDirectionLarger;
-        }else if(newScale < scale){
+        } else if (newScale < scale) {
             scaleDirection = MMScaleDirectionSmaller;
-        }else{
-            
+        } else {
         }
         scale = newScale;
         self.state = UIGestureRecognizerStateChanged;
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     NSUInteger validTouchCount = [validTouches count];
     [validTouches removeObjectsInSet:touches];
-    if(validTouchCount == 2){
+    if (validTouchCount == 2) {
         self.state = UIGestureRecognizerStateEnded;
-    }else{
+    } else {
         self.state = UIGestureRecognizerStateFailed;
     }
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     NSUInteger validTouchCount = [validTouches count];
     [validTouches removeObjectsInSet:touches];
-    if(validTouchCount == 2){
+    if (validTouchCount == 2) {
         self.state = UIGestureRecognizerStateCancelled;
-    }else{
+    } else {
         self.state = UIGestureRecognizerStateFailed;
     }
 }
 
-- (void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-//    DebugLog(@"ignoreTouch");
+- (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
+    //    DebugLog(@"ignoreTouch");
     [super ignoreTouch:touch forEvent:event];
 }
 
 #pragma mark - UIGestureRecognzier Subclass
 
--(void) reset{
+- (void)reset {
     [validTouches removeAllObjects];
     pinchedPage = nil;
     scaleDirection = MMBezelDirectionNone;
@@ -137,37 +137,37 @@
 
 // kill the gesture, and make sure that any events
 // that fire after this won't include the pinchedPage
--(void) killTheGestureCold{
+- (void)killTheGestureCold {
     pinchedPage = nil;
     [self cancel];
 }
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
     return [preventedGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
     return [preventingGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return ![otherGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return [otherGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return [otherGestureRecognizer isKindOfClass:[MMLongPressFromListViewGestureRecognizer class]];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        //        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;
@@ -176,8 +176,8 @@
 
 #pragma mark - Helper
 
--(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
-    if([touches count] >= 2){
+- (CGFloat)distanceBetweenTouches:(NSOrderedSet*)touches {
+    if ([touches count] >= 2) {
         UITouch* touch1 = [touches objectAtIndex:0];
         UITouch* touch2 = [touches objectAtIndex:1];
         CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];

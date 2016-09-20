@@ -8,14 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMStatTracker : NSObject
 
-+(MMStatTracker*) trackerWithName:(NSString*)name;
++ (MMStatTracker*)trackerWithName:(NSString*)name;
 
-+(MMStatTracker*) trackerWithName:(NSString *)name andTargetCount:(NSInteger)targetCount;
++ (MMStatTracker*)trackerWithName:(NSString*)name andTargetCount:(NSInteger)targetCount;
 
 - (instancetype)init NS_UNAVAILABLE;
 
-- (void) trackValue:(CGFloat)nextVal;
+- (void)trackValue:(CGFloat)nextVal;
 
 @end

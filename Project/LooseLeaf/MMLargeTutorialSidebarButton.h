@@ -8,6 +8,7 @@
 
 #import "MMTutorialSidebarButton.h"
 
+
 @interface MMLargeTutorialSidebarButton : MMTutorialSidebarButton
 
 @end

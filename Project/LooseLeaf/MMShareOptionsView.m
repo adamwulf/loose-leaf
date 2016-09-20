@@ -8,18 +8,18 @@
 
 #import "MMShareOptionsView.h"
 
+
 @implementation MMShareOptionsView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         self.userInteractionEnabled = YES;
-        
+
         CGFloat width = frame.size.width;
-        CGRect lineRect = CGRectMake(width*0.1, 0, width*0.8, 1);
+        CGRect lineRect = CGRectMake(width * 0.1, 0, width * 0.8, 1);
         UIView* line = [[UIView alloc] initWithFrame:lineRect];
         line.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
         line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
@@ -28,32 +28,32 @@
     return self;
 }
 
--(BOOL) shouldCloseWhenSidebarHides{
+- (BOOL)shouldCloseWhenSidebarHides {
     return NO;
 }
 
--(void) reset{
+- (void)reset {
     self.alpha = 0;
 }
 
--(void) hide{
-    if(self.alpha){
+- (void)hide {
+    if (self.alpha) {
         CGRect origFrame = self.frame;
         CGRect offsetFrame = origFrame;
         offsetFrame.origin.y += 10;
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.alpha = 0;
             self.frame = offsetFrame;
-        }completion:^(BOOL finished){
-            if(finished){
+        } completion:^(BOOL finished) {
+            if (finished) {
                 self.frame = origFrame;
             }
         }];
     }
 }
 
--(void) show{
-    if(!self.alpha){
+- (void)show {
+    if (!self.alpha) {
         CGRect origFrame = self.frame;
         CGRect offsetFrame = origFrame;
         offsetFrame.origin.y += 10;
@@ -61,11 +61,11 @@
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             self.alpha = 1;
             self.frame = origFrame;
-        }completion:nil];
+        } completion:nil];
     }
 }
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation{
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation {
     // noop
 }
 

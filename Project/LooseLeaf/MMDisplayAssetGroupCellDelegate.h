@@ -12,6 +12,6 @@
 
 @protocol MMDisplayAssetGroupCellDelegate <NSObject>
 
--(void) deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell*)cell;
+- (void)deleteButtonWasTappedForCell:(MMDisplayAssetGroupCell*)cell;
 
 @end

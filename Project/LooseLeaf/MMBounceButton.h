@@ -8,18 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMBounceButton : UIButton
 
 @property (nonatomic, assign) CGFloat rotation;
 
--(UIColor*) borderColor;
+- (UIColor*)borderColor;
 
--(UIColor*) backgroundColor;
+- (UIColor*)backgroundColor;
 
--(CGAffineTransform) rotationTransform;
+- (CGAffineTransform)rotationTransform;
 
--(void) bounceButton;
+- (void)bounceButton;
 
--(BOOL) shouldBounce;
+- (BOOL)shouldBounce;
 
 @end

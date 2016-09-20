@@ -10,7 +10,8 @@
 #import "MMScrapView.h"
 #import "MMSidebarButton.h"
 
-@interface MMScrapBubbleButton : MMSidebarButton{
+
+@interface MMScrapBubbleButton : MMSidebarButton {
     MMScrapView* scrap;
     CGFloat scale;
     CGFloat originalScrapScale;
@@ -21,7 +22,7 @@
 @property (nonatomic, assign) CGFloat scale;
 @property (nonatomic, assign) CGFloat originalScrapScale;
 
-+(CGFloat) idealScaleForScrap:(MMScrapView*)scrap;
-+(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap;
++ (CGFloat)idealScaleForScrap:(MMScrapView*)scrap;
++ (CGAffineTransform)idealTransformForScrap:(MMScrapView*)scrap;
 
 @end

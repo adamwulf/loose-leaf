@@ -22,40 +22,40 @@
 // and attempts to login to CloudKit. if login fails,
 // then it will transition to an ErrorState for the
 // appropriate reason
-@implementation MMCloudKitBaseState{
+@implementation MMCloudKitBaseState {
     BOOL isCheckingStatus;
     NSArray* cachedFriendListIfAny;
 }
 
 
--(id) initWithCachedFriendList:(NSArray*)_friendList{
-    if(self = [super init]){
+- (id)initWithCachedFriendList:(NSArray*)_friendList {
+    if (self = [super init]) {
         cachedFriendListIfAny = _friendList;
     }
     return self;
 }
 
 
--(NSArray*) friendList{
+- (NSArray*)friendList {
     return cachedFriendListIfAny;
 }
 
 
-+(NSString*) statusPlistPath{
++ (NSString*)statusPlistPath {
     return [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"status.plist"];
 }
 
-+(void) clearCache{
++ (void)clearCache {
     [[NSFileManager defaultManager] removeItemAtPath:[MMCloudKitBaseState statusPlistPath] error:nil];
 }
 
--(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+- (void)runState {
+    if ([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
-        @synchronized(self){
-            if(isCheckingStatus){
+    } else {
+        @synchronized(self) {
+            if (isCheckingStatus) {
                 return;
             }
             isCheckingStatus = YES;
@@ -64,14 +64,14 @@
         // SPRSimpleCloudMessengerErroriCloudAccount, or
         // SPRSimpleCloudMessengerErrorMissingDiscoveryPermissions
         // should reset my cache and restart this state.
-        
+
         NSDictionary* status = [NSDictionary dictionaryWithContentsOfFile:[MMCloudKitBaseState statusPlistPath]];
-        if(status){
-//            DebugLog(@"using cached account and permission status %@", status);
-            SCKMAccountStatus accountStatus = (SCKMAccountStatus) [[status objectForKey:@"accountStatus"] integerValue];
-            SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus) [[status objectForKey:@"permissionStatus"] integerValue];
+        if (status) {
+            //            DebugLog(@"using cached account and permission status %@", status);
+            SCKMAccountStatus accountStatus = (SCKMAccountStatus)[[status objectForKey:@"accountStatus"] integerValue];
+            SCKMApplicationPermissionStatus permissionStatus = (SCKMApplicationPermissionStatus)[[status objectForKey:@"permissionStatus"] integerValue];
             [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
-            @synchronized(self){
+            @synchronized(self) {
                 isCheckingStatus = NO;
             }
             return;
@@ -79,26 +79,26 @@
 
         [[SPRSimpleCloudKitManager sharedManager] silentlyVerifyiCloudAccountStatusOnComplete:^(SCKMAccountStatus accountStatus,
                                                                                                 SCKMApplicationPermissionStatus permissionStatus,
-                                                                                                NSError *error) {
-            @synchronized(self){
+                                                                                                NSError* error) {
+            @synchronized(self) {
                 isCheckingStatus = NO;
             }
-            if([MMCloudKitManager sharedManager].currentState != self){
+            if ([MMCloudKitManager sharedManager].currentState != self) {
                 // bail early. the network probably went offline
                 // while we were waiting for a reply. if we're not current,
                 // then we shouldn't process / change state.
                 return;
             }
-            if(error){
+            if (error) {
                 [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
-            }else{
+            } else {
                 [self switchStateBasedOnAccountStatus:accountStatus andPermissionStatus:permissionStatus];
             }
         }];
     }
 }
 
--(void) switchStateBasedOnAccountStatus:(SCKMAccountStatus)accountStatus andPermissionStatus:(SCKMApplicationPermissionStatus)permissionStatus{
+- (void)switchStateBasedOnAccountStatus:(SCKMAccountStatus)accountStatus andPermissionStatus:(SCKMApplicationPermissionStatus)permissionStatus {
     [MMCloudKitBaseState clearCache];
     switch (accountStatus) {
         case SCKMAccountStatusCouldNotDetermine:
@@ -129,8 +129,8 @@
                     // icloud is available for this user, so we need to
                     // fetch their account info if we don't already have it.
                     {
-                        NSDictionary* status = @{@"accountStatus" : @(accountStatus),
-                                                 @"permissionStatus" : @(permissionStatus)};
+                        NSDictionary* status = @{ @"accountStatus": @(accountStatus),
+                                                  @"permissionStatus": @(permissionStatus) };
                         [status writeToFile:[MMCloudKitBaseState statusPlistPath] atomically:YES];
                         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] initWithCachedFriendList:self.friendList]];
                     }
@@ -140,35 +140,35 @@
     }
 }
 
--(void) killState{
+- (void)killState {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
--(BOOL) isLoggedInAndReadyForAnything{
+- (BOOL)isLoggedInAndReadyForAnything {
     return NO;
 }
 
 #pragma mark - Notifications
 
--(void) cloudKitInfoDidChange{
+- (void)cloudKitInfoDidChange {
     DebugLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
-    @synchronized(self){
+    @synchronized(self) {
         [self runState];
     }
 }
 
--(void) reachabilityDidChange{
+- (void)reachabilityDidChange {
     DebugLog(@"%@ reachabilityDidChange", NSStringFromClass([self class]));
-    @synchronized(self){
+    @synchronized(self) {
         [self runState];
     }
 }
 
--(void) cloudKitDidRecievePush{
+- (void)cloudKitDidRecievePush {
     // noop
 }
 
--(void) cloudKitDidCheckForNotifications{
+- (void)cloudKitDidCheckForNotifications {
     // noop
 }
 

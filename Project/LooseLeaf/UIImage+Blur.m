@@ -23,9 +23,10 @@
 #import <Accelerate/Accelerate.h>
 #import <UIKit/UIKit.h>
 
+
 @implementation UIImage (Blur)
 
-+ (UIImage *)applyBlurOnImage:(UIImage *)imageToBlur withRadius:(CGFloat)blurRadius {
++ (UIImage*)applyBlurOnImage:(UIImage*)imageToBlur withRadius:(CGFloat)blurRadius {
     if ((blurRadius < 0.0f) || (blurRadius > 1.0f)) {
         blurRadius = 0.5f;
     }
@@ -37,7 +38,7 @@
 
     vImage_Buffer inBuffer, outBuffer;
     vImage_Error error;
-    void *pixelBuffer;
+    void* pixelBuffer;
 
     CGDataProviderRef inProvider = CGImageGetDataProvider(rawImage);
     CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
@@ -57,31 +58,31 @@
     error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL,
                                        0, 0, boxSize, boxSize, NULL,
                                        kvImageEdgeExtend);
-//    if (error)
-//        APLog(@"blur error: convolution failed");
+    //    if (error)
+    //        APLog(@"blur error: convolution failed");
 
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
-        CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
-                                                 outBuffer.width,
-                                                 outBuffer.height,
-                                                 8,
-                                                 outBuffer.rowBytes,
-                                                 colorSpace,
-                                                 CGImageGetBitmapInfo(imageToBlur.CGImage));
+    CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
+                                             outBuffer.width,
+                                             outBuffer.height,
+                                             8,
+                                             outBuffer.rowBytes,
+                                             colorSpace,
+                                             CGImageGetBitmapInfo(imageToBlur.CGImage));
 
-        CGImageRef imageRef = CGBitmapContextCreateImage (ctx);
-        UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRef imageRef = CGBitmapContextCreateImage(ctx);
+    UIImage* returnImage = [UIImage imageWithCGImage:imageRef];
 
-        //clean up
-        CGContextRelease(ctx);
-        CGColorSpaceRelease(colorSpace);
+    //clean up
+    CGContextRelease(ctx);
+    CGColorSpaceRelease(colorSpace);
 
-        free(pixelBuffer);
-        CFRelease(inBitmapData);
-        CGImageRelease(imageRef);
-        
-        return returnImage;
+    free(pixelBuffer);
+    CFRelease(inBitmapData);
+    CGImageRelease(imageRef);
+
+    return returnImage;
 }
 
 @end

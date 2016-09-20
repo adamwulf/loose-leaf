@@ -14,7 +14,8 @@
 // TODO: possibly use this tutorial for threadsafe cache
 // https://mikeash.com/pyblog/friday-qa-2011-10-14-whats-new-in-gcd.html
 
-@implementation MMLoadImageCache{
+
+@implementation MMLoadImageCache {
     NSMutableDictionary* loadedImages;
     NSMutableArray* orderedKeys;
     int loadedBytes;
@@ -22,10 +23,11 @@
 
 static MMLoadImageCache* _instance = nil;
 
--(id) init{
-    @synchronized([MMLoadImageCache class]){
-        if(_instance) return _instance;
-        if((self = [super init])){
+- (id)init {
+    @synchronized([MMLoadImageCache class]) {
+        if (_instance)
+            return _instance;
+        if ((self = [super init])) {
             loadedImages = [NSMutableDictionary dictionary];
             orderedKeys = [NSMutableArray array];
             _instance = self;
@@ -34,22 +36,22 @@ static MMLoadImageCache* _instance = nil;
     return _instance;
 }
 
-+(MMLoadImageCache*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMLoadImageCache alloc]init];
++ (MMLoadImageCache*)sharedInstance {
+    if (!_instance) {
+        _instance = [[MMLoadImageCache alloc] init];
     }
     return _instance;
 }
 
--(int) memoryOfLoadedImages{
+- (int)memoryOfLoadedImages {
     return loadedBytes;
 }
 
 #pragma mark - Load Images
 
--(BOOL) containsPathInCache:(NSString*)path{
+- (BOOL)containsPathInCache:(NSString*)path {
     BOOL contains = NO;
-    @synchronized(self){
+    @synchronized(self) {
         contains = [orderedKeys containsObject:path];
     }
     return contains;
@@ -57,16 +59,16 @@ static MMLoadImageCache* _instance = nil;
 
 
 static int count = 0;
--(UIImage*) imageAtPath:(NSString*)path{
-    if(path){
+- (UIImage*)imageAtPath:(NSString*)path {
+    if (path) {
         @autoreleasepool {
             UIImage* cachedImage = nil;
-            @synchronized(self){
+            @synchronized(self) {
                 cachedImage = [loadedImages objectForKey:path];
             }
-            if(!cachedImage){
-                @synchronized(self){
-                    if([orderedKeys containsObject:path]){
+            if (!cachedImage) {
+                @synchronized(self) {
+                    if ([orderedKeys containsObject:path]) {
                         // we don't have an image, but our path is
                         // in cache. this means there was nothing on disk
                         return nil;
@@ -74,43 +76,44 @@ static int count = 0;
                 }
                 cachedImage = [JotDiskAssetManager imageWithContentsOfFile:path];
                 count++;
-                @synchronized(self){
-                    if(cachedImage){
+                @synchronized(self) {
+                    if (cachedImage) {
                         [loadedImages setObject:cachedImage forKey:path];
                     }
-                    if(path){
+                    if (path) {
                         [orderedKeys removeObject:path];
                         [orderedKeys insertObject:path atIndex:0];
-                    }else{
+                    } else {
                         DebugLog(@"how did we get nil path?");
                     }
                     [self ensureCacheSize];
-                    
+
                     loadedBytes += [cachedImage uncompressedByteSize];
                 }
             }
             return cachedImage;
         }
-    }else{
+    } else {
         NSLog(@"nil path for image cache");
         return nil;
     }
 }
 
--(void) ensureCacheSize{
-    @synchronized(self){
-        while([orderedKeys count] > kMMLoadImageCacheSize){
+- (void)ensureCacheSize {
+    @synchronized(self) {
+        while ([orderedKeys count] > kMMLoadImageCacheSize) {
             [self clearCacheForPath:[orderedKeys lastObject]];
         }
     }
 }
 
--(void) clearCacheForPath:(NSString*)path{
+- (void)clearCacheForPath:(NSString*)path {
     @autoreleasepool {
-        if(!path) return;
-        @synchronized(self){
+        if (!path)
+            return;
+        @synchronized(self) {
             UIImage* cachedImage = [loadedImages objectForKey:path];
-            if(cachedImage){
+            if (cachedImage) {
                 loadedBytes -= [cachedImage uncompressedByteSize];
             }
             [loadedImages removeObjectForKey:path];
@@ -119,21 +122,21 @@ static int count = 0;
     }
 }
 
--(void) updateCacheForPath:(NSString*)path toImage:(UIImage*)image{
-    if(path){
-        @synchronized(self){
+- (void)updateCacheForPath:(NSString*)path toImage:(UIImage*)image {
+    if (path) {
+        @synchronized(self) {
             @autoreleasepool {
                 [self clearCacheForPath:path];
-                if(image){
+                if (image) {
                     UIImage* cachedImage = [loadedImages objectForKey:path];
-                    if(cachedImage){
+                    if (cachedImage) {
                         loadedBytes -= [cachedImage uncompressedByteSize];
                     }
                     [loadedImages setObject:image forKey:path];
                     loadedBytes += [image uncompressedByteSize];
-                }else{
+                } else {
                     UIImage* cachedImage = [loadedImages objectForKey:path];
-                    if(cachedImage){
+                    if (cachedImage) {
                         loadedBytes -= [cachedImage uncompressedByteSize];
                     }
                     [loadedImages removeObjectForKey:path];
@@ -142,14 +145,14 @@ static int count = 0;
                 [self ensureCacheSize];
             }
         }
-    }else{
+    } else {
         DebugLog(@"nil path for image cache");
     }
 }
 
 #pragma mark - Profiling Helpers
 
--(NSInteger) numberOfItemsHeldInCache{
+- (NSInteger)numberOfItemsHeldInCache {
     return [loadedImages count];
 }
 

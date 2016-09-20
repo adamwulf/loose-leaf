@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "MMUndoRedoItem.h"
 
-@interface MMUndoRedoBlockItem : NSObject<MMUndoRedoItem>{
-    @protected
+
+@interface MMUndoRedoBlockItem : NSObject <MMUndoRedoItem> {
+   @protected
     // YES if the item can undo,
     // NO if it can redo
     BOOL canUndo;
@@ -18,9 +19,9 @@
 
 @property (nonatomic, readonly) BOOL canUndo;
 
-+(MMUndoRedoBlockItem*) itemWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock;
++ (MMUndoRedoBlockItem*)itemWithUndoBlock:(void (^)())undoBlock andRedoBlock:(void (^)())redoBlock;
 
-- (id) initWithUndoBlock:(void(^)())undoBlock andRedoBlock:(void(^)())redoBlock;
+- (id)initWithUndoBlock:(void (^)())undoBlock andRedoBlock:(void (^)())redoBlock;
 
 
 @end

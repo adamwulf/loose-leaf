@@ -13,40 +13,43 @@
 #import "MMPresentationWindow.h"
 #import "Constants.h"
 
-@implementation MMPrintShareItem{
+
+@implementation MMPrintShareItem {
     MMProgressedImageViewButton* button;
 }
 
 @synthesize delegate;
 
--(id) init{
-    if(self = [super init]){
-        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+- (id)init {
+    if (self = [super init]) {
+        button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"print"]];
         button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
-                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
-                                                     name:kReachabilityChangedNotification object:nil];
-        
+                                                     name:kReachabilityChangedNotification
+                                                   object:nil];
+
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
-        
+
         [self updateButtonGreyscale];
     }
     return self;
 }
 
--(MMSidebarButton*) button{
+- (MMSidebarButton*)button {
     return button;
 }
 
--(void) performShareAction{
+- (void)performShareAction {
     // only allow printing if we're enabled
-    if([UIPrintInteractionController isPrintingAvailable] && [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable && [self.delegate urlToShare]){
+    if ([UIPrintInteractionController isPrintingAvailable] && [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable && [self.delegate urlToShare]) {
         [delegate mayShare:self];
         button.selected = YES;
         [button setNeedsDisplay];
@@ -58,42 +61,42 @@
             @autoreleasepool {
                 UIPrintInteractionController* printController = [UIPrintInteractionController sharedPrintController];
                 printController.printingItem = [self.delegate urlToShare];
-                
+
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
                 [presentationWindow makeKeyAndVisible];
                 UIView* presentationView = presentationWindow.rootViewController.view;
                 CGRect presentationRect = [presentationView convertRect:self.button.bounds fromView:self.button];
-                [printController presentFromRect:presentationRect inView:presentationView animated:YES completionHandler:^(UIPrintInteractionController *printInteractionController, BOOL completed, NSError *error) {
-                    if(completed){
+                [printController presentFromRect:presentationRect inView:presentationView animated:YES completionHandler:^(UIPrintInteractionController* printInteractionController, BOOL completed, NSError* error) {
+                    if (completed) {
                         [self.delegate didShare:self];
                         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
                     }
                     NSString* strResult = completed ? @"Success" : @"Cancelled";
-                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Print",
-                                                                                 kMPEventExportPropResult : strResult}];
+                    [[Mixpanel sharedInstance] track:kMPEventExport properties:@{ kMPEventExportPropDestination: @"Print",
+                                                                                  kMPEventExportPropResult: strResult }];
                     button.selected = NO;
                     [button setNeedsDisplay];
                 }];
             }
         });
-    }else{
+    } else {
         [button animateToPercent:1.0 success:NO completion:nil];
     }
 }
 
--(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+- (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
     return YES;
 }
 
 #pragma mark - Notification
 
--(void) updateButtonGreyscale{
-    if(![self.delegate urlToShare]){
+- (void)updateButtonGreyscale {
+    if (![self.delegate urlToShare]) {
         button.greyscale = YES;
-    }else if([UIPrintInteractionController isPrintingAvailable] &&
-       [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable){
+    } else if ([UIPrintInteractionController isPrintingAvailable] &&
+               [MMReachabilityManager sharedLocalNetwork].currentReachabilityStatus != NotReachable) {
         button.greyscale = NO;
-    }else{
+    } else {
         button.greyscale = YES;
     }
     [button setNeedsDisplay];
@@ -101,7 +104,7 @@
 
 #pragma mark - Dealloc
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

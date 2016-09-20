@@ -10,16 +10,17 @@
 #import "MMScrapView.h"
 #import "MMScrappedPaperView.h"
 
+
 @interface MMTrashManager : NSObject
 
-+(MMTrashManager*) sharedInstance;
++ (MMTrashManager*)sharedInstance;
 
--(dispatch_queue_t) trashManagerQueue;
+- (dispatch_queue_t)trashManagerQueue;
 
-+(BOOL) isTrashManagerQueue;
++ (BOOL)isTrashManagerQueue;
 
--(void) deleteScrap:(NSString*)scrap inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState;
+- (void)deleteScrap:(NSString*)scrap inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState;
 
--(void) deletePage:(MMPaperView*)page;
+- (void)deletePage:(MMPaperView*)page;
 
 @end

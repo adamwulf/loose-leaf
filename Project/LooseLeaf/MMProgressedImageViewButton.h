@@ -8,11 +8,12 @@
 
 #import "MMImageViewButton.h"
 
+
 @interface MMProgressedImageViewButton : MMImageViewButton
 
 @property (nonatomic, assign) BOOL targetSuccess;
 @property (nonatomic, assign) CGFloat targetProgress;
 
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion;
+- (void)animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL targetSuccess))completion;
 
 @end

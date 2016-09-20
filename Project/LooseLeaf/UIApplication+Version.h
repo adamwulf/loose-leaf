@@ -7,11 +7,10 @@
 //
 
 
-
 @interface UIApplication (Version)
 
-+(id) bundleVersion;
++ (id)bundleVersion;
 
-+(id) bundleShortVersionString;
++ (id)bundleShortVersionString;
 
 @end

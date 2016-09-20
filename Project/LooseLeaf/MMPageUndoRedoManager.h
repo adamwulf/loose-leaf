@@ -10,29 +10,30 @@
 #import "MMUndoRedoItem.h"
 #import "MMUndoablePaperView.h"
 
+
 @interface MMPageUndoRedoManager : NSObject
 
 @property (readonly) BOOL hasEditsToSave;
 @property (readonly) BOOL isLoaded;
 
--(id) initForDelegatePage:(MMUndoablePaperView*)page;
+- (id)initForDelegatePage:(MMUndoablePaperView*)page;
 
--(void) addUndoItem:(NSObject<MMUndoRedoItem>*)item;
+- (void)addUndoItem:(NSObject<MMUndoRedoItem>*)item;
 
--(void) undo;
+- (void)undo;
 
--(void) redo;
+- (void)redo;
 
 #pragma mark - Saving and Loading
 
--(void) saveTo:(NSString*)path;
+- (void)saveTo:(NSString*)path;
 
--(void) loadFrom:(NSString*)path;
+- (void)loadFrom:(NSString*)path;
 
--(void) unloadState;
+- (void)unloadState;
 
 #pragma mark - Scrap Checking
 
--(BOOL) containsItemForScrapUUID:(NSString*)scrapUUID;
+- (BOOL)containsItemForScrapUUID:(NSString*)scrapUUID;
 
 @end

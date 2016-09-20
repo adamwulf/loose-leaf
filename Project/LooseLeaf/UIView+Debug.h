@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIView (Debug)
 
--(void) showDebugBorder;
+- (void)showDebugBorder;
 
--(int) fullByteSize;
+- (int)fullByteSize;
 
 @end

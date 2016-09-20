@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface NSIndexSet (Map)
 
-- (NSIndexSet *)mapIndexesUsingBlock:(NSUInteger (^)(NSUInteger idx))block;
+- (NSIndexSet*)mapIndexesUsingBlock:(NSUInteger (^)(NSUInteger idx))block;
 
 @end

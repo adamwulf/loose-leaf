@@ -13,7 +13,7 @@
 
 @class MMScrapPaperStackView;
 
-struct DurationCacheObject{
+struct DurationCacheObject {
     // hash uniquely identifying a touch,
     // 0 if this record is free to use
     NSUInteger hash;
@@ -37,26 +37,27 @@ struct DurationCacheObject{
     CGFloat totalDistance;
 };
 
+
 @interface MMTouchVelocityGestureRecognizer : UIGestureRecognizer
 
 @property (nonatomic, weak) MMScrapPaperStackView* stackView;
 
-+(MMTouchVelocityGestureRecognizer*) sharedInstance;
++ (MMTouchVelocityGestureRecognizer*)sharedInstance;
 
-+(int) cacheSize;
++ (int)cacheSize;
 
-+(int) maxVelocity;
++ (int)maxVelocity;
 
--(void) pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj;
+- (void)pleaseNotifyMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj;
 
--(void) stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj;
+- (void)stopNotifyingMeWhenTouchesDie:(UIGestureRecognizer<MMTouchLifeCycleDelegate>*)obj;
 
--(CGFloat) normalizedVelocityForTouch:(UITouch*)touch;
+- (CGFloat)normalizedVelocityForTouch:(UITouch*)touch;
 
--(struct DurationCacheObject) velocityInformationForTouch:(UITouch*)touch withIndex:(int*)index;
+- (struct DurationCacheObject)velocityInformationForTouch:(UITouch*)touch withIndex:(int*)index;
 
--(int) indexForTouchInCacheIfExists:(UITouch*)touch;
+- (int)indexForTouchInCacheIfExists:(UITouch*)touch;
 
--(int) numberOfActiveTouches;
+- (int)numberOfActiveTouches;
 
 @end

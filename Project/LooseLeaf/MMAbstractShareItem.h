@@ -12,22 +12,23 @@
 #import "MMShareItemDelegate.h"
 #import "NSURL+UTI.h"
 
+
 @interface MMAbstractShareItem : NSObject
 
 @property (weak, nullable) NSObject<MMShareItemDelegate>* delegate;
 @property (nonatomic, assign, getter=isShowingOptionsView) BOOL showingOptionsView;
 @property (nullable, readonly) MMShareOptionsView* optionsView;
 
--(MMSidebarButton * __nonnull) button;
+- (MMSidebarButton* __nonnull)button;
 
--(BOOL) isAtAllPossibleForMimeType:(NSString* __nonnull)mimeType;
+- (BOOL)isAtAllPossibleForMimeType:(NSString* __nonnull)mimeType;
 
--(void) willShow;
+- (void)willShow;
 
--(void) didHide;
+- (void)didHide;
 
--(void) animateCompletionText:(NSString* __nonnull)linkText withImage:(UIImage* __nonnull)icon;
+- (void)animateCompletionText:(NSString* __nonnull)linkText withImage:(UIImage* __nonnull)icon;
 
--(void) updateButtonGreyscale;
+- (void)updateButtonGreyscale;
 
 @end

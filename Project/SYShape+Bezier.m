@@ -10,18 +10,19 @@
 #import <ClippingBezier/ClippingBezier.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 
+
 @implementation SYShape (Bezier)
 
--(UIBezierPath*) bezierPath{
+- (UIBezierPath*)bezierPath {
     UIBezierPath* output = [UIBezierPath bezierPath];
-    for(SYGeometry* geom in self.geometries){
-        if([output elementCount]){
+    for (SYGeometry* geom in self.geometries) {
+        if ([output elementCount]) {
             [output appendPathRemovingInitialMoveToPoint:[geom bezierPath]];
-        }else{
+        } else {
             [output appendPath:[geom bezierPath]];
         }
     }
-    if(self.isClosedCurve){
+    if (self.isClosedCurve) {
         [output closePath];
     }
     return output;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMOfflineIconView : UIView
 
 @property (nonatomic) BOOL shouldDrawOpaque;

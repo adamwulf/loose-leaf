@@ -11,7 +11,8 @@
 #import "UIColor+Shadow.h"
 #import <QuartzCore/QuartzCore.h>
 
-@implementation MMSidebarButton{
+
+@implementation MMSidebarButton {
     CGFloat shadowInset;
 }
 
@@ -19,8 +20,7 @@
 @synthesize shadowColor;
 @synthesize shadowInset;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -33,96 +33,94 @@
     return self;
 }
 
--(void) setSelected:(BOOL)selected{
-    if(selected != self.selected){
+- (void)setSelected:(BOOL)selected {
+    if (selected != self.selected) {
         [super setSelected:selected];
         [self setNeedsDisplay];
     }
 }
 
--(void) setEnabled:(BOOL)enabled{
-    if(enabled != self.enabled){
+- (void)setEnabled:(BOOL)enabled {
+    if (enabled != self.enabled) {
         [super setEnabled:enabled];
         [self setNeedsDisplay];
     }
 }
 
--(UIColor*) borderColor{
-    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
+- (UIColor*)borderColor {
+    return [UIColor colorWithRed:0.26 green:0.26 blue:0.26 alpha:0.35];
 }
 
--(UIColor*) backgroundColor{
-    return [UIColor colorWithRed: 0.84 + (self.enabled ? 0 : -0.3) green: 0.84 + (self.enabled ? 0 : -0.3) blue: 0.84 + (self.enabled ? 0 : -0.3) alpha: 0.5 + (self.enabled ? 0 : -0.2)];
+- (UIColor*)backgroundColor {
+    return [UIColor colorWithRed:0.84 + (self.enabled ? 0 : -0.3) green:0.84 + (self.enabled ? 0 : -0.3) blue:0.84 + (self.enabled ? 0 : -0.3) alpha:0.5 + (self.enabled ? 0 : -0.2)];
 }
 
--(CGRect) drawableFrame{
+- (CGRect)drawableFrame {
     CGFloat smallest = floorf(MIN(self.bounds.size.width, self.bounds.size.height));
-    return CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer, smallest - 2*kWidthOfSidebarButtonBuffer);
+    return CGRectMake(kWidthOfSidebarButtonBuffer, kWidthOfSidebarButtonBuffer, smallest - 2 * kWidthOfSidebarButtonBuffer, smallest - 2 * kWidthOfSidebarButtonBuffer);
 }
 
--(UIBezierPath*) ovalPath{
+- (UIBezierPath*)ovalPath {
     CGRect frame = [self drawableFrame];
-    return [UIBezierPath bezierPathWithOvalInRect: CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
+    return [UIBezierPath bezierPathWithOvalInRect:CGRectMake(CGRectGetMinX(frame) + 0.5, CGRectGetMinY(frame) + 0.5, floor(CGRectGetWidth(frame) - 1.0), floor(CGRectGetHeight(frame) - 1.0))];
 }
 
--(UIColor*) shadowColor{
-    if(!shadowColor){
+- (UIColor*)shadowColor {
+    if (!shadowColor) {
         return [UIColor blueShadowColor];
     }
     return shadowColor;
 }
 
--(void) drawDropshadowIfSelected{
-    if(self.selected){
+- (void)drawDropshadowIfSelected {
+    if (self.selected) {
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
         UIColor* selectedBlueFill = [self shadowColor];
-//        selectedBlueFill = [UIColor blueShadowColor];
-        
+        //        selectedBlueFill = [UIColor blueShadowColor];
+
         CGRect frame = [self drawableFrame];
         UIBezierPath* ovalPath = [self ovalPath];
-        
+
         //
         // possible drop shadow
         UIColor* gradientColor = [selectedBlueFill colorWithAlphaComponent:1];
         UIColor* clearColor = [selectedBlueFill colorWithAlphaComponent:0];
         NSArray* gradientColors = [NSArray arrayWithObjects:
-                                   (id)gradientColor.CGColor,
-                                   (id)clearColor.CGColor, nil];
+                                               (id)gradientColor.CGColor,
+                                               (id)clearColor.CGColor, nil];
         CGFloat gradientLocations[] = {0, 1};
         CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
         CGContextSaveGState(context);
-        
+
         UIBezierPath* clipPath = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(ovalPath.bounds, shadowInset, shadowInset)];
         [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
         clipPath.usesEvenOddFillRule = YES;
         [clipPath addClip];
-        
-        CGFloat width = self.bounds.size.width - (2*kWidthOfSidebarButtonBuffer);
+
+        CGFloat width = self.bounds.size.width - (2 * kWidthOfSidebarButtonBuffer);
         CGContextDrawRadialGradient(context, gradient,
-                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)-1,
-                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width/2.0)+(width*0.08),
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width / 2.0) - 1,
+                                    CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame)), (width / 2.0) + (width * 0.08),
                                     kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
-        
+
         CGGradientRelease(gradient);
         CGColorSpaceRelease(colorSpace);
-        
+
         CGContextRestoreGState(context);
     }
 }
-
-
 
 
 /**
  * returns a unit vector that's perpendicular to the line
  * between the input points
  */
--(CGPoint) perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint) p2{
-    CGFloat dx = p1.x-p2.x;
-    CGFloat dy = p1.y-p2.y;
-    CGFloat dist = sqrt(dx*dx + dy*dy);
+- (CGPoint)perpendicularUnitVectorForPoint:(CGPoint)p1 andPoint:(CGPoint)p2 {
+    CGFloat dx = p1.x - p2.x;
+    CGFloat dy = p1.y - p2.y;
+    CGFloat dist = sqrt(dx * dx + dy * dy);
     dx /= dist;
     dy /= dist;
     return CGPointMake(dx, dy);
@@ -132,22 +130,21 @@
  * creates a rectangular bezier path along the line
  * between the input points with the input width
  */
--(UIBezierPath*) pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint) p2 andVector:(CGPoint)pv andWidth:(CGFloat)width{
+- (UIBezierPath*)pathForLineGivePoint:(CGPoint)p1 andPoint:(CGPoint)p2 andVector:(CGPoint)pv andWidth:(CGFloat)width {
     UIBezierPath* linePath = [UIBezierPath bezierPath];
-    [linePath moveToPoint: CGPointMake(p1.x + (width/2)*pv.y, p1.y - (width/2)*pv.x)];
-    [linePath addLineToPoint: CGPointMake(p1.x - (width/2)*pv.y, p1.y + (width/2)*pv.x)];
-    [linePath addLineToPoint: CGPointMake(p2.x - (width/2)*pv.y, p2.y + (width/2)*pv.x)];
-    [linePath addLineToPoint: CGPointMake(p2.x + (width/2)*pv.y, p2.y - (width/2)*pv.x)];
-    [linePath addLineToPoint: CGPointMake(p1.x + (width/2)*pv.y, p1.y - (width/2)*pv.x)];
+    [linePath moveToPoint:CGPointMake(p1.x + (width / 2) * pv.y, p1.y - (width / 2) * pv.x)];
+    [linePath addLineToPoint:CGPointMake(p1.x - (width / 2) * pv.y, p1.y + (width / 2) * pv.x)];
+    [linePath addLineToPoint:CGPointMake(p2.x - (width / 2) * pv.y, p2.y + (width / 2) * pv.x)];
+    [linePath addLineToPoint:CGPointMake(p2.x + (width / 2) * pv.y, p2.y - (width / 2) * pv.x)];
+    [linePath addLineToPoint:CGPointMake(p1.x + (width / 2) * pv.y, p1.y - (width / 2) * pv.x)];
     [linePath closePath];
     linePath.lineJoinStyle = kCGLineJoinRound;
     return linePath;
 }
 
 
-
-- (void)drawRect:(CGRect)rect{
-    if(!self.enabled){
+- (void)drawRect:(CGRect)rect {
+    if (!self.enabled) {
         CGContextRef context = UIGraphicsGetCurrentContext();
 
         //
@@ -157,21 +154,20 @@
         [[[UIColor whiteColor] colorWithAlphaComponent:.3] setFill];
         [[UIBezierPath bezierPathWithRect:self.bounds] fill];
         CGContextSetBlendMode(context, kCGBlendModeNormal);
-        
     }
 }
 
--(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTappedDown object:[[event allTouches] anyObject]];
     [super touchesBegan:touches withEvent:event];
 }
 
--(void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
     [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
     [super touchesEnded:touches withEvent:event];
 }
 
--(void) touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
     [[NSNotificationCenter defaultCenter] postNotificationName:kDeletingInboxItemTapped object:[[event allTouches] anyObject]];
     [super touchesCancelled:touches withEvent:event];
 }

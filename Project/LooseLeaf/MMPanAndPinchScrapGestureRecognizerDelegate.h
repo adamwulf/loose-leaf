@@ -13,14 +13,14 @@
 
 @protocol MMPanAndPinchScrapGestureRecognizerDelegate <MMGestureTouchOwnershipDelegate>
 
--(NSArray*) scrapsToPan;
+- (NSArray*)scrapsToPan;
 
--(BOOL) panScrapRequiresLongPress;
+- (BOOL)panScrapRequiresLongPress;
 
--(CGFloat) topVisiblePageScaleForScrap:(MMScrapView*)scrap;
+- (CGFloat)topVisiblePageScaleForScrap:(MMScrapView*)scrap;
 
--(CGPoint) convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap;
+- (CGPoint)convertScrapCenterToScrapContainerCoordinate:(MMScrapView*)scrap;
 
--(BOOL) allowsHoldingScrapsWithTouch:(UITouch*)touch;
+- (BOOL)allowsHoldingScrapsWithTouch:(UITouch*)touch;
 
 @end

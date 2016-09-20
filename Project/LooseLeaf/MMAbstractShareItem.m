@@ -10,34 +10,35 @@
 #import "NSThread+BlockAdditions.h"
 #import "Constants.h"
 
+
 @implementation MMAbstractShareItem
 
 @synthesize delegate;
 
--(MMSidebarButton*) button{
+- (MMSidebarButton*)button {
     @throw kAbstractMethodException;
 }
 
--(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+- (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
     @throw kAbstractMethodException;
 }
 
--(void) willShow{
+- (void)willShow {
     // noop
 }
 
--(void) didHide{
+- (void)didHide {
     // noop
 }
 
--(void) updateButtonGreyscale{
+- (void)updateButtonGreyscale {
     // noop
 }
 
--(void) animateCompletionText:(NSString*)linkText withImage:(UIImage*)icon{
+- (void)animateCompletionText:(NSString*)linkText withImage:(UIImage*)icon {
     UIImageView* imgView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 0, 40, 40)];
     imgView.image = icon;
-    
+
     UILabel* labelForLink = [[UILabel alloc] initWithFrame:CGRectZero];
     labelForLink.alpha = 0;
     labelForLink.text = [NSString stringWithFormat:@"       %@", linkText];
@@ -59,14 +60,14 @@
     labelForLink.frame = fr;
     [labelForLink addSubview:imgView];
     [self.button.window addSubview:labelForLink];
-    
+
     [UIView animateWithDuration:.3 animations:^{
         labelForLink.alpha = 1;
-    }completion:^(BOOL finished){
+    } completion:^(BOOL finished) {
         [[NSThread mainThread] performBlock:^{
             [UIView animateWithDuration:.3 animations:^{
                 labelForLink.alpha = 0;
-            }completion:^(BOOL finished){
+            } completion:^(BOOL finished) {
                 [labelForLink removeFromSuperview];
             }];
         } afterDelay:2.2];

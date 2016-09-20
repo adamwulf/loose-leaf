@@ -12,9 +12,10 @@
 
 @protocol MMMemoryManagerDelegate <NSObject>
 
--(int) fullByteSize;
+- (int)fullByteSize;
 
 @end
+
 
 @interface MMMemoryManager : NSObject
 
@@ -43,6 +44,6 @@
 @property (readonly) int totalBytesInVBOs;
 @property (readonly) int totalBytesInTextures;
 
--(id) initWithDelegate:(id<MMMemoryManagerDelegate>)delegate;
+- (id)initWithDelegate:(id<MMMemoryManagerDelegate>)delegate;
 
 @end

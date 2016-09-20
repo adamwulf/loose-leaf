@@ -8,6 +8,7 @@
 
 #import "MMPaletteButton.h"
 
+
 @implementation MMPaletteButton
 
 @synthesize tool;

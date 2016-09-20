@@ -8,14 +8,15 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+
 @interface MMRotatingKeyDemoLayer : CALayer
 
 @property (nonatomic, readonly) BOOL isFlipped;
 
--(id) initWithFrame:(CGRect)frame;
+- (id)initWithFrame:(CGRect)frame;
 
--(void) flipWithoutAnimation;
+- (void)flipWithoutAnimation;
 
--(void) bounceAndFlipWithCompletion:(void (^)())completion;
+- (void)bounceAndFlipWithCompletion:(void (^)())completion;
 
 @end

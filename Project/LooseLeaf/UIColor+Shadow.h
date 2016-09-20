@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIColor (Shadow)
 
-+(UIColor*)shadowColor;
++ (UIColor*)shadowColor;
 
-+(UIColor*) blueShadowColor;
++ (UIColor*)blueShadowColor;
 
-+(UIColor*) lightBlueShadowColor;
++ (UIColor*)lightBlueShadowColor;
 
 @end

@@ -9,8 +9,9 @@
 #import "MMDisplayAsset.h"
 #import "MMPDFInboxItem.h"
 
+
 @interface MMPDFPageAsset : MMDisplayAsset
 
--(id) initWithPDF:(MMPDFInboxItem*)pdf andPage:(NSInteger)pageNum;
+- (id)initWithPDF:(MMPDFInboxItem*)pdf andPage:(NSInteger)pageNum;
 
 @end

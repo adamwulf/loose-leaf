@@ -11,13 +11,14 @@
 
 @class MMImmutableScrapCollectionState;
 
-typedef enum{
+typedef enum {
     MMScrapCollectionStateTargetLoadedEditable,
     MMScrapCollectionStateTargetLoadedNotEditable,
     MMScrapCollectionStateTargetUnloaded
 } MMScrapCollectionStateStatus;
 
-@interface MMScrapCollectionState : NSObject{
+
+@interface MMScrapCollectionState : NSObject {
     // loading state
     BOOL isLoaded;
     BOOL isLoading;
@@ -38,8 +39,8 @@ typedef enum{
     MMScrapCollectionStateStatus targetLoadedState;
 }
 
-+(dispatch_queue_t) importExportStateQueue;
-+(BOOL) isImportExportStateQueue;
++ (dispatch_queue_t)importExportStateQueue;
++ (BOOL)isImportExportStateQueue;
 
 @property (nonatomic, readonly) NSObject<MMScrapCollectionStateDelegate>* delegate;
 @property (nonatomic, readonly) int fullByteSize;
@@ -52,34 +53,34 @@ typedef enum{
 
 #pragma mark - Manage Scraps
 
--(void) scrapVisibilityWasUpdated:(MMScrapView*)scrap;
+- (void)scrapVisibilityWasUpdated:(MMScrapView*)scrap;
 
 // returns the scrap for the specified uuid, or nil if there's no match
--(MMScrapView*) scrapForUUID:(NSString*)uuid;
+- (MMScrapView*)scrapForUUID:(NSString*)uuid;
 
 #pragma mark - Save and Load
 
--(MMImmutableScrapCollectionState*) immutableStateForPath:(NSString*)scrapIDsPath;
+- (MMImmutableScrapCollectionState*)immutableStateForPath:(NSString*)scrapIDsPath;
 
--(BOOL) isStateLoaded;
--(BOOL) isCollectionStateLoading;
+- (BOOL)isStateLoaded;
+- (BOOL)isCollectionStateLoading;
 
--(void) loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable andAdjustForScale:(BOOL)adjustForScale;
+- (void)loadStateAsynchronously:(BOOL)async atPath:(NSString*)scrapIDsPath andMakeEditable:(BOOL)makeEditable andAdjustForScale:(BOOL)adjustForScale;
 
--(void) unloadPaperState;
+- (void)unloadPaperState;
 
 #pragma mark - Paths
 
--(NSString*) directoryPathForScrapUUID:(NSString*)uuid;
+- (NSString*)directoryPathForScrapUUID:(NSString*)uuid;
 
--(NSString*) bundledDirectoryPathForScrapUUID:(NSString*)uuid;
+- (NSString*)bundledDirectoryPathForScrapUUID:(NSString*)uuid;
 
 #pragma mark - Scrap Stealing
 
--(void) stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapOwner;
+- (void)stealScrap:(NSString*)scrapUUID fromScrapCollectionState:(MMScrapCollectionState*)formerScrapOwner;
 
 #pragma mark - Deleting Assets
 
--(void) deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
+- (void)deleteScrapWithUUID:(NSString*)scrapUUID shouldRespectOthers:(BOOL)respectOthers;
 
 @end

@@ -10,10 +10,11 @@
 #import "MMCamViewDelegate.h"
 #import "MMSinglePhotoCollectionViewCellDelegate.h"
 
-@interface MMCameraCollectionViewCell : UICollectionViewCell<MMCamViewDelegate>
+
+@interface MMCameraCollectionViewCell : UICollectionViewCell <MMCamViewDelegate>
 
 @property (nonatomic, weak) NSObject<MMSinglePhotoCollectionViewCellDelegate>* delegate;
 
--(void) updatePhotoRotation:(BOOL)animated;
+- (void)updatePhotoRotation:(BOOL)animated;
 
 @end

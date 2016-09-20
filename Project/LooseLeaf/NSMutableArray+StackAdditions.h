@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface NSMutableArray (StackAdditions)
 
-- (id) peek;
+- (id)peek;
 - (id)pop;
 - (void)push:(id)obj;
-- (void) addToBottomOfStack:(id)obj;
+- (void)addToBottomOfStack:(id)obj;
 
 @end

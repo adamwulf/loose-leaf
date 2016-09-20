@@ -9,13 +9,14 @@
 #ifndef LooseLeaf_MMEditablePaperViewSubclass_h
 #define LooseLeaf_MMEditablePaperViewSubclass_h
 
+
 @interface MMEditablePaperView (Subclass)
 
-+(dispatch_queue_t) importThumbnailQueue;
++ (dispatch_queue_t)importThumbnailQueue;
 
--(void) saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete;
+- (void)saveToDiskHelper:(void (^)(BOOL didSaveEdits))onComplete;
 
--(void) updateThumbnailVisibility:(BOOL)forceUpdateIconImage;
+- (void)updateThumbnailVisibility:(BOOL)forceUpdateIconImage;
 
 @end
 

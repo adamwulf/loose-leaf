@@ -8,7 +8,8 @@
 
 #import "MMColorButton.h"
 
-@implementation MMColorButton{
+
+@implementation MMColorButton {
     UIColor* color;
     CGRect originalFrame;
 }
@@ -16,8 +17,7 @@
 @synthesize color;
 @synthesize originalFrame;
 
-- (id)initWithColor:(UIColor*)_color andFrame:(CGRect)frame
-{
+- (id)initWithColor:(UIColor*)_color andFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -29,11 +29,10 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     //// Color Declarations
     UIColor* darkerGreyBorder = [self borderColor];
-    
+
     //// Oval
     UIBezierPath* ovalPath = [self ovalPath];
     [ovalPath closePath];
@@ -42,13 +41,13 @@
     [darkerGreyBorder setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
-    
+
     [self drawDropshadowIfSelected];
-    
+
     [super drawRect:rect];
 }
 
--(void) setColor:(UIColor *)_color{
+- (void)setColor:(UIColor*)_color {
     color = _color;
     [self setNeedsDisplay];
 }

@@ -16,14 +16,15 @@
 #import "MMCloudKitImportExportView.h"
 #import "MMShadowHandView.h"
 
-@interface MMScrapPaperStackView : MMEditablePaperStackView<MMScrapViewOwnershipDelegate,MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapSidebarContainerViewDelegate,MMStretchScrapGestureRecognizerDelegate,MMImageSidebarContainerViewDelegate,MMShareSidebarDelegate,MMInboxManagerDelegate>{
+
+@interface MMScrapPaperStackView : MMEditablePaperStackView <MMScrapViewOwnershipDelegate, MMPanAndPinchScrapGestureRecognizerDelegate, MMScrapSidebarContainerViewDelegate, MMStretchScrapGestureRecognizerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMInboxManagerDelegate> {
 }
 
 @property (nonatomic, weak) MMCloudKitImportExportView* cloudKitExportView;
 @property (nonatomic, weak) MMShadowHandView* silhouette;
 
--(void) willResignActive;
+- (void)willResignActive;
 
--(void) didEnterBackground;
+- (void)didEnterBackground;
 
 @end

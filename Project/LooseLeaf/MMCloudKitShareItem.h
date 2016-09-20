@@ -11,16 +11,17 @@
 #import <CloudKit/CloudKit.h>
 #import "MMCloudKitManagerDelegate.h"
 
+
 @interface MMCloudKitShareItem : MMAbstractShareItem
 
--(void) userIsAskingToShareTo:(NSDictionary*)userInfo fromButton:(MMBounceButton*)button;
+- (void)userIsAskingToShareTo:(NSDictionary*)userInfo fromButton:(MMBounceButton*)button;
 
--(NSDictionary*) cloudKitSenderInfo;
+- (NSDictionary*)cloudKitSenderInfo;
 
--(void) didTapInviteButton;
+- (void)didTapInviteButton;
 
 #pragma mark - Cloud Kit
 
--(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState;
+- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
 @end

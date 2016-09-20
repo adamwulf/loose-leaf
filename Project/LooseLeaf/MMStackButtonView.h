@@ -9,14 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "MMStackButtonViewDelegate.h"
 
+
 @interface MMStackButtonView : UIView
 
 @property (nonatomic, weak) NSObject<MMStackButtonViewDelegate>* delegate;
 
--(instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (instancetype)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
--(instancetype) initWithFrame:(CGRect)frame andStackUUID:(NSString*)stackUUID;
+- (instancetype)initWithFrame:(CGRect)frame andStackUUID:(NSString*)stackUUID;
 
--(void) refresh;
+- (void)refresh;
 
 @end

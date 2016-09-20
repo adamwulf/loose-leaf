@@ -10,38 +10,38 @@
 #import "Constants.h"
 #import <JotUI/UIImage+Resize.h>
 
+
 @implementation MMDisplayAsset
 
--(UIImage*) aspectRatioThumbnail{
+- (UIImage*)aspectRatioThumbnail {
     @throw kAbstractMethodException;
 }
 
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim{
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim {
     @throw kAbstractMethodException;
 }
 
--(UIImage*) aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio{
-    
+- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio {
     UIImage* ret;
     @autoreleasepool {
         ret = [self aspectThumbnailWithMaxPixelSize:maxDim];
-        
+
         CGSize size = [self fullResolutionSize];
         CGFloat pdfRatio = ret.size.width / ret.size.height;
-        
-        if((pdfRatio > 1 && ratio < 1) || (pdfRatio < 1 && ratio > 1)){
+
+        if ((pdfRatio > 1 && ratio < 1) || (pdfRatio < 1 && ratio > 1)) {
             ratio = 1 / ratio;
         }
-        
-        if(pdfRatio != ratio){
-            if(pdfRatio > 1){
+
+        if (pdfRatio != ratio) {
+            if (pdfRatio > 1) {
                 size.width = maxDim;
                 size.height = maxDim * ratio;
-            }else{
+            } else {
                 size.height = maxDim;
                 size.width = maxDim * ratio;
             }
-            
+
             ret = [ret resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:size interpolationQuality:kCGInterpolationHigh];
         }
     }
@@ -49,19 +49,19 @@
     return ret;
 }
 
--(NSURL*) fullResolutionURL{
+- (NSURL*)fullResolutionURL {
     @throw kAbstractMethodException;
 }
 
--(CGSize) fullResolutionSize{
+- (CGSize)fullResolutionSize {
     @throw kAbstractMethodException;
 }
 
--(CGFloat) defaultRotation{
+- (CGFloat)defaultRotation {
     return 0;
 }
 
--(CGFloat) preferredImportMaxDim{
+- (CGFloat)preferredImportMaxDim {
     return kPhotoImportMaxDim;
 }
 

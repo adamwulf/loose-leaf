@@ -8,26 +8,27 @@
 
 #import "NSMutableArray+StackAdditions.h"
 
+
 @implementation NSMutableArray (StackAdditions)
 
-- (id) peek{
+- (id)peek {
     return [self lastObject];
 }
 
-- (id)pop{
+- (id)pop {
     // nil if [self count] == 0
     id __strong lastObject = [self lastObject];
-    if (lastObject){
+    if (lastObject) {
         [self removeLastObject];
     }
     return lastObject;
 }
 
-- (void)push:(id)obj{
-    [self addObject: obj];
+- (void)push:(id)obj {
+    [self addObject:obj];
 }
 
-- (void) addToBottomOfStack:(id)obj{
+- (void)addToBottomOfStack:(id)obj {
     [self insertObject:obj atIndex:0];
 }
 @end

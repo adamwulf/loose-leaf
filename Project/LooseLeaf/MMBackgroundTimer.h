@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MMBackgroundTimer : NSOperation{
+
+@interface MMBackgroundTimer : NSOperation {
     BOOL done;
     id target;
     SEL action;
     NSTimeInterval interval;
 }
 
--(id) initWithInterval:(NSTimeInterval)interval andTarget:(id)target andSelector:(SEL)action;
+- (id)initWithInterval:(NSTimeInterval)interval andTarget:(id)target andSelector:(SEL)action;
 
 @end

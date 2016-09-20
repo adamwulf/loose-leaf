@@ -8,23 +8,24 @@
 
 #import "MMInboxItem.h"
 
+
 @interface MMInboxItem (Protected)
 
-+(dispatch_queue_t) assetQueue;
++ (dispatch_queue_t)assetQueue;
 
-+(NSString*) cacheDirectory;
++ (NSString*)cacheDirectory;
 
--(id) initWithURL:(NSURL*)itemURL andInitBlock:(void(^)())block;
+- (id)initWithURL:(NSURL*)itemURL andInitBlock:(void (^)())block;
 
--(void) generatePageThumbnailCache;
+- (void)generatePageThumbnailCache;
 
--(CGSize) calculateSizeForPage:(NSUInteger)page;
+- (CGSize)calculateSizeForPage:(NSUInteger)page;
 
--(UIImage*) cachedImageAtPath:(NSString*)cachedImagePath;
+- (UIImage*)cachedImageAtPath:(NSString*)cachedImagePath;
 
--(UIImage*) generateImageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
+- (UIImage*)generateImageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
 
--(NSString*) cachedAssetsPath;
+- (NSString*)cachedAssetsPath;
 
 
 @end

@@ -11,17 +11,19 @@
 #import "MMTutorialManager.h"
 #import "Constants.h"
 
-@interface MMTutorialViewController ()<MMTutorialViewDelegate>
+
+@interface MMTutorialViewController () <MMTutorialViewDelegate>
 
 @end
 
-@implementation MMTutorialViewController{
+
+@implementation MMTutorialViewController {
     NSArray* tutorialList;
-    void(^completionBlock)();
+    void (^completionBlock)();
 }
 
--(instancetype) initWithTutorials:(NSArray*)_tutorialList andCompletionBlock:(void(^)())_completionBlock{
-    if(self = [super init]){
+- (instancetype)initWithTutorials:(NSArray*)_tutorialList andCompletionBlock:(void (^)())_completionBlock {
+    if (self = [super init]) {
         tutorialList = _tutorialList;
         completionBlock = _completionBlock;
         self.modalPresentationStyle = UIModalPresentationCustom;
@@ -31,11 +33,11 @@
 }
 
 
--(void) loadView{
+- (void)loadView {
     MMTutorialView* tutorialView = [[MMTutorialView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds] andTutorials:tutorialList];
     tutorialView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     tutorialView.delegate = self;
-    
+
     self.view = tutorialView;
 }
 
@@ -51,22 +53,22 @@
 
 #pragma mark - MMRoundedSquareViewDelegate
 
--(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView{
-    if(completionBlock){
+- (void)didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView {
+    if (completionBlock) {
         completionBlock();
     }
 }
 
--(void) userIsViewingTutorialStep:(NSInteger)stepNum{
+- (void)userIsViewingTutorialStep:(NSInteger)stepNum {
     DebugLog(@"User is watching tutorial %ld", (long)stepNum);
 }
 
--(void) didFinishTutorial{
+- (void)didFinishTutorial {
     [[MMTutorialManager sharedInstance] finishWatchingTutorial];
 }
 
--(void) closeTutorials{
-    if(completionBlock){
+- (void)closeTutorials {
+    if (completionBlock) {
         completionBlock();
     }
 }

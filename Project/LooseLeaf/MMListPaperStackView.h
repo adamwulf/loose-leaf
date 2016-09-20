@@ -8,7 +8,7 @@
 
 #import "MMPaperStackView.h"
 #import <QuartzCore/QuartzCore.h>
-#import "MMPanAndPinchFromListViewGestureRecognizer.h"
+#import "MMStretchPageGestureRecognizer.h"
 #import "MMLongPressFromListViewGestureRecognizer.h"
 #import "MMListAddPageButton.h"
 #import "MMListAddPageButtonDelegate.h"
@@ -19,7 +19,8 @@
 #import "MMShadowHandView.h"
 #import "MMButtonToolbarView.h"
 
-@interface MMListPaperStackView : MMPaperStackView<MMPanAndPinchFromListViewGestureRecognizerDelegate,MMListAddPageButtonDelegate,MMPageCacheManagerDelegate,UIScrollViewDelegate>{
+
+@interface MMListPaperStackView : MMPaperStackView <MMStretchPageGestureRecognizerDelegate, MMListAddPageButtonDelegate, MMPageCacheManagerDelegate, UIScrollViewDelegate> {
     //
     // when beginning a zoom, we need to save the
     // frames of all the pages we'll be animating
@@ -33,20 +34,20 @@
     CGFloat columnWidth;
     CGFloat rowHeight;
     CGFloat bufferWidth;
-    
-    MMPanAndPinchFromListViewGestureRecognizer* pinchGesture;
+
+    MMStretchPageGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
-    
+
     CGPoint initialScrollOffsetFromTransitionToListView;
     NSArray* pagesThatWillBeVisibleAfterTransitionToListView;
-    
+
     // the point in the view's coordinates (not scroll offset)
     // of the drag gesture in list view
     CGPoint lastDragPoint;
     MMPaperView* pageBeingDragged;
     CADisplayLink* displayLink;
     BOOL realizedThatPageIsBeingDragged;
-    
+
     MMListAddPageButton* addPageButtonInListView;
 }
 
@@ -54,44 +55,50 @@
 @property (nonatomic, readonly) MMButtonToolbarView* toolbar;
 @property (nonatomic, readonly) BOOL isAnimatingTowardPageView;
 
--(CGPoint) offsetNeededToShowPage:(MMPaperView*)page;
--(NSArray*) findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
+- (CGPoint)offsetNeededToShowPage:(MMPaperView*)page;
+- (NSArray*)findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
 
 // returns yes if the imported page was handled
--(BOOL) importAndShowPage:(MMExportablePaperView*)page;
+- (BOOL)importAndShowPage:(MMExportablePaperView*)page;
 
--(MMShadowHandView*) silhouette;
+- (MMShadowHandView*)silhouette;
 
 // protected
 
--(void) immediatelyTransitionToListView;
+- (void)immediatelyTransitionToListView;
 
--(void) beginUITransitionFromPageView;
+- (void)beginUITransitionFromPageView;
 
--(void) beginUITransitionFromListView;
+- (void)beginUITransitionFromListView;
 
--(void) finishUITransitionToListView;
+- (void)finishUITransitionToListView;
 
--(void) finishUITransitionToPageView;
+- (void)finishUITransitionToPageView;
 
--(void) deletePage:(MMPaperView*)page;
+- (void)deletePage:(MMPaperView*)page;
 
--(void) didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
+- (void)transitionFromListToNewBlankPageIfInPageView;
 
--(void) transitionFromListToNewBlankPageIfInPageView;
+- (CGFloat)contentHeightForAllPages;
 
--(CGFloat) contentHeightForAllPages;
+- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
 
--(void) moveAddButtonToBottom;
+- (void)transitionFromListToNewBlankPageIfInPageView;
 
--(void) moveAddButtonToTop;
+- (void)moveAddButtonToBottom;
 
--(void) subclassBeforeTransitionToListView;
+- (void)moveAddButtonToTop;
 
--(void) subclassDuringTransitionToListView;
+- (void)subclassBeforeTransitionToListView;
 
--(void) tutorialShouldOpen:(NSNotification*)note;
+- (void)subclassDuringTransitionToListView;
 
--(void) tutorialShouldClose:(NSNotification*)note;
+- (void)tutorialShouldOpen:(NSNotification*)note;
+
+- (void)tutorialShouldClose:(NSNotification*)note;
+
+- (CGRect)frameForIndexInList:(NSInteger)indexOfPage;
+
+- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
 
 @end

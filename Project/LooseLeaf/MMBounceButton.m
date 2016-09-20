@@ -9,14 +9,14 @@
 #import "MMBounceButton.h"
 #import "UIView+Animations.h"
 
-@implementation MMBounceButton{
+
+@implementation MMBounceButton {
     CGFloat rotation;
 }
 
 @synthesize rotation;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
@@ -29,28 +29,28 @@
     return self;
 }
 
--(UIColor*) borderColor{
-    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
+- (UIColor*)borderColor {
+    return [UIColor colorWithRed:0.26 green:0.26 blue:0.26 alpha:0.35];
 }
 
--(UIColor*) backgroundColor{
-    return [UIColor colorWithRed: 0.84 + (self.enabled ? 0 : -0.3) green: 0.84 + (self.enabled ? 0 : -0.3) blue: 0.84 + (self.enabled ? 0 : -0.3) alpha: 0.5 + (self.enabled ? 0 : -0.2)];
+- (UIColor*)backgroundColor {
+    return [UIColor colorWithRed:0.84 + (self.enabled ? 0 : -0.3) green:0.84 + (self.enabled ? 0 : -0.3) blue:0.84 + (self.enabled ? 0 : -0.3) alpha:0.5 + (self.enabled ? 0 : -0.2)];
 }
 
--(CGAffineTransform) rotationTransform{
+- (CGAffineTransform)rotationTransform {
     return CGAffineTransformMakeRotation([self rotation]);
 }
 
--(void) bounceButton{
+- (void)bounceButton {
     [self bounceButton:nil];
 }
 
--(BOOL) shouldBounce{
+- (BOOL)shouldBounce {
     return YES;
 }
 
--(void) bounceButton:(id)sender{
-    if(self.enabled && [self shouldBounce]){
+- (void)bounceButton:(id)sender {
+    if (self.enabled && [self shouldBounce]) {
         self.center = self.center;
         [self bounceWithTransform:[self rotationTransform]];
     }

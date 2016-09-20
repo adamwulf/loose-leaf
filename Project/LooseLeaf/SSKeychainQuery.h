@@ -10,15 +10,15 @@
 #import <Security/Security.h>
 
 #if __IPHONE_7_0 || __MAC_10_9
-	// Keychain synchronization available at compile time
-	#define SSKEYCHAIN_SYNCHRONIZATION_AVAILABLE 1
+// Keychain synchronization available at compile time
+#define SSKEYCHAIN_SYNCHRONIZATION_AVAILABLE 1
 #endif
 
 #ifdef SSKEYCHAIN_SYNCHRONIZATION_AVAILABLE
 typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
-	SSKeychainQuerySynchronizationModeAny,
-	SSKeychainQuerySynchronizationModeNo,
-	SSKeychainQuerySynchronizationModeYes
+    SSKeychainQuerySynchronizationModeAny,
+    SSKeychainQuerySynchronizationModeNo,
+    SSKeychainQuerySynchronizationModeYes
 };
 #endif
 
@@ -28,17 +28,17 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
 @interface SSKeychainQuery : NSObject
 
 /** kSecAttrAccount */
-@property (nonatomic, copy) NSString *account;
+@property (nonatomic, copy) NSString* account;
 
 /** kSecAttrService */
-@property (nonatomic, copy) NSString *service;
+@property (nonatomic, copy) NSString* service;
 
 /** kSecAttrLabel */
-@property (nonatomic, copy) NSString *label;
+@property (nonatomic, copy) NSString* label;
 
 #if __IPHONE_3_0 && TARGET_OS_IPHONE
 /** kSecAttrAccessGroup (only used on iOS) */
-@property (nonatomic, copy) NSString *accessGroup;
+@property (nonatomic, copy) NSString* accessGroup;
 #endif
 
 #ifdef SSKEYCHAIN_SYNCHRONIZATION_AVAILABLE
@@ -47,7 +47,7 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
 #endif
 
 /** Root storage for password information */
-@property (nonatomic, copy) NSData *passwordData;
+@property (nonatomic, copy) NSData* passwordData;
 
 /**
  This property automatically transitions between an object and the value of
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
  Convenience accessor for setting and getting a password string. Passes through
  to `passwordData` using UTF-8 string encoding.
  */
-@property (nonatomic, copy) NSString *password;
+@property (nonatomic, copy) NSString* password;
 
 
 ///------------------------
@@ -74,7 +74,7 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
 
  @return `YES` if saving was successful, `NO` otherwise.
  */
-- (BOOL)save:(NSError **)error;
+- (BOOL)save:(NSError**)error;
 
 /**
  Dete keychain items that match the given account, service, and access group.
@@ -83,7 +83,7 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
 
  @return `YES` if saving was successful, `NO` otherwise.
  */
-- (BOOL)deleteItem:(NSError **)error;
+- (BOOL)deleteItem:(NSError**)error;
 
 
 ///---------------
@@ -100,7 +100,7 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
  `nil` should an error occur.
  The order of the items is not determined.
  */
-- (NSArray *)fetchAll:(NSError **)error;
+- (NSArray*)fetchAll:(NSError**)error;
 
 /**
  Fetch the keychain item that matches the given account, service, and access
@@ -112,7 +112,7 @@ typedef NS_ENUM(NSUInteger, SSKeychainQuerySynchronizationMode) {
 
  @return `YES` if fetching was successful, `NO` otherwise.
  */
-- (BOOL)fetch:(NSError **)error;
+- (BOOL)fetch:(NSError**)error;
 
 
 ///-----------------------------
