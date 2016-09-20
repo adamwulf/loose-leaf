@@ -76,9 +76,10 @@
 
 @synthesize stackView;
 
-- (id)init{
+- (id)initWithSilhouette:(MMShadowHandView*)silhouette{
     if(self = [super init]){
         
+        _silhouette = silhouette;
         mightShowReleaseNotes = YES;
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -94,7 +95,6 @@
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
         [[MMRotationManager sharedInstance] setDelegate:self];
-
 
         // Do any additional setup after loading the view, typically from a nib.
         srand ((uint) time(NULL) );
@@ -394,6 +394,8 @@
 
         stackViewsByUUID[stackUUID] = aStackView;
     }
+    
+    aStackView.silhouette = self.silhouette;
 
     [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, MMTutorialStackView*  _Nonnull obj, BOOL * _Nonnull stop) {
         obj.hidden = ![key isEqualToString:stackUUID];

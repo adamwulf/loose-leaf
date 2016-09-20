@@ -82,19 +82,19 @@
         presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
         [presentationWindow makeKeyAndVisible];
         
+        MMShadowHandView* silhouetteView = [[MMShadowHandView alloc] initWithFrame:self.window.bounds];
+
         CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
         self.window = [[MMWindow alloc] initWithFrame:screenBounds];
         // Override point for customization after application launch.
-        self.viewController = [[MMLooseLeafViewController alloc] init];
+        self.viewController = [[MMLooseLeafViewController alloc] initWithSilhouette:silhouetteView];
         self.window.rootViewController = self.viewController;
         [self.window makeKeyAndVisible];
         
         MMTouchDotView* blueDots = [[MMTouchDotView alloc] initWithFrame:self.window.bounds];
         [self.window addSubview:blueDots];
         
-        MMShadowHandView* silhouetteView = [[MMShadowHandView alloc] initWithFrame:self.window.bounds];
         [self.window addSubview:silhouetteView];
-        self.viewController.stackView.silhouette = silhouetteView;
         
 
         

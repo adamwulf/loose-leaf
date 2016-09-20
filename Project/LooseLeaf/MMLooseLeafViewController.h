@@ -17,8 +17,11 @@
     MMTutorialStackView* currentStackView;
 }
 
+- (id)init NS_UNAVAILABLE;
+- (id)initWithSilhouette:(MMShadowHandView*)silhouette;
 
 @property (readonly) MMScrapPaperStackView* stackView;
+@property (readonly) MMShadowHandView* silhouette;
 
 -(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
