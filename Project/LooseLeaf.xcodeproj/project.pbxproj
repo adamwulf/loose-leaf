@@ -524,6 +524,7 @@
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
+		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DE1D7B9633009AE6BE /* colorlesspoint.vsh */; };
 		C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DF1D7B9633009AE6BE /* coloredpoint.vsh */; };
@@ -1527,6 +1528,8 @@
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
+		C5C13E131D9108100047B3EF /* MMPageCloner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageCloner.h; sourceTree = "<group>"; };
+		C5C13E141D9108100047B3EF /* MMPageCloner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageCloner.m; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = colorlesspoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/colorlesspoint.vsh; sourceTree = "<group>"; };
 		C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = coloredpoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/coloredpoint.vsh; sourceTree = "<group>"; };
@@ -3189,6 +3192,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
+				C5C13E121D9107FF0047B3EF /* Clone Page */,
 				C569F42E1CD0709800C19BB0 /* Named Stack */,
 				C5860E131C14CA1000CD079B /* Toolbar */,
 				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
@@ -3671,6 +3675,15 @@
 				C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */,
 			);
 			name = Backgrounds;
+			sourceTree = "<group>";
+		};
+		C5C13E121D9107FF0047B3EF /* Clone Page */ = {
+			isa = PBXGroup;
+			children = (
+				C5C13E131D9108100047B3EF /* MMPageCloner.h */,
+				C5C13E141D9108100047B3EF /* MMPageCloner.m */,
+			);
+			name = "Clone Page";
 			sourceTree = "<group>";
 		};
 		C5C298EA1D7BF0A6009AE6BE /* JotUI Resources */ = {
@@ -4484,6 +4497,7 @@
 				661C4B241A830F740014DB20 /* MMPinterestShareItem.m in Sources */,
 				66E1010319ECB5DE006E7C15 /* MMRotateViewController.m in Sources */,
 				6677C5911AAB778E00B2E46C /* MMCameraListLayout.m in Sources */,
+				C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */,
 				66A13D3A1631D9D9002F5428 /* MMObjectSelectLongPressGestureRecognizer.m in Sources */,
 				665C593717BD7CD3006DECBF /* PolygonTool.m in Sources */,
 				66A13D401631E0E6002F5428 /* MMImmovableTapGestureRecognizer.m in Sources */,

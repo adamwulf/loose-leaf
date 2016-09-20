@@ -13,6 +13,10 @@
 
 @protocol MMStretchPageGestureRecognizerDelegate <MMPanAndPinchFromListViewGestureRecognizerDelegate>
 
--(void) didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture withOffset:(CGPoint)offset;
+- (void)didStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture withOffset:(CGPoint)offset;
+
+- (void)didCancelStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture;
+
+- (void)didBeginStretchToDuplicatePageWithGesture:(MMStretchPageGestureRecognizer*)gesture;
 
 @end

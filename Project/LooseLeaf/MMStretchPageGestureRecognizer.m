@@ -10,9 +10,10 @@
 #import "MMStretchHelper.h"
 #import "UIView+Animations.h"
 
-@implementation MMStretchPageGestureRecognizer{
+
+@implementation MMStretchPageGestureRecognizer {
     NSMutableOrderedSet* additionalTouches;
-    
+
     CGPoint adjust;
     Quadrilateral firstQ;
     Quadrilateral secondQ;
@@ -21,16 +22,16 @@
     // of the gesture
     Quadrilateral normalFirstQ;
     UIView* stretchedPage;
-    
+
     // initial scroll offset of our view vs the window
     CGPoint initialOffset;
 }
 
 @dynamic pinchDelegate;
 
--(id) init{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         additionalTouches = [[NSMutableOrderedSet alloc] init];
         [self reset];
         self.delegate = self;
@@ -38,9 +39,9 @@
     return self;
 }
 
--(id) initWithTarget:(id)target action:(SEL)action{
+- (id)initWithTarget:(id)target action:(SEL)action {
     self = [super initWithTarget:target action:action];
-    if(self){
+    if (self) {
         additionalTouches = [[NSMutableOrderedSet alloc] init];
         [self reset];
         self.delegate = self;
@@ -51,78 +52,83 @@
 
 #pragma mark - Touch Methods
 
--(NSOrderedSet<UITouch*>*) allFourTouches{
+- (NSOrderedSet<UITouch*>*)allFourTouches {
     NSMutableOrderedSet* allFourTouches = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
-    
+
     [allFourTouches addObjectsInOrderedSet:additionalTouches];
     [MMStretchHelper sortTouchesClockwise:allFourTouches];
-    
+
     return allFourTouches;
 }
 
--(void) initializeStretch{
-    
+- (void)initializeStretch {
     stretchedPage = [pinchedPage snapshotViewAfterScreenUpdates:NO];
-    
+
     [[self view] addSubview:stretchedPage];
     CGRect pageFrame = [pinchedPage convertRect:[pinchedPage bounds] toView:[self view]];
     pageFrame = [MMShadowedView expandBounds:pageFrame];
     [stretchedPage setFrame:pageFrame];
-    
+
     pinchedPage.alpha = 0;
-    
+
     [UIView setAnchorPoint:CGPointMake(0, 0) forView:stretchedPage];
-    
+
     stretchedPage.layer.transform = CATransform3DIdentity;
     adjust = [stretchedPage convertPoint:CGPointZero toView:nil];
     firstQ = [MMStretchHelper getQuadFrom:[self allFourTouches] inView:nil];
     initialOffset = [[self view] convertPoint:CGPointZero toView:nil];
 
     [MMStretchHelper logQuadrilateral:firstQ];
-    
+
     skewTransform = CATransform3DIdentity;
-    
+
     normalFirstQ = [MMStretchHelper getNormalizedRawQuadFrom:[self allFourTouches] inView:pinchedPage];
 }
 
--(void) touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+- (void)touchesBegan:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
+    BOOL currentlyStretching = [additionalTouches count] == 2 && [validTouches count] == 2;
+
     for (UITouch* touch in touches) {
-        if([validTouches count] < 2){
+        if ([validTouches count] < 2) {
             [super touchesBegan:[NSSet setWithObject:touch] withEvent:event];
-            
-            if([additionalTouches count] == 2){
+
+            if ([additionalTouches count] == 2) {
                 // that was the 4th touch
                 [self initializeStretch];
             }
-        }else if([additionalTouches count] < 2){
+        } else if ([additionalTouches count] < 2) {
             CGPoint locationInPage = [touch locationInView:pinchedPage];
 
-            if(CGRectContainsPoint([pinchedPage bounds], locationInPage)){
+            if (CGRectContainsPoint([pinchedPage bounds], locationInPage)) {
                 [additionalTouches addObject:touch];
-                
-                if([additionalTouches count] == 2 && [validTouches count] == 2){
+
+                if ([additionalTouches count] == 2 && [validTouches count] == 2) {
                     // that was the 4th touch
                     [self initializeStretch];
                 }
-            }else{
+            } else {
                 [self ignoreTouch:touch forEvent:event];
             }
-        }else{
+        } else {
             [self ignoreTouch:touch forEvent:event];
         }
     }
+
+    if (!currentlyStretching && [additionalTouches count] == 2 && [validTouches count] == 2) {
+        [[self pinchDelegate] didBeginStretchToDuplicatePageWithGesture:self];
+    }
 }
 
--(void) touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+- (void)touchesMoved:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
     for (UITouch* touch in touches) {
-        if([validTouches containsObject:touch]){
+        if ([validTouches containsObject:touch]) {
             [super touchesMoved:[NSSet setWithObject:touch] withEvent:event];
-        }else if([additionalTouches count] == 2 && [validTouches count] == 2){
+        } else if ([additionalTouches count] == 2 && [validTouches count] == 2) {
             secondQ = [MMStretchHelper getQuadFrom:[self allFourTouches] inView:nil];
 
             CGPoint currentOffset = [[self view] convertPoint:CGPointZero toView:nil];
             CGPoint offsetDelta = CGPointMake(initialOffset.x - currentOffset.x, initialOffset.y - currentOffset.y);
-            
+
             Quadrilateral q1 = [MMStretchHelper adjustedQuad:firstQ by:adjust];
             Quadrilateral q2 = [MMStretchHelper adjustedQuad:secondQ by:adjust];
             // generate the actual transform between the two quads
@@ -132,21 +138,21 @@
             // now, determine if our stretch should pull the scrap into two pieces.
             // this should happen if either stretch is 2.0 times the other direction
             CGFloat scaleW = DistanceBetweenTwoPoints(secondQ.upperLeft, secondQ.upperRight) /
-            DistanceBetweenTwoPoints(firstQ.upperLeft, firstQ.upperRight);
+                DistanceBetweenTwoPoints(firstQ.upperLeft, firstQ.upperRight);
             CGFloat scaleH = DistanceBetweenTwoPoints(secondQ.upperLeft, secondQ.lowerLeft) /
-            DistanceBetweenTwoPoints(firstQ.upperLeft, firstQ.lowerLeft);
-            
+                DistanceBetweenTwoPoints(firstQ.upperLeft, firstQ.lowerLeft);
+
             // normalize the scales so that they are always
             // multiples of each other. 1.0:2.0 or 2.0:1.0 means
             // we should duplicate the scrap
-            if(scaleW < scaleH){
+            if (scaleW < scaleH) {
                 scaleH /= scaleW;
                 scaleW /= scaleW;
-            }else{
+            } else {
                 scaleW /= scaleH;
                 scaleH /= scaleH;
             }
-            
+
             // if we should split the scrap, pull the touches
             // into two sets based on the direction of the stretch
             NSOrderedSet* touches1 = nil;
@@ -154,14 +160,14 @@
             CGPoint normalCenter1 = CGPointZero;
             CGPoint normalCenter2 = CGPointZero;
             NSOrderedSet<UITouch*>* fourTouches = [self allFourTouches];
-            
-            if(scaleW > scaleH * 2){
+
+            if (scaleW > scaleH * 2) {
                 // scaling the quad wide
                 touches1 = [NSOrderedSet orderedSetWithObjects:[fourTouches objectAtIndex:0], [fourTouches objectAtIndex:3], nil];
                 touches2 = [NSOrderedSet orderedSetWithObjects:[fourTouches objectAtIndex:1], [fourTouches objectAtIndex:2], nil];
                 normalCenter1 = AveragePoints(normalFirstQ.upperLeft, normalFirstQ.lowerLeft);
                 normalCenter2 = AveragePoints(normalFirstQ.upperRight, normalFirstQ.lowerRight);
-            }else if(scaleH > scaleW * 2){
+            } else if (scaleH > scaleW * 2) {
                 // scaling the quad tall
                 touches1 = [NSOrderedSet orderedSetWithObjects:[fourTouches objectAtIndex:0], [fourTouches objectAtIndex:1], nil];
                 touches2 = [NSOrderedSet orderedSetWithObjects:[fourTouches objectAtIndex:2], [fourTouches objectAtIndex:3], nil];
@@ -169,14 +175,13 @@
                 normalCenter2 = AveragePoints(normalFirstQ.lowerRight, normalFirstQ.lowerLeft);
             }
 
-            if(touches1){
-                
+            if (touches1) {
                 CGPoint loc1 = [self averageLocationForTouches:touches1 inView:nil];
                 CGPoint loc2 = [self averageLocationForTouches:touches2 inView:nil];
                 CGPoint offset = CGPointMake(loc2.x - loc1.x, loc2.y - loc1.y);
-                
+
                 [[self pinchDelegate] didStretchToDuplicatePageWithGesture:self withOffset:offset];
-                
+
                 for (UITouch* touch in touches2) {
                     [self ignoreTouch:touch forEvent:event];
                 }
@@ -184,18 +189,18 @@
                 [additionalTouches removeObjectsInArray:[touches2 array]];
                 [validTouches addObjectsFromArray:[additionalTouches array]];
                 [additionalTouches removeAllObjects];
-                
+
                 [self finalizeStretchIfNeeded];
             }
         }
     }
 }
 
--(void) touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+- (void)touchesEnded:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
     for (UITouch* touch in touches) {
-        if([validTouches containsObject:touch]){
+        if ([validTouches containsObject:touch]) {
             [super touchesEnded:[NSSet setWithObject:touch] withEvent:event];
-        }else{
+        } else {
             [additionalTouches removeObject:touch];
         }
     }
@@ -203,46 +208,49 @@
     [self finalizeStretchIfNeeded];
 }
 
--(void) touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+- (void)touchesCancelled:(NSSet<UITouch*>*)touches withEvent:(UIEvent*)event {
     for (UITouch* touch in touches) {
-        if([validTouches containsObject:touch]){
+        if ([validTouches containsObject:touch]) {
             [super touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
-        }else{
+        } else {
             [additionalTouches removeObject:touch];
         }
+        [[self pinchDelegate] didCancelStretchToDuplicatePageWithGesture:self];
     }
-    
+
     [self finalizeStretchIfNeeded];
 }
 
--(void) finalizeStretchIfNeeded{
-    if([validTouches count] + [additionalTouches count] < 4){
+- (void)finalizeStretchIfNeeded {
+    if ([validTouches count] + [additionalTouches count] < 4 && stretchedPage) {
         skewTransform = CATransform3DIdentity;
         stretchedPage.layer.transform = skewTransform;
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:stretchedPage];
         pinchedPage.alpha = 1;
         [stretchedPage removeFromSuperview];
         stretchedPage = nil;
+
+        [[self pinchDelegate] didCancelStretchToDuplicatePageWithGesture:self];
     }
 }
 
 #pragma mark - UIGestureRecognizerSubclass
 
--(CGPoint) averageLocationForTouches:(NSOrderedSet<UITouch*>*)touches inView:(UIView*)view{
+- (CGPoint)averageLocationForTouches:(NSOrderedSet<UITouch*>*)touches inView:(UIView*)view {
     CGPoint p = CGPointZero;
     for (UITouch* touch in touches) {
         CGPoint loc = [touch locationInView:view];
         p.x += loc.x;
         p.y += loc.y;
     }
-    if([touches count]){
+    if ([touches count]) {
         p.x /= [touches count];
         p.y /= [touches count];
     }
     return p;
 }
 
--(CGPoint) locationInView:(UIView *)view{
+- (CGPoint)locationInView:(UIView*)view {
     return [self averageLocationForTouches:validTouches inView:view];
 }
 
