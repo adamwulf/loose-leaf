@@ -526,6 +526,9 @@
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
 		C5C13E171D91FC5A0047B3EF /* list-view-clone-page.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */; };
+		C5C13E201D9246C90047B3EF /* ShareViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E1F1D9246C90047B3EF /* ShareViewController.m */; };
+		C5C13E231D9246C90047B3EF /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5C13E211D9246C90047B3EF /* MainInterface.storyboard */; };
+		C5C13E281D9246C90047B3EF /* LooseLeafShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C5C13E1C1D9246C90047B3EF /* LooseLeafShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
 		C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DE1D7B9633009AE6BE /* colorlesspoint.vsh */; };
 		C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */ = {isa = PBXBuildFile; fileRef = C5C298DF1D7B9633009AE6BE /* coloredpoint.vsh */; };
@@ -619,6 +622,30 @@
 		C5FC08711C23E01B00C88675 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC082B1C23E01B00C88675 /* UIImage+MPImageEffects.m */; };
 		C5FC08721C23E01B00C88675 /* UIView+MPHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC082D1C23E01B00C88675 /* UIView+MPHelpers.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C5C13E251D9246C90047B3EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 66DCFB7D1581BCED00B4918C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5C13E1B1D9246C90047B3EF;
+			remoteInfo = LooseLeafShare;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C5C13E271D9246C90047B3EF /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C5C13E281D9246C90047B3EF /* LooseLeafShare.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-user-intro.png"; sourceTree = "<group>"; };
@@ -1532,6 +1559,11 @@
 		C5C13E131D9108100047B3EF /* MMPageCloner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageCloner.h; sourceTree = "<group>"; };
 		C5C13E141D9108100047B3EF /* MMPageCloner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageCloner.m; sourceTree = "<group>"; };
 		C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "list-view-clone-page.mp4"; sourceTree = "<group>"; };
+		C5C13E1C1D9246C90047B3EF /* LooseLeafShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LooseLeafShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5C13E1E1D9246C90047B3EF /* ShareViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareViewController.h; sourceTree = "<group>"; };
+		C5C13E1F1D9246C90047B3EF /* ShareViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShareViewController.m; sourceTree = "<group>"; };
+		C5C13E221D9246C90047B3EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		C5C13E241D9246C90047B3EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../Frameworks/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		C5C298C31D7B90E9009AE6BE /* colorlesspoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = colorlesspoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/colorlesspoint.vsh; sourceTree = "<group>"; };
 		C5C298C41D7B90E9009AE6BE /* coloredpoint.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = coloredpoint.vsh; path = ../Submodules/JotUI/JotUI/JotUI/coloredpoint.vsh; sourceTree = "<group>"; };
@@ -1741,6 +1773,13 @@
 				66DCFB8B1581BCEF00B4918C /* UIKit.framework in Frameworks */,
 				66DCFB8D1581BCEF00B4918C /* Foundation.framework in Frameworks */,
 				66DCFB8F1581BCEF00B4918C /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C5C13E191D9246C90047B3EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3091,6 +3130,7 @@
 			children = (
 				C5DA295C1D7C012500D868EC /* MMMarkdown */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
+				C5C13E1D1D9246C90047B3EF /* LooseLeafShare */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
 			);
@@ -3100,6 +3140,7 @@
 			isa = PBXGroup;
 			children = (
 				66DCFB861581BCEF00B4918C /* LooseLeaf.app */,
+				C5C13E1C1D9246C90047B3EF /* LooseLeafShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3689,6 +3730,17 @@
 			name = "Clone Page";
 			sourceTree = "<group>";
 		};
+		C5C13E1D1D9246C90047B3EF /* LooseLeafShare */ = {
+			isa = PBXGroup;
+			children = (
+				C5C13E1E1D9246C90047B3EF /* ShareViewController.h */,
+				C5C13E1F1D9246C90047B3EF /* ShareViewController.m */,
+				C5C13E211D9246C90047B3EF /* MainInterface.storyboard */,
+				C5C13E241D9246C90047B3EF /* Info.plist */,
+			);
+			path = LooseLeafShare;
+			sourceTree = "<group>";
+		};
 		C5C298EA1D7BF0A6009AE6BE /* JotUI Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -3904,15 +3956,34 @@
 				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
 				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
 				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
+				C5C13E271D9246C90047B3EF /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C5C13E261D9246C90047B3EF /* PBXTargetDependency */,
 			);
 			name = LooseLeaf;
 			productName = "Paper Stack";
 			productReference = 66DCFB861581BCEF00B4918C /* LooseLeaf.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C5C13E1B1D9246C90047B3EF /* LooseLeafShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C5C13E291D9246C90047B3EF /* Build configuration list for PBXNativeTarget "LooseLeafShare" */;
+			buildPhases = (
+				C5C13E181D9246C90047B3EF /* Sources */,
+				C5C13E191D9246C90047B3EF /* Frameworks */,
+				C5C13E1A1D9246C90047B3EF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LooseLeafShare;
+			productName = LooseLeafShare;
+			productReference = C5C13E1C1D9246C90047B3EF /* LooseLeafShare.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -3944,6 +4015,11 @@
 							};
 						};
 					};
+					C5C13E1B1D9246C90047B3EF = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = MU27A4SCKC;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 66DCFB801581BCED00B4918C /* Build configuration list for PBXProject "LooseLeaf" */;
@@ -3963,6 +4039,7 @@
 				ko,
 				ru,
 				da,
+				Base,
 			);
 			mainGroup = 66DCFB7B1581BCED00B4918C;
 			productRefGroup = 66DCFB871581BCEF00B4918C /* Products */;
@@ -3970,6 +4047,7 @@
 			projectRoot = "";
 			targets = (
 				66DCFB851581BCEF00B4918C /* LooseLeaf */,
+				C5C13E1B1D9246C90047B3EF /* LooseLeafShare */,
 			);
 		};
 /* End PBXProject section */
@@ -4164,6 +4242,14 @@
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C5C13E1A1D9246C90047B3EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C5C13E231D9246C90047B3EF /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4629,7 +4715,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C5C13E181D9246C90047B3EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C5C13E201D9246C90047B3EF /* ShareViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C5C13E261D9246C90047B3EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5C13E1B1D9246C90047B3EF /* LooseLeafShare */;
+			targetProxy = C5C13E251D9246C90047B3EF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		66DCFB931581BCEF00B4918C /* InfoPlist.strings */ = {
@@ -4649,6 +4751,14 @@
 				66CAF81A1A1EA98F0033E07B /* da */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C5C13E211D9246C90047B3EF /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C5C13E221D9246C90047B3EF /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -4762,7 +4872,7 @@
 					"DEBUGUSERDEFAULTS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -4791,7 +4901,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
@@ -4800,6 +4910,55 @@
 				PRODUCT_NAME = LooseLeaf;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		C5C13E2A1D9246C90047B3EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = MU27A4SCKC;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = LooseLeafShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.milestonemade.looseleaf.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C5C13E2B1D9246C90047B3EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = MU27A4SCKC;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = LooseLeafShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.milestonemade.looseleaf.share;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -4823,6 +4982,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		C5C13E291D9246C90047B3EF /* Build configuration list for PBXNativeTarget "LooseLeafShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C5C13E2A1D9246C90047B3EF /* Debug */,
+				C5C13E2B1D9246C90047B3EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
