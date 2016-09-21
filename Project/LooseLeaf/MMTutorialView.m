@@ -427,8 +427,13 @@
         [[Mixpanel sharedInstance] track:kMPBackgroundDuringTutorial properties:@{ @"Tutorial": @"newsletter" }];
     }
 
-    [[[Mixpanel sharedInstance] people] set:kMPDidBackgroundDuringTutorial to:@(YES)];
-    [[Mixpanel sharedInstance] flush];
+    if (![[MMTutorialManager sharedInstance] hasFinishedTutorial]) {
+        // only track if they background during the tutorial if they've never finished
+        // a tutorial in the first place. I was tracking even if they had been using
+        // the app just fine and backgrounded after opening the tutorial themselves.
+        [[[Mixpanel sharedInstance] people] set:kMPDidBackgroundDuringTutorial to:@(YES)];
+        [[Mixpanel sharedInstance] flush];
+    }
 }
 
 @end
