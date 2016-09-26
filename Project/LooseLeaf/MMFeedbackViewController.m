@@ -7,7 +7,7 @@
 //
 
 #import "MMFeedbackViewController.h"
-#import "MMRoundedSquareView.h"
+#import "MMFeedbackView.h"
 
 
 @interface MMFeedbackViewController () <MMRoundedSquareViewDelegate>
@@ -30,7 +30,7 @@
 
 
 - (void)loadView {
-    MMRoundedSquareView* releaseNotesView = [[MMRoundedSquareView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
+    MMFeedbackView* releaseNotesView = [[MMFeedbackView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
     releaseNotesView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     releaseNotesView.delegate = self;
 

@@ -11,6 +11,8 @@
 
 @interface MMFeedbackViewController : UIViewController
 
+- (instancetype)init NS_UNAVAILABLE;
+
 - (instancetype)initWithCompletionBlock:(void (^)())_completionBlock;
 
 @end
