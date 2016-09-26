@@ -37,15 +37,17 @@
 #import "MMAbstractShareItem.h"
 #import "MMReleaseNotesViewController.h"
 #import "MMReleaseNotesView.h"
+#import "MMFeedbackViewController.h"
 #import "UIApplication+Version.h"
 #import "MMAppDelegate.h"
 #import "MMPresentationWindow.h"
 #import "MMTutorialViewController.h"
 #import "Constants.h"
 #import "MMMarkdown.h"
+#import "MMFeedbackViewController.h"
 
 
-@interface MMLooseLeafViewController () <MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMStackControllerViewDelegate, MMRoundedSquareViewDelegate>
+@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMStackControllerViewDelegate, MMRoundedSquareViewDelegate>
 
 @end
 
@@ -70,6 +72,7 @@
     // tutorials
     MMTutorialViewController* tutorialViewController;
     MMReleaseNotesViewController* releaseNotesViewController;
+    MMFeedbackViewController* feedbackViewController;
     UIView* backdrop;
 
     // make sure to only check to show release notes once per launch
@@ -332,12 +335,51 @@
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
+- (BOOL)isShowingAnyModal {
+    return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingReleaseNotes];
+}
+
 - (BOOL)isShowingTutorial {
     return tutorialViewController != nil;
 }
 
 - (BOOL)isShowingReleaseNotes {
     return releaseNotesViewController != nil;
+}
+
+- (BOOL)isShowingFeedbackForm {
+    return feedbackViewController != nil;
+}
+
+#pragma mark - MMTutorialStackViewDelegate
+
+- (void)stackViewDidPressFeedbackButton:(MMTutorialStackView*)stackView {
+    if ([self isShowingAnyModal]) {
+        // tutorial is already showing, just return
+        return;
+    }
+
+    backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
+    backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
+    backdrop.alpha = 0;
+    [self.view addSubview:backdrop];
+
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+
+    feedbackViewController = [[MMFeedbackViewController alloc] initWithCompletionBlock:^{
+        [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+            feedbackViewController = nil;
+        }];
+        [UIView animateWithDuration:.3 animations:^{
+            backdrop.alpha = 0;
+        }];
+    }];
+
+    [presentationWindow.rootViewController presentViewController:feedbackViewController animated:YES completion:nil];
+
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 1;
+    }];
 }
 
 #pragma mark - MMStackControllerViewDelegate
@@ -606,7 +648,7 @@
 #pragma mark - Release Notes
 
 - (void)showReleaseNotesIfNeeded {
-    if ([self isShowingTutorial] || [self isShowingReleaseNotes]) {
+    if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
         return;
     }
@@ -658,7 +700,7 @@
 #pragma mark - Tutorial Notifications
 
 - (void)tutorialShouldOpen:(NSNotification*)note {
-    if ([self isShowingTutorial] || [self isShowingReleaseNotes]) {
+    if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
         return;
     }

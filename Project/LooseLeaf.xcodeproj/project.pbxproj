@@ -548,6 +548,7 @@
 		C5DA29971D7C013A00D868EC /* MMParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29841D7C013A00D868EC /* MMParser.m */; };
 		C5DA29981D7C013A00D868EC /* MMScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29861D7C013A00D868EC /* MMScanner.m */; };
 		C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29881D7C013A00D868EC /* MMSpanParser.m */; };
+		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1572,6 +1573,9 @@
 		C5DA29861D7C013A00D868EC /* MMScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMScanner.m; path = ../../Submodules/MMMarkdown/Source/MMScanner.m; sourceTree = "<group>"; };
 		C5DA29871D7C013A00D868EC /* MMSpanParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMSpanParser.h; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.h; sourceTree = "<group>"; };
 		C5DA29881D7C013A00D868EC /* MMSpanParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMSpanParser.m; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.m; sourceTree = "<group>"; };
+		C5E02A7F1D99BD25001F6ED6 /* MMTutorialStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialStackViewDelegate.h; sourceTree = "<group>"; };
+		C5E02A811D99BDF5001F6ED6 /* MMFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackViewController.h; sourceTree = "<group>"; };
+		C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackViewController.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -3135,6 +3139,7 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
+				C5E02A801D99BDE6001F6ED6 /* FeedbackView */,
 				C5C298FA1D7BFCC9009AE6BE /* ReleaseNotesView */,
 				6688D1E11A994E7500EB17EC /* TutorialView */,
 				C5060FAF1CAA09F300B9721C /* RoundedSquareView */,
@@ -3214,6 +3219,7 @@
 				66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */,
 				662808F71A9BB57100CA3F9A /* MMTutorialStackView.h */,
 				662808F81A9BB57100CA3F9A /* MMTutorialStackView.m */,
+				C5E02A7F1D99BD25001F6ED6 /* MMTutorialStackViewDelegate.h */,
 				6699715317DBA07300E81467 /* Debug */,
 			);
 			name = MMPaperStack;
@@ -3746,6 +3752,15 @@
 			);
 			name = MMMarkdown;
 			path = LooseLeaf;
+			sourceTree = "<group>";
+		};
+		C5E02A801D99BDE6001F6ED6 /* FeedbackView */ = {
+			isa = PBXGroup;
+			children = (
+				C5E02A811D99BDF5001F6ED6 /* MMFeedbackViewController.h */,
+				C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */,
+			);
+			name = FeedbackView;
 			sourceTree = "<group>";
 		};
 		C5F4BE811C2676C100FFB640 /* LaunchScreen */ = {
@@ -4311,6 +4326,7 @@
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
 				66C4734F19CB999000505BC0 /* MMAssetListLayout.m in Sources */,
+				C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */,
 				C5FC08631C23E01B00C88675 /* MPUIColorToNSStringValueTransformer.m in Sources */,
 				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,
 				660116EC19ABAEC10065C1B4 /* MMCloudKitOfflineState.m in Sources */,

@@ -18,7 +18,10 @@
 @implementation MMTutorialStackView {
     MMTextButton* helpButton;
     MMLargeTutorialSidebarButton* listViewTutorialButton;
+    MMLargeTutorialSidebarButton* listViewFeedbackButton;
 }
+
+@dynamic stackDelegate;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
@@ -34,15 +37,30 @@
         }
 
         CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
+
         listViewTutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
             return [[MMTutorialManager sharedInstance] listViewTutorialSteps];
         }];
-        listViewTutorialButton.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height - 100);
+        listViewTutorialButton.center = [self locationForTutorialButtonInListView];
         [listViewTutorialButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+        listViewFeedbackButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
+            return [[MMTutorialManager sharedInstance] listViewTutorialSteps];
+        }];
+        listViewFeedbackButton.center = [self locationForFeedbackButtonInListView];
+        [listViewFeedbackButton addTarget:self action:@selector(feedbackButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
         [self moveAddButtonToBottom];
     }
     return self;
 }
+
+#pragma mark - App Feedback
+
+- (void)feedbackButtonPressed:(MMTutorialSidebarButton*)tutorialButton {
+    [[self stackDelegate] stackViewDidPressFeedbackButton:self];
+}
+
 
 #pragma mark - Tutorial Buttons
 
@@ -122,8 +140,13 @@
 }
 
 - (CGPoint)locationForTutorialButtonInListView {
-    return CGPointMake(self.bounds.size.width / 2, [self contentHeightForAllPages] - 110);
-    ;
+    CGFloat adjustment = (CGRectGetWidth([listViewTutorialButton bounds]) + kWidthOfSidebarButtonBuffer) / 2;
+    return CGPointMake(self.bounds.size.width / 2 - adjustment, [self contentHeightForAllPages] - 110);
+}
+
+- (CGPoint)locationForFeedbackButtonInListView {
+    CGFloat adjustment = (CGRectGetWidth([listViewTutorialButton bounds]) + kWidthOfSidebarButtonBuffer) / 2;
+    return CGPointMake(self.bounds.size.width / 2 + adjustment, [self contentHeightForAllPages] - 110);
 }
 
 - (void)subclassBeforeTransitionToListView {
@@ -134,6 +157,12 @@
     fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
     listViewTutorialButton.frame = fr;
     listViewTutorialButton.alpha = 0;
+
+    listViewFeedbackButton.center = [self locationForFeedbackButtonInListView];
+    fr = listViewTutorialButton.frame;
+    fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
+    listViewFeedbackButton.frame = fr;
+    listViewFeedbackButton.alpha = 0;
 }
 
 - (void)subclassDuringTransitionToListView {
@@ -145,15 +174,21 @@
 - (void)moveAddButtonToBottom {
     [super moveAddButtonToBottom];
     [self insertSubview:listViewTutorialButton atIndex:0];
+    [self insertSubview:listViewFeedbackButton atIndex:0];
+
     listViewTutorialButton.alpha = 0;
+    listViewFeedbackButton.alpha = 0;
 }
 
 - (void)moveAddButtonToTop {
     [super moveAddButtonToTop];
     [self addSubview:listViewTutorialButton];
+    [self addSubview:listViewFeedbackButton];
     listViewTutorialButton.alpha = 1;
+    listViewFeedbackButton.alpha = 1;
 
     listViewTutorialButton.center = [self locationForTutorialButtonInListView];
+    listViewFeedbackButton.center = [self locationForFeedbackButtonInListView];
 }
 
 #pragma mark - tap control

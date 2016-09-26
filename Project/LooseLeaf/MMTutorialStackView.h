@@ -7,8 +7,11 @@
 //
 
 #import "MMScrapPaperStackView.h"
+#import "MMTutorialStackViewDelegate.h"
 
 
 @interface MMTutorialStackView : MMScrapPaperStackView
+
+@property (nonatomic, weak) NSObject<MMTutorialStackViewDelegate>* stackDelegate;
 
 @end
