@@ -13,12 +13,13 @@
 #import "Mixpanel.h"
 #import "MMTutorialManager.h"
 #import "MMLargeTutorialSidebarButton.h"
+#import "MMFeedbackButton.h"
 
 
 @implementation MMTutorialStackView {
     MMTextButton* helpButton;
     MMLargeTutorialSidebarButton* listViewTutorialButton;
-    MMLargeTutorialSidebarButton* listViewFeedbackButton;
+    MMFeedbackButton* listViewFeedbackButton;
 }
 
 @dynamic stackDelegate;
@@ -44,9 +45,7 @@
         listViewTutorialButton.center = [self locationForTutorialButtonInListView];
         [listViewTutorialButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
-        listViewFeedbackButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
-            return [[MMTutorialManager sharedInstance] listViewTutorialSteps];
-        }];
+        listViewFeedbackButton = [[MMFeedbackButton alloc] initWithFrame:typicalBounds];
         listViewFeedbackButton.center = [self locationForFeedbackButtonInListView];
         [listViewFeedbackButton addTarget:self action:@selector(feedbackButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 

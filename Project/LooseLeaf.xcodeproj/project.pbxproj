@@ -550,6 +550,7 @@
 		C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29881D7C013A00D868EC /* MMSpanParser.m */; };
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
+		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 		C5FC082E1C23E01B00C88675 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5FC07B41C23E01B00C88675 /* _MPTweakBindObserver.m */; };
 		C5FC082F1C23E01B00C88675 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5FC07B51C23E01B00C88675 /* Media.xcassets */; };
@@ -1579,6 +1580,8 @@
 		C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackViewController.m; sourceTree = "<group>"; };
 		C5E02A841D99C007001F6ED6 /* MMFeedbackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackView.h; sourceTree = "<group>"; };
 		C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
+		C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackButton.h; sourceTree = "<group>"; };
+		C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackButton.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -3445,6 +3448,8 @@
 				66D0905415F7080F004D2CAF /* MMListAddPageButton.h */,
 				66D0905515F70810004D2CAF /* MMListAddPageButton.m */,
 				66D0905815F71941004D2CAF /* MMListAddPageButtonDelegate.h */,
+				C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */,
+				C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */,
 			);
 			name = "List View";
 			sourceTree = "<group>";
@@ -4571,6 +4576,7 @@
 				C5DA29951D7C013A00D868EC /* MMGenerator.m in Sources */,
 				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
+				C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMSingleStackManager.m in Sources */,
 				669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */,
 				66B21A76175E559E0049F1AF /* NSArray+Map.m in Sources */,
