@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param email The user's email address. This will be nil if the user does not grant access to their email address or your application is not allowed to request email addresses.
  *  @param error An error that details why a user's email address could not be provided.
  */
-typedef void (^TWTRShareEmailCompletion)(NSString * __twtr_nullable email, NSError * __twtr_nullable error);
+typedef void (^TWTRShareEmailCompletion)(NSString* __twtr_nullable email, NSError* __twtr_nullable error);
 
 /**
  *  The `TWTRShareEmailViewController` class presents a view to the user to request their email address. This is a subclass of `UINavigationController` and must be presented modally.
@@ -42,7 +42,7 @@ typedef void (^TWTRShareEmailCompletion)(NSString * __twtr_nullable email, NSErr
  *  @param userID the ID of the user you are requesting the email on behalf of, if nil the last signed in account will be used.
  *  @param completion The completion block called when the user either accepts or denies access to their email address. Called on the main thread.
  */
-- (instancetype)initWithUserID:(twtr_nullable NSString *)userID completion:(twtr_nullable TWTRShareEmailCompletion)completion;
+- (instancetype)initWithUserID:(twtr_nullable NSString*)userID completion:(twtr_nullable TWTRShareEmailCompletion)completion;
 
 @end
 

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <TwitterKit/TWTRTimelineDataSource.h>
+#import "TWTRTimelineDataSource.h"
 
 @class TWTRAPIClient;
 

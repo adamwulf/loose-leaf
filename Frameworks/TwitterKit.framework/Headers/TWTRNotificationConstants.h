@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Constants for notifications that are posted from TwitterKit. These are posted on the default notification center.
  */
 
-#pragma mark - Tweet Notifications
+#pragma mark - Tweet Action Notifications
 
 /**
  *  Notification indicating a Tweet was selected.
@@ -50,12 +50,73 @@ FOUNDATION_EXPORT NSString * const TWTRDidLikeTweetNotification;
  */
 FOUNDATION_EXPORT NSString * const TWTRDidUnlikeTweetNotification;
 
+#pragma mark - Media Notifications
+
+/**
+ *  Notification indicating the the playback state of a video
+ *  has changed.
+ *
+ *  object: The UIView emitting these notifications
+ *  userInfo: {TWTRVideoPlaybackStateKey: TWTRVideoStateValuePlaying}
+ *            {TWTRVideoPlaybackStateKey: TWTRVideoStateValuePaused}
+ *            {TWTRVideoPlaybackStateKey: TWTRVideoStateValueCompleted}
+ */
+FOUNDATION_EXPORT NSString * const TWTRVideoPlaybackStateChangedNotification;
+
+/**
+ *  User info key for the state of video playback.
+ */
+FOUNDATION_EXPORT NSString * const TWTRVideoPlaybackStateKey;
+
+/**
+ *  User info values for the state of video playback.
+ */
+FOUNDATION_EXPORT NSString * const TWTRVideoStateValuePlaying;
+FOUNDATION_EXPORT NSString * const TWTRVideoStateValuePaused;
+FOUNDATION_EXPORT NSString * const TWTRVideoStateValueCompleted;
+
+#pragma mark - Presentation Notifications
+
+/**
+ *  Notification indicating that the video view controller will
+ *  be presented.
+ *
+ *  object: The UIViewController hosting the video view
+ *  userInfo: {TWTRVideoTypeKey: TWTRVideoTypeGIF}
+ *            {TWTRVideoTypeKey: TWTRVideoTypeStandard}
+ *            {TWTRVideoTypeKey: TWTRVideoTypeVine}
+ */
+FOUNDATION_EXPORT NSString * const TWTRWillPresentVideoNotification;
+
+/**
+ *  Notification indicating that the video view controller has
+ *  been dismissed.
+ *
+ *  object: The UIViewController hosting the video view
+ */
+FOUNDATION_EXPORT NSString * const TWTRDidDismissVideoNotification;
+
+/**
+ *  The key to fetch the type of video being displayed in a 
+ *  TWTRVideoViewController.
+ */
+FOUNDATION_EXPORT NSString * const TWTRVideoTypeKey;
+
+/**
+ *  User info values for the type of video being displayed
+ *  in a TWTRVideoViewController.
+ */
+FOUNDATION_EXPORT NSString * const TWTRVideoTypeGIF;
+FOUNDATION_EXPORT NSString * const TWTRVideoTypeStandard;
+FOUNDATION_EXPORT NSString * const TWTRVideoTypeVine;
+
 #pragma mark - Notification User Info
 
 /**
  *  User info key to fetch the associated Tweet in the notification.
  */
 FOUNDATION_EXPORT NSString * const TWTRNotificationInfoTweet;
+
 
 /**
  * A notification which is posted when a user logs out of Twitter.
