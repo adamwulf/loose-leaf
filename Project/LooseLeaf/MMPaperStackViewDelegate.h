@@ -16,6 +16,8 @@
 
 - (void)animatingToPageView;
 
+- (MMScrapsInBezelContainerView*)bezelScrapContainer;
+
 - (MMImageSidebarContainerView*)importImageSidebar;
 
 - (MMShareSidebarContainerView*)sharePageSidebar;

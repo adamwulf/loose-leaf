@@ -52,7 +52,6 @@
 
 
 @implementation MMScrapPaperStackView {
-    MMScrapsInBezelContainerView* bezelScrapContainer;
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support
     // grabbing two scraps at the same time
@@ -63,10 +62,6 @@
     // this is the initial transform of a scrap
     // before it's started to be stretched.
     CATransform3D startSkewTransform;
-
-    // the scrap button that shows the count
-    // in the right sidebar
-    MMCountBubbleButton* countButton;
 
     NSTimer* debugTimer;
     NSTimer* drawTimer;
@@ -94,19 +89,6 @@
     if ((self = [super initWithFrame:frame andUUID:_uuid])) {
         self.autoresizingMask = UIViewAutoresizingNone;
 
-        CGFloat rightBezelSide = frame.size.width - 100;
-        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
-        countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
-        countButton.alpha = 0;
-        [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
-        [self insertSubview:countButton belowSubview:addPageSidebarButton];
-
-        bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:self.bounds andCountButton:countButton];
-        bezelScrapContainer.delegate = self;
-        bezelScrapContainer.bubbleDelegate = self;
-        [self insertSubview:bezelScrapContainer belowSubview:countButton];
-        [bezelScrapContainer setCountButton:countButton];
-
         panAndPinchScrapGesture = [[MMPanAndPinchScrapGestureRecognizer alloc] initWithTarget:self action:@selector(panAndScaleScrap:)];
         panAndPinchScrapGesture.bezelDirectionMask = MMBezelDirectionRight;
         panAndPinchScrapGesture.scrapDelegate = self;
@@ -132,8 +114,6 @@
 
         [insertImageButton addTarget:self action:@selector(insertImageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
-        [self insertSubview:countButton belowSubview:addPageSidebarButton];
-
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds andDarkBorder:YES];
@@ -151,11 +131,11 @@
 }
 
 - (void)finishedLoading {
-    [bezelScrapContainer loadFromDisk];
+    // noop
 }
 
 - (int)fullByteSize {
-    return [super fullByteSize] + bezelScrapContainer.fullByteSize;
+    return [super fullByteSize];
 }
 
 #pragma mark - Insert Image
@@ -764,8 +744,8 @@
 }
 
 - (void)anySidebarButtonTapped:(id)button {
-    if (button != countButton) {
-        [bezelScrapContainer sidebarCloseButtonWasTapped];
+    if (button != self.stackDelegate.bezelScrapContainer.countButton) {
+        [self.stackDelegate.bezelScrapContainer sidebarCloseButtonWasTapped];
     }
 }
 
@@ -1138,7 +1118,7 @@
             [startingPageForScrap addUndoItemForBezeledScrap:scrap withProperties:startingScrapProperties];
             // if we've bezelled the scrap,
             // add it to the bezel container
-            [bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
+            [self.stackDelegate.bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
         }
     }
     if (scrapViewIfFinished) {
@@ -1566,13 +1546,13 @@
 
 - (void)setButtonsVisible:(BOOL)visible animated:(BOOL)animated {
     if (animated) {
-        if (bezelScrapContainer.alpha != visible ? 1 : 0) {
+        if (self.stackDelegate.bezelScrapContainer.alpha != visible ? 1 : 0) {
             [UIView animateWithDuration:.3 animations:^{
-                bezelScrapContainer.alpha = visible ? 1 : 0;
+                self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
             }];
         }
     } else {
-        bezelScrapContainer.alpha = visible ? 1 : 0;
+        self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
     }
     [super setButtonsVisible:visible animated:animated];
 }
@@ -1599,7 +1579,7 @@
 }
 
 - (MMScrapsInBezelContainerView*)bezelContainerView {
-    return bezelScrapContainer;
+    return self.stackDelegate.bezelScrapContainer;
 }
 
 - (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk {
@@ -1692,7 +1672,7 @@
 
 - (void)didAddScrapToBezelSidebar:(MMScrapView*)scrap {
     CheckMainThread;
-    [bezelScrapContainer saveScrapContainerToDisk];
+    [self.stackDelegate.bezelScrapContainer saveScrapContainerToDisk];
     isAnimatingScrapToOrFromSidebar = NO;
 }
 
@@ -1746,7 +1726,7 @@
         scrapToAddToPage.center = center;
         scrapToAddToPage.scale = scale;
         [page saveToDisk:nil];
-        [bezelScrapContainer saveScrapContainerToDisk];
+        [self.stackDelegate.bezelScrapContainer saveScrapContainerToDisk];
 
         isAnimatingScrapToOrFromSidebar = NO;
     }];
@@ -1824,7 +1804,7 @@
 - (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading {
     [super didUpdateAccelerometerWithReading:currentRawReading];
     [NSThread performBlockOnMainThread:^{
-        [bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
+        [self.stackDelegate.bezelScrapContainer didUpdateAccelerometerWithReading:currentRawReading];
     }];
 }
 
@@ -1843,7 +1823,7 @@
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        [bezelScrapContainer didRotateToIdealOrientation:orientation];
+        [self.stackDelegate.bezelScrapContainer didRotateToIdealOrientation:orientation];
     } completion:nil];
 }
 

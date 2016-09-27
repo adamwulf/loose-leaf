@@ -45,9 +45,10 @@
 #import "Constants.h"
 #import "MMMarkdown.h"
 #import "MMFeedbackViewController.h"
+#import "MMScrapsInBezelContainerView.h"
 
 
-@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMStackControllerViewDelegate, MMRoundedSquareViewDelegate>
+@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMStackControllerViewDelegate, MMRoundedSquareViewDelegate, MMScrapSidebarContainerViewDelegate>
 
 @end
 
@@ -77,6 +78,11 @@
 
     // make sure to only check to show release notes once per launch
     BOOL mightShowReleaseNotes;
+
+    // the scrap button that shows the count
+    // in the right sidebar
+    MMCountBubbleButton* countButton;
+    MMScrapsInBezelContainerView* bezelScrapContainer;
 }
 
 - (id)init {
@@ -186,6 +192,8 @@
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
         // Load the stack
+
+        [bezelScrapContainer loadFromDisk];
         [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
 
         // Image import sidebar
@@ -204,6 +212,20 @@
             [self.view addSubview:sharePageSidebar];
         } afterDelay:1];
 
+        // scrap sidebar
+        CGRect frame = [self.view bounds];
+        CGFloat rightBezelSide = frame.size.width - 100;
+        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
+        countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+        countButton.alpha = 0;
+        [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:countButton];
+
+        bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
+        bezelScrapContainer.delegate = self;
+        bezelScrapContainer.bubbleDelegate = self;
+        [self.view addSubview:bezelScrapContainer];
+        [bezelScrapContainer setCountButton:countButton];
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
@@ -313,6 +335,10 @@
 
 - (void)animatingToPageView {
     listOfStacksView.alpha = 0;
+}
+
+- (MMScrapsInBezelContainerView*)bezelScrapContainer {
+    return bezelScrapContainer;
 }
 
 - (MMImageSidebarContainerView*)importImageSidebar {
@@ -475,7 +501,7 @@
         return @([accum intValue] + obj.fullByteSize);
     }] intValue];
 
-    return fullByteSize + importImageSidebar.fullByteSize;
+    return fullByteSize + importImageSidebar.fullByteSize + bezelScrapContainer.fullByteSize;
 }
 
 - (NSInteger)numberOfPages {
@@ -752,6 +778,41 @@
             stackPropertiesView = nil;
         }];
     }
+}
+
+#pragma mark - Scrap Sidebar
+
+- (void)showScrapSidebar:(id)button {
+}
+
+#pragma mark - MMScrapSidebarContainerViewDelegate
+
+- (void)willAddScrapToBezelSidebar:(MMScrapView*)scrap {
+    [currentStackView willAddScrapToBezelSidebar:scrap];
+}
+
+- (void)didAddScrapToBezelSidebar:(MMScrapView*)scrap {
+    [currentStackView didAddScrapToBezelSidebar:scrap];
+}
+
+- (void)willAddScrapBackToPage:(MMScrapView*)scrap {
+    [currentStackView willAddScrapBackToPage:scrap];
+}
+
+- (MMUndoablePaperView*)didAddScrapBackToPage:(MMScrapView*)originalScrap atIndex:(NSUInteger)index {
+    return [currentStackView didAddScrapBackToPage:originalScrap atIndex:index];
+}
+
+- (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap {
+    return [currentStackView positionOnScreenToScaleScrapTo:scrap];
+}
+
+- (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale {
+    return [currentStackView scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:originalScale];
+}
+
+- (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {
+    return [currentStackView pageForUUID:uuid];
 }
 
 @end
