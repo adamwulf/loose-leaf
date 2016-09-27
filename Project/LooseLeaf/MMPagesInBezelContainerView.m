@@ -1,15 +1,15 @@
 //
-//  MMScapBubbleContainerView.m
+//  MMPagesInBezelContainerView.m
 //  LooseLeaf
 //
-//  Created by Adam Wulf on 8/31/13.
-//  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
+//  Created by Adam Wulf on 9/27/16.
+//  Copyright © 2016 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapsInBezelContainerView.h"
+#import "MMPagesInBezelContainerView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
-#import "MMScrapSidebarContentView.h"
+#import "MMPageSidebarContentView.h"
 #import "MMScrapsInSidebarState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
@@ -23,12 +23,12 @@
 #define kAnimationDuration 0.3
 
 
-@implementation MMScrapsInBezelContainerView {
+@implementation MMPagesInBezelContainerView {
     CGFloat lastRotationReading;
     CGFloat targetAlpha;
     NSMutableDictionary* bubbleForScrap;
     MMCountBubbleButton* countButton;
-    MMScrapSidebarContentView* contentView;
+    MMPageSidebarContentView* contentView;
     MMScrapsInSidebarState* sidebarScrapState;
     NSString* scrapIDsPath;
 
@@ -44,7 +44,7 @@
         targetAlpha = 1;
         bubbleForScrap = [NSMutableDictionary dictionary];
 
-        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
+        contentView = [[MMPageSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         [slidingSidebarView addSubview:contentView];
 
@@ -53,7 +53,7 @@
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
 
-        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMScrapsInBezelContainerView pathToPlist]];
+        NSDictionary* loadedRotationValues = [NSDictionary dictionaryWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
         rotationAdjustments = [NSMutableDictionary dictionary];
         if (loadedRotationValues) {
             [rotationAdjustments addEntriesFromDictionary:loadedRotationValues];
@@ -511,7 +511,7 @@ static NSString* bezelStatePath;
         dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
                 [[sidebarScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
-                [writeableAdjustments writeToFile:[MMScrapsInBezelContainerView pathToPlist] atomically:YES];
+                [writeableAdjustments writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
             }
         });
     }

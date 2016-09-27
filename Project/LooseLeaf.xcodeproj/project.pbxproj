@@ -641,6 +641,9 @@
 		C5F1B2E01D9B01BB00E0E9A8 /* UIImage+MPImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2801D9B01BB00E0E9A8 /* UIImage+MPImageEffects.m */; };
 		C5F1B2E11D9B01BB00E0E9A8 /* UIView+MPHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2821D9B01BB00E0E9A8 /* UIView+MPHelpers.m */; };
 		C5F1B2E21D9B01BB00E0E9A8 /* UIViewController+AutomaticEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2841D9B01BB00E0E9A8 /* UIViewController+AutomaticEvents.m */; };
+		C5F1B2E61D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */; };
+		C5F1B2EA1D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */; };
+		C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -1761,6 +1764,13 @@
 		C5F1B2831D9B01BB00E0E9A8 /* UIViewController+AutomaticEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+AutomaticEvents.h"; sourceTree = "<group>"; };
 		C5F1B2841D9B01BB00E0E9A8 /* UIViewController+AutomaticEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+AutomaticEvents.m"; sourceTree = "<group>"; };
 		C5F1B2851D9B01BB00E0E9A8 /* watchos.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = watchos.modulemap; sourceTree = "<group>"; };
+		C5F1B2E41D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesInBezelContainerView.h; sourceTree = "<group>"; };
+		C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPagesInBezelContainerView.m; sourceTree = "<group>"; };
+		C5F1B2E71D9B0CE400E0E9A8 /* MMPageSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C5F1B2E81D9B0CFC00E0E9A8 /* MMPageSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageSidebarContentView.h; sourceTree = "<group>"; };
+		C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageSidebarContentView.m; sourceTree = "<group>"; };
+		C5F1B2EB1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSidebarButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
+		C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSidebarButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -2299,6 +2309,8 @@
 				66B51A2917AC50F7005B5E09 /* MMBezelInGestureRecognizer.m */,
 				66D7496118A6DB010015650E /* MMDrawingTouchGestureRecognizer.h */,
 				66D7496218A6DB010015650E /* MMDrawingTouchGestureRecognizer.m */,
+				C5F1B2EB1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.h */,
+				C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */,
 			);
 			name = "Stack View";
 			sourceTree = "<group>";
@@ -2738,6 +2750,7 @@
 		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
 			isa = PBXGroup;
 			children = (
+				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
 				C53F635A1CDA87E500091EF1 /* BackgroundView */,
 				66E1010019ECB5CD006E7C15 /* Presentation Window */,
 				6634855D19DA2E4200B5CF2D /* Delete Sidebar */,
@@ -3995,6 +4008,18 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				C5F1B2E41D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.h */,
+				C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */,
+				C5F1B2E71D9B0CE400E0E9A8 /* MMPageSidebarContainerViewDelegate.h */,
+				C5F1B2E81D9B0CFC00E0E9A8 /* MMPageSidebarContentView.h */,
+				C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */,
+			);
+			name = "Page Sidebar";
+			sourceTree = "<group>";
+		};
 		C5F4BE811C2676C100FFB640 /* LaunchScreen */ = {
 			isa = PBXGroup;
 			children = (
@@ -4582,6 +4607,7 @@
 				C5F1B29F1D9B01BB00E0E9A8 /* MPABTestDesignerConnection.m in Sources */,
 				C5F1B2D01D9B01BB00E0E9A8 /* MPTypeDescription.m in Sources */,
 				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,
+				C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */,
 				66EC2FEF19DD11E0008F2BB6 /* MMJotViewNilState.m in Sources */,
 				C504E71A1CFFE55600914A0E /* MMScrapStateUpgrader.m in Sources */,
 				66D0905615F70810004D2CAF /* MMListAddPageButton.m in Sources */,
@@ -4593,6 +4619,7 @@
 				66FA03A219BFE68000AF0DC4 /* MMCloudKeyButton.m in Sources */,
 				C5F1B29D1D9B01BB00E0E9A8 /* MPABTestDesignerClearRequestMessage.m in Sources */,
 				66AC8D8618E8902A00A65036 /* ALAssetsGroup+Properties.m in Sources */,
+				C5F1B2E61D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m in Sources */,
 				66AC8D8E18E89C9800A65036 /* MMAlbumRowView.m in Sources */,
 				C5F1B2E11D9B01BB00E0E9A8 /* UIView+MPHelpers.m in Sources */,
 				662280771AAF9FFF00DAB609 /* MMAlbumGroupListLayout.m in Sources */,
@@ -4613,6 +4640,7 @@
 				663326BA1AAFE409003915E6 /* MMAbstractShareItem.m in Sources */,
 				660116F219ABB1A50065C1B4 /* MMCloudKitDeclinedPermissionState.m in Sources */,
 				660116E619ABAAFC0065C1B4 /* MMCloudKitBaseState.m in Sources */,
+				C5F1B2EA1D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m in Sources */,
 				C5F1B2A51D9B01BB00E0E9A8 /* MPABTestDesignerTweakRequestMessage.m in Sources */,
 				6652452A1996B45C00C36609 /* MMPhotoAlbumShareItem.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */,

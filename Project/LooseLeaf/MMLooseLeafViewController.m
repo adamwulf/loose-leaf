@@ -29,7 +29,6 @@
 #import "MMTutorialView.h"
 #import "MMTutorialManager.h"
 #import "MMTutorialViewDelegate.h"
-#import "MMRoundedSquareViewDelegate.h"
 #import "MMPalmGestureRecognizer.h"
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
