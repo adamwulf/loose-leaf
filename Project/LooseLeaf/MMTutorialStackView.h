@@ -6,11 +6,17 @@
 //  Copyright (c) 2015 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapPaperStackView.h"
+#import "MMClonePaperStackView.h"
 #import "MMTutorialStackViewDelegate.h"
 
 
-@interface MMTutorialStackView : MMScrapPaperStackView
+@class MMLargeTutorialSidebarButton, MMFeedbackButton;
+
+
+@interface MMTutorialStackView : MMClonePaperStackView {
+    MMLargeTutorialSidebarButton* listViewTutorialButton;
+    MMFeedbackButton* listViewFeedbackButton;
+}
 
 @property (nonatomic, weak) NSObject<MMTutorialStackViewDelegate>* stackDelegate;
 

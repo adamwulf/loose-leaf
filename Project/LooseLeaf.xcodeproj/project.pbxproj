@@ -524,6 +524,7 @@
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
+		C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
 		C5C13E171D91FC5A0047B3EF /* list-view-clone-page.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
@@ -1556,6 +1557,8 @@
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
+		C5BAF6801D99FC3A00A86496 /* MMClonePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMClonePaperStackView.h; sourceTree = "<group>"; };
+		C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMClonePaperStackView.m; sourceTree = "<group>"; };
 		C5C13E131D9108100047B3EF /* MMPageCloner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageCloner.h; sourceTree = "<group>"; };
 		C5C13E141D9108100047B3EF /* MMPageCloner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageCloner.m; sourceTree = "<group>"; };
 		C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "list-view-clone-page.mp4"; sourceTree = "<group>"; };
@@ -3290,6 +3293,8 @@
 				66728714159515FC0018571A /* MMEditablePaperStackView.m */,
 				66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */,
 				66CE11F617CFD8A600882275 /* MMScrapPaperStackView.m */,
+				C5BAF6801D99FC3A00A86496 /* MMClonePaperStackView.h */,
+				C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */,
 				662808F71A9BB57100CA3F9A /* MMTutorialStackView.h */,
 				662808F81A9BB57100CA3F9A /* MMTutorialStackView.m */,
 				C5E02A7F1D99BD25001F6ED6 /* MMTutorialStackViewDelegate.h */,
@@ -4466,6 +4471,7 @@
 				C5F1B2B21D9B01BB00E0E9A8 /* MPDesignerTrackMessage.m in Sources */,
 				663326CD1AB09CD9003915E6 /* MMImageInboxItem.m in Sources */,
 				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
+				C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
 				66C4734F19CB999000505BC0 /* MMAssetListLayout.m in Sources */,

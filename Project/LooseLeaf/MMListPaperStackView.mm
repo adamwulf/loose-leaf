@@ -31,6 +31,9 @@
 
 @synthesize toolbar;
 @synthesize deleteSidebar;
+@synthesize columnWidth;
+@synthesize rowHeight;
+@synthesize bufferWidth;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     self = [super initWithFrame:frame andUUID:_uuid];

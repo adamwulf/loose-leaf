@@ -18,8 +18,6 @@
 
 @implementation MMTutorialStackView {
     MMTextButton* helpButton;
-    MMLargeTutorialSidebarButton* listViewTutorialButton;
-    MMFeedbackButton* listViewFeedbackButton;
 }
 
 @dynamic stackDelegate;
