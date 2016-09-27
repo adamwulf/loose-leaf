@@ -161,10 +161,14 @@
 #pragma mark - Feedback
 
 - (void)sendFeedback:(UIButton*)button {
-    if (![feedbackTextView.text isEqualToString:kFeedbackPlaceholderText] && [feedbackTextView.text length]) {
-        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                          kMPUpgradeFeedbackReply: feedbackTextView.text ?: @"" }];
+    NSString* feedbackText = feedbackTextView.text ?: @"";
+
+    if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
+        feedbackText = @"";
     }
+
+    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 
     [feedbackTextView resignFirstResponder];
 
@@ -182,10 +186,14 @@
 
     [feedbackTextView resignFirstResponder];
 
-    if (![feedbackTextView.text isEqualToString:kFeedbackPlaceholderText] && [feedbackTextView.text length]) {
-        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                          kMPUpgradeFeedbackReply: feedbackTextView.text ?: @"" }];
+    NSString* feedbackText = feedbackTextView.text ?: @"";
+
+    if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
+        feedbackText = @"";
     }
+
+    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 }
 
 
