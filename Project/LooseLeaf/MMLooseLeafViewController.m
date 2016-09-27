@@ -29,7 +29,6 @@
 #import "MMTutorialView.h"
 #import "MMTutorialManager.h"
 #import "MMTutorialViewDelegate.h"
-#import "MMStackPropertiesView.h"
 #import "MMRoundedSquareViewDelegate.h"
 #import "MMPalmGestureRecognizer.h"
 #import "MMRotatingBackgroundView.h"
@@ -48,7 +47,7 @@
 #import "MMScrapsInBezelContainerView.h"
 
 
-@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMStackControllerViewDelegate, MMRoundedSquareViewDelegate, MMScrapSidebarContainerViewDelegate>
+@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate>
 
 @end
 
@@ -68,8 +67,6 @@
 
     NSMutableDictionary* stackViewsByUUID;
 
-    // stack properties
-    MMStackPropertiesView* stackPropertiesView;
     // tutorials
     MMTutorialViewController* tutorialViewController;
     MMReleaseNotesViewController* releaseNotesViewController;
@@ -176,18 +173,6 @@
                                                        kMPShareStatusSinaWeibo: kMPShareStatusUnknown,
         }];
         [[Mixpanel sharedInstance] flush];
-
-        // navigation between stacks
-
-        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 320)];
-        listOfStacksView.alpha = 0;
-        listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
-        listOfStacksView.stackDelegate = self;
-        listOfStacksView.hidden = YES;
-
-        [listOfStacksView reloadStackButtons];
-
-        [self.view addSubview:listOfStacksView];
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
@@ -409,28 +394,6 @@
 }
 
 #pragma mark - MMStackControllerViewDelegate
-
-- (void)didTapNameForStack:(NSString*)stackUUID {
-    if (stackPropertiesView) {
-        return;
-    }
-
-    backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
-    backdrop.backgroundColor = [UIColor whiteColor];
-    backdrop.alpha = 0;
-    [self.view addSubview:backdrop];
-
-    stackPropertiesView = [[MMStackPropertiesView alloc] initWithFrame:self.view.bounds andStackUUID:stackUUID];
-    stackPropertiesView.alpha = 0;
-    stackPropertiesView.delegate = self;
-    [self.view addSubview:stackPropertiesView];
-
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 1;
-        stackPropertiesView.alpha = 1;
-    }];
-    DebugLog(@"showing stack id: %@", stackUUID);
-}
 
 - (void)addStack {
     NSString* stackID = [[MMAllStacksManager sharedInstance] createStack];
@@ -762,22 +725,6 @@
     }
 
     [tutorialViewController closeTutorials];
-}
-
-#pragma mark - MMRoundedSquareViewDelegate
-
-- (void)didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView {
-    if (squareView == stackPropertiesView) {
-        [UIView animateWithDuration:.3 animations:^{
-            backdrop.alpha = 0;
-            stackPropertiesView.alpha = 0;
-        } completion:^(BOOL finished) {
-            [backdrop removeFromSuperview];
-            backdrop = nil;
-            [stackPropertiesView removeFromSuperview];
-            stackPropertiesView = nil;
-        }];
-    }
 }
 
 #pragma mark - Scrap Sidebar

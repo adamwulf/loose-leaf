@@ -428,7 +428,6 @@
 		C504E71A1CFFE55600914A0E /* MMScrapStateUpgrader.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E7191CFFE55600914A0E /* MMScrapStateUpgrader.m */; };
 		C504E71D1CFFF21100914A0E /* MMJotViewStateUpgrader.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E71C1CFFF21100914A0E /* MMJotViewStateUpgrader.m */; };
 		C5060FB21CAA0A0C00B9721C /* MMRoundedSquareView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */; };
-		C5060FB51CAA147000B9721C /* MMStackPropertiesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */; };
 		C5060FB61CAA170400B9721C /* top-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE861C2676F400FFB640 /* top-buttons.png */; };
 		C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */; };
 		C5060FB81CAA170400B9721C /* bottom-buttons.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F4BE881C2676F900FFB640 /* bottom-buttons.png */; };
@@ -445,9 +444,7 @@
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C50CBF6F1CE441240053885A /* UIImage+MMColor.m */; };
 		C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C50CBF8A1CE4522E0053885A /* Icons.xcassets */; };
-		C51290491CAB13250057363A /* MMStackIconView.m in Sources */ = {isa = PBXBuildFile; fileRef = C51290481CAB13250057363A /* MMStackIconView.m */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
-		C51C69631C8978CE00C77AC7 /* MMStackControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
@@ -522,7 +519,6 @@
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A181CDB1B4A00508F1D /* bg53.jpg */; };
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
-		C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
@@ -1427,8 +1423,6 @@
 		C504E71C1CFFF21100914A0E /* MMJotViewStateUpgrader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMJotViewStateUpgrader.m; sourceTree = "<group>"; };
 		C5060FB01CAA0A0C00B9721C /* MMRoundedSquareView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedSquareView.h; sourceTree = "<group>"; };
 		C5060FB11CAA0A0C00B9721C /* MMRoundedSquareView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRoundedSquareView.m; sourceTree = "<group>"; };
-		C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackPropertiesView.h; sourceTree = "<group>"; };
-		C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackPropertiesView.m; sourceTree = "<group>"; };
 		C5060FBA1CAA197600B9721C /* MMRoundedSquareViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRoundedSquareViewDelegate.h; sourceTree = "<group>"; };
 		C506A3921C23DAD800236895 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterCore.framework; path = ../Frameworks/TwitterCore.framework; sourceTree = "<group>"; };
 		C506A39B1C23DD6100236895 /* SSKeychain.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SSKeychain.framework; path = "../../../../Library/Developer/Xcode/DerivedData/LooseLeaf-etiwoynnttmrrhdmsptvkstzemdv/Build/Products/Debug-iphoneos/SSKeychain.framework"; sourceTree = "<group>"; };
@@ -1454,13 +1448,9 @@
 		C50CBF6E1CE441240053885A /* UIImage+MMColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMColor.h"; sourceTree = "<group>"; };
 		C50CBF6F1CE441240053885A /* UIImage+MMColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMColor.m"; sourceTree = "<group>"; };
 		C50CBF8A1CE4522E0053885A /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
-		C51290471CAB13250057363A /* MMStackIconView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackIconView.h; sourceTree = "<group>"; };
-		C51290481CAB13250057363A /* MMStackIconView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackIconView.m; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
-		C51C69611C8978CE00C77AC7 /* MMStackControllerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackControllerView.h; sourceTree = "<group>"; };
-		C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackControllerView.m; sourceTree = "<group>"; };
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C53F63541CDA871D00091EF1 /* UIImage+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
 		C53F63551CDA871D00091EF1 /* UIImage+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
@@ -1550,10 +1540,6 @@
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C58E6A181CDB1B4A00508F1D /* bg53.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg53.jpg; sourceTree = "<group>"; };
 		C58E6A191CDB1B4A00508F1D /* bg54.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg54.jpg; sourceTree = "<group>"; };
-		C5A7A0861CA64C590054EEF1 /* MMStackControllerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackControllerViewDelegate.h; sourceTree = "<group>"; };
-		C5A7A0871CA651D70054EEF1 /* MMStackButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonView.h; sourceTree = "<group>"; };
-		C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMStackButtonView.m; sourceTree = "<group>"; };
-		C5A7A08A1CA65E5A0054EEF1 /* MMStackButtonViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMStackButtonViewDelegate.h; sourceTree = "<group>"; };
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
@@ -2753,7 +2739,6 @@
 			isa = PBXGroup;
 			children = (
 				C53F635A1CDA87E500091EF1 /* BackgroundView */,
-				C51C69601C8978B200C77AC7 /* StackController */,
 				66E1010019ECB5CD006E7C15 /* Presentation Window */,
 				6634855D19DA2E4200B5CF2D /* Delete Sidebar */,
 				66DCFB991581BCEF00B4918C /* MMAppDelegate.h */,
@@ -3619,23 +3604,6 @@
 			name = icons;
 			sourceTree = "<group>";
 		};
-		C51C69601C8978B200C77AC7 /* StackController */ = {
-			isa = PBXGroup;
-			children = (
-				C51C69611C8978CE00C77AC7 /* MMStackControllerView.h */,
-				C51C69621C8978CE00C77AC7 /* MMStackControllerView.m */,
-				C5A7A0861CA64C590054EEF1 /* MMStackControllerViewDelegate.h */,
-				C5A7A0871CA651D70054EEF1 /* MMStackButtonView.h */,
-				C5A7A0881CA651D70054EEF1 /* MMStackButtonView.m */,
-				C5A7A08A1CA65E5A0054EEF1 /* MMStackButtonViewDelegate.h */,
-				C5060FB31CAA147000B9721C /* MMStackPropertiesView.h */,
-				C5060FB41CAA147000B9721C /* MMStackPropertiesView.m */,
-				C51290471CAB13250057363A /* MMStackIconView.h */,
-				C51290481CAB13250057363A /* MMStackIconView.m */,
-			);
-			name = StackController;
-			sourceTree = "<group>";
-		};
 		C53F633D1CDA85E900091EF1 /* backgrounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -4433,9 +4401,6 @@
 				C5F1B29B1D9B01BB00E0E9A8 /* MPABTestDesignerChangeRequestMessage.m in Sources */,
 				66343C501ABF8CD000801962 /* MMTutorialSidebarButton.m in Sources */,
 				665245691996DAB800C36609 /* AFURLResponseSerialization.m in Sources */,
-				C5FC08501C23E01B00C88675 /* MPNSNumberToCGFloatValueTransformer.m in Sources */,
-				C5FC08421C23E01B00C88675 /* MPCGColorRefToNSStringValueTransformer.m in Sources */,
-				C51C69631C8978CE00C77AC7 /* MMStackControllerView.m in Sources */,
 				66BE6CA219D67BC100A5F650 /* MMPolaroidView.m in Sources */,
 				664FB55B194BAC6A009C1EF9 /* MMCancelableGestureRecognizer.m in Sources */,
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,
@@ -4519,7 +4484,6 @@
 				C5F1B2CF1D9B01BB00E0E9A8 /* MPTweakStore.m in Sources */,
 				66AF94FD1905956C004818F8 /* MMPageCacheManager.m in Sources */,
 				665245661996DAB800C36609 /* AFSecurityPolicy.m in Sources */,
-				C5FC08541C23E01B00C88675 /* MPObjectSerializerConfig.m in Sources */,
 				C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */,
 				66ACECE819D4D571000EA792 /* MMPhotoOnDisk.m in Sources */,
 				C5F1B2C11D9B01BB00E0E9A8 /* MPObjectSerializerContext.m in Sources */,
@@ -4566,7 +4530,6 @@
 				66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
-				C5060FB51CAA147000B9721C /* MMStackPropertiesView.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				C5F1B2AD1D9B01BB00E0E9A8 /* MPCGRectToNSDictionaryValueTransformer.m in Sources */,
@@ -4705,11 +4668,9 @@
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
 				C5F1B2CD1D9B01BB00E0E9A8 /* MPTweak.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
-				C51290491CAB13250057363A /* MMStackIconView.m in Sources */,
 				C5F1B2BB1D9B01BB00E0E9A8 /* MPNSAttributedStringToNSDictionaryValueTransformer.m in Sources */,
 				C5F1B2C41D9B01BB00E0E9A8 /* MPResources.m in Sources */,
 				66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */,
-				C5A7A0891CA651D70054EEF1 /* MMStackButtonView.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
 				66E2241919D66F8B000FCA96 /* MMEmptyCollectionViewCell.m in Sources */,
