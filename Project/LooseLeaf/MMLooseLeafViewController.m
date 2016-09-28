@@ -177,7 +177,6 @@
 
         // Load the stack
 
-        [bezelScrapContainer loadFromDisk];
         [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
 
         // Image import sidebar
@@ -210,6 +209,8 @@
         bezelScrapContainer.bubbleDelegate = self;
         [self.view addSubview:bezelScrapContainer];
         [bezelScrapContainer setCountButton:countButton];
+
+        [bezelScrapContainer loadFromDisk];
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];

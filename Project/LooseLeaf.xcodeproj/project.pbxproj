@@ -646,6 +646,7 @@
 		C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */; };
 		C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */; };
 		C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */; };
+		C5F1B3181D9B68D900E0E9A8 /* MMPageSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3171D9B68D900E0E9A8 /* MMPageSidebarButton.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -1777,6 +1778,8 @@
 		C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarContainerView.m; sourceTree = "<group>"; };
 		C5F1B3051D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContentView.h; sourceTree = "<group>"; };
 		C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarContentView.m; sourceTree = "<group>"; };
+		C5F1B3161D9B68D900E0E9A8 /* MMPageSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageSidebarButton.h; sourceTree = "<group>"; };
+		C5F1B3171D9B68D900E0E9A8 /* MMPageSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageSidebarButton.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -3218,12 +3221,12 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
-				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				C5F1B2FF1D9B380F00E0E9A8 /* Rounded Views */,
 				6693295715958A890033E557 /* Managers */,
 				66BD6E811593AF4500D4544C /* Buttons */,
 				660E1DAD158FC7CA0001DA12 /* Code Icons */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
+				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				664C62F115A36DB00072736A /* MMPaperView */,
 				66DCFBBF1581C7F400B4918C /* MMPaperStack */,
 				6693298115996C6A0033E557 /* Controller and App Delegate */,
@@ -4014,6 +4017,8 @@
 				C5F1B2E71D9B0CE400E0E9A8 /* MMPageSidebarContainerViewDelegate.h */,
 				C5F1B2E81D9B0CFC00E0E9A8 /* MMPageSidebarContentView.h */,
 				C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */,
+				C5F1B3161D9B68D900E0E9A8 /* MMPageSidebarButton.h */,
+				C5F1B3171D9B68D900E0E9A8 /* MMPageSidebarButton.m */,
 			);
 			name = "Page Sidebar";
 			sourceTree = "<group>";
@@ -4487,6 +4492,7 @@
 				66A790C319689CF00037F01A /* MMUndoRedoRemoveScrapItem.m in Sources */,
 				667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */,
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
+				C5F1B3181D9B68D900E0E9A8 /* MMPageSidebarButton.m in Sources */,
 				6610D08D1AA8FAFA0019C2FB /* MMInboxButton.m in Sources */,
 				C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,

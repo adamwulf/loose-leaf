@@ -1827,6 +1827,15 @@
 - (void)immediatelyAnimateFromListViewToFullScreenView {
     CheckMainThread;
 
+    // load the state for the top page in the visible stack
+    if (![[visibleStackHolder peekSubview] isStateLoaded]) {
+        [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[visibleStackHolder peekSubview]];
+        [[visibleStackHolder peekSubview] loadStateAsynchronously:YES
+                                                         withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                         andScale:[MMPageCacheManager sharedInstance].drawableView.scale
+                                                       andContext:[MMPageCacheManager sharedInstance].drawableView.context];
+    }
+
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
 
     CGFloat duration = 0.2;

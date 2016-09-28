@@ -130,10 +130,6 @@
     return self;
 }
 
-- (void)finishedLoading {
-    // noop
-}
-
 - (int)fullByteSize {
     return [super fullByteSize];
 }

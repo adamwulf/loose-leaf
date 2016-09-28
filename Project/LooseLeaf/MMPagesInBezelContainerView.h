@@ -17,7 +17,7 @@
 #import "MMScrapsInSidebarState.h"
 
 
-@interface MMPagesInBezelContainerView : MMCountableSidebarContainerView <MMPaperView*>
+@interface MMPagesInBezelContainerView : MMCountableSidebarContainerView <MMEditablePaperView*>
 <MMScrapsInSidebarStateDelegate, MMSidebarButtonDelegate> {
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }

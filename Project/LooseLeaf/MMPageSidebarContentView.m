@@ -7,8 +7,8 @@
 //
 
 #import "MMPageSidebarContentView.h"
-#import "MMScrapView.h"
-#import "MMScrapSidebarButton.h"
+#import "MMEditablePaperView.h"
+#import "MMPageSidebarButton.h"
 #import "MMTrashButton.h"
 #import "Constants.h"
 #import "UIView+Animations.h"
@@ -16,6 +16,7 @@
 #import "MMRotationManager.h"
 #import "MMAppDelegate.h"
 #import "MMPresentationWindow.h"
+#import "MMPageCacheManager.h"
 
 #define kColumnSideMargin 10.0
 #define kColumnTopMargin 10.0
@@ -142,10 +143,10 @@ typedef struct RowOfScrapsInSidebar {
 }
 
 - (void)viewDidHide {
-    for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
-        if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
+    for (MMPageSidebarButton* subview in [[scrollView subviews] copy]) {
+        if ([subview isKindOfClass:[MMPageSidebarButton class]]) {
             if ([[self.delegate viewsInSidebar] count] > kMaxButtonsInBezelSidebar) {
-                [subview.scrap.state unloadCachedScrapPreview];
+                [[MMPageCacheManager sharedInstance] forgetAboutPage:subview.page];
             }
             [subview removeFromSuperview];
         }
@@ -156,8 +157,8 @@ typedef struct RowOfScrapsInSidebar {
     CheckMainThread;
 
     // determine how many rows of scraps that we'll need
-    NSArray* allScraps = [self.delegate viewsInSidebar];
-    int rowCount = ceilf((float)[allScraps count] / columnCount);
+    NSArray* allPages = [self.delegate viewsInSidebar];
+    int rowCount = ceilf((float)[allPages count] / columnCount);
     CGFloat maxDimOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
 
     // make sure we have data to store the attributes per row
@@ -176,9 +177,9 @@ typedef struct RowOfScrapsInSidebar {
         // determine the index and scrap objects
         CGFloat maxHeightOfScrapsInRow = 0;
         for (int index = row * (int)columnCount; index < row * columnCount + columnCount; index++) {
-            if (index < [allScraps count]) {
-                MMScrapView* currentScrap = [allScraps objectAtIndex:index];
-                CGSize sizeOfCellForScrap = [MMScrapSidebarButton sizeOfRowForScrap:currentScrap forWidth:maxDimOfScrap];
+            if (index < [allPages count]) {
+                MMEditablePaperView* currentPage = [allPages objectAtIndex:index];
+                CGSize sizeOfCellForScrap = [MMPageSidebarButton sizeOfRowForPage:currentPage forWidth:maxDimOfScrap];
                 CGFloat heightOfCurrScrap = sizeOfCellForScrap.height + kColumnTopMargin;
                 if (heightOfCurrScrap > maxHeightOfScrapsInRow) {
                     maxHeightOfScrapsInRow = heightOfCurrScrap;
@@ -223,8 +224,8 @@ typedef struct RowOfScrapsInSidebar {
 
 #pragma mark - UIButton
 
-- (void)tappedOnScrapButton:(MMScrapSidebarButton*)button {
-    [self.delegate didTapOnViewFromMenu:button.scrap];
+- (void)tappedOnPageButton:(MMPageSidebarButton*)button {
+    [self.delegate didTapOnViewFromMenu:button.page];
 }
 
 - (void)tappedOnTrashButton:(MMTrashButton*)button {
@@ -277,7 +278,7 @@ typedef struct RowOfScrapsInSidebar {
 
     // determine the variables that will affect
     // our layout
-    NSArray* allScraps = [self.delegate viewsInSidebar];
+    NSArray* allPages = [self.delegate viewsInSidebar];
     CGFloat sizeOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
     int row = [self rowForYOffset:scrollView.contentOffset.y];
     int maxRow = [self rowForYOffset:scrollView.contentOffset.y + scrollView.bounds.size.height] + 1;
@@ -285,10 +286,10 @@ typedef struct RowOfScrapsInSidebar {
     // very basic for now. just remove all old scraps
     NSInteger minVisibleRow = NSIntegerMax;
     NSInteger maxVisibleRow = NSIntegerMin;
-    for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
-        if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
+    for (MMPageSidebarButton* subview in [[scrollView subviews] copy]) {
+        if ([subview isKindOfClass:[MMPageSidebarButton class]]) {
             if (subview.rowNumber < row || subview.rowNumber > maxRow) {
-                [subview.scrap.state unloadCachedScrapPreview];
+                [[MMPageCacheManager sharedInstance] forgetAboutPage:subview.page];
                 [subview removeFromSuperview];
             } else if (subview.rowNumber < minVisibleRow) {
                 minVisibleRow = subview.rowNumber;
@@ -305,17 +306,17 @@ typedef struct RowOfScrapsInSidebar {
         NSMutableArray* currRow = [NSMutableArray array];
         if (row < minVisibleRow || row > maxVisibleRow) {
             for (int index = row * (int)columnCount; index < row * columnCount + columnCount; index++) {
-                if (index < [allScraps count]) {
-                    MMScrapView* currentScrap = [allScraps objectAtIndex:index];
+                if (index < [allPages count]) {
+                    MMEditablePaperView* currentPage = [allPages objectAtIndex:index];
                     // place the left scrap. it should have 10 px left margin
                     // (left margin already accounted for with our bounds)
                     // and 10px in the middle between it at the right
                     CGFloat x = (index - row * columnCount) * (sizeOfScrap + kColumnSideMargin);
-                    MMScrapSidebarButton* leftScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfScrap, sizeOfScrap)];
+                    MMPageSidebarButton* leftScrapButton = [[MMPageSidebarButton alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfScrap, sizeOfScrap)];
                     leftScrapButton.rowNumber = row;
-                    [leftScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
-                    leftScrapButton.scrap = currentScrap;
-                    [currentScrap.state loadCachedScrapPreview];
+                    [leftScrapButton addTarget:self action:@selector(tappedOnPageButton:) forControlEvents:UIControlEventTouchUpInside];
+                    leftScrapButton.page = currentPage;
+                    //                    [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:leftScrapButton.page];
                     [scrollView addSubview:leftScrapButton];
                     CGFloat heightOfCurrScrap = leftScrapButton.bounds.size.height + kColumnTopMargin;
                     if (heightOfCurrScrap > maxHeightOfScrapsInRow) {
@@ -325,7 +326,7 @@ typedef struct RowOfScrapsInSidebar {
                 }
             }
             // center row items vertically
-            for (MMScrapSidebarButton* button in currRow) {
+            for (MMPageSidebarButton* button in currRow) {
                 CGRect fr = button.frame;
                 fr.origin.y += (maxHeightOfScrapsInRow - fr.size.height) / 2;
                 button.frame = fr;

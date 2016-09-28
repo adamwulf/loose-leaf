@@ -759,10 +759,6 @@ static UIWebView* pdfWebView;
                                              error:nil];
 }
 
-- (void)finishedLoading {
-    @throw kAbstractMethodException;
-}
-
 - (void)loadStacksFromDisk {
     // check to see if we have any state to load at all, and if
     // not then build our default content
@@ -789,14 +785,6 @@ static UIWebView* pdfWebView;
     }
 
     if ([self hasPages]) {
-        // load the state for the top page in the visible stack
-        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[visibleStackHolder peekSubview]];
-        [[visibleStackHolder peekSubview] loadStateAsynchronously:NO
-                                                         withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
-                                                         andScale:[MMPageCacheManager sharedInstance].drawableView.scale
-                                                       andContext:[MMPageCacheManager sharedInstance].drawableView.context];
-
-
         // only load the image previews for the pages that will be visible
         // other page previews will load as the user turns the page,
         // or as they scroll the list view
@@ -805,10 +793,6 @@ static UIWebView* pdfWebView;
         for (MMEditablePaperView* page in visiblePages) {
             [page loadCachedPreview];
         }
-
-        [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
-        [self didChangeTopPage];
-        [self finishedLoading];
     } else {
         // list is empty on purpose
         [self immediatelyTransitionToListView];

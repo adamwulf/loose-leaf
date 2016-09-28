@@ -88,8 +88,6 @@
 
 - (void)setMemoryView:(MMMemoryProfileView*)_memoryView;
 
-- (void)finishedLoading;
-
 - (BOOL)shouldPrioritizeSidebarButtonsForTaps;
 
 - (void)bounceSidebarButton:(MMSidebarButton*)button;
