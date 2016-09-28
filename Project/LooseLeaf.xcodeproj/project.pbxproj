@@ -644,6 +644,8 @@
 		C5F1B2E61D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */; };
 		C5F1B2EA1D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */; };
 		C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */; };
+		C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */; };
+		C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -1771,6 +1773,10 @@
 		C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageSidebarContentView.m; sourceTree = "<group>"; };
 		C5F1B2EB1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSidebarButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
 		C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSidebarButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
+		C5F1B3021D9B38D000E0E9A8 /* MMCountableSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContainerView.h; sourceTree = "<group>"; };
+		C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarContainerView.m; sourceTree = "<group>"; };
+		C5F1B3051D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContentView.h; sourceTree = "<group>"; };
+		C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarContentView.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -1923,7 +1929,7 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
-		660E1DAD158FC7CA0001DA12 /* Icons */ = {
+		660E1DAD158FC7CA0001DA12 /* Code Icons */ = {
 			isa = PBXGroup;
 			children = (
 				660E1DAE158FC7DB0001DA12 /* MMPaperIcon.h */,
@@ -1941,7 +1947,7 @@
 				66343C5C1AC06FDA00801962 /* MMLoopIcon.h */,
 				66343C5D1AC06FDA00801962 /* MMLoopIcon.m */,
 			);
-			name = Icons;
+			name = "Code Icons";
 			sourceTree = "<group>";
 		};
 		6610D0821AA8F4920019C2FB /* Display Asset */ = {
@@ -3167,7 +3173,6 @@
 		66DCFB7B1581BCED00B4918C = {
 			isa = PBXGroup;
 			children = (
-				C5DA295C1D7C012500D868EC /* MMMarkdown */,
 				66DCFB901581BCEF00B4918C /* Loose Leaf */,
 				66DCFB891581BCEF00B4918C /* Frameworks */,
 				66DCFB871581BCEF00B4918C /* Products */,
@@ -3213,24 +3218,16 @@
 		66DCFB901581BCEF00B4918C /* Loose Leaf */ = {
 			isa = PBXGroup;
 			children = (
-				C5E02A801D99BDE6001F6ED6 /* FeedbackView */,
-				C5C298FA1D7BFCC9009AE6BE /* ReleaseNotesView */,
-				6688D1E11A994E7500EB17EC /* TutorialView */,
-				C5060FAF1CAA09F300B9721C /* RoundedSquareView */,
-				66FD31E71AE035AF00EDD1D5 /* Archiving Help */,
-				66343C681AC085F900801962 /* Newsletter */,
-				662B7D1C19E7A54C00C5529B /* Trackers */,
-				661708E31981B434006A73EF /* FXBlurView */,
+				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
+				C5F1B2FF1D9B380F00E0E9A8 /* Rounded Views */,
 				6693295715958A890033E557 /* Managers */,
-				6650DD1018F4842E00ADF591 /* Icon Images */,
 				66BD6E811593AF4500D4544C /* Buttons */,
-				660E1DAD158FC7CA0001DA12 /* Icons */,
+				660E1DAD158FC7CA0001DA12 /* Code Icons */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
-				664B025E18E6711D00325EF2 /* Helper Classes */,
-				66B8A4C6196E43B400E80009 /* Scrap Container */,
 				664C62F115A36DB00072736A /* MMPaperView */,
 				66DCFBBF1581C7F400B4918C /* MMPaperStack */,
 				6693298115996C6A0033E557 /* Controller and App Delegate */,
+				C5F1B3001D9B382800E0E9A8 /* Utility */,
 				66DCFB911581BCEF00B4918C /* Supporting Files */,
 			);
 			name = "Loose Leaf";
@@ -3240,6 +3237,8 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				6650DD1018F4842E00ADF591 /* Icon Images */,
+				C5DA295C1D7C012500D868EC /* MMMarkdown */,
 				C5F1B1DE1D9B01BA00E0E9A8 /* Mixpanel */,
 				C5C298EA1D7BF0A6009AE6BE /* JotUI Resources */,
 				C50CBF711CE451FA0053885A /* icons */,
@@ -3812,7 +3811,6 @@
 				C5DA29881D7C013A00D868EC /* MMSpanParser.m */,
 			);
 			name = MMMarkdown;
-			path = LooseLeaf;
 			sourceTree = "<group>";
 		};
 		C5E02A801D99BDE6001F6ED6 /* FeedbackView */ = {
@@ -4018,6 +4016,41 @@
 				C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */,
 			);
 			name = "Page Sidebar";
+			sourceTree = "<group>";
+		};
+		C5F1B2FF1D9B380F00E0E9A8 /* Rounded Views */ = {
+			isa = PBXGroup;
+			children = (
+				C5060FAF1CAA09F300B9721C /* RoundedSquareView */,
+				C5E02A801D99BDE6001F6ED6 /* FeedbackView */,
+				C5C298FA1D7BFCC9009AE6BE /* ReleaseNotesView */,
+				6688D1E11A994E7500EB17EC /* TutorialView */,
+			);
+			name = "Rounded Views";
+			sourceTree = "<group>";
+		};
+		C5F1B3001D9B382800E0E9A8 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				66FD31E71AE035AF00EDD1D5 /* Archiving Help */,
+				66343C681AC085F900801962 /* Newsletter */,
+				662B7D1C19E7A54C00C5529B /* Trackers */,
+				661708E31981B434006A73EF /* FXBlurView */,
+				664B025E18E6711D00325EF2 /* Helper Classes */,
+				66B8A4C6196E43B400E80009 /* Scrap Container */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
+		C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				C5F1B3021D9B38D000E0E9A8 /* MMCountableSidebarContainerView.h */,
+				C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */,
+				C5F1B3051D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.h */,
+				C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */,
+			);
+			name = "Countable Sidebar";
 			sourceTree = "<group>";
 		};
 		C5F4BE811C2676C100FFB640 /* LaunchScreen */ = {
@@ -4407,6 +4440,7 @@
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				C5F1B2B51D9B01BB00E0E9A8 /* MPNetwork.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
+				C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */,
 				C5F1B2A01D9B01BB00E0E9A8 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,
 				66DCFB9E1581BCEF00B4918C /* MMLooseLeafViewController.m in Sources */,
 				66B8A4C9196E43C300E80009 /* MMScrapContainerView.m in Sources */,
@@ -4681,6 +4715,7 @@
 				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
 				665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
+				C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */,
 				66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,

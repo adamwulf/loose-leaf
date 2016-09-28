@@ -109,7 +109,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMaxPageResolution 1.5
 
 // Page View
-#define kMaxScrapsInBezel 6
+#define kMaxButtonsInBezelSidebar 6
 #define kGutterWidthToDragPages 500
 #define kFingerWidth 40
 #define kFilteringFactor 0.2

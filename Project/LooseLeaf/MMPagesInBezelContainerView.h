@@ -6,7 +6,7 @@
 //  Copyright © 2016 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMFullScreenSidebarContainingView.h"
+#import "MMCountableSidebarContainerView.h"
 #import "MMUntouchableView.h"
 #import "MMScrapView.h"
 #import "MMScrapSidebarContainerViewDelegate.h"
@@ -17,13 +17,13 @@
 #import "MMScrapsInSidebarState.h"
 
 
-@interface MMPagesInBezelContainerView : MMFullScreenSidebarContainingView <MMScrapsInSidebarStateDelegate, MMSidebarButtonDelegate> {
+@interface MMPagesInBezelContainerView : MMCountableSidebarContainerView <MMPaperView*>
+<MMScrapsInSidebarStateDelegate, MMSidebarButtonDelegate> {
     __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 }
 
 @property (nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
-@property (readonly) NSArray* scrapsInSidebar;
 @property (readonly) MMScrapsInSidebarState* sidebarScrapState;
 
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)countButton;
@@ -38,13 +38,9 @@
 
 - (void)saveScrapContainerToDisk;
 
-- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap;
-
 - (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
 
 - (void)loadFromDisk;
-
-- (void)deleteAllScrapsFromSidebar;
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 

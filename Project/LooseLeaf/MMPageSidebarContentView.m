@@ -137,14 +137,14 @@ typedef struct RowOfScrapsInSidebar {
         // then the user doesn't want to undo deleting
         // all scraps, so tell our delegate to commit to
         // deleting all scraps
-        [self.delegate deleteAllScrapsFromSidebar];
+        [self.delegate deleteAllViewsFromSidebar];
     }
 }
 
 - (void)viewDidHide {
     for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
         if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
-            if ([[self.delegate scrapsInSidebar] count] > kMaxScrapsInBezel) {
+            if ([[self.delegate viewsInSidebar] count] > kMaxButtonsInBezelSidebar) {
                 [subview.scrap.state unloadCachedScrapPreview];
             }
             [subview removeFromSuperview];
@@ -156,7 +156,7 @@ typedef struct RowOfScrapsInSidebar {
     CheckMainThread;
 
     // determine how many rows of scraps that we'll need
-    NSArray* allScraps = [self.delegate scrapsInSidebar];
+    NSArray* allScraps = [self.delegate viewsInSidebar];
     int rowCount = ceilf((float)[allScraps count] / columnCount);
     CGFloat maxDimOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
 
@@ -224,14 +224,14 @@ typedef struct RowOfScrapsInSidebar {
 #pragma mark - UIButton
 
 - (void)tappedOnScrapButton:(MMScrapSidebarButton*)button {
-    [self.delegate didTapOnScrapFromMenu:button.scrap];
+    [self.delegate didTapOnViewFromMenu:button.scrap];
 }
 
 - (void)tappedOnTrashButton:(MMTrashButton*)button {
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Delete All Scraps" message:@"Do you want to delete all scraps from the sidebar?" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction* _Nonnull action) {
         deleteCountLabel.frame = CGRectFromSize(CGSizeMake(CGRectGetWidth(self.bounds) * 4 / 5, 100));
-        [deleteCountLabel setText:[NSString stringWithFormat:@"%ld scraps have been deleted.", (unsigned long)[self.delegate.scrapsInSidebar count]]];
+        [deleteCountLabel setText:[NSString stringWithFormat:@"%ld scraps have been deleted.", (unsigned long)[self.delegate.viewsInSidebar count]]];
         [deleteCountLabel sizeToFit];
         deleteCountLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetWidth(self.bounds) / 2 - 60);
 
@@ -277,7 +277,7 @@ typedef struct RowOfScrapsInSidebar {
 
     // determine the variables that will affect
     // our layout
-    NSArray* allScraps = [self.delegate scrapsInSidebar];
+    NSArray* allScraps = [self.delegate viewsInSidebar];
     CGFloat sizeOfScrap = (self.bounds.size.width - kColumnSideMargin) / columnCount;
     int row = [self rowForYOffset:scrollView.contentOffset.y];
     int maxRow = [self rowForYOffset:scrollView.contentOffset.y + scrollView.bounds.size.height] + 1;
