@@ -432,6 +432,9 @@
 
     cloudKitExportView.stackView = currentStackView;
     [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
+
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[currentStackView visibleStackHolder] peekSubview]];
+    [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[currentStackView visibleStackHolder] peekSubview]];
 }
 
 - (void)deleteStack:(NSString*)stackUUID {
