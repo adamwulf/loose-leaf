@@ -72,25 +72,13 @@
 - (void)bubbleTapped:(UITapGestureRecognizer*)gesture {
     MMScrapBubbleButton* bubble = (MMScrapBubbleButton*)gesture.view;
     MMScrapView* scrap = bubble.scrap;
-    [viewsInSidebar removeObject:bubble.scrap];
 
-    if ([sidebarScrapState.allLoadedScraps containsObject:bubble.scrap]) {
+    if ([viewsInSidebar containsObject:bubble.scrap]) {
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         [rotationAdjustments removeObjectForKey:scrap.uuid];
 
-
-        [sidebarScrapState scrapIsRemovedFromSidebar:bubble.scrap];
-
-        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
-        [self addSubview:scrap];
-
-        // set the bubble to nil its scrap so it'll be known dead
-        // if we need to realign buttons during this animation
-        bubble.scrap = nil;
-        [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
-
-        [bubbleForScrap removeObjectForKey:scrap.uuid];
+        [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil below:NO];
     }
 }
 
