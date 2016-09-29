@@ -33,7 +33,7 @@
 }
 
 - (NSArray<MMUUIDView>*)viewsInSidebar {
-    @throw kAbstractMethodException;
+    return [viewsInSidebar copy];
 }
 
 - (BOOL)containsView:(UIView<MMUUIDView>*)view {
@@ -55,14 +55,26 @@
             [otherBubble removeFromSuperview];
         }
     }
+
+    [viewsInSidebar removeAllObjects];
 }
 
-- (void)didTapOnViewFromMenu:(UIView<MMUUIDView>*)view {
-    @throw kAbstractMethodException;
+- (void)didTapOnViewFromMenu:(UIView<MMUUIDView>*)view withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
+    [viewsInSidebar removeObject:view];
+    view.center = [self convertPoint:view.center fromView:view.superview];
+
+    if (below) {
+        [self insertSubview:view atIndex:0];
+    } else {
+        [self addSubview:view];
+    }
+
+    [self sidebarCloseButtonWasTapped];
+    [self.countButton setCount:[[self viewsInSidebar] count]];
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
-    @throw kAbstractMethodException;
+    [viewsInSidebar addObject:view];
 }
 
 #pragma mark - Actions

@@ -35,8 +35,4 @@
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
-// only for undo/redo
-
-- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below;
-
 @end

@@ -28,7 +28,6 @@
     NSString* scrapIDsPath;
 
     NSMutableDictionary* rotationAdjustments;
-    NSMutableArray* viewsInSidebar;
 }
 
 @synthesize bubbleDelegate;
@@ -37,7 +36,6 @@
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
     if (self = [super initWithFrame:frame andCountButton:_countButton]) {
         bubbleForScrap = [NSMutableDictionary dictionary];
-        viewsInSidebar = [NSMutableArray array];
 
         contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
@@ -73,20 +71,16 @@
     MMScrapBubbleButton* bubble = (MMScrapBubbleButton*)gesture.view;
     MMScrapView* scrap = bubble.scrap;
 
-    if ([viewsInSidebar containsObject:bubble.scrap]) {
+    if ([[self viewsInSidebar] containsObject:bubble.scrap]) {
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         [rotationAdjustments removeObjectForKey:scrap.uuid];
 
-        [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil below:NO];
+        [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil below:NO];
     }
 }
 
 #pragma mark - MMCountableSidebarContainerView
-
-- (NSArray<MMUUIDView>*)viewsInSidebar {
-    return [viewsInSidebar copy];
-}
 
 - (void)addViewToCountableSidebar:(MMScrapView*)scrap animated:(BOOL)animated {
     // make sure we've saved its current state
@@ -98,7 +92,7 @@
 
     [sidebarScrapState scrapIsAddedToSidebar:scrap];
 
-    [viewsInSidebar addObject:scrap];
+    [super addViewToCountableSidebar:scrap animated:animated];
 
     // exit the scrap to the bezel!
     CGPoint center = [self centerForBubbleAtIndex:0];
@@ -253,24 +247,12 @@
     }
 }
 
-- (void)didTapOnViewFromMenu:(MMScrapView*)scrap {
-    [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil below:YES];
-}
-
-- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
+- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
     [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
-    [viewsInSidebar removeObject:scrap];
 
-    scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
-    if (below) {
-        [self insertSubview:scrap atIndex:0];
-    } else {
-        [self addSubview:scrap];
-    }
+    [super didTapOnViewFromMenu:scrap withPreferredScrapProperties:properties below:below];
 
-    [self sidebarCloseButtonWasTapped];
     [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:properties];
-    [self.countButton setCount:[sidebarScrapState.allLoadedScraps count]];
 
     [bubbleForScrap removeObjectForKey:scrap.uuid];
 }
@@ -340,10 +322,9 @@
 
 - (void)deleteAllViewsFromSidebar {
     DebugLog(@"delete all scraps!");
-    for (MMScrapView* scrap in [sidebarScrapState.allLoadedScraps copy]) {
+    for (MMScrapView* scrap in [[self viewsInSidebar] copy]) {
         [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
         [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
-        [viewsInSidebar removeObject:scrap];
     }
 
     [super deleteAllViewsFromSidebar];

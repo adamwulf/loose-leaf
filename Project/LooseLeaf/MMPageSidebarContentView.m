@@ -225,7 +225,7 @@ typedef struct RowOfScrapsInSidebar {
 #pragma mark - UIButton
 
 - (void)tappedOnPageButton:(MMPageSidebarButton*)button {
-    [self.delegate didTapOnViewFromMenu:button.page];
+    [self.delegate didTapOnViewFromMenu:button.page withPreferredScrapProperties:nil below:YES];
 }
 
 - (void)tappedOnTrashButton:(MMTrashButton*)button {

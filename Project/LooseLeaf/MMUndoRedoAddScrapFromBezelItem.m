@@ -37,7 +37,7 @@
             [weakSelf.page.bezelContainerView addViewToCountableSidebar:scrap animated:YES];
         } andRedoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-            [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.properties below:YES];
+            [weakSelf.page.bezelContainerView didTapOnViewFromMenu:scrap withPreferredScrapProperties:weakSelf.properties below:YES];
         } forPage:_page]) {
         scrapUUID = _scrapUUID;
         properties = scrapProperties;

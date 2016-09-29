@@ -320,10 +320,10 @@
 }
 
 - (void)didTapOnViewFromMenu:(MMScrapView*)scrap {
-    [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil];
+    [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil];
 }
 
-- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties {
+- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties {
     [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
 
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];

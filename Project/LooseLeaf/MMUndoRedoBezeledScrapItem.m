@@ -39,7 +39,7 @@
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
             if ([weakSelf.page.bezelContainerView containsView:scrap]) {
                 weakSelf.sidebarEverDidContainScrap = YES;
-                [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.propertiesWhenRemoved below:YES];
+                [weakSelf.page.bezelContainerView didTapOnViewFromMenu:scrap withPreferredScrapProperties:weakSelf.propertiesWhenRemoved below:YES];
             } else {
                 weakSelf.sidebarEverDidContainScrap = NO;
                 [weakSelf.page.scrapsOnPaperState showScrap:scrap];
