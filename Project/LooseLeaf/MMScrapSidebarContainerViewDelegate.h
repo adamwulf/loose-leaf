@@ -13,10 +13,6 @@
 
 @protocol MMScrapSidebarContainerViewDelegate <MMCountableSidebarContainerViewDelegate>
 
-- (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
-
-- (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;
-
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid;
 
 @end

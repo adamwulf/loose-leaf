@@ -74,6 +74,55 @@
 
     [self sidebarCloseButtonWasTapped];
     [self.countButton setCount:[[self viewsInSidebar] count]];
+
+
+    UIView<MMBubbleButton>* bubbleToAddToPage = [bubbleForScrap objectForKey:view.uuid];
+
+    view.scale = view.scale * [[bubbleToAddToPage class] idealScaleForView:view];
+
+    BOOL hadProperties = properties != nil;
+
+    if (!properties) {
+        properties = [self idealPropertiesForViewInBubble:bubbleToAddToPage];
+        ;
+    }
+
+    [self.bubbleDelegate willRemoveView:view fromCountableSidebar:self];
+    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [view setPropertiesDictionary:properties];
+    } completion:^(BOOL finished) {
+        NSUInteger index = NSNotFound;
+        if ([properties objectForKey:@"subviewIndex"]) {
+            index = [[properties objectForKey:@"subviewIndex"] unsignedIntegerValue];
+        }
+        [self.bubbleDelegate didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:self];
+    }];
+    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        bubbleToAddToPage.alpha = 0;
+        for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
+            if ([otherBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
+                if (otherBubble.view && otherBubble != bubbleToAddToPage) {
+                    int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
+                    otherBubble.center = [self centerForBubbleAtIndex:index];
+                    if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+                        // we need to reset the view here, because it could have been stolen
+                        // by the actual sidebar content view. If that's the case, then we
+                        // need to steal the view back so it can display in the bubble button
+                        otherBubble.view = otherBubble.view;
+                        otherBubble.alpha = 1;
+                        [self loadCachedPreviewForView:otherBubble.view];
+                    }
+                }
+            }
+        }
+        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+            self.countButton.alpha = 0;
+        }
+    } completion:^(BOOL finished) {
+        [bubbleToAddToPage removeFromSuperview];
+    }];
+
+    [bubbleForScrap removeObjectForKey:view.uuid];
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
@@ -240,6 +289,17 @@
 
 - (void)unloadCachedPreviewForView:(UIView<MMUUIDView>*)view {
     @throw kAbstractMethodException;
+}
+
+- (NSDictionary*)idealPropertiesForViewInBubble:(UIView<MMBubbleButton>*)bubble {
+    UIView<MMUUIDView>* scrap = bubble.view;
+    CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleViewTo:scrap fromCountableSidebar:self];
+    CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleViewTo:scrap givenOriginalScale:bubble.originalViewScale fromCountableSidebar:self];
+    NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
+    [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
+    [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
+    [mproperties setObject:[NSNumber numberWithFloat:scaleOnScreenToScaleTo] forKey:@"scale"];
+    return mproperties;
 }
 
 #pragma mark - Actions

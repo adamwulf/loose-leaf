@@ -27,6 +27,7 @@
 @synthesize unitShadowPath;
 @synthesize originalUnscaledBounds;
 @synthesize panGesture;
+@synthesize propertiesDictionary;
 
 - (void)setIsBeingPannedAndZoomed:(BOOL)_isBeingPannedAndZoomed {
     isBeingPannedAndZoomed = _isBeingPannedAndZoomed;
@@ -109,6 +110,12 @@
     self.scale = newScale;
 }
 
+- (NSDictionary*)propertiesDictionary {
+    return nil;
+}
+
+- (void)setPropertiesDictionary:(NSDictionary*)propertiesDictionary {
+}
 
 #pragma mark - Gestures
 

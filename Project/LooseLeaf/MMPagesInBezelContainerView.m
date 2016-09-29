@@ -347,8 +347,8 @@
     BOOL hadProperties = properties != nil;
 
     if (!properties) {
-        CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
-        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalViewScale];
+        CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleViewTo:scrap fromCountableSidebar:self];
+        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleViewTo:scrap givenOriginalScale:bubble.originalViewScale fromCountableSidebar:self];
         NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
         [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
         [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
@@ -365,15 +365,7 @@
         if ([properties objectForKey:@"subviewIndex"]) {
             index = [[properties objectForKey:@"subviewIndex"] unsignedIntegerValue];
         }
-        MMUndoablePaperView* page = [self.bubbleDelegate didRemoveView:scrap atIndex:index fromCountableSidebar:self];
-        [scrap blockToFireWhenStateLoads:^{
-            if (!hadProperties) {
-                DebugLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
-                [page addUndoItemForMostRecentAddedScrapFromBezelFromScrap:scrap];
-            } else {
-                DebugLog(@"scrap added from undo item, don't add new undo item");
-            }
-        }];
+        [self.bubbleDelegate didRemoveView:scrap atIndex:index hadProperties:hadProperties fromCountableSidebar:self];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         bubble.alpha = 0;

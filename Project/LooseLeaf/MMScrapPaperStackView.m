@@ -1682,7 +1682,7 @@
 //        need to clone this scrap onto our page and then give the original to
 //        the trashmanager to deal with.
 // returns the page that the scrap was added to
-- (MMUndoablePaperView*)didRemoveView:(MMScrapView*)originalScrap atIndex:(NSUInteger)index fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+- (void)didRemoveView:(MMScrapView*)originalScrap atIndex:(NSUInteger)index hadProperties:(BOOL)hadProperties fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     // first, find the page to add the scrap to.
     // this will check visible + bezelled pages to see
     // which page should get the scrap, and it'll tell us
@@ -1726,7 +1726,15 @@
 
         isAnimatingScrapToOrFromSidebar = NO;
     }];
-    return page;
+
+    [originalScrap blockToFireWhenStateLoads:^{
+        if (!hadProperties) {
+            DebugLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
+            [page addUndoItemForMostRecentAddedScrapFromBezelFromScrap:originalScrap];
+        } else {
+            DebugLog(@"scrap added from undo item, don't add new undo item");
+        }
+    }];
 }
 
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {
@@ -1738,11 +1746,11 @@
     }]] firstObject];
 }
 
-- (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap {
+- (CGPoint)positionOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     return [visibleStackHolder center];
 }
 
-- (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale {
+- (CGFloat)scaleOnScreenToScaleViewTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     return originalScale * [visibleStackHolder peekSubview].scale;
 }
 

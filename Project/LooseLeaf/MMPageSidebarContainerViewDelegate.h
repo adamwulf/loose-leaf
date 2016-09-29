@@ -20,11 +20,11 @@
 
 - (void)willAddScrapBackToPage:(MMScrapView*)scrap;
 
-- (MMUndoablePaperView*)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
+- (void)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index hadProperties:(BOOL)hadProperties fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
 
-- (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
+- (CGPoint)positionOnScreenToScaleViewTo:(MMScrapView*)scrap fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
 
-- (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;
+- (CGFloat)scaleOnScreenToScaleViewTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
 
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid;
 

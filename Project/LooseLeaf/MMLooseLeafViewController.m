@@ -751,16 +751,16 @@
     [currentStackView willRemoveView:view fromCountableSidebar:sidebar];
 }
 
-- (MMUndoablePaperView*)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
-    return [currentStackView didRemoveView:view atIndex:index fromCountableSidebar:sidebar];
+- (void)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index hadProperties:(BOOL)hadProperties fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    [currentStackView didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:sidebar];
 }
 
-- (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap {
-    return [currentStackView positionOnScreenToScaleScrapTo:scrap];
+- (CGPoint)positionOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    return [currentStackView positionOnScreenToScaleViewTo:view fromCountableSidebar:sidebar];
 }
 
-- (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale {
-    return [currentStackView scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:originalScale];
+- (CGFloat)scaleOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view givenOriginalScale:(CGFloat)originalScale fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    return [currentStackView scaleOnScreenToScaleViewTo:view givenOriginalScale:originalScale fromCountableSidebar:sidebar];
 }
 
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {

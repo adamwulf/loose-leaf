@@ -103,77 +103,22 @@
     [super addViewToCountableSidebar:scrap animated:animated];
 }
 
-- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
+- (NSDictionary*)idealPropertiesForViewInBubble:(MMScrapBubbleButton*)bubble {
+    NSMutableDictionary* mproperties = [[super idealPropertiesForViewInBubble:bubble] mutableCopy] ?: [NSMutableDictionary dictionary];
+
+    [mproperties setObject:[NSNumber numberWithFloat:bubble.view.rotation] forKey:@"rotation"];
+
+    return mproperties;
+}
+
+- (void)didTapOnViewFromMenu:(MMScrapView*)view withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
     CheckMainThread;
 
-    [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
+    [sidebarScrapState scrapIsRemovedFromSidebar:view];
 
-    [scrap loadScrapStateAsynchronously:YES];
+    [view loadScrapStateAsynchronously:YES];
 
-
-    [super didTapOnViewFromMenu:scrap withPreferredScrapProperties:properties below:below];
-
-    UIView<MMBubbleButton>* bubbleToAddToPage = [bubbleForScrap objectForKey:scrap.uuid];
-
-    scrap.scale = scrap.scale * [[bubbleToAddToPage class] idealScaleForView:scrap];
-
-    BOOL hadProperties = properties != nil;
-
-    if (!properties) {
-        CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
-        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubbleToAddToPage.originalViewScale];
-        NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
-        [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
-        [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
-        [mproperties setObject:[NSNumber numberWithFloat:scrap.rotation] forKey:@"rotation"];
-        [mproperties setObject:[NSNumber numberWithFloat:scaleOnScreenToScaleTo] forKey:@"scale"];
-        properties = mproperties;
-    }
-
-    [self.bubbleDelegate willRemoveView:scrap fromCountableSidebar:self];
-    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [scrap setPropertiesDictionary:properties];
-    } completion:^(BOOL finished) {
-        NSUInteger index = NSNotFound;
-        if ([properties objectForKey:@"subviewIndex"]) {
-            index = [[properties objectForKey:@"subviewIndex"] unsignedIntegerValue];
-        }
-        MMUndoablePaperView* page = [self.bubbleDelegate didRemoveView:scrap atIndex:index fromCountableSidebar:self];
-        [scrap blockToFireWhenStateLoads:^{
-            if (!hadProperties) {
-                DebugLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);
-                [page addUndoItemForMostRecentAddedScrapFromBezelFromScrap:scrap];
-            } else {
-                DebugLog(@"scrap added from undo item, don't add new undo item");
-            }
-        }];
-    }];
-    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        bubbleToAddToPage.alpha = 0;
-        for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
-            if ([otherBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                if (otherBubble.view && otherBubble != bubbleToAddToPage) {
-                    int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
-                    otherBubble.center = [self centerForBubbleAtIndex:index];
-                    if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
-                        // we need to reset the view here, because it could have been stolen
-                        // by the actual sidebar content view. If that's the case, then we
-                        // need to steal the view back so it can display in the bubble button
-                        otherBubble.view = otherBubble.view;
-                        otherBubble.alpha = 1;
-                        [self loadCachedPreviewForView:otherBubble.view];
-                    }
-                }
-            }
-        }
-        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
-            self.countButton.alpha = 0;
-        }
-    } completion:^(BOOL finished) {
-        [bubbleToAddToPage removeFromSuperview];
-    }];
-
-    [bubbleForScrap removeObjectForKey:scrap.uuid];
+    [super didTapOnViewFromMenu:view withPreferredScrapProperties:properties below:below];
 }
 
 

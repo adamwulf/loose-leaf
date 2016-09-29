@@ -51,4 +51,6 @@
 
 - (void)unloadCachedPreviewForView:(ViewType)view;
 
+- (NSDictionary*)idealPropertiesForViewInBubble:(UIView<MMBubbleButton>*)bubble;
+
 @end
