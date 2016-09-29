@@ -50,7 +50,7 @@
         } andRedoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
             if (weakSelf.sidebarEverDidContainScrap) {
-                [weakSelf.page.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
+                [weakSelf.page.bezelContainerView addViewToCountableSidebar:scrap animated:YES];
             } else {
                 [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
             }

@@ -25,8 +25,6 @@
 @property (nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (readonly) MMScrapsInSidebarState* sidebarScrapState;
 
-- (void)addScrapToBezelSidebar:(MMScrapView*)scrap animated:(BOOL)animated;
-
 - (BOOL)containsScrap:(MMScrapView*)scrap;
 
 - (BOOL)containsScrapUUID:(NSString*)scrapUUID;

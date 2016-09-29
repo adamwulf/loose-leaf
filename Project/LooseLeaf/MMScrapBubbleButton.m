@@ -20,7 +20,6 @@
 }
 
 @synthesize scrap;
-@synthesize scale;
 @synthesize rotationAdjustment;
 @synthesize originalScrapScale;
 
@@ -31,7 +30,6 @@
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         rotationAdjustment = 0;
-        scale = 1;
         lastRotationTransform = 0;
         self.rotation = 0;
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
@@ -57,11 +55,6 @@
     if (ABS(lastRotationTransform - [self.delegate sidebarButtonRotation]) > 0.01) {
         self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
     }
-}
-
-- (void)setScale:(CGFloat)_scale {
-    scale = _scale;
-    self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
 }
 
 #pragma mark - Scrap
@@ -140,60 +133,7 @@
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
-    // Drawing code
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGRect shadowFrame = CGRectInset(self.bounds, 10, 10);
-    CGFloat tokenAdjustment = (100 - self.bounds.size.width) / 15;
-    CGRect tokenFrame = CGRectInset(self.bounds, 14 - tokenAdjustment, 14 - tokenAdjustment);
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:shadowFrame];
-    UIBezierPath* tokenOvalPath = [UIBezierPath bezierPathWithOvalInRect:tokenFrame];
-
-
-    [[self backgroundColor] setFill];
-    [tokenOvalPath fill];
-
-    CGContextSetBlendMode(context, kCGBlendModeClear);
-    [[UIColor whiteColor] setStroke];
-    tokenOvalPath.lineWidth = 1;
-    [tokenOvalPath stroke];
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-
-    [[self borderColor] setStroke];
-    [tokenOvalPath stroke];
-
-    //
-    //
-    // shadow
-    //
-
-    UIColor* greyShadowColor = [self borderColor];
-
-    //
-    // possible drop shadow
-    UIColor* gradientColor = [greyShadowColor colorWithAlphaComponent:0.5];
-    UIColor* clearColor = [greyShadowColor colorWithAlphaComponent:0];
-    NSArray* gradientColors = [NSArray arrayWithObjects:
-                                           (id)gradientColor.CGColor,
-                                           (id)clearColor.CGColor, nil];
-    CGFloat gradientLocations[] = {0, 1};
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
-    CGContextSaveGState(context);
-
-    UIBezierPath* clipPath = [ovalPath copy];
-    [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
-    clipPath.usesEvenOddFillRule = YES;
-    [clipPath addClip];
-
-    CGContextDrawRadialGradient(context, gradient,
-                                CGPointMake(CGRectGetMidX(shadowFrame), CGRectGetMidY(shadowFrame)), shadowFrame.size.width / 2 - 1,
-                                CGPointMake(CGRectGetMidX(shadowFrame), CGRectGetMidY(shadowFrame)), shadowFrame.size.width / 2 + 4.5 * shadowFrame.size.width / 100.0,
-                                kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
-
-    CGGradientRelease(gradient);
-    CGColorSpaceRelease(colorSpace);
-
-    CGContextRestoreGState(context);
+    [super drawCircleBackground:rect];
 }
 
 #pragma mark - Ignore Touches

@@ -1114,7 +1114,7 @@
             [startingPageForScrap addUndoItemForBezeledScrap:scrap withProperties:startingScrapProperties];
             // if we've bezelled the scrap,
             // add it to the bezel container
-            [self.stackDelegate.bezelScrapContainer addScrapToBezelSidebar:scrap animated:YES];
+            [self.stackDelegate.bezelScrapContainer addViewToCountableSidebar:scrap animated:YES];
         }
     }
     if (scrapViewIfFinished) {

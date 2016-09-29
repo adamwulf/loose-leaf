@@ -6,11 +6,18 @@
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapBubbleButton.h"
+#import "MMSidebarButton.h"
 
 
-@interface MMCountBubbleButton : MMScrapBubbleButton
+@interface MMCountBubbleButton : MMSidebarButton {
+    CGFloat scale;
+}
 
 @property (nonatomic, assign) NSInteger count;
+@property (nonatomic, assign) CGFloat scale;
+
+// subclasses
+
+- (void)drawCircleBackground:(CGRect)rect;
 
 @end

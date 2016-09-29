@@ -29,4 +29,6 @@
 
 - (void)didTapOnViewFromMenu:(ViewType)view;
 
+- (void)addViewToCountableSidebar:(ViewType)scrap animated:(BOOL)animated;
+
 @end

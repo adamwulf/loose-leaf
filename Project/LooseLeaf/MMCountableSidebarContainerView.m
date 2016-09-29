@@ -40,6 +40,10 @@
     @throw kAbstractMethodException;
 }
 
+- (void)addViewToCountableSidebar:(UIView*)scrap animated:(BOOL)animated {
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Actions
 
 // count button was tapped,
@@ -82,7 +86,7 @@
     } else {
         countButton.alpha = 0;
         for (UIView* subview in self.subviews) {
-            if ([subview isKindOfClass:[MMScrapBubbleButton class]]) {
+            if ([subview isKindOfClass:[MMSidebarButton class]]) {
                 subview.alpha = targetAlpha;
             }
         }
@@ -91,4 +95,40 @@
         [self sidebarCloseButtonWasTapped];
     }
 }
+
+#pragma mark - Ignore Touches
+
+/**
+ * these two methods make sure that this scrap container view
+ * can never intercept any touch input. instead it will
+ * effectively pass through this view to the views behind it
+ */
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
+    for (UIView* bubble in self.subviews) {
+        if ([bubble isKindOfClass:[MMSidebarButton class]]) {
+            UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
+            if (output)
+                return output;
+        }
+    }
+    if (contentView.alpha) {
+        UIView* output = [contentView hitTest:[self convertPoint:point toView:contentView] withEvent:event];
+        if (output)
+            return output;
+    }
+    return [super hitTest:point withEvent:event];
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
+    for (UIView* bubble in self.subviews) {
+        if ([bubble isKindOfClass:[MMSidebarButton class]]) {
+            if ([bubble pointInside:[self convertPoint:point toView:bubble] withEvent:event]) {
+                return YES;
+            }
+        }
+    }
+    return [super pointInside:point withEvent:event];
+}
+
+
 @end

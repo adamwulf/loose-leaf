@@ -2759,7 +2759,6 @@
 		6693298115996C6A0033E557 /* Controller and App Delegate */ = {
 			isa = PBXGroup;
 			children = (
-				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
 				C53F635A1CDA87E500091EF1 /* BackgroundView */,
 				66E1010019ECB5CD006E7C15 /* Presentation Window */,
 				6634855D19DA2E4200B5CF2D /* Delete Sidebar */,
@@ -3154,8 +3153,6 @@
 		66CE120517D3B6C200882275 /* Scrap Bubble */ = {
 			isa = PBXGroup;
 			children = (
-				66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */,
-				66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */,
 				6690EF1217CC64630009A0AC /* MMScrapBubbleButton.h */,
 				6690EF1317CC64630009A0AC /* MMScrapBubbleButton.m */,
 				66CE11FE17D2772400882275 /* MMScrapBorderView.h */,
@@ -3226,9 +3223,9 @@
 				66BD6E811593AF4500D4544C /* Buttons */,
 				660E1DAD158FC7CA0001DA12 /* Code Icons */,
 				66DCFBDC1582BF1600B4918C /* Gestures */,
-				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				664C62F115A36DB00072736A /* MMPaperView */,
 				66DCFBBF1581C7F400B4918C /* MMPaperStack */,
+				C5EFA5991D9C9A6B00BBE8CD /* Sidebars */,
 				6693298115996C6A0033E557 /* Controller and App Delegate */,
 				C5F1B3001D9B382800E0E9A8 /* Utility */,
 				66DCFB911581BCEF00B4918C /* Supporting Files */,
@@ -3279,10 +3276,6 @@
 				C5C13E121D9107FF0047B3EF /* Clone Page */,
 				C569F42E1CD0709800C19BB0 /* Named Stack */,
 				C5860E131C14CA1000CD079B /* Toolbar */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
-				66B42FBD19955A2C005D8214 /* Share Sidebar */,
-				66AC8D7618E7504D00A65036 /* Import Sidebar */,
-				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				66C38AC51753226F0035B872 /* Tools */,
 				C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */,
 				66DCFBC01581C85B00B4918C /* MMPaperStackView.h */,
@@ -3827,6 +3820,19 @@
 			name = FeedbackView;
 			sourceTree = "<group>";
 		};
+		C5EFA5991D9C9A6B00BBE8CD /* Sidebars */ = {
+			isa = PBXGroup;
+			children = (
+				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
+				66CE120417D3B6A400882275 /* Scrap Sidebar */,
+				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
+				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
+				66B42FBD19955A2C005D8214 /* Share Sidebar */,
+				66AC8D7618E7504D00A65036 /* Import Sidebar */,
+			);
+			name = Sidebars;
+			sourceTree = "<group>";
+		};
 		C5F1B1DE1D9B01BA00E0E9A8 /* Mixpanel */ = {
 			isa = PBXGroup;
 			children = (
@@ -4050,6 +4056,8 @@
 		C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */,
+				66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */,
 				C5F1B3021D9B38D000E0E9A8 /* MMCountableSidebarContainerView.h */,
 				C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */,
 				C5F1B3051D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.h */,

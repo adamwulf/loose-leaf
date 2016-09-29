@@ -77,7 +77,7 @@
 
 #pragma mark - Scrap Animations
 
-- (void)addScrapToBezelSidebar:(MMScrapView*)scrap animated:(BOOL)animated {
+- (void)addViewToCountableSidebar:(MMScrapView*)scrap animated:(BOOL)animated {
     // make sure we've saved its current state
     if (animated) {
         // only save when it's animated. non-animated is loading
@@ -401,41 +401,6 @@
     [contentView didRotateToIdealOrientation:orientation];
 }
 
-#pragma mark - Ignore Touches
-
-/**
- * these two methods make sure that this scrap container view
- * can never intercept any touch input. instead it will
- * effectively pass through this view to the views behind it
- */
-- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
-    for (MMScrapBubbleButton* bubble in self.subviews) {
-        if ([bubble isKindOfClass:[MMScrapBubbleButton class]]) {
-            UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
-            if (output)
-                return output;
-        }
-    }
-    if (contentView.alpha) {
-        UIView* output = [contentView hitTest:[self convertPoint:point toView:contentView] withEvent:event];
-        if (output)
-            return output;
-    }
-    return [super hitTest:point withEvent:event];
-}
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
-    for (MMScrapBubbleButton* bubble in self.subviews) {
-        if ([bubble isKindOfClass:[MMScrapBubbleButton class]]) {
-            if ([bubble pointInside:[self convertPoint:point toView:bubble] withEvent:event]) {
-                return YES;
-            }
-        }
-    }
-    return [super pointInside:point withEvent:event];
-}
-
-
 #pragma mark - Save and Load
 
 
@@ -488,7 +453,7 @@ static NSString* bezelStatePath;
     // add to the bezel
     NSNumber* rotationAdjustment = [rotationAdjustments objectForKey:scrap.uuid];
     scrap.rotation += [rotationAdjustment floatValue];
-    [self addScrapToBezelSidebar:scrap animated:NO];
+    [self addViewToCountableSidebar:scrap animated:NO];
     [scrap setShouldShowShadow:NO];
 }
 
@@ -508,6 +473,7 @@ static NSString* bezelStatePath;
     return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
 }
 
+#pragma mark - MMFullScreenSidebarContainingView
 
 - (void)sidebarCloseButtonWasTapped {
     if ([self isVisible]) {
