@@ -134,7 +134,7 @@
     if (animated) {
         CGFloat animationDuration = 0.5;
 
-        if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
+        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
             // allow adding to 6 in the sidebar, otherwise
             // we need to pull them all into 1 button w/
             // a menu
@@ -150,7 +150,7 @@
                 for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
                     if (otherBubble != bubble) {
                         if ([otherBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                            int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.view];
+                            int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                         }
                     }
@@ -164,7 +164,7 @@
                     bubble.scale = .8;
                     bubble.alpha = self.alpha;
                 } completion:^(BOOL finished) {
-                    [self.countButton setCount:[sidebarScrapState.allLoadedScraps count]];
+                    [self.countButton setCount:[[self viewsInSidebar] count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         // bounce back
                         bubble.scale = 1.1;
@@ -178,11 +178,11 @@
                     }];
                 }];
             }];
-        } else if ([sidebarScrapState.allLoadedScraps count] > kMaxButtonsInBezelSidebar) {
+        } else if ([[self viewsInSidebar] count] > kMaxButtonsInBezelSidebar) {
             // we need to merge all the bubbles together into
             // a single button during the bezel animation
             [self.bubbleDelegate willAddView:scrap toCountableSidebar:self];
-            [self.countButton setCount:[sidebarScrapState.allLoadedScraps count]];
+            [self.countButton setCount:[[self viewsInSidebar] count]];
             bubble.center = self.countButton.center;
             bubble.scale = 1;
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -204,7 +204,7 @@
                     // scrap "hits" the bubble and pushes it down a bit
                     self.countButton.scale = .8;
                 } completion:^(BOOL finished) {
-                    [self.countButton setCount:[sidebarScrapState.allLoadedScraps count]];
+                    [self.countButton setCount:[[self viewsInSidebar] count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
                         // bounce back
                         self.countButton.scale = 1.1;
@@ -221,20 +221,20 @@
         }
     } else {
         [self.bubbleDelegate willAddView:scrap toCountableSidebar:self];
-        if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
+        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
             [self loadCachedPreviewForView:scrap];
             bubble.alpha = 1;
             scrap.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
             bubble.view = scrap;
             for (UIView<MMBubbleButton>* anyBubble in self.subviews) {
-                if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                    int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:anyBubble.view];
+                if ([anyBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
+                    int index = (int)[[self viewsInSidebar] indexOfObject:anyBubble.view];
                     anyBubble.center = [self centerForBubbleAtIndex:index];
                 }
             }
         } else {
-            [self.countButton setCount:[sidebarScrapState.allLoadedScraps count]];
+            [self.countButton setCount:[[self viewsInSidebar] count]];
             self.countButton.alpha = 1;
             for (UIView<MMBubbleButton>* bubble in self.subviews) {
                 if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
@@ -305,9 +305,9 @@
         for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
             if ([otherBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
                 if (otherBubble.view && otherBubble != bubbleToAddToPage) {
-                    int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.view];
+                    int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
-                    if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
+                    if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
                         // we need to reset the view here, because it could have been stolen
                         // by the actual sidebar content view. If that's the case, then we
                         // need to steal the view back so it can display in the bubble button
@@ -318,7 +318,7 @@
                 }
             }
         }
-        if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
+        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
             self.countButton.alpha = 0;
         }
     } completion:^(BOOL finished) {

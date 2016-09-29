@@ -74,7 +74,11 @@
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
-    [viewsInSidebar addObject:view];
+    if (animated) {
+        [viewsInSidebar insertObject:view atIndex:0];
+    } else {
+        [viewsInSidebar addObject:view];
+    }
 }
 
 #pragma mark - Protected
