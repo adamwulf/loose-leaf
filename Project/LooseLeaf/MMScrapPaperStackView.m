@@ -1672,7 +1672,7 @@
     isAnimatingScrapToOrFromSidebar = NO;
 }
 
-- (void)willAddScrapBackToPage:(MMScrapView*)scrap {
+- (void)willRemoveView:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     CheckMainThread;
     isAnimatingScrapToOrFromSidebar = YES;
 }
@@ -1682,7 +1682,7 @@
 //        need to clone this scrap onto our page and then give the original to
 //        the trashmanager to deal with.
 // returns the page that the scrap was added to
-- (MMUndoablePaperView*)didAddScrapBackToPage:(MMScrapView*)originalScrap atIndex:(NSUInteger)index {
+- (MMUndoablePaperView*)didRemoveView:(MMScrapView*)originalScrap atIndex:(NSUInteger)index fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     // first, find the page to add the scrap to.
     // this will check visible + bezelled pages to see
     // which page should get the scrap, and it'll tell us

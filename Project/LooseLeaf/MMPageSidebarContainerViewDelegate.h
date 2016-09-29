@@ -20,7 +20,7 @@
 
 - (void)willAddScrapBackToPage:(MMScrapView*)scrap;
 
-- (MMUndoablePaperView*)didAddScrapBackToPage:(MMScrapView*)originalScrap atIndex:(NSUInteger)index;
+- (MMUndoablePaperView*)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
 
 - (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
 

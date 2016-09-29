@@ -357,7 +357,7 @@
         properties = mproperties;
     }
 
-    [self.bubbleDelegate willAddScrapBackToPage:scrap];
+    [self.bubbleDelegate willRemoveView:scrap fromCountableSidebar:self];
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [scrap setPropertiesDictionary:properties];
     } completion:^(BOOL finished) {
@@ -365,7 +365,7 @@
         if ([properties objectForKey:@"subviewIndex"]) {
             index = [[properties objectForKey:@"subviewIndex"] unsignedIntegerValue];
         }
-        MMUndoablePaperView* page = [self.bubbleDelegate didAddScrapBackToPage:scrap atIndex:index];
+        MMUndoablePaperView* page = [self.bubbleDelegate didRemoveView:scrap atIndex:index fromCountableSidebar:self];
         [scrap blockToFireWhenStateLoads:^{
             if (!hadProperties) {
                 DebugLog(@"tapped on scrap from sidebar. should add undo item to page %@", page.uuid);

@@ -13,10 +13,6 @@
 
 @protocol MMScrapSidebarContainerViewDelegate <MMCountableSidebarContainerViewDelegate>
 
-- (void)willAddScrapBackToPage:(MMScrapView*)scrap;
-
-- (MMUndoablePaperView*)didAddScrapBackToPage:(MMScrapView*)originalScrap atIndex:(NSUInteger)index;
-
 - (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap;
 
 - (CGFloat)scaleOnScreenToScaleScrapTo:(MMScrapView*)scrap givenOriginalScale:(CGFloat)originalScale;

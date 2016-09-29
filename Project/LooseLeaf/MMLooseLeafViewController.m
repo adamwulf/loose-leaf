@@ -747,12 +747,12 @@
     [currentStackView didAddView:view toCountableSidebar:sidebar];
 }
 
-- (void)willAddScrapBackToPage:(MMScrapView*)scrap {
-    [currentStackView willAddScrapBackToPage:scrap];
+- (void)willRemoveView:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    [currentStackView willRemoveView:view fromCountableSidebar:sidebar];
 }
 
-- (MMUndoablePaperView*)didAddScrapBackToPage:(MMScrapView*)originalScrap atIndex:(NSUInteger)index {
-    return [currentStackView didAddScrapBackToPage:originalScrap atIndex:index];
+- (MMUndoablePaperView*)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    return [currentStackView didRemoveView:view atIndex:index fromCountableSidebar:sidebar];
 }
 
 - (CGPoint)positionOnScreenToScaleScrapTo:(MMScrapView*)scrap {
