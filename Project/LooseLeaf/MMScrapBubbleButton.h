@@ -9,18 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "MMScrapView.h"
 #import "MMCountBubbleButton.h"
+#import "MMBubbleButton.h"
 
 
-@interface MMScrapBubbleButton : MMCountBubbleButton {
-    MMScrapView* scrap;
+@interface MMScrapBubbleButton : MMCountBubbleButton <MMBubbleButton> {
     CGFloat originalScrapScale;
 }
 
-@property (nonatomic) MMScrapView* scrap;
+@property (nonatomic) MMScrapView* view; // from MMBubbleButton
 @property (nonatomic, assign) CGFloat rotationAdjustment;
 @property (nonatomic, assign) CGFloat originalScrapScale;
-
-+ (CGFloat)idealScaleForScrap:(MMScrapView*)scrap;
-+ (CGAffineTransform)idealTransformForScrap:(MMScrapView*)scrap;
 
 @end

@@ -69,11 +69,11 @@
 
 - (void)bubbleTapped:(UITapGestureRecognizer*)gesture {
     MMScrapBubbleButton* bubble = (MMScrapBubbleButton*)gesture.view;
-    MMScrapView* scrap = bubble.scrap;
+    MMScrapView* scrap = bubble.view;
 
-    if ([[self viewsInSidebar] containsObject:bubble.scrap]) {
+    if ([[self viewsInSidebar] containsObject:bubble.view]) {
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
-        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         [rotationAdjustments removeObjectForKey:scrap.uuid];
 
         [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil below:NO];
@@ -81,6 +81,15 @@
 }
 
 #pragma mark - MMCountableSidebarContainerView
+
+- (MMScrapBubbleButton*)newButtonForView:(MMScrapView*)scrap {
+    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    bubble.rotation = lastRotationReading;
+    bubble.originalScrapScale = scrap.scale;
+    bubble.delegate = self;
+    [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
+    return bubble;
+}
 
 - (void)addViewToCountableSidebar:(MMScrapView*)scrap animated:(BOOL)animated {
     // make sure we've saved its current state
@@ -100,9 +109,8 @@
     // prep the animation by creating the new bubble for the scrap
     // and initializing it's probable location (may change if count > 6)
     // and set it's alpha/rotation/scale to prepare for the animation
-    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    UIView<MMBubbleButton>* bubble = [self newButtonForView:scrap];
     bubble.center = center;
-    bubble.delegate = self;
 
     //
     // iOS7 changes how buttons can be tapped during a gesture (i think).
@@ -112,16 +120,13 @@
     //    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
     UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleTapped:)];
     [bubble addGestureRecognizer:tappy];
-    bubble.originalScrapScale = scrap.scale;
     [self insertSubview:bubble atIndex:0];
     [self insertSubview:scrap aboveSubview:bubble];
     // keep the scrap in the bezel container during the animation, then
     // push it into the bubble
     bubble.alpha = 0;
-    bubble.rotation = lastRotationReading;
     bubble.scale = .9;
     [bubbleForScrap setObject:bubble forKey:scrap.uuid];
-    [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
 
     //
     // unload the scrap state, so that it shows the
@@ -142,12 +147,12 @@
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
                 bubble.alpha = 1;
-                scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+                scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
                 scrap.center = bubble.center;
                 for (MMScrapBubbleButton* otherBubble in self.subviews) {
                     if (otherBubble != bubble) {
                         if ([otherBubble isKindOfClass:[MMScrapBubbleButton class]]) {
-                            int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.scrap];
+                            int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.view];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                         }
                     }
@@ -155,7 +160,7 @@
 
             } completion:^(BOOL finished) {
                 // add it to the bubble and bounce
-                bubble.scrap = scrap;
+                bubble.view = scrap;
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     // scrap "hits" the bubble and pushes it down a bit
                     bubble.scale = .8;
@@ -189,14 +194,14 @@
                     if ([bubble isKindOfClass:[MMScrapBubbleButton class]]) {
                         bubble.alpha = 0;
                         bubble.center = self.countButton.center;
-                        [bubble.scrap.state unloadCachedScrapPreview];
+                        [bubble.view.state unloadCachedScrapPreview];
                     }
                 }
-                scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+                scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
                 scrap.center = bubble.center;
             } completion:^(BOOL finished) {
                 // add it to the bubble and bounce
-                bubble.scrap = scrap;
+                bubble.view = scrap;
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     // scrap "hits" the bubble and pushes it down a bit
                     self.countButton.scale = .8;
@@ -220,12 +225,12 @@
         if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
             [scrap.state loadCachedScrapPreview];
             bubble.alpha = 1;
-            scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+            scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
-            bubble.scrap = scrap;
+            bubble.view = scrap;
             for (MMScrapBubbleButton* anyBubble in self.subviews) {
                 if ([anyBubble isKindOfClass:[MMScrapBubbleButton class]]) {
-                    int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:anyBubble.scrap];
+                    int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:anyBubble.view];
                     anyBubble.center = [self centerForBubbleAtIndex:index];
                 }
             }
@@ -236,12 +241,12 @@
                 if ([bubble isKindOfClass:[MMScrapBubbleButton class]]) {
                     bubble.alpha = 0;
                     bubble.center = self.countButton.center;
-                    [bubble.scrap.state unloadCachedScrapPreview];
+                    [bubble.view.state unloadCachedScrapPreview];
                 }
             }
-            scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+            scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
-            bubble.scrap = scrap;
+            bubble.view = scrap;
         }
         [self saveScrapContainerToDisk];
     }
@@ -263,7 +268,7 @@
 
     [scrap loadScrapStateAsynchronously:YES];
 
-    scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForScrap:scrap];
+    scrap.scale = scrap.scale * [MMScrapBubbleButton idealScaleForView:scrap];
 
     BOOL hadProperties = properties != nil;
 
@@ -300,13 +305,16 @@
         bubble.alpha = 0;
         for (MMScrapBubbleButton* otherBubble in self.subviews) {
             if (otherBubble != self.countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]) {
-                if (otherBubble.scrap && otherBubble != bubble) {
-                    int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.scrap];
+                if (otherBubble.view && otherBubble != bubble) {
+                    int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.view];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
-                        otherBubble.scrap = otherBubble.scrap; // reset it
+                        // we need to reset the view here, because it could have been stolen
+                        // by the actual sidebar content view. If that's the case, then we
+                        // need to steal the view back so it can display in the bubble button
+                        otherBubble.view = otherBubble.view;
                         otherBubble.alpha = 1;
-                        [otherBubble.scrap.state loadCachedScrapPreview];
+                        [otherBubble.view.state loadCachedScrapPreview];
                     }
                 }
             }

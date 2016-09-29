@@ -32,6 +32,10 @@
     return self;
 }
 
+- (UIView<MMBubbleButton>*)newButtonForView:(UIView<MMUUIDView>*)scrap {
+    @throw kAbstractMethodException;
+}
+
 - (NSArray<MMUUIDView>*)viewsInSidebar {
     return [viewsInSidebar copy];
 }

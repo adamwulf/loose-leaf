@@ -19,7 +19,7 @@
     MMScrapBorderView* borderView;
 }
 
-@synthesize scrap;
+@synthesize view;
 @synthesize rotationAdjustment;
 @synthesize originalScrapScale;
 
@@ -59,18 +59,18 @@
 
 #pragma mark - Scrap
 
-+ (CGFloat)idealScaleForScrap:(MMScrapView*)scrap {
++ (CGFloat)idealScaleForView:(MMScrapView*)scrap {
     return 36.0 / MAX(scrap.originalSize.width, scrap.originalSize.height);
 }
 
-+ (CGAffineTransform)idealTransformForScrap:(MMScrapView*)scrap {
++ (CGAffineTransform)idealTransformForView:(MMScrapView*)scrap {
     // aim to get the border into 36 px
-    CGFloat scale = [MMScrapBubbleButton idealScaleForScrap:scrap];
+    CGFloat scale = [MMScrapBubbleButton idealScaleForView:scrap];
     return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation), CGAffineTransformMakeScale(scale, scale));
 }
 
-- (void)setScrap:(MMScrapView*)_scrap {
-    scrap = _scrap;
+- (void)setView:(MMScrapView*)_scrap {
+    view = _scrap;
     if (!_scrap) {
         //        DebugLog(@"killing scrap bubble, setting to nil scrap");
         [borderView setHidden:YES];
@@ -83,17 +83,17 @@
     self.rotation = -foo;
     self.rotation = foo;
 
-    [self insertSubview:scrap belowSubview:borderView];
-    scrap.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-    scrap.transform = [MMScrapBubbleButton idealTransformForScrap:scrap];
-    UIBezierPath* idealScaledPathInButton = [scrap.bezierPath copy];
-    [idealScaledPathInButton applyTransform:scrap.transform];
+    [self insertSubview:view belowSubview:borderView];
+    view.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    view.transform = [MMScrapBubbleButton idealTransformForView:view];
+    UIBezierPath* idealScaledPathInButton = [view.bezierPath copy];
+    [idealScaledPathInButton applyTransform:view.transform];
 
     // find the first point of the path compared
     // to the first point of the scrap's path
     // and line these up
-    CGPoint firstscrappoint = [scrap.bezierPath firstPoint];
-    firstscrappoint = [self convertPoint:firstscrappoint fromView:scrap];
+    CGPoint firstscrappoint = [view.bezierPath firstPoint];
+    firstscrappoint = [self convertPoint:firstscrappoint fromView:view];
     CGPoint firstpathpoint = [idealScaledPathInButton firstPoint];
     CGFloat diffX = firstscrappoint.x - firstpathpoint.x;
     CGFloat diffY = firstscrappoint.y - firstpathpoint.y;
@@ -107,11 +107,11 @@
     // let's move the scrap and the path to the average
     // of the two centers
     CGPoint pathCenter = CGPointMake(idealScaledPathInButton.bounds.origin.x + idealScaledPathInButton.bounds.size.width / 2, idealScaledPathInButton.bounds.origin.y + idealScaledPathInButton.bounds.size.height / 2);
-    diffX = scrap.center.x - pathCenter.x;
-    diffY = scrap.center.y - pathCenter.y;
+    diffX = view.center.x - pathCenter.x;
+    diffY = view.center.y - pathCenter.y;
     CGAffineTransform centerTransform = CGAffineTransformMakeTranslation(diffX / 2, diffY / 2);
     [idealScaledPathInButton applyTransform:centerTransform];
-    scrap.center = CGPointApplyAffineTransform(scrap.center, centerTransform);
+    view.center = CGPointApplyAffineTransform(view.center, centerTransform);
 
     // now let the border know about it's path
     // to draw

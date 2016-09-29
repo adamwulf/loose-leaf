@@ -1602,6 +1602,7 @@
 		C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackButton.h; sourceTree = "<group>"; };
 		C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackButton.m; sourceTree = "<group>"; };
 		C5EFA59B1D9CCFA700BBE8CD /* MMUUIDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUUIDView.h; sourceTree = "<group>"; };
+		C5EFA59C1D9CED7000BBE8CD /* MMBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBubbleButton.h; sourceTree = "<group>"; };
 		C5F1B1DF1D9B01BA00E0E9A8 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPTweakBindObserver.h; sourceTree = "<group>"; };
 		C5F1B1E01D9B01BA00E0E9A8 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPTweakBindObserver.m; sourceTree = "<group>"; };
 		C5F1B1E11D9B01BA00E0E9A8 /* app_extension_module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = app_extension_module.modulemap; sourceTree = "<group>"; };
@@ -4072,6 +4073,7 @@
 				C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */,
 				C5F1B3051D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.h */,
 				C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */,
+				C5EFA59C1D9CED7000BBE8CD /* MMBubbleButton.h */,
 			);
 			name = "Countable Sidebar";
 			sourceTree = "<group>";
