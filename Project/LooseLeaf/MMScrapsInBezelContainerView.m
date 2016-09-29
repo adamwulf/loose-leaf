@@ -121,6 +121,7 @@
     bubble.rotation = lastRotationReading;
     bubble.scale = .9;
     [bubbleForScrap setObject:bubble forKey:scrap.uuid];
+    [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
 
     //
     // unload the scrap state, so that it shows the
@@ -155,7 +156,6 @@
             } completion:^(BOOL finished) {
                 // add it to the bubble and bounce
                 bubble.scrap = scrap;
-                [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     // scrap "hits" the bubble and pushes it down a bit
                     bubble.scale = .8;
@@ -321,7 +321,6 @@
 
 
 - (void)deleteAllViewsFromSidebar {
-    DebugLog(@"delete all scraps!");
     for (MMScrapView* scrap in [[self viewsInSidebar] copy]) {
         [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
         [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
