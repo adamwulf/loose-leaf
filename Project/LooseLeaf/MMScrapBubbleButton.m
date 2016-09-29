@@ -73,6 +73,7 @@
     scrap = _scrap;
     if (!_scrap) {
         //        DebugLog(@"killing scrap bubble, setting to nil scrap");
+        [borderView setHidden:YES];
         return;
     }
     rotationAdjustment = self.rotation;

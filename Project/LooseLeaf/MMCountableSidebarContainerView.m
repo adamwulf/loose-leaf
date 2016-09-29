@@ -14,6 +14,7 @@
 
 @implementation MMCountableSidebarContainerView {
     CGFloat targetAlpha;
+    NSMutableArray* viewsInSidebar;
 }
 
 @synthesize contentView = contentView;
@@ -22,6 +23,7 @@
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
     if (self = [super initWithFrame:frame forButton:_countButton animateFromLeft:NO]) {
         targetAlpha = 1;
+        viewsInSidebar = [NSMutableArray array];
 
         countButton = _countButton;
         countButton.delegate = self;

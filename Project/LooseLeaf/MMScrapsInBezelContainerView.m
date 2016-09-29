@@ -28,6 +28,7 @@
     NSString* scrapIDsPath;
 
     NSMutableDictionary* rotationAdjustments;
+    NSMutableArray* viewsInSidebar;
 }
 
 @synthesize bubbleDelegate;
@@ -36,6 +37,7 @@
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
     if (self = [super initWithFrame:frame andCountButton:_countButton]) {
         bubbleForScrap = [NSMutableDictionary dictionary];
+        viewsInSidebar = [NSMutableArray array];
 
         contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
@@ -69,13 +71,18 @@
 
 - (void)bubbleTapped:(UITapGestureRecognizer*)gesture {
     MMScrapBubbleButton* bubble = (MMScrapBubbleButton*)gesture.view;
-    if ([sidebarScrapState.allLoadedScraps containsObject:bubble.scrap]) {
-        [sidebarScrapState scrapIsRemovedFromSidebar:bubble.scrap];
+    MMScrapView* scrap = bubble.scrap;
+    [viewsInSidebar removeObject:bubble.scrap];
 
-        MMScrapView* scrap = bubble.scrap;
-        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
+    if ([sidebarScrapState.allLoadedScraps containsObject:bubble.scrap]) {
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
         scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        [rotationAdjustments removeObjectForKey:scrap.uuid];
+
+
+        [sidebarScrapState scrapIsRemovedFromSidebar:bubble.scrap];
+
+        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
         [self addSubview:scrap];
 
         // set the bubble to nil its scrap so it'll be known dead
@@ -84,14 +91,13 @@
         [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
 
         [bubbleForScrap removeObjectForKey:scrap.uuid];
-        [rotationAdjustments removeObjectForKey:scrap.uuid];
     }
 }
 
 #pragma mark - MMCountableSidebarContainerView
 
 - (NSArray<MMUUIDView>*)viewsInSidebar {
-    return [sidebarScrapState.allLoadedScraps copy];
+    return [viewsInSidebar copy];
 }
 
 - (void)addViewToCountableSidebar:(MMScrapView*)scrap animated:(BOOL)animated {
@@ -100,8 +106,11 @@
         // only save when it's animated. non-animated is loading
         // from disk at start up
         [scrap saveScrapToDisk:nil];
-        [sidebarScrapState scrapIsAddedToSidebar:scrap];
     }
+
+    [sidebarScrapState scrapIsAddedToSidebar:scrap];
+
+    [viewsInSidebar addObject:scrap];
 
     // exit the scrap to the bezel!
     CGPoint center = [self centerForBubbleAtIndex:0];
@@ -131,12 +140,10 @@
     bubble.scale = .9;
     [bubbleForScrap setObject:bubble forKey:scrap.uuid];
 
-
     //
     // unload the scrap state, so that it shows the
     // image preview instead of an editable state
     [scrap unloadState];
-
 
     if (animated) {
         CGFloat animationDuration = 0.5;
@@ -259,14 +266,19 @@
 }
 
 - (void)didTapOnViewFromMenu:(MMScrapView*)scrap {
-    [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil];
+    [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil below:YES];
 }
 
-- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties {
+- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
     [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
+    [viewsInSidebar removeObject:scrap];
 
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
-    [self insertSubview:scrap atIndex:0];
+    if (below) {
+        [self insertSubview:scrap atIndex:0];
+    } else {
+        [self addSubview:scrap];
+    }
 
     [self sidebarCloseButtonWasTapped];
     [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:properties];
@@ -343,6 +355,7 @@
     for (MMScrapView* scrap in [sidebarScrapState.allLoadedScraps copy]) {
         [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
         [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
+        [viewsInSidebar removeObject:scrap];
     }
 
     [super deleteAllViewsFromSidebar];
