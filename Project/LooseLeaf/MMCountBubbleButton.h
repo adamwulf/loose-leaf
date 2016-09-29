@@ -7,6 +7,7 @@
 //
 
 #import "MMSidebarButton.h"
+#import "MMBubbleButton.h"
 
 
 @interface MMCountBubbleButton : MMSidebarButton {

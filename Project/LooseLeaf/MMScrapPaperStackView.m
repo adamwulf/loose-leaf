@@ -1661,12 +1661,12 @@
     [self cancelAllGestures];
 }
 
-- (void)willAddScrapToBezelSidebar:(MMScrapView*)scrap {
+- (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     CheckMainThread;
     isAnimatingScrapToOrFromSidebar = YES;
 }
 
-- (void)didAddScrapToBezelSidebar:(MMScrapView*)scrap {
+- (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     CheckMainThread;
     [self.stackDelegate.bezelScrapContainer saveScrapContainerToDisk];
     isAnimatingScrapToOrFromSidebar = NO;

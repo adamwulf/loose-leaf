@@ -737,12 +737,14 @@
 
 #pragma mark - MMScrapSidebarContainerViewDelegate
 
-- (void)willAddScrapToBezelSidebar:(MMScrapView*)scrap {
-    [currentStackView willAddScrapToBezelSidebar:scrap];
+- (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView willAddView:view toCountableSidebar:sidebar];
+    }
 }
 
-- (void)didAddScrapToBezelSidebar:(MMScrapView*)scrap {
-    [currentStackView didAddScrapToBezelSidebar:scrap];
+- (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    [currentStackView didAddView:view toCountableSidebar:sidebar];
 }
 
 - (void)willAddScrapBackToPage:(MMScrapView*)scrap {

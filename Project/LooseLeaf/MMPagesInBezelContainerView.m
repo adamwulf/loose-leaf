@@ -145,7 +145,7 @@
     //    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
     UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleTapped:)];
     [bubble addGestureRecognizer:tappy];
-    bubble.originalScrapScale = scrap.scale;
+    bubble.originalViewScale = scrap.scale;
     [self insertSubview:bubble atIndex:0];
     [self insertSubview:scrap aboveSubview:bubble];
     // keep the scrap in the bezel container during the animation, then
@@ -171,7 +171,7 @@
             // a menu
             [scrap.state loadCachedScrapPreview];
 
-            [self.bubbleDelegate willAddScrapToBezelSidebar:scrap];
+            [self.bubbleDelegate willAddView:scrap toCountableSidebar:self];
 
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
@@ -205,7 +205,7 @@
                             // and done
                             bubble.scale = 1.0;
                         } completion:^(BOOL finished) {
-                            [self.bubbleDelegate didAddScrapToBezelSidebar:scrap];
+                            [self.bubbleDelegate didAddView:scrap toCountableSidebar:self];
                         }];
                     }];
                 }];
@@ -213,7 +213,7 @@
         } else if ([sidebarScrapState.allLoadedScraps count] > kMaxButtonsInBezelSidebar) {
             // we need to merge all the bubbles together into
             // a single button during the bezel animation
-            [self.bubbleDelegate willAddScrapToBezelSidebar:scrap];
+            [self.bubbleDelegate willAddView:scrap toCountableSidebar:self];
             [countButton setCount:[sidebarScrapState.allLoadedScraps count]];
             bubble.center = countButton.center;
             bubble.scale = 1;
@@ -245,7 +245,7 @@
                             // and done
                             countButton.scale = 1.0;
                         } completion:^(BOOL finished) {
-                            [self.bubbleDelegate didAddScrapToBezelSidebar:scrap];
+                            [self.bubbleDelegate didAddView:scrap toCountableSidebar:self];
                         }];
                     }];
                 }];
@@ -348,7 +348,7 @@
 
     if (!properties) {
         CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
-        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
+        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalViewScale];
         NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
         [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
         [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];

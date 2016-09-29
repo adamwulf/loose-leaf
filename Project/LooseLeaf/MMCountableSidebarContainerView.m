@@ -81,6 +81,16 @@
     [viewsInSidebar addObject:view];
 }
 
+#pragma mark - Protected
+
+- (void)loadCachedPreviewForView:(UIView<MMUUIDView>*)view {
+    @throw kAbstractMethodException;
+}
+
+- (void)unloadCachedPreviewForView:(UIView<MMUUIDView>*)view {
+    @throw kAbstractMethodException;
+}
+
 #pragma mark - Actions
 
 // count button was tapped,

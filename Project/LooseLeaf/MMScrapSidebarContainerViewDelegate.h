@@ -10,11 +10,13 @@
 #import "MMScrapView.h"
 #import "MMUndoablePaperView.h"
 
+@class MMCountableSidebarContainerView;
+
 @protocol MMScrapSidebarContainerViewDelegate <NSObject>
 
-- (void)willAddScrapToBezelSidebar:(MMScrapView*)scrap;
+- (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
 
-- (void)didAddScrapToBezelSidebar:(MMScrapView*)scrap;
+- (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
 
 - (void)willAddScrapBackToPage:(MMScrapView*)scrap;
 

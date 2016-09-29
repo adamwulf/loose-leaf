@@ -40,8 +40,12 @@
 - (void)addViewToCountableSidebar:(ViewType)view animated:(BOOL)animated;
 
 
-// private
+// protected
 
 - (void)bubbleTapped:(UITapGestureRecognizer*)gesture;
+
+- (void)loadCachedPreviewForView:(ViewType)view;
+
+- (void)unloadCachedPreviewForView:(ViewType)view;
 
 @end

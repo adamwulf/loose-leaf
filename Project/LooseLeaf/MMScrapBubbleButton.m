@@ -21,7 +21,7 @@
 
 @synthesize view;
 @synthesize rotationAdjustment;
-@synthesize originalScrapScale;
+@synthesize originalViewScale;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

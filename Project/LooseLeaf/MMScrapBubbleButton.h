@@ -12,12 +12,9 @@
 #import "MMBubbleButton.h"
 
 
-@interface MMScrapBubbleButton : MMCountBubbleButton <MMBubbleButton> {
-    CGFloat originalScrapScale;
-}
+@interface MMScrapBubbleButton : MMCountBubbleButton <MMBubbleButton>
 
 @property (nonatomic) MMScrapView* view; // from MMBubbleButton
 @property (nonatomic, assign) CGFloat rotationAdjustment;
-@property (nonatomic, assign) CGFloat originalScrapScale;
 
 @end

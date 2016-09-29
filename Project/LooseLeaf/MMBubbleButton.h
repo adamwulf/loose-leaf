@@ -13,12 +13,12 @@
 
 @property (nonatomic) UIView<MMUUIDView>* view;
 @property (nonatomic, assign) CGFloat scale;
+@property (nonatomic, assign) CGFloat originalViewScale;
 
 #pragma mark - Scrap
 
 + (CGFloat)idealScaleForView:(UIView<MMUUIDView>*)view;
 
 + (CGAffineTransform)idealTransformForView:(UIView<MMUUIDView>*)view;
-
 
 @end
