@@ -39,4 +39,9 @@
 
 - (void)addViewToCountableSidebar:(ViewType)view animated:(BOOL)animated;
 
+
+// private
+
+- (void)bubbleTapped:(UITapGestureRecognizer*)gesture;
+
 @end

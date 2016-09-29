@@ -73,11 +73,10 @@
 
     if ([[self viewsInSidebar] containsObject:bubble.view]) {
         scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
-        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         [rotationAdjustments removeObjectForKey:scrap.uuid];
-
-        [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil below:NO];
     }
+
+    [super bubbleTapped:gesture];
 }
 
 #pragma mark - MMCountableSidebarContainerView
@@ -264,7 +263,7 @@
 
 - (void)animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties {
     CheckMainThread;
-    MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
+    MMScrapBubbleButton* bubbleToAddToPage = [bubbleForScrap objectForKey:scrap.uuid];
 
     [scrap loadScrapStateAsynchronously:YES];
 
@@ -274,7 +273,7 @@
 
     if (!properties) {
         CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleScrapTo:scrap];
-        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubble.originalScrapScale];
+        CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleScrapTo:scrap givenOriginalScale:bubbleToAddToPage.originalScrapScale];
         NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
         [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
         [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
@@ -302,10 +301,10 @@
         }];
     }];
     [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        bubble.alpha = 0;
+        bubbleToAddToPage.alpha = 0;
         for (MMScrapBubbleButton* otherBubble in self.subviews) {
             if (otherBubble != self.countButton && [otherBubble isKindOfClass:[MMScrapBubbleButton class]]) {
-                if (otherBubble.view && otherBubble != bubble) {
+                if (otherBubble.view && otherBubble != bubbleToAddToPage) {
                     int index = (int)[sidebarScrapState.allLoadedScraps indexOfObject:otherBubble.view];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
                     if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
@@ -323,7 +322,7 @@
             self.countButton.alpha = 0;
         }
     } completion:^(BOOL finished) {
-        [bubble removeFromSuperview];
+        [bubbleToAddToPage removeFromSuperview];
     }];
 }
 

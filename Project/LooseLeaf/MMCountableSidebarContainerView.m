@@ -95,6 +95,17 @@
     }
 }
 
+- (void)bubbleTapped:(UITapGestureRecognizer*)gesture {
+    UIView<MMBubbleButton>* bubble = (UIView<MMBubbleButton>*)gesture.view;
+    UIView<MMUUIDView>* scrap = bubble.view;
+
+    if ([[self viewsInSidebar] containsObject:bubble.view]) {
+        scrap.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil below:NO];
+    }
+}
+
+
 #pragma mark - MMSidebarButtonDelegate
 
 - (CGFloat)sidebarButtonRotation {
