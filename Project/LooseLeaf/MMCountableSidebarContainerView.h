@@ -11,16 +11,19 @@
 #import "MMCountableSidebarContentView.h"
 #import "MMUUIDView.h"
 #import "MMBubbleButton.h"
+#import "MMCountableSidebarContainerViewDelegate.h"
 
 
 @interface MMCountableSidebarContainerView < ViewType : UIView <MMUUIDView>
 * > : MMFullScreenSidebarContainingView<MMSidebarButtonDelegate> {
     MMCountableSidebarContentView* contentView;
+    NSMutableDictionary* bubbleForScrap;
 }
 
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
 @property (readonly) NSArray<ViewType>* viewsInSidebar;
 @property (nonatomic, readonly) MMCountableSidebarContentView* contentView;
+@property (nonatomic, weak) NSObject<MMCountableSidebarContainerViewDelegate>* bubbleDelegate;
 
 - (id)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)countButton;

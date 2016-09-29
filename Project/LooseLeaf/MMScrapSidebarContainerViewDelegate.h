@@ -9,14 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "MMScrapView.h"
 #import "MMUndoablePaperView.h"
+#import "MMCountableSidebarContainerViewDelegate.h"
 
-@class MMCountableSidebarContainerView;
-
-@protocol MMScrapSidebarContainerViewDelegate <NSObject>
-
-- (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
-
-- (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar;
+@protocol MMScrapSidebarContainerViewDelegate <MMCountableSidebarContainerViewDelegate>
 
 - (void)willAddScrapBackToPage:(MMScrapView*)scrap;
 
