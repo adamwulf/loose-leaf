@@ -20,8 +20,6 @@
 #import "MMTrashManager.h"
 #import "MMSidebarButtonTapGestureRecognizer.h"
 
-#define kAnimationDuration 0.3
-
 
 @implementation MMScrapsInBezelContainerView {
     CGFloat lastRotationReading;
@@ -54,15 +52,6 @@
     return self;
 }
 
-- (int)fullByteSize {
-    return [super fullByteSize] + sidebarScrapState.fullByteSize;
-}
-
-- (NSArray*)viewsInSidebar {
-    return [sidebarScrapState.allLoadedScraps copy];
-}
-
-
 #pragma mark - Helper Methods
 
 - (NSString*)scrapIDsPath {
@@ -75,7 +64,35 @@
     return scrapIDsPath;
 }
 
-#pragma mark - Scrap Animations
+
+#pragma mark - Actions
+
+- (void)bubbleTapped:(UITapGestureRecognizer*)gesture {
+    MMScrapBubbleButton* bubble = (MMScrapBubbleButton*)gesture.view;
+    if ([sidebarScrapState.allLoadedScraps containsObject:bubble.scrap]) {
+        [sidebarScrapState scrapIsRemovedFromSidebar:bubble.scrap];
+
+        MMScrapView* scrap = bubble.scrap;
+        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
+        scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
+        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        [self addSubview:scrap];
+
+        // set the bubble to nil its scrap so it'll be known dead
+        // if we need to realign buttons during this animation
+        bubble.scrap = nil;
+        [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
+
+        [bubbleForScrap removeObjectForKey:scrap.uuid];
+        [rotationAdjustments removeObjectForKey:scrap.uuid];
+    }
+}
+
+#pragma mark - MMCountableSidebarContainerView
+
+- (NSArray<MMUUIDView>*)viewsInSidebar {
+    return [sidebarScrapState.allLoadedScraps copy];
+}
 
 - (void)addViewToCountableSidebar:(MMScrapView*)scrap animated:(BOOL)animated {
     // make sure we've saved its current state
@@ -241,43 +258,6 @@
     }
 }
 
-- (BOOL)containsScrap:(MMScrapView*)scrap {
-    return [sidebarScrapState.allLoadedScraps containsObject:scrap];
-}
-
-- (BOOL)containsScrapUUID:(NSString*)scrapUUID {
-    for (MMScrapView* scrap in sidebarScrapState.allLoadedScraps) {
-        if ([scrap.uuid isEqualToString:scrapUUID]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-
-#pragma mark - Button Tap
-
-- (void)bubbleTapped:(UITapGestureRecognizer*)gesture {
-    MMScrapBubbleButton* bubble = (MMScrapBubbleButton*)gesture.view;
-    if ([sidebarScrapState.allLoadedScraps containsObject:bubble.scrap]) {
-        [sidebarScrapState scrapIsRemovedFromSidebar:bubble.scrap];
-
-        MMScrapView* scrap = bubble.scrap;
-        scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
-        scrap.rotation += (bubble.rotation - bubble.rotationAdjustment);
-        scrap.transform = CGAffineTransformConcat([MMScrapBubbleButton idealTransformForScrap:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-        [self addSubview:scrap];
-
-        // set the bubble to nil its scrap so it'll be known dead
-        // if we need to realign buttons during this animation
-        bubble.scrap = nil;
-        [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
-
-        [bubbleForScrap removeObjectForKey:scrap.uuid];
-        [rotationAdjustments removeObjectForKey:scrap.uuid];
-    }
-}
-
 - (void)didTapOnViewFromMenu:(MMScrapView*)scrap {
     [self didTapOnScrapFromMenu:scrap withPreferredScrapProperties:nil];
 }
@@ -364,11 +344,9 @@
         [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
         [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
     }
-    for (MMScrapBubbleButton* otherBubble in self.subviews) {
-        if ([otherBubble isKindOfClass:[MMScrapBubbleButton class]]) {
-            [otherBubble removeFromSuperview];
-        }
-    }
+
+    [super deleteAllViewsFromSidebar];
+
     [self saveScrapContainerToDisk];
 }
 
@@ -471,21 +449,6 @@ static NSString* bezelStatePath;
 
 - (MMScrapsOnPaperState*)paperStateForPageUUID:(NSString*)uuidOfPage {
     return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
-}
-
-#pragma mark - MMFullScreenSidebarContainingView
-
-- (void)sidebarCloseButtonWasTapped {
-    if ([self isVisible]) {
-        [contentView viewWillHide];
-        [self hide:YES onComplete:^(BOOL finished) {
-            [contentView viewDidHide];
-        }];
-        [UIView animateWithDuration:kAnimationDuration animations:^{
-            [self setAlpha:1];
-        } completion:nil];
-        [self.delegate sidebarCloseButtonWasTapped];
-    }
 }
 
 @end

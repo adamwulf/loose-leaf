@@ -9,23 +9,29 @@
 #import "MMFullScreenSidebarContainingView.h"
 #import "MMCountBubbleButton.h"
 #import "MMCountableSidebarContentView.h"
+#import "MMUUIDView.h"
 
 
-@interface MMCountableSidebarContainerView <ViewType : UIView*> : MMFullScreenSidebarContainingView<MMSidebarButtonDelegate>{
+@interface MMCountableSidebarContainerView < ViewType : UIView <MMUUIDView>
+* > : MMFullScreenSidebarContainingView<MMSidebarButtonDelegate> {
     MMCountableSidebarContentView* contentView;
 }
 
 @property (nonatomic, strong) MMCountBubbleButton* countButton;
-@property (readonly) NSArray* viewsInSidebar;
+@property (readonly) NSArray<ViewType>* viewsInSidebar;
 @property (nonatomic, readonly) MMCountableSidebarContentView* contentView;
 
 - (id)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)countButton;
 
 
+- (BOOL)containsView:(ViewType)view;
+
+- (BOOL)containsViewUUID:(NSString*)viewUUID;
+
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index;
 
-- (void)deleteAllViewsFromSidebar;
+- (void)deleteAllViewsFromSidebar NS_REQUIRES_SUPER;
 
 - (void)didTapOnViewFromMenu:(ViewType)view;
 

@@ -25,19 +25,18 @@
 @property (nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (readonly) MMScrapsInSidebarState* sidebarScrapState;
 
-- (BOOL)containsScrap:(MMScrapView*)scrap;
-
-- (BOOL)containsScrapUUID:(NSString*)scrapUUID;
-
-- (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
+// scrap specific
 
 - (void)saveScrapContainerToDisk;
 
-- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
-
 - (void)loadFromDisk;
+
+- (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
+// only for undo/redo
+
+- (void)didTapOnScrapFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
 
 @end

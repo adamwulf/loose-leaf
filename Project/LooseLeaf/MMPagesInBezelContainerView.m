@@ -282,11 +282,11 @@
     }
 }
 
-- (BOOL)containsScrap:(MMScrapView*)scrap {
+- (BOOL)containsView:(MMScrapView*)scrap {
     return [sidebarScrapState.allLoadedScraps containsObject:scrap];
 }
 
-- (BOOL)containsScrapUUID:(NSString*)scrapUUID {
+- (BOOL)containsViewUUID:(NSString*)scrapUUID {
     for (MMScrapView* scrap in sidebarScrapState.allLoadedScraps) {
         if ([scrap.uuid isEqualToString:scrapUUID]) {
             return YES;
@@ -417,11 +417,9 @@
         [[MMTrashManager sharedInstance] deleteScrap:scrap.uuid inScrapCollectionState:scrap.state.scrapsOnPaperState];
         [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
     }
-    for (MMScrapBubbleButton* otherBubble in self.subviews) {
-        if ([otherBubble isKindOfClass:[MMScrapBubbleButton class]]) {
-            [otherBubble removeFromSuperview];
-        }
-    }
+
+    [super deleteAllViewsFromSidebar];
+
     [self saveScrapContainerToDisk];
 }
 

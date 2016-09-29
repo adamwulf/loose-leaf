@@ -30,9 +30,9 @@
 
 - (void)addScrapToBezelSidebar:(MMScrapView*)scrap animated:(BOOL)animated;
 
-- (BOOL)containsScrap:(MMScrapView*)scrap;
+- (BOOL)containsView:(MMScrapView*)scrap;
 
-- (BOOL)containsScrapUUID:(NSString*)scrapUUID;
+- (BOOL)containsViewUUID:(NSString*)scrapUUID;
 
 - (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
 

@@ -11,9 +11,10 @@
 #import "MMScrapViewStateDelegate.h"
 #import "MMScrapViewState.h"
 #import "MMVector.h"
+#import "MMUUIDView.h"
 
 
-@interface MMScrapView : UIView <MMScrapViewStateDelegate>
+@interface MMScrapView : UIView <MMScrapViewStateDelegate, MMUUIDView>
 
 @property (readonly) CGAffineTransform clippingPathTransform;
 @property (readonly) UIBezierPath* clippingPath;
@@ -23,7 +24,6 @@
 @property (nonatomic, assign) NSDictionary* propertiesDictionary; // contains center/scale/rotation/uuid
 @property (nonatomic, assign) BOOL selected;
 @property (nonatomic, readonly) CGSize originalSize;
-@property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, readonly) NSString* owningPageUUID;
 @property (nonatomic, readonly) MMScrapViewState* state;
 

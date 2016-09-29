@@ -1601,6 +1601,7 @@
 		C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
 		C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackButton.h; sourceTree = "<group>"; };
 		C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackButton.m; sourceTree = "<group>"; };
+		C5EFA59B1D9CCFA700BBE8CD /* MMUUIDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUUIDView.h; sourceTree = "<group>"; };
 		C5F1B1DF1D9B01BA00E0E9A8 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPTweakBindObserver.h; sourceTree = "<group>"; };
 		C5F1B1E01D9B01BA00E0E9A8 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPTweakBindObserver.m; sourceTree = "<group>"; };
 		C5F1B1E11D9B01BA00E0E9A8 /* app_extension_module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = app_extension_module.modulemap; sourceTree = "<group>"; };
@@ -3244,7 +3245,6 @@
 				C50CBF711CE451FA0053885A /* icons */,
 				C53F633D1CDA85E900091EF1 /* backgrounds */,
 				C5F4BE811C2676C100FFB640 /* LaunchScreen */,
-				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
 				66A02F9019A1D0FD0013EFAE /* eppz-kit */,
 				665245321996D9E700C36609 /* AFNetworking */,
 				6653B8A7195CC79A001C6E15 /* Default user content */,
@@ -3252,6 +3252,8 @@
 				66684B2F182D8869005A27B4 /* Settings */,
 				66B21A77175E59490049F1AF /* Operations */,
 				660E1DA6158FC6120001DA12 /* Categories */,
+				C5EFA59A1D9CCF7A00BBE8CD /* Protocols */,
+				667F8AF317B0222300A0C7F8 /* Loose-Leaf-Icon7@2x.png */,
 				C542AA241D812E140024FAD9 /* highlighter.png */,
 				C55AC19A1D7C0AB100259558 /* logo.png */,
 				C55AC19C1D7C0BDD00259558 /* logo@2x.png */,
@@ -3831,6 +3833,14 @@
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 			);
 			name = Sidebars;
+			sourceTree = "<group>";
+		};
+		C5EFA59A1D9CCF7A00BBE8CD /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				C5EFA59B1D9CCFA700BBE8CD /* MMUUIDView.h */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 		C5F1B1DE1D9B01BA00E0E9A8 /* Mixpanel */ = {

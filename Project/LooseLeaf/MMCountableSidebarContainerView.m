@@ -9,6 +9,8 @@
 #import "MMCountableSidebarContainerView.h"
 #import "Constants.h"
 
+#define kAnimationDuration 0.3
+
 
 @implementation MMCountableSidebarContainerView {
     CGFloat targetAlpha;
@@ -28,19 +30,36 @@
     return self;
 }
 
-- (NSArray*)viewsInSidebar {
+- (NSArray<MMUUIDView>*)viewsInSidebar {
     @throw kAbstractMethodException;
+}
+
+- (BOOL)containsView:(UIView<MMUUIDView>*)view {
+    return [[self viewsInSidebar] containsObject:view];
+}
+
+- (BOOL)containsViewUUID:(NSString*)viewUUID {
+    for (UIView<MMUUIDView>* view in [self viewsInSidebar]) {
+        if ([view.uuid isEqualToString:viewUUID]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)deleteAllViewsFromSidebar {
+    for (UIView* otherBubble in self.subviews) {
+        if ([otherBubble isKindOfClass:[MMCountBubbleButton class]]) {
+            [otherBubble removeFromSuperview];
+        }
+    }
+}
+
+- (void)didTapOnViewFromMenu:(UIView<MMUUIDView>*)view {
     @throw kAbstractMethodException;
 }
 
-- (void)didTapOnViewFromMenu:(UIView*)view {
-    @throw kAbstractMethodException;
-}
-
-- (void)addViewToCountableSidebar:(UIView*)scrap animated:(BOOL)animated {
+- (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
     @throw kAbstractMethodException;
 }
 
@@ -85,7 +104,7 @@
         countButton.alpha = targetAlpha;
     } else {
         countButton.alpha = 0;
-        for (UIView* subview in self.subviews) {
+        for (UIView<MMUUIDView>* subview in self.subviews) {
             if ([subview isKindOfClass:[MMSidebarButton class]]) {
                 subview.alpha = targetAlpha;
             }
@@ -128,6 +147,21 @@
         }
     }
     return [super pointInside:point withEvent:event];
+}
+
+#pragma mark - MMFullScreenSidebarContainingView
+
+- (void)sidebarCloseButtonWasTapped {
+    if ([self isVisible]) {
+        [contentView viewWillHide];
+        [self hide:YES onComplete:^(BOOL finished) {
+            [contentView viewDidHide];
+        }];
+        [UIView animateWithDuration:kAnimationDuration animations:^{
+            [self setAlpha:1];
+        } completion:nil];
+        [self.delegate sidebarCloseButtonWasTapped];
+    }
 }
 
 

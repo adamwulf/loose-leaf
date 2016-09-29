@@ -37,7 +37,7 @@
     __weak MMUndoRedoBezeledScrapItem* weakSelf = self;
     if (self = [super initWithUndoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-            if ([weakSelf.page.bezelContainerView containsScrap:scrap]) {
+            if ([weakSelf.page.bezelContainerView containsView:scrap]) {
                 weakSelf.sidebarEverDidContainScrap = YES;
                 [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.propertiesWhenRemoved];
             } else {
