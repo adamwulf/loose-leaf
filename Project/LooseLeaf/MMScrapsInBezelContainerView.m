@@ -81,7 +81,7 @@
 
 #pragma mark - MMCountableSidebarContainerView
 
-- (MMScrapBubbleButton*)newButtonForView:(MMScrapView*)scrap {
+- (MMScrapBubbleButton*)newBubbleForView:(MMScrapView*)scrap {
     MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     bubble.rotation = lastRotationReading;
     bubble.originalViewScale = scrap.scale;
@@ -100,6 +100,10 @@
 
     [sidebarScrapState scrapIsAddedToSidebar:scrap];
 
+    // unload the scrap state, so that it shows the
+    // image preview instead of an editable state
+    [scrap unloadState];
+
     [super addViewToCountableSidebar:scrap animated:animated];
 
     // exit the scrap to the bezel!
@@ -108,7 +112,7 @@
     // prep the animation by creating the new bubble for the scrap
     // and initializing it's probable location (may change if count > 6)
     // and set it's alpha/rotation/scale to prepare for the animation
-    UIView<MMBubbleButton>* bubble = [self newButtonForView:scrap];
+    UIView<MMBubbleButton>* bubble = [self newBubbleForView:scrap];
     bubble.center = center;
 
     //
@@ -127,11 +131,6 @@
     bubble.scale = .9;
     [bubbleForScrap setObject:bubble forKey:scrap.uuid];
 
-    //
-    // unload the scrap state, so that it shows the
-    // image preview instead of an editable state
-    [scrap unloadState];
-
     if (animated) {
         CGFloat animationDuration = 0.5;
 
@@ -139,7 +138,7 @@
             // allow adding to 6 in the sidebar, otherwise
             // we need to pull them all into 1 button w/
             // a menu
-            [scrap.state loadCachedScrapPreview];
+            [self loadCachedPreviewForView:scrap];
 
             [self.bubbleDelegate willAddView:scrap toCountableSidebar:self];
 
@@ -221,8 +220,9 @@
             }];
         }
     } else {
+        [self.bubbleDelegate willAddView:scrap toCountableSidebar:self];
         if ([sidebarScrapState.allLoadedScraps count] <= kMaxButtonsInBezelSidebar) {
-            [scrap.state loadCachedScrapPreview];
+            [self loadCachedPreviewForView:scrap];
             bubble.alpha = 1;
             scrap.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             scrap.center = bubble.center;
@@ -247,7 +247,7 @@
             scrap.center = bubble.center;
             bubble.view = scrap;
         }
-        [self saveScrapContainerToDisk];
+        [self.bubbleDelegate didAddView:scrap toCountableSidebar:self];
     }
 }
 

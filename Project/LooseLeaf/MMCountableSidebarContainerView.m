@@ -32,10 +32,6 @@
     return self;
 }
 
-- (UIView<MMBubbleButton>*)newButtonForView:(UIView<MMUUIDView>*)scrap {
-    @throw kAbstractMethodException;
-}
-
 - (NSArray<MMUUIDView>*)viewsInSidebar {
     return [viewsInSidebar copy];
 }
@@ -82,6 +78,10 @@
 }
 
 #pragma mark - Protected
+
+- (UIView<MMBubbleButton>*)newBubbleForView:(UIView<MMUUIDView>*)scrap {
+    @throw kAbstractMethodException;
+}
 
 - (void)loadCachedPreviewForView:(UIView<MMUUIDView>*)view {
     @throw kAbstractMethodException;

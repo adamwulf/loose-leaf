@@ -25,8 +25,6 @@
 - (id)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)countButton;
 
-- (UIView<MMBubbleButton>*)newButtonForView:(ViewType)scrap;
-
 - (BOOL)containsView:(ViewType)view;
 
 - (BOOL)containsViewUUID:(NSString*)viewUUID;
@@ -41,6 +39,8 @@
 
 
 // protected
+
+- (UIView<MMBubbleButton>*)newBubbleForView:(ViewType)scrap;
 
 - (void)bubbleTapped:(UITapGestureRecognizer*)gesture;
 
