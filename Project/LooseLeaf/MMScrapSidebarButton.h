@@ -7,14 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMScrapView.h"
+#import "MMUUIDView.h"
 
 
 @interface MMScrapSidebarButton : UIButton
 
-@property (nonatomic) MMScrapView* scrap;
+@property (nonatomic) UIView<MMUUIDView>* view;
 @property (nonatomic, assign) NSInteger rowNumber;
 
-+ (CGSize)sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width;
++ (CGSize)sizeOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width;
 
 @end

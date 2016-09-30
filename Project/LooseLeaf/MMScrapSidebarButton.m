@@ -10,11 +10,9 @@
 #import <Crashlytics/Crashlytics.h>
 
 
-@implementation MMScrapSidebarButton {
-    MMScrapView* scrap;
-}
+@implementation MMScrapSidebarButton
 
-@synthesize scrap;
+@synthesize view;
 @synthesize rowNumber;
 
 - (id)initWithFrame:(CGRect)frame {
@@ -28,25 +26,25 @@
 }
 
 
-+ (CGFloat)scaleOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width {
-    CGFloat maxDim = MAX(MAX(scrap.frame.size.width, scrap.frame.size.height), 1);
++ (CGFloat)scaleOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width {
+    CGFloat maxDim = MAX(MAX(view.frame.size.width, view.frame.size.height), 1);
     return width / maxDim;
 }
 
-+ (CGSize)sizeOfRowForScrap:(MMScrapView*)scrap forWidth:(CGFloat)width {
-    CGFloat scale = [MMScrapSidebarButton scaleOfRowForScrap:scrap forWidth:width];
-    CGSize s = CGSizeMake(scrap.frame.size.width * scale, scrap.frame.size.height * scale);
++ (CGSize)sizeOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width {
+    CGFloat scale = [MMScrapSidebarButton scaleOfRowForView:view forWidth:width];
+    CGSize s = CGSizeMake(view.frame.size.width * scale, view.frame.size.height * scale);
     if (s.width < s.height) {
         s.width = s.height;
     }
     return s;
 }
 
-- (void)setScrap:(MMScrapView*)_scrap {
-    scrap = _scrap;
+- (void)setView:(UIView<MMUUIDView>*)_view {
+    view = _view;
 
     CGRect fr = self.frame;
-    fr.size = [MMScrapSidebarButton sizeOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    fr.size = [MMScrapSidebarButton sizeOfRowForView:view forWidth:self.bounds.size.width];
     CLS_LOG(@"updating scrap button frame from: %.2f %.2f %.2f %.2f to %.2f %.2f %.2f %.2f", self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, fr.origin.x, fr.origin.y, fr.size.width, fr.size.height);
     self.frame = fr;
 
@@ -54,16 +52,16 @@
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
     // reset scrap to it's normal transform
-    scrap.scale = scrap.scale;
+    view.scale = view.scale;
 
-    UIView* transformView = [[UIView alloc] initWithFrame:scrap.bounds];
+    UIView* transformView = [[UIView alloc] initWithFrame:view.bounds];
     transformView.opaque = YES;
 
-    [transformView addSubview:scrap];
-    scrap.center = transformView.center;
+    [transformView addSubview:view];
+    view.center = transformView.center;
 
     [self addSubview:transformView];
-    CGFloat scale = [MMScrapSidebarButton scaleOfRowForScrap:scrap forWidth:self.bounds.size.width];
+    CGFloat scale = [MMScrapSidebarButton scaleOfRowForView:view forWidth:self.bounds.size.width];
     transformView.transform = CGAffineTransformMakeScale(scale, scale);
     transformView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 

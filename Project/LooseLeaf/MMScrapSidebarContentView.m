@@ -20,22 +20,22 @@
 #define kColumnSideMargin 10.0
 #define kColumnTopMargin 10.0
 
-typedef struct RowOfScrapsInSidebar {
+typedef struct RowOfViewsInSidebar {
     CGFloat topY;
     CGFloat height;
-} RowOfScrapsInSidebar;
+} RowOfViewsInSidebar;
 
 
 @implementation MMScrapSidebarContentView {
     int countOfStoredRowData;
-    RowOfScrapsInSidebar* rowData;
+    RowOfViewsInSidebar* rowData;
 }
 
 - (void)viewDidHide {
     for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
         if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
             if ([[self.delegate viewsInSidebar] count] > kMaxButtonsInBezelSidebar) {
-                [subview.scrap.state unloadCachedScrapPreview];
+                [[self delegate] unloadCachedPreviewForView:subview.view];
             }
             [subview removeFromSuperview];
         }
@@ -56,7 +56,7 @@ typedef struct RowOfScrapsInSidebar {
             free(rowData);
         }
         countOfStoredRowData = rowCount;
-        rowData = malloc(countOfStoredRowData * sizeof(RowOfScrapsInSidebar));
+        rowData = malloc(countOfStoredRowData * sizeof(RowOfViewsInSidebar));
     }
 
     // calculate the height we'll need for each
@@ -68,7 +68,7 @@ typedef struct RowOfScrapsInSidebar {
         for (int index = row * (int)self.columnCount; index < row * self.columnCount + self.columnCount; index++) {
             if (index < [allScraps count]) {
                 MMScrapView* currentScrap = [allScraps objectAtIndex:index];
-                CGSize sizeOfCellForScrap = [MMScrapSidebarButton sizeOfRowForScrap:currentScrap forWidth:maxDimOfScrap];
+                CGSize sizeOfCellForScrap = [MMScrapSidebarButton sizeOfRowForView:currentScrap forWidth:maxDimOfScrap];
                 CGFloat heightOfCurrScrap = sizeOfCellForScrap.height + kColumnTopMargin;
                 if (heightOfCurrScrap > maxHeightOfScrapsInRow) {
                     maxHeightOfScrapsInRow = heightOfCurrScrap;
@@ -96,7 +96,7 @@ typedef struct RowOfScrapsInSidebar {
 
 - (CGFloat)contentHeight {
     if (rowData) {
-        RowOfScrapsInSidebar lastRow = rowData[countOfStoredRowData - 1];
+        RowOfViewsInSidebar lastRow = rowData[countOfStoredRowData - 1];
         return lastRow.topY + lastRow.height + 4 * kColumnTopMargin + 100; // add 100 for our trash button
     }
     return 0;
@@ -105,7 +105,7 @@ typedef struct RowOfScrapsInSidebar {
 #pragma mark - UIButton
 
 - (void)tappedOnScrapButton:(MMScrapSidebarButton*)button {
-    [self.delegate didTapOnViewFromMenu:button.scrap withPreferredScrapProperties:nil below:YES];
+    [self.delegate didTapOnViewFromMenu:button.view withPreferredScrapProperties:nil below:YES];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -148,7 +148,7 @@ typedef struct RowOfScrapsInSidebar {
     for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
         if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
             if (subview.rowNumber < row || subview.rowNumber > maxRow) {
-                [subview.scrap.state unloadCachedScrapPreview];
+                [[self delegate] unloadCachedPreviewForView:subview.view];
                 [subview removeFromSuperview];
             } else if (subview.rowNumber < minVisibleRow) {
                 minVisibleRow = subview.rowNumber;
@@ -174,8 +174,8 @@ typedef struct RowOfScrapsInSidebar {
                     MMScrapSidebarButton* leftScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfScrap, sizeOfScrap)];
                     leftScrapButton.rowNumber = row;
                     [leftScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
-                    leftScrapButton.scrap = currentScrap;
-                    [currentScrap.state loadCachedScrapPreview];
+                    leftScrapButton.view = currentScrap;
+                    [[self delegate] loadCachedPreviewForView:currentScrap];
                     [scrollView addSubview:leftScrapButton];
                     CGFloat heightOfCurrScrap = leftScrapButton.bounds.size.height + kColumnTopMargin;
                     if (heightOfCurrScrap > maxHeightOfScrapsInRow) {
