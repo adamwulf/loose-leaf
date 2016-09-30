@@ -111,14 +111,14 @@
     return mproperties;
 }
 
-- (void)didTapOnViewFromMenu:(MMScrapView*)view withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
+- (void)didTapOnViewFromMenu:(MMScrapView*)view withPreferredProperties:(NSDictionary*)properties below:(BOOL)below {
     CheckMainThread;
 
     [sidebarScrapState scrapIsRemovedFromSidebar:view];
 
     [view loadScrapStateAsynchronously:YES];
 
-    [super didTapOnViewFromMenu:view withPreferredScrapProperties:properties below:below];
+    [super didTapOnViewFromMenu:view withPreferredProperties:properties below:below];
 }
 
 

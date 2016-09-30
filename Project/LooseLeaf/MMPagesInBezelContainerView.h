@@ -38,7 +38,7 @@
 
 - (void)saveScrapContainerToDisk;
 
-- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties;
+- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredProperties:(NSDictionary*)properties;
 
 - (void)loadFromDisk;
 

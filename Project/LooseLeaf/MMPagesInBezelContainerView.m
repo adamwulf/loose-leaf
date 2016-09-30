@@ -312,7 +312,7 @@
         // set the bubble to nil its scrap so it'll be known dead
         // if we need to realign buttons during this animation
         bubble.view = nil;
-        [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:nil];
+        [self animateAndAddScrapBackToPage:scrap withPreferredProperties:nil];
 
         [bubbleForScrap removeObjectForKey:scrap.uuid];
         [rotationAdjustments removeObjectForKey:scrap.uuid];
@@ -320,23 +320,23 @@
 }
 
 - (void)didTapOnViewFromMenu:(MMScrapView*)scrap {
-    [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil];
+    [self didTapOnViewFromMenu:scrap withPreferredProperties:nil];
 }
 
-- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties {
+- (void)didTapOnViewFromMenu:(MMScrapView*)scrap withPreferredProperties:(NSDictionary*)properties {
     [sidebarScrapState scrapIsRemovedFromSidebar:scrap];
 
     scrap.center = [self convertPoint:scrap.center fromView:scrap.superview];
     [self insertSubview:scrap atIndex:0];
 
     [self sidebarCloseButtonWasTapped];
-    [self animateAndAddScrapBackToPage:scrap withPreferredScrapProperties:properties];
+    [self animateAndAddScrapBackToPage:scrap withPreferredProperties:properties];
     [countButton setCount:[sidebarScrapState.allLoadedScraps count]];
 
     [bubbleForScrap removeObjectForKey:scrap.uuid];
 }
 
-- (void)animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredScrapProperties:(NSDictionary*)properties {
+- (void)animateAndAddScrapBackToPage:(MMScrapView*)scrap withPreferredProperties:(NSDictionary*)properties {
     CheckMainThread;
     MMScrapBubbleButton* bubble = [bubbleForScrap objectForKey:scrap.uuid];
 

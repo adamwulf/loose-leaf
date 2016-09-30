@@ -36,7 +36,7 @@
 
 - (void)deleteAllViewsFromSidebar NS_REQUIRES_SUPER;
 
-- (void)didTapOnViewFromMenu:(ViewType)view withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below;
+- (void)didTapOnViewFromMenu:(ViewType)view withPreferredProperties:(NSDictionary*)properties below:(BOOL)below;
 
 - (void)addViewToCountableSidebar:(ViewType)view animated:(BOOL)animated;
 

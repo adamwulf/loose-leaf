@@ -1,5 +1,5 @@
 //
-//  MMScrapBezelMenuView.h
+//  MMScrapSidebarContentView.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/5/13.

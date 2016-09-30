@@ -1,5 +1,5 @@
 //
-//  MMScrapBezelMenuView.m
+//  MMScrapSidebarContentView.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/5/13.
@@ -8,7 +8,7 @@
 
 #import "MMScrapSidebarContentView.h"
 #import "MMScrapView.h"
-#import "MMScrapSidebarButton.h"
+#import "MMCountableSidebarButton.h"
 #import "MMTrashButton.h"
 #import "Constants.h"
 #import "UIView+Animations.h"
@@ -32,8 +32,8 @@ typedef struct RowOfViewsInSidebar {
 }
 
 - (void)viewDidHide {
-    for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
-        if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
+    for (MMCountableSidebarButton* subview in [[scrollView subviews] copy]) {
+        if ([subview isKindOfClass:[MMCountableSidebarButton class]]) {
             if ([[self.delegate viewsInSidebar] count] > kMaxButtonsInBezelSidebar) {
                 [[self delegate] unloadCachedPreviewForView:subview.view];
             }
@@ -46,9 +46,9 @@ typedef struct RowOfViewsInSidebar {
     CheckMainThread;
 
     // determine how many rows of scraps that we'll need
-    NSArray* allScraps = [self.delegate viewsInSidebar];
-    int rowCount = ceilf((float)[allScraps count] / self.columnCount);
-    CGFloat maxDimOfScrap = (self.bounds.size.width - kColumnSideMargin) / self.columnCount;
+    NSArray* allViews = [self.delegate viewsInSidebar];
+    int rowCount = ceilf((float)[allViews count] / self.columnCount);
+    CGFloat maxDimOfView = (self.bounds.size.width - kColumnSideMargin) / self.columnCount;
 
     // make sure we have data to store the attributes per row
     if (rowCount > countOfStoredRowData) {
@@ -64,20 +64,20 @@ typedef struct RowOfViewsInSidebar {
     CGFloat currentYOffset = 5 * kColumnTopMargin;
     for (int row = 0; row < rowCount; row++) {
         // determine the index and scrap objects
-        CGFloat maxHeightOfScrapsInRow = 0;
+        CGFloat maxHeightOfViewsInRow = 0;
         for (int index = row * (int)self.columnCount; index < row * self.columnCount + self.columnCount; index++) {
-            if (index < [allScraps count]) {
-                MMScrapView* currentScrap = [allScraps objectAtIndex:index];
-                CGSize sizeOfCellForScrap = [MMScrapSidebarButton sizeOfRowForView:currentScrap forWidth:maxDimOfScrap];
-                CGFloat heightOfCurrScrap = sizeOfCellForScrap.height + kColumnTopMargin;
-                if (heightOfCurrScrap > maxHeightOfScrapsInRow) {
-                    maxHeightOfScrapsInRow = heightOfCurrScrap;
+            if (index < [allViews count]) {
+                UIView<MMUUIDView>* currentView = [allViews objectAtIndex:index];
+                CGSize sizeOfCellForView = [MMCountableSidebarButton sizeOfRowForView:currentView forWidth:maxDimOfView];
+                CGFloat heightOfCurrView = sizeOfCellForView.height + kColumnTopMargin;
+                if (heightOfCurrView > maxHeightOfViewsInRow) {
+                    maxHeightOfViewsInRow = heightOfCurrView;
                 }
             }
         }
-        rowData[row].height = maxHeightOfScrapsInRow;
+        rowData[row].height = maxHeightOfViewsInRow;
         rowData[row].topY = currentYOffset;
-        currentYOffset += maxHeightOfScrapsInRow;
+        currentYOffset += maxHeightOfViewsInRow;
     }
 
     // set our content offset and make sure it's still valid
@@ -104,8 +104,8 @@ typedef struct RowOfViewsInSidebar {
 
 #pragma mark - UIButton
 
-- (void)tappedOnScrapButton:(MMScrapSidebarButton*)button {
-    [self.delegate didTapOnViewFromMenu:button.view withPreferredScrapProperties:nil below:YES];
+- (void)tappedOnViewButton:(MMCountableSidebarButton*)button {
+    [self.delegate didTapOnViewFromMenu:button.view withPreferredProperties:nil below:YES];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -137,16 +137,16 @@ typedef struct RowOfViewsInSidebar {
 
     // determine the variables that will affect
     // our layout
-    NSArray* allScraps = [self.delegate viewsInSidebar];
-    CGFloat sizeOfScrap = (self.bounds.size.width - kColumnSideMargin) / self.columnCount;
+    NSArray* allViews = [self.delegate viewsInSidebar];
+    CGFloat sizeOfView = (self.bounds.size.width - kColumnSideMargin) / self.columnCount;
     int row = [self rowForYOffset:scrollView.contentOffset.y];
     int maxRow = [self rowForYOffset:scrollView.contentOffset.y + scrollView.bounds.size.height] + 1;
 
     // very basic for now. just remove all old scraps
     NSInteger minVisibleRow = NSIntegerMax;
     NSInteger maxVisibleRow = NSIntegerMin;
-    for (MMScrapSidebarButton* subview in [[scrollView subviews] copy]) {
-        if ([subview isKindOfClass:[MMScrapSidebarButton class]]) {
+    for (MMCountableSidebarButton* subview in [[scrollView subviews] copy]) {
+        if ([subview isKindOfClass:[MMCountableSidebarButton class]]) {
             if (subview.rowNumber < row || subview.rowNumber > maxRow) {
                 [[self delegate] unloadCachedPreviewForView:subview.view];
                 [subview removeFromSuperview];
@@ -161,33 +161,33 @@ typedef struct RowOfViewsInSidebar {
     while (row < countOfStoredRowData && rowData[row].topY < scrollView.contentOffset.y + scrollView.bounds.size.height) {
         // add views while we have some and while they're visible
         // determine the index and scrap objects
-        CGFloat maxHeightOfScrapsInRow = 0;
+        CGFloat maxHeightOfViewsInRow = 0;
         NSMutableArray* currRow = [NSMutableArray array];
         if (row < minVisibleRow || row > maxVisibleRow) {
             for (int index = row * (int)self.columnCount; index < row * self.columnCount + self.columnCount; index++) {
-                if (index < [allScraps count]) {
-                    MMScrapView* currentScrap = [allScraps objectAtIndex:index];
+                if (index < [allViews count]) {
+                    UIView<MMUUIDView>* currentView = [allViews objectAtIndex:index];
                     // place the left scrap. it should have 10 px left margin
                     // (left margin already accounted for with our bounds)
                     // and 10px in the middle between it at the right
-                    CGFloat x = (index - row * self.columnCount) * (sizeOfScrap + kColumnSideMargin);
-                    MMScrapSidebarButton* leftScrapButton = [[MMScrapSidebarButton alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfScrap, sizeOfScrap)];
-                    leftScrapButton.rowNumber = row;
-                    [leftScrapButton addTarget:self action:@selector(tappedOnScrapButton:) forControlEvents:UIControlEventTouchUpInside];
-                    leftScrapButton.view = currentScrap;
-                    [[self delegate] loadCachedPreviewForView:currentScrap];
-                    [scrollView addSubview:leftScrapButton];
-                    CGFloat heightOfCurrScrap = leftScrapButton.bounds.size.height + kColumnTopMargin;
-                    if (heightOfCurrScrap > maxHeightOfScrapsInRow) {
-                        maxHeightOfScrapsInRow = heightOfCurrScrap;
+                    CGFloat x = (index - row * self.columnCount) * (sizeOfView + kColumnSideMargin);
+                    MMCountableSidebarButton* leftViewButton = [[MMCountableSidebarButton alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfView, sizeOfView)];
+                    leftViewButton.rowNumber = row;
+                    [leftViewButton addTarget:self action:@selector(tappedOnViewButton:) forControlEvents:UIControlEventTouchUpInside];
+                    leftViewButton.view = currentView;
+                    [[self delegate] loadCachedPreviewForView:currentView];
+                    [scrollView addSubview:leftViewButton];
+                    CGFloat heightOfCurrView = leftViewButton.bounds.size.height + kColumnTopMargin;
+                    if (heightOfCurrView > maxHeightOfViewsInRow) {
+                        maxHeightOfViewsInRow = heightOfCurrView;
                     }
-                    [currRow addObject:leftScrapButton];
+                    [currRow addObject:leftViewButton];
                 }
             }
             // center row items vertically
-            for (MMScrapSidebarButton* button in currRow) {
+            for (MMCountableSidebarButton* button in currRow) {
                 CGRect fr = button.frame;
-                fr.origin.y += (maxHeightOfScrapsInRow - fr.size.height) / 2;
+                fr.origin.y += (maxHeightOfViewsInRow - fr.size.height) / 2;
                 button.frame = fr;
             }
         }

@@ -1,5 +1,5 @@
 //
-//  MMScrapMenuButton.h
+//  MMCountableSidebarButton.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/6/13.
@@ -10,7 +10,7 @@
 #import "MMUUIDView.h"
 
 
-@interface MMScrapSidebarButton : UIButton
+@interface MMCountableSidebarButton : UIButton
 
 @property (nonatomic) UIView<MMUUIDView>* view;
 @property (nonatomic, assign) NSInteger rowNumber;

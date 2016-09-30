@@ -270,7 +270,7 @@
 		6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6695B6E71750088D0069E61F /* AudioToolbox.framework */; };
 		6695B6EC17505FBF0069E61F /* MMEditablePaperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */; };
 		6695B6F01751CC170069E61F /* Pen.m in Sources */ = {isa = PBXBuildFile; fileRef = 6695B6EF1751CC160069E61F /* Pen.m */; };
-		6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */; };
+		6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMCountableSidebarButton.m */; };
 		6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699715117DBA02700E81467 /* MMDebugDrawView.m */; };
 		669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */; };
 		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1114,8 +1114,8 @@
 		6695B6EB17505FBF0069E61F /* MMEditablePaperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperView.m; sourceTree = "<group>"; };
 		6695B6EE1751CC160069E61F /* Pen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pen.h; sourceTree = "<group>"; };
 		6695B6EF1751CC160069E61F /* Pen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pen.m; sourceTree = "<group>"; };
-		6699714B17DA5EDB00E81467 /* MMScrapSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarButton.h; sourceTree = "<group>"; };
-		6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarButton.m; sourceTree = "<group>"; };
+		6699714B17DA5EDB00E81467 /* MMCountableSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarButton.h; sourceTree = "<group>"; };
+		6699714C17DA5EDB00E81467 /* MMCountableSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarButton.m; sourceTree = "<group>"; };
 		6699715017DBA02700E81467 /* MMDebugDrawView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugDrawView.h; sourceTree = "<group>"; };
 		6699715117DBA02700E81467 /* MMDebugDrawView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugDrawView.m; sourceTree = "<group>"; };
 		66999053185F7520005581D9 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -3147,8 +3147,6 @@
 				66CE120617D3BBCD00882275 /* MMScrapSidebarContainerViewDelegate.h */,
 				66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */,
 				66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */,
-				6699714B17DA5EDB00E81467 /* MMScrapSidebarButton.h */,
-				6699714C17DA5EDB00E81467 /* MMScrapSidebarButton.m */,
 			);
 			name = "Scrap Sidebar";
 			sourceTree = "<group>";
@@ -4061,6 +4059,8 @@
 			children = (
 				66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */,
 				66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */,
+				6699714B17DA5EDB00E81467 /* MMCountableSidebarButton.h */,
+				6699714C17DA5EDB00E81467 /* MMCountableSidebarButton.m */,
 				C5F1B3021D9B38D000E0E9A8 /* MMCountableSidebarContainerView.h */,
 				C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */,
 				C5EFA59D1D9D966100BBE8CD /* MMCountableSidebarContainerViewDelegate.h */,
@@ -4484,7 +4484,7 @@
 				666E254918F613FA00C17295 /* MMFaceSidebarContentView.m in Sources */,
 				C5F1B2951D9B01BB00E0E9A8 /* Mixpanel+HostWatchOS.m in Sources */,
 				C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */,
-				6699714D17DA5EDB00E81467 /* MMScrapSidebarButton.m in Sources */,
+				6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */,
 				C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */,
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
 				6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */,

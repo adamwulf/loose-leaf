@@ -1,16 +1,16 @@
 //
-//  MMScrapMenuButton.m
+//  MMCountableSidebarButton.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/6/13.
 //  Copyright (c) 2013 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMScrapSidebarButton.h"
+#import "MMCountableSidebarButton.h"
 #import <Crashlytics/Crashlytics.h>
 
 
-@implementation MMScrapSidebarButton
+@implementation MMCountableSidebarButton
 
 @synthesize view;
 @synthesize rowNumber;
@@ -32,7 +32,7 @@
 }
 
 + (CGSize)sizeOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width {
-    CGFloat scale = [MMScrapSidebarButton scaleOfRowForView:view forWidth:width];
+    CGFloat scale = [MMCountableSidebarButton scaleOfRowForView:view forWidth:width];
     CGSize s = CGSizeMake(view.frame.size.width * scale, view.frame.size.height * scale);
     if (s.width < s.height) {
         s.width = s.height;
@@ -44,7 +44,7 @@
     view = _view;
 
     CGRect fr = self.frame;
-    fr.size = [MMScrapSidebarButton sizeOfRowForView:view forWidth:self.bounds.size.width];
+    fr.size = [MMCountableSidebarButton sizeOfRowForView:view forWidth:self.bounds.size.width];
     CLS_LOG(@"updating scrap button frame from: %.2f %.2f %.2f %.2f to %.2f %.2f %.2f %.2f", self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, fr.origin.x, fr.origin.y, fr.size.width, fr.size.height);
     self.frame = fr;
 
@@ -61,7 +61,7 @@
     view.center = transformView.center;
 
     [self addSubview:transformView];
-    CGFloat scale = [MMScrapSidebarButton scaleOfRowForView:view forWidth:self.bounds.size.width];
+    CGFloat scale = [MMCountableSidebarButton scaleOfRowForView:view forWidth:self.bounds.size.width];
     transformView.transform = CGAffineTransformMakeScale(scale, scale);
     transformView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 

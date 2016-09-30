@@ -62,7 +62,7 @@
     [viewsInSidebar removeAllObjects];
 }
 
-- (void)didTapOnViewFromMenu:(UIView<MMUUIDView>*)view withPreferredScrapProperties:(NSDictionary*)properties below:(BOOL)below {
+- (void)didTapOnViewFromMenu:(UIView<MMUUIDView>*)view withPreferredProperties:(NSDictionary*)properties below:(BOOL)below {
     [viewsInSidebar removeObject:view];
     view.center = [self convertPoint:view.center fromView:view.superview];
 
@@ -322,7 +322,7 @@
 
     if ([[self viewsInSidebar] containsObject:bubble.view]) {
         scrap.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:scrap], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-        [self didTapOnViewFromMenu:scrap withPreferredScrapProperties:nil below:NO];
+        [self didTapOnViewFromMenu:scrap withPreferredProperties:nil below:NO];
     }
 }
 
