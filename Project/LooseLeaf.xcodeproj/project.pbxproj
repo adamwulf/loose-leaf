@@ -406,7 +406,6 @@
 		66EDE48619B3BD6C00A5623B /* MMCloudKitImportCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = 66EDE48519B3BD6C00A5623B /* MMCloudKitImportCoordinator.m */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
-		66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */; };
 		66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AA19C393DE00C1F696 /* ios-settings-icon.png */; };
 		66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */; };
 		66F968B119C3940400C1F696 /* MMCloudKitNoAccountHelpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F968B019C3940400C1F696 /* MMCloudKitNoAccountHelpView.m */; };
@@ -548,6 +547,7 @@
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
 		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
+		C5EFA5A01D9E13FB00BBE8CD /* MMPageBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */; };
 		C5F1B2861D9B01BB00E0E9A8 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B1E01D9B01BA00E0E9A8 /* _MPTweakBindObserver.m */; };
 		C5F1B2871D9B01BB00E0E9A8 /* MPArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F1B1E41D9B01BA00E0E9A8 /* MPArrowLeft.png */; };
 		C5F1B2881D9B01BB00E0E9A8 /* MPArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F1B1E51D9B01BA00E0E9A8 /* MPArrowLeft@2x.png */; };
@@ -642,11 +642,9 @@
 		C5F1B2E11D9B01BB00E0E9A8 /* UIView+MPHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2821D9B01BB00E0E9A8 /* UIView+MPHelpers.m */; };
 		C5F1B2E21D9B01BB00E0E9A8 /* UIViewController+AutomaticEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2841D9B01BB00E0E9A8 /* UIViewController+AutomaticEvents.m */; };
 		C5F1B2E61D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */; };
-		C5F1B2EA1D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */; };
 		C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */; };
 		C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */; };
 		C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */; };
-		C5F1B3181D9B68D900E0E9A8 /* MMPageSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3171D9B68D900E0E9A8 /* MMPageSidebarButton.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -1392,8 +1390,6 @@
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountBubbleButton.h; sourceTree = "<group>"; };
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
-		66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapSidebarContentView.h; sourceTree = "<group>"; };
-		66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapSidebarContentView.m; sourceTree = "<group>"; };
 		66F968AA19C393DE00C1F696 /* ios-settings-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon.png"; sourceTree = "<group>"; };
 		66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon@2x.png"; sourceTree = "<group>"; };
 		66F968AF19C3940400C1F696 /* MMCloudKitNoAccountHelpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitNoAccountHelpView.h; sourceTree = "<group>"; };
@@ -1604,6 +1600,8 @@
 		C5EFA59B1D9CCFA700BBE8CD /* MMUUIDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUUIDView.h; sourceTree = "<group>"; };
 		C5EFA59C1D9CED7000BBE8CD /* MMBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBubbleButton.h; sourceTree = "<group>"; };
 		C5EFA59D1D9D966100BBE8CD /* MMCountableSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C5EFA59E1D9E13FB00BBE8CD /* MMPageBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageBubbleButton.h; sourceTree = "<group>"; };
+		C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageBubbleButton.m; sourceTree = "<group>"; };
 		C5F1B1DF1D9B01BA00E0E9A8 /* _MPTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _MPTweakBindObserver.h; sourceTree = "<group>"; };
 		C5F1B1E01D9B01BA00E0E9A8 /* _MPTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _MPTweakBindObserver.m; sourceTree = "<group>"; };
 		C5F1B1E11D9B01BA00E0E9A8 /* app_extension_module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = app_extension_module.modulemap; sourceTree = "<group>"; };
@@ -1772,17 +1770,12 @@
 		C5F1B2851D9B01BB00E0E9A8 /* watchos.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = watchos.modulemap; sourceTree = "<group>"; };
 		C5F1B2E41D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesInBezelContainerView.h; sourceTree = "<group>"; };
 		C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPagesInBezelContainerView.m; sourceTree = "<group>"; };
-		C5F1B2E71D9B0CE400E0E9A8 /* MMPageSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
-		C5F1B2E81D9B0CFC00E0E9A8 /* MMPageSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageSidebarContentView.h; sourceTree = "<group>"; };
-		C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageSidebarContentView.m; sourceTree = "<group>"; };
 		C5F1B2EB1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMSidebarButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
 		C5F1B2EC1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMSidebarButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
 		C5F1B3021D9B38D000E0E9A8 /* MMCountableSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContainerView.h; sourceTree = "<group>"; };
 		C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarContainerView.m; sourceTree = "<group>"; };
 		C5F1B3051D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContentView.h; sourceTree = "<group>"; };
 		C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountableSidebarContentView.m; sourceTree = "<group>"; };
-		C5F1B3161D9B68D900E0E9A8 /* MMPageSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageSidebarButton.h; sourceTree = "<group>"; };
-		C5F1B3171D9B68D900E0E9A8 /* MMPageSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageSidebarButton.m; sourceTree = "<group>"; };
 		C5F4BE821C2676CF00FFB640 /* top-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE841C2676D700FFB640 /* bottom-buttons@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons@2x.png"; sourceTree = "<group>"; };
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
@@ -3145,8 +3138,6 @@
 				66CE11FB17D2700E00882275 /* MMScrapsInBezelContainerView.h */,
 				66CE11FC17D2700E00882275 /* MMScrapsInBezelContainerView.m */,
 				66CE120617D3BBCD00882275 /* MMScrapSidebarContainerViewDelegate.h */,
-				66F4FB2417D912730086E21C /* MMScrapSidebarContentView.h */,
-				66F4FB2517D912730086E21C /* MMScrapSidebarContentView.m */,
 			);
 			name = "Scrap Sidebar";
 			sourceTree = "<group>";
@@ -4019,13 +4010,10 @@
 		C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */ = {
 			isa = PBXGroup;
 			children = (
+				C5EFA59E1D9E13FB00BBE8CD /* MMPageBubbleButton.h */,
+				C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */,
 				C5F1B2E41D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.h */,
 				C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */,
-				C5F1B2E71D9B0CE400E0E9A8 /* MMPageSidebarContainerViewDelegate.h */,
-				C5F1B2E81D9B0CFC00E0E9A8 /* MMPageSidebarContentView.h */,
-				C5F1B2E91D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m */,
-				C5F1B3161D9B68D900E0E9A8 /* MMPageSidebarButton.h */,
-				C5F1B3171D9B68D900E0E9A8 /* MMPageSidebarButton.m */,
 			);
 			name = "Page Sidebar";
 			sourceTree = "<group>";
@@ -4506,7 +4494,6 @@
 				66A790C319689CF00037F01A /* MMUndoRedoRemoveScrapItem.m in Sources */,
 				667D98AF192D5D8200625879 /* MMInboxManager.m in Sources */,
 				66A790B6196896FA0037F01A /* MMUndoRedoAddScrapItem.m in Sources */,
-				C5F1B3181D9B68D900E0E9A8 /* MMPageSidebarButton.m in Sources */,
 				6610D08D1AA8FAFA0019C2FB /* MMInboxButton.m in Sources */,
 				C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */,
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
@@ -4694,7 +4681,6 @@
 				663326BA1AAFE409003915E6 /* MMAbstractShareItem.m in Sources */,
 				660116F219ABB1A50065C1B4 /* MMCloudKitDeclinedPermissionState.m in Sources */,
 				660116E619ABAAFC0065C1B4 /* MMCloudKitBaseState.m in Sources */,
-				C5F1B2EA1D9B0CFC00E0E9A8 /* MMPageSidebarContentView.m in Sources */,
 				C5F1B2A51D9B01BB00E0E9A8 /* MPABTestDesignerTweakRequestMessage.m in Sources */,
 				6652452A1996B45C00C36609 /* MMPhotoAlbumShareItem.m in Sources */,
 				66B51A2A17AC50F7005B5E09 /* MMBezelInGestureRecognizer.m in Sources */,
@@ -4738,6 +4724,7 @@
 				C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */,
 				66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
+				C5EFA5A01D9E13FB00BBE8CD /* MMPageBubbleButton.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
 				66381F5919CB921A0014796F /* MMCameraCollectionViewCell.m in Sources */,
 				66381F5D19CB96730014796F /* MMDisplayAssetCell.m in Sources */,
@@ -4769,7 +4756,6 @@
 				C5F1B2CE1D9B01BB00E0E9A8 /* MPTweakInline.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
 				C5DA29951D7C013A00D868EC /* MMGenerator.m in Sources */,
-				66F4FB2617D912730086E21C /* MMScrapSidebarContentView.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMSingleStackManager.m in Sources */,

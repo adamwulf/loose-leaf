@@ -9,7 +9,7 @@
 #import "MMScrapsInBezelContainerView.h"
 #import "MMScrapBubbleButton.h"
 #import "NSThread+BlockAdditions.h"
-#import "MMScrapSidebarContentView.h"
+#import "MMCountableSidebarContentView.h"
 #import "MMScrapsInSidebarState.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
@@ -33,7 +33,7 @@
 
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
     if (self = [super initWithFrame:frame andCountButton:_countButton]) {
-        contentView = [[MMScrapSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
+        contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         [slidingSidebarView addSubview:contentView];
 
@@ -239,7 +239,7 @@ static NSString* bezelStatePath;
 }
 
 - (MMScrapsOnPaperState*)paperStateForPageUUID:(NSString*)uuidOfPage {
-    return [bubbleDelegate pageForUUID:uuidOfPage].scrapsOnPaperState;
+    return [[self bubbleDelegate] pageForUUID:uuidOfPage].scrapsOnPaperState;
 }
 
 @end

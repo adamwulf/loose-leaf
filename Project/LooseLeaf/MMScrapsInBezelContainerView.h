@@ -18,11 +18,9 @@
 
 
 @interface MMScrapsInBezelContainerView : MMCountableSidebarContainerView <MMScrapView*>
-<MMScrapsInSidebarStateDelegate> {
-    __weak NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
-}
+<MMScrapsInSidebarStateDelegate>
 
-@property (nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
+    @property(nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (readonly) MMScrapsInSidebarState* sidebarScrapState;
 
 // scrap specific
