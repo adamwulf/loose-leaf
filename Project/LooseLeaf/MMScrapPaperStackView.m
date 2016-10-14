@@ -372,15 +372,15 @@
     [super enableAllGesturesForPageView];
 }
 
-- (void)sidebarCloseButtonWasTapped {
+- (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar {
     // noop
 }
 
-- (void)sidebarWillShow {
+- (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar {
     [self disableAllGesturesForPageView];
 }
 
-- (void)sidebarWillHide {
+- (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar {
     [self setButtonsVisible:YES animated:YES];
     [self enableAllGesturesForPageView];
 }
@@ -1550,6 +1550,7 @@
     } else {
         self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
     }
+    self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
     [super setButtonsVisible:visible animated:animated];
 }
 
@@ -1595,7 +1596,7 @@
 - (MMScrapView*)scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID {
     // try to load a scrap from the bezel sidebar if possible,
     // otherwise our scrap state will load it
-    MMScrapView* scrapOwnedByBezel = [self.bezelContainerView.sidebarScrapState scrapForUUID:scrapUUID];
+    MMScrapView* scrapOwnedByBezel = [self.stackDelegate.bezelScrapContainer.sidebarScrapState scrapForUUID:scrapUUID];
     //    MMScrapView* scrapOwnedByPan1 = scr
 
     MMScrapView* scrapOwnedByPan1 = panAndPinchScrapGesture.scrap;

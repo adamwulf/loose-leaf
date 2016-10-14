@@ -150,7 +150,15 @@
     UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleTapped:)];
     [bubble addGestureRecognizer:tappy];
     [self insertSubview:bubble atIndex:0];
+
+    CGPoint theirCenter = view.center;
+    CGPoint myCenter = [self convertPoint:theirCenter fromView:view.superview];
+
     [self insertSubview:view aboveSubview:bubble];
+    view.center = myCenter;
+    view.layer.borderColor = [[UIColor purpleColor] CGColor];
+    view.layer.borderWidth = 10;
+
     // keep the scrap in the bezel container during the animation, then
     // push it into the bubble
     bubble.alpha = 0;
@@ -410,7 +418,7 @@
         [UIView animateWithDuration:kAnimationDuration animations:^{
             [self setAlpha:1];
         } completion:nil];
-        [self.delegate sidebarCloseButtonWasTapped];
+        [self.delegate sidebarCloseButtonWasTapped:self];
     }
 }
 

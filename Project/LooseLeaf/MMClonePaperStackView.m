@@ -34,6 +34,23 @@
         pageCloner = nil;
     }
 
+    if (gesture.state == UIGestureRecognizerStateEnded ||
+        gesture.state == UIGestureRecognizerStateFailed ||
+        gesture.state == UIGestureRecognizerStateCancelled) {
+        if (gesture.pinchedPage.center.x > CGRectGetWidth([self bounds]) - kBezelInGestureWidth) {
+            // properties for drag behavior
+            realizedThatPageIsBeingDragged = NO;
+            pageBeingDragged = nil;
+            // go to page/list view
+            // based on how the gesture ended
+            [self setScrollEnabled:YES];
+            [self.stackDelegate.bezelPagesContainer addViewToCountableSidebar:(MMEditablePaperView*)gesture.pinchedPage animated:YES];
+            [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:YES forceRecalculateAll:YES];
+            [self finishUITransitionToListView];
+            return;
+        }
+    }
+
     [super didPickUpAPageInListView:gesture];
 }
 

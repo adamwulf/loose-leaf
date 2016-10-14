@@ -30,15 +30,20 @@
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         [slidingSidebarView addSubview:contentView];
+
+        self.layer.borderWidth = 4;
+        self.layer.borderColor = [[UIColor greenColor] CGColor];
     }
     return self;
 }
 
 #pragma mark - MMCountableSidebarContainerView
 
-- (MMPageBubbleButton*)newBubbleForView:(MMEditablePaperView*)scrap {
+- (MMPageBubbleButton*)newBubbleForView:(MMEditablePaperView*)page {
     MMPageBubbleButton* bubble = [[MMPageBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
-    bubble.originalViewScale = scrap.scale;
+    bubble.originalViewScale = page.scale;
+    bubble.layer.borderColor = [[UIColor redColor] CGColor];
+    bubble.layer.borderWidth = 5;
     return bubble;
 }
 

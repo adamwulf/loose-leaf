@@ -91,7 +91,7 @@
             onComplete(finished);
     };
 
-    [delegate sidebarWillHide];
+    [delegate sidebarWillHide:self];
     // keep our property changes in a block
     // to pass to UIView or just run
     void (^hideBlock)(void) = ^{
@@ -123,7 +123,7 @@
     if ([self isVisible])
         return;
 
-    [delegate sidebarWillShow];
+    [delegate sidebarWillShow:self];
 
     if (animated) {
         CGRect fr = slidingSidebarView.frame;
@@ -247,7 +247,7 @@
 - (void)sidebarCloseButtonWasTapped {
     if ([self isVisible]) {
         [self hide:YES onComplete:nil];
-        [self.delegate sidebarCloseButtonWasTapped];
+        [self.delegate sidebarCloseButtonWasTapped:self];
     }
 }
 

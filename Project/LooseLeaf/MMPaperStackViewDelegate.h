@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
+#import "MMPagesInBezelContainerView.h"
 
 @protocol MMPaperStackViewDelegate <NSObject>
 
@@ -17,6 +18,8 @@
 - (void)animatingToPageView;
 
 - (MMScrapsInBezelContainerView*)bezelScrapContainer;
+
+- (MMPagesInBezelContainerView*)bezelPagesContainer;
 
 - (MMImageSidebarContainerView*)importImageSidebar;
 

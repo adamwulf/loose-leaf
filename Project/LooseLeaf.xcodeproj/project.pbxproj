@@ -3715,6 +3715,15 @@
 			name = PDFs;
 			sourceTree = "<group>";
 		};
+		C57E6BFA1DB0967D0038DB3B /* Page Bubble */ = {
+			isa = PBXGroup;
+			children = (
+				C5EFA59E1D9E13FB00BBE8CD /* MMPageBubbleButton.h */,
+				C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */,
+			);
+			name = "Page Bubble";
+			sourceTree = "<group>";
+		};
 		C5860E131C14CA1000CD079B /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
@@ -4010,8 +4019,7 @@
 		C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */ = {
 			isa = PBXGroup;
 			children = (
-				C5EFA59E1D9E13FB00BBE8CD /* MMPageBubbleButton.h */,
-				C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */,
+				C57E6BFA1DB0967D0038DB3B /* Page Bubble */,
 				C5F1B2E41D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.h */,
 				C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */,
 			);

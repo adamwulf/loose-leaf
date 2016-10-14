@@ -44,6 +44,7 @@
 #import "MMMarkdown.h"
 #import "MMFeedbackViewController.h"
 #import "MMScrapsInBezelContainerView.h"
+#import "MMPagesInBezelContainerView.h"
 
 
 @interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate>
@@ -79,6 +80,9 @@
     // in the right sidebar
     MMCountBubbleButton* countButton;
     MMScrapsInBezelContainerView* bezelScrapContainer;
+
+    MMCountBubbleButton* countPagesButton;
+    MMPagesInBezelContainerView* bezelPagesContainer;
 }
 
 - (id)init {
@@ -212,6 +216,20 @@
 
         [bezelScrapContainer loadFromDisk];
 
+        frame = [self.view bounds];
+        rightBezelSide = frame.size.width - 100;
+        midPointY = (frame.size.height - 3 * 80) / 2;
+        countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+        countPagesButton.alpha = 0;
+        [countPagesButton addTarget:self action:@selector(showPagesSidebar:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:countPagesButton];
+
+        bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
+        bezelPagesContainer.delegate = self;
+        bezelPagesContainer.bubbleDelegate = self;
+        [self.view addSubview:bezelPagesContainer];
+        [bezelPagesContainer setCountButton:countPagesButton];
+
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         [self.view addGestureRecognizer:[MMPalmGestureRecognizer sharedInstance]];
@@ -326,6 +344,10 @@
     return bezelScrapContainer;
 }
 
+- (MMPagesInBezelContainerView*)bezelPagesContainer {
+    return bezelPagesContainer;
+}
+
 - (MMImageSidebarContainerView*)importImageSidebar {
     return importImageSidebar;
 }
@@ -403,6 +425,10 @@
 
 - (void)switchToStack:(NSString*)stackUUID {
     MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
+
+    if (!stackUUID) {
+        stackUUID = [[NSUUID UUID] UUIDString];
+    }
 
     if (!aStackView) {
         aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
@@ -577,16 +603,22 @@
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
-- (void)sidebarCloseButtonWasTapped {
-    [currentStackView sidebarCloseButtonWasTapped];
+- (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView sidebarCloseButtonWasTapped:sidebar];
+    }
 }
 
-- (void)sidebarWillShow {
-    [currentStackView sidebarWillShow];
+- (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView sidebarWillShow:sidebar];
+    }
 }
 
-- (void)sidebarWillHide {
-    [currentStackView sidebarWillHide];
+- (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView sidebarWillHide:sidebar];
+    }
 }
 
 - (UIView*)viewForBlur {
@@ -735,6 +767,9 @@
 - (void)showScrapSidebar:(id)button {
 }
 
+- (void)showPagesSidebar:(id)button {
+}
+
 #pragma mark - MMScrapSidebarContainerViewDelegate
 
 - (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
@@ -744,23 +779,37 @@
 }
 
 - (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
-    [currentStackView didAddView:view toCountableSidebar:sidebar];
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView didAddView:view toCountableSidebar:sidebar];
+    }
 }
 
 - (void)willRemoveView:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
-    [currentStackView willRemoveView:view fromCountableSidebar:sidebar];
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView willRemoveView:view fromCountableSidebar:sidebar];
+    }
 }
 
 - (void)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index hadProperties:(BOOL)hadProperties fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
-    [currentStackView didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:sidebar];
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:sidebar];
+    }
 }
 
 - (CGPoint)positionOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
-    return [currentStackView positionOnScreenToScaleViewTo:view fromCountableSidebar:sidebar];
+    if (sidebar == bezelScrapContainer) {
+        return [currentStackView positionOnScreenToScaleViewTo:view fromCountableSidebar:sidebar];
+    }
+
+    return CGPointZero;
 }
 
 - (CGFloat)scaleOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view givenOriginalScale:(CGFloat)originalScale fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
-    return [currentStackView scaleOnScreenToScaleViewTo:view givenOriginalScale:originalScale fromCountableSidebar:sidebar];
+    if (sidebar == bezelScrapContainer) {
+        return [currentStackView scaleOnScreenToScaleViewTo:view givenOriginalScale:originalScale fromCountableSidebar:sidebar];
+    }
+
+    return 1.0;
 }
 
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {
