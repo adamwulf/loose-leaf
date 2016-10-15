@@ -257,7 +257,7 @@
         [self.bubbleDelegate willAddView:view toCountableSidebar:self];
         if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
             [self loadCachedPreviewForView:view];
-            bubble.alpha = 1;
+            bubble.alpha = targetAlpha;
             view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             view.center = bubble.center;
             bubble.view = view;

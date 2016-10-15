@@ -179,10 +179,6 @@
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
-        // Load the stack
-
-        [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
-
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.insertImageButton animateFromLeft:YES];
         importImageSidebar.delegate = self;
@@ -216,6 +212,8 @@
 
         [bezelScrapContainer loadFromDisk];
 
+        // page sidebar
+
         frame = [self.view bounds];
         rightBezelSide = frame.size.width - 100;
         midPointY = (frame.size.height - 3 * 80) / 2;
@@ -238,6 +236,10 @@
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
+
+        // Load the stack
+
+        [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
 
         // Debug
 
