@@ -14,6 +14,7 @@
 #import "MMExportablePaperView.h"
 #import "MMStretchPageGestureRecognizer.h"
 #import "NSArray+Map.h"
+#import "NSArray+Extras.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -1575,8 +1576,6 @@
     //
     // scrolling is enabled, so we need to return
     // the list of pages that are currently visible
-    CGFloat selfContentOffsetY = offsetOfListView.y;
-    CGFloat selfFrameSizeHeight = self.frame.size.height;
 
     NSArray* arraysOfSubviews[2];
     arraysOfSubviews[0] = visibleStackHolder.subviews;
@@ -1584,41 +1583,33 @@
     int countOfSubviews[2]; // can't be NSUInteger, or -1 < count will be false
     countOfSubviews[0] = (int)[visibleStackHolder.subviews count];
     countOfSubviews[1] = (int)[hiddenStackHolder.subviews count];
-    int arrayIndex = 1;
 
-    int startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
-    int startIndex = startRow * kNumberOfColumnsInListView + kNumberOfColumnsInListView - 1;
+    NSArray* allPages = [visibleStackHolder.subviews arrayByAddingObjectsFromArray:[hiddenStackHolder.subviews reversedArray]];
 
-    NSInteger endRow = floor(selfContentOffsetY + selfFrameSizeHeight - bufferWidth) / (bufferWidth + rowHeight);
-    if (endRow < countOfSubviews[0] + countOfSubviews[1]) {
-        endRow += 1;
+    int startRow = floor(offsetOfListView.y) / (bufferWidth + rowHeight);
+    int startCol = floor(offsetOfListView.x) / (bufferWidth + columnWidth);
+    int startIndex = startRow * kNumberOfColumnsInListView + startCol;
+
+    NSInteger endIndex = startIndex + kNumberOfColumnsInListView;
+    startIndex -= kNumberOfColumnsInListView;
+
+    startIndex = MAX(0, startIndex);
+    endIndex = MIN([allPages count] - 1, endIndex);
+
+    if (endIndex >= startIndex) {
+        NSArray* closePages = [allPages subarrayWithRange:NSMakeRange(startIndex, endIndex - startIndex + 1)];
+        return [closePages jotReduce:^id(id obj, NSUInteger index, MMPaperView* accum) {
+            CGRect fr1 = [self frameForListViewForPage:obj];
+            CGRect fr2 = [self frameForListViewForPage:accum];
+            CGFloat d1 = DistanceBetweenTwoPoints(offsetOfListView, CGRectGetMidPoint(fr1));
+            CGFloat d2 = DistanceBetweenTwoPoints(offsetOfListView, CGRectGetMidPoint(fr2));
+            if (!accum || d1 < d2) {
+                return obj;
+            } else {
+                return accum;
+            }
+        }];
     }
-    NSInteger endIndex = endRow * kNumberOfColumnsInListView;
-
-    // iterate over the visible indexes in the list
-    for (int indexInList = startIndex; indexInList < endIndex; indexInList++) {
-        int i = indexInList;
-        if (i < countOfSubviews[0]) {
-            // index is in visible stack
-            arrayIndex = 0;
-        } else {
-            // index is in hidden stack
-            // make sure to reverse the indexes
-            // when inside the hidden stack
-            arrayIndex = 1;
-            i -= countOfSubviews[0];
-            i = countOfSubviews[1] - i - 1; // reverse the hidden stack
-        }
-        if (i >= 0) {
-            // the index calculations don't respect the number of pages,
-            // it's just a blind calculation of which indexes in the list
-            // view are visible at the given offset, so make sure
-            // that the index is actually valid
-            MMPaperView* aPage = [arraysOfSubviews[arrayIndex] objectAtIndex:i];
-            return aPage;
-        }
-    }
-
     return nil;
 }
 
