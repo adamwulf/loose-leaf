@@ -75,6 +75,7 @@
     [self sidebarCloseButtonWasTapped];
     [self.countButton setCount:[[self viewsInSidebar] count]];
 
+    [self.bubbleDelegate willRemoveView:view fromCountableSidebar:self];
 
     UIView<MMBubbleButton>* bubbleToAddToPage = [bubbleForScrap objectForKey:view.uuid];
 
@@ -84,10 +85,10 @@
 
     if (!properties) {
         properties = [self idealPropertiesForViewInBubble:bubbleToAddToPage];
-        ;
     }
 
-    [self.bubbleDelegate willRemoveView:view fromCountableSidebar:self];
+    view.layer.borderWidth = 0;
+
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [view setPropertiesDictionary:properties];
     } completion:^(BOOL finished) {
@@ -334,13 +335,6 @@
     }
 }
 
-
-#pragma mark - MMSidebarButtonDelegate
-
-- (CGFloat)sidebarButtonRotation {
-    return 0;
-}
-
 #pragma mark - Helper Methods
 
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
@@ -363,7 +357,7 @@
     } else {
         countButton.alpha = 0;
         for (UIView<MMUUIDView>* subview in self.subviews) {
-            if ([subview isKindOfClass:[MMSidebarButton class]]) {
+            if ([subview conformsToProtocol:@protocol(MMBubbleButton)]) {
                 subview.alpha = targetAlpha;
             }
         }
@@ -382,7 +376,7 @@
  */
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     for (UIView* bubble in self.subviews) {
-        if ([bubble isKindOfClass:[MMSidebarButton class]]) {
+        if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
             UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
             if (output)
                 return output;
@@ -398,7 +392,7 @@
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     for (UIView* bubble in self.subviews) {
-        if ([bubble isKindOfClass:[MMSidebarButton class]]) {
+        if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
             if ([bubble pointInside:[self convertPoint:point toView:bubble] withEvent:event]) {
                 return YES;
             }

@@ -60,6 +60,7 @@
 // returns yes if the imported page was handled
 - (BOOL)importAndShowPage:(MMExportablePaperView*)page;
 
+- (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page;
 
 // protected
 

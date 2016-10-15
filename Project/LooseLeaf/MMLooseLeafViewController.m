@@ -83,6 +83,8 @@
 
     MMCountBubbleButton* countPagesButton;
     MMPagesInBezelContainerView* bezelPagesContainer;
+
+    MMPaperView* pageInActiveSidebarAnimation;
 }
 
 - (id)init {
@@ -516,7 +518,11 @@
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
-    return [currentStackView findPagesInVisibleRowsOfListView];
+    NSArray* arr = [currentStackView findPagesInVisibleRowsOfListView];
+    if (pageInActiveSidebarAnimation) {
+        arr = [arr arrayByAddingObject:pageInActiveSidebarAnimation];
+    }
+    return arr;
 }
 
 - (NSArray*)pagesInCurrentBezelGesture {
@@ -789,12 +795,17 @@
 - (void)willRemoveView:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     if (sidebar == bezelScrapContainer) {
         [currentStackView willRemoveView:view fromCountableSidebar:sidebar];
+    } else {
+        pageInActiveSidebarAnimation = (MMPaperView*)view;
     }
 }
 
 - (void)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index hadProperties:(BOOL)hadProperties fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     if (sidebar == bezelScrapContainer) {
         [currentStackView didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:sidebar];
+    } else {
+        pageInActiveSidebarAnimation = nil;
+        [currentStackView saveStacksToDisk];
     }
 }
 
@@ -803,7 +814,7 @@
         return [currentStackView positionOnScreenToScaleViewTo:view fromCountableSidebar:sidebar];
     }
 
-    return CGPointZero;
+    return [currentStackView addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)view];
 }
 
 - (CGFloat)scaleOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view givenOriginalScale:(CGFloat)originalScale fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {

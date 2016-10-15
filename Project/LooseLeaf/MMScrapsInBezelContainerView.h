@@ -18,7 +18,7 @@
 
 
 @interface MMScrapsInBezelContainerView : MMCountableSidebarContainerView <MMScrapView*>
-<MMScrapsInSidebarStateDelegate>
+<MMScrapsInSidebarStateDelegate, MMSidebarButtonDelegate>
 
     @property(nonatomic, weak) NSObject<MMScrapSidebarContainerViewDelegate>* bubbleDelegate;
 @property (readonly) MMScrapsInSidebarState* sidebarScrapState;

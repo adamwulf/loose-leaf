@@ -15,7 +15,7 @@
 
 
 @interface MMCountableSidebarContainerView < ViewType : UIView <MMUUIDView>
-* > : MMFullScreenSidebarContainingView<MMSidebarButtonDelegate> {
+* > : MMFullScreenSidebarContainingView {
     MMCountableSidebarContentView* contentView;
     NSMutableDictionary* bubbleForScrap;
 }

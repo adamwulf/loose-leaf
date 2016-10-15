@@ -101,6 +101,7 @@ static const CGFloat frameBuffer = 20;
 }
 - (void)setBounds:(CGRect)bounds {
     [super setBounds:[MMShadowedView expandBounds:bounds]];
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
 }
 
 - (CGPoint)convertPoint:(CGPoint)point toView:(UIView*)view {
