@@ -520,9 +520,12 @@
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
     NSArray* arr = [currentStackView findPagesInVisibleRowsOfListView];
+
     if (pageInActiveSidebarAnimation) {
         arr = [arr arrayByAddingObject:pageInActiveSidebarAnimation];
     }
+    arr = [arr arrayByAddingObjectsFromArray:[self.bezelPagesContainer viewsInSidebar]];
+
     return arr;
 }
 
