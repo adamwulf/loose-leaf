@@ -23,6 +23,19 @@
 
 @implementation MMListSidebarStackView
 
+- (CGRect)frameForListViewForPage:(MMPaperView*)page {
+    CGRect fr = [super frameForListViewForPage:page];
+
+    if ([[self.stackDelegate.bezelPagesContainer viewsInSidebar] count]) {
+        CGFloat maxMove = 120;
+        CGFloat maxX = CGRectGetWidth([self.stackDelegate.bezelPagesContainer bounds]);
+        CGFloat movement = (fr.origin.x) / maxX * maxMove + kWidthOfSidebarButtonBuffer;
+        fr.origin.x -= movement;
+    }
+
+    return fr;
+}
+
 - (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page {
     CGPoint locInSelf = [self convertPoint:page.center fromView:page.superview];
 
@@ -37,7 +50,14 @@
         [visibleStackHolder pushSubview:page];
     }
 
+    // animate pages into their new location
     [self realignPagesInListView:[NSSet setWithArray:currentlyVisiblePages] animated:YES forceRecalculateAll:YES];
+
+    // immediately move non-visible pages to their new location
+    NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
+    [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
+    [allOtherPages removeObjectsInArray:currentlyVisiblePages];
+    [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
 
     CGRect fr = [self frameForListViewForPage:page];
     page.bounds = CGRectFromSize(fr.size);

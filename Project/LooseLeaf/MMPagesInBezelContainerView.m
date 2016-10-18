@@ -42,12 +42,16 @@
     return CGSizeScale(listPageSize, .6);
 }
 
+- (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
+    CGPoint p = [super centerForBubbleAtIndex:index];
+    p.x += 8;
+    return p;
+}
+
 - (MMPageBubbleButton*)newBubbleForView:(MMEditablePaperView*)page {
     CGSize buttonSize = [self sizeForButton];
     MMPageBubbleButton* bubble = [[MMPageBubbleButton alloc] initWithFrame:CGRectMake(0, 0, buttonSize.width, buttonSize.height)];
     bubble.originalViewScale = page.scale;
-    bubble.layer.borderColor = [[UIColor redColor] CGColor];
-    bubble.layer.borderWidth = 5;
     return bubble;
 }
 

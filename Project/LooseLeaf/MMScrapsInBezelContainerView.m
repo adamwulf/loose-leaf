@@ -88,8 +88,6 @@
     bubble.originalViewScale = scrap.scale;
     bubble.delegate = self;
     [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
-    bubble.layer.borderColor = [[UIColor redColor] CGColor];
-    bubble.layer.borderWidth = 5;
     return bubble;
 }
 
