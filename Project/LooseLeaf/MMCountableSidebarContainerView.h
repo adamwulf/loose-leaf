@@ -43,6 +43,8 @@
 
 // protected
 
+- (CGSize)sizeForButton;
+
 - (UIView<MMBubbleButton>*)newBubbleForView:(ViewType)scrap;
 
 - (void)bubbleTapped:(UITapGestureRecognizer*)gesture;

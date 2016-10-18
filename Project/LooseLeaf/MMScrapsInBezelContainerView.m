@@ -77,12 +77,19 @@
 
 #pragma mark - MMCountableSidebarContainerView
 
+- (CGSize)sizeForButton {
+    return CGSizeMake(80, 80);
+}
+
 - (MMScrapBubbleButton*)newBubbleForView:(MMScrapView*)scrap {
-    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    CGSize sizeOfButton = [self sizeForButton];
+    MMScrapBubbleButton* bubble = [[MMScrapBubbleButton alloc] initWithFrame:CGRectMake(0, 0, sizeOfButton.width, sizeOfButton.height)];
     bubble.rotation = lastRotationReading;
     bubble.originalViewScale = scrap.scale;
     bubble.delegate = self;
     [rotationAdjustments setObject:@(bubble.rotationAdjustment) forKey:scrap.uuid];
+    bubble.layer.borderColor = [[UIColor redColor] CGColor];
+    bubble.layer.borderWidth = 5;
     return bubble;
 }
 

@@ -39,8 +39,15 @@
 
 #pragma mark - MMCountableSidebarContainerView
 
+- (CGSize)sizeForButton {
+    CGSize screenSize = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size;
+    CGSize listPageSize = CGSizeScale(screenSize, kListPageZoom);
+    return CGSizeScale(listPageSize, .6);
+}
+
 - (MMPageBubbleButton*)newBubbleForView:(MMEditablePaperView*)page {
-    MMPageBubbleButton* bubble = [[MMPageBubbleButton alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
+    CGSize buttonSize = [self sizeForButton];
+    MMPageBubbleButton* bubble = [[MMPageBubbleButton alloc] initWithFrame:CGRectMake(0, 0, buttonSize.width, buttonSize.height)];
     bubble.originalViewScale = page.scale;
     bubble.layer.borderColor = [[UIColor redColor] CGColor];
     bubble.layer.borderWidth = 5;

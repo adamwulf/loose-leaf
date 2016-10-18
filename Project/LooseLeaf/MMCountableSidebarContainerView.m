@@ -157,8 +157,6 @@
 
     [self insertSubview:view aboveSubview:bubble];
     view.center = myCenter;
-    view.layer.borderColor = [[UIColor purpleColor] CGColor];
-    view.layer.borderWidth = 10;
 
     // keep the scrap in the bezel container during the animation, then
     // push it into the bubble
@@ -255,6 +253,8 @@
             }];
         }
     } else {
+        bubble.scale = 1.0;
+
         [self.bubbleDelegate willAddView:view toCountableSidebar:self];
         if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
             [self loadCachedPreviewForView:view];
@@ -337,12 +337,17 @@
 
 #pragma mark - Helper Methods
 
+- (CGSize)sizeForButton {
+    @throw kAbstractMethodException;
+}
+
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
-    CGFloat rightBezelSide = self.bounds.size.width - 100;
+    CGSize sizeOfButton = [self sizeForButton];
+    CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - 20;
     // midpoint calculates for 6 buttons
-    CGFloat midPointY = (self.bounds.size.height - 6 * 80) / 2;
-    CGPoint ret = CGPointMake(rightBezelSide + 40, midPointY + 40);
-    ret.y += 80 * index;
+    CGFloat midPointY = (self.bounds.size.height - 6 * sizeOfButton.height) / 2;
+    CGPoint ret = CGPointMake(rightBezelSide + sizeOfButton.width / 2, midPointY + sizeOfButton.height / 2);
+    ret.y += sizeOfButton.height * index;
     return ret;
 }
 
