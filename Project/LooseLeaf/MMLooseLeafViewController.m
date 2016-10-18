@@ -612,19 +612,25 @@
 #pragma mark - MMImageSidebarContainerViewDelegate
 
 - (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar {
-    if (sidebar == bezelScrapContainer) {
+    if (sidebar == bezelScrapContainer ||
+        sidebar == importImageSidebar ||
+        sidebar == sharePageSidebar) {
         [currentStackView sidebarCloseButtonWasTapped:sidebar];
     }
 }
 
 - (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar {
-    if (sidebar == bezelScrapContainer) {
+    if (sidebar == bezelScrapContainer ||
+        sidebar == importImageSidebar ||
+        sidebar == sharePageSidebar) {
         [currentStackView sidebarWillShow:sidebar];
     }
 }
 
 - (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar {
-    if (sidebar == bezelScrapContainer) {
+    if (sidebar == bezelScrapContainer ||
+        sidebar == importImageSidebar ||
+        sidebar == sharePageSidebar) {
         [currentStackView sidebarWillHide:sidebar];
     }
 }
