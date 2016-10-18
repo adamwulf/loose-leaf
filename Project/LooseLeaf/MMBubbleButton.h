@@ -21,4 +21,6 @@
 
 + (CGAffineTransform)idealTransformForView:(UIView<MMUUIDView>*)view;
 
++ (CGRect)idealBoundsForView:(UIView<MMUUIDView>*)view;
+
 @end

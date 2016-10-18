@@ -69,6 +69,10 @@
     return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation), CGAffineTransformMakeScale(scale, scale));
 }
 
++ (CGRect)idealBoundsForView:(UIView<MMUUIDView>*)view {
+    return view.bounds;
+}
+
 - (void)setView:(MMScrapView*)_scrap {
     view = _scrap;
     if (!_scrap) {

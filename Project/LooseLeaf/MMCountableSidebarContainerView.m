@@ -178,6 +178,7 @@
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
                 bubble.alpha = 1;
+                view.bounds = [[bubble class] idealBoundsForView:view];
                 view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
                 view.center = bubble.center;
                 for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
@@ -259,6 +260,7 @@
         if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
             [self loadCachedPreviewForView:view];
             bubble.alpha = targetAlpha;
+            view.bounds = [[bubble class] idealBoundsForView:view];
             view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             view.center = bubble.center;
             bubble.view = view;
@@ -278,6 +280,7 @@
                     [self unloadCachedPreviewForView:bubble.view];
                 }
             }
+            view.bounds = [[bubble class] idealBoundsForView:view];
             view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
             view.center = bubble.center;
             bubble.view = view;

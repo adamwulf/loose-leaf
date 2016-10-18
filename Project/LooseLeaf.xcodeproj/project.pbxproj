@@ -1545,6 +1545,7 @@
 		C58E6A191CDB1B4A00508F1D /* bg54.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg54.jpg; sourceTree = "<group>"; };
 		C599D56E1DB6AE6F009035F3 /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
 		C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
+		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
@@ -4027,6 +4028,7 @@
 				C57E6BFA1DB0967D0038DB3B /* Page Bubble */,
 				C5F1B2E41D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.h */,
 				C5F1B2E51D9B0CC500E0E9A8 /* MMPagesInBezelContainerView.m */,
+				C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */,
 			);
 			name = "Page Sidebar";
 			sourceTree = "<group>";

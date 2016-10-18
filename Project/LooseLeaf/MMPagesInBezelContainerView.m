@@ -17,11 +17,18 @@
 #import "MMImmutableScrapsInSidebarState.h"
 #import "MMTrashManager.h"
 #import "MMSidebarButtonTapGestureRecognizer.h"
+#import "MMBlockOperation.h"
+#import "MMAllStacksManager.h"
+#import "MMSingleStackManager.h"
+#import "MMTutorialStackView.h"
+#import "NSArray+Map.h"
 
 #define kAnimationDuration 0.3
 
 
-@implementation MMPagesInBezelContainerView
+@implementation MMPagesInBezelContainerView {
+    NSOperationQueue* opQueue;
+}
 
 @dynamic bubbleDelegate;
 
@@ -30,6 +37,8 @@
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         [slidingSidebarView addSubview:contentView];
+        opQueue = [[NSOperationQueue alloc] init];
+        [opQueue setMaxConcurrentOperationCount:1];
     }
     return self;
 }
@@ -103,11 +112,52 @@ static NSString* bezelStatePath;
 }
 
 - (void)savePageContainerToDisk {
-    // save to disk
+    [NSThread performBlockOnMainThread:^{
+        // must use main thread to get the stack
+        // of UIViews to save to disk
+
+        NSArray* sidebarPages = [NSArray arrayWithArray:[self viewsInSidebar]];
+
+        [opQueue addOperation:[[MMBlockOperation alloc] initWithBlock:^{
+            // now that we have the views to save,
+            // we can actually write to disk on the background
+            //
+            // the opqueue makes sure that we will always save
+            // to disk in the order that [saveToDisk] was called
+            // on the main thread.
+            NSArray* sidebarPagesToWrite = [sidebarPages mapObjectsUsingBlock:^id(MMPaperView* page, NSUInteger idx) {
+                NSMutableDictionary* pageDictionary = [[page dictionaryDescription] mutableCopy];
+                pageDictionary[@"stackUUID"] = [page.delegate.stackManager uuid];
+                return pageDictionary;
+            }];
+
+            [sidebarPagesToWrite writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
+        }]];
+    }];
 }
 
 - (void)loadFromDisk {
     // load from disk
+    CGRect bounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
+
+    NSArray* pagesMeta = [[NSArray alloc] initWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
+
+    for (NSDictionary* pageMeta in pagesMeta) {
+        NSString* stackUUID = pageMeta[@"stackUUID"];
+        NSString* pageUUID = pageMeta[@"uuid"];
+        MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
+        page.isBrandNewPage = NO;
+        page.delegate = [self.bubbleDelegate stackForUUID:stackUUID];
+        [page disableAllGestures];
+
+        // scale the page down. we can't initialize with this bounds,
+        // because the initialied bounds is also our drawable resolution.
+        CGRect scaledBounds = CGRectScale(bounds, kListPageZoom);
+
+        [page setFrame:scaledBounds];
+
+        [self addViewToCountableSidebar:page animated:NO];
+    }
 }
 
 @end

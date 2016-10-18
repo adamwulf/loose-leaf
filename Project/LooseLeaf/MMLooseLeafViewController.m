@@ -434,23 +434,7 @@
 }
 
 - (void)switchToStack:(NSString*)stackUUID {
-    MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
-
-    if (!stackUUID) {
-        stackUUID = [[NSUUID UUID] UUIDString];
-    }
-
-    if (!aStackView) {
-        aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
-        aStackView.stackDelegate = self;
-        aStackView.deleteSidebar = deleteSidebar;
-        [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
-        aStackView.center = self.view.center;
-
-        [aStackView loadStacksFromDisk];
-
-        stackViewsByUUID[stackUUID] = aStackView;
-    }
+    MMTutorialStackView* aStackView = [self stackForUUID:stackUUID];
 
     [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, MMTutorialStackView* _Nonnull obj, BOOL* _Nonnull stop) {
         obj.hidden = ![key isEqualToString:stackUUID];
@@ -488,6 +472,30 @@
         }
     }
     [listOfStacksView reloadStackButtons];
+}
+
+#pragma mark - MMPagesSidebarContainerViewDelegate
+
+- (MMTutorialStackView*)stackForUUID:(NSString*)stackUUID {
+    MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
+
+    if (!stackUUID) {
+        stackUUID = [[NSUUID UUID] UUIDString];
+    }
+
+    if (!aStackView) {
+        aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
+        aStackView.stackDelegate = self;
+        aStackView.deleteSidebar = deleteSidebar;
+        [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
+        aStackView.center = self.view.center;
+
+        [aStackView loadStacksFromDisk];
+
+        stackViewsByUUID[stackUUID] = aStackView;
+    }
+
+    return aStackView;
 }
 
 #pragma mark - MMMemoryManagerDelegate

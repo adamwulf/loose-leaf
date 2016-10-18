@@ -15,9 +15,12 @@
 #import "MMScrapsInSidebarStateDelegate.h"
 #import "MMSidebarButtonDelegate.h"
 #import "MMScrapsInSidebarState.h"
+#import "MMPagesSidebarContainerViewDelegate.h"
 
 
 @interface MMPagesInBezelContainerView : MMCountableSidebarContainerView <MMEditablePaperView*>
+
+@property (nonatomic, weak) NSObject<MMPagesSidebarContainerViewDelegate>* bubbleDelegate;
 
 - (void)savePageContainerToDisk;
 

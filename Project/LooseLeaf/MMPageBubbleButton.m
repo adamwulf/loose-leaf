@@ -16,13 +16,19 @@
 @synthesize scale;
 
 + (CGFloat)idealScaleForView:(MMEditablePaperView*)page {
-    return .4;
+    return .5;
 }
 
 + (CGAffineTransform)idealTransformForView:(MMEditablePaperView*)page {
     // aim to get the border into 36 px
     CGFloat scale = [MMPageBubbleButton idealScaleForView:page];
     return CGAffineTransformMakeScale(scale, scale);
+}
+
++ (CGRect)idealBoundsForView:(UIView<MMUUIDView>*)view {
+    CGSize screenSize = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size;
+    CGSize listPageSize = CGSizeScale(screenSize, kListPageZoom);
+    return CGRectFromSize(listPageSize);
 }
 
 - (void)setView:(MMEditablePaperView*)_view {
