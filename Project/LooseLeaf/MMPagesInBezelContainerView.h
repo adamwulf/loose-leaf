@@ -19,4 +19,8 @@
 
 @interface MMPagesInBezelContainerView : MMCountableSidebarContainerView <MMEditablePaperView*>
 
+- (void)savePageContainerToDisk;
+
+- (void)loadFromDisk;
+
 @end

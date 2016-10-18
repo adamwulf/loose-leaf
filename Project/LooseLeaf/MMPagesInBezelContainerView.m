@@ -77,7 +77,7 @@
 
     [super deleteAllViewsFromSidebar];
 
-    [self saveScrapContainerToDisk];
+    [self savePageContainerToDisk];
 }
 
 - (void)loadCachedPreviewForView:(MMEditablePaperView*)view {
@@ -102,12 +102,12 @@ static NSString* bezelStatePath;
     return bezelStatePath;
 }
 
-- (void)saveScrapContainerToDisk {
-    @throw [NSException exceptionWithName:@"NeedsImplementationException" reason:@"This method is not implemented" userInfo:nil];
+- (void)savePageContainerToDisk {
+    // save to disk
 }
 
 - (void)loadFromDisk {
-    @throw [NSException exceptionWithName:@"NeedsImplementationException" reason:@"This method is not implemented" userInfo:nil];
+    // load from disk
 }
 
 @end

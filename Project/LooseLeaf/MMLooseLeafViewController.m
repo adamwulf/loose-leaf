@@ -207,7 +207,6 @@
         CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
         countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
-        [countButton addTarget:self action:@selector(showScrapSidebar:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:countButton];
 
         bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
@@ -225,7 +224,6 @@
         midPointY = (frame.size.height - 3 * 80) / 2;
         countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countPagesButton.alpha = 0;
-        [countPagesButton addTarget:self action:@selector(showPagesSidebar:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:countPagesButton];
 
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
@@ -242,6 +240,7 @@
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
+        [bezelPagesContainer loadFromDisk];
 
         // Open to list view if needed
         if ([[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]) {
@@ -780,14 +779,6 @@
     [tutorialViewController closeTutorials];
 }
 
-#pragma mark - Scrap Sidebar
-
-- (void)showScrapSidebar:(id)button {
-}
-
-- (void)showPagesSidebar:(id)button {
-}
-
 #pragma mark - MMScrapSidebarContainerViewDelegate
 
 - (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
@@ -799,6 +790,9 @@
 - (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
     if (sidebar == bezelScrapContainer) {
         [currentStackView didAddView:view toCountableSidebar:sidebar];
+    } else {
+        [self.bezelPagesContainer savePageContainerToDisk];
+        [currentStackView saveStacksToDisk];
     }
 }
 
@@ -815,6 +809,7 @@
         [currentStackView didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:sidebar];
     } else {
         pageInActiveSidebarAnimation = nil;
+        [self.bezelPagesContainer savePageContainerToDisk];
         [currentStackView saveStacksToDisk];
     }
 }
