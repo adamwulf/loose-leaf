@@ -518,6 +518,7 @@
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A181CDB1B4A00508F1D /* bg53.jpg */; };
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
+		C599D5701DB6AE6F009035F3 /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
@@ -1542,6 +1543,8 @@
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C58E6A181CDB1B4A00508F1D /* bg53.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg53.jpg; sourceTree = "<group>"; };
 		C58E6A191CDB1B4A00508F1D /* bg54.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg54.jpg; sourceTree = "<group>"; };
+		C599D56E1DB6AE6F009035F3 /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
+		C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
@@ -3274,6 +3277,8 @@
 				66DCFBC11581C85B00B4918C /* MMPaperStackView.m */,
 				664C62EE15A36DA40072736A /* MMListPaperStackView.h */,
 				664C62EF15A36DA40072736A /* MMListPaperStackView.mm */,
+				C599D56E1DB6AE6F009035F3 /* MMListSidebarStackView.h */,
+				C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */,
 				66728713159515FC0018571A /* MMEditablePaperStackView.h */,
 				66728714159515FC0018571A /* MMEditablePaperStackView.m */,
 				66CE11F517CFD8A600882275 /* MMScrapPaperStackView.h */,
@@ -4529,6 +4534,7 @@
 				66AC8D7D18E754FE00A65036 /* MMAbstractSidebarContentView.m in Sources */,
 				66343C571ABF9FCA00801962 /* MMRoundedButton.m in Sources */,
 				C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */,
+				C599D5701DB6AE6F009035F3 /* MMListSidebarStackView.m in Sources */,
 				C5F1B2D71D9B01BB00E0E9A8 /* MPVariant.m in Sources */,
 				C5F1B2DF1D9B01BB00E0E9A8 /* UIImage+MPAverageColor.m in Sources */,
 				666E254118F5E43600C17295 /* MMPalmTreeButton.m in Sources */,

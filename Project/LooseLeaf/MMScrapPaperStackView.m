@@ -44,13 +44,6 @@
 #import "NSURL+UTI.h"
 
 
-@interface MMListPaperStackView (Protected)
-
-- (void)realignPagesInListView:(NSSet*)pagesToMove animated:(BOOL)animated forceRecalculateAll:(BOOL)recalculateAll;
-
-@end
-
-
 @implementation MMScrapPaperStackView {
     MMScrapContainerView* scrapContainer;
     // we get two gestures here, so that we can support

@@ -14,7 +14,6 @@
 #import "MMExportablePaperView.h"
 #import "MMStretchPageGestureRecognizer.h"
 #import "NSArray+Map.h"
-#import "NSArray+Extras.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -1572,47 +1571,6 @@
     return numberOfRows * (bufferWidth + rowHeight) + bufferWidth;
 }
 
-- (MMPaperView*)findPageClosestToOffset:(CGPoint)offsetOfListView {
-    //
-    // scrolling is enabled, so we need to return
-    // the list of pages that are currently visible
-
-    NSArray* arraysOfSubviews[2];
-    arraysOfSubviews[0] = visibleStackHolder.subviews;
-    arraysOfSubviews[1] = hiddenStackHolder.subviews;
-    int countOfSubviews[2]; // can't be NSUInteger, or -1 < count will be false
-    countOfSubviews[0] = (int)[visibleStackHolder.subviews count];
-    countOfSubviews[1] = (int)[hiddenStackHolder.subviews count];
-
-    NSArray* allPages = [visibleStackHolder.subviews arrayByAddingObjectsFromArray:[hiddenStackHolder.subviews reversedArray]];
-
-    int startRow = floor(offsetOfListView.y) / (bufferWidth + rowHeight);
-    int startCol = floor(offsetOfListView.x) / (bufferWidth + columnWidth);
-    int startIndex = startRow * kNumberOfColumnsInListView + startCol;
-
-    NSInteger endIndex = startIndex + kNumberOfColumnsInListView;
-    startIndex -= kNumberOfColumnsInListView;
-
-    startIndex = MAX(0, startIndex);
-    endIndex = MIN([allPages count] - 1, endIndex);
-
-    if (endIndex >= startIndex) {
-        NSArray* closePages = [allPages subarrayWithRange:NSMakeRange(startIndex, endIndex - startIndex + 1)];
-        return [closePages jotReduce:^id(id obj, NSUInteger index, MMPaperView* accum) {
-            CGRect fr1 = [self frameForListViewForPage:obj];
-            CGRect fr2 = [self frameForListViewForPage:accum];
-            CGFloat d1 = DistanceBetweenTwoPoints(offsetOfListView, CGRectGetMidPoint(fr1));
-            CGFloat d2 = DistanceBetweenTwoPoints(offsetOfListView, CGRectGetMidPoint(fr2));
-            if (!accum || d1 < d2) {
-                return obj;
-            } else {
-                return accum;
-            }
-        }];
-    }
-    return nil;
-}
-
 /**
  * this will help decide which pages will
  * be animated out into list view from page
@@ -2011,29 +1969,6 @@
     //
     // now that the user has finished the gesture,
     // we can forget about the original frame locations
-}
-
-
-- (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page {
-    CGPoint locInSelf = [self convertPoint:page.center fromView:page.superview];
-
-    NSArray* currentlyVisiblePages = [self findPagesInVisibleRowsOfListView];
-    MMPaperView* nearbyPage = [self findPageClosestToOffset:locInSelf];
-
-    if (nearbyPage) {
-        [self ensurePageIsAtTopOfVisibleStack:nearbyPage];
-        [self addPage:page belowPage:nearbyPage];
-        [page disableAllGestures];
-    } else {
-        [visibleStackHolder pushSubview:page];
-    }
-
-    [self realignPagesInListView:[NSSet setWithArray:currentlyVisiblePages] animated:YES forceRecalculateAll:YES];
-
-    CGRect fr = [self frameForListViewForPage:page];
-    page.bounds = CGRectFromSize(fr.size);
-
-    return CGRectGetMidPoint(fr);
 }
 
 #pragma mark - MMInboxManagerDelegate Helper
