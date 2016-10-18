@@ -181,6 +181,10 @@
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
+        // Load the stack
+
+        [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
+
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.insertImageButton animateFromLeft:YES];
         importImageSidebar.delegate = self;
@@ -239,9 +243,12 @@
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
 
-        // Load the stack
-
-        [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
+        // Open to list view if needed
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]) {
+            // open into list view if that was their last visible screen
+            [currentStackView immediatelyTransitionToListView];
+            [currentStackView setButtonsVisible:NO animated:NO];
+        }
 
         // Debug
 
@@ -442,12 +449,6 @@
         aStackView.center = self.view.center;
 
         [aStackView loadStacksFromDisk];
-
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]) {
-            // open into list view if that was their last visible screen
-            [aStackView immediatelyTransitionToListView];
-            [aStackView setButtonsVisible:NO animated:NO];
-        }
 
         stackViewsByUUID[stackUUID] = aStackView;
     }

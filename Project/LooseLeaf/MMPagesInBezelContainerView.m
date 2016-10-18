@@ -30,9 +30,6 @@
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         [slidingSidebarView addSubview:contentView];
-
-        self.layer.borderWidth = 4;
-        self.layer.borderColor = [[UIColor greenColor] CGColor];
     }
     return self;
 }
