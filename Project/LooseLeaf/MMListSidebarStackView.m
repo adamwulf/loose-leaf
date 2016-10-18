@@ -57,6 +57,7 @@
     NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
     [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
     [allOtherPages removeObjectsInArray:currentlyVisiblePages];
+    [allOtherPages removeObject:page];
     [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
 
     CGRect fr = [self frameForListViewForPage:page];
