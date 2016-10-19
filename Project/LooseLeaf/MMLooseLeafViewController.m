@@ -608,6 +608,10 @@
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
+            [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                [self.bezelScrapContainer didRotateToIdealOrientation:toOrient];
+                [self.bezelPagesContainer didRotateToIdealOrientation:toOrient];
+            } completion:nil];
         }
     }];
 }

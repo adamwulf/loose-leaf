@@ -134,6 +134,20 @@
     [view unloadCachedPreview];
 }
 
+#pragma mark - Rotation
+
+- (CGFloat)sidebarButtonRotation {
+    return -([[[MMRotationManager sharedInstance] idealRotationReadingForCurrentOrientation] angle] + M_PI / 2);
+}
+
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
+    self.countButton.rotation = [self sidebarButtonRotation];
+    self.countButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
+    [self.contentView setRotation:[self sidebarButtonRotation]];
+
+    [super didRotateToIdealOrientation:orientation];
+}
+
 #pragma mark - Save and Load
 
 static NSString* bezelStatePath;

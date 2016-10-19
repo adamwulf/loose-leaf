@@ -44,6 +44,7 @@
 
 - (void)addViewToCountableSidebar:(ViewType)view animated:(BOOL)animated;
 
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
 // protected
 

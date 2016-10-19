@@ -1823,9 +1823,7 @@
 }
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
-    [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
-        [self.stackDelegate.bezelScrapContainer didRotateToIdealOrientation:orientation];
-    } completion:nil];
+    // noop
 }
 
 #pragma mark = Saving and Editing

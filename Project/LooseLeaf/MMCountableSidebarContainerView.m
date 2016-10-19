@@ -496,4 +496,10 @@
     return 0;
 }
 
+#pragma mark - Rotation
+
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
+    [contentView didRotateToIdealOrientation:orientation];
+}
+
 @end

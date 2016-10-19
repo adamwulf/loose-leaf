@@ -31,6 +31,4 @@
 
 - (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
 
-- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
-
 @end

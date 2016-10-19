@@ -160,6 +160,7 @@
     lastRotationReading = [self sidebarButtonRotationForReading:currentRawReading];
     CGFloat rotReading = [self sidebarButtonRotationForReading:currentRawReading];
     self.countButton.rotation = rotReading;
+    self.countButton.transform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
     for (MMScrapBubbleButton* bubble in self.subviews) {
         if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
             // during an animation, the scrap will also be a subview,
@@ -169,10 +170,6 @@
         }
     }
     [contentView setRotation:rotReading];
-}
-
-- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
-    [contentView didRotateToIdealOrientation:orientation];
 }
 
 #pragma mark - Save and Load
