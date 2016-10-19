@@ -342,10 +342,12 @@
 
 - (void)animatingToListView {
     listOfStacksView.alpha = 1;
+    [currentStackView setButtonsVisible:NO animated:NO];
 }
 
 - (void)animatingToPageView {
     listOfStacksView.alpha = 0;
+    [currentStackView setButtonsVisible:YES animated:YES];
 }
 
 - (MMScrapsInBezelContainerView*)bezelScrapContainer {
