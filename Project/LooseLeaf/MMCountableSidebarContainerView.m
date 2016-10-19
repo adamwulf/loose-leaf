@@ -190,6 +190,7 @@
                 bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                 view.bounds = [[bubble class] idealBoundsForView:view];
                 view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+                bubble.transform = [self targetTransformForBubbleButton:bubble];
                 view.center = bubble.center;
                 for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
                     if (otherBubble != bubble) {
@@ -197,6 +198,7 @@
                             int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                             otherBubble.alpha = [self targetAlphaForBubbleButton:otherBubble];
+                            otherBubble.transform = [self targetTransformForBubbleButton:otherBubble];
                         }
                     }
                 }
@@ -235,10 +237,11 @@
                 self.countButton.alpha = 1;
                 for (UIView<MMBubbleButton>* bubble in self.subviews) {
                     if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                        view.bounds = [[bubble class] idealBoundsForView:view];
+                        bubble.view.bounds = [[bubble class] idealBoundsForView:bubble.view];
                         bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                         bubble.center = self.countButton.center;
                         view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+                        bubble.transform = [self targetTransformForBubbleButton:bubble];
                         if (!bubble.alpha) {
                             [self unloadCachedPreviewForView:bubble.view];
                         } else {
@@ -246,6 +249,7 @@
                         }
                     }
                 }
+                view.bounds = [[bubble class] idealBoundsForView:view];
                 view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
                 view.center = bubble.center;
             } completion:^(BOOL finished) {
@@ -278,6 +282,7 @@
         view.bounds = [[bubble class] idealBoundsForView:view];
         view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
         view.center = bubble.center;
+        bubble.transform = [self targetTransformForBubbleButton:bubble];
         bubble.view = view;
         [self resetAlphaForButtonsWithoutAnimation];
         [self.bubbleDelegate didAddView:view toCountableSidebar:self];
@@ -291,6 +296,7 @@
                 int index = (int)[[self viewsInSidebar] indexOfObject:bubble.view];
                 bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                 bubble.center = [self centerForBubbleAtIndex:index];
+                bubble.transform = [self targetTransformForBubbleButton:bubble];
                 [self loadCachedPreviewForView:bubble.view];
             }
         }
@@ -301,6 +307,7 @@
             if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
                 bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                 bubble.center = self.countButton.center;
+                bubble.transform = [self targetTransformForBubbleButton:bubble];
                 if (!bubble.alpha) {
                     [self unloadCachedPreviewForView:bubble.view];
                 } else {
@@ -321,6 +328,10 @@
     } else {
         return 0;
     }
+}
+
+- (CGAffineTransform)targetTransformForBubbleButton:(UIView<MMBubbleButton>*)bubble {
+    return CGAffineTransformIdentity;
 }
 
 #pragma mark - Protected

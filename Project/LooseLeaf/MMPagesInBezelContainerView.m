@@ -65,16 +65,29 @@
     }
 }
 
-- (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
-    CGSize sizeOfButton = [self sizeForButton];
-    CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - 20;
-    // midpoint calculates for 6 buttons
-    CGFloat midPointY = (self.bounds.size.height - [self.viewsInSidebar count] * sizeOfButton.height) / 2;
-    CGPoint ret = CGPointMake(rightBezelSide + sizeOfButton.width / 2, midPointY + sizeOfButton.height / 2);
-    ret.y += sizeOfButton.height * index;
-    ret.x += 8;
+- (CGAffineTransform)targetTransformForBubbleButton:(UIView<MMBubbleButton>*)bubble {
+    CGAffineTransform transform = [super targetTransformForBubbleButton:bubble];
 
-    return ret;
+    CGFloat rot = RandomPhotoRotation([[self viewsInSidebar] indexOfObject:(MMEditablePaperView*)bubble.view]);
+
+    CGAffineTransform rotTransform = CGAffineTransformMakeRotation(rot);
+
+    return CGAffineTransformConcat(transform, rotTransform);
+}
+
+- (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
+    if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+        CGSize sizeOfButton = [self sizeForButton];
+        CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - 20;
+        // midpoint calculates for 6 buttons
+        CGFloat midPointY = (self.bounds.size.height - [self.viewsInSidebar count] * sizeOfButton.height) / 2;
+        CGPoint ret = CGPointMake(rightBezelSide + sizeOfButton.width / 2, midPointY + sizeOfButton.height / 2);
+        ret.y += sizeOfButton.height * index;
+        ret.x += 8;
+        return ret;
+    } else {
+        return self.countButton.center;
+    }
 }
 
 - (MMPageBubbleButton*)newBubbleForView:(MMEditablePaperView*)page {
