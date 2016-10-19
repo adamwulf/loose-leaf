@@ -13,6 +13,11 @@
 #define kAnimationDuration 0.3
 
 
+@interface MMCountableSidebarContainerView () <MMSidebarButtonDelegate>
+
+@end
+
+
 @implementation MMCountableSidebarContainerView {
     CGFloat targetAlpha;
     NSMutableArray* viewsInSidebar;
@@ -33,6 +38,11 @@
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
+}
+
+- (void)setCountButton:(MMCountBubbleButton*)_countButton {
+    countButton = _countButton;
+    [self addSubview:countButton];
 }
 
 - (NSArray<MMUUIDView>*)viewsInSidebar {
@@ -67,7 +77,7 @@
     view.center = [self convertPoint:view.center fromView:view.superview];
 
     if (below) {
-        [self insertSubview:view atIndex:0];
+        [self insertSubview:view belowSubview:countButton];
     } else {
         [self addSubview:view];
     }
@@ -150,7 +160,7 @@
     //    [bubble addTarget:self action:@selector(bubbleTapped:) forControlEvents:UIControlEventTouchUpInside];
     UITapGestureRecognizer* tappy = [[MMSidebarButtonTapGestureRecognizer alloc] initWithTarget:self action:@selector(bubbleTapped:)];
     [bubble addGestureRecognizer:tappy];
-    [self insertSubview:bubble atIndex:0];
+    [self insertSubview:bubble belowSubview:countButton];
 
     CGPoint theirCenter = view.center;
     CGPoint myCenter = [self convertPoint:theirCenter fromView:view.superview];
@@ -177,7 +187,7 @@
 
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
-                bubble.alpha = 1;
+                bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                 view.bounds = [[bubble class] idealBoundsForView:view];
                 view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
                 view.center = bubble.center;
@@ -186,6 +196,7 @@
                         if ([otherBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
                             int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
+                            otherBubble.alpha = [self targetAlphaForBubbleButton:otherBubble];
                         }
                     }
                 }
@@ -196,7 +207,7 @@
                 [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                     // scrap "hits" the bubble and pushes it down a bit
                     bubble.scale = .8;
-                    bubble.alpha = self.alpha;
+                    bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                 } completion:^(BOOL finished) {
                     [self.countButton setCount:[[self viewsInSidebar] count]];
                     [UIView animateWithDuration:animationDuration * .2 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -224,9 +235,15 @@
                 self.countButton.alpha = 1;
                 for (UIView<MMBubbleButton>* bubble in self.subviews) {
                     if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                        bubble.alpha = 0;
+                        view.bounds = [[bubble class] idealBoundsForView:view];
+                        bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                         bubble.center = self.countButton.center;
-                        [self unloadCachedPreviewForView:bubble.view];
+                        view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+                        if (!bubble.alpha) {
+                            [self unloadCachedPreviewForView:bubble.view];
+                        } else {
+                            [self loadCachedPreviewForView:view];
+                        }
                     }
                 }
                 view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
@@ -257,35 +274,52 @@
         bubble.scale = 1.0;
 
         [self.bubbleDelegate willAddView:view toCountableSidebar:self];
-        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
-            [self loadCachedPreviewForView:view];
-            bubble.alpha = targetAlpha;
-            view.bounds = [[bubble class] idealBoundsForView:view];
-            view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-            view.center = bubble.center;
-            bubble.view = view;
-            for (UIView<MMBubbleButton>* anyBubble in self.subviews) {
-                if ([anyBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                    int index = (int)[[self viewsInSidebar] indexOfObject:anyBubble.view];
-                    anyBubble.center = [self centerForBubbleAtIndex:index];
-                }
-            }
-        } else {
-            [self.countButton setCount:[[self viewsInSidebar] count]];
-            self.countButton.alpha = 1;
-            for (UIView<MMBubbleButton>* bubble in self.subviews) {
-                if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                    bubble.alpha = 0;
-                    bubble.center = self.countButton.center;
-                    [self unloadCachedPreviewForView:bubble.view];
-                }
-            }
-            view.bounds = [[bubble class] idealBoundsForView:view];
-            view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
-            view.center = bubble.center;
-            bubble.view = view;
-        }
+        bubble.alpha = [self targetAlphaForBubbleButton:bubble];
+        view.bounds = [[bubble class] idealBoundsForView:view];
+        view.transform = CGAffineTransformConcat([[bubble class] idealTransformForView:view], CGAffineTransformMakeScale(bubble.scale, bubble.scale));
+        view.center = bubble.center;
+        bubble.view = view;
+        [self resetAlphaForButtonsWithoutAnimation];
         [self.bubbleDelegate didAddView:view toCountableSidebar:self];
+    }
+}
+
+- (void)resetAlphaForButtonsWithoutAnimation {
+    if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+        for (UIView<MMBubbleButton>* bubble in self.subviews) {
+            if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
+                int index = (int)[[self viewsInSidebar] indexOfObject:bubble.view];
+                bubble.alpha = [self targetAlphaForBubbleButton:bubble];
+                bubble.center = [self centerForBubbleAtIndex:index];
+                [self loadCachedPreviewForView:bubble.view];
+            }
+        }
+    } else {
+        [self.countButton setCount:[[self viewsInSidebar] count]];
+        self.countButton.alpha = 1;
+        for (UIView<MMBubbleButton>* bubble in self.subviews) {
+            if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
+                bubble.alpha = [self targetAlphaForBubbleButton:bubble];
+                bubble.center = self.countButton.center;
+                if (!bubble.alpha) {
+                    [self unloadCachedPreviewForView:bubble.view];
+                } else {
+                    [self loadCachedPreviewForView:bubble.view];
+                }
+            }
+        }
+    }
+}
+
+- (CGFloat)targetAlphaForBubbleButton:(UIView<MMBubbleButton>*)bubble {
+    if (self.alpha) {
+        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
     }
 }
 
@@ -364,10 +398,10 @@
         countButton.alpha = targetAlpha;
     } else {
         countButton.alpha = 0;
-        for (UIView<MMUUIDView>* subview in self.subviews) {
-            if ([subview conformsToProtocol:@protocol(MMBubbleButton)]) {
-                subview.alpha = targetAlpha;
-            }
+    }
+    for (UIView<MMBubbleButton>* subview in self.subviews) {
+        if ([subview conformsToProtocol:@protocol(MMBubbleButton)]) {
+            subview.alpha = [self targetAlphaForBubbleButton:subview];
         }
     }
     if (!targetAlpha) {
@@ -384,16 +418,26 @@
  */
 - (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     for (UIView* bubble in self.subviews) {
-        if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-            UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
-            if (output)
-                return output;
+        if (bubble.alpha && [[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+            if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
+                UIView* output = [bubble hitTest:[self convertPoint:point toView:bubble] withEvent:event];
+                if (output) {
+                    return output;
+                }
+            }
+        }
+    }
+    if (countButton.alpha) {
+        UIView* output = [countButton hitTest:[self convertPoint:point toView:countButton] withEvent:event];
+        if (output) {
+            return output;
         }
     }
     if (contentView.alpha) {
         UIView* output = [contentView hitTest:[self convertPoint:point toView:contentView] withEvent:event];
-        if (output)
+        if (output) {
             return output;
+        }
     }
     return [super hitTest:point withEvent:event];
 }
@@ -414,7 +458,17 @@
 - (void)sidebarCloseButtonWasTapped {
     if ([self isVisible]) {
         [contentView viewWillHide];
+
+        // reset our buttons
+        for (UIView<MMBubbleButton>* subview in self.subviews) {
+            if ([subview conformsToProtocol:@protocol(MMBubbleButton)]) {
+                subview.view = subview.view;
+                subview.view.alpha = subview.view.alpha;
+            }
+        }
+
         [self hide:YES onComplete:^(BOOL finished) {
+            [self resetAlphaForButtonsWithoutAnimation];
             [contentView viewDidHide];
         }];
         [UIView animateWithDuration:kAnimationDuration animations:^{
@@ -424,5 +478,10 @@
     }
 }
 
+#pragma mark - MMSidebarButtonDelegate
+
+- (CGFloat)sidebarButtonRotation {
+    return 0;
+}
 
 @end

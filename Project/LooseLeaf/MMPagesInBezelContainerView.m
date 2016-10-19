@@ -21,6 +21,7 @@
 #import "MMAllStacksManager.h"
 #import "MMSingleStackManager.h"
 #import "MMTutorialStackView.h"
+#import "MMEditablePaperView.h"
 #import "NSArray+Map.h"
 
 #define kAnimationDuration 0.3
@@ -51,10 +52,29 @@
     return CGSizeScale(listPageSize, .6);
 }
 
+- (CGFloat)targetAlphaForBubbleButton:(UIView<MMBubbleButton>*)bubble {
+    if (self.alpha) {
+        if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+            return [super targetAlphaForBubbleButton:bubble];
+        } else {
+            NSInteger minIndex = [[self viewsInSidebar] count] - 4;
+            return [[self viewsInSidebar] indexOfObject:(MMEditablePaperView*)bubble.view] > minIndex ? 1 : 0;
+        }
+    } else {
+        return 0;
+    }
+}
+
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
-    CGPoint p = [super centerForBubbleAtIndex:index];
-    p.x += 8;
-    return p;
+    CGSize sizeOfButton = [self sizeForButton];
+    CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - 20;
+    // midpoint calculates for 6 buttons
+    CGFloat midPointY = (self.bounds.size.height - [self.viewsInSidebar count] * sizeOfButton.height) / 2;
+    CGPoint ret = CGPointMake(rightBezelSide + sizeOfButton.width / 2, midPointY + sizeOfButton.height / 2);
+    ret.y += sizeOfButton.height * index;
+    ret.x += 8;
+
+    return ret;
 }
 
 - (MMPageBubbleButton*)newBubbleForView:(MMEditablePaperView*)page {

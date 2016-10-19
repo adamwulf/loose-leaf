@@ -1538,12 +1538,15 @@
         if (self.stackDelegate.bezelScrapContainer.alpha != visible ? 1 : 0) {
             [UIView animateWithDuration:.3 animations:^{
                 self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
+                self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
             }];
+        } else {
+            self.stackDelegate.bezelPagesContainer.alpha = !self.stackDelegate.bezelScrapContainer.alpha;
         }
     } else {
         self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
+        self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
     }
-    self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
     [super setButtonsVisible:visible animated:animated];
 }
 

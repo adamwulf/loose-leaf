@@ -13,7 +13,6 @@
 #import "MMScrapsOnPaperStateDelegate.h"
 #import "MMCountBubbleButton.h"
 #import "MMScrapsInSidebarStateDelegate.h"
-#import "MMSidebarButtonDelegate.h"
 #import "MMScrapsInSidebarState.h"
 #import "MMPagesSidebarContainerViewDelegate.h"
 

@@ -75,6 +75,9 @@
         return;
     }
 
+    UIView* slidingSidebarViewSnapshot = [slidingSidebarView snapshotViewAfterScreenUpdates:NO];
+    [slidingSidebarView addSubview:slidingSidebarViewSnapshot];
+
     void (^realComplete)(BOOL) = ^(BOOL finished) {
         if (finished) {
             CGRect fr = slidingSidebarView.frame;
@@ -87,6 +90,7 @@
             }
             [slidingSidebarView didHide];
         }
+        [slidingSidebarViewSnapshot removeFromSuperview];
         if (onComplete)
             onComplete(finished);
     };

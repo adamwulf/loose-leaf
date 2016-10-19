@@ -231,9 +231,6 @@ typedef struct RowOfViewsInSidebar {
 - (void)viewDidHide {
     for (MMCountableSidebarButton* subview in [[scrollView subviews] copy]) {
         if ([subview isKindOfClass:[MMCountableSidebarButton class]]) {
-            if ([[self.delegate viewsInSidebar] count] > kMaxButtonsInBezelSidebar) {
-                [[self delegate] unloadCachedPreviewForView:subview.view];
-            }
             [subview removeFromSuperview];
         }
     }

@@ -47,7 +47,7 @@
 #import "MMPagesInBezelContainerView.h"
 
 
-@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate>
+@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate>
 
 @end
 
@@ -78,10 +78,8 @@
 
     // the scrap button that shows the count
     // in the right sidebar
-    MMCountBubbleButton* countButton;
     MMScrapsInBezelContainerView* bezelScrapContainer;
 
-    MMCountBubbleButton* countPagesButton;
     MMPagesInBezelContainerView* bezelPagesContainer;
 
     MMPaperView* pageInActiveSidebarAnimation;
@@ -205,9 +203,8 @@
         CGRect frame = [self.view bounds];
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
-        countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+        MMCountBubbleButton* countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countButton.alpha = 0;
-        [self.view addSubview:countButton];
 
         bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
         bezelScrapContainer.delegate = self;
@@ -222,9 +219,8 @@
         frame = [self.view bounds];
         rightBezelSide = frame.size.width - 100;
         midPointY = (frame.size.height - 3 * 80) / 2;
-        countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+        MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         countPagesButton.alpha = 0;
-        [self.view addSubview:countPagesButton];
 
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
         bezelPagesContainer.delegate = self;
@@ -247,6 +243,8 @@
             // open into list view if that was their last visible screen
             [currentStackView immediatelyTransitionToListView];
             [currentStackView setButtonsVisible:NO animated:NO];
+        } else {
+            [currentStackView setButtonsVisible:YES animated:NO];
         }
 
         // Debug

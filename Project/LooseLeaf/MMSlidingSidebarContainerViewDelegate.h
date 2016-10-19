@@ -20,4 +20,6 @@
 
 - (UIView*)viewForBlur;
 
+- (void)sidebarIsHiding:(MMFullScreenSidebarContainingView*)sidebar;
+
 @end

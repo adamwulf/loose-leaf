@@ -34,6 +34,8 @@
 
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index;
 
+- (CGFloat)targetAlphaForBubbleButton:(UIView<MMBubbleButton>*)bubble;
+
 - (void)deleteAllViewsFromSidebar NS_REQUIRES_SUPER;
 
 - (void)didTapOnViewFromMenu:(ViewType)view withPreferredProperties:(NSDictionary*)properties below:(BOOL)below;
