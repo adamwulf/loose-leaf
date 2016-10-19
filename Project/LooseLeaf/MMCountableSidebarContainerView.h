@@ -15,12 +15,12 @@
 
 
 @interface MMCountableSidebarContainerView < ViewType : UIView <MMUUIDView>
-* > : MMFullScreenSidebarContainingView {
+* > : MMFullScreenSidebarContainingView<MMSidebarButtonDelegate> {
     MMCountableSidebarContentView* contentView;
     NSMutableDictionary* bubbleForScrap;
 }
 
-@property (nonatomic, strong) MMCountBubbleButton* countButton;
+@property (nonatomic, readonly) MMCountBubbleButton* countButton;
 @property (readonly) NSArray<ViewType>* viewsInSidebar;
 @property (nonatomic, readonly) MMCountableSidebarContentView* contentView;
 @property (nonatomic, weak) NSObject<MMCountableSidebarContainerViewDelegate>* bubbleDelegate;

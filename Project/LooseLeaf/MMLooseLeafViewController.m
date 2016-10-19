@@ -204,13 +204,11 @@
         CGFloat rightBezelSide = frame.size.width - 100;
         CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
         MMCountBubbleButton* countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
-        countButton.alpha = 0;
 
         bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
         bezelScrapContainer.delegate = self;
         bezelScrapContainer.bubbleDelegate = self;
         [self.view addSubview:bezelScrapContainer];
-        [bezelScrapContainer setCountButton:countButton];
 
         [bezelScrapContainer loadFromDisk];
 
@@ -220,13 +218,11 @@
         rightBezelSide = frame.size.width - 100;
         midPointY = (frame.size.height - 3 * 80) / 2;
         MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
-        countPagesButton.alpha = 0;
 
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
         bezelPagesContainer.delegate = self;
         bezelPagesContainer.bubbleDelegate = self;
         [self.view addSubview:bezelPagesContainer];
-        [bezelPagesContainer setCountButton:countPagesButton];
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];

@@ -13,11 +13,6 @@
 #define kAnimationDuration 0.3
 
 
-@interface MMCountableSidebarContainerView () <MMSidebarButtonDelegate>
-
-@end
-
-
 @implementation MMCountableSidebarContainerView {
     CGFloat targetAlpha;
     NSMutableArray* viewsInSidebar;
@@ -36,13 +31,9 @@
         countButton = _countButton;
         countButton.delegate = self;
         [countButton addTarget:self action:@selector(countButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:countButton];
     }
     return self;
-}
-
-- (void)setCountButton:(MMCountBubbleButton*)_countButton {
-    countButton = _countButton;
-    [self addSubview:countButton];
 }
 
 - (NSArray<MMUUIDView>*)viewsInSidebar {
@@ -235,7 +226,7 @@
             bubble.scale = 1;
             [UIView animateWithDuration:animationDuration * .51 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
                 // animate the scrap into position
-                self.countButton.alpha = 1;
+                self.countButton.alpha = targetAlpha;
                 for (UIView<MMBubbleButton>* bubble in self.subviews) {
                     if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
                         bubble.view.bounds = [[bubble class] idealBoundsForView:bubble.view];
@@ -292,6 +283,7 @@
 
 - (void)resetAlphaForButtonsWithoutAnimation {
     if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+        self.countButton.alpha = 0;
         for (UIView<MMBubbleButton>* bubble in self.subviews) {
             if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
                 int index = (int)[[self viewsInSidebar] indexOfObject:bubble.view];
@@ -303,7 +295,7 @@
         }
     } else {
         [self.countButton setCount:[[self viewsInSidebar] count]];
-        self.countButton.alpha = 1;
+        self.countButton.alpha = targetAlpha;
         for (UIView<MMBubbleButton>* bubble in self.subviews) {
             if ([bubble conformsToProtocol:@protocol(MMBubbleButton)]) {
                 bubble.alpha = [self targetAlphaForBubbleButton:bubble];

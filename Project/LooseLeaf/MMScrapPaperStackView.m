@@ -1541,7 +1541,8 @@
                 self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
             }];
         } else {
-            self.stackDelegate.bezelPagesContainer.alpha = !self.stackDelegate.bezelScrapContainer.alpha;
+            self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
+            self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
         }
     } else {
         self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
