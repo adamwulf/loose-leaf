@@ -115,12 +115,13 @@
                 if (otherBubble.view && otherBubble != bubbleToAddToPage) {
                     int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
                     otherBubble.center = [self centerForBubbleAtIndex:index];
+                    otherBubble.alpha = [self targetAlphaForBubbleButton:otherBubble];
+                    otherBubble.transform = [self targetTransformForBubbleButton:otherBubble];
                     if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
                         // we need to reset the view here, because it could have been stolen
                         // by the actual sidebar content view. If that's the case, then we
                         // need to steal the view back so it can display in the bubble button
                         otherBubble.view = otherBubble.view;
-                        otherBubble.alpha = 1;
                         [self loadCachedPreviewForView:otherBubble.view];
                     }
                 }

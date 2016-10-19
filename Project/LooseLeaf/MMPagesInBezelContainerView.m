@@ -68,11 +68,15 @@
 - (CGAffineTransform)targetTransformForBubbleButton:(UIView<MMBubbleButton>*)bubble {
     CGAffineTransform transform = [super targetTransformForBubbleButton:bubble];
 
-    CGFloat rot = RandomPhotoRotation([[self viewsInSidebar] indexOfObject:(MMEditablePaperView*)bubble.view]);
+    if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
+        return transform;
+    } else {
+        CGFloat rot = RandomPhotoRotation([[self viewsInSidebar] indexOfObject:(MMEditablePaperView*)bubble.view]);
 
-    CGAffineTransform rotTransform = CGAffineTransformMakeRotation(rot);
+        CGAffineTransform rotTransform = CGAffineTransformMakeRotation(rot);
 
-    return CGAffineTransformConcat(transform, rotTransform);
+        return CGAffineTransformConcat(transform, rotTransform);
+    }
 }
 
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
