@@ -22,6 +22,7 @@
 #import "MMSingleStackManager.h"
 #import "MMTutorialStackView.h"
 #import "MMEditablePaperView.h"
+#import "MMPagesSidebarButton.h"
 #import "NSArray+Map.h"
 
 #define kAnimationDuration 0.3
@@ -209,6 +210,25 @@ static NSString* bezelStatePath;
 
         [self addViewToCountableSidebar:page animated:NO];
     }
+}
+
+#pragma mark - For Content
+
+- (CGSize)sizeOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width {
+    CGRect bounds = view.bounds;
+
+    CGSize s = bounds.size;
+
+    s.height = width * s.height / s.width;
+    s.width = width;
+
+    return s;
+}
+
+#pragma mark - For Content
+
+- (Class)sidebarButtonClass {
+    return [MMPagesSidebarButton class];
 }
 
 @end

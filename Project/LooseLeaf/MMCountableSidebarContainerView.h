@@ -46,6 +46,10 @@
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation;
 
+// for sidebar content
+
+- (Class)sidebarButtonClass;
+
 // protected
 
 - (CGSize)sizeForButton;

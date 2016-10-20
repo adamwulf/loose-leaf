@@ -8,6 +8,7 @@
 
 #import "MMCountableSidebarContainerView.h"
 #import "MMSidebarButtonTapGestureRecognizer.h"
+#import "MMCountableSidebarButton.h"
 #import "Constants.h"
 
 #define kAnimationDuration 0.3
@@ -492,6 +493,12 @@
 
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
     [contentView didRotateToIdealOrientation:orientation];
+}
+
+#pragma mark - For Content
+
+- (Class)sidebarButtonClass {
+    return [MMCountableSidebarButton class];
 }
 
 @end

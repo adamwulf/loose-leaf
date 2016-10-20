@@ -196,7 +196,7 @@ typedef struct RowOfViewsInSidebar {
         for (int index = row * (int)self.columnCount; index < row * self.columnCount + self.columnCount; index++) {
             if (index < [allViews count]) {
                 UIView<MMUUIDView>* currentView = [allViews objectAtIndex:index];
-                CGSize sizeOfCellForView = [MMCountableSidebarButton sizeOfRowForView:currentView forWidth:maxDimOfView];
+                CGSize sizeOfCellForView = [[self.delegate sidebarButtonClass] sizeOfRowForView:currentView forWidth:maxDimOfView];
                 CGFloat heightOfCurrView = sizeOfCellForView.height + kColumnTopMargin;
                 if (heightOfCurrView > maxHeightOfViewsInRow) {
                     maxHeightOfViewsInRow = heightOfCurrView;
@@ -230,7 +230,7 @@ typedef struct RowOfViewsInSidebar {
 
 - (void)viewDidHide {
     for (MMCountableSidebarButton* subview in [[scrollView subviews] copy]) {
-        if ([subview isKindOfClass:[MMCountableSidebarButton class]]) {
+        if ([subview isKindOfClass:[self.delegate sidebarButtonClass]]) {
             [subview removeFromSuperview];
         }
     }
@@ -261,7 +261,7 @@ typedef struct RowOfViewsInSidebar {
     NSInteger minVisibleRow = NSIntegerMax;
     NSInteger maxVisibleRow = NSIntegerMin;
     for (MMCountableSidebarButton* subview in [[scrollView subviews] copy]) {
-        if ([subview isKindOfClass:[MMCountableSidebarButton class]]) {
+        if ([subview isKindOfClass:[self.delegate sidebarButtonClass]]) {
             if (subview.rowNumber < row || subview.rowNumber > maxRow) {
                 [[self delegate] unloadCachedPreviewForView:subview.view];
                 [subview removeFromSuperview];
@@ -286,7 +286,7 @@ typedef struct RowOfViewsInSidebar {
                     // (left margin already accounted for with our bounds)
                     // and 10px in the middle between it at the right
                     CGFloat x = (index - row * self.columnCount) * (sizeOfView + kColumnSideMargin);
-                    MMCountableSidebarButton* leftViewButton = [[MMCountableSidebarButton alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfView, sizeOfView)];
+                    MMCountableSidebarButton* leftViewButton = [[[self.delegate sidebarButtonClass] alloc] initWithFrame:CGRectMake(x, rowData[row].topY, sizeOfView, sizeOfView)];
                     leftViewButton.rowNumber = row;
                     [leftViewButton addTarget:self action:@selector(tappedOnViewButton:) forControlEvents:UIControlEventTouchUpInside];
                     leftViewButton.view = currentView;

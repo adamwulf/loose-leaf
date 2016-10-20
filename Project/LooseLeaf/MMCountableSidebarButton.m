@@ -25,14 +25,13 @@
     return self;
 }
 
-
 + (CGFloat)scaleOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width {
     CGFloat maxDim = MAX(MAX(view.frame.size.width, view.frame.size.height), 1);
     return width / maxDim;
 }
 
 + (CGSize)sizeOfRowForView:(UIView<MMUUIDView>*)view forWidth:(CGFloat)width {
-    CGFloat scale = [MMCountableSidebarButton scaleOfRowForView:view forWidth:width];
+    CGFloat scale = [self scaleOfRowForView:view forWidth:width];
     CGSize s = CGSizeMake(view.frame.size.width * scale, view.frame.size.height * scale);
     if (s.width < s.height) {
         s.width = s.height;
@@ -44,7 +43,7 @@
     view = _view;
 
     CGRect fr = self.frame;
-    fr.size = [MMCountableSidebarButton sizeOfRowForView:view forWidth:self.bounds.size.width];
+    fr.size = [[self class] sizeOfRowForView:view forWidth:self.bounds.size.width];
     CLS_LOG(@"updating scrap button frame from: %.2f %.2f %.2f %.2f to %.2f %.2f %.2f %.2f", self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, fr.origin.x, fr.origin.y, fr.size.width, fr.size.height);
     self.frame = fr;
 
@@ -61,7 +60,7 @@
     view.center = transformView.center;
 
     [self addSubview:transformView];
-    CGFloat scale = [MMCountableSidebarButton scaleOfRowForView:view forWidth:self.bounds.size.width];
+    CGFloat scale = [[self class] scaleOfRowForView:view forWidth:self.bounds.size.width];
     transformView.transform = CGAffineTransformMakeScale(scale, scale);
     transformView.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
 
