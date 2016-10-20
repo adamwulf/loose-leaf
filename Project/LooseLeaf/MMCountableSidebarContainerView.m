@@ -74,7 +74,6 @@
         [self addSubview:view];
     }
 
-    [self sidebarCloseButtonWasTapped];
     [self.countButton setCount:[[self viewsInSidebar] count]];
 
     [self.bubbleDelegate willRemoveView:view fromCountableSidebar:self];
@@ -90,6 +89,11 @@
     }
 
     view.layer.borderWidth = 0;
+
+    // remove the reference to the scrap from the button
+    bubbleToAddToPage.view = nil;
+
+    [self sidebarCloseButtonWasTapped];
 
     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [view setPropertiesDictionary:properties];
