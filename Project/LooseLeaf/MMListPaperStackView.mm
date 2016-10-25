@@ -220,6 +220,17 @@
 
 #pragma mark - List View Enable / Disable Helper Methods
 
+- (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page {
+    addPageButtonInListView.frame = [self frameForAddPageButton];
+    [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
+    [self moveAddButtonToTop];
+
+    CGRect fr = [self frameForListViewForPage:page];
+    page.bounds = CGRectFromSize(fr.size);
+
+    return CGRectGetMidPoint(fr);
+}
+
 - (void)immediatelyTransitionToListView {
     if (isShowingPageView) {
         MMEditablePaperView* page = [[self visibleStackHolder] peekSubview];

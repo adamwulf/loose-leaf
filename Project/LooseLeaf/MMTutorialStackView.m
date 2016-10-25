@@ -52,6 +52,15 @@
     return self;
 }
 
+- (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page {
+    CGPoint ret = [super addPageBackToListViewAndAnimateOtherPages:page];
+
+    listViewTutorialButton.center = [self locationForTutorialButtonInListView];
+    listViewFeedbackButton.center = [self locationForFeedbackButtonInListView];
+
+    return ret;
+}
+
 #pragma mark - App Feedback
 
 - (void)feedbackButtonPressed:(MMTutorialSidebarButton*)tutorialButton {

@@ -60,10 +60,7 @@
     [allOtherPages removeObject:page];
     [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
 
-    CGRect fr = [self frameForListViewForPage:page];
-    page.bounds = CGRectFromSize(fr.size);
-
-    return CGRectGetMidPoint(fr);
+    return [super addPageBackToListViewAndAnimateOtherPages:page];
 }
 
 - (MMPaperView*)findPageClosestToOffset:(CGPoint)offsetOfListView {

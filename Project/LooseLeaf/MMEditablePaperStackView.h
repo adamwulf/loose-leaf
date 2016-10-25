@@ -71,10 +71,11 @@
 
 @property (nonatomic, readonly) MMImageButton* insertImageButton;
 @property (nonatomic, readonly) MMShareButton* shareButton;
+@property (nonatomic, readonly) BOOL buttonsVisible;
 
 - (void)saveStacksToDisk;
 
-- (void)loadStacksFromDisk;
+- (void)loadStacksFromDiskIntoPageView:(BOOL)isPageView;
 
 - (BOOL)hasPages;
 

@@ -83,6 +83,8 @@
     MMPagesInBezelContainerView* bezelPagesContainer;
 
     MMPaperView* pageInActiveSidebarAnimation;
+
+    UIView* stackContainerView;
 }
 
 - (id)init {
@@ -121,6 +123,9 @@
             }
         };
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
+
+        stackContainerView = [[UIView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:stackContainerView];
 
 
         // export icons will show here, below the sidebars but over the stacks
@@ -224,6 +229,8 @@
         bezelPagesContainer.bubbleDelegate = self;
         [self.view addSubview:bezelPagesContainer];
 
+        [bezelPagesContainer loadFromDisk];
+
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         [self.view addGestureRecognizer:[MMPalmGestureRecognizer sharedInstance]];
@@ -232,16 +239,8 @@
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
-        [bezelPagesContainer loadFromDisk];
-
-        // Open to list view if needed
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]) {
-            // open into list view if that was their last visible screen
-            [currentStackView immediatelyTransitionToListView];
-            [currentStackView setButtonsVisible:NO animated:NO];
-        } else {
-            [currentStackView setButtonsVisible:YES animated:NO];
-        }
+        // refresh button visibility after adding all our sidebars
+        [currentStackView setButtonsVisible:[currentStackView buttonsVisible] animated:NO];
 
         // Debug
 
@@ -390,6 +389,12 @@
     return feedbackViewController != nil;
 }
 
+- (void)didLoadStack:(MMPaperStackView*)stack {
+    if (stackContainerView.hidden) {
+        // now that we've loaded the app, we can show the stack view
+    }
+}
+
 #pragma mark - MMTutorialStackViewDelegate
 
 - (void)stackViewDidPressFeedbackButton:(MMTutorialStackView*)stackView {
@@ -433,7 +438,7 @@
     MMTutorialStackView* aStackView = [self stackForUUID:stackUUID];
 
     [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, MMTutorialStackView* _Nonnull obj, BOOL* _Nonnull stop) {
-        obj.hidden = ![key isEqualToString:stackUUID];
+        obj.hidden = ![key isEqualToString:aStackView.uuid];
     }];
 
     currentStackView = aStackView;
@@ -476,19 +481,23 @@
     MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
 
     if (!stackUUID) {
-        stackUUID = [[NSUUID UUID] UUIDString];
+        stackUUID = [[MMAllStacksManager sharedInstance] createStack];
     }
 
     if (!aStackView) {
         aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
         aStackView.stackDelegate = self;
         aStackView.deleteSidebar = deleteSidebar;
-        [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
+        [stackContainerView addSubview:aStackView];
         aStackView.center = self.view.center;
 
-        [aStackView loadStacksFromDisk];
-
         stackViewsByUUID[stackUUID] = aStackView;
+
+        if (!currentStackView) {
+            currentStackView = aStackView;
+        }
+
+        [aStackView loadStacksFromDiskIntoPageView:[[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]];
     }
 
     return aStackView;
@@ -522,7 +531,7 @@
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
-    NSArray* arr = [currentStackView findPagesInVisibleRowsOfListView];
+    NSArray* arr = [currentStackView findPagesInVisibleRowsOfListView] ?: @[];
 
     if (pageInActiveSidebarAnimation) {
         arr = [arr arrayByAddingObject:pageInActiveSidebarAnimation];
@@ -703,6 +712,8 @@
     }
 
     NSString* version = [UIApplication bundleShortVersionString];
+
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{kLastOpenedVersion: version}];
 
     //#ifdef DEBUG
     //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];

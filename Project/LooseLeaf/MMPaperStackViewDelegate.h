@@ -11,6 +11,8 @@
 #import "MMShareSidebarContainerView.h"
 #import "MMPagesInBezelContainerView.h"
 
+@class MMPaperStackView;
+
 @protocol MMPaperStackViewDelegate <NSObject>
 
 - (void)animatingToListView;
@@ -32,5 +34,7 @@
 - (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
 
 - (BOOL)isShowingTutorial;
+
+- (void)didLoadStack:(MMPaperStackView*)stack;
 
 @end

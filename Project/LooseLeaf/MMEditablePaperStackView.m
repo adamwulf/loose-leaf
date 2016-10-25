@@ -422,6 +422,10 @@ static UIWebView* pdfWebView;
     DebugLog(@"temp button");
 }
 
+- (BOOL)buttonsVisible {
+    return pencilTool.alpha;
+}
+
 - (void)setButtonsVisible:(BOOL)visible animated:(BOOL)animated {
     [self setButtonsVisible:visible withDuration:animated ? 0.3 : 0];
 }
@@ -551,6 +555,11 @@ static UIWebView* pdfWebView;
 }
 
 #pragma mark = List View
+
+- (void)immediatelyTransitionToListView {
+    [super immediatelyTransitionToListView];
+    [self setButtonsVisible:NO animated:NO];
+}
 
 - (void)isBeginningToScaleReallySmall:(MMPaperView*)page {
     // make sure the currently edited page is being saved
@@ -751,6 +760,8 @@ static UIWebView* pdfWebView;
     NSURL* visiblePagesPlist = [[NSBundle mainBundle] URLForResource:@"visiblePages" withExtension:@"plist" subdirectory:@"Documents"];
     NSURL* hiddenPagesPlist = [[NSBundle mainBundle] URLForResource:@"hiddenPages" withExtension:@"plist" subdirectory:@"Documents"];
 
+    [NSFileManager ensureDirectoryExistsAtPath:[[self.stackManager visiblePlistPath] stringByDeletingLastPathComponent]];
+
     [[NSFileManager defaultManager] copyItemAtPath:[visiblePagesPlist path]
                                             toPath:[self.stackManager visiblePlistPath]
                                              error:nil];
@@ -759,20 +770,14 @@ static UIWebView* pdfWebView;
                                              error:nil];
 }
 
-- (void)loadStacksFromDisk {
+- (void)loadStacksFromDiskIntoPageView:(BOOL)isPageView {
     // check to see if we have any state to load at all, and if
     // not then build our default content
     if (![self.stackManager hasStateToLoad]) {
         // we don't have any pages, and we don't have any
         // state to load
-        self.userInteractionEnabled = NO;
-        [NSThread performBlockInBackground:^{
-            [self buildDefaultContent];
-            [NSThread performBlockOnMainThread:^{
-                self.userInteractionEnabled = YES;
-                [self loadStacksFromDisk];
-            }];
-        }];
+        [self buildDefaultContent];
+        [self loadStacksFromDiskIntoPageView:isPageView];
         return;
     } else {
         NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
@@ -793,10 +798,20 @@ static UIWebView* pdfWebView;
         for (MMEditablePaperView* page in visiblePages) {
             [page loadCachedPreview];
         }
+        [self setButtonsVisible:YES animated:NO];
+
+        // Open to list view if needed
+        if (isPageView) {
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[self visibleStackHolder] peekSubview]];
+        } else {
+            // open into list view if that was their last visible screen
+            [self immediatelyTransitionToListView];
+        }
     } else {
         // list is empty on purpose
         [self immediatelyTransitionToListView];
     }
+    [[self stackDelegate] didLoadStack:self];
 }
 
 - (BOOL)hasPages {
