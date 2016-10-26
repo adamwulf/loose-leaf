@@ -24,7 +24,6 @@
 @property (nonatomic, readonly) MMShadowHandView* silhouette;
 @property (nonatomic, readonly) MMPagesInBezelContainerView* bezelPagesContainer;
 
-
 - (void)importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 - (void)willResignActive;
