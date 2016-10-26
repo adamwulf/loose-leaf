@@ -18,8 +18,6 @@
 
 - (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar;
 
-- (UIView*)viewForBlur;
-
-- (void)sidebarIsHiding:(MMFullScreenSidebarContainingView*)sidebar;
+- (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar;
 
 @end

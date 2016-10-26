@@ -651,8 +651,11 @@
     }
 }
 
-- (UIView*)viewForBlur {
-    return [currentStackView viewForBlur];
+- (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelPagesContainer) {
+        return self.view;
+    }
+    return [currentStackView blurViewForSidebar:sidebar];
 }
 
 #pragma mark - MMImageSidebarContainerViewDelegate

@@ -256,7 +256,7 @@
 }
 
 - (UIView*)viewForBlur {
-    return delegate.viewForBlur;
+    return [delegate blurViewForSidebar:self];
 }
 
 @end

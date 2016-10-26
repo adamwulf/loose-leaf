@@ -185,17 +185,17 @@ static MMPageCacheManager* _instance = nil;
 
 - (BOOL)isEditablePageStable {
     BOOL (^isPageLoadedHuh)(MMUndoablePaperView*) = ^(MMUndoablePaperView* page) {
-        __block BOOL allStatesAreLoaded = [currentEditablePage isStateLoaded];
+        __block BOOL allStatesAreLoaded = [page isStateLoaded];
         [[currentEditablePage scrapsOnPaper] enumerateObjectsUsingBlock:^(MMScrapView* obj, NSUInteger idx, BOOL* stop) {
             allStatesAreLoaded = allStatesAreLoaded && [[obj state] isScrapStateLoaded];
         }];
         return allStatesAreLoaded;
     };
 
-    BOOL topIsEditable = currentEditablePage == currentlyTopPage;
-    BOOL topIsLoaded = isPageLoadedHuh(currentlyTopPage);
+    BOOL topIsEditable = !currentEditablePage || currentEditablePage == currentlyTopPage;
+    BOOL topIsLoaded = !currentlyTopPage || isPageLoadedHuh(currentlyTopPage);
 
-    return topIsEditable && topIsLoaded;
+    return (topIsEditable && topIsLoaded);
 }
 
 - (void)ensureTopPageIsLoaded:(MMPaperView*)topPage {

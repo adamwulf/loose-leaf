@@ -1923,7 +1923,7 @@
     return [super isActivelyGesturing] || panAndPinchScrapGesture.scrap || panAndPinchScrapGesture2.scrap || stretchScrapGesture.scrap || isAnimatingScrapToOrFromSidebar;
 }
 
-- (UIView*)viewForBlur {
+- (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar {
     return [visibleStackHolder peekSubview];
 }
 
