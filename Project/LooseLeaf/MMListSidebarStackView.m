@@ -98,17 +98,14 @@
 
     NSArray* allPages = [visibleStackHolder.subviews arrayByAddingObjectsFromArray:[hiddenStackHolder.subviews reversedArray]];
 
-    int startRow = floor(offsetOfListView.y) / (self.bufferWidth + self.rowHeight);
-    int startCol = floor(offsetOfListView.x) / (self.bufferWidth + self.columnWidth);
-    int startIndex = startRow * kNumberOfColumnsInListView + startCol;
+    NSInteger startRow = floor(offsetOfListView.y) / (self.bufferWidth + self.rowHeight);
+    NSInteger startCol = floor(offsetOfListView.x) / (self.bufferWidth + self.columnWidth);
+    NSInteger startIndex = startRow * kNumberOfColumnsInListView + startCol;
 
     NSInteger endIndex = startIndex + kNumberOfColumnsInListView;
     startIndex -= kNumberOfColumnsInListView;
 
-    startIndex = MAX(0, startIndex);
-    endIndex = MIN([allPages count] - 1, endIndex);
-
-    if (endIndex >= startIndex) {
+    if (startIndex >= 0 && endIndex < [allPages count]) {
         NSArray* closePages = [allPages subarrayWithRange:NSMakeRange(startIndex, endIndex - startIndex + 1)];
         return [closePages jotReduce:^id(id obj, NSUInteger index, MMPaperView* accum) {
             CGRect fr1 = [self frameForListViewForPage:obj];
