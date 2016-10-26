@@ -165,7 +165,7 @@
     listViewTutorialButton.alpha = 0;
 
     listViewFeedbackButton.center = [self locationForFeedbackButtonInListView];
-    fr = listViewTutorialButton.frame;
+    fr = listViewFeedbackButton.frame;
     fr.origin.y -= initialScrollOffsetFromTransitionToListView.y;
     listViewFeedbackButton.frame = fr;
     listViewFeedbackButton.alpha = 0;
@@ -174,6 +174,7 @@
 - (void)subclassDuringTransitionToListView {
     [super subclassDuringTransitionToListView];
     listViewTutorialButton.alpha = 1;
+    listViewFeedbackButton.alpha = 1;
 }
 
 
