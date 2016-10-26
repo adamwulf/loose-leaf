@@ -58,7 +58,7 @@
 }
 
 - (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page {
-    CGPoint locInSelf = [self convertPoint:page.center fromView:page.superview];
+    CGPoint locInSelf = CGPointMake(CGRectGetMaxX(self.bounds), CGRectGetMidY(self.bounds) + self.contentOffset.y);
 
     NSArray* currentlyVisiblePages = [self findPagesInVisibleRowsOfListView];
     MMPaperView* nearbyPage = [self findPageClosestToOffset:locInSelf];
