@@ -184,6 +184,10 @@ dispatch_queue_t importThumbnailQueue;
                 [drawableView loadState:paperState];
                 drawableView.delegate = self;
 
+                // the following dispatch_after and the .alpha manipulation is
+                // to allow the JotView to trigger a presentRenderBuffer w/ the new
+                // page state to flush out the render buffer. this fixes the flicker
+                // of old page content when moving between pages
                 [drawableView removeFromSuperview];
                 [self updateThumbnailVisibility];
                 drawableView.alpha = 0;
