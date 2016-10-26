@@ -549,6 +549,7 @@
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
 		C5C45A0B1DC13AC500C50EA7 /* MPNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A091DC13AC500C50EA7 /* MPNetwork.m */; };
+		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
 		C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29781D7C013A00D868EC /* MMMarkdown.m */; };
 		C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297C1D7C013A00D868EC /* MMDocument.m */; };
 		C5DA29941D7C013A00D868EC /* MMElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297E1D7C013A00D868EC /* MMElement.m */; };
@@ -1612,6 +1613,8 @@
 		C5C45A081DC13AC500C50EA7 /* MPNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPNetwork.h; sourceTree = "<group>"; };
 		C5C45A091DC13AC500C50EA7 /* MPNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPNetwork.m; sourceTree = "<group>"; };
 		C5C45A0A1DC13AC500C50EA7 /* MPNetworkPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPNetworkPrivate.h; sourceTree = "<group>"; };
+		C5C45A1A1DC14CFA00C50EA7 /* MMLooseLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLooseLeafView.h; sourceTree = "<group>"; };
+		C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLooseLeafView.m; sourceTree = "<group>"; };
 		C5DA29771D7C013A00D868EC /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMMarkdown.h; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.h; sourceTree = "<group>"; };
 		C5DA29781D7C013A00D868EC /* MMMarkdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMMarkdown.m; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.m; sourceTree = "<group>"; };
 		C5DA29791D7C013A00D868EC /* MMMarkdown-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MMMarkdown-Prefix.pch"; path = "../../Submodules/MMMarkdown/Source/MMMarkdown-Prefix.pch"; sourceTree = "<group>"; };
@@ -2831,6 +2834,8 @@
 				66DCFB9D1581BCEF00B4918C /* MMLooseLeafViewController.m */,
 				662EFF2B199EBC140086C106 /* MMWindow.h */,
 				662EFF2C199EBC140086C106 /* MMWindow.m */,
+				C5C45A1A1DC14CFA00C50EA7 /* MMLooseLeafView.h */,
+				C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */,
 			);
 			name = "Controller and App Delegate";
 			sourceTree = "<group>";
@@ -4530,6 +4535,7 @@
 				C506A3BA1C23DE3200236895 /* SSKeychain.m in Sources */,
 				66A790B9196898A90037F01A /* MMUndoRedoGroupItem.m in Sources */,
 				C5F1B2C51D9B01BB00E0E9A8 /* MPSequenceGenerator.m in Sources */,
+				C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */,
 				66EC2FEC19DD06F6008F2BB6 /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
 				C5F1B2D21D9B01BB00E0E9A8 /* MPUIControlBinding.m in Sources */,

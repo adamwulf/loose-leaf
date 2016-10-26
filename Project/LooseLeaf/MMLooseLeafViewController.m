@@ -45,6 +45,7 @@
 #import "MMFeedbackViewController.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMPagesInBezelContainerView.h"
+#import "MMLooseLeafView.h"
 
 
 @interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate>
@@ -80,14 +81,12 @@
     // in the right sidebar
     MMScrapsInBezelContainerView* bezelScrapContainer;
 
-    MMPagesInBezelContainerView* bezelPagesContainer;
-
     MMPaperView* pageInActiveSidebarAnimation;
 
     UIView* stackContainerView;
 }
 
-@synthesize stackView;
+@synthesize bezelPagesContainer;
 
 - (id)initWithSilhouette:(MMShadowHandView*)silhouette {
     if (self = [super init]) {
@@ -229,7 +228,7 @@
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
         bezelPagesContainer.delegate = self;
         bezelPagesContainer.bubbleDelegate = self;
-        [self.view addSubview:bezelPagesContainer];
+        [self.view insertSubview:bezelPagesContainer belowSubview:stackContainerView];
 
         [bezelPagesContainer loadFromDisk];
 
@@ -256,6 +255,12 @@
         //        [self.view addSubview:memoryProfileView];
     }
     return self;
+}
+
+- (void)loadView {
+    MMLooseLeafView* looseLeafView = [[MMLooseLeafView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
+    looseLeafView.looseLeafController = self;
+    self.view = looseLeafView;
 }
 
 - (void)dealloc {

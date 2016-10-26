@@ -21,8 +21,9 @@
 - (id)init NS_UNAVAILABLE;
 - (id)initWithSilhouette:(MMShadowHandView*)silhouette;
 
-@property (readonly) MMScrapPaperStackView* stackView;
-@property (readonly) MMShadowHandView* silhouette;
+@property (nonatomic, readonly) MMShadowHandView* silhouette;
+@property (nonatomic, readonly) MMPagesInBezelContainerView* bezelPagesContainer;
+
 
 - (void)importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
