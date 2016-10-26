@@ -96,7 +96,7 @@
 
         [self.window addSubview:silhouetteView];
 
-        //    [self.window.layer setSpeed:0.1f];
+        [self.window.layer setSpeed:0.5f];
 
         // setup the timer that will help log session duration
         [self setupTimer];

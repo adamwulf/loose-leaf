@@ -178,10 +178,12 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    if (!silhouette.rightHand.isDrawing) {
-        [silhouette startDrawingAtTouch:touchForScrollShadow immediately:YES];
+    if (touchForScrollShadow) {
+        if (!silhouette.rightHand.isDrawing) {
+            [silhouette startDrawingAtTouch:touchForScrollShadow immediately:YES];
+        }
+        [silhouette continueDrawingAtTouch:touchForScrollShadow];
     }
-    [silhouette continueDrawingAtTouch:touchForScrollShadow];
 
     [super scrollViewDidScroll:scrollView];
 }
