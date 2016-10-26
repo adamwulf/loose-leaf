@@ -497,7 +497,7 @@
             currentStackView = aStackView;
         }
 
-        [aStackView loadStacksFromDiskIntoPageView:[[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]];
+        [aStackView loadStacksFromDiskIntoListView:[[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]];
     }
 
     return aStackView;
