@@ -10,6 +10,7 @@
 #import "NSURL+UTI.h"
 #import "MMPageCloner.h"
 #import "Mixpanel.h"
+#import "MMShadowHand.h"
 
 
 @interface MMListPaperStackView (Protected)
@@ -21,6 +22,8 @@
 
 @implementation MMClonePaperStackView {
     MMPageCloner* pageCloner;
+
+    UITouch* touchForScrollShadow;
 }
 
 #pragma mark - MMStretchPageGestureRecognizerDelegate
@@ -49,6 +52,7 @@
             [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:YES forceRecalculateAll:YES];
             [self finishUITransitionToListView];
             [silhouette endPanningObject:gesture.view];
+            [silhouette endDrawingAtTouch:[gesture.validTouches firstObject]];
             return;
         }
     }
@@ -166,5 +170,26 @@
         pageCloner = nil;
     }];
 }
+
+
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
+    touchForScrollShadow = [touches anyObject];
+    [super touchesBegan:touches withEvent:event];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView*)scrollView {
+    if (!silhouette.rightHand.isDrawing) {
+        [silhouette startDrawingAtTouch:touchForScrollShadow immediately:YES];
+    }
+    [silhouette continueDrawingAtTouch:touchForScrollShadow];
+
+    [super scrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
+    [silhouette endDrawingAtTouch:touchForScrollShadow];
+    touchForScrollShadow = nil;
+}
+
 
 @end

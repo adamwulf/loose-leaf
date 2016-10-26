@@ -10,21 +10,27 @@
 #import "MMTouchDotGestureRecognizerDelegate.h"
 #import "MMPaperView.h"
 
+@class MMShadowHand;
+
+
 @interface MMShadowHandView : UIView
 
+@property (nonatomic, readonly) MMShadowHand* rightHand;
+@property (nonatomic, readonly) MMShadowHand* leftHand;
+
 // bezel
--(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
--(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
--(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+- (void)startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+- (void)continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
+- (void)endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches;
 
 // panning a page
--(void) startPanningObject:(id)obj withTouches:(NSArray*)touches;
--(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches;
--(void) endPanningObject:(id)obj;
+- (void)startPanningObject:(id)obj withTouches:(NSArray*)touches;
+- (void)continuePanningObject:(id)obj withTouches:(NSArray*)touches;
+- (void)endPanningObject:(id)obj;
 
 // drawing
--(void) startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately;
--(void) continueDrawingAtTouch:(UITouch*)touch;
--(void) endDrawingAtTouch:(UITouch*)touch;
+- (void)startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately;
+- (void)continueDrawingAtTouch:(UITouch*)touch;
+- (void)endDrawingAtTouch:(UITouch*)touch;
 
 @end

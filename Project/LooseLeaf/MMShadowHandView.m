@@ -18,36 +18,36 @@
 #import "MMVector.h"
 #import "MMShadowHand.h"
 
-@implementation MMShadowHandView{
+
+@implementation MMShadowHandView {
     MMDrawingGestureShadow* pointerFingerHelper;
-//    UISlider* slider;
-    MMShadowHand* rightHand;
-    MMShadowHand* leftHand;
+    //    UISlider* slider;
 }
 
+@synthesize rightHand = rightHand;
+@synthesize leftHand = leftHand;
 
-
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
-        
+
         leftHand = [[MMShadowHand alloc] initForRightHand:NO forView:self];
         rightHand = [[MMShadowHand alloc] initForRightHand:YES forView:self];
-        
-        
-//        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
-//        slider.value = 1;
-//        slider.minimumValue = 0;
-//        slider.maximumValue = 1;
-//        [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-//        
-//        [[NSThread mainThread] performBlock:^{
-//            [self.window addSubview:slider];
-//            [leftHand startPinchingObject:nil withTouches:nil];
-//        } afterDelay:.3];
-        
-        
+
+
+        //        slider = [[UISlider alloc] initWithFrame:CGRectMake(450, 50, 200, 40)];
+        //        slider.value = 1;
+        //        slider.minimumValue = 0;
+        //        slider.maximumValue = 1;
+        //        [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+        //
+        //        [[NSThread mainThread] performBlock:^{
+        //            [self.window addSubview:slider];
+        //            [leftHand startPinchingObject:nil withTouches:nil];
+        //        } afterDelay:.3];
+
+
         [self.layer addSublayer:leftHand.layer];
         [self.layer addSublayer:rightHand.layer];
     }
@@ -59,87 +59,86 @@
 //}
 
 
-
 #pragma mark - Panning a Page
 
--(void) startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
+- (void)startBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches {
     [leftHand startBezelingInFromRight:fromRight withTouches:touches];
 }
 
--(void) continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
+- (void)continueBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches {
     [leftHand continueBezelingInFromRight:fromRight withTouches:touches];
 }
 
--(void) endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches{
+- (void)endBezelingInFromRight:(BOOL)fromRight withTouches:(NSArray*)touches {
     [leftHand endBezelingInFromRight:fromRight withTouches:touches];
 }
 
 
 #pragma mark - Panning a Page
 
--(void) startPanningObject:(id)obj withTouches:(NSArray*)touches{
-    if(!leftHand.isActive){
+- (void)startPanningObject:(id)obj withTouches:(NSArray*)touches {
+    if (!leftHand.isActive) {
         [leftHand startPanningObject:obj withTouches:touches];
-//        [leftHand startPinchingObject:obj withTouches:touches];
-    }else{
+        //        [leftHand startPinchingObject:obj withTouches:touches];
+    } else {
         [rightHand startPanningObject:obj withTouches:touches];
-//        [rightHand startPinchingObject:obj withTouches:touches];
+        //        [rightHand startPinchingObject:obj withTouches:touches];
     }
 }
 
--(void) continuePanningObject:(id)obj withTouches:(NSArray*)touches{
-//    if([touches count] == 4){
-//        touches = [touches sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-//            return [obj1 locationInView:self].x > [obj2 locationInView:self].x;
-//        }];
-//        [leftHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(0, 2)]];
-//        [rightHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(2, 2)]];
-//    }else{
-    
-        if(leftHand.heldObject == obj){
-            [leftHand continuePanningObject:obj withTouches:touches];
-//            [leftHand continuePinchingObject:obj withTouches:touches];
-        }else if(rightHand.heldObject == obj){
-            [rightHand continuePanningObject:obj withTouches:touches];
-//            [rightHand continuePinchingObject:obj withTouches:touches];
-        }
-//    }
+- (void)continuePanningObject:(id)obj withTouches:(NSArray*)touches {
+    //    if([touches count] == 4){
+    //        touches = [touches sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    //            return [obj1 locationInView:self].x > [obj2 locationInView:self].x;
+    //        }];
+    //        [leftHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(0, 2)]];
+    //        [rightHand continuePanningObject:obj withTouches:[touches subarrayWithRange:NSMakeRange(2, 2)]];
+    //    }else{
+
+    if (leftHand.heldObject == obj) {
+        [leftHand continuePanningObject:obj withTouches:touches];
+        //            [leftHand continuePinchingObject:obj withTouches:touches];
+    } else if (rightHand.heldObject == obj) {
+        [rightHand continuePanningObject:obj withTouches:touches];
+        //            [rightHand continuePinchingObject:obj withTouches:touches];
+    }
+    //    }
 }
 
--(void) endPanningObject:(id)obj{
-    if(leftHand.heldObject == obj){
+- (void)endPanningObject:(id)obj {
+    if (leftHand.heldObject == obj) {
         NSLog(@"ending left pan");
-//        [leftHand endPinchingObject:obj];
+        //        [leftHand endPinchingObject:obj];
         [leftHand endPanningObject:obj];
     }
-    if(rightHand.heldObject == obj){
+    if (rightHand.heldObject == obj) {
         NSLog(@"ending right pan");
-//        [rightHand endPinchingObject:obj];
+        //        [rightHand endPinchingObject:obj];
         [rightHand endPanningObject:obj];
     }
 }
 
 #pragma mark - Drawing Events
 
--(void) startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately{
-    if(!rightHand.isActive){
+- (void)startDrawingAtTouch:(UITouch*)touch immediately:(BOOL)immediately {
+    if (!rightHand.isActive) {
         [rightHand startDrawingAtTouch:touch immediately:immediately];
-    }else{
+    } else {
         [leftHand startDrawingAtTouch:touch immediately:immediately];
     }
 }
--(void) continueDrawingAtTouch:(UITouch*)touch{
-    if(rightHand.isActive){
+- (void)continueDrawingAtTouch:(UITouch*)touch {
+    if (rightHand.isActive) {
         [rightHand continueDrawingAtTouch:touch];
-    }else{
+    } else {
         [leftHand continueDrawingAtTouch:touch];
     }
 }
--(void) endDrawingAtTouch:(UITouch*)touch{
-    if(rightHand.isDrawing){
+- (void)endDrawingAtTouch:(UITouch*)touch {
+    if (rightHand.isDrawing) {
         [rightHand endDrawingAtTouch:touch];
     }
-    if(leftHand.isDrawing){
+    if (leftHand.isDrawing) {
         [leftHand endDrawingAtTouch:touch];
     }
 }
@@ -151,19 +150,18 @@
  * these two methods make sure that touches on this
  * UIView always passthrough to any views underneath it
  */
--(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
     return nil;
 }
 
--(BOOL) pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent*)event {
     return NO;
 }
 
 
-
 #pragma mark - CALayer Helper
 
--(void) preventCALayerImplicitAnimation:(void(^)(void))block{
+- (void)preventCALayerImplicitAnimation:(void (^)(void))block {
     [CATransaction begin];
     [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
     block();
