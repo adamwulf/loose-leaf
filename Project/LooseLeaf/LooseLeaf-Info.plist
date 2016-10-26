@@ -157,6 +157,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo access</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Lato-Bold.ttf</string>
