@@ -18,6 +18,8 @@
 #include <map>
 #include <iterator>
 
+#define kAdditionalZoomForPanningPageInList .03
+
 
 @implementation MMListPaperStackView {
     std::map<NSUInteger, CGRect>* mapOfFinalFramesForPagesBeingZoomed; //All data pointers have same size,
@@ -1080,7 +1082,31 @@
         [self setScrollEnabled:NO];
         [self ensurePageIsAtTopOfVisibleStack:gesture.pinchedPage];
         [self beginUITransitionFromListView];
-        [UIView animateWithDuration:.1 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+
+        // Animate the page shadow first
+        CGFloat scale = kListPageZoom + kAdditionalZoomForPanningPageInList;
+
+        CGRect originalPageRect = gesture.pinchedPage.bounds;
+        CGRect updatedPageRect = CGRectScale(self.bounds, scale);
+        originalPageRect.origin = CGPointMake([MMShadowedView shadowWidth], [MMShadowedView shadowWidth]);
+        updatedPageRect.origin = CGPointMake([MMShadowedView shadowWidth], [MMShadowedView shadowWidth]);
+
+        gesture.pinchedPage.clipsToBounds = NO;
+
+        CGFloat duration = .1;
+
+        UIBezierPath* originalShadow = [UIBezierPath bezierPathWithRect:originalPageRect];
+        UIBezierPath* updatedShadow = [UIBezierPath bezierPathWithRect:updatedPageRect];
+
+        CABasicAnimation* theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
+        theAnimation.duration = duration;
+        theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+        theAnimation.fromValue = (id)originalShadow.CGPath;
+        theAnimation.toValue = (id)updatedShadow.CGPath;
+        [gesture.pinchedPage.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+
+        // next, animate the page view itself
+        [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             [self updatePageFrameForGestureHelper:gesture];
         } completion:nil];
     } else if (gesture.state == UIGestureRecognizerStateEnded ||
@@ -1393,7 +1419,7 @@
 }
 
 - (void)updatePageFrameForGestureHelper:(UIGestureRecognizer*)gesture {
-    CGFloat scale = kListPageZoom + .03;
+    CGFloat scale = kListPageZoom + kAdditionalZoomForPanningPageInList;
 
     if ([gesture isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]]) {
         MMPanAndPinchFromListViewGestureRecognizer* panGesture = (MMPanAndPinchFromListViewGestureRecognizer*)gesture;
@@ -1424,8 +1450,8 @@
             [self immediatelyAnimateFromListViewToFullScreenView];
             return;
 
-        } else if (scale < panGesture.initialPageScale + .03) {
-            scale = panGesture.initialPageScale + .03;
+        } else if (scale < panGesture.initialPageScale + kAdditionalZoomForPanningPageInList) {
+            scale = panGesture.initialPageScale + kAdditionalZoomForPanningPageInList;
         }
     }
 
@@ -1467,7 +1493,7 @@
 
 
     // make sure to keep it centered in its location in list view
-    CGSize pickupSize = CGSizeMake(superviewSize.width * (kListPageZoom + .03), superviewSize.height * (kListPageZoom + .03));
+    CGSize pickupSize = CGSizeMake(superviewSize.width * (kListPageZoom + kAdditionalZoomForPanningPageInList), superviewSize.height * (kListPageZoom + kAdditionalZoomForPanningPageInList));
     CGSize smallSize = CGSizeMake(superviewSize.width * kListPageZoom, superviewSize.height * kListPageZoom);
     CGSize diffInSize = CGSizeMake(pickupSize.width - smallSize.width, pickupSize.height - smallSize.height);
 
