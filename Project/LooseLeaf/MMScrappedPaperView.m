@@ -108,7 +108,7 @@
 // and what's loaded into memory
 - (void)updateThumbnailVisibility:(BOOL)forceUpdateIconImage {
     CheckMainThread;
-    if (drawableView && drawableView.superview && (self.scale > kMinPageZoom || hasPendingScrappedIconUpdate)) {
+    if (drawableView && drawableView.superview && drawableView.alpha > 0 && (self.scale > kMinPageZoom || hasPendingScrappedIconUpdate)) {
         // if we have a drawable view, and it's been added to our page
         // then we know it was it's prepped and ready to show valid ink
         if (![self.delegate isAnimatingTowardPageView] && [self.paperState isStateLoaded] && [self.scrapsOnPaperState isStateLoaded]) {

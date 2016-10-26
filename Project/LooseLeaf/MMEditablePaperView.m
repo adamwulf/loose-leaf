@@ -183,9 +183,14 @@ dispatch_queue_t importThumbnailQueue;
                 [drawableView.layer removeAllAnimations];
                 [drawableView loadState:paperState];
                 drawableView.delegate = self;
-                dispatch_async(dispatch_get_main_queue(), ^{
+
+                [drawableView removeFromSuperview];
+                [self updateThumbnailVisibility];
+                drawableView.alpha = 0;
+                [self addDrawableViewToContentView];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     if (drawableView) {
-                        [self addDrawableViewToContentView];
+                        drawableView.alpha = 1;
                         // anchor the view to the top left,
                         // so that when we scale down, the drawable view
                         // stays in place
