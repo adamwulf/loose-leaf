@@ -18,6 +18,8 @@
     MMTutorialStackView* currentStackView;
 }
 
+@property (nonatomic, readonly) MMPagesInBezelContainerView* bezelPagesContainer;
+
 - (void)importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 - (void)willResignActive;
