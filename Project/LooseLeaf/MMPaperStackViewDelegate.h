@@ -9,12 +9,19 @@
 #import <Foundation/Foundation.h>
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
+#import "MMPagesInBezelContainerView.h"
+
+@class MMPaperStackView;
 
 @protocol MMPaperStackViewDelegate <NSObject>
 
 - (void)animatingToListView;
 
 - (void)animatingToPageView;
+
+- (MMScrapsInBezelContainerView*)bezelScrapContainer;
+
+- (MMPagesInBezelContainerView*)bezelPagesContainer;
 
 - (MMImageSidebarContainerView*)importImageSidebar;
 

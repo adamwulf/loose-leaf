@@ -34,10 +34,10 @@
     __weak MMUndoRedoAddScrapFromBezelItem* weakSelf = self;
     if (self = [super initWithUndoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-            [weakSelf.page.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
+            [weakSelf.page.bezelContainerView addViewToCountableSidebar:scrap animated:YES];
         } andRedoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-            [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.properties];
+            [weakSelf.page.bezelContainerView didTapOnViewFromMenu:scrap withPreferredProperties:weakSelf.properties below:YES];
         } forPage:_page]) {
         scrapUUID = _scrapUUID;
         properties = scrapProperties;

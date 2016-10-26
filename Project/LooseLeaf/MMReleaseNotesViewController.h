@@ -11,6 +11,8 @@
 
 @interface MMReleaseNotesViewController : UIViewController
 
+- (instancetype)init NS_UNAVAILABLE;
+
 - (instancetype)initWithReleaseNotes:(NSString*)releaseNotes andCompletionBlock:(void (^)())completionBlock;
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMListPaperStackView.h"
+#import "MMListSidebarStackView.h"
 #import "MMUndoRedoButton.h"
 #import "MMPaperButton.h"
 #import "MMPlusButton.h"
@@ -44,7 +44,7 @@
  * this class is responsible for the editable buttons and controls that show
  * outside of a page's view subviews
  */
-@interface MMEditablePaperStackView : MMListPaperStackView <MMPaperViewDelegate, MMPencilAndPaletteViewDelegate, MMRotationManagerDelegate, PolygonToolDelegate, MMPageCacheManagerDelegate> {
+@interface MMEditablePaperStackView : MMListSidebarStackView <MMPaperViewDelegate, MMPencilAndPaletteViewDelegate, MMRotationManagerDelegate, PolygonToolDelegate, MMPageCacheManagerDelegate> {
     // toolbar
     MMPlusButton* addPageSidebarButton;
     MMImageButton* insertImageButton;
@@ -71,10 +71,11 @@
 
 @property (nonatomic, readonly) MMImageButton* insertImageButton;
 @property (nonatomic, readonly) MMShareButton* shareButton;
+@property (nonatomic, readonly) BOOL buttonsVisible;
 
 - (void)saveStacksToDisk;
 
-- (void)loadStacksFromDisk;
+- (void)loadStacksFromDiskIntoListView:(BOOL)isListView;
 
 - (BOOL)hasPages;
 
@@ -87,8 +88,6 @@
 - (void)setButtonsVisible:(BOOL)visible withDuration:(CGFloat)duration;
 
 - (void)setMemoryView:(MMMemoryProfileView*)_memoryView;
-
-- (void)finishedLoading;
 
 - (BOOL)shouldPrioritizeSidebarButtonsForTaps;
 

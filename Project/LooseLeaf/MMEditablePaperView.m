@@ -183,9 +183,18 @@ dispatch_queue_t importThumbnailQueue;
                 [drawableView.layer removeAllAnimations];
                 [drawableView loadState:paperState];
                 drawableView.delegate = self;
-                dispatch_async(dispatch_get_main_queue(), ^{
+
+                // the following dispatch_after and the .alpha manipulation is
+                // to allow the JotView to trigger a presentRenderBuffer w/ the new
+                // page state to flush out the render buffer. this fixes the flicker
+                // of old page content when moving between pages
+                [drawableView removeFromSuperview];
+                [self updateThumbnailVisibility];
+                drawableView.alpha = 0;
+                [self addDrawableViewToContentView];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     if (drawableView) {
-                        [self addDrawableViewToContentView];
+                        drawableView.alpha = 1;
                         // anchor the view to the top left,
                         // so that when we scale down, the drawable view
                         // stays in place

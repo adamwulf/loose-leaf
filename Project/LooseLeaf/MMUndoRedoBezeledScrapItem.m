@@ -37,9 +37,9 @@
     __weak MMUndoRedoBezeledScrapItem* weakSelf = self;
     if (self = [super initWithUndoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-            if ([weakSelf.page.bezelContainerView containsScrap:scrap]) {
+            if ([weakSelf.page.bezelContainerView containsView:scrap]) {
                 weakSelf.sidebarEverDidContainScrap = YES;
-                [weakSelf.page.bezelContainerView didTapOnScrapFromMenu:scrap withPreferredScrapProperties:weakSelf.propertiesWhenRemoved];
+                [weakSelf.page.bezelContainerView didTapOnViewFromMenu:scrap withPreferredProperties:weakSelf.propertiesWhenRemoved below:YES];
             } else {
                 weakSelf.sidebarEverDidContainScrap = NO;
                 [weakSelf.page.scrapsOnPaperState showScrap:scrap];
@@ -50,7 +50,7 @@
         } andRedoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
             if (weakSelf.sidebarEverDidContainScrap) {
-                [weakSelf.page.bezelContainerView addScrapToBezelSidebar:scrap animated:YES];
+                [weakSelf.page.bezelContainerView addViewToCountableSidebar:scrap animated:YES];
             } else {
                 [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
             }

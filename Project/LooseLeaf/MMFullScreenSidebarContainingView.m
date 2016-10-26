@@ -75,6 +75,9 @@
         return;
     }
 
+    UIView* slidingSidebarViewSnapshot = [slidingSidebarView snapshotViewAfterScreenUpdates:NO];
+    [slidingSidebarView addSubview:slidingSidebarViewSnapshot];
+
     void (^realComplete)(BOOL) = ^(BOOL finished) {
         if (finished) {
             CGRect fr = slidingSidebarView.frame;
@@ -87,11 +90,12 @@
             }
             [slidingSidebarView didHide];
         }
+        [slidingSidebarViewSnapshot removeFromSuperview];
         if (onComplete)
             onComplete(finished);
     };
 
-    [delegate sidebarWillHide];
+    [delegate sidebarWillHide:self];
     // keep our property changes in a block
     // to pass to UIView or just run
     void (^hideBlock)(void) = ^{
@@ -123,7 +127,7 @@
     if ([self isVisible])
         return;
 
-    [delegate sidebarWillShow];
+    [delegate sidebarWillShow:self];
 
     if (animated) {
         CGRect fr = slidingSidebarView.frame;
@@ -247,12 +251,12 @@
 - (void)sidebarCloseButtonWasTapped {
     if ([self isVisible]) {
         [self hide:YES onComplete:nil];
-        [self.delegate sidebarCloseButtonWasTapped];
+        [self.delegate sidebarCloseButtonWasTapped:self];
     }
 }
 
 - (UIView*)viewForBlur {
-    return delegate.viewForBlur;
+    return [delegate blurViewForSidebar:self];
 }
 
 @end

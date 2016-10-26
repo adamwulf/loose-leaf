@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 @protocol TWTRTimelineDataSource;
 @protocol TWTRTweetViewDelegate;
+@protocol TWTRTimelineDelegate;
 @class TWTRMoPubAdConfiguration;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -58,6 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<TWTRTweetViewDelegate> tweetViewDelegate;
 
 /**
+ *  The object that acts as the delegate for the timeline.
+ */
+@property (nonatomic, weak) id<TWTRTimelineDelegate> timelineDelegate;
+
+/**
  Initializes a timeline view controller. Does not start loading tweets until
  `viewWillAppear:` is called.
  
@@ -86,6 +92,26 @@ NS_ASSUME_NONNULL_BEGIN
  *  Asynchronously refresh and replace all the data in the table view with the latest `TWTRTweet`s.
  */
 - (void)refresh;
+
+/**
+ * Returns the number of Tweets that are currently displayed by the controller.
+ */
+- (NSUInteger)countOfTweets;
+
+/**
+ * Returns the Tweet at the given index.
+ * 
+ * @warning This method will throw an exception if the index is out of range of the count of Tweets.
+ */
+- (TWTRTweet *)tweetAtIndex:(NSInteger)index;
+
+/**
+ * Returns a copy of the Tweets at the time of calling this method.
+ 
+ * This method returns the copy of the current Tweets. The Tweets may change
+ * after this method is called.
+ */
+- (NSArray *)snapshotTweets;
 
 @end
 

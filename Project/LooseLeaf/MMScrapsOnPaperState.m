@@ -514,7 +514,6 @@
                 [otherArray addObject:scrap];
             } else {
                 removedScrap = scrap;
-                //                DebugLog(@"permanently removed scrap %@ from page %@", scrapUUID, self.delegate.uuidOfScrapCollectionStateOwner);
             }
         }
         allLoadedScraps = otherArray;

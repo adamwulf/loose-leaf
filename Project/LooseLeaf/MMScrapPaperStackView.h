@@ -18,6 +18,7 @@
 
 
 @interface MMScrapPaperStackView : MMEditablePaperStackView <MMScrapViewOwnershipDelegate, MMPanAndPinchScrapGestureRecognizerDelegate, MMScrapSidebarContainerViewDelegate, MMStretchScrapGestureRecognizerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMInboxManagerDelegate> {
+    __weak MMShadowHandView* silhouette;
 }
 
 @property (nonatomic, weak) MMCloudKitImportExportView* cloudKitExportView;

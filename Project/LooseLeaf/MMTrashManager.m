@@ -119,7 +119,7 @@ static MMTrashManager* _instance = nil;
                     // delete the scrap, and do NOT respect the undo manager.
                     // we can ignore the undo manager since we're just deleting
                     // the page anyways.
-                    if (![pageOriginalDelegate.bezelContainerView containsScrapUUID:scrapUUID]) {
+                    if (![pageOriginalDelegate.bezelContainerView containsViewUUID:scrapUUID]) {
                         [self deleteScrap:scrapUUID inScrapCollectionState:page.scrapsOnPaperState shouldRespectOthers:NO];
                     } else {
                         // synchronous, so that the files will be gone

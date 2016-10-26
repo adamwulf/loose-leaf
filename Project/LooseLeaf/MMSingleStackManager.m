@@ -19,7 +19,9 @@
 #import <JotUI/UIImage+Alpha.h>
 
 
-@implementation MMSingleStackManager
+@implementation MMSingleStackManager {
+    BOOL isLoaded;
+}
 
 @synthesize uuid;
 
@@ -45,6 +47,9 @@
 }
 
 - (void)saveStacksToDisk {
+    if (!isLoaded) {
+        return;
+    }
     [NSThread performBlockOnMainThread:^{
         // must use main thread to get the stack
         // of UIViews to save to disk
@@ -83,6 +88,8 @@
 }
 
 - (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds {
+    isLoaded = YES;
+
     NSDictionary* plist = [MMSingleStackManager loadFromDiskForStackUUID:self.uuid];
 
     NSArray* allPagesToWrite = [plist[@"visiblePages"] arrayByAddingObjectsFromArray:[plist[@"hiddenPages"] reversedArray]];

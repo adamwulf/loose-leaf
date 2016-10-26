@@ -13,11 +13,10 @@
 #import "MMImmovableTapGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMShadowedView.h"
+#import "MMUUIDView.h"
 
 
-@interface MMPaperView : MMShadowedView {
-    NSString* uuid;
-
+@interface MMPaperView : MMShadowedView <MMUUIDView> {
     NSObject<MMPaperViewDelegate>* __weak delegate;
 
     BOOL isBeingPannedAndZoomed;
@@ -33,7 +32,6 @@
     UIBezierPath* unitShadowPath;
 }
 
-@property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, readonly) UIBezierPath* unitShadowPath;
 @property (nonatomic, weak) NSObject<MMPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;

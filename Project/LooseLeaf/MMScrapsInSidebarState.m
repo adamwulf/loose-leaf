@@ -218,11 +218,13 @@
 
 - (void)scrapIsAddedToSidebar:(MMScrapView*)scrap {
     @synchronized(allLoadedScraps) {
-        NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:[scrap propertiesDictionary]];
-        [props setObject:[scrap owningPageUUID] forKey:@"pageUUID"];
-        [allPropertiesForScraps insertObject:props atIndex:0];
-        [allLoadedScraps insertObject:scrap atIndex:0];
-        hasEditsToSave = YES;
+        if (![allLoadedScraps containsObject:scrap]) {
+            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:[scrap propertiesDictionary]];
+            [props setObject:[scrap owningPageUUID] forKey:@"pageUUID"];
+            [allPropertiesForScraps insertObject:props atIndex:0];
+            [allLoadedScraps insertObject:scrap atIndex:0];
+            hasEditsToSave = YES;
+        }
     }
 }
 

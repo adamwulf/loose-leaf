@@ -109,6 +109,14 @@
     self.scale = newScale;
 }
 
+- (NSDictionary*)propertiesDictionary {
+    return nil;
+}
+
+- (void)setPropertiesDictionary:(NSDictionary*)propertiesDictionary {
+    self.center = CGPointMake([propertiesDictionary[@"center.x"] floatValue], [propertiesDictionary[@"center.y"] floatValue]);
+    [self setTransform:CGAffineTransformMakeScale([propertiesDictionary[@"scale"] floatValue], [propertiesDictionary[@"scale"] floatValue])];
+}
 
 #pragma mark - Gestures
 

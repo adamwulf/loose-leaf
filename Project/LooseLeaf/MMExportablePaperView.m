@@ -381,7 +381,7 @@
     //
     // first check the bezel to see if the scrap exists outside the page
     BOOL (^checkScrapExistsInBezel)() = ^{
-        if ([self.delegate.bezelContainerView containsScrapUUID:scrapUUID]) {
+        if ([self.delegate.bezelContainerView containsViewUUID:scrapUUID]) {
             DebugLog(@"scrap %@ is in bezel, can't delete assets", scrapUUID);
             return YES;
         }

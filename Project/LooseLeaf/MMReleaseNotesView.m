@@ -24,11 +24,13 @@
     MMReleaseNotesButtonPrompt* firstPromptView;
     MMReleaseNotesButtonPrompt* happyResponseView;
 
+    CGRect idealLogoImageViewFrame;
     CGRect idealFeedbackLabelFrame;
     CGRect idealFeedbackTextViewFrame;
     CGRect idealCloseButtonFrame;
     CGRect idealSendButtonFrame;
 
+    UIImageView* logoImageView;
     UILabel* feedbackPromptLabel;
     UITextView* feedbackTextView;
     UIButton* closeAnywayButton;
@@ -81,13 +83,22 @@
         [feedbackForm setBackgroundColor:[UIColor whiteColor]];
         feedbackForm.alpha = 0;
 
-        CGRect promptFr = CGRectMake(100, 80, 400, 60);
+        UIImage* logoImg = [UIImage imageNamed:@"logo"];
+
+        logoImageView = [[UIImageView alloc] initWithImage:logoImg];
+        CGRect fr = logoImageView.bounds;
+        fr.size.width *= .75;
+        fr.size.height *= .75;
+        logoImageView.bounds = fr;
+        logoImageView.center = CGPointMake(CGRectGetWidth([[self maskedScrollContainer] bounds]) / 2, 80);
+
+        CGRect promptFr = CGRectMake(100, 110, 400, 60);
         feedbackPromptLabel = [[UILabel alloc] initWithFrame:promptFr];
         feedbackPromptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
         feedbackPromptLabel.textAlignment = NSTextAlignmentCenter;
         feedbackPromptLabel.text = @"What would make Loose Leaf better?";
 
-        CGRect feedbackFrame = CGRectMake(100, 160, 400, 240);
+        CGRect feedbackFrame = CGRectMake(100, 190, 420, 220);
         feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
         [feedbackTextView setDelegate:self];
         [[feedbackTextView layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
@@ -115,10 +126,11 @@
         [[sendButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [sendButton addTarget:self action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
 
-        CGFloat yOffset = CGRectGetHeight([[self maskedScrollContainer] bounds]) - 140;
+        CGFloat yOffset = CGRectGetHeight([[self maskedScrollContainer] bounds]) - 120;
         closeAnywayButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) - CGRectGetWidth([closeAnywayButton bounds]) - 60) / 2, yOffset);
         sendButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) + CGRectGetWidth([sendButton bounds]) + 60) / 2, yOffset);
 
+        [feedbackForm addSubview:logoImageView];
         [feedbackForm addSubview:feedbackPromptLabel];
         [feedbackForm addSubview:feedbackTextView];
         [feedbackForm addSubview:closeAnywayButton];
@@ -126,10 +138,10 @@
 
         [[self maskedScrollContainer] addSubview:feedbackForm];
 
+        idealLogoImageViewFrame = logoImageView.frame;
         idealFeedbackLabelFrame = feedbackPromptLabel.frame;
         idealFeedbackTextViewFrame = feedbackTextView.frame;
         idealCloseButtonFrame = closeAnywayButton.frame;
-        ;
         idealSendButtonFrame = sendButton.frame;
 
         thanksView = [[UIView alloc] initWithFrame:[self.maskedScrollContainer bounds]];
@@ -212,11 +224,13 @@
     CGRect idealFeedbackFrameInWindow = [[self maskedScrollContainer] convertRect:idealFeedbackTextViewFrame toView:nil];
 
     if (CGRectIntersectsRect(idealFeedbackFrameInWindow, keyboardFrame)) {
-        feedbackPromptLabel.frame = CGRectOffset(idealFeedbackLabelFrame, 0, -40);
-        feedbackTextView.frame = CGRectOffset(CGRectResizeBy(idealFeedbackTextViewFrame, 0, -100), 0, -40);
-        closeAnywayButton.frame = CGRectOffset(idealCloseButtonFrame, 0, -140);
-        sendButton.frame = CGRectOffset(idealSendButtonFrame, 0, -140);
+        logoImageView.frame = CGRectOffset(idealLogoImageViewFrame, 0, -20);
+        feedbackPromptLabel.frame = CGRectOffset(idealFeedbackLabelFrame, 0, -30);
+        feedbackTextView.frame = CGRectOffset(CGRectResizeBy(idealFeedbackTextViewFrame, 0, -118), 0, -40);
+        closeAnywayButton.frame = CGRectOffset(idealCloseButtonFrame, 0, -178);
+        sendButton.frame = CGRectOffset(idealSendButtonFrame, 0, -178);
     } else {
+        logoImageView.frame = idealLogoImageViewFrame;
         feedbackPromptLabel.frame = idealFeedbackLabelFrame;
         feedbackTextView.frame = idealFeedbackTextViewFrame;
         closeAnywayButton.frame = idealCloseButtonFrame;
@@ -227,13 +241,21 @@
 #pragma mark - Feedback
 
 - (void)sendFeedback:(UIButton*)button {
+    NSString* feedbackText = feedbackTextView.text ?: @"";
+
+    if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
+        feedbackText = @"";
+    }
+
     [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
-                                                                      kMPUpgradeFeedbackReply: feedbackTextView.text ?: @"" }];
+                                                                      kMPUpgradeFeedbackReply: feedbackText }];
+
+    [feedbackTextView resignFirstResponder];
 
     [UIView animateWithDuration:.3 animations:^{
         thanksView.alpha = 1;
     } completion:^(BOOL finished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [[self delegate] didTapToCloseRoundedSquareView:self];
         });
     }];
@@ -242,8 +264,16 @@
 - (void)closeFeedbackForm:(UIButton*)button {
     [[self delegate] didTapToCloseRoundedSquareView:self];
 
+    [feedbackTextView resignFirstResponder];
+
+    NSString* feedbackText = feedbackTextView.text ?: @"";
+
+    if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
+        feedbackText = @"";
+    }
+
     [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
-                                                                      kMPUpgradeFeedbackReply: feedbackTextView.text ?: @"" }];
+                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 }
 
 
