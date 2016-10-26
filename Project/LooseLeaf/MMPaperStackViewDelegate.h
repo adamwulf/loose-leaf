@@ -35,6 +35,4 @@
 
 - (BOOL)isShowingTutorial;
 
-- (void)didLoadStack:(MMPaperStackView*)stack;
-
 @end

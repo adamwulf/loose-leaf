@@ -328,12 +328,13 @@ typedef struct RowOfViewsInSidebar {
     // first, let's take our best guess
     // at which row is showing:
     CGFloat averageRowHeight = [self contentHeight] / countOfStoredRowData;
-    int probableRow = floorf(yOffset / averageRowHeight);
+    int probableRow = (int)floorf(yOffset / averageRowHeight);
+    probableRow = MIN(MAX(probableRow, 0), countOfStoredRowData - 1);
 
-    while (rowData[probableRow].topY > yOffset) {
+    while (rowData[probableRow].topY > yOffset && probableRow > 0) {
         probableRow--;
     }
-    while (rowData[probableRow].topY + rowData[probableRow].height < yOffset) {
+    while (rowData[probableRow].topY + rowData[probableRow].height < yOffset && probableRow < countOfStoredRowData - 1) {
         probableRow++;
     }
     return probableRow < 0 ? 0 : probableRow;

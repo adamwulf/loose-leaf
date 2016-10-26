@@ -18,13 +18,34 @@
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page;
 
+- (CGRect)frameForAddPageButton;
+
 @end
 
 
 @implementation MMListSidebarStackView
 
+- (void)immediatelyRelayoutIfInListMode {
+    if (!self.isShowingPageView) {
+        [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:NO forceRecalculateAll:YES];
+    }
+}
+
 - (CGRect)frameForListViewForPage:(MMPaperView*)page {
     CGRect fr = [super frameForListViewForPage:page];
+
+    if ([[self.stackDelegate.bezelPagesContainer viewsInSidebar] count]) {
+        CGFloat maxMove = 120;
+        CGFloat maxX = CGRectGetWidth([self.stackDelegate.bezelPagesContainer bounds]);
+        CGFloat movement = (fr.origin.x) / maxX * maxMove + kWidthOfSidebarButtonBuffer;
+        fr.origin.x -= movement;
+    }
+
+    return fr;
+}
+
+- (CGRect)frameForAddPageButton {
+    CGRect fr = [super frameForAddPageButton];
 
     if ([[self.stackDelegate.bezelPagesContainer viewsInSidebar] count]) {
         CGFloat maxMove = 120;

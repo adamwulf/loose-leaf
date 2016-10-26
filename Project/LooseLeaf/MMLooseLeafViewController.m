@@ -240,7 +240,9 @@
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
         // refresh button visibility after adding all our sidebars
+
         [currentStackView setButtonsVisible:[currentStackView buttonsVisible] animated:NO];
+        [currentStackView immediatelyRelayoutIfInListMode];
 
         // Debug
 
@@ -387,12 +389,6 @@
 
 - (BOOL)isShowingFeedbackForm {
     return feedbackViewController != nil;
-}
-
-- (void)didLoadStack:(MMPaperStackView*)stack {
-    if (stackContainerView.hidden) {
-        // now that we've loaded the app, we can show the stack view
-    }
 }
 
 #pragma mark - MMTutorialStackViewDelegate

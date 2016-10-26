@@ -811,7 +811,6 @@ static UIWebView* pdfWebView;
         // list is empty on purpose
         [self immediatelyTransitionToListView];
     }
-    [[self stackDelegate] didLoadStack:self];
 }
 
 - (BOOL)hasPages {

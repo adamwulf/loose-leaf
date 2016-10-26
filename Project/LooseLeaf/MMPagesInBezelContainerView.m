@@ -29,6 +29,7 @@
 
 
 @implementation MMPagesInBezelContainerView {
+    BOOL hasLoaded;
     NSOperationQueue* opQueue;
 }
 
@@ -59,7 +60,8 @@
             return [super targetAlphaForBubbleButton:bubble];
         } else {
             NSInteger minIndex = [[self viewsInSidebar] count] - 4;
-            return [[self viewsInSidebar] indexOfObject:(MMEditablePaperView*)bubble.view] > minIndex ? 1 : 0;
+            NSInteger index = [[self viewsInSidebar] indexOfObject:(MMEditablePaperView*)bubble.view];
+            return index > minIndex ? 1 : 0;
         }
     } else {
         return 0;
@@ -164,6 +166,10 @@ static NSString* bezelStatePath;
 }
 
 - (void)savePageContainerToDisk {
+    if (!hasLoaded) {
+        // nothing to save if we haven't loaded anything yet
+        return;
+    }
     [NSThread performBlockOnMainThread:^{
         // must use main thread to get the stack
         // of UIViews to save to disk
@@ -210,6 +216,8 @@ static NSString* bezelStatePath;
 
         [self addViewToCountableSidebar:page animated:NO];
     }
+
+    hasLoaded = YES;
 }
 
 #pragma mark - For Content

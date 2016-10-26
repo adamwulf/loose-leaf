@@ -11,4 +11,6 @@
 
 @interface MMListSidebarStackView : MMListPaperStackView
 
+- (void)immediatelyRelayoutIfInListMode;
+
 @end

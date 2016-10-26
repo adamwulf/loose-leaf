@@ -134,14 +134,10 @@
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
-    if (animated) {
-        [viewsInSidebar insertObject:view atIndex:0];
-    } else {
-        [viewsInSidebar addObject:view];
-    }
+    [viewsInSidebar addObject:view];
 
     // exit the scrap to the bezel!
-    CGPoint center = [self centerForBubbleAtIndex:0];
+    CGPoint center = [self centerForBubbleAtIndex:[[self viewsInSidebar] indexOfObject:view]];
 
     // prep the animation by creating the new bubble for the scrap
     // and initializing it's probable location (may change if count > 6)
@@ -192,7 +188,7 @@
                 for (UIView<MMBubbleButton>* otherBubble in self.subviews) {
                     if (otherBubble != bubble) {
                         if ([otherBubble conformsToProtocol:@protocol(MMBubbleButton)]) {
-                            int index = (int)[[self viewsInSidebar] indexOfObject:otherBubble.view];
+                            NSInteger index = [[self viewsInSidebar] indexOfObject:otherBubble.view];
                             otherBubble.center = [self centerForBubbleAtIndex:index];
                             otherBubble.alpha = [self targetAlphaForBubbleButton:otherBubble];
                             otherBubble.transform = [self targetTransformForBubbleButton:otherBubble];
@@ -295,7 +291,11 @@
                 bubble.alpha = [self targetAlphaForBubbleButton:bubble];
                 bubble.center = [self centerForBubbleAtIndex:index];
                 bubble.transform = [self targetTransformForBubbleButton:bubble];
-                [self loadCachedPreviewForView:bubble.view];
+                if (!bubble.alpha) {
+                    [self unloadCachedPreviewForView:bubble.view];
+                } else {
+                    [self loadCachedPreviewForView:bubble.view];
+                }
             }
         }
     } else {
