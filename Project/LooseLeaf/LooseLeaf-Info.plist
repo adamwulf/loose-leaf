@@ -130,6 +130,8 @@
 	<string>YOUR_FACEBOOK_APP_ID</string>
 	<key>FacebookDisplayName</key>
 	<string>Loose Leaf</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -159,6 +161,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Import photos onto your pages.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Loose Leaf rotates the interface as your move your iPad.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Import photos onto your pages.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Lato-Bold.ttf</string>
