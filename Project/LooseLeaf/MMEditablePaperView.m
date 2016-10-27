@@ -653,7 +653,7 @@ static int count = 0;
         fileExistsAtPlistPath = YES;
         return [self plistPath];
     } else {
-        return [[[self bundledPagesPath] stringByAppendingPathComponent:@"info"] stringByAppendingPathExtension:@"plist"];
+        return [[[self bundledPagesPath] stringByAppendingPathComponent:@"bundle-safe-info"] stringByAppendingPathExtension:@"plist"];
     }
 }
 

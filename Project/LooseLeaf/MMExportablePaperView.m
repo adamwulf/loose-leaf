@@ -279,6 +279,11 @@
                 if ([aFileInPage isEqualToString:@"scrapIDs.plist"] && locationOfUpdatedScrapInfo) {
                     fullPathOfFile = locationOfUpdatedScrapInfo;
                 }
+                // rename the file if needed
+                if ([[aFileInPage lastPathComponent] isEqualToString:@"bundle-safe-info.plist"]) {
+                    aFileInPage = [[aFileInPage stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"info.plist"];
+                }
+
                 if ([zip addFileToZip:fullPathOfFile
                           toPathInZip:aFileInPage]) {
                 } else {

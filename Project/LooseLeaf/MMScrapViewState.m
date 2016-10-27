@@ -748,7 +748,7 @@ static const void* const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 - (NSString*)bundledScrapPropertiesPlistPath {
-    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"info" stringByAppendingPathExtension:@"plist"]];
+    return [[scrapsOnPaperState bundledDirectoryPathForScrapUUID:self.uuid] stringByAppendingPathComponent:[@"bundle-safe-info" stringByAppendingPathExtension:@"plist"]];
 }
 
 - (NSString*)bundledScrapBezierPath {

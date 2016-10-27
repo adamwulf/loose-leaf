@@ -43,7 +43,13 @@
 
             // don't copy items from the bundle that are already
             // overwritten in the modified page's contents
-            [bundledContents removeObjectsInArray:pagesContents];
+            [bundledContents removeObjectsInArray:[pagesContents jotMap:^id(NSString* obj, NSUInteger index) {
+                // map page contents to bundle contents names
+                if ([[obj lastPathComponent] isEqualToString:@"info.plist"]) {
+                    obj = [[obj stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"bundle-safe-info.plist"];
+                }
+                return obj;
+            }]];
 
             void (^moveItemIntoLocation)(NSString*, NSString*) = ^(NSString* fromPath, NSString* targetPath) {
                 NSError* err = nil;
@@ -55,8 +61,13 @@
                 NSAssert(!err, @"shouldn't have any problem copying files");
             };
 
-            for (NSString* item in bundledContents) {
+            for (__strong NSString* item in bundledContents) {
                 NSString* fromPath = [bundledPath stringByAppendingPathComponent:item];
+
+                if ([[item lastPathComponent] isEqualToString:@"bundle-safe-info.plist"]) {
+                    item = [[item stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"info.plist"];
+                }
+
                 NSString* targetPath = [destinationPath stringByAppendingPathComponent:item];
                 moveItemIntoLocation(fromPath, targetPath);
             }
