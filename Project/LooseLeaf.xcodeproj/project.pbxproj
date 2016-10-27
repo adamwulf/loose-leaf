@@ -545,11 +545,11 @@
 		C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */; };
 		C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */; };
 		C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */; };
-		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.1.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */; };
+		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.2.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */; };
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
-		C5C45A0B1DC13AC500C50EA7 /* MPNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A091DC13AC500C50EA7 /* MPNetwork.m */; };
 		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
+		C5C45A1E1DC154B200C50EA7 /* reorder-pages.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C45A1D1DC154AD00C50EA7 /* reorder-pages.mp4 */; };
 		C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29781D7C013A00D868EC /* MMMarkdown.m */; };
 		C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297C1D7C013A00D868EC /* MMDocument.m */; };
 		C5DA29941D7C013A00D868EC /* MMElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297E1D7C013A00D868EC /* MMElement.m */; };
@@ -561,6 +561,8 @@
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
 		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
+		C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */; };
+		C5EC1C331DC1841100C65DB3 /* release-notes-feedback-feature.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */; };
 		C5EFA5A01D9E13FB00BBE8CD /* MMPageBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */; };
 		C5F1B2861D9B01BB00E0E9A8 /* _MPTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B1E01D9B01BA00E0E9A8 /* _MPTweakBindObserver.m */; };
 		C5F1B2871D9B01BB00E0E9A8 /* MPArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = C5F1B1E41D9B01BA00E0E9A8 /* MPArrowLeft.png */; };
@@ -1605,16 +1607,14 @@
 		C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../Submodules/cloudkit-manager/SimpleCloudKitManager/build/Release-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
 		C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/ClippingBezier/Submodules/PerformanceBezier/build/Release-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../Submodules/ClippingBezier/build/Release-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
-		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-2.1.0.md"; sourceTree = "<group>"; };
+		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-2.2.0.md"; sourceTree = "<group>"; };
 		C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMMarkdown.framework; path = "../Submodules/MMMarkdown/build/Debug-iphoneos/MMMarkdown.framework"; sourceTree = "<group>"; };
 		C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.license; sourceTree = "<group>"; };
 		C5C298FB1D7BFD2E009AE6BE /* MMReleaseNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesView.h; sourceTree = "<group>"; };
 		C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReleaseNotesView.m; sourceTree = "<group>"; };
-		C5C45A081DC13AC500C50EA7 /* MPNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPNetwork.h; sourceTree = "<group>"; };
-		C5C45A091DC13AC500C50EA7 /* MPNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPNetwork.m; sourceTree = "<group>"; };
-		C5C45A0A1DC13AC500C50EA7 /* MPNetworkPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPNetworkPrivate.h; sourceTree = "<group>"; };
 		C5C45A1A1DC14CFA00C50EA7 /* MMLooseLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLooseLeafView.h; sourceTree = "<group>"; };
 		C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLooseLeafView.m; sourceTree = "<group>"; };
+		C5C45A1D1DC154AD00C50EA7 /* reorder-pages.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "reorder-pages.mp4"; sourceTree = "<group>"; };
 		C5DA29771D7C013A00D868EC /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMMarkdown.h; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.h; sourceTree = "<group>"; };
 		C5DA29781D7C013A00D868EC /* MMMarkdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMMarkdown.m; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.m; sourceTree = "<group>"; };
 		C5DA29791D7C013A00D868EC /* MMMarkdown-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MMMarkdown-Prefix.pch"; path = "../../Submodules/MMMarkdown/Source/MMMarkdown-Prefix.pch"; sourceTree = "<group>"; };
@@ -1640,6 +1640,9 @@
 		C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
 		C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackButton.h; sourceTree = "<group>"; };
 		C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackButton.m; sourceTree = "<group>"; };
+		C5EC1C2F1DC1817800C65DB3 /* MMLoopingVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopingVideoView.h; sourceTree = "<group>"; };
+		C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopingVideoView.m; sourceTree = "<group>"; };
+		C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "release-notes-feedback-feature.png"; sourceTree = "<group>"; };
 		C5EFA59B1D9CCFA700BBE8CD /* MMUUIDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUUIDView.h; sourceTree = "<group>"; };
 		C5EFA59C1D9CED7000BBE8CD /* MMBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBubbleButton.h; sourceTree = "<group>"; };
 		C5EFA59D1D9D966100BBE8CD /* MMCountableSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountableSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
@@ -2562,6 +2565,7 @@
 		665F7F601AE096C900635D56 /* list-view */ = {
 			isa = PBXGroup;
 			children = (
+				C5C45A1D1DC154AD00C50EA7 /* reorder-pages.mp4 */,
 				C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */,
 				665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */,
 				665F7F611AE096D000635D56 /* list-view-delete-page.mov */,
@@ -3349,7 +3353,8 @@
 				66DCFBDB1582BE3900B4918C /* Constants.h */,
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
-				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.1.0.md */,
+				C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */,
+				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3876,6 +3881,8 @@
 				C55AC19F1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m */,
 				C55AC1A41D7E257100259558 /* MMReleaseNotesViewController.h */,
 				C55AC1A51D7E257100259558 /* MMReleaseNotesViewController.m */,
+				C5EC1C2F1DC1817800C65DB3 /* MMLoopingVideoView.h */,
+				C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */,
 			);
 			name = ReleaseNotesView;
 			sourceTree = "<group>";
@@ -4261,6 +4268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
+				C5C45A1E1DC154B200C50EA7 /* reorder-pages.mp4 in Resources */,
 				C5F1B28F1D9B01BB00E0E9A8 /* MPCloseButton@3x.png in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
 				C55AC19B1D7C0AB100259558 /* logo.png in Resources */,
@@ -4268,7 +4276,7 @@
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
 				C5C298E81D7B9633009AE6BE /* stencil.fsh in Resources */,
 				C5C298E91D7B9633009AE6BE /* point.fsh in Resources */,
-				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.1.0.md in Resources */,
+				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.2.0.md in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
@@ -4292,6 +4300,7 @@
 				66DCFB951581BCEF00B4918C /* InfoPlist.strings in Resources */,
 				6650DD1218F4843400ADF591 /* photoalbum@2x.png in Resources */,
 				66684B40182DAAC0005A27B4 /* UIColorWithHex.license in Resources */,
+				C5EC1C331DC1841100C65DB3 /* release-notes-feedback-feature.png in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */,
 				C58E6A2C1CDB1B4A00508F1D /* bg15.jpg in Resources */,
@@ -4778,6 +4787,7 @@
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
 				6630F4C91AA4FBF8004F2FDC /* MMPDFPageAsset.m in Sources */,
 				C5F1B2961D9B01BB00E0E9A8 /* Mixpanel.m in Sources */,
+				C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */,
 				66343C671AC085D600801962 /* MMNewsletterSignupHandler.m in Sources */,
 				66423DCB19412195000A3709 /* MMDecompressImagePromise.m in Sources */,
 				C506A3BB1C23DE3200236895 /* SSKeychainQuery.m in Sources */,

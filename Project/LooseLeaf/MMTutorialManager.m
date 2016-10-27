@@ -144,6 +144,11 @@ static MMTutorialManager* _instance = nil;
             @"video": @"list-view-reorder-pages.mov"
         },
         @{
+            @"id": @"reorder-pages",
+            @"title": @"Organize Your Pages",
+            @"video": @"reorder-pages.mp4"
+        },
+        @{
             @"id": @"list-view-delete-page",
             @"title": @"Delete a Page",
             @"video": @"list-view-delete-page.mov"
