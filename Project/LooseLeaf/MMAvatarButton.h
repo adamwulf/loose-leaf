@@ -8,6 +8,7 @@
 
 #import "MMSidebarButton.h"
 
+
 @interface MMAvatarButton : MMSidebarButton
 
 @property (nonatomic, assign) BOOL shouldDrawDarkBackground;
@@ -20,15 +21,15 @@
 
 - (id)initWithFrame:(CGRect)frame forLetter:(NSString*)letter;
 
--(void) animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion;
+- (void)animateToPercent:(CGFloat)progress success:(BOOL)succeeded completion:(void (^)(BOOL finished))completion;
 
--(void) animateBounceToTopOfScreenAtX:(CGFloat)xLoc
+- (void)animateBounceToTopOfScreenAtX:(CGFloat)xLoc
                          withDuration:(CGFloat)duration
                    withTargetRotation:(CGFloat)targetRotation
                            completion:(void (^)(BOOL finished))completion;
 
--(void) animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion;
+- (void)animateOnScreenFrom:(CGPoint)offscreen withCompletion:(void (^)(BOOL finished))completion;
 
--(void) animateOffScreenWithCompletion:(void (^)(BOOL finished))completion;
+- (void)animateOffScreenWithCompletion:(void (^)(BOOL finished))completion;
 
 @end

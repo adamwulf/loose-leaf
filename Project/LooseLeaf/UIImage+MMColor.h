@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIImage (MMColor)
 
-+ (UIImage *)imageFromColor:(UIColor *)color;
++ (UIImage*)imageFromColor:(UIColor*)color;
 
 @end

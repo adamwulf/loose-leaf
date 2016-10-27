@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMPolaroidView : UIView
 
--(UIBezierPath*) boundingRectForFrame:(CGRect)rect withInset:(CGFloat)inset;
+- (UIBezierPath*)boundingRectForFrame:(CGRect)rect withInset:(CGFloat)inset;
 
 @end

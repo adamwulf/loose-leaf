@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMTutorialViewController : UIViewController
 
--(instancetype) initWithTutorials:(NSArray*)tutorialList andCompletionBlock:(void(^)())completionBlock;
+- (instancetype)initWithTutorials:(NSArray*)tutorialList andCompletionBlock:(void (^)())completionBlock;
 
--(void) closeTutorials;
+- (void)closeTutorials;
 
 @end

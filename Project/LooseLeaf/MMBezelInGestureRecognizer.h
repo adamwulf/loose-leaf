@@ -13,7 +13,8 @@
 #import "MMCancelableGestureRecognizer.h"
 #import "MMGestureTouchOwnershipDelegate.h"
 
-@interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer{
+
+@interface MMBezelInGestureRecognizer : MMCancelableGestureRecognizer {
     // direction the user is panning
     MMBezelDirection panDirection;
     CGFloat liftedFingerOffset;
@@ -21,14 +22,14 @@
     CGPoint lastKnownLocation;
     // use to calculate translation
     CGPoint firstKnownLocation;
-    
+
     NSMutableSet* validTouches;
-    
+
     NSDate* dateOfLastBezelEnding;
     NSInteger numberOfRepeatingBezels;
-    
+
     __unsafe_unretained NSObject<MMGestureTouchOwnershipDelegate>* panDelegate;
-    
+
     UIGestureRecognizerState subState;
 }
 
@@ -40,10 +41,10 @@
 @property (nonatomic, assign) BOOL hasSeenSubstateBegin;
 @property (nonatomic, assign) BOOL gestureIsFromRightBezel; // YES if from right bezel, NO if from left
 
--(CGPoint) translationInView:(UIView*)view;
+- (CGPoint)translationInView:(UIView*)view;
 
--(void) resetPageCount;
+- (void)resetPageCount;
 
--(BOOL) isActivelyBezeling;
+- (BOOL)isActivelyBezeling;
 
 @end

@@ -9,12 +9,13 @@
 #import "MMUndoRedoPageItem.h"
 #import "MMScrapView.h"
 
+
 @interface MMUndoRedoAddScrapItem : MMUndoRedoPageItem
 
 @property (readonly) NSString* scrapUUID;
 
-+(id) itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)properties;
++ (id)itemForPage:(MMUndoablePaperView*)_page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)properties;
 
--(id) initForPage:(MMUndoablePaperView*)page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)properties;
+- (id)initForPage:(MMUndoablePaperView*)page andScrapUUID:(NSString*)scrapUUID andProperties:(NSDictionary*)properties;
 
 @end

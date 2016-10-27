@@ -8,14 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
+@class MMFullScreenSidebarContainingView;
+
 @protocol MMSlidingSidebarContainerViewDelegate <NSObject>
 
--(void) sidebarCloseButtonWasTapped;
+- (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar;
 
--(void) sidebarWillShow;
+- (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar;
 
--(void) sidebarWillHide;
+- (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar;
 
--(UIView*) viewForBlur;
+- (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar;
 
 @end

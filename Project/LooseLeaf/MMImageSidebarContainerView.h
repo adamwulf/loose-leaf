@@ -12,21 +12,22 @@
 #import "MMAbstractSidebarContentView.h"
 #import "MMPDFInboxItem.h"
 
-@interface MMImageSidebarContainerView : MMFullScreenSidebarContainingView<MMPhotoManagerDelegate>
+
+@interface MMImageSidebarContainerView : MMFullScreenSidebarContainingView <MMPhotoManagerDelegate>
 
 @property (nonatomic, weak) NSObject<MMImageSidebarContainerViewDelegate>* delegate;
 
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
+- (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
 
--(void) assetWasTapped:(MMDisplayAsset *)asset
-              fromView:(MMBufferedImageView *)bufferedImage
+- (void)assetWasTapped:(MMDisplayAsset*)asset
+              fromView:(MMBufferedImageView*)bufferedImage
           withRotation:(CGFloat)rotation
          fromContainer:(MMAbstractSidebarContentView*)container;
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
--(void) showPDF:(MMInboxItem*)pdf;
+- (void)showPDF:(MMInboxItem*)pdf;
 
--(void) refreshPDF;
+- (void)refreshPDF;
 
 @end

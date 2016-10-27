@@ -8,7 +8,8 @@
 
 #import "MMSidebarButton.h"
 
-@interface MMUndoRedoButton : MMSidebarButton{
+
+@interface MMUndoRedoButton : MMSidebarButton {
     BOOL reverseArrow;
 }
 

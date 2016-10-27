@@ -8,6 +8,7 @@
 
 #import "MMAbstractSidebarContentView.h"
 
+
 @interface MMEventSidebarContentView : MMAbstractSidebarContentView
 
 @end

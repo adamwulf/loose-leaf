@@ -12,7 +12,8 @@
 #import "MMVector.h"
 #import "Constants.h"
 
-@interface MMRotationManager : NSObject{
+
+@interface MMRotationManager : NSObject {
     BOOL isFirstReading;
     CGFloat accelerationX;
     CGFloat accelerationY;
@@ -31,19 +32,19 @@
 @property (nonatomic, weak) NSObject<MMRotationManagerDelegate>* delegate;
 @property (nonatomic, readonly) UIInterfaceOrientation lastBestOrientation;
 
-+(MMRotationManager*) sharedInstance;
++ (MMRotationManager*)sharedInstance;
 
--(UIInterfaceOrientation) currentInterfaceOrientation;
+- (UIInterfaceOrientation)currentInterfaceOrientation;
 
--(UIDeviceOrientation) currentDeviceOrientation;
+- (UIDeviceOrientation)currentDeviceOrientation;
 
--(MMVector*) upVector;
+- (MMVector*)upVector;
 
 
--(void) willResignActive;
+- (void)willResignActive;
 
--(void) didBecomeActive;
+- (void)didBecomeActive;
 
--(void) applicationDidBackground;
+- (void)applicationDidBackground;
 
 @end

@@ -8,24 +8,25 @@
 
 #import "MMRulerAdjustment.h"
 
-@implementation MMRulerAdjustment{
+
+@implementation MMRulerAdjustment {
     NSArray* adjustedElements;
     BOOL didAdjust;
 }
 
--(id) initWithAdjustments:(NSArray*)elements andDidAdjust:(BOOL)adjust{
-    if(self = [super init]){
+- (id)initWithAdjustments:(NSArray*)elements andDidAdjust:(BOOL)adjust {
+    if (self = [super init]) {
         adjustedElements = elements;
         didAdjust = adjust;
     }
     return self;
 }
 
-- (NSArray*) elements{
+- (NSArray*)elements {
     return adjustedElements;
 }
 
--(BOOL) didAdjust{
+- (BOOL)didAdjust {
     return didAdjust;
 }
 

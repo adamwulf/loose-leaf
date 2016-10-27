@@ -46,3 +46,6 @@
 [submodule "Submodules/MMMarkdown"]
 	path = Submodules/MMMarkdown
 	url = git@github.com:adamwulf/MMMarkdown.git
+[submodule "Submodules/spacecommander"]
+	path = Submodules/spacecommander
+	url = git@github.com:square/spacecommander.git

@@ -11,9 +11,10 @@
 
 @class MMScrapBackgroundView, MMScrapViewState;
 
+
 @interface MMGenericBackgroundView : UIView
 
--(id) initWithImage:(UIImage*)img andDelegate:(NSObject<MMGenericBackgroundViewDelegate>*)delegate;
+- (id)initWithImage:(UIImage*)img andDelegate:(NSObject<MMGenericBackgroundViewDelegate>*)delegate;
 
 @property (nonatomic, weak) NSObject<MMGenericBackgroundViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat backgroundRotation;
@@ -21,8 +22,8 @@
 @property (nonatomic, assign) CGPoint backgroundOffset;
 @property (nonatomic, retain) UIImage* backingImage;
 
--(void) aspectFillBackgroundImageIntoView;
+- (void)aspectFillBackgroundImageIntoView;
 
--(MMScrapBackgroundView*) stampBackgroundFor:(MMScrapViewState*)targetScrapState;
+- (MMScrapBackgroundView*)stampBackgroundFor:(MMScrapViewState*)targetScrapState;
 
 @end

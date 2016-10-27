@@ -14,53 +14,53 @@
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 #import "Constants.h"
 
-@implementation MMCloudKitFetchingAccountInfoState{
+
+@implementation MMCloudKitFetchingAccountInfoState {
     BOOL isCheckingStatus;
     NSArray* cachedFriendListIfAny;
 }
 
-+(NSString*) accountPlistPath{
++ (NSString*)accountPlistPath {
     return [[MMCloudKitManager cloudKitFilesPath] stringByAppendingPathComponent:@"account.plist"];
 }
 
-+(void) clearAccountCache{
++ (void)clearAccountCache {
     [[NSFileManager defaultManager] removeItemAtPath:[MMCloudKitFetchingAccountInfoState accountPlistPath] error:nil];
 }
 
--(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+- (void)runState {
+    if ([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
-        @synchronized(self){
-            if(isCheckingStatus){
+    } else {
+        @synchronized(self) {
+            if (isCheckingStatus) {
                 return;
             }
             isCheckingStatus = YES;
         }
-        [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserRecordIDOnComplete:^(CKRecordID *userRecord, NSError *error) {
-            if([MMCloudKitManager sharedManager].currentState != self){
+        [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserRecordIDOnComplete:^(CKRecordID* userRecord, NSError* error) {
+            if ([MMCloudKitManager sharedManager].currentState != self) {
                 // bail early. the network probably went offline
                 // while we were waiting for a reply. if we're not current,
                 // then we shouldn't process / change state.
                 return;
             }
-            if(error){
-                @synchronized(self){
+            if (error) {
+                @synchronized(self) {
                     isCheckingStatus = NO;
                 }
                 [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
-            }else{
-                
+            } else {
                 // we now have the user record id, find out
                 // if our info matches what we have stored
                 // on disk (if anything)
                 NSDictionary* cachedUserInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[MMCloudKitFetchingAccountInfoState accountPlistPath]];
-                if(cachedUserInfo && [cachedUserInfo isKindOfClass:[NSDictionary class]]){
+                if (cachedUserInfo && [cachedUserInfo isKindOfClass:[NSDictionary class]]) {
                     // sanity check with the class comparison
-                    if([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]){
-//                        DebugLog(@"using cached account information");
-                        @synchronized(self){
+                    if ([[cachedUserInfo objectForKey:@"recordId"] isEqual:userRecord]) {
+                        //                        DebugLog(@"using cached account information");
+                        @synchronized(self) {
                             isCheckingStatus = NO;
                         }
                         [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
@@ -69,7 +69,7 @@
                                                                  andSaveToPath:[MMCloudKitFetchingAccountInfoState accountPlistPath]
                                                     andUpdateStateWhenComplete:NO];
                         return;
-                    }else{
+                    } else {
                         // our records don't match, so delete the file
                         // and tell the friends state to delete too.
                         // then re-run this state w/o any of the cached info
@@ -78,7 +78,7 @@
                         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchingAccountInfoState alloc] init]];
                         return;
                     }
-                }else{
+                } else {
                     // didn't have any cached account info,
                     // so lets fetch it and update to the next state
                     // afterwards
@@ -92,34 +92,34 @@
 }
 
 
--(void) fetchAccountInformationInBackgroundForUserRecord:(CKRecordID*)userRecord andSaveToPath:(NSString*)userInfoPlistPath andUpdateStateWhenComplete:(BOOL)shouldUpdateState{
+- (void)fetchAccountInformationInBackgroundForUserRecord:(CKRecordID*)userRecord andSaveToPath:(NSString*)userInfoPlistPath andUpdateStateWhenComplete:(BOOL)shouldUpdateState {
     [[SPRSimpleCloudKitManager sharedManager] silentlyFetchUserInfoForUserId:userRecord onComplete:^(CKDiscoveredUserInfo* discoveredInfo, NSError* error) {
-        if(shouldUpdateState && [MMCloudKitManager sharedManager].currentState != self){
+        if (shouldUpdateState && [MMCloudKitManager sharedManager].currentState != self) {
             // bail early. the network probably went offline
             // while we were waiting for a reply. if we're not current,
             // then we shouldn't process / change state.
             return;
         }
-        @synchronized(self){
+        @synchronized(self) {
             isCheckingStatus = NO;
         }
-        if(error){
-            if(shouldUpdateState){
+        if (error) {
+            if (shouldUpdateState) {
                 [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
-            }else{
+            } else {
                 // the state was already changed because we had cache data.
                 // we only loaded it again to update our cache in the background.
                 // we can die silently here.
             }
-        }else{
-            if(![NSKeyedArchiver archiveRootObject:[discoveredInfo asDictionary] toFile:userInfoPlistPath]){
+        } else {
+            if (![NSKeyedArchiver archiveRootObject:[discoveredInfo asDictionary] toFile:userInfoPlistPath]) {
                 DebugLog(@"couldn't archive CloudKit account data");
             }
             [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
-            if(shouldUpdateState){
+            if (shouldUpdateState) {
                 [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:userRecord
                                                                                                              andUserInfo:[discoveredInfo asDictionary]]];
-            }else{
+            } else {
                 // the state was already changed because we had cache data.
                 // we only loaded it again to update our cache in the background.
             }

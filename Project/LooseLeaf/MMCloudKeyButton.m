@@ -14,14 +14,15 @@
 #import "UIView+Animations.h"
 #import "UIView+Debug.h"
 
-@implementation MMCloudKeyButton{
+
+@implementation MMCloudKeyButton {
     MMRotatingKeyDemoLayer* needLoginView;
     NSTimer* bounceTimer;
     MMCloudErrorIconLayer* brokenCloud;
 }
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         needLoginView = [[MMRotatingKeyDemoLayer alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         [self.layer addSublayer:needLoginView];
         [self addTarget:self action:@selector(didTapButton) forControlEvents:UIControlEventTouchUpInside];
@@ -29,31 +30,31 @@
     return self;
 }
 
--(BOOL) isShowingKey{
+- (BOOL)isShowingKey {
     return !needLoginView.isFlipped;
 }
 
--(void) flipImmediatelyToCloud{
-    if([self isShowingKey]){
+- (void)flipImmediatelyToCloud {
+    if ([self isShowingKey]) {
         [needLoginView flipWithoutAnimation];
     }
-    if(brokenCloud){
+    if (brokenCloud) {
         needLoginView.opacity = 1.0;
         [brokenCloud removeFromSuperlayer];
         brokenCloud = nil;
     }
 }
 
--(void) flipAnimatedToKeyWithCompletion:(void (^)())completion{
-    if(![self isShowingKey]){
+- (void)flipAnimatedToKeyWithCompletion:(void (^)())completion {
+    if (![self isShowingKey]) {
         [needLoginView bounceAndFlipWithCompletion:completion];
     }
 }
 
--(void) animateToBrokenCloud{
+- (void)animateToBrokenCloud {
     brokenCloud = [[MMCloudErrorIconLayer alloc] initWithFrame:self.bounds];
     [self.layer addSublayer:brokenCloud];
-    
+
     brokenCloud.opacity = 1.0;
     needLoginView.opacity = 0.0;
 
@@ -62,42 +63,42 @@
     opacityForBreak.fromValue = @(0.0);
     opacityForBreak.toValue = @(1.0);
     opacityForBreak.duration = .3;
-    
+
     CGAffineTransform currTransform = self.transform;
     self.transform = CGAffineTransformIdentity;
 
     [CATransaction begin];
     [brokenCloud addAnimation:opacityForBreak forKey:@"opacity"];
-    
+
     CGRect selfBounds = self.bounds;
     CGPoint updatedAnchorPoint = [brokenCloud centerOfErrorCircle];
     updatedAnchorPoint.x /= selfBounds.size.width;
     updatedAnchorPoint.y /= selfBounds.size.height;
     [UIView setAnchorPoint:updatedAnchorPoint forView:self];
     [CATransaction commit];
-    
+
     self.transform = currTransform;
 }
 
--(void) setupTimer{
-    if(!bounceTimer){
+- (void)setupTimer {
+    if (!bounceTimer) {
         bounceTimer = [NSTimer scheduledTimerWithTimeInterval:3.5 target:self selector:@selector(bounceLightly) userInfo:nil repeats:YES];
         [self bounceLightly];
     }
 }
 
--(void) tearDownTimer{
+- (void)tearDownTimer {
     [bounceTimer invalidate];
     bounceTimer = nil;
 }
 
--(void) didTapButton{
+- (void)didTapButton {
     [self tearDownTimer];
     [needLoginView bounceAndFlipWithCompletion:nil];
     self.enabled = NO;
 }
 
--(void)bounceLightly{
+- (void)bounceLightly {
     CGFloat duration = 0.35;
     [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
         UIInterfaceOrientation orientation = [[MMRotationManager sharedInstance] lastBestOrientation];
@@ -115,26 +116,26 @@
 
 #pragma mark - Rotation
 
--(CGFloat) idealRotationForOrientation:(UIInterfaceOrientation)orientation{
+- (CGFloat)idealRotationForOrientation:(UIInterfaceOrientation)orientation {
     CGFloat visiblePhotoRotation = 0;
-    if(orientation == UIInterfaceOrientationLandscapeRight){
+    if (orientation == UIInterfaceOrientationLandscapeRight) {
         visiblePhotoRotation = M_PI / 2;
-    }else if(orientation == UIInterfaceOrientationPortraitUpsideDown){
+    } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
         visiblePhotoRotation = M_PI;
-    }else if(orientation == UIInterfaceOrientationLandscapeLeft){
+    } else if (orientation == UIInterfaceOrientationLandscapeLeft) {
         visiblePhotoRotation = -M_PI / 2;
-    }else{
+    } else {
         visiblePhotoRotation = 0;
     }
     return visiblePhotoRotation;
 }
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated{
-    if(animated){
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation animated:(BOOL)animated {
+    if (animated) {
         [UIView animateWithDuration:.2 animations:^{
             self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
         }];
-    }else{
+    } else {
         self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
     }
 }

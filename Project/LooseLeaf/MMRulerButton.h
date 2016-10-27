@@ -8,6 +8,7 @@
 
 #import "MMSidebarButton.h"
 
+
 @interface MMRulerButton : MMSidebarButton
 
 @end

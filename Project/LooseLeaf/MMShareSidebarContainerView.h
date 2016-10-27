@@ -11,14 +11,15 @@
 #import "MMCloudKitManagerDelegate.h"
 #import "MMVector.h"
 
-@interface MMShareSidebarContainerView : MMFullScreenSidebarContainingView<MMShareItemDelegate>
+
+@interface MMShareSidebarContainerView : MMFullScreenSidebarContainingView <MMShareItemDelegate>
 
 @property (weak) NSObject<MMShareSidebarDelegate>* shareDelegate;
 
--(void) updateInterfaceTo:(UIInterfaceOrientation)orientation;
+- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation;
 
 #pragma mark - Cloud Kit
 
--(void) cloudKitDidChangeState:(MMCloudKitBaseState *)currentState;
+- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
 @end

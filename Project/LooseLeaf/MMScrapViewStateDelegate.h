@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMScrapViewState,MMScrapsInBezelContainerView;
+@class MMScrapViewState, MMScrapsInBezelContainerView;
 
 @protocol MMScrapViewStateDelegate <NSObject>
 
--(void) didLoadScrapViewState:(MMScrapViewState*)state;
+- (void)didLoadScrapViewState:(MMScrapViewState*)state;
 
--(CGPoint) center;
+- (CGPoint)center;
 
--(CGFloat) rotation;
+- (CGFloat)rotation;
 
 @end

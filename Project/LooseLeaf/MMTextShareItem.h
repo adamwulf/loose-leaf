@@ -10,6 +10,7 @@
 #import <MessageUI/MessageUI.h>
 #import "MMAbstractShareItem.h"
 
-@interface MMTextShareItem : MMAbstractShareItem<MFMessageComposeViewControllerDelegate>
+
+@interface MMTextShareItem : MMAbstractShareItem <MFMessageComposeViewControllerDelegate>
 
 @end

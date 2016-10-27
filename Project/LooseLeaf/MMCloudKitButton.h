@@ -8,8 +8,9 @@
 
 #import "MMImageViewButton.h"
 
+
 @interface MMCloudKitButton : MMImageViewButton
 
-+(UIBezierPath*) cloudPathForFrame:(CGRect)frame;
++ (UIBezierPath*)cloudPathForFrame:(CGRect)frame;
 
 @end

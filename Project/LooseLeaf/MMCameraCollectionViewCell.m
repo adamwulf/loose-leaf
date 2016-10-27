@@ -14,7 +14,8 @@
 #import "Constants.h"
 #import <JotUI/JotUI.h>
 
-@implementation MMCameraCollectionViewCell{
+
+@implementation MMCameraCollectionViewCell {
     CGFloat rowHeight;
     MMBorderedCamView* cameraRow;
     MMFlipCameraButton* flipButton;
@@ -22,7 +23,7 @@
 
 @synthesize delegate;
 
--(CGRect) cameraViewFr{
+- (CGRect)cameraViewFr {
     CGFloat ratio = [UIScreen mainScreen].portraitBounds.size.width / [UIScreen mainScreen].portraitBounds.size.height;
     CGRect cameraViewFr = CGRectZero;
     cameraViewFr.size.width = ratio * (rowHeight - kCameraMargin) * 2;
@@ -31,16 +32,16 @@
 }
 
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         AVCaptureDevicePosition preferredPosition = [[NSUserDefaults standardUserDefaults] integerForKey:kCameraPositionUserDefaultKey];
         rowHeight = ceilf(self.bounds.size.width / 2);
         CGRect cameraViewFr = [self cameraViewFr];
-        
+
         cameraRow = [[MMBorderedCamView alloc] initWithFrame:cameraViewFr andCameraPosition:preferredPosition];
         cameraRow.delegate = self;
-        cameraRow.rotation = RandomPhotoRotation(0)/2;
-        cameraRow.center = CGPointMake((self.frame.size.width-kWidthOfSidebarButton)/2 + kCameraMargin, kCameraMargin + cameraRow.bounds.size.height/2);
+        cameraRow.rotation = RandomPhotoRotation(0) / 2;
+        cameraRow.center = CGPointMake((self.frame.size.width - kWidthOfSidebarButton) / 2 + kCameraMargin, kCameraMargin + cameraRow.bounds.size.height / 2);
 
         flipButton = [[MMFlipCameraButton alloc] initWithFrame:CGRectMake(self.frame.size.width - kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer + kCameraMargin,
                                                                           floorf((cameraViewFr.size.height - kWidthOfSidebarButton) / 2),
@@ -56,28 +57,28 @@
 
 #pragma mark - Camera Button
 
--(void) changeCamera{
+- (void)changeCamera {
     [cameraRow changeCamera];
 }
 
 #pragma mark - MMCamViewDelegate
 
--(void) didTakePicture:(UIImage*)img{
+- (void)didTakePicture:(UIImage*)img {
     DebugLog(@"took picture!");
     [self.delegate pictureTakeWithCamera:img fromView:cameraRow];
 }
 
--(void) didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition{
+- (void)didChangeCameraTo:(AVCaptureDevicePosition)preferredPosition {
     [[NSUserDefaults standardUserDefaults] setInteger:preferredPosition forKey:kCameraPositionUserDefaultKey];
 }
 
--(void) sessionStarted{
+- (void)sessionStarted {
     // noop
 }
 
 #pragma mark - Rotation
 
--(void) updatePhotoRotation:(BOOL)animated{
+- (void)updatePhotoRotation:(BOOL)animated {
     [flipButton updatePhotoRotation:animated];
 }
 

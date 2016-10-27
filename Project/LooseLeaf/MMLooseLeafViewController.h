@@ -13,14 +13,17 @@
 #import <TwitterKit/TwitterKit.h>
 #import "MMMemoryManager.h"
 
-@interface MMLooseLeafViewController : UIViewController<MMMemoryManagerDelegate>{
+
+@interface MMLooseLeafViewController : UIViewController <MMMemoryManagerDelegate> {
     MMTutorialStackView* currentStackView;
 }
 
--(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
+@property (nonatomic, readonly) MMPagesInBezelContainerView* bezelPagesContainer;
 
--(void) willResignActive;
+- (void)importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
--(void) didEnterBackground;
+- (void)willResignActive;
+
+- (void)didEnterBackground;
 
 @end

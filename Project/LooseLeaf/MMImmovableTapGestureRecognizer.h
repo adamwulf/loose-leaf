@@ -17,6 +17,6 @@
  * these classes is essentially the same.
  *
  */
-@interface MMImmovableTapGestureRecognizer : UITapGestureRecognizer<UIGestureRecognizerDelegate>
+@interface MMImmovableTapGestureRecognizer : UITapGestureRecognizer <UIGestureRecognizerDelegate>
 
 @end

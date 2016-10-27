@@ -20,8 +20,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE. */
 
+
 @interface UIImage (Blur)
 
-+ (UIImage *)applyBlurOnImage:(UIImage *)imageToBlur withRadius:(CGFloat)blurRadius;
++ (UIImage*)applyBlurOnImage:(UIImage*)imageToBlur withRadius:(CGFloat)blurRadius;
 
 @end

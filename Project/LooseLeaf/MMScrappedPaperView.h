@@ -20,10 +20,10 @@
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
-@interface MMScrappedPaperView : MMEditablePaperView<MMPanAndPinchScrapGestureRecognizerDelegate,MMScrapsOnPaperStateDelegate,MMDecompressImagePromiseDelegate>{
+@interface MMScrappedPaperView : MMEditablePaperView <MMPanAndPinchScrapGestureRecognizerDelegate, MMScrapsOnPaperStateDelegate, MMDecompressImagePromiseDelegate> {
     MMScrapsOnPaperState* scrapsOnPaperState;
     UIImageView* cachedImgView;
-    
+
     // this defaults to NO, which means we'll try to
     // load a thumbnail. if an image does not exist
     // on disk, then we'll set this to YES which will
@@ -35,53 +35,53 @@
 
 @property (readonly) MMScrapsOnPaperState* scrapsOnPaperState;
 @property (readonly) UIImageView* cachedImgView;
-@property (nonatomic, weak) NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMScrapViewOwnershipDelegate, MMPaperViewDelegate>* delegate;
 
--(dispatch_queue_t) serialBackgroundQueue;
+- (dispatch_queue_t)serialBackgroundQueue;
 
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
--(MMScrapView*) addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
+- (MMScrapView*)addScrapWithPath:(UIBezierPath*)path andScale:(CGFloat)scale;
+- (MMScrapView*)addScrapWithPath:(UIBezierPath*)path andRotation:(CGFloat)rotation andScale:(CGFloat)scale;
 
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
+- (void)didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading;
 
 #pragma mark - Scissors
 
--(void) beginScissorAtPoint:(CGPoint)point;
+- (void)beginScissorAtPoint:(CGPoint)point;
 
--(BOOL) continueScissorAtPoint:(CGPoint)point;
+- (BOOL)continueScissorAtPoint:(CGPoint)point;
 
--(void) finishScissorAtPoint:(CGPoint)point;
+- (void)finishScissorAtPoint:(CGPoint)point;
 
--(void) cancelScissorAtPoint:(CGPoint)point;
+- (void)cancelScissorAtPoint:(CGPoint)point;
 
--(MMScissorResult*) completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
+- (MMScissorResult*)completeScissorsCutWithPath:(UIBezierPath*)scissorPath;
 
--(NSString*) scrappedThumbnailPath;
+- (NSString*)scrappedThumbnailPath;
 
--(UIImage*) scrappedImgViewImage;
+- (UIImage*)scrappedImgViewImage;
 
--(void) addUndoLevelAndContinueStroke;
+- (void)addUndoLevelAndContinueStroke;
 
--(void) performBlockForUnloadedScrapStateSynchronously:(void(^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload andSavePaperState:(BOOL)shouldSavePaperState;
+- (void)performBlockForUnloadedScrapStateSynchronously:(void (^)())block andImmediatelyUnloadState:(BOOL)shouldImmediatelyUnload andSavePaperState:(BOOL)shouldSavePaperState;
 
--(NSString*) scrapIDsPath;
+- (NSString*)scrapIDsPath;
 
--(NSArray*) scrapsOnPaper;
+- (NSArray*)scrapsOnPaper;
 
--(CGSize) thumbnailSize;
+- (CGSize)thumbnailSize;
 
 #pragma mark - protected
 
--(void) drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize;
+- (void)drawScrap:(MMScrapView*)scrap intoContext:(CGContextRef)context withSize:(CGSize)contextSize;
 
--(void) loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
+- (void)loadCachedPreviewAndDecompressImmediately:(BOOL)forceToDecompressImmediately;
 
--(void) isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail;
+- (void)isShowingDrawableView:(BOOL)showDrawableView andIsShowingThumbnail:(BOOL)showThumbnail;
 
--(void) drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize;
+- (void)drawPageBackgroundInContext:(CGContextRef)context forThumbnailSize:(CGSize)thumbSize;
 
--(void) setThumbnailTo:(UIImage*)img;
+- (void)setThumbnailTo:(UIImage*)img;
 
--(void) newlyCutScrapFromPaperView:(MMScrapView*)scrap;
+- (void)newlyCutScrapFromPaperView:(MMScrapView*)scrap;
 
 @end

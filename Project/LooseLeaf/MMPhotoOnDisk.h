@@ -8,8 +8,9 @@
 
 #import "MMPhoto.h"
 
+
 @interface MMPhotoOnDisk : MMPhoto
 
--(id) initWithPath:(NSString*)pathToPhoto;
+- (id)initWithPath:(NSString*)pathToPhoto;
 
 @end

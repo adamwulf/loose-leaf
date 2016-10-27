@@ -12,26 +12,24 @@
 #import <ClippingBezier/ClippingBezier.h>
 #import "Constants.h"
 
-@implementation MMScrapBubbleButton{
+
+@implementation MMScrapBubbleButton {
     CGFloat lastRotationTransform;
     CGFloat rotationAdjustment;
     MMScrapBorderView* borderView;
 }
 
-@synthesize scrap;
-@synthesize scale;
+@synthesize view;
 @synthesize rotationAdjustment;
-@synthesize originalScrapScale;
+@synthesize originalViewScale;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         rotationAdjustment = 0;
-        scale = 1;
         lastRotationTransform = 0;
         self.rotation = 0;
         borderView = [[MMScrapBorderView alloc] initWithFrame:self.bounds];
@@ -47,60 +45,59 @@
  * to the bubble. when the scrap is added, we need to be at
  * rotation = 0, so the rotationAdjustment accounts for that
  */
--(CGAffineTransform) rotationTransform{
+- (CGAffineTransform)rotationTransform {
     lastRotationTransform = [self.delegate sidebarButtonRotation];
     return CGAffineTransformMakeRotation([self.delegate sidebarButtonRotation] - rotationAdjustment);
 }
 
--(void) setRotation:(CGFloat)_rotation{
+- (void)setRotation:(CGFloat)_rotation {
     [super setRotation:_rotation];
-    if(ABS(lastRotationTransform - [self.delegate sidebarButtonRotation]) > 0.01){
+    if (ABS(lastRotationTransform - [self.delegate sidebarButtonRotation]) > 0.01) {
         self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
     }
 }
 
--(void) setScale:(CGFloat)_scale{
-    scale = _scale;
-    self.transform = CGAffineTransformScale([self rotationTransform], scale, scale);
-}
-
 #pragma mark - Scrap
 
-+(CGFloat) idealScaleForScrap:(MMScrapView*)scrap{
++ (CGFloat)idealScaleForView:(MMScrapView*)scrap {
     return 36.0 / MAX(scrap.originalSize.width, scrap.originalSize.height);
 }
 
-+(CGAffineTransform) idealTransformForScrap:(MMScrapView*)scrap{
++ (CGAffineTransform)idealTransformForView:(MMScrapView*)scrap {
     // aim to get the border into 36 px
-    CGFloat scale = [MMScrapBubbleButton idealScaleForScrap:scrap];
-    return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation),CGAffineTransformMakeScale(scale, scale));
+    CGFloat scale = [MMScrapBubbleButton idealScaleForView:scrap];
+    return CGAffineTransformConcat(CGAffineTransformMakeRotation(scrap.rotation), CGAffineTransformMakeScale(scale, scale));
 }
 
--(void) setScrap:(MMScrapView *)_scrap{
-    
-    scrap = _scrap;
-    if(!_scrap){
-//        DebugLog(@"killing scrap bubble, setting to nil scrap");
++ (CGRect)idealBoundsForView:(UIView<MMUUIDView>*)view {
+    return view.bounds;
+}
+
+- (void)setView:(MMScrapView*)_scrap {
+    view = _scrap;
+    if (!_scrap) {
+        //        DebugLog(@"killing scrap bubble, setting to nil scrap");
+        [borderView setHidden:YES];
         return;
     }
     rotationAdjustment = self.rotation;
-    
+
     // force transform update
     CGFloat foo = self.rotation;
     self.rotation = -foo;
     self.rotation = foo;
 
-    [self insertSubview:scrap belowSubview:borderView];
-    scrap.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
-    scrap.transform = [MMScrapBubbleButton idealTransformForScrap:scrap];
-    UIBezierPath* idealScaledPathInButton = [scrap.bezierPath copy];
-    [idealScaledPathInButton applyTransform:scrap.transform];
+    [self insertSubview:view belowSubview:borderView];
+    view.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    view.transform = [MMScrapBubbleButton idealTransformForView:view];
+    UIBezierPath* idealScaledPathInButton = [view.bezierPath copy];
+    [idealScaledPathInButton applyTransform:view.transform];
 
     // find the first point of the path compared
     // to the first point of the scrap's path
     // and line these up
-    CGPoint firstscrappoint = [scrap.bezierPath firstPoint];
-    firstscrappoint = [self convertPoint:firstscrappoint fromView:scrap];
+    CGPoint firstscrappoint = [view.bezierPath firstPoint];
+    firstscrappoint = [self convertPoint:firstscrappoint fromView:view];
     CGPoint firstpathpoint = [idealScaledPathInButton firstPoint];
     CGFloat diffX = firstscrappoint.x - firstpathpoint.x;
     CGFloat diffY = firstscrappoint.y - firstpathpoint.y;
@@ -113,12 +110,12 @@
     //
     // let's move the scrap and the path to the average
     // of the two centers
-    CGPoint pathCenter = CGPointMake(idealScaledPathInButton.bounds.origin.x + idealScaledPathInButton.bounds.size.width/2, idealScaledPathInButton.bounds.origin.y + idealScaledPathInButton.bounds.size.height / 2);
-    diffX = scrap.center.x - pathCenter.x;
-    diffY = scrap.center.y - pathCenter.y;
-    CGAffineTransform centerTransform = CGAffineTransformMakeTranslation(diffX/2, diffY/2);
+    CGPoint pathCenter = CGPointMake(idealScaledPathInButton.bounds.origin.x + idealScaledPathInButton.bounds.size.width / 2, idealScaledPathInButton.bounds.origin.y + idealScaledPathInButton.bounds.size.height / 2);
+    diffX = view.center.x - pathCenter.x;
+    diffY = view.center.y - pathCenter.y;
+    CGAffineTransform centerTransform = CGAffineTransformMakeTranslation(diffX / 2, diffY / 2);
     [idealScaledPathInButton applyTransform:centerTransform];
-    scrap.center = CGPointApplyAffineTransform(scrap.center, centerTransform);
+    view.center = CGPointApplyAffineTransform(view.center, centerTransform);
 
     // now let the border know about it's path
     // to draw
@@ -129,74 +126,19 @@
 #pragma mark - Properties
 
 
--(UIColor*) borderColor{
-    return [UIColor colorWithRed: 0.26 green: 0.26 blue: 0.26 alpha: 0.35];
+- (UIColor*)borderColor {
+    return [UIColor colorWithRed:0.26 green:0.26 blue:0.26 alpha:0.35];
 }
 
--(UIColor*) backgroundColor{
-    return [UIColor colorWithRed: 0.84 green: 0.84 blue: 0.84 alpha: 0.5];
+- (UIColor*)backgroundColor {
+    return [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
 }
 
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGRect shadowFrame = CGRectInset(self.bounds, 10, 10);
-    CGFloat tokenAdjustment = (100 - self.bounds.size.width) / 15;
-    CGRect tokenFrame = CGRectInset(self.bounds, 14 - tokenAdjustment, 14 - tokenAdjustment);
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:shadowFrame];
-    UIBezierPath* tokenOvalPath = [UIBezierPath bezierPathWithOvalInRect:tokenFrame];
-    
-    
-    [[self backgroundColor] setFill];
-    [tokenOvalPath fill];
-
-    CGContextSetBlendMode(context, kCGBlendModeClear);
-    [[UIColor whiteColor] setStroke];
-    tokenOvalPath.lineWidth = 1;
-    [tokenOvalPath stroke];
-    CGContextSetBlendMode(context, kCGBlendModeNormal);
-
-    [[self borderColor] setStroke];
-    [tokenOvalPath stroke];
-    
-    //
-    //
-    // shadow
-    //
-    
-    UIColor* greyShadowColor = [self borderColor];
-    
-    //
-    // possible drop shadow
-    UIColor* gradientColor = [greyShadowColor colorWithAlphaComponent:0.5];
-    UIColor* clearColor = [greyShadowColor colorWithAlphaComponent:0];
-    NSArray* gradientColors = [NSArray arrayWithObjects:
-                               (id)gradientColor.CGColor,
-                               (id)clearColor.CGColor, nil];
-    CGFloat gradientLocations[] = {0, 1};
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)gradientColors, gradientLocations);
-    CGContextSaveGState(context);
-    
-    UIBezierPath* clipPath = [ovalPath copy];
-    [clipPath appendPath:[UIBezierPath bezierPathWithRect:CGRectInfinite]];
-    clipPath.usesEvenOddFillRule = YES;
-    [clipPath addClip];
-    
-    CGContextDrawRadialGradient(context, gradient,
-                                CGPointMake(CGRectGetMidX(shadowFrame), CGRectGetMidY(shadowFrame)), shadowFrame.size.width / 2 - 1,
-                                CGPointMake(CGRectGetMidX(shadowFrame), CGRectGetMidY(shadowFrame)), shadowFrame.size.width / 2 + 4.5 * shadowFrame.size.width / 100.0,
-                                kCGGradientDrawsBeforeStartLocation | kCGGradientDrawsAfterEndLocation);
-    
-    CGGradientRelease(gradient);
-    CGColorSpaceRelease(colorSpace);
-    
-    CGContextRestoreGState(context);
-
+- (void)drawRect:(CGRect)rect {
+    [super drawCircleBackground:rect];
 }
 
 #pragma mark - Ignore Touches
@@ -207,8 +149,8 @@
  * can never intercept any touch input. instead it will
  * effectively pass through this view to the views behind it
  */
--(UIView*) hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-    if([super hitTest:point withEvent:event]){
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent*)event {
+    if ([super hitTest:point withEvent:event]) {
         return self;
     }
     return nil;

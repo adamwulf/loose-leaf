@@ -5,7 +5,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <TwitterKit/TWTRTweetViewDelegate.h>
+#import "TWTRTweetViewDelegate.h"
 
 @class TWTRTweet;
 
@@ -94,6 +94,11 @@ typedef NS_ENUM(NSUInteger, TWTRTweetViewTheme) {
  _Note:_ You can't change the theme through an appearance proxy after the view has already been added to the view hierarchy. Direct `theme` property access will work though.
  */
 @interface TWTRTweetView : UIView <UIAppearanceContainer>
+
+/**
+ *  The Tweet being displayed.
+ */
+@property (nonatomic, readonly) TWTRTweet *tweet;
 
 /**
  *  Background color of the Tweet view and all text labels (fullname, username, Tweet text, timestamp).

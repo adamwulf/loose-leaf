@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIImage (Memory)
 
--(int) uncompressedByteSize;
+- (int)uncompressedByteSize;
 
 @end

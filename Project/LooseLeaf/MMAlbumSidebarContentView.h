@@ -8,6 +8,7 @@
 
 #import "MMAbstractSidebarContentView.h"
 
+
 @interface MMAlbumSidebarContentView : MMAbstractSidebarContentView
 
 @end

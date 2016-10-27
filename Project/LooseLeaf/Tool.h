@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <JotUI/JotUI.h>
 
-@interface Tool : NSObject<JotViewDelegate>
+
+@interface Tool : NSObject <JotViewDelegate>
 
 @end

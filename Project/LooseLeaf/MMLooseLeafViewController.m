@@ -29,26 +29,31 @@
 #import "MMTutorialView.h"
 #import "MMTutorialManager.h"
 #import "MMTutorialViewDelegate.h"
-#import "MMStackPropertiesView.h"
-#import "MMRoundedSquareViewDelegate.h"
 #import "MMPalmGestureRecognizer.h"
 #import "MMRotatingBackgroundView.h"
 #import "MMTrashManager.h"
 #import "MMAbstractShareItem.h"
 #import "MMReleaseNotesViewController.h"
 #import "MMReleaseNotesView.h"
+#import "MMFeedbackViewController.h"
 #import "UIApplication+Version.h"
 #import "MMAppDelegate.h"
 #import "MMPresentationWindow.h"
 #import "MMTutorialViewController.h"
 #import "Constants.h"
 #import "MMMarkdown.h"
+#import "MMFeedbackViewController.h"
+#import "MMScrapsInBezelContainerView.h"
+#import "MMPagesInBezelContainerView.h"
+#import "MMLooseLeafView.h"
 
-@interface MMLooseLeafViewController ()<MMPaperStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate,MMStackControllerViewDelegate,MMRoundedSquareViewDelegate>
+
+@interface MMLooseLeafViewController () <MMTutorialStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate>
 
 @end
 
-@implementation MMLooseLeafViewController{
+
+@implementation MMLooseLeafViewController {
     MMMemoryManager* memoryManager;
     MMDeletePageSidebarController* deleteSidebar;
     MMCloudKitImportExportView* cloudKitExportView;
@@ -62,23 +67,31 @@
     MMShareSidebarContainerView* sharePageSidebar;
 
     NSMutableDictionary* stackViewsByUUID;
-    
-    // stack properties
-    MMStackPropertiesView* stackPropertiesView;
+
     // tutorials
     MMTutorialViewController* tutorialViewController;
     MMReleaseNotesViewController* releaseNotesViewController;
+    MMFeedbackViewController* feedbackViewController;
     UIView* backdrop;
-    
+
     // make sure to only check to show release notes once per launch
     BOOL mightShowReleaseNotes;
+
+    // the scrap button that shows the count
+    // in the right sidebar
+    MMScrapsInBezelContainerView* bezelScrapContainer;
+
+    MMPaperView* pageInActiveSidebarAnimation;
+
+    UIView* stackContainerView;
 }
 
-- (id)init{
-    if(self = [super init]){
-        
+@synthesize bezelPagesContainer;
+
+- (id)init {
+    if (self = [super init]) {
         mightShowReleaseNotes = YES;
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
                                                      name:kPageCacheManagerHasLoadedAnyPage
@@ -95,22 +108,25 @@
 
 
         // Do any additional setup after loading the view, typically from a nib.
-        srand ((uint) time(NULL) );
+        srand((uint)time(NULL));
         [[MMShadowManager sharedInstance] beginGeneratingShadows];
-    
+
         self.view.opaque = YES;
 
         [self.view addSubview:[[MMRotatingBackgroundView alloc] initWithFrame:self.view.bounds]];
-        
+
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds andDarkBorder:NO];
-        deleteSidebar.deleteCompleteBlock = ^(UIView* pageToDelete){
-            if([pageToDelete isKindOfClass:[MMPaperView class]]){
+        deleteSidebar.deleteCompleteBlock = ^(UIView* pageToDelete) {
+            if ([pageToDelete isKindOfClass:[MMPaperView class]]) {
                 // sanity check. only pages should be passed here in list view.
                 // scraps are handled in a separate delete sidebar
                 [[MMTrashManager sharedInstance] deletePage:(MMPaperView*)pageToDelete];
             }
         };
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
+
+        stackContainerView = [[UIView alloc] initWithFrame:self.view.bounds];
+        [self.view addSubview:stackContainerView];
 
 
         // export icons will show here, below the sidebars but over the stacks
@@ -120,7 +136,7 @@
         MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.view.bounds];
         cloudKitExportView.animationHelperView = exportAnimationHelperView;
         [self.view addSubview:exportAnimationHelperView];
-        
+
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
 
@@ -128,60 +144,49 @@
 
         [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
                                              to:@([self numberOfPages])];
-        NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+        NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
                                              to:language];
-        [[[Mixpanel sharedInstance] people] setOnce:@{kMPDidBackgroundDuringTutorial : @(NO),
-                                                      kMPNewsletterStatus : @"Unknown",
-                                                      kMPHasFinishedTutorial : @(NO),
-                                                      kMPDurationWatchingTutorial: @(0),
-                                                      kMPFirstLaunchDate : [NSDate date],
-                                                      kMPHasAddedPage : @(NO),
-                                                      kMPHasZoomedToList : @(NO),
-                                                      kMPHasReorderedPage : @(NO),
-                                                      kMPHasBookTurnedPage : @(NO),
-                                                      kMPHasShakeToReorder : @(NO),
-                                                      kMPHasBezelledScrap : @(NO),
-                                                      kMPNumberOfPenUses : @(0),
-                                                      kMPNumberOfEraserUses : @(0),
-                                                      kMPNumberOfScissorUses : @(0),
-                                                      kMPNumberOfRulerUses : @(0),
-                                                      kMPNumberOfImports : @(0),
-                                                      kMPNumberOfPhotoImports : @(0),
-                                                      kMPNumberOfCloudKitImports : @(0),
-                                                      kMPNumberOfPhotosTaken : @(0),
-                                                      kMPNumberOfExports : @(0),
-                                                      kMPNumberOfCloudKitExports : @(0),
-                                                      kMPDurationAppOpen : @(0.0),
-                                                      kMPNumberOfCrashes : @(0),
-                                                      kMPDistanceDrawn : @(0.0),
-                                                      kMPDistanceErased : @(0.0),
-                                                      kMPNumberOfClippingExceptions : @(0.0),
-                                                      kMPShareStatusCloudKit : kMPShareStatusUnknown,
-                                                      kMPShareStatusFacebook : kMPShareStatusUnknown,
-                                                      kMPShareStatusTwitter : kMPShareStatusUnknown,
-                                                      kMPShareStatusEmail : kMPShareStatusUnknown,
-                                                      kMPShareStatusSMS : kMPShareStatusUnknown,
-                                                      kMPShareStatusTencentWeibo : kMPShareStatusUnknown,
-                                                      kMPShareStatusSinaWeibo : kMPShareStatusUnknown,
-                                                      }];
+        [[[Mixpanel sharedInstance] people] setOnce:@{ kMPDidBackgroundDuringTutorial: @(NO),
+                                                       kMPNewsletterStatus: @"Unknown",
+                                                       kMPHasFinishedTutorial: @(NO),
+                                                       kMPDurationWatchingTutorial: @(0),
+                                                       kMPFirstLaunchDate: [NSDate date],
+                                                       kMPHasAddedPage: @(NO),
+                                                       kMPHasZoomedToList: @(NO),
+                                                       kMPHasReorderedPage: @(NO),
+                                                       kMPHasBookTurnedPage: @(NO),
+                                                       kMPHasShakeToReorder: @(NO),
+                                                       kMPHasBezelledScrap: @(NO),
+                                                       kMPNumberOfPenUses: @(0),
+                                                       kMPNumberOfEraserUses: @(0),
+                                                       kMPNumberOfScissorUses: @(0),
+                                                       kMPNumberOfRulerUses: @(0),
+                                                       kMPNumberOfImports: @(0),
+                                                       kMPNumberOfPhotoImports: @(0),
+                                                       kMPNumberOfCloudKitImports: @(0),
+                                                       kMPNumberOfPhotosTaken: @(0),
+                                                       kMPNumberOfExports: @(0),
+                                                       kMPNumberOfCloudKitExports: @(0),
+                                                       kMPDurationAppOpen: @(0.0),
+                                                       kMPNumberOfCrashes: @(0),
+                                                       kMPDistanceDrawn: @(0.0),
+                                                       kMPDistanceErased: @(0.0),
+                                                       kMPNumberOfClippingExceptions: @(0.0),
+                                                       kMPShareStatusCloudKit: kMPShareStatusUnknown,
+                                                       kMPShareStatusFacebook: kMPShareStatusUnknown,
+                                                       kMPShareStatusTwitter: kMPShareStatusUnknown,
+                                                       kMPShareStatusEmail: kMPShareStatusUnknown,
+                                                       kMPShareStatusSMS: kMPShareStatusUnknown,
+                                                       kMPShareStatusTencentWeibo: kMPShareStatusUnknown,
+                                                       kMPShareStatusSinaWeibo: kMPShareStatusUnknown,
+        }];
         [[Mixpanel sharedInstance] flush];
-
-        // navigation between stacks
-
-        listOfStacksView = [[MMStackControllerView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 320)];
-        listOfStacksView.alpha = 0;
-        listOfStacksView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.92];
-        listOfStacksView.stackDelegate = self;
-        listOfStacksView.hidden = YES;
-
-        [listOfStacksView reloadStackButtons];
-        
-        [self.view addSubview:listOfStacksView];
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
         // Load the stack
+
         [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
 
         // Image import sidebar
@@ -200,6 +205,32 @@
             [self.view addSubview:sharePageSidebar];
         } afterDelay:1];
 
+        // scrap sidebar
+        CGRect frame = [self.view bounds];
+        CGFloat rightBezelSide = frame.size.width - 100;
+        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
+        MMCountBubbleButton* countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+
+        bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
+        bezelScrapContainer.delegate = self;
+        bezelScrapContainer.bubbleDelegate = self;
+        [self.view addSubview:bezelScrapContainer];
+
+        [bezelScrapContainer loadFromDisk];
+
+        // page sidebar
+
+        frame = [self.view bounds];
+        rightBezelSide = frame.size.width - 100;
+        midPointY = (frame.size.height - 3 * 80) / 2;
+        MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+
+        bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
+        bezelPagesContainer.delegate = self;
+        bezelPagesContainer.bubbleDelegate = self;
+        [self.view insertSubview:bezelPagesContainer belowSubview:stackContainerView];
+
+        [bezelPagesContainer loadFromDisk];
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
@@ -209,48 +240,56 @@
         [[MMDrawingTouchGestureRecognizer sharedInstance] setTouchDelegate:self];
         [self.view addGestureRecognizer:[MMDrawingTouchGestureRecognizer sharedInstance]];
 
+        // refresh button visibility after adding all our sidebars
 
+        [currentStackView setButtonsVisible:[currentStackView buttonsVisible] animated:NO];
+        [currentStackView immediatelyRelayoutIfInListMode];
 
         // Debug
 
-//        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
-//        memoryProfileView.memoryManager = memoryManager;
-//        memoryProfileView.hidden = YES;
-//        
-//        [stackView setMemoryView:memoryProfileView];
-//        [self.view addSubview:memoryProfileView];
+        //        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
+        //        memoryProfileView.memoryManager = memoryManager;
+        //        memoryProfileView.hidden = YES;
+        //
+        //        [stackView setMemoryView:memoryProfileView];
+        //        [self.view addSubview:memoryProfileView];
     }
     return self;
 }
 
--(void) dealloc{
+- (void)loadView {
+    MMLooseLeafView* looseLeafView = [[MMLooseLeafView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
+    looseLeafView.looseLeafController = self;
+    self.view = looseLeafView;
+}
+
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void) pageCacheManagerDidLoadPage{
+- (void)pageCacheManagerDidLoadPage {
     [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 
--(void) importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication{
+- (void)importFileFrom:(NSURL*)url fromApp:(NSString*)sourceApplication {
     // ask the inbox manager to
     [[MMInboxManager sharedInstance] processInboxItem:url fromApp:(NSString*)sourceApplication];
 }
 
--(void) printKeys:(NSDictionary*)dict atlevel:(NSInteger)level{
+- (void)printKeys:(NSDictionary*)dict atlevel:(NSInteger)level {
     NSString* space = @"";
-    for(int i=0;i<level;i++){
+    for (int i = 0; i < level; i++) {
         space = [space stringByAppendingString:@" "];
     }
-    for(NSString* key in [dict allKeys]){
-        
+    for (NSString* key in [dict allKeys]) {
         id obj = [dict objectForKey:key];
-        if([obj isKindOfClass:[NSDictionary class]]){
-            [self printKeys:obj atlevel:level+1];
-        }else{
-            if([obj isKindOfClass:[NSArray class]]){
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            [self printKeys:obj atlevel:level + 1];
+        } else {
+            if ([obj isKindOfClass:[NSArray class]]) {
                 DebugLog(@"%@ %@ - %@ [%lu]", space, key, [obj class], (unsigned long)[obj count]);
-            }else{
+            } else {
                 DebugLog(@"%@ %@ - %@", space, key, [obj class]);
             }
         }
@@ -258,23 +297,22 @@
 }
 
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return UIInterfaceOrientationPortrait == interfaceOrientation;
 }
 
--(UIInterfaceOrientationMask) supportedInterfaceOrientations{
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
--(BOOL) shouldAutorotate{
+- (BOOL)shouldAutorotate {
     return NO;
 }
 
--(void) viewDidAppear:(BOOL)animated{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    if(mightShowReleaseNotes){
+
+    if (mightShowReleaseNotes) {
         mightShowReleaseNotes = NO;
         [self showReleaseNotesIfNeeded];
     }
@@ -283,162 +321,202 @@
 
 #pragma mark - application state
 
--(void) willResignActive{
+- (void)willResignActive {
     DebugLog(@"telling stack to cancel all gestures");
     [currentStackView willResignActive];
     [currentStackView cancelAllGestures];
     [[currentStackView.visibleStackHolder peekSubview] cancelAllGestures];
 }
 
--(void) didEnterBackground{
+- (void)didEnterBackground {
     [currentStackView didEnterBackground];
 }
 
--(void) dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion{
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
     [super dismissViewControllerAnimated:flag completion:completion];
-//    DebugLog(@"dismissing view controller");
+    //    DebugLog(@"dismissing view controller");
 }
 
--(void) presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion{
+- (void)presentViewController:(UIViewController*)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion {
     [super presentViewController:viewControllerToPresent animated:flag completion:completion];
-//    DebugLog(@"presenting view controller");
+    //    DebugLog(@"presenting view controller");
 }
 
 #pragma mark - MMPaperStackViewDelegate
 
--(void) animatingToListView{
+- (void)animatingToListView {
     listOfStacksView.alpha = 1;
+    [currentStackView setButtonsVisible:NO animated:NO];
 }
 
--(void) animatingToPageView{
+- (void)animatingToPageView {
     listOfStacksView.alpha = 0;
+    [currentStackView setButtonsVisible:YES animated:YES];
 }
 
--(MMImageSidebarContainerView*) importImageSidebar{
+- (MMScrapsInBezelContainerView*)bezelScrapContainer {
+    return bezelScrapContainer;
+}
+
+- (MMPagesInBezelContainerView*)bezelPagesContainer {
+    return bezelPagesContainer;
+}
+
+- (MMImageSidebarContainerView*)importImageSidebar {
     return importImageSidebar;
 }
 
--(MMShareSidebarContainerView*) sharePageSidebar{
+- (MMShareSidebarContainerView*)sharePageSidebar {
     return sharePageSidebar;
 }
 
--(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk{
+- (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk {
     [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
 }
 
--(void) didFailToExportPage:(MMPaperView*)page{
+- (void)didFailToExportPage:(MMPaperView*)page {
     [cloudKitExportView didFailToExportPage:page];
 }
 
--(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk{
+- (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk {
     [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
 }
 
--(BOOL) isShowingTutorial{
+- (BOOL)isShowingAnyModal {
+    return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingReleaseNotes];
+}
+
+- (BOOL)isShowingTutorial {
     return tutorialViewController != nil;
 }
 
--(BOOL) isShowingReleaseNotes{
+- (BOOL)isShowingReleaseNotes {
     return releaseNotesViewController != nil;
+}
+
+- (BOOL)isShowingFeedbackForm {
+    return feedbackViewController != nil;
+}
+
+#pragma mark - MMTutorialStackViewDelegate
+
+- (void)stackViewDidPressFeedbackButton:(MMTutorialStackView*)stackView {
+    if ([self isShowingAnyModal]) {
+        // tutorial is already showing, just return
+        return;
+    }
+
+    backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
+    backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
+    backdrop.alpha = 0;
+    [self.view addSubview:backdrop];
+
+    MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
+
+    feedbackViewController = [[MMFeedbackViewController alloc] initWithCompletionBlock:^{
+        [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
+            feedbackViewController = nil;
+        }];
+        [UIView animateWithDuration:.3 animations:^{
+            backdrop.alpha = 0;
+        }];
+    }];
+
+    [presentationWindow.rootViewController presentViewController:feedbackViewController animated:YES completion:nil];
+
+    [UIView animateWithDuration:.3 animations:^{
+        backdrop.alpha = 1;
+    }];
 }
 
 #pragma mark - MMStackControllerViewDelegate
 
--(void) didTapNameForStack:(NSString*)stackUUID{
-    if(stackPropertiesView){
-        return;
-    }
-    
-    backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
-    backdrop.backgroundColor = [UIColor whiteColor];
-    backdrop.alpha = 0;
-    [self.view addSubview:backdrop];
-    
-    stackPropertiesView = [[MMStackPropertiesView alloc] initWithFrame:self.view.bounds andStackUUID:stackUUID];
-    stackPropertiesView.alpha = 0;
-    stackPropertiesView.delegate = self;
-    [self.view addSubview:stackPropertiesView];
-    
-    [UIView animateWithDuration:.3 animations:^{
-        backdrop.alpha = 1;
-        stackPropertiesView.alpha = 1;
-    }];
-    DebugLog(@"showing stack id: %@", stackUUID);
-}
-
--(void) addStack{
+- (void)addStack {
     NSString* stackID = [[MMAllStacksManager sharedInstance] createStack];
     [self switchToStack:stackID];
     [listOfStacksView reloadStackButtons];
 }
 
--(void) switchToStack:(NSString*)stackUUID{
-    MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
+- (void)switchToStack:(NSString*)stackUUID {
+    MMTutorialStackView* aStackView = [self stackForUUID:stackUUID];
 
-    if(!aStackView){
-        aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
-        aStackView.stackDelegate = self;
-        aStackView.deleteSidebar = deleteSidebar;
-        [self.view insertSubview:aStackView aboveSubview:deleteSidebar.deleteSidebarBackground];
-        aStackView.center = self.view.center;
-
-        [aStackView loadStacksFromDisk];
-
-        if([[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]){
-            // open into list view if that was their last visible screen
-            [aStackView immediatelyTransitionToListView];
-            [aStackView setButtonsVisible:NO animated:NO];
-        }
-
-        stackViewsByUUID[stackUUID] = aStackView;
-    }
-
-    [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, MMTutorialStackView*  _Nonnull obj, BOOL * _Nonnull stop) {
-        obj.hidden = ![key isEqualToString:stackUUID];
+    [stackViewsByUUID enumerateKeysAndObjectsUsingBlock:^(id _Nonnull key, MMTutorialStackView* _Nonnull obj, BOOL* _Nonnull stop) {
+        obj.hidden = ![key isEqualToString:aStackView.uuid];
     }];
 
     currentStackView = aStackView;
 
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
-    
+
     cloudKitExportView.stackView = currentStackView;
     [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
+
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[currentStackView visibleStackHolder] peekSubview]];
+    [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[currentStackView visibleStackHolder] peekSubview]];
 }
 
--(void) deleteStack:(NSString*)stackUUID{
+- (void)deleteStack:(NSString*)stackUUID {
     NSInteger idx = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
-    if(stackViewsByUUID[stackUUID]){
+    if (stackViewsByUUID[stackUUID]) {
         [stackViewsByUUID[stackUUID] removeFromSuperview];
         [stackViewsByUUID removeObjectForKey:stackUUID];
     }
-    
+
     [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
-    
-    if([currentStackView.uuid isEqualToString:stackUUID]){
-        if(idx >= [[[MMAllStacksManager sharedInstance] stackIDs] count]){
+
+    if ([currentStackView.uuid isEqualToString:stackUUID]) {
+        if (idx >= [[[MMAllStacksManager sharedInstance] stackIDs] count]) {
             idx -= 1;
         }
-        
-        if(idx == -1){
+
+        if (idx == -1) {
             [self addStack];
-        }else{
+        } else {
             [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] objectAtIndex:idx]];
         }
     }
     [listOfStacksView reloadStackButtons];
 }
 
+#pragma mark - MMPagesSidebarContainerViewDelegate
+
+- (MMTutorialStackView*)stackForUUID:(NSString*)stackUUID {
+    MMTutorialStackView* aStackView = stackViewsByUUID[stackUUID];
+
+    if (!stackUUID) {
+        stackUUID = [[MMAllStacksManager sharedInstance] createStack];
+    }
+
+    if (!aStackView) {
+        aStackView = [[MMTutorialStackView alloc] initWithFrame:self.view.bounds andUUID:stackUUID];
+        aStackView.stackDelegate = self;
+        aStackView.deleteSidebar = deleteSidebar;
+        [stackContainerView addSubview:aStackView];
+        aStackView.center = self.view.center;
+
+        stackViewsByUUID[stackUUID] = aStackView;
+
+        if (!currentStackView) {
+            currentStackView = aStackView;
+        }
+
+        [aStackView loadStacksFromDiskIntoListView:[[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]];
+    }
+
+    return aStackView;
+}
+
 #pragma mark - MMMemoryManagerDelegate
 
--(int) fullByteSize{
+- (int)fullByteSize {
     int fullByteSize = [[[stackViewsByUUID allValues] jotReduce:^id(MMTutorialStackView* obj, NSUInteger index, id accum) {
         return @([accum intValue] + obj.fullByteSize);
     }] intValue];
 
-    return fullByteSize + importImageSidebar.fullByteSize;
+    return fullByteSize + importImageSidebar.fullByteSize + bezelScrapContainer.fullByteSize;
 }
 
--(NSInteger) numberOfPages{
+- (NSInteger)numberOfPages {
     return [[[stackViewsByUUID allValues] jotReduce:^id(MMTutorialStackView* obj, NSUInteger index, id accum) {
         return @([accum integerValue] + [obj.visibleStackHolder.subviews count] + [obj.hiddenStackHolder.subviews count]);
     }] integerValue];
@@ -447,158 +525,184 @@
 
 #pragma mark - MMPageCacheManagerDelegate
 
--(BOOL) isPageInVisibleStack:(MMPaperView*)page{
+- (BOOL)isPageInVisibleStack:(MMPaperView*)page {
     return [currentStackView isPageInVisibleStack:page];
 }
 
--(MMPaperView*) getPageBelow:(MMPaperView*)page{
+- (MMPaperView*)getPageBelow:(MMPaperView*)page {
     return [currentStackView getPageBelow:page];
 }
 
--(NSArray*) findPagesInVisibleRowsOfListView{
-    return [currentStackView findPagesInVisibleRowsOfListView];
+- (NSArray*)findPagesInVisibleRowsOfListView {
+    NSArray* arr = [currentStackView findPagesInVisibleRowsOfListView] ?: @[];
+
+    if (pageInActiveSidebarAnimation) {
+        arr = [arr arrayByAddingObject:pageInActiveSidebarAnimation];
+    }
+    arr = [arr arrayByAddingObjectsFromArray:[self.bezelPagesContainer viewsInSidebar]];
+
+    return arr;
 }
 
--(NSArray*) pagesInCurrentBezelGesture{
+- (NSArray*)pagesInCurrentBezelGesture {
     return [currentStackView pagesInCurrentBezelGesture];
 }
 
--(BOOL) isShowingPageView{
+- (BOOL)isShowingPageView {
     return [currentStackView isShowingPageView];
 }
 
--(NSInteger) countAllPages{
+- (NSInteger)countAllPages {
     return [currentStackView countAllPages];
 }
 
 #pragma mark - MMInboxManagerDelegate
 
--(void) didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+- (void)didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
     [currentStackView didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
 }
 
--(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+- (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
     [currentStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
 }
 
--(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication{
+- (void)failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
     [currentStackView failedToProcessIncomingURL:url fromApp:sourceApplication];
 }
 
 
 #pragma mark - MMCloudKitManagerDelegate
 
--(void) cloudKitDidChangeState:(MMCloudKitBaseState*)currentState{
+- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState {
     [sharePageSidebar cloudKitDidChangeState:currentState];
 }
 
--(void) didFetchMessage:(SPRMessage*)message{
+- (void)didFetchMessage:(SPRMessage*)message {
     [cloudKitExportView didFetchMessage:message];
 }
 
--(void) didResetBadgeCountTo:(NSUInteger)badgeNumber{
+- (void)didResetBadgeCountTo:(NSUInteger)badgeNumber {
     [cloudKitExportView didResetBadgeCountTo:badgeNumber];
 }
 
 #pragma mark - MMGestureTouchOwnershipDelegate
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture {
     [currentStackView ownershipOfTouches:touches isGesture:gesture];
 }
 
--(BOOL) isAllowedToPan{
+- (BOOL)isAllowedToPan {
     return [currentStackView isAllowedToPan];
 }
 
--(BOOL) isAllowedToBezel{
+- (BOOL)isAllowedToBezel {
     return [currentStackView isAllowedToBezel];
 }
 
 #pragma mark - MMRotationManagerDelegate
 
 
--(void) willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+- (void)willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient {
     [currentStackView willRotateInterfaceFrom:fromOrient to:toOrient];
 }
 
--(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient{
+- (void)didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient {
     [currentStackView didRotateInterfaceFrom:fromOrient to:toOrient];
 }
 
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient{
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient {
     [NSThread performBlockOnMainThread:^{
         @autoreleasepool {
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
+            [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
+                [self.bezelScrapContainer didRotateToIdealOrientation:toOrient];
+                [self.bezelPagesContainer didRotateToIdealOrientation:toOrient];
+            } completion:nil];
         }
     }];
 }
 
--(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading{
+- (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading {
     [currentStackView didUpdateAccelerometerWithReading:currentRawReading];
 }
 
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel{
+- (void)didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel {
     [currentStackView didUpdateAccelerometerWithRawReading:currentRawReading andX:xAccel andY:yAccel andZ:zAccel];
 }
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
--(void) sidebarCloseButtonWasTapped{
-    [currentStackView sidebarCloseButtonWasTapped];
+- (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelScrapContainer ||
+        sidebar == importImageSidebar ||
+        sidebar == sharePageSidebar) {
+        [currentStackView sidebarCloseButtonWasTapped:sidebar];
+    }
 }
 
--(void) sidebarWillShow{
-    [currentStackView sidebarWillShow];
+- (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelScrapContainer ||
+        sidebar == importImageSidebar ||
+        sidebar == sharePageSidebar) {
+        [currentStackView sidebarWillShow:sidebar];
+    }
 }
 
--(void) sidebarWillHide{
-    [currentStackView sidebarWillHide];
+- (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelScrapContainer ||
+        sidebar == importImageSidebar ||
+        sidebar == sharePageSidebar) {
+        [currentStackView sidebarWillHide:sidebar];
+    }
 }
 
--(UIView*) viewForBlur{
-    return [currentStackView viewForBlur];
+- (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar {
+    if (sidebar == bezelPagesContainer) {
+        return self.view;
+    }
+    return [currentStackView blurViewForSidebar:sidebar];
 }
 
 #pragma mark - MMImageSidebarContainerViewDelegate
 
--(void) pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage{
+- (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage {
     [currentStackView pictureTakeWithCamera:img fromView:cameraView andRequestsImportAsPage:asPage];
 }
 
--(void) assetWasTapped:(MMDisplayAsset *)photo fromView:(MMBufferedImageView *)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage{
+- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(MMBufferedImageView*)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
     [currentStackView assetWasTapped:photo fromView:bufferedImage withRotation:rotation fromContainer:containerDescription andRequestsImportAsPage:asPage];
 }
 
 #pragma mark - MMShareSidebarDelegate
 
--(void) exportToImage:(void (^)(NSURL *))completionBlock{
+- (void)exportToImage:(void (^)(NSURL*))completionBlock {
     [currentStackView exportToImage:completionBlock];
 }
 
--(void) exportToPDF:(void(^)(NSURL* urlToPDF))completionBlock{
+- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
     [currentStackView exportToPDF:completionBlock];
 }
 
--(NSDictionary*) cloudKitSenderInfo{
+- (NSDictionary*)cloudKitSenderInfo {
     return [currentStackView cloudKitSenderInfo];
 }
 
--(void) didShare:(MMAbstractShareItem*)shareItem{
+- (void)didShare:(MMAbstractShareItem*)shareItem {
     [sharePageSidebar hide:YES onComplete:nil];
     [currentStackView didShare:shareItem];
 }
 
--(void) mayShare:(MMAbstractShareItem*)shareItem{
+- (void)mayShare:(MMAbstractShareItem*)shareItem {
     [currentStackView mayShare:shareItem];
 }
 
--(void) wontShare:(MMAbstractShareItem*)shareItem{
+- (void)wontShare:(MMAbstractShareItem*)shareItem {
     [currentStackView wontShare:shareItem];
 }
 
--(void) didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button{
+- (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button {
     [cloudKitExportView didShareTopPageToUser:userId fromButton:button];
     [sharePageSidebar hide:YES onComplete:nil];
 
@@ -607,41 +711,34 @@
 
 #pragma mark - Release Notes
 
--(void) showReleaseNotesIfNeeded{
-    if([self isShowingTutorial] || [self isShowingReleaseNotes]){
+- (void)showReleaseNotesIfNeeded {
+    NSString* version = [UIApplication bundleShortVersionString];
+
+    if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
+        [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
         return;
     }
 
-    NSString* version = [UIApplication bundleShortVersionString];
-    
-    // hardcode version for a 2.1.1 updates
-    version = @"2.1.0";
-    
-//#ifdef DEBUG
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
-//#endif
-    
-    if(version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]){
-        
+#ifdef DEBUG
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+#endif
+
+    if (version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]) {
         NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:[NSString stringWithFormat:@"ReleaseNotes-%@", version] withExtension:@"md"];
         NSString* releaseNotes = [NSString stringWithContentsOfURL:releaseNotesFile encoding:NSUTF8StringEncoding error:nil];
-        
-        if(releaseNotes){
+
+        if (releaseNotes) {
             NSString* htmlReleaseNotes = [MMMarkdown HTMLStringWithMarkdown:releaseNotes error:nil];
-            
-            if(htmlReleaseNotes){
-//#ifndef DEBUG
-                [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
-//#endif
-                
+
+            if (htmlReleaseNotes) {
                 backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
                 backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
                 backdrop.alpha = 0;
                 [self.view addSubview:backdrop];
-                
+
                 MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
-                
+
                 releaseNotesViewController = [[MMReleaseNotesViewController alloc] initWithReleaseNotes:htmlReleaseNotes andCompletionBlock:^{
                     [presentationWindow.rootViewController dismissViewControllerAnimated:YES completion:^{
                         releaseNotesViewController = nil;
@@ -659,22 +756,24 @@
             }
         }
     }
+
+    [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
 }
 
 #pragma mark - Tutorial Notifications
 
--(void) tutorialShouldOpen:(NSNotification*)note{
-    if([self isShowingTutorial] || [self isShowingReleaseNotes]){
+- (void)tutorialShouldOpen:(NSNotification*)note {
+    if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
         return;
     }
-    
+
     NSArray* tutorials = [note.userInfo objectForKey:@"tutorialList"];
     backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
     backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
     backdrop.alpha = 0;
     [self.view addSubview:backdrop];
-    
+
     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];
 
     tutorialViewController = [[MMTutorialViewController alloc] initWithTutorials:tutorials andCompletionBlock:^{
@@ -685,38 +784,76 @@
             backdrop.alpha = 0;
         }];
     }];
-    
+
     [presentationWindow.rootViewController presentViewController:tutorialViewController animated:YES completion:nil];
-    
+
     [UIView animateWithDuration:.3 animations:^{
         backdrop.alpha = 1;
     }];
-    
 }
 
--(void) tutorialShouldClose:(NSNotification*)note{
-    if(![self isShowingTutorial]){
+- (void)tutorialShouldClose:(NSNotification*)note {
+    if (![self isShowingTutorial]) {
         // tutorial is already hidden, just return
         return;
     }
-    
+
     [tutorialViewController closeTutorials];
 }
 
-#pragma mark - MMRoundedSquareViewDelegate
+#pragma mark - MMScrapSidebarContainerViewDelegate
 
--(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView *)squareView{
-    if(squareView == stackPropertiesView){
-        [UIView animateWithDuration:.3 animations:^{
-            backdrop.alpha = 0;
-            stackPropertiesView.alpha = 0;
-        } completion:^(BOOL finished) {
-            [backdrop removeFromSuperview];
-            backdrop = nil;
-            [stackPropertiesView removeFromSuperview];
-            stackPropertiesView = nil;
-        }];
+- (void)willAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView willAddView:view toCountableSidebar:sidebar];
     }
+}
+
+- (void)didAddView:(UIView<MMUUIDView>*)view toCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView didAddView:view toCountableSidebar:sidebar];
+    } else {
+        [self.bezelPagesContainer savePageContainerToDisk];
+        [currentStackView saveStacksToDisk];
+    }
+}
+
+- (void)willRemoveView:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView willRemoveView:view fromCountableSidebar:sidebar];
+    } else {
+        pageInActiveSidebarAnimation = (MMPaperView*)view;
+    }
+}
+
+- (void)didRemoveView:(UIView<MMUUIDView>*)view atIndex:(NSUInteger)index hadProperties:(BOOL)hadProperties fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        [currentStackView didRemoveView:view atIndex:index hadProperties:hadProperties fromCountableSidebar:sidebar];
+    } else {
+        pageInActiveSidebarAnimation = nil;
+        [self.bezelPagesContainer savePageContainerToDisk];
+        [currentStackView saveStacksToDisk];
+    }
+}
+
+- (CGPoint)positionOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        return [currentStackView positionOnScreenToScaleViewTo:view fromCountableSidebar:sidebar];
+    }
+
+    return [currentStackView addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)view];
+}
+
+- (CGFloat)scaleOnScreenToScaleViewTo:(UIView<MMUUIDView>*)view givenOriginalScale:(CGFloat)originalScale fromCountableSidebar:(MMCountableSidebarContainerView*)sidebar {
+    if (sidebar == bezelScrapContainer) {
+        return [currentStackView scaleOnScreenToScaleViewTo:view givenOriginalScale:originalScale fromCountableSidebar:sidebar];
+    }
+
+    return 1.0;
+}
+
+- (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {
+    return [currentStackView pageForUUID:uuid];
 }
 
 @end

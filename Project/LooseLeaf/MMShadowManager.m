@@ -12,14 +12,16 @@
 #import "NSThread+BlockAdditions.h"
 #import <JotUI/JotUI.h>
 
+
 @implementation MMShadowManager
 
 
 static MMShadowManager* _instance = nil;
 
--(id) init{
-    if(_instance) return _instance;
-    if((self = [super init])){
+- (id)init {
+    if (_instance)
+        return _instance;
+    if ((self = [super init])) {
         _instance = self;
         shadowPathCache = [[NSMutableDictionary alloc] init];
         unitShadowPath = [self generateUnitShadowPath];
@@ -27,9 +29,9 @@ static MMShadowManager* _instance = nil;
     return _instance;
 }
 
-+(MMShadowManager*) sharedInstance{
-    if(!_instance){
-        _instance = [[MMShadowManager alloc]init];
++ (MMShadowManager*)sharedInstance {
+    if (!_instance) {
+        _instance = [[MMShadowManager alloc] init];
     }
     return _instance;
 }
@@ -37,7 +39,7 @@ static MMShadowManager* _instance = nil;
 
 #pragma mark - shadow methods
 
--(UIBezierPath*) generateUnitShadowPath{
+- (UIBezierPath*)generateUnitShadowPath {
     [MMShadowManager sharedInstance];
     CGFloat width = [[UIScreen mainScreen] portraitBounds].size.width;
     CGFloat height = [[UIScreen mainScreen] portraitBounds].size.height;
@@ -45,26 +47,26 @@ static MMShadowManager* _instance = nil;
     [path moveToPoint:CGPointMake((rand() % kShadowDepth) / width, (rand() % kShadowDepth) / height)];
     CGFloat loc = rand() % 100 / 100.0 / 20.0;
     // left
-    while(loc < 1){
+    while (loc < 1) {
         CGFloat val = (rand() % 3) / width;
         [path addLineToPoint:CGPointMake(val, loc)];
         loc += rand() % 100 / 100.0 / 20.0;
     }
     // bottom
     loc = rand() % 100 / 100.0 / 20.0;
-    while(loc < 1){
+    while (loc < 1) {
         [path addLineToPoint:CGPointMake(loc, 1 - (rand() % kShadowDepth) / height)];
         loc += rand() % 100 / 100.0 / 20.0;
     }
     // right
     loc = 1 - rand() % 100 / 100.0 / 20.0;
-    while(loc > 0){
-        [path addLineToPoint:CGPointMake(1 - (rand() % kShadowDepth)/width, loc)];
+    while (loc > 0) {
+        [path addLineToPoint:CGPointMake(1 - (rand() % kShadowDepth) / width, loc)];
         loc -= rand() % 100 / 100.0 / 20.0;
     }
     // top
     loc = 1 - rand() % 100 / 100.0 / 20.0;
-    while(loc > 0){
+    while (loc > 0) {
         [path addLineToPoint:CGPointMake(loc, (rand() % kShadowDepth) / height)];
         loc -= rand() % 100 / 100.0 / 20.0;
     }
@@ -73,9 +75,8 @@ static MMShadowManager* _instance = nil;
 }
 
 
-
--(void) beginGeneratingShadows{
-    if(![shadowPathCache count]){
+- (void)beginGeneratingShadows {
+    if (![shadowPathCache count]) {
         //
         // only run once
         // latest tests show this finishes in .02s on an iPad 3
@@ -86,7 +87,7 @@ static MMShadowManager* _instance = nil;
                 CGFloat maxWidth = screenSize.width * kMaxPageZoom;
                 CGFloat currWidth = minWidth;
                 CGFloat currHeight;
-                while(currWidth <= maxWidth){
+                while (currWidth <= maxWidth) {
                     currHeight = currWidth / screenSize.width * screenSize.height;
                     [self getShadowForSize:CGSizeMake(currWidth, currHeight)];
                     currWidth += 1;
@@ -96,15 +97,15 @@ static MMShadowManager* _instance = nil;
     }
 }
 
--(BOOL) hasShadowForSize:(CGSize)size{
-    NSNumber* key = [NSNumber numberWithInt:(int) size.width];
+- (BOOL)hasShadowForSize:(CGSize)size {
+    NSNumber* key = [NSNumber numberWithInt:(int)size.width];
     return (BOOL)[shadowPathCache objectForKey:key];
 }
 
--(CGPathRef) getShadowForSize:(CGSize)size{
-    NSNumber* key = [NSNumber numberWithInt:(int) size.width];
+- (CGPathRef)getShadowForSize:(CGSize)size {
+    NSNumber* key = [NSNumber numberWithInt:(int)size.width];
     UIBezierPath* path = [shadowPathCache objectForKey:key];
-    if(!path){
+    if (!path) {
         /*
         path = [[unitShadowPath copy] autorelease];
         [path applyTransform:CGAffineTransformMakeScale(size.width, size.height)];

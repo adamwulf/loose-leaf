@@ -11,6 +11,7 @@
 
 @class MMScrapsOnPaperState;
 
+
 @interface MMScrapContainerView : MMUntouchableView
 
 - (id)initWithFrame:(CGRect)frame forScrapsOnPaperState:(MMScrapsOnPaperState*)_scrapsOnPaperState;

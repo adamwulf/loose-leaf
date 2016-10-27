@@ -11,7 +11,8 @@
 
 @class MMFullScreenSidebarContainingView;
 
-@interface MMSlidingSidebarView : UIView{
+
+@interface MMSlidingSidebarView : UIView {
     __weak MMFullScreenSidebarContainingView* delegate;
 }
 
@@ -19,16 +20,16 @@
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
--(CGRect) contentBounds;
+- (CGRect)contentBounds;
 
--(BOOL) isVisible;
+- (BOOL)isVisible;
 
--(void) willShow;
+- (void)willShow;
 
--(void) showForDuration:(CGFloat)duration;
+- (void)showForDuration:(CGFloat)duration;
 
--(void) hideAnimation;
+- (void)hideAnimation;
 
--(void) didHide;
+- (void)didHide;
 
 @end

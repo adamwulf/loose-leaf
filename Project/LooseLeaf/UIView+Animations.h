@@ -8,16 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIView (Animations)
 
--(void) removeAllAnimationsAndPreservePresentationFrame;
+- (void)removeAllAnimationsAndPreservePresentationFrame;
 
-+(void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view;
++ (void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView*)view;
 
--(void) bounceWithTransform:(CGAffineTransform)transform;
+- (void)bounceWithTransform:(CGAffineTransform)transform;
 
--(void) bounce;
+- (void)bounce;
 
--(void) bounceWithTransform:(CGAffineTransform)transform stepOne:(CGFloat)max stepTwo:(CGFloat)min;
+- (void)bounceWithTransform:(CGAffineTransform)transform stepOne:(CGFloat)max stepTwo:(CGFloat)min;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "MMAvatarButton.h"
 
+
 @interface MMCloudAvatarButton : MMAvatarButton
 
 @end

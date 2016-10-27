@@ -10,10 +10,11 @@
 
 @class MMPresentationWindow;
 
-@interface MMRotateViewController : UIViewController{
+
+@interface MMRotateViewController : UIViewController {
     MMPresentationWindow* window;
 }
 
--(id) initWithWindow:(MMPresentationWindow*)_window;
+- (id)initWithWindow:(MMPresentationWindow*)_window;
 
 @end

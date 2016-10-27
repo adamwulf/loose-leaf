@@ -11,6 +11,7 @@
 #import "MMPaletteButton.h"
 #import "MMPencilAndPaletteViewDelegate.h"
 
+
 @interface MMPencilAndPaletteView : UIView
 
 @property (nonatomic) CGFloat rotation;
@@ -22,6 +23,6 @@
 
 - (id)initWithButtonFrame:(CGRect)frame andScreenSize:(CGSize)totalSize;
 
--(void) setActiveButton:(MMPaletteButton*)button;
+- (void)setActiveButton:(MMPaletteButton*)button;
 
 @end

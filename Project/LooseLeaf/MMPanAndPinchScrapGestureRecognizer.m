@@ -19,19 +19,20 @@
 #import "MMAppDelegate.h"
 #import "MMLooseLeafViewController.h"
 
-#define  kMaxSimultaneousTouchesAllowedToTrack 20
-#define  kNumberOfDirectionChangesToDetermineShake 2
-#define  kVelocityLowPass 0.7
-NSInteger const  mmMinimumNumberOfScrapTouches = 2;
-#define  SCRAP_VELOCITY_CLAMP_MIN 20 // px / sec
-#define  SCRAP_VELOCITY_CLAMP_MAX 2000 // px / sec
+#define kMaxSimultaneousTouchesAllowedToTrack 20
+#define kNumberOfDirectionChangesToDetermineShake 2
+#define kVelocityLowPass 0.7
+NSInteger const mmMinimumNumberOfScrapTouches = 2;
+#define SCRAP_VELOCITY_CLAMP_MIN 20 // px / sec
+#define SCRAP_VELOCITY_CLAMP_MAX 2000 // px / sec
 
-struct TouchInterval{
+struct TouchInterval {
     NSInteger numberOfDirectionChanges;
     BOOL hasProcessedShake;
 };
 
-@implementation MMPanAndPinchScrapGestureRecognizer{
+
+@implementation MMPanAndPinchScrapGestureRecognizer {
     // the scrap being held
     __weak MMScrapView* scrap;
     // the initial vector between the two
@@ -47,7 +48,7 @@ struct TouchInterval{
     CGPoint gestureLocationAtStart;
     // the amount the gesture has moved
     CGPoint translation;
-    
+
     // helper properties so that the gesture's
     // delegate can see how the center/scale/etc
     // have changed during the gesture
@@ -55,12 +56,12 @@ struct TouchInterval{
     CGFloat preGesturePageScale;
     CGFloat preGestureRotation;
     CGPoint preGestureCenter;
-    
+
     struct TouchInterval touchIntervals[kMaxSimultaneousTouchesAllowedToTrack];
-    
+
     BOOL isShaking;
     BOOL paused;
-    
+
     NSDictionary* startingScrapProperties;
 }
 
@@ -82,50 +83,50 @@ struct TouchInterval{
 @synthesize startingScrapProperties;
 @synthesize startingPageForScrap;
 
--(NSArray*) possibleTouches{
+- (NSArray*)possibleTouches {
     return [possibleTouches array];
 }
 
--(NSArray*) ignoredTouches{
+- (NSArray*)ignoredTouches {
     NSMutableArray* ret = [NSMutableArray array];
-    for(NSObject* obj in ignoredTouches){
+    for (NSObject* obj in ignoredTouches) {
         [ret addObject:obj];
     }
     return ret;
 }
 
--(NSArray*)validTouches{
+- (NSArray*)validTouches {
     return [validTouches array];
 }
 
--(CGPoint) translation{
+- (CGPoint)translation {
     return CGPointMake(translation.x, translation.y);
 }
 
--(CGFloat) rotation{
+- (CGFloat)rotation {
     return rotation;
 }
 
--(void) setScrap:(MMScrapView *)_scrap{
-    if(scrap != _scrap){
+- (void)setScrap:(MMScrapView*)_scrap {
+    if (scrap != _scrap) {
         // save the properties of the scrap whenever its set
         scrap = _scrap;
         startingScrapProperties = [scrap propertiesDictionary];
         // update the starting page, if any
         //
         // not the prettiest
-        if(scrap && scrap.state.scrapsOnPaperState.delegate && ![scrap.state.scrapsOnPaperState.delegate isKindOfClass:[MMUndoablePaperView class]]){
+        if (scrap && scrap.state.scrapsOnPaperState.delegate && ![scrap.state.scrapsOnPaperState.delegate isKindOfClass:[MMUndoablePaperView class]]) {
             @throw [NSException exceptionWithName:@"InvalidDelegateException" reason:@"delegate for scrap must be a page" userInfo:nil];
         }
-        startingPageForScrap = scrap ? ((MMUndoablePaperView*) scrap.state.scrapsOnPaperState.delegate) : nil;
+        startingPageForScrap = scrap ? ((MMUndoablePaperView*)scrap.state.scrapsOnPaperState.delegate) : nil;
     }
 }
 
 #pragma mark - Init
 
--(id) init{
+- (id)init {
     self = [super init];
-    if(self){
+    if (self) {
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
@@ -136,9 +137,9 @@ struct TouchInterval{
     return self;
 }
 
--(id) initWithTarget:(id)target action:(SEL)action{
+- (id)initWithTarget:(id)target action:(SEL)action {
     self = [super initWithTarget:target action:action];
-    if(self){
+    if (self) {
         validTouches = [[NSMutableOrderedSet alloc] init];
         possibleTouches = [[NSMutableOrderedSet alloc] init];
         ignoredTouches = [[NSMutableSet alloc] init];
@@ -152,32 +153,32 @@ struct TouchInterval{
 
 #pragma mark - Touch Ownership
 
--(BOOL) containsTouch:(UITouch*)touch{
+- (BOOL)containsTouch:(UITouch*)touch {
     return [validTouches containsObject:touch];
 }
 
--(void) ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture{
-    if(gesture != self && ![gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]){
+- (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture {
+    if (gesture != self && ![gesture isKindOfClass:[MMStretchScrapGestureRecognizer class]]) {
         __block BOOL needsToFixValidTouches = NO;
-        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop){
-            if([validTouches containsObject:touch]){
+        [touches enumerateObjectsUsingBlock:^(UITouch* touch, BOOL* stop) {
+            if ([validTouches containsObject:touch]) {
                 needsToFixValidTouches = YES;
             }
-            if([possibleTouches containsObject:touch] || [validTouches containsObject:touch]){
+            if ([possibleTouches containsObject:touch] || [validTouches containsObject:touch]) {
                 [possibleTouches removeObjectsInSet:touches];
                 [validTouches removeObjectsInSet:touches];
             }
             [ignoredTouches addObjectsInSet:touches];
         }];
-        if(needsToFixValidTouches && [validTouches count] < mmMinimumNumberOfScrapTouches){
+        if (needsToFixValidTouches && [validTouches count] < mmMinimumNumberOfScrapTouches) {
             // what do i do if a valid touch is
             // stolen from us?
             // this can happen if the user bezels
             // from teh right, and both bezel touches
             // also begin on top of the same scrap
             self.state = UIGestureRecognizerStateCancelled;
-            if([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]){
-                if([(MMPanAndPinchScrapGestureRecognizer*)gesture scrap] == scrap){
+            if ([gesture isKindOfClass:[MMPanAndPinchScrapGestureRecognizer class]]) {
+                if ([(MMPanAndPinchScrapGestureRecognizer*)gesture scrap] == scrap) {
                     // if the other pan/pinch gesture owns this scrap, then let
                     // it handle it and we'll give up our scrap silently
                     self.scrap = nil;
@@ -194,42 +195,42 @@ struct TouchInterval{
  * and we need to swap which pan gestures own which
  * touches
  */
--(void) relinquishOwnershipOfTouches:(NSSet*)touches{
-    
+- (void)relinquishOwnershipOfTouches:(NSSet*)touches {
     NSMutableSet* validTouchesToRelinquish = [NSMutableSet setWithSet:[validTouches set]];
     [validTouchesToRelinquish intersectSet:touches];
 
     [validTouches removeObjectsInSet:touches];
     [ignoredTouches addObjectsInSet:validTouchesToRelinquish];
-    
-    if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-//        DebugLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
-//        DebugLog(@"demoting valid touches");
+
+    if ([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap) {
+        //        DebugLog(@"promote possible touch? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+        //        DebugLog(@"demoting valid touches");
         [possibleTouches addObjectsInSet:[validTouches set]];
         [validTouches removeAllObjects];
         self.scrap = nil;
     }
-    if([validTouches count] == 0 && self.scrap){
-//        DebugLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+    if ([validTouches count] == 0 && self.scrap) {
+        //        DebugLog(@"relenquish scrap? %d %d %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
         self.scrap = nil;
     }
-    
+
 
     // if we only have 2 touches, then their sort
     // order doesn't matter
-    if([validTouches count] <= mmMinimumNumberOfScrapTouches) return;
-    
+    if ([validTouches count] <= mmMinimumNumberOfScrapTouches)
+        return;
+
     // now sort valid touches by relative distance,
     // with closest first. this nested for loop
     // will caculate the distance between every touch
     // with every other touch.
-    int count = (int) [validTouches count];
+    int count = (int)[validTouches count];
     CGFloat dist[count][count];
-    for(int i=0;i<count;i++){
-        for(int j=i;j<count;j++){
-            if(i == j){
+    for (int i = 0; i < count; i++) {
+        for (int j = i; j < count; j++) {
+            if (i == j) {
                 dist[i][j] = 0;
-            }else{
+            } else {
                 UITouch* touch1 = [validTouches objectAtIndex:i];
                 UITouch* touch2 = [validTouches objectAtIndex:j];
                 CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
@@ -239,19 +240,19 @@ struct TouchInterval{
             }
         }
     }
-    
+
     // we'll then average the distance for every touch
     // with all others.
     CGFloat avgDist[count];
-    for(int i=0;i<count;i++){
+    for (int i = 0; i < count; i++) {
         avgDist[i] = 0;
-        for(int j=0;j<count;j++){
+        for (int j = 0; j < count; j++) {
             avgDist[i] += dist[i][j] / count;
         }
     }
-    
+
     CGFloat* blockedAvgDist = avgDist;
-    [validTouches sortUsingComparator:^NSComparisonResult(id obj1, id obj2){
+    [validTouches sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSInteger idx1 = [validTouches indexOfObject:obj1];
         NSInteger idx2 = [validTouches indexOfObject:obj2];
         return blockedAvgDist[idx1] < blockedAvgDist[idx2] ? NSOrderedAscending : NSOrderedDescending;
@@ -268,7 +269,7 @@ struct TouchInterval{
     // for the animation after the stretch gesture.
 }
 
--(void) forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap{
+- (void)forceBlessTouches:(NSSet*)touches forScrap:(MMScrapView*)_scrap {
     // force scrap to the input, and force
     // input touches to valid
     self.scrap = _scrap;
@@ -276,29 +277,29 @@ struct TouchInterval{
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
     [self touchesBegan:touches];
-    
+
     [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
 
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+    if ([validTouches count] >= mmMinimumNumberOfScrapTouches) {
         [self prepareGestureToBeginFresh];
-    }else{
+    } else {
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
         self.scrap = nil;
     }
 }
 
--(void) blessTouches:(NSSet*)touches{
+- (void)blessTouches:(NSSet*)touches {
     NSMutableSet* newPossibleTouches = [NSMutableSet setWithSet:ignoredTouches];
     [newPossibleTouches intersectSet:touches];
     [possibleTouches addObjectsInSet:newPossibleTouches];
     [ignoredTouches removeObjectsInSet:newPossibleTouches];
     [self touchesBegan:newPossibleTouches];
-    
+
     [self processPossibleTouches];
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+    if ([validTouches count] >= mmMinimumNumberOfScrapTouches) {
         [self prepareGestureToBeginFresh];
-    }else{
+    } else {
         [possibleTouches addObjectsInOrderedSet:validTouches];
         [validTouches removeAllObjects];
         self.scrap = nil;
@@ -307,8 +308,8 @@ struct TouchInterval{
 
 #pragma mark - Helper Methods
 
--(CGPoint)locationInView:(UIView *)view{
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+- (CGPoint)locationInView:(UIView*)view {
+    if ([validTouches count] >= mmMinimumNumberOfScrapTouches) {
         CGPoint loc1 = [[validTouches firstObject] locationInView:view];
         CGPoint loc2 = [[validTouches objectAtIndex:1] locationInView:view];
         return CGPointMake((loc1.x + loc2.x) / 2, (loc1.y + loc2.y) / 2);
@@ -316,25 +317,25 @@ struct TouchInterval{
     return [super locationInView:view];
 }
 
--(void) processPossibleTouches{
+- (void)processPossibleTouches {
     NSArray* scrapsToLookAt = scrapDelegate.scrapsToPan;
-    if(self.scrap){
+    if (self.scrap) {
         NSUInteger indx = [scrapsToLookAt indexOfObject:self.scrap];
-        if(indx == NSNotFound){
+        if (indx == NSNotFound) {
             scrapsToLookAt = [NSArray arrayWithObject:scrap];
-        }else{
+        } else {
             scrapsToLookAt = [scrapsToLookAt subarrayWithRange:NSMakeRange(indx, [scrapsToLookAt count] - indx)];
         }
     }
-    
+
     NSMutableSet* allPossibleTouches = [NSMutableSet setWithSet:[possibleTouches set]];
     // scraps are returned back to front, so we need to reverse
     // enumerate them so that we check front to back
-    for(MMScrapView* _scrap in [scrapsToLookAt reverseObjectEnumerator]){
+    for (MMScrapView* _scrap in [scrapsToLookAt reverseObjectEnumerator]) {
         NSSet* touchesInScrap = [_scrap matchingPairTouchesFrom:allPossibleTouches];
-        if(self.scrap && self.scrap == _scrap && ![touchesInScrap count]){
-            for(UITouch* touch in possibleTouches){
-                if([scrap containsTouch:touch]){
+        if (self.scrap && self.scrap == _scrap && ![touchesInScrap count]) {
+            for (UITouch* touch in possibleTouches) {
+                if ([scrap containsTouch:touch]) {
                     // we only need to worry about sets with one object
                     // because if more than 1 possible touch matched,
                     // then the matchingTouchesFrom: would have returned them
@@ -342,20 +343,21 @@ struct TouchInterval{
                 }
             }
         }
-        if([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)){
+        if ([touchesInScrap count] && (!self.scrap || self.scrap == _scrap)) {
             // two+ possible touches match this scrap
             self.scrap = _scrap;
             [validTouches addObjectsInSet:touchesInScrap];
             [possibleTouches removeObjectsInSet:touchesInScrap];
             [self.scrapDelegate ownershipOfTouches:[validTouches set] isGesture:self];
             break;
-        }else{
+        } else {
             // remove all touches from allPossibleTouches that match this scrap
             // since grabbing a scrap requires that it hit the visible portion of the scrap,
             // this will remove any touches that don't grab a scrap but do land in a scrap
             [allPossibleTouches removeObjectsInSet:[_scrap allMatchingTouchesFrom:allPossibleTouches]];
         }
-        if(![allPossibleTouches count]) break;
+        if (![allPossibleTouches count])
+            break;
     }
 }
 
@@ -366,47 +368,45 @@ struct TouchInterval{
  * this touch may interrupt an animation on this frame, so set the frame
  * to match that of the animation.
  */
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event {
     [self touchesBegan:touches];
 }
 
-- (void)touchesBegan:(NSSet *)touches{
-//    [self say:@"began" ISee:touches];
+- (void)touchesBegan:(NSSet*)touches {
+    //    [self say:@"began" ISee:touches];
     isShaking = NO;
-    for(UITouch* touch in touches){
+    for (UITouch* touch in touches) {
         [self calculateShakesForTouch:touch];
     }
-    if([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]){
+    if ([self.scrapDelegate panScrapRequiresLongPress] && ![possibleTouches intersectsSet:touches]) {
         // ignore touches in the possible set, b/c if they're already in there during
         // this Began method call, then that means they've been blessed
         [ignoredTouches addObjectsInSet:touches];
         return;
     }
     NSMutableOrderedSet* validTouchesCurrentlyBeginning = [NSMutableOrderedSet orderedSetWithSet:touches];
-    
-    for(UITouch* touch in touches){
-        if(![self.scrapDelegate allowsHoldingScrapsWithTouch:touch]){
+
+    for (UITouch* touch in touches) {
+        if (![self.scrapDelegate allowsHoldingScrapsWithTouch:touch]) {
             [validTouchesCurrentlyBeginning removeObject:touch];
             [ignoredTouches addObject:touch];
         }
     }
-    
+
     // ignore all the touches that could be bezel touches
-    if([validTouchesCurrentlyBeginning count]){
-        
+    if ([validTouchesCurrentlyBeginning count]) {
         [possibleTouches addObjectsFromArray:[validTouchesCurrentlyBeginning array]];
         [possibleTouches removeObjectsInSet:ignoredTouches];
-        
+
         [self processPossibleTouches];
- 
-        if([validTouches count] >= mmMinimumNumberOfScrapTouches){
-            
+
+        if ([validTouches count] >= mmMinimumNumberOfScrapTouches) {
             [self prepareGestureToBeginFresh];
-            
+
             didExitToBezel = MMBezelDirectionNone;
 
             self.state = UIGestureRecognizerStateBegan;
-        }else if([validTouches count] < mmMinimumNumberOfScrapTouches){
+        } else if ([validTouches count] < mmMinimumNumberOfScrapTouches) {
             didExitToBezel = MMBezelDirectionNone;
             initialTouchVector = nil;
             //
@@ -415,58 +415,59 @@ struct TouchInterval{
             secondToLastTouchDidBezel = NO;
         }
     }
-    
-//    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+
+    //    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event{
-    if(paused) return;
-    
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event {
+    if (paused)
+        return;
+
     isShaking = NO;
-    for(UITouch* t in touches){
+    for (UITouch* t in touches) {
         [self calculateShakesForTouch:t];
     }
     NSMutableOrderedSet* validTouchesCurrentlyMoving = [validTouches mutableCopy];
     [validTouchesCurrentlyMoving intersectSet:touches];
     [validTouchesCurrentlyMoving minusSet:ignoredTouches];
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
-        if(self.state == UIGestureRecognizerStateBegan){
+    if ([validTouches count] >= mmMinimumNumberOfScrapTouches) {
+        if (self.state == UIGestureRecognizerStateBegan) {
             initialDistance = 0;
         }
-        if(self.numberOfTouches == 1){
+        if (self.numberOfTouches == 1) {
             initialDistance = 0;
-            if(scale < 1){
+            if (scale < 1) {
                 scaleDirection = MMScaleDirectionLarger;
-            }else if(scale > 1){
+            } else if (scale > 1) {
                 scaleDirection = MMScaleDirectionSmaller;
             }
             scale = 1;
         }
-        if([validTouches count] >= 2 && !initialDistance){
+        if ([validTouches count] >= 2 && !initialDistance) {
             initialDistance = [self distanceBetweenTouches:validTouches];
         }
-        if([validTouches count] >= 2 && initialDistance){
+        if ([validTouches count] >= 2 && initialDistance) {
             CGFloat newScale = [self distanceBetweenTouches:validTouches] / initialDistance;
-            if(newScale > scale){
+            if (newScale > scale) {
                 scaleDirection = MMScaleDirectionLarger;
-            }else if(newScale < scale){
+            } else if (newScale < scale) {
                 scaleDirection = MMScaleDirectionSmaller;
             }
             scale = newScale;
         }
-        if([validTouches count] >= 2){
+        if ([validTouches count] >= 2) {
             CGPoint p1 = [[validTouches firstObject] locationInView:self.view];
             CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
             MMVector* currentVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
             CGFloat diff = [initialTouchVector angleBetween:currentVector];
-//            DebugLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
-//            DebugLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
+            //            DebugLog(@"pan scrap %p adding %f to rotation %f", self, diff, rotation);
+            //            DebugLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
             rotation += diff;
             initialTouchVector = currentVector;
             CGPoint locInView = [self locationInView:self.view];
             translation = CGPointMake(locInView.x - gestureLocationAtStart.x, locInView.y - gestureLocationAtStart.y);
 
-            if(self.scrap){
+            if (self.scrap) {
                 //
                 // only calculate shaking if we're currently
                 // holding a scrap
@@ -477,31 +478,31 @@ struct TouchInterval{
                 // only back and forth, that it has kept a fast velocity,
                 // and if we have ever actually processed that shake yet
                 int numberOfShakingTouches = 0;
-                for(UITouch* touch in validTouches){
+                for (UITouch* touch in validTouches) {
                     int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
-                    if(index != -1){
-                        if(touchIntervals[index].numberOfDirectionChanges >= kNumberOfDirectionChangesToDetermineShake &&
-                           !touchIntervals[index].hasProcessedShake){
+                    if (index != -1) {
+                        if (touchIntervals[index].numberOfDirectionChanges >= kNumberOfDirectionChangesToDetermineShake &&
+                            !touchIntervals[index].hasProcessedShake) {
                             // only count shakes that have
                             // changed direction enough times, and
                             // that we haven't processed yet
                             //
                             // this counts touches that are shaking,
                             // i need two touches for 1 scrap shake
-                            numberOfShakingTouches ++;
+                            numberOfShakingTouches++;
                         }
                     }
                 }
                 // check to see if we have enough touches
                 // that are both being shaked + so far unprocessed
-                if(numberOfShakingTouches >= mmMinimumNumberOfScrapTouches){
+                if (numberOfShakingTouches >= mmMinimumNumberOfScrapTouches) {
                     isShaking = YES;
                     // now we need to tell that we've processed the shakes
                     // so that we don't use this same shake gesture to
                     // repeat immediately
-                    for(UITouch* touch in validTouches){
+                    for (UITouch* touch in validTouches) {
                         int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
-                        if(index != -1){
+                        if (index != -1) {
                             touchIntervals[index].hasProcessedShake = YES;
                         }
                     }
@@ -512,38 +513,38 @@ struct TouchInterval{
     }
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event{
-//    [self say:@"ended" ISee:touches];
-    if(paused){
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event {
+    //    [self say:@"ended" ISee:touches];
+    if (paused) {
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         [possibleTouches removeObjectsInSet:touches];
-        if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
-           self.state != UIGestureRecognizerStatePossible){
+        if (![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
+            self.state != UIGestureRecognizerStatePossible) {
             self.state = UIGestureRecognizerStateEnded;
         }
-        if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-//            DebugLog(@"what");
+        if ([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap) {
+            //            DebugLog(@"what");
             self.scrap = nil;
         }
         return;
     }
-    
+
     isShaking = NO;
     // pan and pinch and bezel
     NSMutableOrderedSet* validTouchesCurrentlyEnding = [NSMutableOrderedSet orderedSetWithOrderedSet:validTouches];
     [validTouchesCurrentlyEnding intersectSet:touches];
     [validTouchesCurrentlyEnding minusSet:ignoredTouches];
 
-    if(self.state == UIGestureRecognizerStateBegan ||
-       self.state == UIGestureRecognizerStateChanged){
+    if (self.state == UIGestureRecognizerStateBegan ||
+        self.state == UIGestureRecognizerStateChanged) {
         //
         // make sure we've actually seen two fingers on the page
         // before we change state or worry about bezeling
-        if([validTouchesCurrentlyEnding count]){
-            for(UITouch* touch in validTouchesCurrentlyEnding){
+        if ([validTouchesCurrentlyEnding count]) {
+            for (UITouch* touch in validTouchesCurrentlyEnding) {
                 CGPoint point = [touch locationInView:self.view.superview];
-                
+
 
                 // we'll use the velocity of a touch to determine if
                 // the user was "throwing" a scrap towards the bezel.
@@ -560,18 +561,18 @@ struct TouchInterval{
                 // use. if this ends up too finicky, then we can use average velocity
                 // instead.
                 CGFloat pxVelocity = velocity * SCRAP_VELOCITY_CLAMP_MAX * .05; // velocity per fraction of a second
-                
+
                 BOOL bezelDirHasLeft = ((bezelDirectionMask & MMBezelDirectionLeft) == MMBezelDirectionLeft);
                 BOOL bezelDirHasRight = ((bezelDirectionMask & MMBezelDirectionRight) == MMBezelDirectionRight);
                 BOOL bezelDirHasUp = ((bezelDirectionMask & MMBezelDirectionUp) == MMBezelDirectionUp);
                 BOOL bezelDirHasDown = ((bezelDirectionMask & MMBezelDirectionDown) == MMBezelDirectionDown);
-                if(point.x < kBezelInGestureWidth && bezelDirHasLeft){
+                if (point.x < kBezelInGestureWidth && bezelDirHasLeft) {
                     didExitToBezel = didExitToBezel | MMBezelDirectionLeft;
-                }else if(point.y < kBezelInGestureWidth && bezelDirHasUp){
+                } else if (point.y < kBezelInGestureWidth && bezelDirHasUp) {
                     didExitToBezel = didExitToBezel | MMBezelDirectionUp;
-                }else if(point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity && bezelDirHasRight){
+                } else if (point.x > self.view.superview.frame.size.width - kBezelInGestureWidth - pxVelocity && bezelDirHasRight) {
                     didExitToBezel = didExitToBezel | MMBezelDirectionRight;
-                }else if(point.y > self.view.superview.frame.size.height - kBezelInGestureWidth - pxVelocity && bezelDirHasDown){
+                } else if (point.y > self.view.superview.frame.size.height - kBezelInGestureWidth - pxVelocity && bezelDirHasDown) {
                     didExitToBezel = didExitToBezel | MMBezelDirectionDown;
                 }
             }
@@ -579,70 +580,69 @@ struct TouchInterval{
             // ok, we need to increment the number of times the user has exited the
             // bezel. only do it if the touch as exited bezel and if we're not
             // double counting the last two touches.
-            if(didExitToBezel != MMBezelDirectionNone &&
-               !secondToLastTouchDidBezel &&
-               ([validTouches count] - [validTouchesCurrentlyEnding count]) < mmMinimumNumberOfScrapTouches){
-                if([validTouches count] - [validTouchesCurrentlyEnding count] == 1){
+            if (didExitToBezel != MMBezelDirectionNone &&
+                !secondToLastTouchDidBezel &&
+                ([validTouches count] - [validTouchesCurrentlyEnding count]) < mmMinimumNumberOfScrapTouches) {
+                if ([validTouches count] - [validTouchesCurrentlyEnding count] == 1) {
                     // that was the 2nd to last touch!
                     // set this flag so we don't double count it when the last
                     // touch ends
                     secondToLastTouchDidBezel = YES;
                 }
             }
-            if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+            if (self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged) {
                 self.state = UIGestureRecognizerStatePossible;
             }
         }
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
-        if([validTouches count] == 1){
+        if ([validTouches count] == 1) {
             [possibleTouches addObjectsInSet:[validTouches set]];
             [validTouches removeAllObjects];
         }
-        if([validTouches count] == 0 &&
-           [possibleTouches count] == 0){
+        if ([validTouches count] == 0 &&
+            [possibleTouches count] == 0) {
             self.state = UIGestureRecognizerStateEnded;
         }
-    }else{
+    } else {
         //
         // only 1 finger during this gesture, and it's exited
         // so it doesn't count for bezeling or pan/pinch
         [validTouches minusOrderedSet:validTouchesCurrentlyEnding];
         [possibleTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
-        
-        if(![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]){
+
+        if (![validTouches count] && ![possibleTouches count] && ![ignoredTouches count]) {
             self.state = UIGestureRecognizerStateFailed;
         }
     }
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches && [validTouchesCurrentlyEnding count]){
+    if ([validTouches count] >= mmMinimumNumberOfScrapTouches && [validTouchesCurrentlyEnding count]) {
         // reset the location and the initial distance of the gesture
         // so that the new first two touches position won't immediatley
         // change where the page is or what its scale is
         [UIView setAnchorPoint:CGPointMake(.5, .5) forView:scrap];
         [self prepareGestureToBeginFresh];
     }
-//    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
-    for(UITouch* touch in touches){
+    //    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+    for (UITouch* touch in touches) {
         [self clearCacheForTouch:touch];
     }
 }
 
 
-
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event{
-//    [self say:@"cancelled" ISee:touches];
-    if(paused){
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event {
+    //    [self say:@"cancelled" ISee:touches];
+    if (paused) {
         [validTouches removeObjectsInSet:touches];
         [ignoredTouches removeObjectsInSet:touches];
         [possibleTouches removeObjectsInSet:touches];
-        if(![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
-           self.state != UIGestureRecognizerStatePossible){
+        if (![validTouches count] && ![ignoredTouches count] && ![possibleTouches count] &&
+            self.state != UIGestureRecognizerStatePossible) {
             self.state = UIGestureRecognizerStateEnded;
         }
-        if([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap){
-//            DebugLog(@"what");
+        if ([validTouches count] < mmMinimumNumberOfScrapTouches && self.scrap) {
+            //            DebugLog(@"what");
             self.scrap = nil;
         }
         return;
@@ -652,27 +652,27 @@ struct TouchInterval{
     [validTouchesCurrentlyCancelling minusSet:ignoredTouches];
     [possibleTouches removeObjectsInSet:touches];
     [ignoredTouches removeObjectsInSet:touches];
-    if([validTouchesCurrentlyCancelling count]){
+    if ([validTouchesCurrentlyCancelling count]) {
         [validTouches minusOrderedSet:validTouchesCurrentlyCancelling];
-        if(self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged){
+        if (self.numberOfTouches == 1 && self.state == UIGestureRecognizerStateChanged) {
             self.state = UIGestureRecognizerStatePossible;
         }
     }
-    if([validTouches count] == 0 &&
-       [possibleTouches count] == 0 &&
-       [ignoredTouches count] == 0 &&
-       (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)){
+    if ([validTouches count] == 0 &&
+        [possibleTouches count] == 0 &&
+        [ignoredTouches count] == 0 &&
+        (self.state == UIGestureRecognizerStateChanged || self.state == UIGestureRecognizerStateBegan)) {
         self.state = UIGestureRecognizerStateCancelled;
     }
-//    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
+    //    DebugLog(@"pan scrap valid: %d  possible: %d  ignored: %d", [validTouches count], [possibleTouches count], [ignoredTouches count]);
 
-    for(UITouch* touch in touches){
+    for (UITouch* touch in touches) {
         [self clearCacheForTouch:touch];
     }
 }
 
--(void)ignoreTouch:(UITouch *)touch forEvent:(UIEvent *)event{
-    if(![ignoredTouches containsObject:touch]){
+- (void)ignoreTouch:(UITouch*)touch forEvent:(UIEvent*)event {
+    if (![ignoredTouches containsObject:touch]) {
         [ignoredTouches addObject:touch];
         [self clearCacheForTouch:touch];
         // dont' send to super, or we'll stop getting
@@ -704,9 +704,10 @@ struct TouchInterval{
  *
  * this way we don't have to wait
  */
--(void) prepareGestureToBeginFresh{
-    if(paused) return;
-    
+- (void)prepareGestureToBeginFresh {
+    if (paused)
+        return;
+
     // set the anchor point so that it
     // rotates around the point that we're
     // gesturing
@@ -721,8 +722,8 @@ struct TouchInterval{
     CGPoint p2 = [[validTouches objectAtIndex:1] locationInView:self.view];
     initialTouchVector = [[MMVector alloc] initWithPoint:p1 andPoint:p2];
     rotation = 0;
-//    DebugLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
-//    DebugLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
+    //    DebugLog(@"pan scrap %p setting vector to %@ and rotation to %f", self, initialTouchVector, rotation);
+    //    DebugLog(@" using touches %p and %p", [validTouches firstObject], [validTouches objectAtIndex:1]);
     gestureLocationAtStart = [self locationInView:self.view];
     initialDistance = [self distanceBetweenTouches:validTouches];
     translation = CGPointZero;
@@ -759,13 +760,13 @@ struct TouchInterval{
  * the opportunity to fix the anchor point of the scrap
  * without having to expose anchor point methods
  */
--(void) giveUpScrap{
+- (void)giveUpScrap {
     [UIView setAnchorPoint:CGPointMake(.5, .5) forView:self.scrap];
     self.scrap = nil;
 }
 
 
-- (void)reset{
+- (void)reset {
     [super reset];
     initialDistance = 0;
     scale = 1;
@@ -785,8 +786,8 @@ struct TouchInterval{
  * helper to calculate distance between input touches
  * to help us track initial vs moving scale
  */
--(CGFloat) distanceBetweenTouches:(NSOrderedSet*) touches{
-    if([touches count] >= 2){
+- (CGFloat)distanceBetweenTouches:(NSOrderedSet*)touches {
+    if ([touches count] >= 2) {
         UITouch* touch1 = [touches objectAtIndex:0];
         UITouch* touch2 = [touches objectAtIndex:1];
         CGPoint initialPoint1 = [touch1 locationInView:self.view.superview];
@@ -798,54 +799,54 @@ struct TouchInterval{
 
 #pragma mark - Shake Helpers
 
--(void) calculateShakesForTouch:(UITouch*)touch{
+- (void)calculateShakesForTouch:(UITouch*)touch {
     int indexOfTouchInformation = -1;
     struct DurationCacheObject cache = [[MMTouchVelocityGestureRecognizer sharedInstance] velocityInformationForTouch:touch withIndex:&indexOfTouchInformation];
-    if(indexOfTouchInformation != -1){
+    if (indexOfTouchInformation != -1) {
         // we have velocity information for this touch
-        
-        if(cache.distanceFromPrevious > 5){
-            if(cache.avgNormalizedVelocity < 0.5 ||
-               (cache.deltaAngle >= 0.2 && cache.deltaAngle <= 0.8)){
+
+        if (cache.distanceFromPrevious > 5) {
+            if (cache.avgNormalizedVelocity < 0.5 ||
+                (cache.deltaAngle >= 0.2 && cache.deltaAngle <= 0.8)) {
                 // too slow
                 // or angle too wide
                 touchIntervals[indexOfTouchInformation].numberOfDirectionChanges = 0;
                 touchIntervals[indexOfTouchInformation].hasProcessedShake = NO;
-            }else if(cache.deltaAngle < 0.2){
+            } else if (cache.deltaAngle < 0.2) {
                 // same direction
-            }else if(cache.deltaAngle > 0.8){
+            } else if (cache.deltaAngle > 0.8) {
                 // opposite direction
                 touchIntervals[indexOfTouchInformation].numberOfDirectionChanges += 1;
             }
         }
-    }else{
+    } else {
         // we don't have velocity information for this touch
     }
 }
 
--(void) clearCacheForTouch:(UITouch*)touch{
+- (void)clearCacheForTouch:(UITouch*)touch {
     int index = [[MMTouchVelocityGestureRecognizer sharedInstance] indexForTouchInCacheIfExists:touch];
-    if(index != -1){
+    if (index != -1) {
         touchIntervals[index].numberOfDirectionChanges = 0;
         touchIntervals[index].hasProcessedShake = NO;
     }
 }
 
--(BOOL) paused{
+- (BOOL)paused {
     return paused;
 }
 
--(void) pause{
+- (void)pause {
     paused = YES;
 }
 
--(BOOL) begin{
-//    DebugLog(@"pan scrap gesture %p began", self);
-    if(!paused){
+- (BOOL)begin {
+    //    DebugLog(@"pan scrap gesture %p began", self);
+    if (!paused) {
         DebugLog(@"what8");
     }
     paused = NO;
-    if([validTouches count] >= mmMinimumNumberOfScrapTouches){
+    if ([validTouches count] >= mmMinimumNumberOfScrapTouches) {
         [self prepareGestureToBeginFresh];
         return YES;
     }
@@ -854,33 +855,33 @@ struct TouchInterval{
 
 #pragma mark - UIGestureRecognizer Subclass
 
-- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer*)preventedGestureRecognizer {
     return NO;
 }
 
-- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer*)preventingGestureRecognizer {
     return NO;
 }
 
 
 #pragma mark - UIGestureRecognizerDelegate
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return YES;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return NO;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
     return NO;
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldReceiveTouch:(UITouch*)touch {
     // Disallow recognition of tap gestures in the segmented control.
     if ([touch.view isKindOfClass:[UIControl class]]) {
-//        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
+        //        DebugLog(@"ignore touch in %@", NSStringFromClass([self class]));
         return NO;
     }
     return YES;

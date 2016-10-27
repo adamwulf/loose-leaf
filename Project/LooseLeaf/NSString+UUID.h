@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface NSString (UUID)
 
-+ (NSString*) createStringUUID;
++ (NSString*)createStringUUID;
 
 @end

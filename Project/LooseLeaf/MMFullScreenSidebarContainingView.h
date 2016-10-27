@@ -11,7 +11,8 @@
 #import "MMSlidingSidebarView.h"
 #import "MMSlidingSidebarContainerViewDelegate.h"
 
-@interface MMFullScreenSidebarContainingView : UIView{
+
+@interface MMFullScreenSidebarContainingView : UIView {
     MMSlidingSidebarView* slidingSidebarView;
     __weak NSObject<MMSlidingSidebarContainerViewDelegate>* delegate;
 }
@@ -20,14 +21,14 @@
 
 - (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
 
--(void) sidebarCloseButtonWasTapped;
+- (void)sidebarCloseButtonWasTapped;
 
--(BOOL) isVisible;
+- (BOOL)isVisible;
 
--(void) hide:(BOOL)animated onComplete:(void(^)(BOOL finished))onComplete;
+- (void)hide:(BOOL)animated onComplete:(void (^)(BOOL finished))onComplete;
 
--(void) show:(BOOL)animated;
+- (void)show:(BOOL)animated;
 
--(UIView*) viewForBlur;
+- (UIView*)viewForBlur;
 
 @end

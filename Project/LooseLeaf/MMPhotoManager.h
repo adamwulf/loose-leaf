@@ -13,7 +13,8 @@
 
 #define kPermissionDeniedError 401
 
-@interface MMPhotoManager : NSObject{
+
+@interface MMPhotoManager : NSObject {
     __weak NSObject<MMPhotoManagerDelegate>* delegate;
 }
 
@@ -25,12 +26,12 @@
 @property (readonly) MMPhotoAlbum* cameraRoll;
 @property (readonly) ALAssetsLibrary* assetsLibrary;
 
-+(MMPhotoManager*) sharedInstance;
++ (MMPhotoManager*)sharedInstance;
 
-+(BOOL) hasPhotosPermission;
++ (BOOL)hasPhotosPermission;
 
--(void) bypassAuthRequirement;
+- (void)bypassAuthRequirement;
 
--(void) initializeAlbumCache;
+- (void)initializeAlbumCache;
 
 @end

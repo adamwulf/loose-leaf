@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMScrapCollectionState (Private)
 
 #pragma mark - Saving Helpers
 
--(void) wasSavedAtUndoHash:(NSUInteger)savedUndoHash;
+- (void)wasSavedAtUndoHash:(NSUInteger)savedUndoHash;
 
 @end

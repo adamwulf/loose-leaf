@@ -12,19 +12,20 @@
 #import <JotUI/JotUI.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
+
 @interface UIBezierPath (PathElement)
 
--(void) scaleAndPreserveCenter:(CGFloat)scale;
+- (void)scaleAndPreserveCenter:(CGFloat)scale;
 
--(void) rotateAndAlignCenter:(CGFloat)rotation;
+- (void)rotateAndAlignCenter:(CGFloat)rotation;
 
--(NSArray*) convertToPathElementsFromTValue:(CGFloat)fromTValue
+- (NSArray*)convertToPathElementsFromTValue:(CGFloat)fromTValue
                                    toTValue:(CGFloat)toTValue
                                   fromColor:(UIColor*)fromColor
-                                   toColor:(UIColor*)toColor
-                                 fromWidth:(CGFloat)fromWidth
-                                   toWidth:(CGFloat)toWidth
-                             withTransform:(CGAffineTransform)transform
+                                    toColor:(UIColor*)toColor
+                                  fromWidth:(CGFloat)fromWidth
+                                    toWidth:(CGFloat)toWidth
+                              withTransform:(CGAffineTransform)transform
                                    andScale:(CGFloat)scale
                                andStepWidth:(CGFloat)stepWidth
                                 andRotation:(CGFloat)rotation;

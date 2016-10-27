@@ -8,16 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMStopWatch : NSObject
 
--(id) initWithDuration:(CGFloat)duration;
+- (id)initWithDuration:(CGFloat)duration;
 
--(BOOL) isRunning;
+- (BOOL)isRunning;
 
--(void) start;
+- (void)start;
 
--(CGFloat) stop;
+- (CGFloat)stop;
 
--(CGFloat) read;
+- (CGFloat)read;
 
 @end

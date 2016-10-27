@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMEmptyCollectionViewCell : UIView
 
--(void) updatePhotoRotation:(BOOL)animated;
+- (void)updatePhotoRotation:(BOOL)animated;
 
--(void) setText:(NSString*)text;
+- (void)setText:(NSString*)text;
 
 @end

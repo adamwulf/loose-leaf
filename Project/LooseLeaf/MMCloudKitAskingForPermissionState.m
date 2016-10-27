@@ -17,50 +17,51 @@
 #import "MMCloudKitFetchingAccountInfoState.h"
 #import <SimpleCloudKitManager/SPRSimpleCloudKitManager.h>
 
-@implementation MMCloudKitAskingForPermissionState{
+
+@implementation MMCloudKitAskingForPermissionState {
     BOOL isCheckingStatus;
     SCKMAccountStatus accountStatus;
 }
 
--(id) initWithAccountStatus:(SCKMAccountStatus) _accountStatus{
-    if(self = [super init]){
+- (id)initWithAccountStatus:(SCKMAccountStatus)_accountStatus {
+    if (self = [super init]) {
         accountStatus = _accountStatus;
     }
     return self;
 }
 
--(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+- (void)runState {
+    if ([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
-        @synchronized(self){
-            if(isCheckingStatus){
+    } else {
+        @synchronized(self) {
+            if (isCheckingStatus) {
                 return;
             }
             isCheckingStatus = YES;
         }
-        
+
         [MMCloudKitFetchingAccountInfoState clearAccountCache];
         [MMCloudKitFetchFriendsState clearFriendsCache];
-        
+
         [[SPRSimpleCloudKitManager sharedManager] promptAndFetchUserInfoOnComplete:^(SCKMApplicationPermissionStatus permissionStatus,
-                                                                                     CKRecordID *recordID,
-                                                                                     CKDiscoveredUserInfo *userInfo,
-                                                                                     NSError *error) {
-            if([MMCloudKitManager sharedManager].currentState != self){
+                                                                                     CKRecordID* recordID,
+                                                                                     CKDiscoveredUserInfo* userInfo,
+                                                                                     NSError* error) {
+            if ([MMCloudKitManager sharedManager].currentState != self) {
                 // bail early. the network probably went offline
                 // while we were waiting for a reply. if we're not current,
                 // then we shouldn't process / change state.
                 return;
             }
-            @synchronized(self){
+            @synchronized(self) {
                 isCheckingStatus = NO;
             }
             [MMCloudKitBaseState clearCache];
-            if(error){
+            if (error) {
                 [[MMCloudKitManager sharedManager] changeToStateBasedOnError:error];
-            }else{
+            } else {
                 switch (permissionStatus) {
                     case SCKMApplicationPermissionStatusCouldNotComplete:
                         [[MMCloudKitManager sharedManager] retryStateAfterDelay:3];
@@ -79,9 +80,9 @@
                         [[SPRSimpleCloudKitManager sharedManager] promptForRemoteNotificationsIfNecessary];
                         // icloud is available for this user, so we need to
                         // fetch their account info if we don't already have it.
-                        if(recordID && userInfo){
+                        if (recordID && userInfo) {
                             [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitFetchFriendsState alloc] initWithUserRecord:recordID andUserInfo:[userInfo asDictionary]]];
-                        }else{
+                        } else {
                             [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
                         }
                         break;

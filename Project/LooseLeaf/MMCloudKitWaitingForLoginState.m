@@ -16,28 +16,29 @@
 #import "MMCloudKitAskingForPermissionState.h"
 #import "MMCloudKitManager.h"
 
-@implementation MMCloudKitWaitingForLoginState{
+
+@implementation MMCloudKitWaitingForLoginState {
     SCKMAccountStatus accountStatus;
 }
 
--(id) initWithAccountStatus:(SCKMAccountStatus) _accountStatus{
-    if(self = [super init]){
+- (id)initWithAccountStatus:(SCKMAccountStatus)_accountStatus {
+    if (self = [super init]) {
         accountStatus = _accountStatus;
     }
     return self;
 }
 
--(void) runState{
-    if([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable){
+- (void)runState {
+    if ([MMReachabilityManager sharedManager].currentReachabilityStatus == NotReachable) {
         // we can't connect to cloudkit, so move to an error state
         [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitOfflineState alloc] init]];
-    }else{
+    } else {
         [MMCloudKitFetchingAccountInfoState clearAccountCache];
         [MMCloudKitFetchFriendsState clearFriendsCache];
     }
 }
 
--(void) didAskToLogin{
+- (void)didAskToLogin {
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitAskingForPermissionState alloc] initWithAccountStatus:accountStatus]];
 }
 

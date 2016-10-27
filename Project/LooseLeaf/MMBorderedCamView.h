@@ -10,7 +10,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MMCamViewDelegate.h"
 
-@interface MMBorderedCamView : UIView<MMCamViewDelegate>{
+
+@interface MMBorderedCamView : UIView <MMCamViewDelegate> {
     __weak NSObject<MMCamViewDelegate>* delegate;
 }
 
@@ -19,6 +20,6 @@
 
 - (id)initWithFrame:(CGRect)frame andCameraPosition:(AVCaptureDevicePosition)preferredPosition;
 
--(void) changeCamera;
+- (void)changeCamera;
 
 @end

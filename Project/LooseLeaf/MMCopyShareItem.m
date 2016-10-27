@@ -13,7 +13,8 @@
 #import "Constants.h"
 #import "NSURL+UTI.h"
 
-@implementation MMCopyShareItem{
+
+@implementation MMCopyShareItem {
     CGFloat lastProgress;
     CGFloat targetProgress;
     BOOL targetSuccess;
@@ -22,88 +23,89 @@
 
 @synthesize delegate;
 
--(id) init{
-    if(self = [super init]){
-        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0,0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+- (id)init {
+    if (self = [super init]) {
+        button = [[MMImageViewButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"copy"]];
         button.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateButtonGreyscale)
-                                                     name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
+
         [button addTarget:self action:@selector(performShareAction) forControlEvents:UIControlEventTouchUpInside];
-        
+
         [self updateButtonGreyscale];
     }
     return self;
 }
 
--(MMSidebarButton*) button{
+- (MMSidebarButton*)button {
     return button;
 }
 
--(void) performShareAction{
-    if(!button.greyscale){
-        if(!targetProgress){
+- (void)performShareAction {
+    if (!button.greyscale) {
+        if (!targetProgress) {
             // only trigger if not already animating
             [delegate mayShare:self];
-            
+
             UIImage* imgToShare = [UIImage imageWithData:[NSData dataWithContentsOfURL:[self.delegate urlToShare]]];
             [UIPasteboard generalPasteboard].image = imgToShare;
-            
+
             [[[Mixpanel sharedInstance] people] increment:kMPNumberOfExports by:@(1)];
-            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{kMPEventExportPropDestination : @"Copy To Clipboard",
-                                                                         kMPEventExportPropResult : @"Success"}];
-            
+            [[Mixpanel sharedInstance] track:kMPEventExport properties:@{ kMPEventExportPropDestination: @"Copy To Clipboard",
+                                                                          kMPEventExportPropResult: @"Success" }];
+
             [self animateToSuccess:YES];
         }
-    }else{
+    } else {
         [self animateToSuccess:NO];
     }
 }
 
--(void) animateToSuccess:(BOOL)succeeded{
+- (void)animateToSuccess:(BOOL)succeeded {
     CGPoint center = CGPointMake(CGRectGetMidX(button.drawableFrame), CGRectGetMidY(button.drawableFrame));
-    
-    CAShapeLayer *circle=[CAShapeLayer layer];
+
+    CAShapeLayer* circle = [CAShapeLayer layer];
     CGFloat radius = ceilf(button.drawableFrame.size.width / 2);
-    circle.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-    circle.fillColor=[UIColor clearColor].CGColor;
-    circle.strokeColor=[[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
-    circle.lineWidth=radius*2;
+    circle.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+    circle.fillColor = [UIColor clearColor].CGColor;
+    circle.strokeColor = [[UIColor whiteColor] colorWithAlphaComponent:.7].CGColor;
+    circle.lineWidth = radius * 2;
     circle.strokeEnd = 0;
-    
-    
-    CAShapeLayer *mask=[CAShapeLayer layer];
-    mask.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-    
-    CAShapeLayer *mask2=[CAShapeLayer layer];
-    mask2.path=[UIBezierPath bezierPathWithArcCenter:center radius:radius-1.5 startAngle:2*M_PI*0-M_PI_2 endAngle:2*M_PI*1-M_PI_2 clockwise:YES].CGPath;
-    
+
+
+    CAShapeLayer* mask = [CAShapeLayer layer];
+    mask.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 1.5 startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+
+    CAShapeLayer* mask2 = [CAShapeLayer layer];
+    mask2.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius - 1.5 startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
+
     circle.mask = mask;
-    
+
     UIView* checkOrXView = [[UIView alloc] initWithFrame:button.bounds];
     checkOrXView.backgroundColor = [UIColor whiteColor];
     checkOrXView.layer.mask = mask2;
-    
+
     [button.layer addSublayer:circle];
-    
-    CABasicAnimation *animation=[CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-    animation.duration=.4;
+
+    CABasicAnimation* animation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
+    animation.duration = .4;
     animation.fillMode = kCAFillModeForwards;
-    animation.removedOnCompletion=NO;
-    animation.fromValue=@(0);
-    animation.toValue=@(1);
-    animation.timingFunction=[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    animation.removedOnCompletion = NO;
+    animation.fromValue = @(0);
+    animation.toValue = @(1);
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     [circle addAnimation:animation forKey:@"drawCircleAnimation"];
-    
+
     [[NSThread mainThread] performBlock:^{
         CAShapeLayer* checkMarkOrXLayer = [CAShapeLayer layer];
         checkMarkOrXLayer.anchorPoint = CGPointZero;
         checkMarkOrXLayer.bounds = button.bounds;
         UIBezierPath* path = [UIBezierPath bezierPath];
-        if(succeeded){
+        if (succeeded) {
             CGPoint start = CGPointMake(28, 39);
             CGPoint corner = CGPointMake(start.x + 6, start.y + 6);
             CGPoint end = CGPointMake(corner.x + 14, corner.y - 14);
@@ -111,7 +113,7 @@
             [path addLineToPoint:corner];
             [path addLineToPoint:end];
             [self animateCompletionText:@"Page copied to clipboard" withImage:[UIImage imageNamed:@"clipboard-icon"]];
-        }else{
+        } else {
             CGFloat size = 14;
             CGPoint start = CGPointMake(31, 31);
             CGPoint end = CGPointMake(start.x + size, start.y + size);
@@ -130,14 +132,14 @@
         checkMarkOrXLayer.strokeEnd = 1;
         checkMarkOrXLayer.backgroundColor = [UIColor clearColor].CGColor;
         checkMarkOrXLayer.fillColor = [UIColor clearColor].CGColor;
-        
+
         checkOrXView.alpha = 0;
         [checkOrXView.layer addSublayer:checkMarkOrXLayer];
         [button addSubview:checkOrXView];
         [UIView animateWithDuration:.3 animations:^{
             checkOrXView.alpha = 1;
-        } completion:^(BOOL finished){
-            if(succeeded){
+        } completion:^(BOOL finished) {
+            if (succeeded) {
                 [delegate didShare:self];
             }
             [[NSThread mainThread] performBlock:^{
@@ -149,18 +151,18 @@
     } afterDelay:.3];
 }
 
--(BOOL) isAtAllPossibleForMimeType:(NSString*)mimeType{
+- (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
     return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Notification
 
--(void) updateButtonGreyscale{
-    if(![self.delegate urlToShare]){
+- (void)updateButtonGreyscale {
+    if (![self.delegate urlToShare]) {
         button.greyscale = YES;
-    }else if([UIPrintInteractionController isPrintingAvailable]){
+    } else if ([UIPrintInteractionController isPrintingAvailable]) {
         button.greyscale = NO;
-    }else{
+    } else {
         button.greyscale = YES;
     }
     [button setNeedsDisplay];
@@ -168,7 +170,7 @@
 
 #pragma mark - Dealloc
 
--(void) dealloc{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

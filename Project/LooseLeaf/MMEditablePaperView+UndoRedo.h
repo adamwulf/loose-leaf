@@ -8,10 +8,11 @@
 
 #import "MMEditablePaperView.h"
 
+
 @interface MMEditablePaperView (UndoRedo)
 
--(void) undo;
+- (void)undo;
 
--(void) redo;
+- (void)redo;
 
 @end

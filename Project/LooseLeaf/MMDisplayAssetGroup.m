@@ -9,17 +9,18 @@
 #import "MMDisplayAssetGroup.h"
 #import "Constants.h"
 
+
 @implementation MMDisplayAssetGroup
 
--(void) loadPreviewPhotos{
+- (void)loadPreviewPhotos {
     @throw kAbstractMethodException;
 }
 
--(void) unloadPreviewPhotos{
+- (void)unloadPreviewPhotos {
     @throw kAbstractMethodException;
 }
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
+- (void)loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock {
     @throw kAbstractMethodException;
 }
 

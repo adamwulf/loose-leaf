@@ -8,17 +8,18 @@
 
 #import "MMRoundedButton.h"
 
+
 @implementation MMRoundedButton
 
--(id) initWithFrame:(CGRect)frame{
-    if(self = [super initWithFrame:frame]){
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
         // generate default colors
         UIButton* defButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [self setTitleColor:[defButton titleColorForState:UIControlStateNormal] forState:UIControlStateNormal];
         [self setTitleColor:[defButton titleColorForState:UIControlStateHighlighted] forState:UIControlStateHighlighted];
         [self setTitleColor:[defButton titleColorForState:UIControlStateDisabled] forState:UIControlStateDisabled];
         [self setTitleColor:[defButton titleColorForState:UIControlStateSelected] forState:UIControlStateSelected];
-        
+
         // setup border
         self.layer.cornerRadius = 10;
         self.layer.borderColor = [self titleColorForState:UIControlStateNormal].CGColor;
@@ -27,7 +28,7 @@
     return self;
 }
 
--(void) setTitle:(NSString *)title forState:(UIControlState)state{
+- (void)setTitle:(NSString*)title forState:(UIControlState)state {
     [super setTitle:title forState:state];
     [self sizeToFit];
     CGRect b = self.bounds;
@@ -36,11 +37,11 @@
     self.bounds = b;
 }
 
--(void) setHighlighted:(BOOL)highlighted{
+- (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-    if(highlighted){
+    if (highlighted) {
         [self setBackgroundColor:[self titleColorForState:UIControlStateNormal]];
-    }else{
+    } else {
         [self setBackgroundColor:[UIColor clearColor]];
     }
 }

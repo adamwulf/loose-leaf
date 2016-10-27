@@ -16,7 +16,7 @@
 // get thrown out of cache, and that
 // apprpriate pages are loaded into
 // cache when needed
-@interface MMPageCacheManager : NSObject{
+@interface MMPageCacheManager : NSObject {
     __weak NSObject<MMPageCacheManagerDelegate>* delegate;
     JotView* drawableView;
 }
@@ -28,29 +28,29 @@
 // NO otherwise
 @property (nonatomic, readonly) BOOL isEditablePageStable;
 
-+(MMPageCacheManager*) sharedInstance;
++ (MMPageCacheManager*)sharedInstance;
 
--(void) pageWasDeleted:(MMPaperView*)page;
+- (void)pageWasDeleted:(MMPaperView*)page;
 
--(void) mayChangeTopPageTo:(MMPaperView*)page;
--(void) willChangeTopPageTo:(MMPaperView*)page;
--(BOOL) didChangeToTopPage:(MMPaperView*)page;
--(void) willNotChangeTopPageTo:(MMPaperView*)page;
+- (void)mayChangeTopPageTo:(MMPaperView*)page;
+- (void)willChangeTopPageTo:(MMPaperView*)page;
+- (BOOL)didChangeToTopPage:(MMPaperView*)page;
+- (void)willNotChangeTopPageTo:(MMPaperView*)page;
 
--(void) didLoadStateForPage:(MMEditablePaperView*) page;
+- (void)didLoadStateForPage:(MMEditablePaperView*)page;
 
--(void) didUnloadStateForPage:(MMEditablePaperView*) page;
+- (void)didUnloadStateForPage:(MMEditablePaperView*)page;
 
--(void) didSavePage:(MMPaperView*)page;
+- (void)didSavePage:(MMPaperView*)page;
 
--(void) forgetAboutPage:(MMPaperView*)page;
+- (void)forgetAboutPage:(MMPaperView*)page;
 
--(void) updateVisiblePageImageCache;
+- (void)updateVisiblePageImageCache;
 
--(NSInteger) numberOfStateLoadedPages;
+- (NSInteger)numberOfStateLoadedPages;
 
--(NSInteger) numberOfPagesWithLoadedPreviewImage;
+- (NSInteger)numberOfPagesWithLoadedPreviewImage;
 
--(int) memoryOfStateLoadedPages;
+- (int)memoryOfStateLoadedPages;
 
 @end

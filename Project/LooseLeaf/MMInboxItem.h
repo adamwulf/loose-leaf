@@ -8,24 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMInboxItem : NSObject
 
 @property (readonly) NSURL* urlOnDisk;
 
--(id) initWithURL:(NSURL*)itemURL;
+- (id)initWithURL:(NSURL*)itemURL;
 
--(BOOL) deleteAssets;
+- (BOOL)deleteAssets;
 
--(NSUInteger) pageCount;
+- (NSUInteger)pageCount;
 
--(CGSize) sizeForPage:(NSUInteger)page;
+- (CGSize)sizeForPage:(NSUInteger)page;
 
--(CGFloat) rotationForPage:(NSInteger)pageNumber;
+- (CGFloat)rotationForPage:(NSInteger)pageNumber;
 
--(UIImage*) thumbnailForPage:(NSUInteger)page;
+- (UIImage*)thumbnailForPage:(NSUInteger)page;
 
--(UIImage*) imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim;
+- (UIImage*)imageForPage:(NSInteger)pageNumber forMaxDim:(CGFloat)maxDim;
 
--(NSString*) pathForPage:(NSUInteger)pageNumber forMaxDim:(CGFloat)maxDim;
+- (NSString*)pathForPage:(NSUInteger)pageNumber forMaxDim:(CGFloat)maxDim;
 
 @end

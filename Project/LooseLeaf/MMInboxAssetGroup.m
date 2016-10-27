@@ -8,13 +8,14 @@
 
 #import "MMInboxAssetGroup.h"
 
+
 @implementation MMInboxAssetGroup
 
 @synthesize inboxItem;
 
--(id) initWithInboxItem:(MMInboxItem*)_inboxItem{
-    if(self = [super init]){
-        if(!_inboxItem){
+- (id)initWithInboxItem:(MMInboxItem*)_inboxItem {
+    if (self = [super init]) {
+        if (!_inboxItem) {
             @throw [NSException exceptionWithName:@"InboxAssetGroupException" reason:@"Item cannot be nil" userInfo:nil];
         }
         inboxItem = _inboxItem;
@@ -22,19 +23,19 @@
     return self;
 }
 
--(NSURL*) assetURL{
+- (NSURL*)assetURL {
     return [inboxItem urlOnDisk];
 }
 
--(NSString*) name{
+- (NSString*)name {
     return [[inboxItem urlOnDisk] lastPathComponent];
 }
 
--(NSString*) persistentId{
+- (NSString*)persistentId {
     return [[inboxItem urlOnDisk] path];
 }
 
--(NSInteger) numberOfPhotos{
+- (NSInteger)numberOfPhotos {
     return [inboxItem pageCount];
 }
 

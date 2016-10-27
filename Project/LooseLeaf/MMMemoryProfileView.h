@@ -11,6 +11,7 @@
 #import "MMScrapPaperStackView.h"
 #import "MMMemoryManager.h"
 
+
 @interface MMMemoryProfileView : MMUntouchableView
 
 @property (weak) MMMemoryManager* memoryManager;

@@ -8,38 +8,39 @@
 
 #import "MMJotViewNilState.h"
 
+
 @implementation MMJotViewNilState
 
 static MMJotViewNilState* _instance = nil;
 
--(id) init{
-    if(_instance) return _instance;
-    if((self = [super init])){
+- (id)init {
+    if (_instance)
+        return _instance;
+    if ((self = [super init])) {
         // noop
     }
     return _instance;
 }
 
-+(MMJotViewNilState*) sharedInstance{
-    if(!_instance){
++ (MMJotViewNilState*)sharedInstance {
+    if (!_instance) {
         _instance = [[MMJotViewNilState alloc] init];
     }
     return _instance;
 }
 
 
-
-+(dispatch_queue_t) loadUnloadStateQueue{
-    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,(unsigned long)NULL);
++ (dispatch_queue_t)loadUnloadStateQueue {
+    return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, (unsigned long)NULL);
 }
 
--(NSObject<JotViewStateProxyDelegate>*) delegate{
+- (NSObject<JotViewStateProxyDelegate>*)delegate {
     return nil;
 }
--(JotViewState*) jotViewState{
+- (JotViewState*)jotViewState {
     return nil;
 }
--(NSMutableArray*) strokesBeingWrittenToBackingTexture{
+- (NSMutableArray*)strokesBeingWrittenToBackingTexture {
     return nil;
 }
 
@@ -47,128 +48,128 @@ static MMJotViewNilState* _instance = nil;
 //    return nil;
 //}
 
--(JotStroke*) currentStroke{
+- (JotStroke*)currentStroke {
     return nil;
 }
 
--(int) fullByteSize{
+- (int)fullByteSize {
     return 0;
 }
 
--(id) initWithDelegate:(NSObject<JotViewStateProxyDelegate>*)delegate{
+- (id)initWithDelegate:(NSObject<JotViewStateProxyDelegate>*)delegate {
     return [MMJotViewNilState sharedInstance];
 }
 
--(BOOL) isStateLoaded{
+- (BOOL)isStateLoaded {
     return YES;
 }
 
--(BOOL) isReadyToExport{
+- (BOOL)isReadyToExport {
     return NO;
 }
 
--(JotViewImmutableState*) immutableState{
+- (JotViewImmutableState*)immutableState {
     return nil;
 }
 
--(JotGLTexture*) backgroundTexture{
+- (JotGLTexture*)backgroundTexture {
     return nil;
 }
 
--(NSArray*) everyVisibleStroke{
+- (NSArray*)everyVisibleStroke {
     return @[];
 }
 
--(JotBufferManager*) bufferManager{
+- (JotBufferManager*)bufferManager {
     return [JotBufferManager sharedInstance];
 }
 
--(void) tick{
+- (void)tick {
     // noop
 }
 
--(NSUInteger) undoHash{
+- (NSUInteger)undoHash {
     return 0;
 }
 
--(void) loadJotStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context andBufferManager:(JotBufferManager*)bufferManager{
+- (void)loadJotStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context andBufferManager:(JotBufferManager*)bufferManager {
     // noop
 }
 
--(void) unload{
+- (void)unload {
     // noop
 }
 
--(BOOL) hasEditsToSave{
+- (BOOL)hasEditsToSave {
     return NO;
 }
 
--(void) wasSavedAtImmutableState:(JotViewImmutableState*)immutableState{
+- (void)wasSavedAtImmutableState:(JotViewImmutableState*)immutableState {
     // noop
 }
 
 #pragma mark - Undo Redo
 
--(BOOL) canUndo{
+- (BOOL)canUndo {
     return NO;
 }
 
--(BOOL) canRedo{
+- (BOOL)canRedo {
     return NO;
 }
 
--(JotStroke*) undo{
+- (JotStroke*)undo {
     return nil;
 }
 
--(JotStroke*) redo{
+- (JotStroke*)redo {
     return nil;
 }
 
 // same as undo, except the undone
 // stroke is not added to the redo stack
--(JotStroke*) undoAndForget{
+- (JotStroke*)undoAndForget {
     return nil;
 }
 
 // closes the current stroke and adds it to the
 // undo stack
--(void) finishCurrentStroke{
+- (void)finishCurrentStroke {
     // noop
 }
 
 
--(void) addUndoLevelAndFinishStrokeWithBrush:(JotBrushTexture*)brushTexture{
+- (void)addUndoLevelAndFinishStrokeWithBrush:(JotBrushTexture*)brushTexture {
     // noop
 }
 
--(void) forceAddEmptyStrokeWithBrush:(JotBrushTexture*)brushTexture{
+- (void)forceAddEmptyStrokeWithBrush:(JotBrushTexture*)brushTexture {
     // noop
 }
 
 // adds the input stroke to the undo stack
 // w/o clearing the undone strokes
--(void) forceAddStroke:(JotStroke*)stroke{
+- (void)forceAddStroke:(JotStroke*)stroke {
     // noop
 }
 
--(void) clearAllStrokes{
+- (void)clearAllStrokes {
     // noop
 }
 
 // returns the new stroke that is the continuation
 // of the currentStroke
--(void) addUndoLevelAndContinueStrokeWithBrush:(JotBrushTexture*)brushTexture{
+- (void)addUndoLevelAndContinueStrokeWithBrush:(JotBrushTexture*)brushTexture {
     // noop
 }
 
 #pragma mark - Debug
 
--(NSUInteger) currentStateUndoHash{
+- (NSUInteger)currentStateUndoHash {
     return 0;
 }
 
--(NSUInteger) lastSavedUndoHash{
+- (NSUInteger)lastSavedUndoHash {
     return 0;
 }
 

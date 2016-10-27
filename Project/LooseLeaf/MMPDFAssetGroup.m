@@ -10,55 +10,56 @@
 #import "NSString+UUID.h"
 #import "MMPDFPageAsset.h"
 
-@implementation MMPDFAssetGroup{
+
+@implementation MMPDFAssetGroup {
     NSArray* previewPhotos;
     NSMutableDictionary* cachedPages;
 }
 
--(id) initWithInboxItem:(MMPDFInboxItem *)_pdf{
-    if(self = [super initWithInboxItem:_pdf]){
+- (id)initWithInboxItem:(MMPDFInboxItem*)_pdf {
+    if (self = [super initWithInboxItem:_pdf]) {
         [self loadPreviewPhotos];
         cachedPages = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
--(NSArray*) previewPhotos{
+- (NSArray*)previewPhotos {
     return previewPhotos;
 }
 
--(BOOL) reversed{
+- (BOOL)reversed {
     return NO;
 }
 
--(short) numberOfPreviewPhotos{
+- (short)numberOfPreviewPhotos {
     return [previewPhotos count];
 }
 
--(MMPDFPageAsset*) pdfPageForIndex:(NSInteger)idx{
+- (MMPDFPageAsset*)pdfPageForIndex:(NSInteger)idx {
     MMPDFPageAsset* page = [cachedPages objectForKey:@(idx)];
-    if(!page){
+    if (!page) {
         page = [[MMPDFPageAsset alloc] initWithPDF:(MMPDFInboxItem*)self.inboxItem andPage:idx];
         [cachedPages setObject:page forKey:@(idx)];
     }
     return page;
 }
 
--(void) loadPreviewPhotos{
+- (void)loadPreviewPhotos {
     previewPhotos = @[];
-    for (int idx=0; idx<5 && idx < [self.inboxItem pageCount]; idx++) {
+    for (int idx = 0; idx < 5 && idx < [self.inboxItem pageCount]; idx++) {
         MMPDFPageAsset* page = [self pdfPageForIndex:idx];
         previewPhotos = [previewPhotos arrayByAddingObject:page];
     }
 }
 
--(void) unloadPreviewPhotos{
+- (void)unloadPreviewPhotos {
     previewPhotos = @[];
     [cachedPages removeAllObjects];
 }
 
--(void) loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock{
-    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) {
+- (void)loadPhotosAtIndexes:(NSIndexSet*)indexSet usingBlock:(MMDisplayAssetGroupEnumerationResultsBlock)enumerationBlock {
+    [indexSet enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL* stop) {
         MMPDFPageAsset* page = [self pdfPageForIndex:idx];
         enumerationBlock(page, idx, stop);
     }];

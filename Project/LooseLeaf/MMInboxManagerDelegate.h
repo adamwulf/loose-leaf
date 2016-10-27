@@ -12,10 +12,10 @@
 
 @protocol MMInboxManagerDelegate <NSObject>
 
--(void) didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
+- (void)didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
--(void) didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
+- (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
--(void) failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
+- (void)failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication;
 
 @end

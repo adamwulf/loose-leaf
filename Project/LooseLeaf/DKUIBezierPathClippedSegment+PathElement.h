@@ -10,9 +10,10 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 #import <ClippingBezier/ClippingBezier.h>
 
+
 @interface DKUIBezierPathClippedSegment (PathElement)
 
--(NSArray*) convertToPathElementsFromColor:(UIColor*)fromColor
+- (NSArray*)convertToPathElementsFromColor:(UIColor*)fromColor
                                    toColor:(UIColor*)toColor
                                  fromWidth:(CGFloat)fromWidth
                                    toWidth:(CGFloat)toWidth
@@ -21,6 +22,6 @@
                               andStepWidth:(CGFloat)stepWidth
                                andRotation:(CGFloat)rotation;
 
--(NSArray*) convertToPathElementsFromColor:(UIColor*)startColor toColor:(UIColor*)endColor fromWidth:(CGFloat)startWidth toWidth:(CGFloat)toWidth andStepWidth:(CGFloat)stepWidth andRotation:(CGFloat)rotation;
+- (NSArray*)convertToPathElementsFromColor:(UIColor*)startColor toColor:(UIColor*)endColor fromWidth:(CGFloat)startWidth toWidth:(CGFloat)toWidth andStepWidth:(CGFloat)stepWidth andRotation:(CGFloat)rotation;
 
 @end

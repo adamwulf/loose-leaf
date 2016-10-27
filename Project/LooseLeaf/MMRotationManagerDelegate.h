@@ -12,14 +12,14 @@
 
 @protocol MMRotationManagerDelegate <NSObject>
 
--(void) willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
+- (void)willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
 
--(void) didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
+- (void)didRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient;
 
--(void) didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient;
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient;
 
--(void) didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
+- (void)didUpdateAccelerometerWithReading:(MMVector*)currentRawReading;
 
--(void) didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
+- (void)didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "MMDarkSidebarButton.h"
 
+
 @interface MMPDFButton : MMDarkSidebarButton
 
 @end

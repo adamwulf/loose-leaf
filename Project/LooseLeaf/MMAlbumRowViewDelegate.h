@@ -12,6 +12,6 @@
 
 @protocol MMAlbumRowViewDelegate <NSObject>
 
--(void) albumRowWasTapped:(MMAlbumRowView*)row;
+- (void)albumRowWasTapped:(MMAlbumRowView*)row;
 
 @end

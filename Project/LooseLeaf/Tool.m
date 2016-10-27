@@ -9,61 +9,62 @@
 #import "Tool.h"
 #import "Constants.h"
 
+
 @implementation Tool
 
-- (CGFloat) widthForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(JotBrushTexture*) textureForStroke{
+- (JotBrushTexture*)textureForStroke {
     @throw kAbstractMethodException;
 }
 
--(CGFloat) stepWidthForStroke{
+- (CGFloat)stepWidthForStroke {
     @throw kAbstractMethodException;
 }
 
-- (UIColor*) colorForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
--(BOOL) supportsRotation{
+- (BOOL)supportsRotation {
     @throw kAbstractMethodException;
 }
 
-- (CGFloat) smoothnessForCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
-- (CGFloat) rotationForSegment:(AbstractBezierPathElement *)segment fromPreviousSegment:(AbstractBezierPathElement *)previousSegment{
+- (CGFloat)rotationForSegment:(AbstractBezierPathElement*)segment fromPreviousSegment:(AbstractBezierPathElement*)previousSegment {
     @throw kAbstractMethodException;
 }
 
-- (BOOL) willBeginStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
-- (void) willMoveStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
-- (void) willEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch shortStrokeEnding:(BOOL)shortStrokeEnding{
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding {
     @throw kAbstractMethodException;
 }
 
-- (void) didEndStrokeWithCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
-- (void) willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
-- (void) didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch *)coalescedTouch fromTouch:(UITouch *)touch{
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
     @throw kAbstractMethodException;
 }
 
-- (NSArray*) willAddElements:(NSArray *)elements toStroke:(JotStroke *)stroke fromPreviousElement:(AbstractBezierPathElement *)previousElement{
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement {
     @throw kAbstractMethodException;
 }
 

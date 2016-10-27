@@ -8,26 +8,27 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMPDF : NSObject
 
 @property (nonatomic, readonly) NSURL* urlOnDisk;
 @property (nonatomic, readonly) NSUInteger pageCount;
 
 // the ppi used for PDF contexts
-+(CGFloat) ppi;
++ (CGFloat)ppi;
 
--(instancetype) initWithURL:(NSURL*)url;
+- (instancetype)initWithURL:(NSURL*)url;
 
--(BOOL) attemptToDecrypt:(NSString*)password;
+- (BOOL)attemptToDecrypt:(NSString*)password;
 
--(BOOL) isEncrypted;
+- (BOOL)isEncrypted;
 
--(CGSize) sizeForPage:(NSUInteger)page;
+- (CGSize)sizeForPage:(NSUInteger)page;
 
--(CGFloat) rotationForPage:(NSUInteger)page;
+- (CGFloat)rotationForPage:(NSUInteger)page;
 
--(UIImage*) imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
+- (UIImage*)imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
 
--(void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size;
+- (void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size;
 
 @end

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMUpgradeInProgressViewController : UIViewController
 
--(void) setProgress:(CGFloat)progress;
+- (void)setProgress:(CGFloat)progress;
 
 @end

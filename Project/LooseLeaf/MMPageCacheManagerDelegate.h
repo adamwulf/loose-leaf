@@ -12,16 +12,16 @@
 
 @protocol MMPageCacheManagerDelegate <NSObject>
 
--(BOOL) isPageInVisibleStack:(MMPaperView*)page;
+- (BOOL)isPageInVisibleStack:(MMPaperView*)page;
 
--(MMPaperView*) getPageBelow:(MMPaperView*)page;
+- (MMPaperView*)getPageBelow:(MMPaperView*)page;
 
--(NSArray*) findPagesInVisibleRowsOfListView;
+- (NSArray*)findPagesInVisibleRowsOfListView;
 
--(NSArray*) pagesInCurrentBezelGesture;
+- (NSArray*)pagesInCurrentBezelGesture;
 
--(BOOL) isShowingPageView;
+- (BOOL)isShowingPageView;
 
--(NSInteger) countAllPages;
+- (NSInteger)countAllPages;
 
 @end

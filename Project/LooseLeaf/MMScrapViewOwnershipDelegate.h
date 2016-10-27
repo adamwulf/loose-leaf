@@ -12,6 +12,6 @@
 
 @protocol MMScrapViewOwnershipDelegate <NSObject>
 
--(MMScrapView*) scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
+- (MMScrapView*)scrapForUUIDIfAlreadyExistsInOtherContainer:(NSString*)scrapUUID;
 
 @end

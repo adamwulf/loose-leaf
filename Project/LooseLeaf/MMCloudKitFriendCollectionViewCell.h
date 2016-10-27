@@ -10,14 +10,15 @@
 #import <CloudKit/CloudKit.h>
 #import "MMAvatarButton.h"
 
+
 @interface MMCloudKitFriendCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, assign) BOOL shouldShowReplyIcon;
 
--(void) setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index;
+- (void)setUserInfo:(NSDictionary*)userInfo forIndex:(NSInteger)index;
 
--(void) bounce;
+- (void)bounce;
 
--(MMAvatarButton*) stealAvatarButton;
+- (MMAvatarButton*)stealAvatarButton;
 
 @end

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface UIImage (FXBlur)
 
--(UIImage*) imageWithBackgroundBlur;
+- (UIImage*)imageWithBackgroundBlur;
 
 @end

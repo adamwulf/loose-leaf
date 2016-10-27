@@ -10,10 +10,11 @@
 #import "MMScrapViewState+Trash.h"
 #import "MMPageUndoRedoManager+Trash.h"
 
+
 @implementation MMExportablePaperView (Trash)
 
--(void) forgetAllPendingEdits{
-    for(MMScrapView* scrap in self.scrapsOnPaper){
+- (void)forgetAllPendingEdits {
+    for (MMScrapView* scrap in self.scrapsOnPaper) {
         scrap.state.isForgetful = YES;
     }
     paperState.isForgetful = YES;

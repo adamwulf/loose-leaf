@@ -11,6 +11,6 @@
 
 @protocol MMTouchLifeCycleDelegate <NSObject>
 
--(void) touchesDidDie:(NSSet*)touches;
+- (void)touchesDidDie:(NSSet*)touches;
 
 @end

@@ -9,19 +9,20 @@
 #import "MMImmutableScrapCollectionState.h"
 #import "Constants.h"
 
+
 @implementation MMImmutableScrapCollectionState
 
--(NSArray*) scraps{
+- (NSArray*)scraps {
     @throw kAbstractMethodException;
 }
 
 // returns YES if any changes actually saved,
 // NO otherwise
--(BOOL) saveStateToDiskBlocking{
+- (BOOL)saveStateToDiskBlocking {
     @throw kAbstractMethodException;
 }
 
--(NSUInteger) undoHash{
+- (NSUInteger)undoHash {
     @throw kAbstractMethodException;
 }
 

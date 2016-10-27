@@ -14,30 +14,30 @@
 
 static const CGFloat frameBuffer = 20;
 
+
 @implementation MMShadowedView
 
 @synthesize contentView;
 
-+(CGRect) expandFrame:(CGRect)rect{
++ (CGRect)expandFrame:(CGRect)rect {
     return CGRectMake(rect.origin.x - frameBuffer, rect.origin.y - frameBuffer, rect.size.width + frameBuffer * 2, rect.size.height + frameBuffer * 2);
 }
-+(CGRect) contractFrame:(CGRect)rect{
++ (CGRect)contractFrame:(CGRect)rect {
     return CGRectMake(rect.origin.x + frameBuffer, rect.origin.y + frameBuffer, rect.size.width - frameBuffer * 2, rect.size.height - frameBuffer * 2);
 }
-+(CGRect) expandBounds:(CGRect)rect{
++ (CGRect)expandBounds:(CGRect)rect {
     return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width + frameBuffer * 2, rect.size.height + frameBuffer * 2);
 }
-+(CGRect) contractBounds:(CGRect)rect{
++ (CGRect)contractBounds:(CGRect)rect {
     return CGRectMake(rect.origin.x, rect.origin.y, rect.size.width - frameBuffer * 2, rect.size.height - frameBuffer * 2);
 }
 
-+(CGFloat) shadowWidth{
++ (CGFloat)shadowWidth {
     return frameBuffer;
 }
 
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     //
     // this'll call our setFrame, so it'll be adjusted in a super call
     self = [super initWithFrame:frame];
@@ -51,17 +51,17 @@ static const CGFloat frameBuffer = 20;
         contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.opaque = NO;
         self.clipsToBounds = YES;
-        
-        
+
+
         UIColor* clear = [UIColor clearColor];
         UIColor* white = [UIColor whiteColor];
         UIColor* shadowColor = [UIColor shadowColor];
-        
-        
+
+
         contentView.opaque = YES;
         contentView.backgroundColor = white;
         contentView.clipsToBounds = YES;
-        
+
         self.backgroundColor = clear;
         [self addSubview:contentView];
 
@@ -84,33 +84,41 @@ static const CGFloat frameBuffer = 20;
  * animate. it won't piggy back on the frame
  * animation
  */
--(void) setFrame:(CGRect)frame{
+- (void)setFrame:(CGRect)frame {
     CGRect expandedFrame = [MMShadowedView expandFrame:frame];
     [super setFrame:expandedFrame];
     self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
 }
 
--(CGRect) frame{
+- (CGRect)frame {
     CGRect fr = [super frame];
     return [MMShadowedView contractFrame:fr];
 }
 
--(CGRect) bounds{
+- (CGRect)bounds {
     CGRect bounds = [MMShadowedView contractBounds:[super bounds]];
     return bounds;
 }
--(void) setBounds:(CGRect)bounds{
+- (void)setBounds:(CGRect)bounds {
     [super setBounds:[MMShadowedView expandBounds:bounds]];
+    self.layer.shadowPath = [UIBezierPath bezierPathWithRect:contentView.frame].CGPath;
 }
 
-- (CGPoint)convertPoint:(CGPoint)point toView:(UIView *)view{
+- (CGPoint)convertPoint:(CGPoint)point toView:(UIView*)view {
     CGPoint converted = [super convertPoint:point toView:view];
     return CGPointMake(converted.x + frameBuffer, converted.y + frameBuffer);
 }
-- (CGPoint)convertPoint:(CGPoint)point fromView:(UIView *)view{
+- (CGPoint)convertPoint:(CGPoint)point fromView:(UIView*)view {
     CGPoint converted = [super convertPoint:point fromView:view];
     return CGPointMake(converted.x - frameBuffer, converted.y - frameBuffer);
 }
 
+- (UIView*)resizableSnapshotViewFromRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates withCapInsets:(UIEdgeInsets)capInsets {
+    return [super resizableSnapshotViewFromRect:[MMShadowedView expandBounds:rect] afterScreenUpdates:afterUpdates withCapInsets:capInsets];
+}
+
+- (BOOL)drawViewHierarchyInRect:(CGRect)rect afterScreenUpdates:(BOOL)afterUpdates {
+    return [super drawViewHierarchyInRect:[MMShadowedView expandBounds:rect] afterScreenUpdates:afterUpdates];
+}
 
 @end

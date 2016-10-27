@@ -12,6 +12,6 @@
 
 @protocol MMDecompressImagePromiseDelegate <NSObject>
 
--(void) didDecompressImage:(MMDecompressImagePromise*)img;
+- (void)didDecompressImage:(MMDecompressImagePromise*)img;
 
 @end

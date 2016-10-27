@@ -12,6 +12,6 @@
 
 @protocol MMRoundedSquareViewDelegate <NSObject>
 
--(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView;
+- (void)didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView;
 
 @end

@@ -9,14 +9,15 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface MMShadowManager : NSObject{
+
+@interface MMShadowManager : NSObject {
     NSMutableDictionary* shadowPathCache;
     UIBezierPath* unitShadowPath;
 }
 
-+(MMShadowManager*) sharedInstance;
++ (MMShadowManager*)sharedInstance;
 
--(void) beginGeneratingShadows;
--(CGPathRef) getShadowForSize:(CGSize)size;
+- (void)beginGeneratingShadows;
+- (CGPathRef)getShadowForSize:(CGSize)size;
 
 @end

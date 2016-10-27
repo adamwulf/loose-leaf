@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface MMCachedPreviewManager : NSObject
 
-+(MMCachedPreviewManager*) sharedInstance;
++ (MMCachedPreviewManager*)sharedInstance;
 
--(UIImageView*) requestCachedImageViewForView:(UIView*)aView;
+- (UIImageView*)requestCachedImageViewForView:(UIView*)aView;
 
--(void) giveBackCachedImageView:(UIImageView*)imageView;
+- (void)giveBackCachedImageView:(UIImageView*)imageView;
 
 @end

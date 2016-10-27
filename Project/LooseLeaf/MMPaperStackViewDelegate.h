@@ -9,23 +9,30 @@
 #import <Foundation/Foundation.h>
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
+#import "MMPagesInBezelContainerView.h"
+
+@class MMPaperStackView;
 
 @protocol MMPaperStackViewDelegate <NSObject>
 
--(void) animatingToListView;
+- (void)animatingToListView;
 
--(void) animatingToPageView;
+- (void)animatingToPageView;
 
--(MMImageSidebarContainerView*) importImageSidebar;
+- (MMScrapsInBezelContainerView*)bezelScrapContainer;
 
--(MMShareSidebarContainerView*) sharePageSidebar;
+- (MMPagesInBezelContainerView*)bezelPagesContainer;
 
--(void) didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
+- (MMImageSidebarContainerView*)importImageSidebar;
 
--(void) didFailToExportPage:(MMPaperView*)page;
+- (MMShareSidebarContainerView*)sharePageSidebar;
 
--(void) isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+- (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
--(BOOL) isShowingTutorial;
+- (void)didFailToExportPage:(MMPaperView*)page;
+
+- (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk;
+
+- (BOOL)isShowingTutorial;
 
 @end

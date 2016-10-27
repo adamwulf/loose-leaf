@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MMImmovableTapGestureRecognizer.h"
 
-@interface MMButtonAwareTapGestureRecognizer : MMImmovableTapGestureRecognizer<UIGestureRecognizerDelegate>
+
+@interface MMButtonAwareTapGestureRecognizer : MMImmovableTapGestureRecognizer <UIGestureRecognizerDelegate>
 
 @end

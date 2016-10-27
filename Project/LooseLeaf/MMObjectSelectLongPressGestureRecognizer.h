@@ -43,7 +43,7 @@
  *
  *
  */
-@interface MMObjectSelectLongPressGestureRecognizer : UILongPressGestureRecognizer<UIGestureRecognizerDelegate>
+@interface MMObjectSelectLongPressGestureRecognizer : UILongPressGestureRecognizer <UIGestureRecognizerDelegate>
 
 @property (readonly) NSSet* activeTouches;
 

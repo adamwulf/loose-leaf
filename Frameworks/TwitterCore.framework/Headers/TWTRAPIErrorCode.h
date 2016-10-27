@@ -32,7 +32,12 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      *  Not authorized to use this endpoint.
      */
     TWTRAPIErrorCodeNotAuthorizedForEndpoint = 37,
-
+    
+    /**
+     * Generic API error code for invalid parameter
+     */
+    TWTRAPIErrorCodeInvalidParameter = 44,
+    
     /**
      *  Corresponds with an HTTP 403 — the access token being used belongs to a suspended user and they can't complete the action you're trying to take
      */
@@ -113,6 +118,12 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      */
     TWTRAPIErrorCodeUserMustVerifyLogin = 231,
 
+    
+    /**
+     * Returned from server in digits sign-in flow if user provides wrong confirmation code
+     */
+    TWTRAPIErrorCodeChallengeCodeInvalid = 236,
+    
     /**
      *  "Bad guest token." The token has probably expired. Try calling `-[Twitter logInGuestWithCompletion:]` again later.
      */
@@ -137,6 +148,11 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      *  Corresponds with HTTP 403. The authenticated user account is not muting the account a call is attempting to unmute.
      */
     TWTRAPIErrorCodeCannotMuteSpecifiedUser = 272,
+    
+    /**
+     *  Phone's carrier not suppported and we can not deliver the sms/make the voice call
+     */
+    TWTRAPIErrorCodeDeviceCarrierNotSupported = 286,
 
     /**
      *  You have already retweeted this tweet.

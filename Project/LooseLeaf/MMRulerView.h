@@ -10,24 +10,25 @@
 #import <JotUI/JotUI.h>
 #import "MMRulerAdjustment.h"
 
+
 @interface MMRulerView : UIView
 
 @property (nonatomic) JotView* jotView;
 
--(void) updateLineAt:(CGPoint)p1 to:(CGPoint)p2 startingDistance:(CGFloat)distance;
+- (void)updateLineAt:(CGPoint)p1 to:(CGPoint)p2 startingDistance:(CGFloat)distance;
 
--(void) liftRuler;
+- (void)liftRuler;
 
--(MMRulerAdjustment*) adjustElementsToStroke:(NSArray *)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement;
+- (MMRulerAdjustment*)adjustElementsToStroke:(NSArray*)elements fromPreviousElement:(AbstractBezierPathElement*)previousElement;
 
--(void) willBeginStrokeAt:(CGPoint)point;
+- (void)willBeginStrokeAt:(CGPoint)point;
 
--(void) willMoveStrokeAt:(CGPoint)point;
+- (void)willMoveStrokeAt:(CGPoint)point;
 
--(CGPoint) adjustPoint:(CGPoint)inputPoint andDidAdjust:(BOOL*)didAdjust;
+- (CGPoint)adjustPoint:(CGPoint)inputPoint andDidAdjust:(BOOL*)didAdjust;
 
--(UIBezierPath*) findPathSegmentsWithNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd;
+- (UIBezierPath*)findPathSegmentsWithNearestStart:(CGPoint)nearestStart andNearestEnd:(CGPoint)nearestEnd;
 
--(BOOL) rulerIsVisible;
+- (BOOL)rulerIsVisible;
 
 @end

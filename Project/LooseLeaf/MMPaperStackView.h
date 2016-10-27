@@ -25,16 +25,16 @@
 #import "MMGestureTouchOwnershipDelegate.h"
 #import "MMPaperStackViewDelegate.h"
 
-@interface MMPaperStackView : UIScrollView<MMPaperViewDelegate,MMGestureTouchOwnershipDelegate>{
 
-@protected
+@interface MMPaperStackView : UIScrollView <MMPaperViewDelegate, MMGestureTouchOwnershipDelegate> {
+   @protected
     MMBezelInGestureRecognizer* fromRightBezelGesture;
     MMBezelInGestureRecognizer* fromLeftBezelGesture;
-    
+
     UIView* visibleStackHolder;
     UIView* hiddenStackHolder;
     UIView* bezelStackHolder;
-    
+
     NSMutableSet* setOfPagesBeingPanned;
 }
 
@@ -45,41 +45,41 @@
 @property (nonatomic, readonly) UIView* bezelStackHolder;
 @property (nonatomic, weak) NSObject<MMPaperStackViewDelegate>* stackDelegate;
 
--(id) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (id)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 
-- (id)initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid;
+- (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
 
--(void) addPaperToBottomOfStack:(MMPaperView*)page;
--(void) addPaperToBottomOfHiddenStack:(MMPaperView*)page;
--(void) addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage;
+- (void)addPaperToBottomOfStack:(MMPaperView*)page;
+- (void)addPaperToBottomOfHiddenStack:(MMPaperView*)page;
+- (void)addPage:(MMPaperView*)page belowPage:(MMPaperView*)otherPage;
 
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void(^)(BOOL finished))completionBlock;
--(void) emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void(^)(BOOL finished))completionBlock;
--(void) popTopPageOfHiddenStack;
--(void) ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView;
--(void) realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated;
--(void) animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void(^)(BOOL finished))completionBlock;
--(BOOL) shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame;
+- (void)emptyBezelStackToHiddenStackAnimated:(BOOL)animated onComplete:(void (^)(BOOL finished))completionBlock;
+- (void)emptyBezelStackToHiddenStackAnimated:(BOOL)animated andPreservePageFrame:(BOOL)preserveFrame onComplete:(void (^)(BOOL finished))completionBlock;
+- (void)popTopPageOfHiddenStack;
+- (void)ensureAtLeast:(NSInteger)numberOfPagesToEnsure pagesInStack:(UIView*)stackView;
+- (void)realignPagesInVisibleStackExcept:(MMPaperView*)page animated:(BOOL)animated;
+- (void)animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void (^)(BOOL finished))completionBlock;
+- (BOOL)shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame;
 
--(void) cancelAllGestures;
--(void) disableAllGesturesForPageView;
--(void) enableAllGesturesForPageView;
+- (void)cancelAllGestures;
+- (void)disableAllGesturesForPageView;
+- (void)enableAllGesturesForPageView;
 
--(void) addPageButtonTapped:(UIButton*)_button;
+- (void)addPageButtonTapped:(UIButton*)_button;
 
 // private
 
--(void) mayChangeTopPageTo:(MMPaperView*)page;
--(void) willChangeTopPageTo:(MMPaperView*)page;
--(void) didChangeTopPage;
--(void) didChangeTopPageTo:(MMPaperView*)page;
--(void) willNotChangeTopPageTo:(MMPaperView*)page;
--(void) isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
--(void) isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
--(void) saveStacksToDisk;
+- (void)mayChangeTopPageTo:(MMPaperView*)page;
+- (void)willChangeTopPageTo:(MMPaperView*)page;
+- (void)didChangeTopPage;
+- (void)didChangeTopPageTo:(MMPaperView*)page;
+- (void)willNotChangeTopPageTo:(MMPaperView*)page;
+- (void)isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
+- (void)isBezelingInLeftWithGesture:(MMBezelInGestureRecognizer*)bezelGesture;
+- (void)saveStacksToDisk;
 
--(NSString*) activeGestureSummary;
+- (NSString*)activeGestureSummary;
 
--(BOOL) isActivelyGesturing;
+- (BOOL)isActivelyGesturing;
 
 @end

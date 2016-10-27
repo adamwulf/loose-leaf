@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "MMLoopView.h"
 
+
 @interface MMVideoLoopView : MMLoopView
 
--(id) initForVideo:(NSURL*)videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)tutorialId;
+- (id)initForVideo:(NSURL*)videoURL withTitle:(NSString*)_title forTutorialId:(NSString*)tutorialId;
 
 @end

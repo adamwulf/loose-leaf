@@ -8,16 +8,17 @@
 
 #import "MMUnknownObject.h"
 
+
 @implementation MMUnknownObject
 
--(id) initWithCoder:(NSCoder *)aDecoder{
-    if(self = [super init]){
+- (id)initWithCoder:(NSCoder*)aDecoder {
+    if (self = [super init]) {
         // noop
     }
     return self;
 }
 
--(void) encodeWithCoder:(NSCoder *)aCoder{
+- (void)encodeWithCoder:(NSCoder*)aCoder {
     // noop
 }
 

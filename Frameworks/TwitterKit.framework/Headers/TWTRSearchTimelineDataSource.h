@@ -71,6 +71,13 @@ Data source representing a Search Timeline. Provides TWTRTweet objects to a TWTR
 @property (nonatomic) BOOL topTweetsOnly;
 
 /**
+ *  Filter out sensitive (containing nudity or violence) tweets. 
+ *
+ *  Defaults to YES.
+ */
+@property (nonatomic) BOOL filterSensitiveTweets;
+
+/**
  *  Convenience initializer. Uses default values for `languageCode` and `maxTweetsPerRequest`.
  *
  *  @param  searchQuery (required) The query string that you would type into https://twitter.com/search

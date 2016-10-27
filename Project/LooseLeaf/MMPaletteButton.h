@@ -10,9 +10,10 @@
 
 @class MMPencilAndPaletteView;
 
+
 @interface MMPaletteButton : MMSidebarButton
 
-@property (nonatomic,weak) MMPencilAndPaletteView* tool;
-@property (nonatomic,strong) UIColor* selectedColor;
+@property (nonatomic, weak) MMPencilAndPaletteView* tool;
+@property (nonatomic, strong) UIColor* selectedColor;
 
 @end

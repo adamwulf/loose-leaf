@@ -10,21 +10,22 @@
 #import "MMCloudKitManager.h"
 #import "Constants.h"
 
+
 @implementation MMCloudKitOfflineState
 
--(void) runState{
+- (void)runState {
     // noop
 }
 
 
 #pragma mark - Notifications
 
--(void) cloudKitInfoDidChange{
+- (void)cloudKitInfoDidChange {
     DebugLog(@"%@ cloudKitInfoDidChange", NSStringFromClass([self class]));
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 
--(void) reachabilityDidChange{
+- (void)reachabilityDidChange {
     [[MMCloudKitManager sharedManager] changeToState:[[MMCloudKitBaseState alloc] init]];
 }
 

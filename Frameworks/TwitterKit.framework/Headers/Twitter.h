@@ -5,7 +5,7 @@
 //
 
 #import <TwitterCore/TWTRSession.h>
-#import <TwitterKit/TWTRAPIClient.h>
+#import "TWTRAPIClient.h"
 #import <UIKit/UIKit.h>
 
 @class TWTRSessionStore;

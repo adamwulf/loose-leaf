@@ -8,14 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMDebugDrawView : UIView
 
-+(MMDebugDrawView*) sharedInstance;
++ (MMDebugDrawView*)sharedInstance;
 
--(void) clear;
+- (void)clear;
 
--(void) addCurve:(UIBezierPath*)path;
+- (void)addCurve:(UIBezierPath*)path;
 
--(void) drawPoint:(CGPoint)p;
+- (void)drawPoint:(CGPoint)p;
 
 @end

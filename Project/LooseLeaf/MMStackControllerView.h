@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "MMStackControllerViewDelegate.h"
 
+
 @interface MMStackControllerView : UIScrollView
 
 @property (nonatomic, weak) NSObject<MMStackControllerViewDelegate>* stackDelegate;
 
--(void) reloadStackButtons;
+- (void)reloadStackButtons;
 
 @end

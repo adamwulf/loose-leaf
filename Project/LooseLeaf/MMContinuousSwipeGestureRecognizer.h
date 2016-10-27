@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MMContinuousSwipeGestureRecognizer : UIPanGestureRecognizer
 
 @property (nonatomic) CGFloat angleBuffer;
 
--(CGPoint) distanceSinceBegin;
+- (CGPoint)distanceSinceBegin;
 
 
 @end

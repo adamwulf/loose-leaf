@@ -13,27 +13,25 @@
 #import "MMImmovableTapGestureRecognizer.h"
 #import "MMObjectSelectLongPressGestureRecognizer.h"
 #import "MMShadowedView.h"
+#import "MMUUIDView.h"
 
-@interface MMPaperView : MMShadowedView{
-    
-    NSString* uuid;
-    
+
+@interface MMPaperView : MMShadowedView <MMUUIDView> {
     NSObject<MMPaperViewDelegate>* __weak delegate;
-    
+
     BOOL isBeingPannedAndZoomed;
-    
+
     UILabel* textLabel;
-    
+
     MMObjectSelectLongPressGestureRecognizer* longPress;
-//    MMImmovableTapGestureRecognizer* tap;
+    //    MMImmovableTapGestureRecognizer* tap;
     MMPanAndPinchGestureRecognizer* panGesture;
-    
+
     BOOL isBrandNewPage;
-    
+
     UIBezierPath* unitShadowPath;
 }
 
-@property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, readonly) UIBezierPath* unitShadowPath;
 @property (nonatomic, weak) NSObject<MMPaperViewDelegate>* delegate;
 @property (nonatomic, assign) CGFloat scale;
@@ -54,15 +52,15 @@
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
 
--(BOOL) willExitToBezel:(MMBezelDirection)bezelDirection;
--(void) cancelAllGestures;
--(void) disableAllGestures;
--(void) enableAllGestures;
+- (BOOL)willExitToBezel:(MMBezelDirection)bezelDirection;
+- (void)cancelAllGestures;
+- (void)disableAllGestures;
+- (void)enableAllGestures;
 
--(void) panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture;
+- (void)panAndScale:(MMPanAndPinchGestureRecognizer*)_panGesture;
 
--(NSDictionary*) dictionaryDescription;
+- (NSDictionary*)dictionaryDescription;
 
--(BOOL) areGesturesEnabled;
+- (BOOL)areGesturesEnabled;
 
 @end

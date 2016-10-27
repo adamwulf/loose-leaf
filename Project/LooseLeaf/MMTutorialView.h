@@ -10,12 +10,13 @@
 #import "MMTutorialViewDelegate.h"
 #import "MMRoundedSquareView.h"
 
-@interface MMTutorialView : MMRoundedSquareView<UIScrollViewDelegate>
+
+@interface MMTutorialView : MMRoundedSquareView <UIScrollViewDelegate>
 
 @property (nonatomic, weak) NSObject<MMTutorialViewDelegate>* delegate;
 
--(id) initWithFrame:(CGRect)frame andTutorials:(NSArray*)tutorialList;
+- (id)initWithFrame:(CGRect)frame andTutorials:(NSArray*)tutorialList;
 
--(void) unloadTutorials;
+- (void)unloadTutorials;
 
 @end

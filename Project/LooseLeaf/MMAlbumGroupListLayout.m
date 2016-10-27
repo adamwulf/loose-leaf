@@ -8,9 +8,10 @@
 
 #import "MMAlbumGroupListLayout.h"
 
+
 @implementation MMAlbumGroupListLayout
 
--(CGFloat) albumRowHeight{
+- (CGFloat)albumRowHeight {
     return self.collectionView.bounds.size.width * 2 / 5;
 }
 

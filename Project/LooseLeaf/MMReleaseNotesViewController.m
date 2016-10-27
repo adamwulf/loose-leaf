@@ -9,17 +9,19 @@
 #import "MMReleaseNotesViewController.h"
 #import "MMReleaseNotesView.h"
 
-@interface MMReleaseNotesViewController ()<MMRoundedSquareViewDelegate>
+
+@interface MMReleaseNotesViewController () <MMRoundedSquareViewDelegate>
 
 @end
 
-@implementation MMReleaseNotesViewController{
+
+@implementation MMReleaseNotesViewController {
     NSString* releaseNotes;
-    void(^completionBlock)();
+    void (^completionBlock)();
 }
 
--(instancetype) initWithReleaseNotes:(NSString*)_releaseNotes andCompletionBlock:(void(^)())_completionBlock{
-    if(self = [super init]){
+- (instancetype)initWithReleaseNotes:(NSString*)_releaseNotes andCompletionBlock:(void (^)())_completionBlock {
+    if (self = [super init]) {
         releaseNotes = _releaseNotes;
         completionBlock = _completionBlock;
         self.modalPresentationStyle = UIModalPresentationCustom;
@@ -29,11 +31,11 @@
 }
 
 
--(void) loadView{
+- (void)loadView {
     MMReleaseNotesView* releaseNotesView = [[MMReleaseNotesView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds] andReleaseNotes:releaseNotes];
     releaseNotesView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     releaseNotesView.delegate = self;
-    
+
     self.view = releaseNotesView;
 }
 
@@ -49,8 +51,8 @@
 
 #pragma mark - MMRoundedSquareViewDelegate
 
--(void) didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView{
-    if(completionBlock){
+- (void)didTapToCloseRoundedSquareView:(MMRoundedSquareView*)squareView {
+    if (completionBlock) {
         completionBlock();
     }
 }
