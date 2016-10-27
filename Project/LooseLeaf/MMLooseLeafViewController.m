@@ -712,18 +712,17 @@
 #pragma mark - Release Notes
 
 - (void)showReleaseNotesIfNeeded {
+    NSString* version = [UIApplication bundleShortVersionString];
+
     if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
+        [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
         return;
     }
 
-    NSString* version = [UIApplication bundleShortVersionString];
-
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{kLastOpenedVersion: version}];
-
-    //#ifdef DEBUG
-    //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
-    //#endif
+#ifdef DEBUG
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+#endif
 
     if (version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]) {
         NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:[NSString stringWithFormat:@"ReleaseNotes-%@", version] withExtension:@"md"];
@@ -733,10 +732,6 @@
             NSString* htmlReleaseNotes = [MMMarkdown HTMLStringWithMarkdown:releaseNotes error:nil];
 
             if (htmlReleaseNotes) {
-                //#ifndef DEBUG
-                [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
-                //#endif
-
                 backdrop = [[UIView alloc] initWithFrame:self.view.bounds];
                 backdrop.backgroundColor = [UIColor colorWithWhite:.5 alpha:1];
                 backdrop.alpha = 0;
@@ -761,6 +756,8 @@
             }
         }
     }
+
+    [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
 }
 
 #pragma mark - Tutorial Notifications
