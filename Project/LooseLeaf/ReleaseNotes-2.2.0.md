@@ -5,7 +5,7 @@
 
 2. Moves pages into the sidebar for easy reordering
 
-[reorder-pages.mp4]
+[page-sidebar.mp4]
 
 3. Added a feedback button to the bottom of list view
 

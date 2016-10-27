@@ -539,7 +539,7 @@
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
 		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
-		C5C45A1E1DC154B200C50EA7 /* reorder-pages.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C45A1D1DC154AD00C50EA7 /* reorder-pages.mp4 */; };
+		C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C45A1D1DC154AD00C50EA7 /* page-sidebar.mp4 */; };
 		C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29781D7C013A00D868EC /* MMMarkdown.m */; };
 		C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297C1D7C013A00D868EC /* MMDocument.m */; };
 		C5DA29941D7C013A00D868EC /* MMElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297E1D7C013A00D868EC /* MMElement.m */; };
@@ -1585,7 +1585,7 @@
 		C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReleaseNotesView.m; sourceTree = "<group>"; };
 		C5C45A1A1DC14CFA00C50EA7 /* MMLooseLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLooseLeafView.h; sourceTree = "<group>"; };
 		C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLooseLeafView.m; sourceTree = "<group>"; };
-		C5C45A1D1DC154AD00C50EA7 /* reorder-pages.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "reorder-pages.mp4"; sourceTree = "<group>"; };
+		C5C45A1D1DC154AD00C50EA7 /* page-sidebar.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-sidebar.mp4"; sourceTree = "<group>"; };
 		C5DA29771D7C013A00D868EC /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMMarkdown.h; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.h; sourceTree = "<group>"; };
 		C5DA29781D7C013A00D868EC /* MMMarkdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMMarkdown.m; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.m; sourceTree = "<group>"; };
 		C5DA29791D7C013A00D868EC /* MMMarkdown-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MMMarkdown-Prefix.pch"; path = "../../Submodules/MMMarkdown/Source/MMMarkdown-Prefix.pch"; sourceTree = "<group>"; };
@@ -2522,7 +2522,7 @@
 		665F7F601AE096C900635D56 /* list-view */ = {
 			isa = PBXGroup;
 			children = (
-				C5C45A1D1DC154AD00C50EA7 /* reorder-pages.mp4 */,
+				C5C45A1D1DC154AD00C50EA7 /* page-sidebar.mp4 */,
 				C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */,
 				665F7F631AE096D500635D56 /* list-view-reorder-pages.mov */,
 				665F7F611AE096D000635D56 /* list-view-delete-page.mov */,
@@ -4198,7 +4198,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
-				C5C45A1E1DC154B200C50EA7 /* reorder-pages.mp4 in Resources */,
+				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
 				C5F1B28F1D9B01BB00E0E9A8 /* MPCloseButton@3x.png in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
 				C55AC19B1D7C0AB100259558 /* logo.png in Resources */,
