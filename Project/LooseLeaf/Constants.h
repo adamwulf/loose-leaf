@@ -235,6 +235,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 // MixPanel Error Events
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
+#define kMPEventCrashAverted @"Crash Averted"
 #define kMPEventGestureBug @"Gesture Bug"
 
 // MixPanel Events Properties
