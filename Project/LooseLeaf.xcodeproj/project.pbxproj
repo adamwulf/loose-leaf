@@ -520,6 +520,8 @@
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C599D5701DB6AE6F009035F3 /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */; };
 		C5A8E1B21DC3252900CD608F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B11DC3252900CD608F /* CloudKit.framework */; };
+		C5A8E1B51DC3441100CD608F /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B41DC3441000CD608F /* Accounts.framework */; };
+		C5A8E1B71DC3441800CD608F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B61DC3441800CD608F /* Social.framework */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
@@ -1553,6 +1555,8 @@
 		C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
 		C5A8E1B11DC3252900CD608F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		C5A8E1B41DC3441000CD608F /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		C5A8E1B61DC3441800CD608F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
@@ -1805,6 +1809,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5A8E1B71DC3441800CD608F /* Social.framework in Frameworks */,
+				C5A8E1B51DC3441100CD608F /* Accounts.framework in Frameworks */,
 				C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */,
 				C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */,
 				C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */,
@@ -3202,6 +3208,8 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5A8E1B61DC3441800CD608F /* Social.framework */,
+				C5A8E1B41DC3441000CD608F /* Accounts.framework */,
 				C5A8E1B11DC3252900CD608F /* CloudKit.framework */,
 				C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */,
 				C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */,
