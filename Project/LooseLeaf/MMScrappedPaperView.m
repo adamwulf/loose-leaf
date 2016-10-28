@@ -1129,13 +1129,12 @@
         dispatch_semaphore_signal(sema1);
     }];
 
-    __block MMImmutableScrapsOnPaperState* immutableScrapState;
+    MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
     if ([scrapsOnPaperState isStateLoaded]) {
         // need to keep reference to immutableScrapState so that
         // we can update the thumbnail after the save
         dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
-                immutableScrapState = [scrapsOnPaperState immutableStateForPath:self.scrapIDsPath];
                 scrapsHadBeenChanged = [immutableScrapState saveStateToDiskBlocking];
                 lastSavedScrapStateHash = immutableScrapState.undoHash;
                 //  signaled scrap collection saved
@@ -1242,9 +1241,10 @@
     CheckMainThread;
     [super unloadState];
     __block MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
+    MMImmutableScrapsOnPaperState* immutableScrapState = [strongScrapState immutableStateForPath:self.scrapIDsPath];
     dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
         @autoreleasepool {
-            [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
+            [immutableScrapState saveStateToDiskBlocking];
             // unloading the scrap state will also remove them
             // from their superview (us)
             [strongScrapState unloadPaperState];
@@ -1264,7 +1264,10 @@
     [scrapsOnPaperState performBlockForUnloadedScrapStateSynchronously:block
                                                        onBlockComplete:^{
                                                            if (shouldSavePaperState) {
-                                                               MMImmutableScrapsOnPaperState* immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                               __block MMImmutableScrapsOnPaperState* immutableScrapState;
+                                                               dispatch_sync(dispatch_get_main_queue(), ^{
+                                                                   immutableScrapState = [self.scrapsOnPaperState immutableStateForPath:scrapIDsPath];
+                                                               });
                                                                [immutableScrapState saveStateToDiskBlocking];
                                                                [NSThread performBlockOnMainThread:^{
                                                                    [self updateFullPageThumbnail:immutableScrapState];
@@ -1380,20 +1383,21 @@
         }
         [NSThread performBlockOnMainThread:^{
             [self didDecompressImage:nil];
+            if ([scrapsOnPaperState isStateLoaded]) {
+                MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
+                MMImmutableScrapsOnPaperState* immutableScrapState = [strongScrapState immutableStateForPath:self.scrapIDsPath];
+                dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
+                    @autoreleasepool {
+                        // save if needed
+                        // currently this will always save to disk. in the future #338
+                        // we should only save if this has changed.
+                        [immutableScrapState saveStateToDiskBlocking];
+                        // free all scraps from memory too
+                        [strongScrapState unloadPaperState];
+                    }
+                });
+            }
         }];
-        if ([scrapsOnPaperState isStateLoaded]) {
-            MMScrapsOnPaperState* strongScrapState = scrapsOnPaperState;
-            dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
-                @autoreleasepool {
-                    // save if needed
-                    // currently this will always save to disk. in the future #338
-                    // we should only save if this has changed.
-                    [[strongScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
-                    // free all scraps from memory too
-                    [strongScrapState unloadPaperState];
-                }
-            });
-        }
     }
 }
 
