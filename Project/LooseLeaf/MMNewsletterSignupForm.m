@@ -29,6 +29,10 @@
     UILabel* validateInputRed;
 
     UILabel* thanksPanel;
+
+    UILabel* stayLbl;
+    UILabel* inTheLbl;
+    MMLoopIcon* loopImage;
 }
 
 @synthesize delegate;
@@ -40,21 +44,21 @@
 - (id)initForm {
     if (self = [super initWithTitle:nil forTutorialId:nil]) {
         CGFloat scale = .3;
-        MMLoopIcon* loop = [[MMLoopIcon alloc] initWithFrame:CGRectMake(0, 0, 500 * scale, 360 * scale)];
-        loop.center = CGPointMake(self.bounds.size.width / 2 + 50, 105);
-        [self addSubview:loop];
+        loopImage = [[MMLoopIcon alloc] initWithFrame:CGRectMake(0, 0, 500 * scale, 360 * scale)];
+        loopImage.center = CGPointMake(self.bounds.size.width / 2 + 50, 105);
+        [self addSubview:loopImage];
 
-        UILabel* stay = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-        stay.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
-        stay.text = @"Stay";
-        stay.font = [UIFont fontWithName:@"Lato-Bold" size:36];
-        [self addSubview:stay];
+        stayLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
+        stayLbl.text = @"Stay";
+        stayLbl.font = [UIFont fontWithName:@"Lato-Bold" size:36];
+        [self addSubview:stayLbl];
 
-        UILabel* inLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-        inLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
-        inLbl.text = @"in the";
-        inLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:20];
-        [self addSubview:inLbl];
+        inTheLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
+        inTheLbl.text = @"in the";
+        inTheLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:20];
+        [self addSubview:inTheLbl];
 
         pitchLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
         pitchLbl.text = @"Tips, features, and offers to get the most out of Loose Leaf.";
@@ -162,17 +166,25 @@
 
         if (orientation == UIInterfaceOrientationPortrait ||
             orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            loopImage.center = CGPointMake(self.bounds.size.width / 2 + 50, 105);
+            stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
+            inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
             emailInput.center = CGPointMake(self.bounds.size.width / 2, 250);
             validateInput.center = CGPointMake(self.bounds.size.width / 2, 280);
-            signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width / 2, 330);
-            noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width / 2, 330);
+            signUpButton.center = CGPointMake(self.bounds.size.width - buttonMargin - signUpButton.bounds.size.width / 2, 330);
+            noThanksButton.center = CGPointMake(buttonMargin + noThanksButton.bounds.size.width / 2, 330);
             pitchLbl.center = CGPointMake(self.bounds.size.width / 2, 195);
         } else {
-            emailInput.center = CGPointMake(self.bounds.size.width / 2, 220);
-            validateInput.center = CGPointMake(self.bounds.size.width / 2, 250);
-            signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width / 2, 300);
-            noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width / 2, 300);
-            pitchLbl.center = CGPointMake(self.bounds.size.width / 2, 180);
+            CGFloat moreMove = CGSizeMaxDim([[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size) <= 1024 ? 30 : 0;
+
+            loopImage.center = CGPointMake(self.bounds.size.width / 2 + 50, 105 - moreMove);
+            stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80 - moreMove);
+            inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110 - moreMove);
+            emailInput.center = CGPointMake(self.bounds.size.width / 2, 220 - moreMove);
+            validateInput.center = CGPointMake(self.bounds.size.width / 2, 250 - moreMove);
+            signUpButton.center = CGPointMake(self.bounds.size.width - buttonMargin - signUpButton.bounds.size.width / 2, 300 - moreMove);
+            noThanksButton.center = CGPointMake(buttonMargin + noThanksButton.bounds.size.width / 2, 300 - moreMove);
+            pitchLbl.center = CGPointMake(self.bounds.size.width / 2, 180 - moreMove);
         }
         validateInputRed.center = validateInput.center;
     };
