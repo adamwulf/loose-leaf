@@ -11,6 +11,7 @@
 #import "MMPageUndoRedoManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMTrashManager.h"
+#import "Mixpanel.h"
 
 
 @interface MMUndoRedoAddScrapItem (Private)
@@ -35,11 +36,21 @@
     __weak MMUndoRedoAddScrapItem* weakSelf = self;
     if (self = [super initWithUndoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
-            [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
+            if (scrap) {
+                [weakSelf.page.scrapsOnPaperState hideScrap:scrap];
+            } else {
+                [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1320),
+                                                                                    @"Option": @(1) }];
+            }
         } andRedoBlock:^{
             MMScrapView* scrap = [weakSelf.page.scrapsOnPaperState scrapForUUID:weakSelf.scrapUUID];
             NSUInteger subviewIndex = [[weakSelf.propertiesWhenAdded objectForKey:@"subviewIndex"] unsignedIntegerValue];
-            [weakSelf.page.scrapsOnPaperState showScrap:scrap atIndex:subviewIndex];
+            if (scrap) {
+                [weakSelf.page.scrapsOnPaperState showScrap:scrap atIndex:subviewIndex];
+            } else {
+                [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1320),
+                                                                                    @"Option": @(2) }];
+            }
             [scrap setPropertiesDictionary:weakSelf.propertiesWhenAdded];
         } forPage:_page]) {
         propertiesWhenAdded = properties;
