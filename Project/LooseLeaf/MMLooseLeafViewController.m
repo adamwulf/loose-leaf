@@ -178,7 +178,8 @@
                                                        kMPShareStatusSMS: kMPShareStatusUnknown,
                                                        kMPShareStatusTencentWeibo: kMPShareStatusUnknown,
                                                        kMPShareStatusSinaWeibo: kMPShareStatusUnknown,
-                                                       kMPNumberOfPages: @(0)
+                                                       kMPNumberOfPages: @(0),
+                                                       kMPPushEnabled: @(NO)
         }];
         [[Mixpanel sharedInstance] flush];
 

@@ -224,10 +224,12 @@
 }
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
+    [[[Mixpanel sharedInstance] people] set:kMPPushEnabled to:@(YES)];
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
+    [[[Mixpanel sharedInstance] people] set:kMPPushEnabled to:@(NO)];
     DebugLog(@"did fail register for remote notifications");
 }
 

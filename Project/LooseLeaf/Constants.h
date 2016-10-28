@@ -207,6 +207,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 #define kMPFailedRotationReading @"Failed Rotation Reading"
 #define kMPEmailAddressField @"$email"
+#define kMPPushEnabled @"Push Enabled"
 
 #define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
 #define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
