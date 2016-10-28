@@ -231,6 +231,7 @@ static MMTutorialManager* _instance = nil;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
     [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];
+    [[[Mixpanel sharedInstance] people] set:kMPEmailAddressField to:email];
     [[Mixpanel sharedInstance] flush];
 }
 

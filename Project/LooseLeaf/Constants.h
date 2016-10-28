@@ -224,6 +224,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
+#define kMPEmailAddressField @"$email"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
