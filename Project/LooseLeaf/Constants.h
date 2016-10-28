@@ -206,6 +206,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 #define kMPFailedRotationReading @"Failed Rotation Reading"
+#define kMPEmailAddressField @"$email"
 
 #define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
 #define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
@@ -224,7 +225,6 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
-#define kMPEmailAddressField @"$email"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
@@ -249,6 +249,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventImportPage @"Import Page"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
+#define kMPEventClonePage @"Clone Page"
+#define kMPEventCloneScrap @"Clone Scrap"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"

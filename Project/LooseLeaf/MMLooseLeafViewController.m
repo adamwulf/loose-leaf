@@ -142,8 +142,6 @@
 
         // book keeping
 
-        [[[Mixpanel sharedInstance] people] set:kMPNumberOfPages
-                                             to:@([self numberOfPages])];
         NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
                                              to:language];
@@ -180,6 +178,7 @@
                                                        kMPShareStatusSMS: kMPShareStatusUnknown,
                                                        kMPShareStatusTencentWeibo: kMPShareStatusUnknown,
                                                        kMPShareStatusSinaWeibo: kMPShareStatusUnknown,
+                                                       kMPNumberOfPages: @(0)
         }];
         [[Mixpanel sharedInstance] flush];
 
