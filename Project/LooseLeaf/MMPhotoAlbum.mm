@@ -14,6 +14,7 @@
 #import "Constants.h"
 #import "NSArray+Extras.h"
 #import "NSIndexSet+Map.h"
+#import "Mixpanel.h"
 
 dispatch_queue_t fetchThumbnailQueue;
 
@@ -166,7 +167,12 @@ BOOL isEnumerating = NO;
                 }];
 
                 if (!stop && indexesToLoad) {
-                    [group enumerateAssetsAtIndexes:indexesToLoad options:NSEnumerationReverse usingBlock:indexManagerBlock];
+                    @try {
+                        [group enumerateAssetsAtIndexes:indexesToLoad options:NSEnumerationReverse usingBlock:indexManagerBlock];
+                    } @catch (NSException* e) {
+                        // noop. we might be asking for images beyond the allowed range.
+                        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1643) }];
+                    }
                 }
             }
         } catch (...) {

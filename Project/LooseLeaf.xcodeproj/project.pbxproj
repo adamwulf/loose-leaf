@@ -242,7 +242,6 @@
 		667D98C2192FD87400625879 /* MMPDFInboxItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C1192FD87400625879 /* MMPDFInboxItem.m */; };
 		667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */ = {isa = PBXBuildFile; fileRef = 667D98C3192FDB4300625879 /* UIImagePDF.license */; };
 		667D98CA19300D0F00625879 /* MMScrapBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667D98C919300D0F00625879 /* MMScrapBackgroundView.m */; };
-		667EF0C519A5401400B1A38D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 667EF0C419A5401400B1A38D /* CloudKit.framework */; };
 		667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 667EF0C619A54F2100B1A38D /* icloud-share.png */; };
 		667EF0C919A54F2500B1A38D /* icloud-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 667EF0C819A54F2500B1A38D /* icloud-share@2x.png */; };
 		667EF0CC19A5501900B1A38D /* MMCloudKitButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 667EF0CB19A5501900B1A38D /* MMCloudKitButton.m */; };
@@ -520,6 +519,9 @@
 		C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A181CDB1B4A00508F1D /* bg53.jpg */; };
 		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C599D5701DB6AE6F009035F3 /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */; };
+		C5A8E1B21DC3252900CD608F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B11DC3252900CD608F /* CloudKit.framework */; };
+		C5A8E1B51DC3441100CD608F /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B41DC3441000CD608F /* Accounts.framework */; };
+		C5A8E1B71DC3441800CD608F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B61DC3441800CD608F /* Social.framework */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
@@ -1065,7 +1067,6 @@
 		667D98C3192FDB4300625879 /* UIImagePDF.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = UIImagePDF.license; sourceTree = "<group>"; };
 		667D98C819300D0F00625879 /* MMScrapBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMScrapBackgroundView.h; sourceTree = "<group>"; };
 		667D98C919300D0F00625879 /* MMScrapBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMScrapBackgroundView.m; sourceTree = "<group>"; };
-		667EF0C419A5401400B1A38D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		667EF0C619A54F2100B1A38D /* icloud-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icloud-share.png"; sourceTree = "<group>"; };
 		667EF0C819A54F2500B1A38D /* icloud-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icloud-share@2x.png"; sourceTree = "<group>"; };
 		667EF0CA19A5501900B1A38D /* MMCloudKitButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCloudKitButton.h; sourceTree = "<group>"; };
@@ -1553,6 +1554,9 @@
 		C599D56E1DB6AE6F009035F3 /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
 		C599D56F1DB6AE6F009035F3 /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C5A8E1B11DC3252900CD608F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		C5A8E1B41DC3441000CD608F /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		C5A8E1B61DC3441800CD608F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundView.h; sourceTree = "<group>"; };
 		C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMGenericBackgroundView.m; sourceTree = "<group>"; };
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
@@ -1805,6 +1809,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5A8E1B71DC3441800CD608F /* Social.framework in Frameworks */,
+				C5A8E1B51DC3441100CD608F /* Accounts.framework in Frameworks */,
 				C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */,
 				C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */,
 				C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */,
@@ -1814,6 +1820,7 @@
 				6616CCD118B6AE9700CAD0F3 /* JotUI.framework in Frameworks */,
 				C506A3951C23DAD900236895 /* TwitterCore.framework in Frameworks */,
 				660FA2981A7C5D5A00BA0ECE /* AdSupport.framework in Frameworks */,
+				C5A8E1B21DC3252900CD608F /* CloudKit.framework in Frameworks */,
 				661C4B261A830FB20014DB20 /* Pinterest.framework in Frameworks */,
 				66627FB21A0258D10064FAD3 /* libicucore.dylib in Frameworks */,
 				667D98AC192D4B7A00625879 /* ImageIO.framework in Frameworks */,
@@ -1824,7 +1831,6 @@
 				66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */,
 				66CA1A8D185E78030013505A /* libc++.dylib in Frameworks */,
 				665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */,
-				667EF0C519A5401400B1A38D /* CloudKit.framework in Frameworks */,
 				66D4FE6918DCA6950010CCBF /* Crashlytics.framework in Frameworks */,
 				66150769178333D500B181F3 /* libz.dylib in Frameworks */,
 				6695B6E81750088D0069E61F /* AudioToolbox.framework in Frameworks */,
@@ -3202,6 +3208,9 @@
 		66DCFB891581BCEF00B4918C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5A8E1B61DC3441800CD608F /* Social.framework */,
+				C5A8E1B41DC3441000CD608F /* Accounts.framework */,
+				C5A8E1B11DC3252900CD608F /* CloudKit.framework */,
 				C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */,
 				C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */,
 				C506A39B1C23DD6100236895 /* SSKeychain.framework */,
@@ -3215,7 +3224,6 @@
 				66627FB11A0258D10064FAD3 /* libicucore.dylib */,
 				66EDE47719B1039000A5623B /* ZipArchive.framework */,
 				66EDE44419B1025400A5623B /* libZipArchive-ios.a */,
-				667EF0C419A5401400B1A38D /* CloudKit.framework */,
 				667D98AB192D4B7A00625879 /* ImageIO.framework */,
 				666425C118CBC40000A306C1 /* CoreMedia.framework */,
 				666425BF18CBC3EF00A306C1 /* AssetsLibrary.framework */,
@@ -4156,6 +4164,9 @@
 							};
 							com.apple.Keychain = {
 								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 1;
 							};
 							com.apple.iCloud = {
 								enabled = 1;

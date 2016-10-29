@@ -310,6 +310,8 @@
 }
 
 - (NSDictionary*)propertiesDictionary {
+    CheckMainThread;
+
     // make sure we calculate all of our properties
     // with a neutral anchor point
     CGPoint currentAnchor = self.layer.anchorPoint;

@@ -105,6 +105,7 @@
             [hiddenStackHolder insertPage:page abovePage:pageToInsertAfter];
         }
 
+        [[Mixpanel sharedInstance] track:kMPEventClonePage];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
         [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
 

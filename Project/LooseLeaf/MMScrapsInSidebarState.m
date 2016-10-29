@@ -176,9 +176,7 @@
 }
 
 - (MMImmutableScrapsInSidebarState*)immutableStateForPath:(NSString*)scrapIDsPath {
-    if (scrapIDsPath) {
-        CheckThreadMatches([MMScrapCollectionState isImportExportStateQueue])
-    }
+    CheckMainThread;
     if ([self isStateLoaded]) {
         @synchronized(allLoadedScraps) {
             hasEditsToSave = NO;

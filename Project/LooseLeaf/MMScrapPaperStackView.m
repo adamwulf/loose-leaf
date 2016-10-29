@@ -1421,6 +1421,8 @@
         @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
 
+    [[Mixpanel sharedInstance] track:kMPEventCloneScrap];
+
     // now that the scrap is where it should be,
     // and contains its background, etc, then
     // save everything

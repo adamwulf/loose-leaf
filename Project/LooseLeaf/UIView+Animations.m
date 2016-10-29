@@ -41,6 +41,10 @@
  * it's center
  */
 + (void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView*)view {
+    if (isnan(anchorPoint.x) || isnan(anchorPoint.y)) {
+        anchorPoint = CGPointMake(.5, .5);
+    }
+
     CGPoint newPoint = CGPointMake(view.bounds.size.width * anchorPoint.x, view.bounds.size.height * anchorPoint.y);
     CGPoint oldPoint = CGPointMake(view.bounds.size.width * view.layer.anchorPoint.x, view.bounds.size.height * view.layer.anchorPoint.y);
 
@@ -57,6 +61,9 @@
 
     if (isnan(position.x) || isnan(position.y)) {
         position = CGPointZero;
+    }
+    if (isnan(anchorPoint.x) || isnan(anchorPoint.y)) {
+        anchorPoint = CGPointMake(.5, .5);
     }
 
     view.layer.position = position;

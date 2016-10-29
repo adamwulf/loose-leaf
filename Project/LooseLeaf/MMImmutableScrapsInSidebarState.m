@@ -21,6 +21,7 @@
 }
 
 - (id)initWithScrapIDsPath:(NSString*)_scrapIDsPath andAllScrapProperties:(NSArray*)_allScrapProperties andOwnerState:(MMScrapCollectionState*)_ownerState {
+    CheckMainThread;
     if (self = [super init]) {
         ownerState = _ownerState;
         scrapIDsPath = _scrapIDsPath;

@@ -30,6 +30,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
 #define CGRectFromSize(size) CGRectMake(0, 0, size.width, size.height)
 #define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, height)
+#define CGSizeMaxDim(size) MAX((size).width, (size).height)
 #define CGRectSquare(size) CGRectMake(0, 0, size, size)
 #define CGSizeScale(size, scale) CGSizeMake(size.width*(scale), size.height*(scale))
 #define CGRectScale(rect, scale) CGRectMake(rect.origin.x*(scale), rect.origin.y*(scale), rect.size.width*(scale), rect.size.height*(scale))
@@ -206,6 +207,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 #define kMPFailedRotationReading @"Failed Rotation Reading"
+#define kMPEmailAddressField @"$email"
+#define kMPPushEnabled @"Push Enabled"
 
 #define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
 #define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
@@ -233,6 +236,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 // MixPanel Error Events
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
+#define kMPEventCrashAverted @"Crash Averted"
 #define kMPEventGestureBug @"Gesture Bug"
 
 // MixPanel Events Properties
@@ -248,6 +252,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventImportPage @"Import Page"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
+#define kMPEventClonePage @"Clone Page"
+#define kMPEventCloneScrap @"Clone Scrap"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"

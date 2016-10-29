@@ -189,11 +189,13 @@ static NSString* bezelStatePath;
 }
 
 - (void)saveScrapContainerToDisk {
+    CheckMainThread;
     if ([sidebarScrapState hasEditsToSave]) {
         NSMutableDictionary* writeableAdjustments = [rotationAdjustments copy];
+        MMImmutableScrapCollectionState* immutableScrapState = [sidebarScrapState immutableStateForPath:self.scrapIDsPath];
         dispatch_async([MMScrapCollectionState importExportStateQueue], ^(void) {
             @autoreleasepool {
-                [[sidebarScrapState immutableStateForPath:self.scrapIDsPath] saveStateToDiskBlocking];
+                [immutableScrapState saveStateToDiskBlocking];
                 [writeableAdjustments writeToFile:[MMScrapsInBezelContainerView pathToPlist] atomically:YES];
             }
         });

@@ -256,6 +256,7 @@ static UIWebView* pdfWebView;
     CGFloat rotationValue = -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI / 2);
     if (isnan(rotationValue)) {
         [[[Mixpanel sharedInstance] people] set:kMPFailedRotationReading to:@(YES)];
+        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1644) }];
         rotationValue = 0;
     }
     return rotationValue;

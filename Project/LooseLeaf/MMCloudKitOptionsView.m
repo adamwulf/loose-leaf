@@ -49,14 +49,6 @@
     if (self = [super initWithFrame:frame]) {
         CGRect lblFr = self.bounds;
         lblFr.origin.y = kWidthOfSidebarButtonBuffer;
-
-        cloudKitLabel = [[UILabel alloc] initWithFrame:lblFr];
-        cloudKitLabel.backgroundColor = [UIColor clearColor];
-        cloudKitLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        cloudKitLabel.text = @"cloudkit!";
-        cloudKitLabel.numberOfLines = 0;
-        [self addSubview:cloudKitLabel];
-
         offlineView = [[MMOfflineIconView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
         offlineView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         offlineView.center = CGPointMake(self.bounds.size.width / 2, offlineView.bounds.size.height * 2 / 3);
@@ -68,6 +60,16 @@
         [cloudKeyButton addTarget:self action:@selector(loginButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         cloudKeyButton.enabled = NO;
         [self addSubview:cloudKeyButton];
+
+        cloudKitLabel = [[UILabel alloc] initWithFrame:CGRectMake(kWidthOfSidebarButtonBuffer + 30, cloudKeyButton.bounds.size.height + 20,
+                                                                  self.bounds.size.width - 60, 100)];
+        cloudKitLabel.backgroundColor = [UIColor clearColor];
+        cloudKitLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        cloudKitLabel.text = @"Tap the key to login and share pages with iCloud";
+        cloudKitLabel.textColor = [UIColor whiteColor];
+        cloudKitLabel.textAlignment = NSTextAlignmentCenter;
+        cloudKitLabel.numberOfLines = 0;
+        [self addSubview:cloudKitLabel];
 
         noAccountHelpView = [[MMCloudKitNoAccountHelpView alloc] initWithFrame:CGRectMake(0, cloudKeyButton.bounds.size.height - 14,
                                                                                           self.bounds.size.width, 570)];
@@ -97,8 +99,6 @@
         [self addSubview:listOfFriendsView];
 
         [self cloudKitDidChangeState:[MMCloudKitManager sharedManager].currentState];
-
-        [self updateInterfaceBasedOniCloudStatus];
     }
     return self;
 }
@@ -119,7 +119,6 @@
     UICollectionViewLayout* layout = [self idealLayoutForOrientation:(UIInterfaceOrientation)[MMRotationManager sharedInstance].lastBestOrientation];
     [self updateDataSource];
     [listOfFriendsView setCollectionViewLayout:layout animated:NO];
-    [self updateInterfaceBasedOniCloudStatus];
     [self updateCloudKeyBounceTimer];
 }
 
@@ -134,7 +133,7 @@
         if (self.alpha && [[MMCloudKitManager sharedManager].currentState isKindOfClass:[MMCloudKitWaitingForLoginState class]]) {
             [cloudKeyButton setupTimer];
         }
-    } afterDelay:1.3];
+    } afterDelay:.6];
 }
 
 - (void)updateDataSource {
@@ -154,35 +153,6 @@
         return [[obj1 objectForKey:@"firstName"] compare:[obj2 objectForKey:@"firstName"] options:NSCaseInsensitiveSearch];
     }];
     [listOfFriendsView reloadData];
-}
-
-#pragma mark - CloudKit UI
-
-BOOL hasSent = NO;
-- (void)updateInterfaceBasedOniCloudStatus {
-    NSString* cloudKitInfo = [[MMCloudKitManager sharedManager] description];
-
-    cloudKitLabel.text = cloudKitInfo;
-    [cloudKitLabel sizeToFit];
-
-    CGRect lblFr = cloudKitLabel.frame;
-    lblFr.origin.y = kWidthOfSidebarButtonBuffer;
-    lblFr.size.width = self.bounds.size.width;
-    cloudKitLabel.frame = lblFr;
-
-    //    DebugLog(@"settings url: %@", UIApplicationOpenSettingsURLString);
-    //    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-
-    //
-    //    [[NSThread mainThread] performBlock:^{
-    //        if(!hasSent){
-    //            NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-    //            if ([[UIApplication sharedApplication] canOpenURL:appSettings]) {
-    //                // make sure to use in iOS8, not iOS7
-    //                [[UIApplication sharedApplication] openURL:appSettings];
-    //            }            hasSent = YES;
-    //        }
-    //    }afterDelay:3];
 }
 
 #pragma mark - Cloud Kit
@@ -217,8 +187,9 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = NO;
         [cloudKeyButton flipAnimatedToKeyWithCompletion:^{
             cloudKeyButton.enabled = YES;
+            cloudKitLabel.hidden = NO;
         }];
-        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusCloudKit to:kMPShareStatusUnavailable];
     } else if ([currentState isKindOfClass:[MMCloudKitAccountMissingState class]]) {
         listOfFriendsView.hidden = YES;
         declinedHelpView.hidden = YES;
@@ -227,7 +198,7 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = NO;
         [noAccountHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
-        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusCloudKit to:kMPShareStatusUnavailable];
     } else if ([currentState isKindOfClass:[MMCloudKitDeclinedPermissionState class]]) {
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
@@ -236,7 +207,7 @@ BOOL hasSent = NO;
         noAccountHelpView.hidden = YES;
         [declinedHelpView animateIntoView];
         [cloudKeyButton animateToBrokenCloud];
-        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusUnavailable];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusCloudKit to:kMPShareStatusUnavailable];
     } else if ([currentState isKindOfClass:[MMCloudKitAskingForPermissionState class]]) {
         // don't need to manually flip key here
         // since it was flipped to cloud when tapped
@@ -261,7 +232,7 @@ BOOL hasSent = NO;
         cloudKeyButton.hidden = YES;
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
-        [[[Mixpanel sharedInstance] people] set:kMPShareStatusFacebook to:kMPShareStatusAvailable];
+        [[[Mixpanel sharedInstance] people] set:kMPShareStatusCloudKit to:kMPShareStatusAvailable];
     } else {
         listOfFriendsView.hidden = YES;
         cloudKitLabel.hidden = YES;
@@ -270,7 +241,6 @@ BOOL hasSent = NO;
         noAccountHelpView.hidden = YES;
         declinedHelpView.hidden = YES;
     }
-    [self updateInterfaceBasedOniCloudStatus];
 }
 
 #pragma mark - UICollectionViewDataSource
