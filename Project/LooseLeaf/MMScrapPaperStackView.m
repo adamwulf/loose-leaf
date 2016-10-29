@@ -602,8 +602,8 @@
 
         CGSize targetSizeAfterBounce = fullScaleSize;
         CGFloat targetScale = 1.0;
-        if (MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height) > 800) {
-            targetSizeAfterBounce = CGSizeFit(targetSizeAfterBounce, CGSizeMake(800, 800)).size;
+        if (MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height) > kMaxScrapImportSizeOnPageFromBounce) {
+            targetSizeAfterBounce = CGSizeFit(targetSizeAfterBounce, CGSizeMake(kMaxScrapImportSizeOnPageFromBounce, kMaxScrapImportSizeOnPageFromBounce)).size;
         }
         targetScale = targetSizeAfterBounce.width / fullScaleSize.width;
 

@@ -10,6 +10,7 @@
 #define Paper_Stack_Contants_h
 
 #import "AuthConstants.h"
+#import "UIDevice+PPI.h"
 
 static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill, BOOL fill) {
     CGFloat horizontalRatio = sizeToFill.width / sizeToScale.width;
@@ -277,8 +278,9 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 #define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
-#define kPhotoImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
-#define kPDFImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
+#define kPhotoImportMaxDim [UIDevice advisedMaxImportDim]
+#define kPDFImportMaxDim [UIDevice advisedMaxImportDim]
+#define kMaxScrapImportSizeOnPageFromBounce 800
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
