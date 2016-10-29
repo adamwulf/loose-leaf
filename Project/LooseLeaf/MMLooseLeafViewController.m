@@ -196,14 +196,12 @@
         [self.view addSubview:importImageSidebar];
 
         // Share sidebar
-        [[NSThread mainThread] performBlock:^{
-            // going to delay building this UI so we can startup faster
-            sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.shareButton animateFromLeft:YES];
-            sharePageSidebar.delegate = self;
-            [sharePageSidebar hide:NO onComplete:nil];
-            sharePageSidebar.shareDelegate = self;
-            [self.view addSubview:sharePageSidebar];
-        } afterDelay:1];
+        // going to delay building this UI so we can startup faster
+        sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.view.bounds forButton:currentStackView.shareButton animateFromLeft:YES];
+        sharePageSidebar.delegate = self;
+        [sharePageSidebar hide:NO onComplete:nil];
+        sharePageSidebar.shareDelegate = self;
+        [self.view addSubview:sharePageSidebar];
 
         // scrap sidebar
         CGRect frame = [self.view bounds];
@@ -253,6 +251,10 @@
         //
         //        [stackView setMemoryView:memoryProfileView];
         //        [self.view addSubview:memoryProfileView];
+
+        if (![[MMTutorialManager sharedInstance] hasFinishedTutorial]) {
+            [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
+        }
     }
     return self;
 }
@@ -309,8 +311,8 @@
     return NO;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 
     if (mightShowReleaseNotes) {
         mightShowReleaseNotes = NO;
