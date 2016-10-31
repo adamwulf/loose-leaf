@@ -121,6 +121,17 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isRetweet;
 
 /**
+ * Indicates whether this Tweet is a Quote Tweet.
+ */
+@property (nonatomic, readonly) BOOL isQuoteTweet;
+
+/**
+ *  The original, fully-hydrated Tweet that was quoted.
+ *  This is `nil` unless `self.isRetweet == YES`.
+ */
+@property (nonatomic, readonly, nullable) TWTRTweet *quotedTweet;
+
+/**
  *  Creates an array of TWTRTweet instances from the array of Twitter API JSON response.
  *
  *  @param array A parsed array of Tweet API JSON responses.
