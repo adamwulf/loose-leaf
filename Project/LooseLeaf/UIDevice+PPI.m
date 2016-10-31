@@ -168,7 +168,7 @@ static CGFloat _advisedMaxImportDim = 0;
     }
 
     // sane default
-    _advisedMaxImportDim = 700;
+    _advisedMaxImportDim = MAX([[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size.width, [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size.height);
 
     return _advisedMaxImportDim;
 }

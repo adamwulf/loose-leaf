@@ -57,8 +57,6 @@
 		66244CAE1A65145100A009BC /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66244CAD1A65145100A009BC /* Fabric.framework */; };
 		6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6627DFA619003DF900592EEF /* CaptureSessionManager.m */; };
 		662808F91A9BB57100CA3F9A /* MMTutorialStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 662808F81A9BB57100CA3F9A /* MMTutorialStackView.m */; };
-		662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */; };
-		662808FD1A9BB6D500CA3F9A /* ruler-for-curve-2.mov in Resources */ = {isa = PBXBuildFile; fileRef = 662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */; };
 		662809011A9BB97500CA3F9A /* white-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 662809001A9BB97500CA3F9A /* white-arrow.png */; };
 		662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 662B7D1E19E7A55700C5529B /* MMStatTracker.m */; };
 		662EFF2D199EBC140086C106 /* MMWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 662EFF2C199EBC140086C106 /* MMWindow.m */; };
@@ -417,7 +415,6 @@
 		66FA03A219BFE68000AF0DC4 /* MMCloudKeyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A119BFE68000AF0DC4 /* MMCloudKeyButton.m */; };
 		66FA03A519BFFB7900AF0DC4 /* MMBrokenCloudLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FA03A419BFFB7900AF0DC4 /* MMBrokenCloudLayer.m */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
-		66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */ = {isa = PBXBuildFile; fileRef = 66FC3BB61ABA631B00F2DE37 /* silly-face.mov */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
 		C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */; };
@@ -4305,7 +4302,6 @@
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
-				66FC3BB81ABA631B00F2DE37 /* silly-face.mov in Resources */,
 				C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */,
 				C58E6A3E1CDB1B4A00508F1D /* bg33.jpg in Resources */,
 				667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */,
@@ -4322,7 +4318,6 @@
 				C58E6A2D1CDB1B4A00508F1D /* bg16.jpg in Resources */,
 				C58E6A341CDB1B4A00508F1D /* bg23.jpg in Resources */,
 				C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */,
-				662808FB1A9BB6C800CA3F9A /* draw-clip-2-2.mov in Resources */,
 				C58E6A4E1CDB1B4A00508F1D /* bg49.jpg in Resources */,
 				6650DD1D18F48E3F00ADF591 /* twitter.png in Resources */,
 				C58E6A1D1CDB1B4A00508F1D /* bg00.jpg in Resources */,
@@ -4341,7 +4336,6 @@
 				C58E6A4C1CDB1B4A00508F1D /* bg47.jpg in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */,
-				662808FD1A9BB6D500CA3F9A /* ruler-for-curve-2.mov in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
 				C58E6A321CDB1B4A00508F1D /* bg21.jpg in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
