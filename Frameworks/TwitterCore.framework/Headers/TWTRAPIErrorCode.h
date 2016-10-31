@@ -118,7 +118,6 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      */
     TWTRAPIErrorCodeUserMustVerifyLogin = 231,
 
-    
     /**
      * Returned from server in digits sign-in flow if user provides wrong confirmation code
      */
@@ -128,7 +127,12 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      *  "Bad guest token." The token has probably expired. Try calling `-[Twitter logInGuestWithCompletion:]` again later.
      */
     TWTRAPIErrorCodeBadGuestToken = 239,
-
+    
+    /**
+     * Rate limiting case for /1/sdk/login
+     */
+    TWTRAPIErrorCodeLoginRateExceeded = 245,
+    
     /**
      *  Corresponds to a HTTP request to a retired URL.
      */
@@ -148,6 +152,12 @@ typedef NS_ENUM(NSUInteger, TWTRAPIErrorCode) {
      *  Corresponds with HTTP 403. The authenticated user account is not muting the account a call is attempting to unmute.
      */
     TWTRAPIErrorCodeCannotMuteSpecifiedUser = 272,
+    
+    /**
+     * Rate limiting case for /1.1/device/register.json endpint
+     */
+    TWTRAPIErrorCodeDeviceRegisterRateExceeded = 299,
+
     
     /**
      *  Phone's carrier not suppported and we can not deliver the sms/make the voice call
