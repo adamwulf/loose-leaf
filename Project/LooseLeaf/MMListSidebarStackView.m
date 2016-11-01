@@ -101,8 +101,8 @@
 
     NSArray* allPages = [visibleStackHolder.subviews arrayByAddingObjectsFromArray:[hiddenStackHolder.subviews reversedArray]];
 
-    NSInteger startRow = floor(offsetOfListView.y) / (self.bufferWidth + self.rowHeight);
-    NSInteger startCol = floor(offsetOfListView.x) / (self.bufferWidth + self.columnWidth);
+    NSInteger startRow = floor(offsetOfListView.y) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]);
+    NSInteger startCol = floor(offsetOfListView.x) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView columnWidth]);
     NSInteger startIndex = startRow * kNumberOfColumnsInListView + startCol;
 
     NSInteger endIndex = startIndex + kNumberOfColumnsInListView;

@@ -33,9 +33,40 @@
 
 @synthesize toolbar;
 @synthesize deleteSidebar;
-@synthesize columnWidth;
-@synthesize rowHeight;
-@synthesize bufferWidth;
+
+static CGFloat screenWidth = 0;
+static CGFloat screenHeight = 0;
+static CGFloat columnWidth = 0;
+static CGFloat rowHeight = 0;
+static CGFloat bufferWidth = 0;
+
++ (CGFloat)screenWidth {
+    if (!screenWidth) {
+        screenWidth = CGRectGetWidth([[[UIScreen mainScreen] fixedCoordinateSpace] bounds]);
+    }
+    return screenWidth;
+}
+
++ (CGFloat)screenHeight {
+    if (!screenHeight) {
+        screenHeight = CGRectGetHeight([[[UIScreen mainScreen] fixedCoordinateSpace] bounds]);
+    }
+
+    return screenHeight;
+}
+
++ (CGFloat)columnWidth {
+    return [MMListPaperStackView screenWidth] * kListPageZoom;
+}
+
++ (CGFloat)rowHeight {
+    return [MMListPaperStackView columnWidth] * [MMListPaperStackView screenHeight] / [MMListPaperStackView screenWidth];
+}
+
++ (CGFloat)bufferWidth {
+    return [MMListPaperStackView columnWidth] * kListPageZoom;
+}
+
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     self = [super initWithFrame:frame andUUID:_uuid];

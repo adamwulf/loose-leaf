@@ -74,8 +74,8 @@
 
     CGPoint targetPoint = CGRectGetMidPoint(targetFrame);
 
-    NSInteger row = (targetPoint.y) / (self.rowHeight + self.bufferWidth);
-    NSInteger col = targetPoint.x / ((self.columnWidth + self.bufferWidth) + self.bufferWidth / kNumberOfColumnsInListView);
+    NSInteger row = (targetPoint.y) / ([MMListPaperStackView rowHeight] + [MMListPaperStackView bufferWidth]);
+    NSInteger col = targetPoint.x / (([MMListPaperStackView columnWidth] + [MMListPaperStackView bufferWidth]) + [MMListPaperStackView bufferWidth] / kNumberOfColumnsInListView);
     NSInteger index = row * kNumberOfColumnsInListView + col - shouldSubOne;
     if (col == kNumberOfColumnsInListView - 1) {
         index -= 1;

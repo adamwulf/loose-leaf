@@ -47,7 +47,7 @@
 #import "MMLooseLeafView.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate>
 
 @end
 
@@ -82,7 +82,7 @@
 
     UIScrollView* allStacksScrollView;
 
-    UIButton* addNewStackButton;
+    MMListAddPageButton* addNewStackButton;
 }
 
 @synthesize bezelPagesContainer;
@@ -131,9 +131,9 @@
         [allStacksScrollView setAlwaysBounceVertical:YES];
         [self.view addSubview:allStacksScrollView];
 
-        addNewStackButton = [[UIButton alloc] initWithFrame:CGRectWithHeight(self.view.bounds, 200)];
-        [addNewStackButton setTitle:@"Add Stack" forState:UIControlStateNormal];
-        [addNewStackButton addTarget:self action:@selector(addStack) forControlEvents:UIControlEventTouchUpInside];
+        // init the add page button in top left of scrollview
+        addNewStackButton = [[MMListAddPageButton alloc] initWithFrame:CGRectMake([MMListPaperStackView bufferWidth], [MMListPaperStackView bufferWidth], [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight])];
+        addNewStackButton.delegate = self;
         [allStacksScrollView addSubview:addNewStackButton];
 
         // export icons will show here, below the sidebars but over the stacks
@@ -539,7 +539,7 @@
         void (^completedBlock)(BOOL) = ^(BOOL finished) {
             MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
             CGRect fr = aStackView.frame;
-            fr.size.height = aStackView.bufferWidth * 2 + aStackView.rowHeight;
+            fr.size.height = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
             aStackView.frame = fr;
 
             currentStackView = nil;
@@ -588,13 +588,10 @@
 }
 
 - (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight {
-    CGFloat stackRowHeight = 0;
+    CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
     for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
         NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
-        if (!stackRowHeight) {
-            stackRowHeight = aStackView.bufferWidth * 2 + aStackView.rowHeight;
-        }
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
             [aStackView organizePagesIntoSingleRowAnimated:NO];
         }
@@ -609,11 +606,16 @@
         aStackView.scrollEnabled = NO;
     }
 
+    [self realignAddStackButton];
+
+    allStacksScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetMaxY(addNewStackButton.frame) + [MMListPaperStackView bufferWidth]);
+}
+
+- (void)realignAddStackButton {
+    CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
     CGRect fr = addNewStackButton.frame;
     fr.origin.y = [[[MMAllStacksManager sharedInstance] stackIDs] count] * stackRowHeight;
     addNewStackButton.frame = fr;
-
-    allStacksScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetMaxY(fr));
 }
 
 - (IBAction)deleteStack:(NSString*)stackUUID {
@@ -988,6 +990,12 @@
 
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {
     return [currentStackView pageForUUID:uuid];
+}
+
+#pragma mark - MMListAddPageButtonDelegate
+
+- (void)didTapAddButtonInListView {
+    [self addStack];
 }
 
 @end

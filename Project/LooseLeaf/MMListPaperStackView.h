@@ -47,12 +47,15 @@
     MMListAddPageButton* addPageButtonInListView;
 }
 
++ (CGFloat)screenWidth;
++ (CGFloat)screenHeight;
++ (CGFloat)columnWidth;
++ (CGFloat)rowHeight;
++ (CGFloat)bufferWidth;
+
 @property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
 @property (nonatomic, readonly) MMButtonToolbarView* toolbar;
 @property (nonatomic, readonly) BOOL isAnimatingTowardPageView;
-@property (nonatomic, readonly) CGFloat columnWidth;
-@property (nonatomic, readonly) CGFloat rowHeight;
-@property (nonatomic, readonly) CGFloat bufferWidth;
 
 - (CGPoint)offsetNeededToShowPage:(MMPaperView*)page;
 - (NSArray*)findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
