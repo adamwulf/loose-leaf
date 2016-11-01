@@ -248,7 +248,7 @@
         [currentStackView setButtonsVisible:[currentStackView buttonsVisible] animated:NO];
         [currentStackView immediatelyRelayoutIfInListMode];
 
-        // TODO: check on this
+        // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
         if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
             [self didAskToSwitchToStack:currentStackForLaunch animated:NO];
 
@@ -260,6 +260,7 @@
             }
         } else {
             [currentStackView setButtonsVisible:NO animated:NO];
+            bezelPagesContainer.alpha = 0;
         }
 
         // Debug
@@ -487,6 +488,7 @@
             }
         }
         addNewStackButton.alpha = 0;
+        bezelPagesContainer.alpha = 1;
     };
 
     void (^completionStep)(BOOL) = ^(BOOL completed) {
@@ -535,6 +537,7 @@
         void (^animationBlock)() = ^{
             [self initializeAllStackViewsExcept:stackUUID];
             addNewStackButton.alpha = 1;
+            bezelPagesContainer.alpha = 0;
         };
 
         void (^completedBlock)(BOOL) = ^(BOOL finished) {
