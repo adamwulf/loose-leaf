@@ -96,6 +96,8 @@
 
 - (CGRect)frameForIndexInList:(NSInteger)indexOfPage;
 
+- (CGRect)frameForListViewForPage:(MMPaperView*)page;
+
 - (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
 
 @end

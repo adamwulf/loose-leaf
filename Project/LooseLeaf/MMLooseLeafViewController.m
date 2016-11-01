@@ -255,7 +255,11 @@
             MMCollapsableStackView* stackView = [self stackForUUID:currentStackForLaunch];
             if ([viewModeForLaunch isEqualToString:kViewModePage]) {
                 [stackView immediatelyTransitionToPageViewAnimated:NO];
+            } else {
+                [currentStackView setButtonsVisible:NO animated:NO];
             }
+        } else {
+            [currentStackView setButtonsVisible:NO animated:NO];
         }
 
         // Debug

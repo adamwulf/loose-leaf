@@ -17,7 +17,7 @@
 
 @interface MMListPaperStackView (Protected)
 
-- (CGRect)frameForIndexInList:(NSInteger)indexOfPage;
+- (CGRect)frameForListViewForPage:(MMPaperView*)page;
 
 @end
 
@@ -224,7 +224,7 @@
  * and content offsets to that the user can scroll them
  */
 - (void)organizePagesIntoListAnimated:(BOOL)animated {
-    NSArray* pagesToAlignIntoRow = [self pagesToAlignForRowView];
+    NSArray* pagesToAnimateIntoRow = [self pagesToAlignForRowView];
 
     //
     // first, find all pages behind the first full scale
@@ -241,6 +241,10 @@
         for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
             // unhide all pages that were hidden from being collapsed into a single row
             aPage.hidden = NO;
+            if (![pagesToAnimateIntoRow containsObject:aPage]) {
+                aPage.transform = CGAffineTransformIdentity;
+                aPage.frame = [self frameForListViewForPage:aPage];
+            }
         }
         // update the location of the add button in case any pages
         // were deleted/added since we last showed the stack in list mode
@@ -254,10 +258,10 @@
         //
         // animate all visible stack pages that will be in the
         // visible frame to the correct place
-        for (MMPaperView* aPage in pagesToAlignIntoRow) {
+        for (MMPaperView* aPage in pagesToAnimateIntoRow) {
             // these views we're animating into place
             aPage.transform = CGAffineTransformIdentity;
-            aPage.frame = [self frameForIndexInList:[pagesToAlignIntoRow indexOfObject:aPage]];
+            aPage.frame = [self frameForListViewForPage:aPage];
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
         // fade in the add/tutorial buttons
@@ -287,7 +291,7 @@
         // the visible stack pages
         visibleStackHolder.layer.zPosition = 0;
 
-        [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
+        [pagesToAnimateIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
             [aPage setSmoothBorder:NO];
             aPage.layer.zPosition = 0;
         }];
