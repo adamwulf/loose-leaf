@@ -794,14 +794,6 @@ static UIWebView* pdfWebView;
     }
 
     if ([self hasPages]) {
-        // only load the image previews for the pages that will be visible
-        // other page previews will load as the user turns the page,
-        // or as they scroll the list view
-        CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-        NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
-        for (MMEditablePaperView* page in visiblePages) {
-            [page loadCachedPreview];
-        }
         [self setButtonsVisible:YES animated:NO];
 
         // Open to list view if needed

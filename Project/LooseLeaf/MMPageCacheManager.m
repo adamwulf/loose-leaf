@@ -338,5 +338,4 @@ static MMPageCacheManager* _instance = nil;
     return totalBytes;
 }
 
-
 @end
