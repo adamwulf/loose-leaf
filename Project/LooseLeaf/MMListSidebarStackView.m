@@ -27,7 +27,8 @@
 
 - (void)immediatelyRelayoutIfInListMode {
     if (!self.isShowingPageView) {
-        [self realignPagesInListView:[NSSet setWithArray:[self findPagesInVisibleRowsOfListView]] animated:NO forceRecalculateAll:YES];
+        NSArray* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[hiddenStackHolder subviews]];
+        [self realignPagesInListView:[NSSet setWithArray:allPages] animated:NO forceRecalculateAll:YES];
     }
 }
 
@@ -70,7 +71,7 @@
         [self addPage:page belowPage:nearbyPage];
         [page disableAllGestures];
     } else {
-        [visibleStackHolder pushSubview:page];
+        [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
 
     // animate pages into their new location
@@ -106,8 +107,9 @@
 
     NSInteger endIndex = startIndex + kNumberOfColumnsInListView;
     startIndex -= kNumberOfColumnsInListView;
+    endIndex = MIN([allPages count] - 1, endIndex);
 
-    if (startIndex >= 0 && endIndex < [allPages count]) {
+    if (startIndex >= 0 && endIndex < [allPages count] && startIndex <= endIndex) {
         NSArray* closePages = [allPages subarrayWithRange:NSMakeRange(startIndex, endIndex - startIndex + 1)];
         return [closePages jotReduce:^id(id obj, NSUInteger index, MMPaperView* accum) {
             CGRect fr1 = [self frameForListViewForPage:obj];
