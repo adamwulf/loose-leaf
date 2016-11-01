@@ -239,14 +239,8 @@
         //
         // immediately hide all of the pages that we won't be animating
         for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
-            if ([pagesToAlignIntoRow containsObject:aPage]) {
-                // we'll animate these in step 2
-            } else {
-                // we already have the last visible page, we're going to
-                // hide all other pages during the animation, then re-show
-                // them in their correct positions afterwards
-                aPage.hidden = YES;
-            }
+            // unhide all pages that were hidden from being collapsed into a single row
+            aPage.hidden = NO;
         }
         // update the location of the add button in case any pages
         // were deleted/added since we last showed the stack in list mode

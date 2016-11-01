@@ -962,10 +962,12 @@ static UIWebView* pdfWebView;
 #pragma mark - List View Enable / Disable Helper Methods
 
 - (void)immediatelyTransitionToListView {
-    if ([self isShowingPageView]) {
-        [super immediatelyTransitionToListView];
-        [self setButtonsVisible:NO animated:NO];
+    for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        aPage.hidden = NO;
     }
+
+    [super immediatelyTransitionToListView];
+    [self setButtonsVisible:NO animated:NO];
 }
 
 #pragma mark - Gestures for List View

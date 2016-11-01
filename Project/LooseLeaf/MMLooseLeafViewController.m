@@ -77,9 +77,9 @@
     // the scrap button that shows the count
     // in the right sidebar
     MMScrapsInBezelContainerView* bezelScrapContainer;
-    
+
     MMPaperView* pageInActiveSidebarAnimation;
-    
+
     UIScrollView* allStacksScrollView;
 
     UIButton* addNewStackButton;
@@ -193,7 +193,6 @@
 
         // Load the stack
 
-//        [self switchToStack:[[[MMAllStacksManager sharedInstance] stackIDs] firstObject]];
         [self initializeAllStackViewsExcept:nil];
 
         // Image import sidebar
