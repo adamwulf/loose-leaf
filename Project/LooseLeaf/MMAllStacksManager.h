@@ -19,7 +19,7 @@
 
 - (NSString*)stackDirectoryPathForUUID:(NSString*)uuid;
 
-- (NSString*)createStack;
+- (NSString*)createStack:(BOOL)withDefaultContent;
 
 - (void)deleteStack:(NSString*)stackUUID;
 

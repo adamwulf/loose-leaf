@@ -78,18 +78,28 @@ static MMAllStacksManager* _instance = nil;
     }];
 }
 
-- (NSString*)createStack {
+- (NSString*)createStack:(BOOL)withDefaultContent {
     CheckMainThread;
-    NSString* uuid = [[NSUUID UUID] UUIDString];
+    NSString* stackID = [[NSUUID UUID] UUIDString];
 
     NSError* err;
-    NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:uuid];
+    NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
     [[NSFileManager defaultManager] createDirectoryAtPath:stackDirectory withIntermediateDirectories:YES attributes:nil error:&err];
 
-    [stackIDs addObject:@{ @"uuid": uuid }];
+    [stackIDs addObject:@{ @"uuid": stackID }];
     [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
 
-    return uuid;
+    if (!withDefaultContent) {
+        NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
+        [NSFileManager ensureDirectoryExistsAtPath:stackDirectory];
+        NSString* visiblePagesPlist = [[stackDirectory stringByAppendingPathComponent:@"visiblePages"] stringByAppendingPathExtension:@"plist"];
+        NSString* hiddenPagesPlist = [[stackDirectory stringByAppendingPathComponent:@"hiddenPages"] stringByAppendingPathExtension:@"plist"];
+
+        [@[] writeToFile:visiblePagesPlist atomically:YES];
+        [@[] writeToFile:hiddenPagesPlist atomically:YES];
+    }
+
+    return stackID;
 }
 
 - (void)deleteStack:(NSString*)stackUUID {
@@ -179,7 +189,7 @@ static MMAllStacksManager* _instance = nil;
 
         // upgrade from 1.x to 2.x required
         stackIDs = stackIDs ?: [NSMutableArray array];
-        NSString* stackID = [self createStack];
+        NSString* stackID = [self createStack:NO];
         NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
 
 

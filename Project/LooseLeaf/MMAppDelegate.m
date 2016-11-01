@@ -83,6 +83,10 @@ static BOOL isFirstLaunch = NO;
 
 
     [[MMAllStacksManager sharedInstance] upgradeIfNecessary:^{
+        if (![[[MMAllStacksManager sharedInstance] stackIDs] count]) {
+            [[MMAllStacksManager sharedInstance] createStack:YES];
+        }
+
         presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
         [presentationWindow makeKeyAndVisible];
 

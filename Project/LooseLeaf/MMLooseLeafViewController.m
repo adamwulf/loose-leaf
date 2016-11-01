@@ -563,14 +563,6 @@
 
 #pragma mark - MMStackControllerViewDelegate
 
-- (IBAction)addStack {
-    NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack];
-    MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
-    [aStackView ensureAtLeast:3 pagesInStack:aStackView.visibleStackHolder];
-
-    [self initializeAllStackViewsExcept:nil];
-}
-
 - (MMCollapsableStackView*)stackForUUID:(NSString*)stackUUID {
     MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
@@ -995,7 +987,11 @@
 #pragma mark - MMListAddPageButtonDelegate
 
 - (void)didTapAddButtonInListView {
-    [self addStack];
+    NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
+    MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+    [aStackView ensureAtLeast:3 pagesInStack:aStackView.visibleStackHolder];
+
+    [self initializeAllStackViewsExcept:nil];
 }
 
 @end

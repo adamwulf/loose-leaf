@@ -132,6 +132,7 @@
         [stackView addSubviewToBottomOfStack:page];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     }
+    [self saveStacksToDisk];
 }
 
 /**
