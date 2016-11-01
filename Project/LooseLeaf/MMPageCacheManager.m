@@ -272,12 +272,14 @@ static MMPageCacheManager* _instance = nil;
         return ![visiblePages containsObject:obj];
     }];
     NSArray* invisiblePages = [pagesWithLoadedCacheImages objectsAtIndexes:indexes];
+
     for (MMEditablePaperView* page in invisiblePages) {
         @synchronized(stateLoadedPages) {
             if (![stateLoadedPages containsObject:page]) {
                 // only allowed to unload pages that we haven't
                 // asked to load their full state
                 [page unloadCachedPreview];
+                [self.delegate findPagesInVisibleRowsOfListView];
                 [pagesWithLoadedCacheImages removeObject:page];
             }
         }

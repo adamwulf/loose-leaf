@@ -128,6 +128,7 @@
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
 
         allStacksScrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+        [allStacksScrollView setAlwaysBounceVertical:YES];
         [self.view addSubview:allStacksScrollView];
 
         addNewStackButton = [[UIButton alloc] initWithFrame:CGRectWithHeight(self.view.bounds, 200)];
@@ -447,6 +448,10 @@
 
 #pragma mark - MMCollapsableStackViewDelegate
 
+- (BOOL)isShowingCollapsedView {
+    return allStacksScrollView.scrollEnabled;
+}
+
 - (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated {
     MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
@@ -520,15 +525,6 @@
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
     if (!allStacksScrollView.scrollEnabled) {
-        // load all page thumbnails into cache:
-        for (MMCollapsableStackView* stackView in [stackViewsByUUID allValues]) {
-            NSArray* pagesVisibleInRow = [stackView findPagesInVisibleRowsOfListView];
-            for (MMEditablePaperView* page in pagesVisibleInRow) {
-                [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:page];
-            }
-        }
-
-
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
@@ -665,12 +661,19 @@
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
-    NSArray* arr = [currentStackView findPagesInVisibleRowsOfListView] ?: @[];
+    NSArray* arr = @[];
+    if ([self isShowingCollapsedView]) {
+        for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
+            arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
+        }
+    } else {
+        arr = [currentStackView findPagesInVisibleRowsOfListView] ?: @[];
 
-    if (pageInActiveSidebarAnimation) {
-        arr = [arr arrayByAddingObject:pageInActiveSidebarAnimation];
+        if (pageInActiveSidebarAnimation) {
+            arr = [arr arrayByAddingObject:pageInActiveSidebarAnimation];
+        }
+        arr = [arr arrayByAddingObjectsFromArray:[self.bezelPagesContainer viewsInSidebar]];
     }
-    arr = [arr arrayByAddingObjectsFromArray:[self.bezelPagesContainer viewsInSidebar]];
 
     return arr;
 }

@@ -42,6 +42,16 @@
     return self;
 }
 
+- (NSArray*)findPagesInVisibleRowsOfListView {
+    if ([self.stackDelegate isShowingCollapsedView]) {
+        // if we're collapsed, then we want to show the same pages
+        // that would appear in our row view
+        return [self pagesToAlignForRowView];
+    } else {
+        return [super findPagesInVisibleRowsOfListView];
+    }
+}
+
 #pragma mark - Actions
 
 - (void)tapToExpandToListMode:(UIButton*)button {
@@ -132,7 +142,7 @@
         for (MMEditablePaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
             if ([pagesToAlignIntoRow containsObject:aPage]) {
                 // we'll animate these in step 2
-                [aPage loadCachedPreview];
+                [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
             } else {
                 // we already have the last visible page, we're going to
                 // hide all other pages during the animation, then re-show
