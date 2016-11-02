@@ -174,13 +174,14 @@
         // animate all of the pages in the row to their final location.
         // we also rotate the pages slightly so that the view isn't
         // so sterile and boring.
-        for (MMPaperView* aPage in pagesToAlignIntoRow) {
+        for (NSInteger index = 0; index < [pagesToAlignIntoRow count]; index++) {
+            MMPaperView* aPage = pagesToAlignIntoRow[index];
             // a UIView's frame takes into account its transform, but our
             // frames are set assuming an identity transform. let's enforce
             // the identity before setting the frame to make this explicit.
             aPage.transform = CGAffineTransformIdentity;
             aPage.frame = targetFrameInRowForPage(aPage);
-            aPage.transform = CGAffineTransformMakeRotation(rand() % 100 / 100.0 * .05 - .025);
+            aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]));
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
         listViewTutorialButton.alpha = 0;

@@ -1005,7 +1005,7 @@
     for (MMPaperView* page in [[aStackView visibleStackHolder] subviews]) {
         [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
             page.alpha = 1;
-            page.transform = CGAffineTransformIdentity;
+            page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
         } completion:nil];
         delay += .1;
     }

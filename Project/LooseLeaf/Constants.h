@@ -300,6 +300,13 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
     return output;                                                                                                 \
 })(a)
 
+#define RandomCollapsedPageRotation(a) (^float(NSInteger b) {    \
+    srand((unsigned)b);                                          \
+    float output = ((float)(rand() % 100 / 100.0 * .05 - .025)); \
+    srand((unsigned)time(NULL));                                 \
+    return output;                                               \
+})(a)
+
 #define RandomMod(a, b) (^float(NSInteger seed, int mod) { \
     srand((unsigned)seed);                                 \
     int output = (rand() % mod);                           \
