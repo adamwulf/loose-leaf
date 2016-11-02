@@ -609,7 +609,7 @@
 - (void)realignAddStackButton {
     CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
     CGRect fr = addNewStackButton.frame;
-    fr.origin.y = [[[MMAllStacksManager sharedInstance] stackIDs] count] * stackRowHeight;
+    fr.origin.y = [[[MMAllStacksManager sharedInstance] stackIDs] count] * stackRowHeight + [MMListPaperStackView bufferWidth];
     addNewStackButton.frame = fr;
 }
 
@@ -995,6 +995,20 @@
     [aStackView ensureAtLeast:3 pagesInStack:aStackView.visibleStackHolder];
 
     [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
+    for (MMPaperView* page in [[aStackView visibleStackHolder] subviews]) {
+        page.alpha = 0;
+        page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
+    }
+
+    CGFloat delay = 0;
+    for (MMPaperView* page in [[aStackView visibleStackHolder] subviews]) {
+        [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+            page.alpha = 1;
+            page.transform = CGAffineTransformIdentity;
+        } completion:nil];
+        delay += .1;
+    }
 }
 
 @end
