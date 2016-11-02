@@ -774,14 +774,14 @@ static UIWebView* pdfWebView;
                                              error:nil];
 }
 
-- (void)loadStacksFromDiskIntoListView:(BOOL)isListView {
+- (void)loadStacksFromDiskIntoListView {
     // check to see if we have any state to load at all, and if
     // not then build our default content
     if (![self.stackManager hasStateToLoad]) {
         // we don't have any pages, and we don't have any
         // state to load
         [self buildDefaultContent];
-        [self loadStacksFromDiskIntoListView:isListView];
+        [self loadStacksFromDiskIntoListView];
         return;
     } else {
         NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
@@ -791,21 +791,6 @@ static UIWebView* pdfWebView;
         for (MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]) {
             [self addPaperToBottomOfHiddenStack:page];
         }
-    }
-
-    if ([self hasPages]) {
-        [self setButtonsVisible:YES animated:NO];
-
-        // Open to list view if needed
-        if (!isListView) {
-            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[self visibleStackHolder] peekSubview]];
-        } else {
-            // open into list view if that was their last visible screen
-            [self immediatelyTransitionToListView];
-        }
-    } else {
-        // list is empty on purpose
-        [self immediatelyTransitionToListView];
     }
 }
 

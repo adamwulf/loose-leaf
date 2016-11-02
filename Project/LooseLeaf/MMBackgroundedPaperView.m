@@ -117,11 +117,12 @@
 - (void)loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context {
     [super loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context];
 
+    wantsBackgroundTextureLoaded = YES;
+
     if (isLoadingBackgroundTexture) {
         return;
     }
     isLoadingBackgroundTexture = YES;
-    wantsBackgroundTextureLoaded = YES;
 
     void (^loadPageBackgroundFromDisk)() = ^{
         if (![self pageBackgroundTexture]) {

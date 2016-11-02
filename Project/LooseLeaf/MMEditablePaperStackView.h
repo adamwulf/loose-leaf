@@ -78,7 +78,7 @@
 
 - (void)saveStacksToDisk;
 
-- (void)loadStacksFromDiskIntoListView:(BOOL)isListView;
+- (void)loadStacksFromDiskIntoListView;
 
 - (BOOL)hasPages;
 

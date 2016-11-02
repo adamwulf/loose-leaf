@@ -34,13 +34,8 @@
 @synthesize toolbar;
 @synthesize deleteSidebar;
 
-static CGFloat screenWidth = 0;
-static CGFloat screenHeight = 0;
-static CGFloat columnWidth = 0;
-static CGFloat rowHeight = 0;
-static CGFloat bufferWidth = 0;
-
 + (CGFloat)screenWidth {
+    static CGFloat screenWidth = 0;
     if (!screenWidth) {
         screenWidth = CGRectGetWidth([[[UIScreen mainScreen] fixedCoordinateSpace] bounds]);
     }
@@ -48,6 +43,7 @@ static CGFloat bufferWidth = 0;
 }
 
 + (CGFloat)screenHeight {
+    static CGFloat screenHeight = 0;
     if (!screenHeight) {
         screenHeight = CGRectGetHeight([[[UIScreen mainScreen] fixedCoordinateSpace] bounds]);
     }
@@ -82,13 +78,6 @@ static CGFloat bufferWidth = 0;
         setOfInitialFramesForPagesBeingZoomed = [[NSMutableDictionary alloc] initWithCapacity:100];
         [self setScrollEnabled:NO];
         [self setAlwaysBounceVertical:YES];
-        //
-        // screen and column constants
-        screenWidth = self.frame.size.width;
-        screenHeight = self.frame.size.height;
-        columnWidth = screenWidth * kListPageZoom;
-        rowHeight = columnWidth * screenHeight / screenWidth;
-        bufferWidth = columnWidth * kListPageZoom;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldOpen:) name:kTutorialStartedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tutorialShouldClose:) name:kTutorialClosedNotification object:nil];
@@ -130,7 +119,7 @@ static CGFloat bufferWidth = 0;
         [self addSubview:toolbar];
 
         // init the add page button in top left of scrollview
-        addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake(bufferWidth, bufferWidth, columnWidth, rowHeight)];
+        addPageButtonInListView = [[MMListAddPageButton alloc] initWithFrame:CGRectMake([MMListPaperStackView bufferWidth], [MMListPaperStackView bufferWidth], [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight])];
         addPageButtonInListView.delegate = self;
         addPageButtonInListView.alpha = 0;
         [self addSubview:addPageButtonInListView];
@@ -170,13 +159,13 @@ static CGFloat bufferWidth = 0;
 - (CGRect)frameForAddPageButton {
     NSInteger numberOfPages = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count];
     NSInteger maxRow = numberOfPages / kNumberOfColumnsInListView;
-    CGRect ret = CGRectMake(0, 0, columnWidth, rowHeight);
+    CGRect ret = CGRectMake(0, 0, [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight]);
 
     NSInteger possibleRemainder = 0;
     while (true) {
         if (numberOfPages % kNumberOfColumnsInListView == possibleRemainder) {
-            ret.origin.x = bufferWidth + bufferWidth * possibleRemainder + columnWidth * possibleRemainder;
-            ret.origin.y = bufferWidth + bufferWidth * maxRow + rowHeight * maxRow;
+            ret.origin.x = [MMListPaperStackView bufferWidth] + [MMListPaperStackView bufferWidth] * possibleRemainder + [MMListPaperStackView columnWidth] * possibleRemainder;
+            ret.origin.y = [MMListPaperStackView bufferWidth] + [MMListPaperStackView bufferWidth] * maxRow + [MMListPaperStackView rowHeight] * maxRow;
             return ret;
         }
         possibleRemainder++;
@@ -212,10 +201,10 @@ static CGFloat bufferWidth = 0;
     NSInteger column = [self columnInListViewGivenIndex:indexOfPage];
     NSInteger row = [self rowInListViewGivenIndex:indexOfPage];
     CGRect frameOfPage = CGRectZero;
-    frameOfPage.origin.x = bufferWidth + bufferWidth * column + columnWidth * column;
-    frameOfPage.origin.y = bufferWidth + (bufferWidth + rowHeight) * row;
-    frameOfPage.size.width = columnWidth;
-    frameOfPage.size.height = rowHeight;
+    frameOfPage.origin.x = [MMListPaperStackView bufferWidth] + [MMListPaperStackView bufferWidth] * column + [MMListPaperStackView columnWidth] * column;
+    frameOfPage.origin.y = [MMListPaperStackView bufferWidth] + ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]) * row;
+    frameOfPage.size.width = [MMListPaperStackView columnWidth];
+    frameOfPage.size.height = [MMListPaperStackView rowHeight];
     return frameOfPage;
 }
 
@@ -1378,8 +1367,8 @@ static CGFloat bufferWidth = 0;
 #pragma mark Other Helpers
 
 - (NSInteger)indexForPointInList:(CGPoint)point {
-    NSInteger row = point.y / (rowHeight + bufferWidth);
-    NSInteger col = point.x / (columnWidth + bufferWidth);
+    NSInteger row = point.y / ([MMListPaperStackView rowHeight] + [MMListPaperStackView bufferWidth]);
+    NSInteger col = point.x / ([MMListPaperStackView columnWidth] + [MMListPaperStackView bufferWidth]);
     return row * kNumberOfColumnsInListView + col;
 }
 
@@ -1453,7 +1442,7 @@ static CGFloat bufferWidth = 0;
     // calculate the number of rows that will be hidden from offset
     NSInteger numberOfHiddenRows = MAX(0, page.rowInListView - 1);
     CGFloat contentHeight = [self contentHeightForAllPages];
-    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * (bufferWidth + rowHeight));
+    CGPoint possiblePoint = CGPointMake(0, numberOfHiddenRows * ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]));
     if (possiblePoint.y + self.frame.size.height > contentHeight) {
         possiblePoint.y = contentHeight - self.frame.size.height;
     }
@@ -1473,7 +1462,7 @@ static CGFloat bufferWidth = 0;
         // need to add a row for the add button
         numberOfRows += 1;
     }
-    return numberOfRows * (bufferWidth + rowHeight) + bufferWidth;
+    return numberOfRows * ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]) + [MMListPaperStackView bufferWidth];
 }
 
 /**
@@ -1552,10 +1541,10 @@ static CGFloat bufferWidth = 0;
         countOfSubviews[1] = (int)[hiddenStackHolder.subviews count];
         int arrayIndex = 1;
 
-        int startRow = floor(selfContentOffsetY) / (bufferWidth + rowHeight);
+        int startRow = floor(selfContentOffsetY) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]);
         int startIndex = startRow * kNumberOfColumnsInListView;
 
-        NSInteger endRow = floor(selfContentOffsetY + selfFrameSizeHeight - bufferWidth) / (bufferWidth + rowHeight);
+        NSInteger endRow = floor(selfContentOffsetY + selfFrameSizeHeight - [MMListPaperStackView bufferWidth]) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]);
         if (endRow < countOfSubviews[0] + countOfSubviews[1]) {
             endRow += 1;
         }

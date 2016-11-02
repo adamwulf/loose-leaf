@@ -24,7 +24,6 @@
 
 @implementation MMCollapsableStackView {
     UIButton* expandButton;
-    UIColor* randomColor;
 }
 
 @dynamic stackDelegate;
@@ -36,8 +35,6 @@
         [expandButton addTarget:self action:@selector(tapToExpandToListMode:) forControlEvents:UIControlEventTouchUpInside];
         expandButton.hidden = YES;
         [self addSubview:expandButton];
-
-        randomColor = [AVHexColor randomColor];
     }
     return self;
 }
@@ -55,7 +52,7 @@
 #pragma mark - Actions
 
 - (void)tapToExpandToListMode:(UIButton*)button {
-    [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES];
+    [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
 }
 
 
@@ -278,6 +275,7 @@
         // fade in the add/tutorial buttons
         listViewTutorialButton.alpha = 1;
         addPageButtonInListView.alpha = 1;
+        [self setButtonsVisible:NO animated:NO];
     };
 
     //

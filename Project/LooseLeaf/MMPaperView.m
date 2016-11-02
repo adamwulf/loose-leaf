@@ -48,6 +48,10 @@
         [self.layer setMasksToBounds:YES];
         self.scale = 1;
 
+        //        UILabel* lbl = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 400, 20)];
+        //        lbl.text = self.uuid;
+        //        [self addSubview:lbl];
+
         //
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate

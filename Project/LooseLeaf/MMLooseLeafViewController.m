@@ -194,7 +194,7 @@
 
         // Load the stack
 
-        [self initializeAllStackViewsExcept:nil];
+        [self initializeAllStackViewsExcept:nil viewMode:viewModeForLaunch];
 
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView insertImageButtonFrame] animateFromLeft:YES];
@@ -251,14 +251,7 @@
 
         // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
         if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
-            [self didAskToSwitchToStack:currentStackForLaunch animated:NO];
-
-            MMCollapsableStackView* stackView = [self stackForUUID:currentStackForLaunch];
-            if ([viewModeForLaunch isEqualToString:kViewModePage]) {
-                [stackView immediatelyTransitionToPageViewAnimated:NO];
-            } else {
-                [currentStackView setButtonsVisible:NO animated:NO];
-            }
+            [self didAskToSwitchToStack:currentStackForLaunch animated:NO viewMode:viewModeForLaunch];
         } else {
             [currentStackView setButtonsVisible:NO animated:NO];
             bezelPagesContainer.alpha = 0;
@@ -452,7 +445,7 @@
     return allStacksScrollView.scrollEnabled;
 }
 
-- (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated {
+- (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated viewMode:(NSString*)viewMode {
     MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
     if (!aStackView) {
@@ -468,7 +461,11 @@
     originalFrame.size.height = CGRectGetHeight(self.view.bounds);
     aStackView.frame = originalFrame;
     [self.view insertSubview:aStackView aboveSubview:allStacksScrollView];
-    [aStackView organizePagesIntoListAnimated:animated];
+    if ([viewMode isEqualToString:kViewModeList]) {
+        [aStackView organizePagesIntoListAnimated:animated];
+    } else {
+        [aStackView immediatelyTransitionToPageViewAnimated:animated];
+    }
 
     void (^animationStep)() = ^{
         NSInteger targetStackIndex = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
@@ -531,7 +528,7 @@
         [aStackView organizePagesIntoSingleRowAnimated:animated];
 
         void (^animationBlock)() = ^{
-            [self initializeAllStackViewsExcept:stackUUID];
+            [self initializeAllStackViewsExcept:stackUUID viewMode:kViewModeCollapsed];
             addNewStackButton.alpha = 1;
             bezelPagesContainer.alpha = 0;
         };
@@ -572,20 +569,26 @@
         aStackView.deleteSidebar = deleteSidebar;
         aStackView.center = self.view.center;
 
-        [aStackView loadStacksFromDiskIntoListView:[[NSUserDefaults standardUserDefaults] boolForKey:kIsShowingListView]];
+        [aStackView loadStacksFromDiskIntoListView];
 
         stackViewsByUUID[stackUUID] = aStackView;
     }
     return aStackView;
 }
 
-- (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight {
+- (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight viewMode:(NSString*)viewMode {
     CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
     for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
         NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
-            [aStackView organizePagesIntoSingleRowAnimated:NO];
+            if ([viewMode isEqualToString:kViewModeCollapsed]) {
+                [aStackView organizePagesIntoSingleRowAnimated:NO];
+            } else if ([viewMode isEqualToString:kViewModeList]) {
+                [aStackView immediatelyTransitionToListView];
+            } else {
+                [aStackView immediatelyTransitionToPageViewAnimated:NO];
+            }
         }
         CGRect fr = aStackView.bounds;
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
@@ -624,7 +627,7 @@
             idx -= 1;
         }
     }
-    [self initializeAllStackViewsExcept:nil];
+    [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 }
 
 #pragma mark - MMMemoryManagerDelegate
@@ -991,7 +994,7 @@
     MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
     [aStackView ensureAtLeast:3 pagesInStack:aStackView.visibleStackHolder];
 
-    [self initializeAllStackViewsExcept:nil];
+    [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 }
 
 @end

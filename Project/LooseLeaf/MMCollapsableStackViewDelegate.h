@@ -13,7 +13,7 @@
 
 - (BOOL)isShowingCollapsedView;
 
-- (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated;
+- (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated viewMode:(NSString*)viewMode;
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated;
 
