@@ -83,6 +83,8 @@
     UIScrollView* allStacksScrollView;
 
     MMListAddPageButton* addNewStackButton;
+
+    BOOL isShowingCollapsedView;
 }
 
 @synthesize bezelPagesContainer;
@@ -93,6 +95,7 @@
         NSString* currentStackForLaunch = [[NSUserDefaults standardUserDefaults] objectForKey:kCurrentStack];
 
         mightShowReleaseNotes = YES;
+        isShowingCollapsedView = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(pageCacheManagerDidLoadPage)
@@ -441,10 +444,6 @@
 
 #pragma mark - MMCollapsableStackViewDelegate
 
-- (BOOL)isShowingCollapsedView {
-    return allStacksScrollView.scrollEnabled;
-}
-
 - (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated viewMode:(NSString*)viewMode {
     MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
@@ -452,6 +451,8 @@
         // don't allow switching to a stack that doesn't exist!
         return;
     }
+
+    isShowingCollapsedView = NO;
 
     CGRect originalFrame = [aStackView convertRect:[aStackView bounds] toView:self.view];
     CGFloat originalMaxY = CGRectGetMaxY(originalFrame);
@@ -521,6 +522,8 @@
 }
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
+    isShowingCollapsedView = YES;
+
     if (!allStacksScrollView.scrollEnabled) {
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
@@ -555,6 +558,24 @@
             animationBlock();
             completedBlock(YES);
         }
+    }
+}
+
+- (void)isPossiblyDeletingStack:(NSString*)stackUUID {
+    if ([self isShowingCollapsedView]) {
+        allStacksScrollView.scrollEnabled = NO;
+    }
+}
+
+- (void)isAskingToDeleteStack:(NSString*)stackUUID {
+    if ([self isShowingCollapsedView]) {
+        allStacksScrollView.scrollEnabled = YES;
+    }
+}
+
+- (void)isNotGoingToDeleteStack:(NSString*)stackUUID {
+    if ([self isShowingCollapsedView]) {
+        allStacksScrollView.scrollEnabled = YES;
     }
 }
 
@@ -680,7 +701,15 @@
 }
 
 - (BOOL)isShowingPageView {
-    return [currentStackView isShowingPageView];
+    return [currentStackView isShowingPageView] && !isShowingCollapsedView;
+}
+
+- (BOOL)isShowingListView {
+    return [currentStackView isShowingListView] && !isShowingCollapsedView;
+}
+
+- (BOOL)isShowingCollapsedView {
+    return isShowingCollapsedView;
 }
 
 - (NSInteger)countAllPages {

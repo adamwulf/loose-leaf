@@ -56,6 +56,7 @@
 @property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
 @property (nonatomic, readonly) MMButtonToolbarView* toolbar;
 @property (nonatomic, readonly) BOOL isAnimatingTowardPageView;
+@property (nonatomic, readonly) NSString* currentViewMode;
 
 - (CGPoint)offsetNeededToShowPage:(MMPaperView*)page;
 - (NSArray*)findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;

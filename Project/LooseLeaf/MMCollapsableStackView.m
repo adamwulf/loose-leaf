@@ -8,6 +8,7 @@
 
 #import "MMCollapsableStackView.h"
 #import "MMLargeTutorialSidebarButton.h"
+#import "MMContinuousSwipeGestureRecognizer.h"
 #import "AVHexColor.h"
 #import "NSArray+Extras.h"
 
@@ -15,7 +16,9 @@
 #define kCollapseAnimationDuration 0.3
 
 
-@interface MMListPaperStackView (Protected)
+@interface MMListPaperStackView (Protected) <UIGestureRecognizerDelegate>
+
+@property (nonatomic, strong) NSString* currentViewMode;
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page;
 
@@ -24,6 +27,7 @@
 
 @implementation MMCollapsableStackView {
     UIButton* expandButton;
+    MMContinuousSwipeGestureRecognizer* deleteGesture;
 }
 
 @dynamic stackDelegate;
@@ -35,8 +39,19 @@
         [expandButton addTarget:self action:@selector(tapToExpandToListMode:) forControlEvents:UIControlEventTouchUpInside];
         expandButton.hidden = YES;
         [self addSubview:expandButton];
+
+        deleteGesture = [[MMContinuousSwipeGestureRecognizer alloc] initWithTarget:self action:@selector(deleteGesture:)];
+        deleteGesture.delegate = self;
+        deleteGesture.angleBuffer = 30;
+        deleteGesture.enabled = NO;
+        [self addGestureRecognizer:deleteGesture];
     }
     return self;
+}
+
+- (void)setCurrentViewMode:(NSString*)currentViewMode {
+    [super setCurrentViewMode:currentViewMode];
+    deleteGesture.enabled = [self isShowingCollapsedView];
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
@@ -119,6 +134,7 @@
     }
 
     NSArray* pagesToAlignIntoRow = [self pagesToAlignForRowView];
+    [self setCurrentViewMode:kViewModeCollapsed];
 
     //
     // first, hide all pages that won't be visible during the row animation.
@@ -330,6 +346,43 @@
     //
     // now that the user has finished the gesture,
     // we can forget about the original frame locations
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    return YES;
+}
+
+#pragma mark - Delete Inbox Items
+
+- (BOOL)finishSwipeToDelete {
+    // animate the delete gesture to finish, or animate back to cancelled
+    return NO;
+}
+
+- (void)deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender {
+    CGPoint p = [sender locationInView:self];
+
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        CGFloat initialAdjustment = .8; //self.squishFactor;
+        // notify other stacks to cancel their delete gesture if any
+        // also, don't let the user swipe to delete and scroll the stacks at the same time
+        [[self stackDelegate] isPossiblyDeletingStack:self.uuid];
+    } else if (sender.state == UIGestureRecognizerStateChanged) {
+        CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
+        //        [self adjustForDelete:initialAdjustment + amount / 100.0];
+    } else if (sender.state == UIGestureRecognizerStateEnded ||
+               sender.state == UIGestureRecognizerStateCancelled) {
+        // enable scrolling stack list
+        if ([self finishSwipeToDelete]) {
+            // delete immediately
+            [[self stackDelegate] isAskingToDeleteStack:self.uuid];
+        } else {
+            // don't delete, wait for tap
+            [[self stackDelegate] isNotGoingToDeleteStack:self.uuid];
+        }
+    }
 }
 
 @end

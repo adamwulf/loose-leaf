@@ -17,4 +17,10 @@
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated;
 
+- (void)isPossiblyDeletingStack:(NSString*)stackUUID;
+
+- (void)isAskingToDeleteStack:(NSString*)stackUUID;
+
+- (void)isNotGoingToDeleteStack:(NSString*)stackUUID;
+
 @end

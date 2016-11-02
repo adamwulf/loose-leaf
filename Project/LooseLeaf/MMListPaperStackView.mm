@@ -21,18 +21,26 @@
 #define kAdditionalZoomForPanningPageInList .03
 
 
+@interface MMListPaperStackView (Protected)
+
+@property (nonatomic, strong) NSString* currentViewMode;
+
+@end
+
+
 @implementation MMListPaperStackView {
     std::map<NSUInteger, CGRect>* mapOfFinalFramesForPagesBeingZoomed; //All data pointers have same size,
-    BOOL isShowingPageView;
     MMButtonAwareTapGestureRecognizer* tapGesture;
     MMButtonAwareTapGestureRecognizer* twoFingerTapGesture;
     MMDeletePageSidebarController* deleteSidebar;
     NSMutableSet* pagesBeingAnimatedDuringDeleteGesture;
     BOOL isAnimatingTowardPageView;
+    NSString* _currentStackMode;
 }
 
 @synthesize toolbar;
 @synthesize deleteSidebar;
+@synthesize currentViewMode = currentViewMode;
 
 + (CGFloat)screenWidth {
     static CGFloat screenWidth = 0;
@@ -69,7 +77,7 @@
     if (self) {
         self.delegate = self;
 
-        isShowingPageView = YES;
+        [self setCurrentViewMode:kViewModePage];
         isAnimatingTowardPageView = NO;
 
         mapOfFinalFramesForPagesBeingZoomed = new std::map<NSUInteger, CGRect>;
@@ -137,6 +145,9 @@
     return [super fullByteSize] + addPageButtonInListView.fullByteSize;
 }
 
+- (void)setCurrentViewMode:(NSString*)_currentViewMode {
+    currentViewMode = _currentViewMode;
+}
 
 #pragma mark - Gesture Helpers
 
@@ -255,7 +266,7 @@
 }
 
 - (void)immediatelyTransitionToListView {
-    if (isShowingPageView) {
+    if (![self isShowingListView]) {
         MMEditablePaperView* page = [[self visibleStackHolder] peekSubview];
 
         [self beginUITransitionFromPageView];
@@ -360,7 +371,7 @@
  */
 - (void)finishUITransitionToListView {
     @synchronized(self) {
-        isShowingPageView = NO;
+        [self setCurrentViewMode:kViewModeList];
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
     [fromRightBezelGesture setEnabled:NO];
@@ -389,7 +400,7 @@
         [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kMPHasZoomedToPage];
     }
     @synchronized(self) {
-        isShowingPageView = YES;
+        [self setCurrentViewMode:kViewModePage];
     }
     for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
         if (aPage != [visibleStackHolder peekSubview]) {
@@ -1884,7 +1895,7 @@
 #pragma mark - MMInboxManagerDelegate Helper
 
 - (void)transitionFromListToNewBlankPageIfInPageView {
-    if (!isShowingPageView) {
+    if (![self isShowingPageView]) {
         // if we're in list mode, then we need
         // to move into page mode with a new blank page
         // that is inserted wherever we're looking
@@ -1942,7 +1953,15 @@
 }
 
 - (BOOL)isShowingPageView {
-    return isShowingPageView;
+    return [currentViewMode isEqualToString:kViewModePage];
+}
+
+- (BOOL)isShowingListView {
+    return [currentViewMode isEqualToString:kViewModeList];
+}
+
+- (BOOL)isShowingCollapsedView {
+    return [currentViewMode isEqualToString:kViewModeCollapsed];
 }
 
 - (NSInteger)countAllPages {
@@ -1952,13 +1971,13 @@
 #pragma mark - Check for Active Gestures
 
 - (BOOL)isActivelyGesturing {
-    return [super isActivelyGesturing] || !isShowingPageView;
+    return [super isActivelyGesturing] || ![self isShowingPageView];
 }
 
 #pragma mark - Import
 
 - (BOOL)importAndShowPage:(MMExportablePaperView*)page {
-    if (!isShowingPageView) {
+    if (![self isShowingPageView]) {
         [[NSThread mainThread] performBlock:^{
             // if we're in list mode, then we need
             // to move into page mode with a new blank page
