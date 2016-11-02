@@ -28,6 +28,8 @@
 @implementation MMCollapsableStackView {
     UIButton* expandButton;
     MMContinuousSwipeGestureRecognizer* deleteGesture;
+    CGFloat squishFactor;
+    CGFloat initialAdjustment;
 }
 
 @dynamic stackDelegate;
@@ -114,6 +116,19 @@
 
 #pragma mark - Animate into row form
 
+- (CGRect)targetFrameInRowForPage:(MMPaperView*)aPage givenAllPages:(NSArray*)pagesToAlignIntoRow {
+    // now we're going to animate all of the pages into a single row.
+    // to do that, we find the first + list frames for pages, and equally
+    // spread the pages between those two frames
+    CGRect firstFrame = [self frameForIndexInList:0];
+    CGRect lastFrame = [self frameForIndexInList:kNumberOfColumnsInListView - 1];
+    NSInteger minimumNumberOfPagesForSpacing = MAX(12, [pagesToAlignIntoRow count]);
+    NSInteger indexInList = [pagesToAlignIntoRow indexOfObject:aPage];
+    CGRect targetFrame = firstFrame;
+    targetFrame.origin.x += (lastFrame.origin.x - firstFrame.origin.x) * ((CGFloat)indexInList / minimumNumberOfPagesForSpacing);
+    return targetFrame;
+}
+
 /**
  * the user has scaled small enough with the top page
  * that we can take over and just animate the rest.
@@ -171,19 +186,6 @@
         [expandButton setHidden:NO];
     };
 
-    // now we're going to animate all of the pages into a single row.
-    // to do that, we find the first + list frames for pages, and equally
-    // spread the pages between those two frames
-    CGRect firstFrame = [self frameForIndexInList:0];
-    CGRect lastFrame = [self frameForIndexInList:kNumberOfColumnsInListView - 1];
-    CGRect (^targetFrameInRowForPage)(MMPaperView* page) = ^(MMPaperView* aPage) {
-        NSInteger minimumNumberOfPagesForSpacing = MAX(12, [pagesToAlignIntoRow count]);
-        NSInteger indexInList = [pagesToAlignIntoRow indexOfObject:aPage];
-        CGRect targetFrame = firstFrame;
-        targetFrame.origin.x += (lastFrame.origin.x - firstFrame.origin.x) * ((CGFloat)indexInList / minimumNumberOfPagesForSpacing);
-        return targetFrame;
-    };
-
     // make sure all the pages go to the correct place
     // so that it looks like where they'll be in the row view
     void (^step2)(void) = ^{
@@ -196,7 +198,7 @@
             // frames are set assuming an identity transform. let's enforce
             // the identity before setting the frame to make this explicit.
             aPage.transform = CGAffineTransformIdentity;
-            aPage.frame = targetFrameInRowForPage(aPage);
+            aPage.frame = [self targetFrameInRowForPage:aPage givenAllPages:pagesToAlignIntoRow];
             aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]));
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
@@ -365,13 +367,16 @@
     CGPoint p = [sender locationInView:self];
 
     if (sender.state == UIGestureRecognizerStateBegan) {
-        CGFloat initialAdjustment = .8; //self.squishFactor;
         // notify other stacks to cancel their delete gesture if any
         // also, don't let the user swipe to delete and scroll the stacks at the same time
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid];
+
+        initialAdjustment = squishFactor;
     } else if (sender.state == UIGestureRecognizerStateChanged) {
+        CGRect firstFrame = [self frameForIndexInList:0];
+        CGRect lastFrame = [self frameForIndexInList:kNumberOfColumnsInListView - 1];
         CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
-        //        [self adjustForDelete:initialAdjustment + amount / 100.0];
+        [self adjustForDelete:initialAdjustment + amount / (CGRectGetMidX(lastFrame) - CGRectGetMidX(firstFrame))];
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
         // enable scrolling stack list
@@ -382,6 +387,35 @@
             // don't delete, wait for tap
             [[self stackDelegate] isNotGoingToDeleteStack:self.uuid];
         }
+        [self adjustForDelete:0];
+    }
+}
+
+- (void)adjustForDelete:(CGFloat)adjustment {
+    if ([self.layer.animationKeys count]) {
+        [self.layer removeAllAnimations];
+    }
+    squishFactor = MAX(-0.2, adjustment);
+
+    CGFloat alphaForDelete = adjustment - .5;
+    alphaForDelete = MAX(alphaForDelete, 0);
+    alphaForDelete /= .4;
+    alphaForDelete = MIN(alphaForDelete, 1.0);
+    //    deleteButton.alpha = alphaForDelete;
+
+    CGRect frameAtStart = [self frameForIndexInList:0];
+
+    NSArray* pagesToAlign = [self pagesToAlignForRowView];
+    for (int i = 0; i < [pagesToAlign count]; i++) {
+        MMPaperView* aPage = pagesToAlign[i];
+        CGFloat ix = CGRectGetMidX([self targetFrameInRowForPage:aPage givenAllPages:pagesToAlign]);
+        CGFloat fx = CGRectGetMidX(frameAtStart) - 120 + i * 4;
+        CGFloat diff = fx - ix;
+        CGFloat x = ix + diff * squishFactor;
+
+        aPage.center = CGPointMake(x, CGRectGetMidY(frameAtStart) + (RandomMod(i, 80) - 40) * squishFactor);
+
+        aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]) + squishFactor * 5 * RandomPhotoRotation([[aPage uuid] hash]));
     }
 }
 
