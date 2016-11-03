@@ -9,6 +9,7 @@
 #import "MMCollapsableStackView.h"
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMContinuousSwipeGestureRecognizer.h"
+#import "MMDeleteButton.h"
 #import "AVHexColor.h"
 #import "NSArray+Extras.h"
 
@@ -30,6 +31,7 @@
     MMContinuousSwipeGestureRecognizer* deleteGesture;
     CGFloat squishFactor;
     CGFloat initialAdjustment;
+    MMDeleteButton* deleteButton;
 }
 
 @dynamic stackDelegate;
@@ -47,6 +49,17 @@
         deleteGesture.angleBuffer = 30;
         deleteGesture.enabled = NO;
         [self addGestureRecognizer:deleteGesture];
+
+        CGFloat buffer = [MMListPaperStackView bufferWidth];
+        CGFloat rowHeight = [MMListPaperStackView rowHeight] + 2 * buffer;
+        CGFloat deleteButtonWidth = 80;
+        CGRect deleteRect = CGRectMake(self.bounds.size.width - 3 * buffer - deleteButtonWidth, (rowHeight - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
+        deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
+        [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        deleteButton.rotation = M_PI / 4;
+        deleteButton.transform = [deleteButton rotationTransform];
+        deleteButton.alpha = 0;
+        [self addSubview:deleteButton];
     }
     return self;
 }
@@ -372,6 +385,7 @@
         CGFloat updatedSquish = initialAdjustment + amount / (CGRectGetMidX(lastFrame) - CGRectGetMidX(firstFrame));
         [self adjustForDelete:updatedSquish withTranslate:0];
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:MAX(0, updatedSquish - .3) * 1.8];
+        deleteButton.alpha = MIN(.2, MAX(0, updatedSquish)) / .2;
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
         // enable scrolling stack list
@@ -388,10 +402,10 @@
             CGFloat bounce = ABS(squishFactor * .2);
             [self adjustForDelete:(squishFactor < 0) ? bounce : -bounce withTranslate:0];
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            deleteButton.alpha = 0;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:0 withTranslate:0];
-                //                deleteButton.alpha = 0;
             }];
         }];
         return NO;
@@ -400,7 +414,7 @@
         // delete immediately
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self adjustForDelete:1 withTranslate:-250];
-            //                deleteButton.alpha = 0;
+            deleteButton.alpha = 0;
         } completion:nil];
         [UIView animateWithDuration:.2 delay:.1 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
@@ -413,10 +427,10 @@
             CGFloat bounce = MIN(ABS(targetToShowButtons - squishFactor) * .2, 20);
             [self adjustForDelete:(squishFactor < targetToShowButtons) ? (targetToShowButtons + bounce) : (targetToShowButtons - bounce) withTranslate:0];
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            deleteButton.alpha = 1.0;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:targetToShowButtons withTranslate:0];
-                //                deleteButton.alpha = 1.0;
             }];
         }];
         return NO;
@@ -438,6 +452,8 @@
     }
 
     [self setClipsToBounds:squishFactor == 0];
+    [expandButton setEnabled:squishFactor == 0];
+    [deleteButton setEnabled:squishFactor > 0];
 
     CGFloat alphaForDelete = adjustment - .5;
     alphaForDelete = MAX(alphaForDelete, 0);
@@ -459,6 +475,21 @@
 
         aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]) + easedOut * 5 * RandomPhotoRotation([[aPage uuid] hash]));
     }
+}
+
+- (IBAction)deleteButtonTapped:(id)sender {
+    [UIView animateWithDuration:.4 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        [self adjustForDelete:.9 withTranslate:0];
+    } completion:nil];
+    [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:1.0];
+        deleteButton.alpha = 0;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            [self adjustForDelete:1.0 withTranslate:-250];
+        } completion:nil];
+    }];
 }
 
 @end
