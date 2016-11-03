@@ -67,7 +67,15 @@
 
         CGFloat cornerRadius = roundf(.125 * [MMListPaperStackView columnWidth]);
         CGRect confirmationRect = CGRectMake(buffer, 0, self.bounds.size.width - 2 * buffer, rowHeight);
+
+        // Vibrancy Effect
         deleteConfirmationPlaceholder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), rowHeight + 2 * buffer)];
+
+        //        UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        //        UIVibrancyEffect* vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:blur];
+        //        UIVisualEffectView* vibrantView = [[UIVisualEffectView alloc] initWithEffect:vibrancyEffect];
+        //        vibrantView.frame = deleteConfirmationPlaceholder.bounds;
+
         UIBezierPath* border = [UIBezierPath bezierPathWithRoundedRect:confirmationRect cornerRadius:cornerRadius];
         CAShapeLayer* borderLayer = [CAShapeLayer layer];
         borderLayer.path = border.CGPath;
@@ -77,9 +85,23 @@
         [borderLayer setLineDashPhase:0];
         [borderLayer setFillColor:[[UIColor clearColor] CGColor]];
         borderLayer.backgroundColor = borderLayer.fillColor;
+
+        UIBezierPath* background = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(confirmationRect, 4, 4) cornerRadius:cornerRadius - 4];
+        CAShapeLayer* backgroundLayer = [CAShapeLayer layer];
+        backgroundLayer.path = background.CGPath;
+        backgroundLayer.fillColor = [UIColor colorWithWhite:1.0 alpha:.2].CGColor;
+
         [deleteConfirmationPlaceholder.layer addSublayer:borderLayer];
+        [deleteConfirmationPlaceholder.layer addSublayer:backgroundLayer];
         deleteConfirmationPlaceholder.alpha = 0;
         [self addSubview:deleteConfirmationPlaceholder];
+
+        UILabel* lbl = [[UILabel alloc] initWithFrame:CGRectWithHeight(deleteConfirmationPlaceholder.bounds, 250)];
+        lbl.text = @"Are you sure you want to delete these pages?";
+        lbl.textColor = [UIColor blackColor];
+        lbl.textAlignment = NSTextAlignmentCenter;
+        lbl.font = [UIFont systemFontOfSize:20];
+        [deleteConfirmationPlaceholder addSubview:lbl];
     }
     return self;
 }
