@@ -32,6 +32,8 @@
     CGFloat squishFactor;
     CGFloat initialAdjustment;
     MMDeleteButton* deleteButton;
+
+    UIView* deleteConfirmationPlaceholder;
 }
 
 @dynamic stackDelegate;
@@ -60,6 +62,24 @@
         deleteButton.transform = [deleteButton rotationTransform];
         deleteButton.alpha = 0;
         [self addSubview:deleteButton];
+
+        UIColor* quarterWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
+
+        CGFloat cornerRadius = roundf(.125 * [MMListPaperStackView columnWidth]);
+        CGRect confirmationRect = CGRectMake(buffer, 0, self.bounds.size.width - 2 * buffer, rowHeight);
+        deleteConfirmationPlaceholder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), rowHeight + 2 * buffer)];
+        UIBezierPath* border = [UIBezierPath bezierPathWithRoundedRect:confirmationRect cornerRadius:cornerRadius];
+        CAShapeLayer* borderLayer = [CAShapeLayer layer];
+        borderLayer.path = border.CGPath;
+        borderLayer.strokeColor = quarterWhite.CGColor;
+        [borderLayer setLineDashPattern:@[@35, @10]];
+        [borderLayer setRepeatCount:2];
+        [borderLayer setLineDashPhase:0];
+        [borderLayer setFillColor:[[UIColor clearColor] CGColor]];
+        borderLayer.backgroundColor = borderLayer.fillColor;
+        [deleteConfirmationPlaceholder.layer addSublayer:borderLayer];
+        deleteConfirmationPlaceholder.alpha = 0;
+        [self addSubview:deleteConfirmationPlaceholder];
     }
     return self;
 }
@@ -376,6 +396,7 @@
         // notify other stacks to cancel their delete gesture if any
         // also, don't let the user swipe to delete and scroll the stacks at the same time
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:0];
+        deleteConfirmationPlaceholder.alpha = 0;
 
         initialAdjustment = squishFactor;
     } else if (sender.state == UIGestureRecognizerStateChanged) {
@@ -403,6 +424,7 @@
             [self adjustForDelete:(squishFactor < 0) ? bounce : -bounce withTranslate:0];
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             deleteButton.alpha = 0;
+            deleteConfirmationPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:0 withTranslate:0];
@@ -415,6 +437,7 @@
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self adjustForDelete:1 withTranslate:-250];
             deleteButton.alpha = 0;
+            deleteConfirmationPlaceholder.alpha = 1;
         } completion:nil];
         [UIView animateWithDuration:.2 delay:.1 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
@@ -428,6 +451,7 @@
             [self adjustForDelete:(squishFactor < targetToShowButtons) ? (targetToShowButtons + bounce) : (targetToShowButtons - bounce) withTranslate:0];
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             deleteButton.alpha = 1.0;
+            deleteConfirmationPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:targetToShowButtons withTranslate:0];
@@ -490,6 +514,9 @@
             [self adjustForDelete:1.0 withTranslate:-250];
         } completion:nil];
     }];
+    [UIView animateWithDuration:.2 delay:.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        deleteConfirmationPlaceholder.alpha = 1;
+    } completion:nil];
 }
 
 @end

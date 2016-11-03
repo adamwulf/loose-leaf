@@ -564,7 +564,7 @@
 - (void)isPossiblyDeletingStack:(NSString*)stackUUID withPendingProbability:(CGFloat)probability {
     if ([self isShowingCollapsedView]) {
         allStacksScrollView.scrollEnabled = NO;
-        [deleteSidebar showSidebarWithPercent:probability withTargetView:nil];
+        [deleteSidebar showSidebarWithPercent:probability withTargetView:stackViewsByUUID[stackUUID]];
     }
 }
 
@@ -577,7 +577,7 @@
 - (void)isNotGoingToDeleteStack:(NSString*)stackUUID {
     if ([self isShowingCollapsedView]) {
         allStacksScrollView.scrollEnabled = YES;
-        [deleteSidebar showSidebarWithPercent:0 withTargetView:nil];
+        [deleteSidebar showSidebarWithPercent:0 withTargetView:stackViewsByUUID[stackUUID]];
     }
 }
 
