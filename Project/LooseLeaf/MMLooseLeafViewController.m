@@ -465,8 +465,11 @@
     if ([viewMode isEqualToString:kViewModeList]) {
         [aStackView organizePagesIntoListAnimated:animated];
     } else {
-        [aStackView immediatelyTransitionToPageViewAnimated:animated];
+        [aStackView organizePagesIntoListAnimated:NO];
+        //        [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
+
+    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[aStackView visibleStackHolder] peekSubview]];
 
     void (^animationStep)() = ^{
         NSInteger targetStackIndex = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
@@ -502,6 +505,7 @@
 
         cloudKitExportView.stackView = currentStackView;
         [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
+        [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[aStackView visibleStackHolder] peekSubview]];
 
         [[NSUserDefaults standardUserDefaults] setObject:stackUUID forKey:kCurrentStack];
     };

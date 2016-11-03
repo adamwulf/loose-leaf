@@ -10,8 +10,10 @@
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMContinuousSwipeGestureRecognizer.h"
 #import "MMDeleteButton.h"
+#import "MMConfirmDeleteStackButton.h"
 #import "AVHexColor.h"
 #import "NSArray+Extras.h"
+#import "MMTrashButton.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -31,7 +33,7 @@
     MMContinuousSwipeGestureRecognizer* deleteGesture;
     CGFloat squishFactor;
     CGFloat initialAdjustment;
-    MMDeleteButton* deleteButton;
+    MMTrashButton* deleteButton;
 
     UIView* deleteConfirmationPlaceholder;
 }
@@ -56,52 +58,15 @@
         CGFloat rowHeight = [MMListPaperStackView rowHeight] + 2 * buffer;
         CGFloat deleteButtonWidth = 80;
         CGRect deleteRect = CGRectMake(self.bounds.size.width - 3 * buffer - deleteButtonWidth, (rowHeight - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
-        deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
+        deleteButton = [[MMTrashButton alloc] initWithFrame:deleteRect];
         [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        deleteButton.rotation = M_PI / 4;
-        deleteButton.transform = [deleteButton rotationTransform];
         deleteButton.alpha = 0;
         [self addSubview:deleteButton];
 
-        UIColor* quarterWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
+        CGRect confirmationRect = CGRectMake(0, 0, self.bounds.size.width, rowHeight);
 
-        CGFloat cornerRadius = roundf(.125 * [MMListPaperStackView columnWidth]);
-        CGRect confirmationRect = CGRectMake(buffer, 0, self.bounds.size.width - 2 * buffer, rowHeight);
-
-        // Vibrancy Effect
-        deleteConfirmationPlaceholder = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), rowHeight + 2 * buffer)];
-
-        //        UIBlurEffect* blur = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
-        //        UIVibrancyEffect* vibrancyEffect = [UIVibrancyEffect effectForBlurEffect:blur];
-        //        UIVisualEffectView* vibrantView = [[UIVisualEffectView alloc] initWithEffect:vibrancyEffect];
-        //        vibrantView.frame = deleteConfirmationPlaceholder.bounds;
-
-        UIBezierPath* border = [UIBezierPath bezierPathWithRoundedRect:confirmationRect cornerRadius:cornerRadius];
-        CAShapeLayer* borderLayer = [CAShapeLayer layer];
-        borderLayer.path = border.CGPath;
-        borderLayer.strokeColor = quarterWhite.CGColor;
-        [borderLayer setLineDashPattern:@[@35, @10]];
-        [borderLayer setRepeatCount:2];
-        [borderLayer setLineDashPhase:0];
-        [borderLayer setFillColor:[[UIColor clearColor] CGColor]];
-        borderLayer.backgroundColor = borderLayer.fillColor;
-
-        UIBezierPath* background = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(confirmationRect, 4, 4) cornerRadius:cornerRadius - 4];
-        CAShapeLayer* backgroundLayer = [CAShapeLayer layer];
-        backgroundLayer.path = background.CGPath;
-        backgroundLayer.fillColor = [UIColor colorWithWhite:1.0 alpha:.2].CGColor;
-
-        [deleteConfirmationPlaceholder.layer addSublayer:borderLayer];
-        [deleteConfirmationPlaceholder.layer addSublayer:backgroundLayer];
-        deleteConfirmationPlaceholder.alpha = 0;
+        deleteConfirmationPlaceholder = [[MMConfirmDeleteStackButton alloc] initWithFrame:confirmationRect];
         [self addSubview:deleteConfirmationPlaceholder];
-
-        UILabel* lbl = [[UILabel alloc] initWithFrame:CGRectWithHeight(deleteConfirmationPlaceholder.bounds, 250)];
-        lbl.text = @"Are you sure you want to delete these pages?";
-        lbl.textColor = [UIColor blackColor];
-        lbl.textAlignment = NSTextAlignmentCenter;
-        lbl.font = [UIFont systemFontOfSize:20];
-        [deleteConfirmationPlaceholder addSubview:lbl];
     }
     return self;
 }
@@ -363,6 +328,8 @@
         for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
             // gestures aren't allowed in row view
             [aPage disableAllGestures];
+            aPage.layer.zPosition = 0;
+            [aPage setSmoothBorder:NO];
         }
         // set our content height/offset for the pages
         [self setContentOffset:CGPointZero animated:NO];
@@ -373,11 +340,6 @@
         // in list and page mode, the hidden stack pages should show above
         // the visible stack pages
         visibleStackHolder.layer.zPosition = 0;
-
-        [pagesToAnimateIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
-            [aPage setSmoothBorder:NO];
-            aPage.layer.zPosition = 0;
-        }];
 
         // now that we're back into list mode, we need to re-enable scrolling + bounce
         [self setBounces:YES];

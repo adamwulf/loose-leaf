@@ -1754,14 +1754,16 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that we can set the scrollview offset to zero and turn off scrolling
-        if (self.contentOffset.y > 0) {
-            for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+            if (self.contentOffset.y > 0) {
                 CGRect newFrame = aPage.frame;
                 newFrame.origin.y -= self.contentOffset.y;
                 if (!CGRectEqualToRect(newFrame, aPage.frame)) {
                     aPage.frame = newFrame;
                 };
             }
+            aPage.layer.zPosition = 0;
+            [aPage setSmoothBorder:NO];
         }
         // set our content height/offset for the pages
         [self beginUITransitionFromListView];

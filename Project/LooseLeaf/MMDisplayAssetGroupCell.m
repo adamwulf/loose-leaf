@@ -9,12 +9,12 @@
 #import "MMDisplayAssetGroupCell.h"
 #import "MMBufferedImageView.h"
 #import "MMRotationManager.h"
-#import "MMDeleteButton.h"
+#import "MMTrashButton.h"
 #import "Constants.h"
 
 
 @implementation MMDisplayAssetGroupCell {
-    MMDeleteButton* deleteButton;
+    MMTrashButton* deleteButton;
     UILabel* name;
     NSArray* bufferedImageViews;
 }
@@ -31,10 +31,8 @@
 
         CGFloat deleteButtonWidth = 80;
         CGRect deleteRect = CGRectMake(self.bounds.size.width - 80 - kBounceWidth, (self.bounds.size.height - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
-        deleteButton = [[MMDeleteButton alloc] initWithFrame:deleteRect];
+        deleteButton = [[MMTrashButton alloc] initWithFrame:deleteRect];
         [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        deleteButton.rotation = M_PI / 4;
-        deleteButton.transform = [deleteButton rotationTransform];
         deleteButton.alpha = 0;
         [self addSubview:deleteButton];
 
@@ -134,8 +132,6 @@
         }
         i++;
     }
-    deleteButton.rotation = M_PI / 4 + visiblePhotoRotation;
-    deleteButton.transform = [deleteButton rotationTransform];
 }
 
 #pragma mark - Swipe for Delete

@@ -62,7 +62,8 @@
     CGFloat trueWidth = 80;
     CGFloat lineWidth = trueWidth / 100.0 * 2.0;
 
-    rect = CGRectInset(frame, 2, 2);
+    frame = CGRectInset(frame, 2, 2);
+    frame.origin.y += 1;
 
     //// trash can Drawing
     UIBezierPath* trashCanPath = [UIBezierPath bezierPath];
