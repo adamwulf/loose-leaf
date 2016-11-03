@@ -17,7 +17,7 @@
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated;
 
-- (void)isPossiblyDeletingStack:(NSString*)stackUUID;
+- (void)isPossiblyDeletingStack:(NSString*)stackUUID withPendingProbability:(CGFloat)probability;
 
 - (void)isAskingToDeleteStack:(NSString*)stackUUID;
 

@@ -358,44 +358,86 @@
 
 #pragma mark - Delete Inbox Items
 
-- (BOOL)finishSwipeToDelete {
-    // animate the delete gesture to finish, or animate back to cancelled
-    return NO;
-}
-
 - (void)deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender {
-    CGPoint p = [sender locationInView:self];
-
     if (sender.state == UIGestureRecognizerStateBegan) {
         // notify other stacks to cancel their delete gesture if any
         // also, don't let the user swipe to delete and scroll the stacks at the same time
-        [[self stackDelegate] isPossiblyDeletingStack:self.uuid];
+        [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:0];
 
         initialAdjustment = squishFactor;
     } else if (sender.state == UIGestureRecognizerStateChanged) {
         CGRect firstFrame = [self frameForIndexInList:0];
         CGRect lastFrame = [self frameForIndexInList:kNumberOfColumnsInListView - 1];
         CGFloat amount = -sender.distanceSinceBegin.x; // negative, because we're moving left
-        [self adjustForDelete:initialAdjustment + amount / (CGRectGetMidX(lastFrame) - CGRectGetMidX(firstFrame))];
+        CGFloat updatedSquish = initialAdjustment + amount / (CGRectGetMidX(lastFrame) - CGRectGetMidX(firstFrame));
+        [self adjustForDelete:updatedSquish withTranslate:0];
+        [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:MAX(0, updatedSquish - .3) * 1.8];
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
         // enable scrolling stack list
-        if ([self finishSwipeToDelete]) {
-            // delete immediately
-            [[self stackDelegate] isAskingToDeleteStack:self.uuid];
-        } else {
-            // don't delete, wait for tap
-            [[self stackDelegate] isNotGoingToDeleteStack:self.uuid];
-        }
-        [self adjustForDelete:0];
+        [self finishSwipeToDelete];
     }
 }
 
-- (void)adjustForDelete:(CGFloat)adjustment {
+
+// must be called after adjustForDelete
+- (BOOL)finishSwipeToDelete {
+    if (squishFactor < .2) {
+        // bounce back to zero and hide delete button
+        [UIView animateWithDuration:.2 animations:^{
+            CGFloat bounce = ABS(squishFactor * .2);
+            [self adjustForDelete:(squishFactor < 0) ? bounce : -bounce withTranslate:0];
+            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:.1 animations:^{
+                [self adjustForDelete:0 withTranslate:0];
+                //                deleteButton.alpha = 0;
+            }];
+        }];
+        return NO;
+    } else if (squishFactor > .6) {
+        // bypass tapping the delete button and just
+        // delete immediately
+        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            [self adjustForDelete:1 withTranslate:-250];
+            //                deleteButton.alpha = 0;
+        } completion:nil];
+        [UIView animateWithDuration:.2 delay:.1 options:UIViewAnimationOptionCurveEaseOut animations:^{
+            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+        } completion:nil];
+        return YES;
+    } else {
+        // bounce to show delete button
+        CGFloat targetToShowButtons = .2;
+        [UIView animateWithDuration:.2 animations:^{
+            CGFloat bounce = MIN(ABS(targetToShowButtons - squishFactor) * .2, 20);
+            [self adjustForDelete:(squishFactor < targetToShowButtons) ? (targetToShowButtons + bounce) : (targetToShowButtons - bounce) withTranslate:0];
+            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:.1 animations:^{
+                [self adjustForDelete:targetToShowButtons withTranslate:0];
+                //                deleteButton.alpha = 1.0;
+            }];
+        }];
+        return NO;
+    }
+}
+
+- (void)adjustForDelete:(CGFloat)adjustment withTranslate:(CGFloat)xTranslate {
     if ([self.layer.animationKeys count]) {
         [self.layer removeAllAnimations];
     }
+
     squishFactor = MAX(-0.2, adjustment);
+    CGFloat easedOut = adjustment;
+    if (easedOut < 0) {
+        easedOut = MAX(easedOut, -0.8);
+        easedOut = MAX(easedOut + .8, 0) / .8;
+        easedOut = 1 - easedOut * easedOut * easedOut;
+        easedOut = easedOut * -.2;
+    }
+
+    [self setClipsToBounds:squishFactor == 0];
 
     CGFloat alphaForDelete = adjustment - .5;
     alphaForDelete = MAX(alphaForDelete, 0);
@@ -411,11 +453,11 @@
         CGFloat ix = CGRectGetMidX([self targetFrameInRowForPage:aPage givenAllPages:pagesToAlign]);
         CGFloat fx = CGRectGetMidX(frameAtStart) - 120 + i * 4;
         CGFloat diff = fx - ix;
-        CGFloat x = ix + diff * squishFactor;
+        CGFloat x = ix + diff * easedOut;
 
-        aPage.center = CGPointMake(x, CGRectGetMidY(frameAtStart) + (RandomMod(i, 80) - 40) * squishFactor);
+        aPage.center = CGPointMake(x + xTranslate, CGRectGetMidY(frameAtStart) + (RandomMod(i, 80) - 40) * easedOut);
 
-        aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]) + squishFactor * 5 * RandomPhotoRotation([[aPage uuid] hash]));
+        aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]) + easedOut * 5 * RandomPhotoRotation([[aPage uuid] hash]));
     }
 }
 
