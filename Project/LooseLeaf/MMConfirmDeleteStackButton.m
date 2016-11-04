@@ -8,6 +8,9 @@
 
 #import "MMConfirmDeleteStackButton.h"
 #import "MMListPaperStackView.h"
+#import "MMRoundedButton.h"
+#import "MMTrashButton.h"
+#import "MMUndoRedoButton.h"
 
 
 @implementation MMConfirmDeleteStackButton
@@ -31,7 +34,7 @@
         UIBezierPath* background = [UIBezierPath bezierPathWithRoundedRect:CGRectInset(confirmationRect, 4, 4) cornerRadius:cornerRadius - 4];
         CAShapeLayer* backgroundLayer = [CAShapeLayer layer];
         backgroundLayer.path = background.CGPath;
-        backgroundLayer.fillColor = [UIColor colorWithWhite:1.0 alpha:.2].CGColor;
+        backgroundLayer.fillColor = [UIColor colorWithWhite:1.0 alpha:.3].CGColor;
 
         [self.layer addSublayer:borderLayer];
         [self.layer addSublayer:backgroundLayer];
@@ -43,8 +46,52 @@
         lbl.textAlignment = NSTextAlignmentCenter;
         lbl.font = [UIFont systemFontOfSize:20];
         [self addSubview:lbl];
+
+
+        UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -8, 0);
+        [MMTrashButton drawTrashCanInRect:CGRectMake(0, 0, 40, 40) withColor:lbl.textColor withBackground:halfGreyFill];
+        UIImage* trashImg = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(36, 40), NO, 0);
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -2, 3);
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 18, 18);
+        CGContextRotateCTM(UIGraphicsGetCurrentContext(), M_PI);
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -18, -18);
+
+        [MMUndoRedoButton drawArrowInRect:CGRectMake(0, 0, 40, 40) reversed:YES withColor:lbl.textColor];
+        UIImage* undoImg = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+
+        MMRoundedButton* confirmButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
+        [confirmButton setImage:trashImg forState:UIControlStateNormal];
+        [confirmButton setTitle:@"Delete" forState:UIControlStateNormal];
+        [confirmButton addTarget:self action:@selector(didTapConfirmButton) forControlEvents:UIControlEventTouchUpInside];
+        [confirmButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
+        [self addSubview:confirmButton];
+
+        MMRoundedButton* cancelButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
+        [cancelButton setImage:undoImg forState:UIControlStateNormal];
+        [cancelButton setTitle:@"Undo" forState:UIControlStateNormal];
+        [cancelButton addTarget:self action:@selector(didTapCancelButton) forControlEvents:UIControlEventTouchUpInside];
+        [cancelButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
+        [self addSubview:cancelButton];
+
+        CGFloat widthOfButtons = confirmButton.bounds.size.width + cancelButton.bounds.size.width + 20;
+        CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
+        cancelButton.center = CGPointMake(self.bounds.size.width - buttonMargin - cancelButton.bounds.size.width / 2, 200);
+        confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, 200);
     }
     return self;
 }
+
+- (void)didTapConfirmButton {
+}
+
+- (void)didTapCancelButton {
+}
+
 
 @end

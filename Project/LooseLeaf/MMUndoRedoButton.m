@@ -54,6 +54,17 @@
     }
     [ovalPath fill];
 
+    [MMUndoRedoButton drawArrowInRect:frame reversed:reverseArrow withColor:darkerGreyBorder];
+
+    [super drawRect:rect];
+}
+
++ (void)drawArrowInRect:(CGRect)frame reversed:(BOOL)reverseArrow withColor:(UIColor*)strokeColor {
+    UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
+    UIColor* barelyWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
+
+    [strokeColor setStroke];
+
     //// Arrow Drawing
     UIBezierPath* arrowPath = [UIBezierPath bezierPath];
     if (reverseArrow) {
@@ -100,8 +111,6 @@
         [arrowPath fill];
         [arrowPath stroke];
     }
-
-    [super drawRect:rect];
 }
 
 

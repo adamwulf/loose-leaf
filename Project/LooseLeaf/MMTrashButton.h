@@ -11,4 +11,6 @@
 
 @interface MMTrashButton : MMDarkSidebarButton
 
++ (void)drawTrashCanInRect:(CGRect)frame withColor:(UIColor*)strokeColor withBackground:(UIColor*)backgroundColor;
+
 @end
