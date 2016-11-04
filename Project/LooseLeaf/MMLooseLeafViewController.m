@@ -45,6 +45,7 @@
 #import "MMScrapsInBezelContainerView.h"
 #import "MMPagesInBezelContainerView.h"
 #import "MMLooseLeafView.h"
+#import "MMDebugStackView.h"
 
 
 @interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate>
@@ -260,6 +261,11 @@
             bezelPagesContainer.alpha = 0;
         }
 
+
+        if (![[MMTutorialManager sharedInstance] hasFinishedTutorial]) {
+            [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
+        }
+
         // Debug
 
         //        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
@@ -268,10 +274,7 @@
         //
         //        [stackView setMemoryView:memoryProfileView];
         //        [self.view addSubview:memoryProfileView];
-
-        if (![[MMTutorialManager sharedInstance] hasFinishedTutorial]) {
-            [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
-        }
+        //        [self.view addSubview:[MMDebugStackView sharedView]];
     }
     return self;
 }
@@ -466,7 +469,7 @@
         [aStackView organizePagesIntoListAnimated:animated];
     } else {
         [aStackView organizePagesIntoListAnimated:NO];
-        //        [aStackView immediatelyTransitionToPageViewAnimated:animated];
+        [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
 
     [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[aStackView visibleStackHolder] peekSubview]];

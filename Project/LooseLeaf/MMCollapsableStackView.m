@@ -231,7 +231,7 @@
     //
     void (^step3)(BOOL finished) = ^(BOOL finished) {
         // ensure sane default for content size
-        [self setContentSize:CGSizeMake(screenWidth, screenHeight)];
+        [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [MMListPaperStackView screenHeight])];
         listViewTutorialButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
 
@@ -333,7 +333,7 @@
         }
         // set our content height/offset for the pages
         [self setContentOffset:CGPointZero animated:NO];
-        [self setContentSize:CGSizeMake(screenWidth, [self contentHeightForAllPages])];
+        [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [self contentHeightForAllPages])];
         [self finishUITransitionToListView];
         [self moveAddButtonToTop];
 

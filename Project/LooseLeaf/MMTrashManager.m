@@ -128,7 +128,9 @@ static MMTrashManager* _instance = nil;
                     }
                 }
             }
-            [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
+            [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
+                [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
+            }];
 
             //
             // deleting scraps above will add blocks to the trashManagerQueue

@@ -28,9 +28,6 @@
     // animate between it's final state
     NSMutableDictionary* setOfInitialFramesForPagesBeingZoomed;
 
-    CGFloat screenWidth;
-    CGFloat screenHeight;
-
     MMStretchPageGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
 

@@ -446,6 +446,7 @@
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
+		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
 		C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19C1D7C0BDD00259558 /* logo@2x.png */; };
 		C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC19F1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m */; };
@@ -1473,6 +1474,8 @@
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
 		C542AA271D81AC8A0024FAD9 /* MMCollapsableStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapsableStackView.m; sourceTree = "<group>"; };
 		C542AA291D81B86F0024FAD9 /* MMCollapsableStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackViewDelegate.h; sourceTree = "<group>"; };
+		C543284C1DCC3397008CCB8A /* MMDebugStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugStackView.h; sourceTree = "<group>"; };
+		C543284D1DCC3397008CCB8A /* MMDebugStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugStackView.m; sourceTree = "<group>"; };
 		C55AC19A1D7C0AB100259558 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		C55AC19C1D7C0BDD00259558 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		C55AC19E1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesButtonPrompt.h; sourceTree = "<group>"; };
@@ -2836,6 +2839,8 @@
 			children = (
 				6699715017DBA02700E81467 /* MMDebugDrawView.h */,
 				6699715117DBA02700E81467 /* MMDebugDrawView.m */,
+				C543284C1DCC3397008CCB8A /* MMDebugStackView.h */,
+				C543284D1DCC3397008CCB8A /* MMDebugStackView.m */,
 			);
 			name = Debug;
 			sourceTree = "<group>";
@@ -4703,6 +4708,7 @@
 				C50A101E1D8CBC4700BA9438 /* MMStretchPageGestureRecognizer.m in Sources */,
 				66D33F4C15A6408A0044C809 /* MMShadowedView.m in Sources */,
 				66E2241619D66ADD000FCA96 /* MMPermissionCameraPhotosCollectionViewCell.m in Sources */,
+				C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */,
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				C5F1B29F1D9B01BB00E0E9A8 /* MPABTestDesignerConnection.m in Sources */,
 				C5F1B2D01D9B01BB00E0E9A8 /* MPTypeDescription.m in Sources */,
