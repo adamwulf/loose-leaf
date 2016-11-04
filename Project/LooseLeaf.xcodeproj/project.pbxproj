@@ -1476,6 +1476,7 @@
 		C542AA291D81B86F0024FAD9 /* MMCollapsableStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackViewDelegate.h; sourceTree = "<group>"; };
 		C543284C1DCC3397008CCB8A /* MMDebugStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugStackView.h; sourceTree = "<group>"; };
 		C543284D1DCC3397008CCB8A /* MMDebugStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugStackView.m; sourceTree = "<group>"; };
+		C543284F1DCC4A02008CCB8A /* MMConfirmDeleteStackButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMConfirmDeleteStackButtonDelegate.h; sourceTree = "<group>"; };
 		C55AC19A1D7C0AB100259558 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		C55AC19C1D7C0BDD00259558 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		C55AC19E1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesButtonPrompt.h; sourceTree = "<group>"; };
@@ -3553,6 +3554,7 @@
 				C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */,
 				C5E654FB1DCBEF6700521894 /* MMConfirmDeleteStackButton.h */,
 				C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */,
+				C543284F1DCC4A02008CCB8A /* MMConfirmDeleteStackButtonDelegate.h */,
 			);
 			name = "List View";
 			sourceTree = "<group>";

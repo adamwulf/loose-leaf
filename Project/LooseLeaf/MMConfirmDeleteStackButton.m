@@ -15,6 +15,8 @@
 
 @implementation MMConfirmDeleteStackButton
 
+@synthesize delegate;
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         UIColor* quarterWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
@@ -88,9 +90,11 @@
 }
 
 - (void)didTapConfirmButton {
+    [self.delegate didConfirmToDeleteStack];
 }
 
 - (void)didTapCancelButton {
+    [self.delegate didCancelDeletingStack];
 }
 
 

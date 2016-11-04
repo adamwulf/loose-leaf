@@ -12,6 +12,7 @@
 #import "MMContinuousSwipeGestureRecognizer.h"
 #import "MMDeleteButton.h"
 #import "MMConfirmDeleteStackButton.h"
+#import "MMConfirmDeleteStackButtonDelegate.h"
 #import "AVHexColor.h"
 #import "NSArray+Extras.h"
 #import "MMTrashButton.h"
@@ -20,7 +21,7 @@
 #define kCollapseAnimationDuration 0.3
 
 
-@interface MMListPaperStackView (Protected) <UIGestureRecognizerDelegate>
+@interface MMListPaperStackView (Protected) <UIGestureRecognizerDelegate, MMConfirmDeleteStackButtonDelegate>
 
 @property (nonatomic, strong) NSString* currentViewMode;
 
@@ -36,7 +37,7 @@
     CGFloat initialAdjustment;
     MMTrashButton* deleteButton;
 
-    UIView* deleteConfirmationPlaceholder;
+    MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
 }
 
 @dynamic stackDelegate;
@@ -67,6 +68,7 @@
         CGRect confirmationRect = CGRectMake(0, 0, self.bounds.size.width, rowHeight);
 
         deleteConfirmationPlaceholder = [[MMConfirmDeleteStackButton alloc] initWithFrame:confirmationRect];
+        deleteConfirmationPlaceholder.delegate = self;
         [self addSubview:deleteConfirmationPlaceholder];
     }
     return self;
@@ -226,6 +228,7 @@
         listViewTutorialButton.alpha = 0;
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
+        deleteConfirmationPlaceholder.alpha = 0;
     };
 
     //
@@ -398,23 +401,23 @@
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
         // enable scrolling stack list
-        [self finishSwipeToDelete];
+        [self finishSwipeToDelete:NO];
     }
 }
 
 
 // must be called after adjustForDelete
-- (BOOL)finishSwipeToDelete {
+- (BOOL)finishSwipeToDelete:(BOOL)longerDuration {
     if (squishFactor < .2) {
         // bounce back to zero and hide delete button
-        [UIView animateWithDuration:.2 animations:^{
+        [UIView animateWithDuration:longerDuration ? .4 : .2 animations:^{
             CGFloat bounce = ABS(squishFactor * .2);
             [self adjustForDelete:(squishFactor < 0) ? bounce : -bounce withTranslate:0];
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             deleteButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
-            [UIView animateWithDuration:.1 animations:^{
+            [UIView animateWithDuration:longerDuration ? .2 : .1 animations:^{
                 [self adjustForDelete:0 withTranslate:0];
             }];
         }];
@@ -430,6 +433,7 @@
         [UIView animateWithDuration:.2 delay:.1 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
         } completion:nil];
+        deleteGesture.enabled = NO;
         return YES;
     } else {
         // bounce to show delete button
@@ -502,9 +506,23 @@
             [self adjustForDelete:1.0 withTranslate:-250];
         } completion:nil];
     }];
-    [UIView animateWithDuration:.2 delay:.3 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+    [UIView animateWithDuration:.3 delay:.4 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         deleteConfirmationPlaceholder.alpha = 1;
     } completion:nil];
+    deleteGesture.enabled = NO;
+}
+
+#pragma mark - MMConfirmDeleteStackButtonDelegate
+
+- (void)didConfirmToDeleteStack {
+    deleteGesture.enabled = YES;
+    squishFactor = 0;
+}
+
+- (void)didCancelDeletingStack {
+    deleteGesture.enabled = YES;
+    squishFactor = .15;
+    [self finishSwipeToDelete:YES];
 }
 
 @end
