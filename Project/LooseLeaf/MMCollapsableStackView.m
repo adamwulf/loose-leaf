@@ -8,6 +8,7 @@
 
 #import "MMCollapsableStackView.h"
 #import "MMLargeTutorialSidebarButton.h"
+#import "MMFeedbackButton.h"
 #import "MMContinuousSwipeGestureRecognizer.h"
 #import "MMDeleteButton.h"
 #import "MMConfirmDeleteStackButton.h"
@@ -223,6 +224,7 @@
         }
         hiddenStackHolder.frame = visibleStackHolder.frame;
         listViewTutorialButton.alpha = 0;
+        listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
     };
 
@@ -233,6 +235,7 @@
         // ensure sane default for content size
         [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [MMListPaperStackView screenHeight])];
         listViewTutorialButton.alpha = 0;
+        listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
 
         [[NSUserDefaults standardUserDefaults] setObject:kViewModeCollapsed forKey:kCurrentViewMode];
@@ -313,6 +316,7 @@
         hiddenStackHolder.frame = visibleStackHolder.frame;
         // fade in the add/tutorial buttons
         listViewTutorialButton.alpha = 1;
+        listViewFeedbackButton.alpha = 1;
         addPageButtonInListView.alpha = 1;
         [self setButtonsVisible:NO animated:NO];
     };
