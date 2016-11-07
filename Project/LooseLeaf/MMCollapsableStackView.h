@@ -13,8 +13,10 @@
 @interface MMCollapsableStackView : MMTutorialStackView
 
 @property (nonatomic, weak) NSObject<MMCollapsableStackViewDelegate>* stackDelegate;
+@property (nonatomic, readonly) BOOL isPerfectlyAlignedIntoRow;
 
 - (void)organizePagesIntoSingleRowAnimated:(BOOL)animated;
 - (void)organizePagesIntoListAnimated:(BOOL)animated;
+- (void)cancelPendingConfirmationsAndResetToRow;
 
 @end

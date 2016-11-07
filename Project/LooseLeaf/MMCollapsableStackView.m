@@ -89,6 +89,18 @@
     }
 }
 
+- (BOOL)isPerfectlyAlignedIntoRow {
+    return squishFactor == 0;
+}
+
+- (void)cancelPendingConfirmationsAndResetToRow {
+    if (![self isPerfectlyAlignedIntoRow]) {
+        deleteGesture.enabled = YES;
+        squishFactor = .15;
+        [self finishSwipeToDelete:YES sendingDelegateNotifications:NO];
+    }
+}
+
 #pragma mark - Actions
 
 - (void)tapToExpandToListMode:(UIButton*)button {
@@ -401,19 +413,21 @@
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
         // enable scrolling stack list
-        [self finishSwipeToDelete:NO];
+        [self finishSwipeToDelete:NO sendingDelegateNotifications:YES];
     }
 }
 
 
 // must be called after adjustForDelete
-- (BOOL)finishSwipeToDelete:(BOOL)longerDuration {
+- (BOOL)finishSwipeToDelete:(BOOL)longerDuration sendingDelegateNotifications:(BOOL)sendDelegateNotifications {
     if (squishFactor < .2) {
         // bounce back to zero and hide delete button
         [UIView animateWithDuration:longerDuration ? .4 : .2 animations:^{
             CGFloat bounce = ABS(squishFactor * .2);
             [self adjustForDelete:(squishFactor < 0) ? bounce : -bounce withTranslate:0];
-            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            if (sendDelegateNotifications) {
+                [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            }
             deleteButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
@@ -431,7 +445,9 @@
             deleteConfirmationPlaceholder.alpha = 1;
         } completion:nil];
         [UIView animateWithDuration:.2 delay:.1 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            if (sendDelegateNotifications) {
+                [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            }
         } completion:nil];
         deleteGesture.enabled = NO;
         return YES;
@@ -441,7 +457,9 @@
         [UIView animateWithDuration:.2 animations:^{
             CGFloat bounce = MIN(ABS(targetToShowButtons - squishFactor) * .2, 20);
             [self adjustForDelete:(squishFactor < targetToShowButtons) ? (targetToShowButtons + bounce) : (targetToShowButtons - bounce) withTranslate:0];
-            [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            if (sendDelegateNotifications) {
+                [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
+            }
             deleteButton.alpha = 1.0;
             deleteConfirmationPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
@@ -523,7 +541,7 @@
 - (void)didCancelDeletingStack {
     deleteGesture.enabled = YES;
     squishFactor = .15;
-    [self finishSwipeToDelete:YES];
+    [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
 }
 
 @end

@@ -572,6 +572,31 @@
     if ([self isShowingCollapsedView]) {
         allStacksScrollView.scrollEnabled = NO;
         [deleteSidebar showSidebarWithPercent:probability withTargetView:stackViewsByUUID[stackUUID]];
+
+        // check if any other stack is showing a delete confirmation / buttons,
+        // and reset their UI if so
+        BOOL needsReset = NO;
+        for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
+            NSString* otherUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+            if (![otherUUID isEqualToString:stackUUID]) {
+                MMCollapsableStackView* aStackView = [self stackForUUID:otherUUID];
+                needsReset = needsReset || ![aStackView isPerfectlyAlignedIntoRow];
+            }
+        }
+
+        if (needsReset) {
+            // now we know that at least 1 stack needs to be reset into a row,
+            // so animate that now
+            [UIView animateWithDuration:.3 animations:^{
+                for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
+                    NSString* otherUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+                    if (![otherUUID isEqualToString:stackUUID]) {
+                        MMCollapsableStackView* aStackView = [self stackForUUID:otherUUID];
+                        [aStackView cancelPendingConfirmationsAndResetToRow];
+                    }
+                }
+            }];
+        }
     }
 }
 
