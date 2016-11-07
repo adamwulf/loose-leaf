@@ -1166,10 +1166,12 @@
     return CGPointMake([MMListPaperStackView screenWidth] / 2 + adjustment, [self contentHeightForAllStacks] - 110);
 }
 
-- (void)tutorialButtonPressed:(id)button {
+- (void)feedbackButtonPressed:(MMTutorialSidebarButton*)tutorialButton {
+    [self stackViewDidPressFeedbackButton:nil];
 }
 
-- (void)feedbackButtonPressed:(id)button {
+- (void)tutorialButtonPressed:(MMTutorialSidebarButton*)tutorialButton {
+    [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
 }
 
 @end
