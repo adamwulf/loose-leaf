@@ -568,6 +568,13 @@
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
     isShowingCollapsedView = YES;
 
+    CGFloat fullHeight = [self contentHeightForAllStacks];
+    CGFloat targetYOffset = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID] * [self stackRowHeight];
+    CGFloat idealY = MIN(targetYOffset + [MMListPaperStackView screenHeight] * 3.0 / 5.0, fullHeight);
+    idealY = MAX(0, idealY - [MMListPaperStackView screenHeight]);
+
+    [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:NO];
+
     if (!allStacksScrollView.scrollEnabled) {
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
