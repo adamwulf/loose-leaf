@@ -46,6 +46,8 @@
 #import "MMPagesInBezelContainerView.h"
 #import "MMLooseLeafView.h"
 #import "MMDebugStackView.h"
+#import "MMLargeTutorialSidebarButton.h"
+#import "MMFeedbackButton.h"
 
 
 @interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate>
@@ -84,6 +86,8 @@
     UIScrollView* allStacksScrollView;
 
     MMListAddPageButton* addNewStackButton;
+    MMLargeTutorialSidebarButton* listViewTutorialButton;
+    MMFeedbackButton* listViewFeedbackButton;
 
     BOOL isShowingCollapsedView;
 }
@@ -139,10 +143,25 @@
         [allStacksScrollView setAlwaysBounceVertical:YES];
         [self.view addSubview:allStacksScrollView];
 
-        // init the add page button in top left of scrollview
+        // init the add page / tutorial / feedback buttons in the scrollview
         addNewStackButton = [[MMListAddPageButton alloc] initWithFrame:CGRectMake([MMListPaperStackView bufferWidth], [MMListPaperStackView bufferWidth], [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight])];
         addNewStackButton.delegate = self;
+
+        CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
+        listViewTutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
+            return [[MMTutorialManager sharedInstance] listViewTutorialSteps];
+        }];
+        listViewTutorialButton.center = [self locationForTutorialButtonInCollapsedView];
+        [listViewTutorialButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+        listViewFeedbackButton = [[MMFeedbackButton alloc] initWithFrame:typicalBounds];
+        listViewFeedbackButton.center = [self locationForFeedbackButtonInCollapsedView];
+        [listViewFeedbackButton addTarget:self action:@selector(feedbackButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
         [allStacksScrollView addSubview:addNewStackButton];
+        [allStacksScrollView addSubview:listViewTutorialButton];
+        [allStacksScrollView addSubview:listViewFeedbackButton];
+
 
         // export icons will show here, below the sidebars but over the stacks
         cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
@@ -502,6 +521,15 @@
                 stackView.alpha = 0;
             }
         }
+
+        CGFloat animationAmountForButtons = CGRectGetHeight(self.view.bounds) - originalMaxY;
+
+        addNewStackButton.center = CGPointTranslate([self locationForAddStackButtonInCollapsedView], 0, animationAmountForButtons);
+        listViewTutorialButton.center = CGPointTranslate([self locationForTutorialButtonInCollapsedView], 0, animationAmountForButtons);
+        listViewFeedbackButton.center = CGPointTranslate([self locationForFeedbackButtonInCollapsedView], 0, animationAmountForButtons);
+        listViewTutorialButton.alpha = 0;
+        listViewFeedbackButton.alpha = 0;
+
         addNewStackButton.alpha = 0;
         bezelPagesContainer.alpha = 1;
     };
@@ -517,6 +545,10 @@
         [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[aStackView visibleStackHolder] peekSubview]];
 
         [[NSUserDefaults standardUserDefaults] setObject:stackUUID forKey:kCurrentStack];
+
+        listViewTutorialButton.alpha = 0;
+        listViewFeedbackButton.alpha = 0;
+        addNewStackButton.alpha = 0;
     };
 
     if (animated) {
@@ -530,7 +562,6 @@
         completionStep(YES);
     }
 
-    addNewStackButton.alpha = 0;
     allStacksScrollView.scrollEnabled = NO;
 }
 
@@ -550,6 +581,8 @@
         void (^animationBlock)() = ^{
             [self initializeAllStackViewsExcept:stackUUID viewMode:kViewModeCollapsed];
             addNewStackButton.alpha = 1;
+            listViewFeedbackButton.alpha = 1;
+            listViewTutorialButton.alpha = 1;
             bezelPagesContainer.alpha = 0;
         };
 
@@ -561,6 +594,8 @@
 
             currentStackView = nil;
             addNewStackButton.alpha = 1;
+            listViewFeedbackButton.alpha = 1;
+            listViewTutorialButton.alpha = 1;
 
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCurrentStack];
         };
@@ -635,6 +670,10 @@
 
 #pragma mark - MMStackControllerViewDelegate
 
+- (CGFloat)stackRowHeight {
+    return [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
+}
+
 - (MMCollapsableStackView*)stackForUUID:(NSString*)stackUUID {
     NSAssert(stackUUID, @"must have a stack uuid to fetch a stack");
 
@@ -654,7 +693,7 @@
 }
 
 - (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight viewMode:(NSString*)viewMode {
-    CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
+    CGFloat stackRowHeight = [self stackRowHeight];
     for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
         NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
@@ -680,14 +719,14 @@
 
     [self realignAddStackButton];
 
-    allStacksScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetMaxY(addNewStackButton.frame) + [MMListPaperStackView bufferWidth]);
+    // add 140 for the tutorial and feedback buttons
+    allStacksScrollView.contentSize = CGSizeMake(CGRectGetWidth(self.view.bounds), CGRectGetMaxY(addNewStackButton.frame) + [MMListPaperStackView bufferWidth] + 140);
 }
 
 - (void)realignAddStackButton {
-    CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
-    CGRect fr = addNewStackButton.frame;
-    fr.origin.y = [[[MMAllStacksManager sharedInstance] stackIDs] count] * stackRowHeight + [MMListPaperStackView bufferWidth];
-    addNewStackButton.frame = fr;
+    addNewStackButton.center = [self locationForAddStackButtonInCollapsedView];
+    listViewTutorialButton.center = [self locationForTutorialButtonInCollapsedView];
+    listViewFeedbackButton.center = [self locationForFeedbackButtonInCollapsedView];
 }
 
 #pragma mark - MMMemoryManagerDelegate
@@ -1101,6 +1140,36 @@
         } completion:nil];
         delay += .1;
     }
+}
+
+#pragma mark - Tutorial and Feedback
+
+- (CGFloat)contentHeightForAllStacks {
+    CGFloat stackRowHeight = [MMListPaperStackView bufferWidth] * 2 + [MMListPaperStackView rowHeight];
+    return stackRowHeight * ([[[MMAllStacksManager sharedInstance] stackIDs] count] + 1) + 140;
+}
+
+- (CGPoint)locationForAddStackButtonInCollapsedView {
+    CGFloat stackRowHeight = [self stackRowHeight];
+    CGRect fr = addNewStackButton.frame;
+    fr.origin.y = [[[MMAllStacksManager sharedInstance] stackIDs] count] * stackRowHeight + [MMListPaperStackView bufferWidth];
+    return CGRectGetMidPoint(fr);
+}
+
+- (CGPoint)locationForTutorialButtonInCollapsedView {
+    CGFloat adjustment = (CGRectGetWidth([listViewTutorialButton bounds]) + kWidthOfSidebarButtonBuffer) / 2;
+    return CGPointMake([MMListPaperStackView screenWidth] / 2 - adjustment, [self contentHeightForAllStacks] - 110);
+}
+
+- (CGPoint)locationForFeedbackButtonInCollapsedView {
+    CGFloat adjustment = (CGRectGetWidth([listViewTutorialButton bounds]) + kWidthOfSidebarButtonBuffer) / 2;
+    return CGPointMake([MMListPaperStackView screenWidth] / 2 + adjustment, [self contentHeightForAllStacks] - 110);
+}
+
+- (void)tutorialButtonPressed:(id)button {
+}
+
+- (void)feedbackButtonPressed:(id)button {
 }
 
 @end

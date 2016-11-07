@@ -120,8 +120,7 @@
         [self updateShareOptions];
 
 
-        CGRect typicalBounds = [[shareItems lastObject] button].bounds;
-        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
+        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray* {
             return [[MMTutorialManager sharedInstance] shareTutorialSteps];
         }];
         tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width / 2, sharingContentView.bounds.size.height - 100);
