@@ -517,6 +517,7 @@
 - (void)didConfirmToDeleteStack {
     deleteGesture.enabled = YES;
     squishFactor = 0;
+    [self.stackDelegate isAskingToDeleteStack:self.uuid];
 }
 
 - (void)didCancelDeletingStack {

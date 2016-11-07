@@ -578,6 +578,16 @@
 - (void)isAskingToDeleteStack:(NSString*)stackUUID {
     if ([self isShowingCollapsedView]) {
         allStacksScrollView.scrollEnabled = YES;
+        MMCollapsableStackView* stackView = stackViewsByUUID[stackUUID];
+        [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
+
+        [UIView animateWithDuration:.3 animations:^{
+            [self initializeAllStackViewsExcept:stackUUID viewMode:kViewModeCollapsed];
+            stackView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [stackView removeFromSuperview];
+            [stackViewsByUUID removeObjectForKey:stackUUID];
+        }];
     }
 }
 
@@ -591,6 +601,8 @@
 #pragma mark - MMStackControllerViewDelegate
 
 - (MMCollapsableStackView*)stackForUUID:(NSString*)stackUUID {
+    NSAssert(stackUUID, @"must have a stack uuid to fetch a stack");
+
     MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
     if (!aStackView) {
@@ -641,23 +653,6 @@
     CGRect fr = addNewStackButton.frame;
     fr.origin.y = [[[MMAllStacksManager sharedInstance] stackIDs] count] * stackRowHeight + [MMListPaperStackView bufferWidth];
     addNewStackButton.frame = fr;
-}
-
-- (IBAction)deleteStack:(NSString*)stackUUID {
-    NSInteger idx = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
-    if (stackViewsByUUID[stackUUID]) {
-        [stackViewsByUUID[stackUUID] removeFromSuperview];
-        [stackViewsByUUID removeObjectForKey:stackUUID];
-    }
-
-    [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
-
-    if ([currentStackView.uuid isEqualToString:stackUUID]) {
-        if (idx >= [[[MMAllStacksManager sharedInstance] stackIDs] count]) {
-            idx -= 1;
-        }
-    }
-    [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 }
 
 #pragma mark - MMMemoryManagerDelegate
@@ -728,11 +723,35 @@
 #pragma mark - MMInboxManagerDelegate
 
 - (void)didProcessIncomingImage:(MMImageInboxItem*)scrapBacking fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
-    [currentStackView didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
+    if (currentStackView) {
+        [currentStackView didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
+    } else {
+        NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+        [aStackView ensureAtLeast:1 pagesInStack:aStackView.visibleStackHolder];
+
+        [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
+        [self didAskToSwitchToStack:[aStackView uuid] animated:NO viewMode:kViewModePage];
+
+        [aStackView didProcessIncomingImage:scrapBacking fromURL:url fromApp:sourceApplication];
+    }
 }
 
 - (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
-    [currentStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
+    if (currentStackView) {
+        [currentStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
+    } else {
+        NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+        [aStackView ensureAtLeast:1 pagesInStack:aStackView.visibleStackHolder];
+
+        [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
+        [self didAskToSwitchToStack:[aStackView uuid] animated:NO viewMode:kViewModePage];
+
+        [aStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
+    }
 }
 
 - (void)failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
