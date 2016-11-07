@@ -95,6 +95,10 @@
         NSString* viewModeForLaunch = [[NSUserDefaults standardUserDefaults] objectForKey:kCurrentViewMode];
         NSString* currentStackForLaunch = [[NSUserDefaults standardUserDefaults] objectForKey:kCurrentStack];
 
+        if (!currentStackForLaunch) {
+            viewModeForLaunch = kViewModeCollapsed;
+        }
+
         mightShowReleaseNotes = YES;
         isShowingCollapsedView = YES;
 
@@ -252,6 +256,8 @@
 
         [currentStackView setButtonsVisible:[currentStackView buttonsVisible] animated:NO];
         [currentStackView immediatelyRelayoutIfInListMode];
+        // TODO: above two lines might never run b/c currentStackView is always nil?
+
 
         // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
         if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
@@ -483,13 +489,13 @@
             if (stackView == aStackView) {
                 aStackView.frame = self.view.bounds;
             } else if (stackIndex < targetStackIndex) {
-                CGFloat animationAmount = CGRectGetMinY(originalFrame) - allStacksScrollView.contentOffset.y;
+                CGFloat animationAmount = CGRectGetMinY(originalFrame);
                 CGRect currFrame = stackView.frame;
                 currFrame.origin.y -= animationAmount;
                 stackView.frame = currFrame;
                 stackView.alpha = 0;
             } else {
-                CGFloat animationAmount = allStacksScrollView.contentOffset.y + CGRectGetHeight(self.view.bounds) - originalMaxY;
+                CGFloat animationAmount = CGRectGetHeight(self.view.bounds) - originalMaxY;
                 CGRect currFrame = stackView.frame;
                 currFrame.origin.y += animationAmount;
                 stackView.frame = currFrame;
@@ -536,6 +542,10 @@
         MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
         [aStackView organizePagesIntoSingleRowAnimated:animated];
+
+        CGRect fr = [aStackView convertRect:[aStackView bounds] toView:allStacksScrollView];
+        [allStacksScrollView addSubview:aStackView];
+        aStackView.frame = fr;
 
         void (^animationBlock)() = ^{
             [self initializeAllStackViewsExcept:stackUUID viewMode:kViewModeCollapsed];
