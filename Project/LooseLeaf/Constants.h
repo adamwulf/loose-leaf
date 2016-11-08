@@ -38,6 +38,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
 #define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
 #define CGPointTranslate(point, translatex, translatey) CGPointMake((point).x + translatex, (point).y + translatey)
+#define CGRectTranslate(rect, translatex, translatey) CGRectMake((rect).origin.x + translatex, (rect).origin.y + translatey, (rect).size.width, (rect).size.height)
 
 #define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)
 
