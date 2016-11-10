@@ -291,6 +291,7 @@
         } else {
             [currentStackView setButtonsVisible:NO animated:NO];
             bezelPagesContainer.alpha = 0;
+            bezelScrapContainer.alpha = 0;
         }
 
 
@@ -1220,7 +1221,6 @@
                 }
             }
         }];
-
 
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         // moving
