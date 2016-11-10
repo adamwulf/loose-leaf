@@ -724,6 +724,11 @@
     return stackIndex * stackRowHeight;
 }
 
+- (NSInteger)targetIndexForYInCollapsedList:(CGFloat)targetY {
+    CGFloat stackRowHeight = [self stackRowHeight];
+    return targetY / stackRowHeight;
+}
+
 - (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight viewMode:(NSString*)viewMode {
     CGFloat stackRowHeight = [self stackRowHeight];
     for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
@@ -744,7 +749,9 @@
             fr.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
             aStackView.frame = fr;
         }
-        [allStacksScrollView addSubview:aStackView];
+        if (![allStacksScrollView.subviews containsObject:aStackView]) {
+            [allStacksScrollView addSubview:aStackView];
+        }
         aStackView.alpha = 1;
         aStackView.scrollEnabled = NO;
     }
@@ -1243,12 +1250,21 @@
         translatedCenter.y += translation.y;
         heldStackView.center = translatedCenter;
 
+        CGPoint locInScroll = [self.view convertPoint:translatedCenter toView:allStacksScrollView];
+        NSInteger updatedStackIndex = [self targetIndexForYInCollapsedList:locInScroll.y];
+
+        [[MMAllStacksManager sharedInstance] moveStack:heldStackView.uuid toIndex:updatedStackIndex];
 
         BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
             if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
                 MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
+                if (aStackView == heldStackView) {
+                    return accum;
+                }
+
                 CGFloat targetY = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
-                return aStackView.frame.origin.y == targetY && (index == 0 || accum);
+
+                return roundf(aStackView.frame.origin.y) != roundf(targetY) || accum;
             } else {
                 return accum;
             }
@@ -1270,7 +1286,8 @@
             [heldStackView squashPagesWhenInRowView:0 withTranslate:0];
             heldStackView.transform = CGAffineTransformIdentity;
             heldStackView.userInteractionEnabled = YES;
-            heldStackView.center = originalCenterOfHeldStackInView;
+
+            [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
         } completion:nil];
     }
 }

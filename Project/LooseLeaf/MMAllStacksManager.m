@@ -15,6 +15,7 @@
 #import "MMUpgradeInProgressViewController.h"
 #import "MMScrapStateUpgrader.h"
 #import "MMJotViewStateUpgrader.h"
+#import "NSArray+MapReduce.h"
 
 
 @implementation MMAllStacksManager {
@@ -78,6 +79,10 @@ static MMAllStacksManager* _instance = nil;
     }];
 }
 
+- (void)saveToDisk {
+    [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+}
+
 - (NSString*)createStack:(BOOL)withDefaultContent {
     CheckMainThread;
     NSString* stackID = [[NSUUID UUID] UUIDString];
@@ -87,7 +92,7 @@ static MMAllStacksManager* _instance = nil;
     [[NSFileManager defaultManager] createDirectoryAtPath:stackDirectory withIntermediateDirectories:YES attributes:nil error:&err];
 
     [stackIDs addObject:@{ @"uuid": stackID }];
-    [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+    [self saveToDisk];
 
     if (!withDefaultContent) {
         NSString* stackDirectory = [[[NSFileManager documentsPath] stringByAppendingPathComponent:@"Stacks"] stringByAppendingPathComponent:stackID];
@@ -107,7 +112,7 @@ static MMAllStacksManager* _instance = nil;
     [stackIDs filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nonnull evaluatedObject, NSDictionary<NSString*, id>* _Nullable bindings) {
         return ![evaluatedObject[@"uuid"] isEqualToString:stackUUID];
     }]];
-    [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+    [self saveToDisk];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[NSFileManager defaultManager] removeItemAtPath:[self stackDirectoryPathForUUID:stackUUID] error:nil];
     });
@@ -137,7 +142,7 @@ static MMAllStacksManager* _instance = nil;
             return obj;
         }] mutableCopy];
         if (didUpdateAnything) {
-            [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+            [self saveToDisk];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"StackCachedPagesDidUpdateNotification" object:nil userInfo:@{ @"stackUUID": stackUUID }];
         }
     }];
@@ -158,7 +163,7 @@ static MMAllStacksManager* _instance = nil;
             return obj;
         }] mutableCopy];
         if (didUpdateAnything) {
-            [[NSKeyedArchiver archivedDataWithRootObject:stackIDs] writeToFile:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"stacks.plist"] atomically:YES];
+            [self saveToDisk];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"StackCachedPagesDidUpdateNotification" object:nil userInfo:@{ @"stackUUID": stackUUID }];
         }
     }];
@@ -242,6 +247,27 @@ static MMAllStacksManager* _instance = nil;
         });
     } else {
         upgradeCompleteBlock();
+    }
+}
+
+- (void)moveStack:(NSString*)stackUUID toIndex:(NSInteger)index {
+    NSDictionary* stackInfoDict = [stackIDs reduce:^id(NSDictionary* obj, NSUInteger index, id accum) {
+        if ([obj[@"uuid"] isEqualToString:stackUUID]) {
+            return obj;
+        } else {
+            return accum;
+        }
+    }];
+
+    if (!stackInfoDict) {
+        @throw [NSException exceptionWithName:@"AllStacksManagerException" reason:@"" userInfo:nil];
+    }
+
+    if ([stackIDs indexOfObject:stackInfoDict] != index) {
+        [stackIDs removeObject:stackInfoDict];
+        index = MAX(0, MIN(index, [stackIDs count] - 1));
+        [stackIDs insertObject:stackInfoDict atIndex:index];
+        [self saveToDisk];
     }
 }
 

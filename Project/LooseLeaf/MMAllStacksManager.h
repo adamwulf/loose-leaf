@@ -33,4 +33,6 @@
 
 - (void)updateName:(NSString*)name forStack:(NSString*)stackUUID;
 
+- (void)moveStack:(NSString*)stackUUID toIndex:(NSInteger)index;
+
 @end
