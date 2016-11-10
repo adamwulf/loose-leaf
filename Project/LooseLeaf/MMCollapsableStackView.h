@@ -19,4 +19,8 @@
 - (void)organizePagesIntoListAnimated:(BOOL)animated;
 - (void)cancelPendingConfirmationsAndResetToRow;
 
+- (void)squashPagesWhenInRowView:(CGFloat)squash withTranslate:(CGFloat)translate;
+- (CGPoint)effectiveRowCenter;
+
+
 @end

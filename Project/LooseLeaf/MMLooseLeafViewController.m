@@ -90,6 +90,10 @@
     MMFeedbackButton* listViewFeedbackButton;
 
     BOOL isShowingCollapsedView;
+
+    UILongPressGestureRecognizer* longPressGesture;
+    CGPoint heldStackViewOffset;
+    MMCollapsableStackView* heldStackView;
 }
 
 @synthesize bezelPagesContainer;
@@ -142,6 +146,9 @@
         allStacksScrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
         [allStacksScrollView setAlwaysBounceVertical:YES];
         [self.view addSubview:allStacksScrollView];
+
+        longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressWithGesture:)];
+        [allStacksScrollView addGestureRecognizer:longPressGesture];
 
         // init the add page / tutorial / feedback buttons in the scrollview
         addNewStackButton = [[MMListAddPageButton alloc] initWithFrame:CGRectMake([MMListPaperStackView bufferWidth], [MMListPaperStackView bufferWidth], [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight])];
@@ -482,6 +489,8 @@
 
     isShowingCollapsedView = NO;
 
+    longPressGesture.enabled = NO;
+
     CGRect originalFrame = [aStackView convertRect:[aStackView bounds] toView:self.view];
     CGFloat originalMaxY = CGRectGetMaxY(originalFrame);
 
@@ -567,6 +576,8 @@
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
     isShowingCollapsedView = YES;
+
+    longPressGesture.enabled = YES;
 
     CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat targetYOffset = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID] * [self stackRowHeight];
@@ -673,6 +684,10 @@
         allStacksScrollView.scrollEnabled = YES;
         [deleteSidebar showSidebarWithPercent:0 withTargetView:stackViewsByUUID[stackUUID]];
     }
+}
+
+- (BOOL)isAllowedToInteractWithStack:(NSString*)stackUUID {
+    return heldStackView == nil;
 }
 
 #pragma mark - MMStackControllerViewDelegate
@@ -1179,6 +1194,45 @@
 
 - (void)tutorialButtonPressed:(MMTutorialSidebarButton*)tutorialButton {
     [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
+}
+
+#pragma mark - Long Press
+
+- (void)didLongPressWithGesture:(UIGestureRecognizer*)gesture {
+    CGPoint pointInScrollView = [gesture locationInView:allStacksScrollView];
+
+    if ([gesture state] == UIGestureRecognizerStateBegan) {
+        [[allStacksScrollView subviews] enumerateObjectsUsingBlock:^(__kindof UIView* _Nonnull obj, NSUInteger idx, BOOL* _Nonnull stop) {
+            if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
+                MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
+                // only allow moving stack views
+                if (CGRectContainsPoint([aStackView frame], pointInScrollView)) {
+                    heldStackView = aStackView;
+                    heldStackViewOffset = [heldStackView effectiveRowCenter];
+
+                    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+
+                        CGFloat diff = CGRectGetWidth([heldStackView bounds]) / 2 - heldStackViewOffset.x;
+
+                        [heldStackView squashPagesWhenInRowView:.2 withTranslate:80 + diff];
+                        heldStackView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+                    } completion:nil];
+                }
+            }
+        }];
+
+
+    } else if ([gesture state] == UIGestureRecognizerStateChanged) {
+        // moving
+    } else if ([gesture state] == UIGestureRecognizerStateEnded ||
+               [gesture state] == UIGestureRecognizerStateCancelled ||
+               [gesture state] == UIGestureRecognizerStateFailed) {
+        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            [heldStackView squashPagesWhenInRowView:0 withTranslate:0];
+            heldStackView.transform = CGAffineTransformIdentity;
+            heldStackView.userInteractionEnabled = YES;
+        } completion:nil];
+    }
 }
 
 @end

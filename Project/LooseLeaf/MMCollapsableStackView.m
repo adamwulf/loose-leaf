@@ -157,7 +157,7 @@
     // spread the pages between those two frames
     CGRect firstFrame = [self frameForIndexInList:0];
     CGRect lastFrame = [self frameForIndexInList:kNumberOfColumnsInListView - 1];
-    NSInteger minimumNumberOfPagesForSpacing = MAX(12, [pagesToAlignIntoRow count]);
+    NSInteger minimumNumberOfPagesForSpacing = MAX(12, [pagesToAlignIntoRow count]) - 1;
     NSInteger indexInList = [pagesToAlignIntoRow indexOfObject:aPage];
     CGRect targetFrame = firstFrame;
     targetFrame.origin.x += (lastFrame.origin.x - firstFrame.origin.x) * ((CGFloat)indexInList / minimumNumberOfPagesForSpacing);
@@ -395,6 +395,12 @@
 #pragma mark - Delete Inbox Items
 
 - (void)deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender {
+    if (![[self stackDelegate] isAllowedToInteractWithStack:[self uuid]]) {
+        // cancel the gesture
+        [sender setEnabled:NO];
+        [sender setEnabled:YES];
+        return;
+    }
     if (sender.state == UIGestureRecognizerStateBegan) {
         // notify other stacks to cancel their delete gesture if any
         // also, don't let the user swipe to delete and scroll the stacks at the same time
@@ -542,6 +548,29 @@
     deleteGesture.enabled = YES;
     squishFactor = .15;
     [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
+}
+
+#pragma mark - Row Animation Helpers
+
+- (void)squashPagesWhenInRowView:(CGFloat)squash withTranslate:(CGFloat)translate {
+    if (![[self currentViewMode] isEqualToString:kViewModeCollapsed]) {
+        @throw [NSException exceptionWithName:@"CollapsedException" reason:@"Cannot squash pages outside of row view" userInfo:nil];
+    }
+    [self adjustForDelete:squash withTranslate:translate];
+}
+
+- (CGPoint)effectiveRowCenter {
+    NSArray* pagesToAlign = [self pagesToAlignForRowView];
+
+    if ([pagesToAlign count]) {
+        MMPaperView* firstPage = pagesToAlign[0];
+        MMPaperView* lastPage = pagesToAlign[[pagesToAlign count] - 1];
+        CGFloat diffx = lastPage.center.x - firstPage.center.x;
+        CGFloat diffy = lastPage.center.y - firstPage.center.y;
+        return CGPointMake(firstPage.center.x + diffx / 2, firstPage.center.y + diffy / 2);
+    } else {
+        return CGRectGetMidPoint([self bounds]);
+    }
 }
 
 @end
