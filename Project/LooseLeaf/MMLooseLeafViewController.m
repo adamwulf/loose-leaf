@@ -92,6 +92,7 @@
 
     BOOL isShowingCollapsedView;
 
+    UIPanGestureRecognizer* panGesture;
     UILongPressGestureRecognizer* longPressGesture;
     CGPoint originalCenterOfHeldStackInView;
     CGPoint heldStackViewOffset;
@@ -152,6 +153,12 @@
 
         longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressWithGesture:)];
         [allStacksScrollView addGestureRecognizer:longPressGesture];
+
+        panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressWithGesture:)];
+        panGesture.minimumNumberOfTouches = 2;
+        panGesture.maximumNumberOfTouches = 2;
+        panGesture.delaysTouchesBegan = NO;
+        [allStacksScrollView addGestureRecognizer:panGesture];
 
         // init the add page / tutorial / feedback buttons in the scrollview
         addNewStackButton = [[MMListAddPageButton alloc] initWithFrame:CGRectMake([MMListPaperStackView bufferWidth], [MMListPaperStackView bufferWidth], [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight])];
@@ -494,6 +501,7 @@
     isShowingCollapsedView = NO;
 
     longPressGesture.enabled = NO;
+    panGesture.enabled = NO;
 
     CGRect originalFrame = [aStackView convertRect:[aStackView bounds] toView:self.view];
     CGFloat originalMaxY = CGRectGetMaxY(originalFrame);
@@ -582,6 +590,7 @@
     isShowingCollapsedView = YES;
 
     longPressGesture.enabled = YES;
+    panGesture.enabled = YES;
 
     CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat targetYOffset = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID] * [self stackRowHeight];
@@ -748,9 +757,9 @@
             fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
             fr.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
             aStackView.frame = fr;
-        }
-        if (![allStacksScrollView.subviews containsObject:aStackView]) {
-            [allStacksScrollView addSubview:aStackView];
+            if (![allStacksScrollView.subviews containsObject:aStackView]) {
+                [allStacksScrollView addSubview:aStackView];
+            }
         }
         aStackView.alpha = 1;
         aStackView.scrollEnabled = NO;
@@ -1217,6 +1226,7 @@
 
 - (void)didLongPressWithGesture:(UILongPressGestureRecognizer*)gesture {
     CGPoint pointInScrollView = [gesture locationInView:allStacksScrollView];
+    CGPoint pointInView = [gesture locationInView:self.view];
 
     if ([gesture state] == UIGestureRecognizerStateBegan) {
         [[allStacksScrollView subviews] enumerateObjectsUsingBlock:^(__kindof UIView* _Nonnull obj, NSUInteger idx, BOOL* _Nonnull stop) {
@@ -1226,7 +1236,7 @@
                 if (CGRectContainsPoint([aStackView frame], pointInScrollView)) {
                     heldStackView = aStackView;
                     heldStackViewOffset = [heldStackView effectiveRowCenter];
-                    originalGestureLocationInView = pointInScrollView;
+                    originalGestureLocationInView = pointInView;
 
                     originalCenterOfHeldStackInView = [heldStackView convertPoint:CGRectGetMidPoint([heldStackView bounds]) toView:self.view];
                     [self.view addSubview:heldStackView];
@@ -1245,7 +1255,7 @@
 
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         // moving
-        CGPoint translation = CGPointMake(pointInScrollView.x - originalGestureLocationInView.x, pointInScrollView.y - originalGestureLocationInView.y);
+        CGPoint translation = CGPointMake(pointInView.x - originalGestureLocationInView.x, pointInView.y - originalGestureLocationInView.y);
         CGPoint translatedCenter = originalCenterOfHeldStackInView;
         translatedCenter.y += translation.y;
         heldStackView.center = translatedCenter;
