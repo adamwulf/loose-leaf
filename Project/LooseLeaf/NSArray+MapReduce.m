@@ -39,4 +39,14 @@
     return result;
 }
 
+- (BOOL)reduceToBool:(BOOL (^)(id obj, NSUInteger index, BOOL accum))reducefunc {
+    BOOL result = NO;
+    NSUInteger index;
+    for (index = 0; index < [self count]; index++) {
+        result = reducefunc([self objectAtIndex:index], index, result);
+    }
+    return result;
+}
+
+
 @end

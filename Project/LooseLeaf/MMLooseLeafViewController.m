@@ -48,6 +48,7 @@
 #import "MMDebugStackView.h"
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMFeedbackButton.h"
+#import "NSArray+MapReduce.h"
 
 
 @interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate>
@@ -92,7 +93,9 @@
     BOOL isShowingCollapsedView;
 
     UILongPressGestureRecognizer* longPressGesture;
+    CGPoint originalCenterOfHeldStackInView;
     CGPoint heldStackViewOffset;
+    CGPoint originalGestureLocationInView;
     MMCollapsableStackView* heldStackView;
 }
 
@@ -715,6 +718,12 @@
     return aStackView;
 }
 
+- (CGFloat)targetYForFrameForStackInCollapsedList:(NSString*)stackUUID {
+    CGFloat stackRowHeight = [self stackRowHeight];
+    NSInteger stackIndex = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
+    return stackIndex * stackRowHeight;
+}
+
 - (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight viewMode:(NSString*)viewMode {
     CGFloat stackRowHeight = [self stackRowHeight];
     for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
@@ -732,9 +741,9 @@
         CGRect fr = aStackView.bounds;
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
             fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
+            fr.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
+            aStackView.frame = fr;
         }
-        fr.origin.y = stackIndex * stackRowHeight;
-        aStackView.frame = fr;
         [allStacksScrollView addSubview:aStackView];
         aStackView.alpha = 1;
         aStackView.scrollEnabled = NO;
@@ -1199,7 +1208,7 @@
 
 #pragma mark - Long Press
 
-- (void)didLongPressWithGesture:(UIGestureRecognizer*)gesture {
+- (void)didLongPressWithGesture:(UILongPressGestureRecognizer*)gesture {
     CGPoint pointInScrollView = [gesture locationInView:allStacksScrollView];
 
     if ([gesture state] == UIGestureRecognizerStateBegan) {
@@ -1210,6 +1219,11 @@
                 if (CGRectContainsPoint([aStackView frame], pointInScrollView)) {
                     heldStackView = aStackView;
                     heldStackViewOffset = [heldStackView effectiveRowCenter];
+                    originalGestureLocationInView = pointInScrollView;
+
+                    originalCenterOfHeldStackInView = [heldStackView convertPoint:CGRectGetMidPoint([heldStackView bounds]) toView:self.view];
+                    [self.view addSubview:heldStackView];
+                    heldStackView.center = originalCenterOfHeldStackInView;
 
                     [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
 
@@ -1224,13 +1238,39 @@
 
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         // moving
+        CGPoint translation = CGPointMake(pointInScrollView.x - originalGestureLocationInView.x, pointInScrollView.y - originalGestureLocationInView.y);
+        CGPoint translatedCenter = originalCenterOfHeldStackInView;
+        translatedCenter.y += translation.y;
+        heldStackView.center = translatedCenter;
+
+
+        BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
+            if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
+                MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
+                CGFloat targetY = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
+                return aStackView.frame.origin.y == targetY && (index == 0 || accum);
+            } else {
+                return accum;
+            }
+        }];
+
+        if (shouldAnimate) {
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                [self initializeAllStackViewsExcept:heldStackView.uuid viewMode:kViewModeCollapsed];
+            } completion:nil];
+        }
     } else if ([gesture state] == UIGestureRecognizerStateEnded ||
                [gesture state] == UIGestureRecognizerStateCancelled ||
                [gesture state] == UIGestureRecognizerStateFailed) {
+        CGPoint p = [heldStackView convertPoint:CGRectGetMidPoint([heldStackView bounds]) toView:allStacksScrollView];
+        [allStacksScrollView addSubview:heldStackView];
+        heldStackView.center = p;
+
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [heldStackView squashPagesWhenInRowView:0 withTranslate:0];
             heldStackView.transform = CGAffineTransformIdentity;
             heldStackView.userInteractionEnabled = YES;
+            heldStackView.center = originalCenterOfHeldStackInView;
         } completion:nil];
     }
 }
