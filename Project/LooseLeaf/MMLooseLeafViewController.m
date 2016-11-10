@@ -92,11 +92,13 @@
 
     BOOL isShowingCollapsedView;
 
+    CADisplayLink* displayLink;
     UIPanGestureRecognizer* panGesture;
     UILongPressGestureRecognizer* longPressGesture;
     CGPoint originalCenterOfHeldStackInView;
     CGPoint heldStackViewOffset;
     CGPoint originalGestureLocationInView;
+    CGPoint mostRecentLocationOfMoveGestureInView;
     MMCollapsableStackView* heldStackView;
 }
 
@@ -308,6 +310,14 @@
         if (![[MMTutorialManager sharedInstance] hasFinishedTutorial]) {
             [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
         }
+
+        [NSThread performBlockInBackground:^{
+            @autoreleasepool {
+                displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateScrollOffsetDuringDrag)];
+                displayLink.paused = YES;
+                [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+            }
+        }];
 
         // Debug
 
@@ -1226,7 +1236,7 @@
 
 - (void)didLongPressWithGesture:(UILongPressGestureRecognizer*)gesture {
     CGPoint pointInScrollView = [gesture locationInView:allStacksScrollView];
-    CGPoint pointInView = [gesture locationInView:self.view];
+    mostRecentLocationOfMoveGestureInView = [gesture locationInView:self.view];
 
     if ([gesture state] == UIGestureRecognizerStateBegan) {
         [[allStacksScrollView subviews] enumerateObjectsUsingBlock:^(__kindof UIView* _Nonnull obj, NSUInteger idx, BOOL* _Nonnull stop) {
@@ -1236,7 +1246,7 @@
                 if (CGRectContainsPoint([aStackView frame], pointInScrollView)) {
                     heldStackView = aStackView;
                     heldStackViewOffset = [heldStackView effectiveRowCenter];
-                    originalGestureLocationInView = pointInView;
+                    originalGestureLocationInView = mostRecentLocationOfMoveGestureInView;
 
                     originalCenterOfHeldStackInView = [heldStackView convertPoint:CGRectGetMidPoint([heldStackView bounds]) toView:self.view];
                     [self.view addSubview:heldStackView];
@@ -1249,13 +1259,15 @@
                         [heldStackView squashPagesWhenInRowView:.2 withTranslate:80 + diff];
                         heldStackView.transform = CGAffineTransformMakeScale(1.1, 1.1);
                     } completion:nil];
+
+                    displayLink.paused = NO;
                 }
             }
         }];
 
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         // moving
-        CGPoint translation = CGPointMake(pointInView.x - originalGestureLocationInView.x, pointInView.y - originalGestureLocationInView.y);
+        CGPoint translation = CGPointMake(mostRecentLocationOfMoveGestureInView.x - originalGestureLocationInView.x, mostRecentLocationOfMoveGestureInView.y - originalGestureLocationInView.y);
         CGPoint translatedCenter = originalCenterOfHeldStackInView;
         translatedCenter.y += translation.y;
         heldStackView.center = translatedCenter;
@@ -1288,6 +1300,7 @@
     } else if ([gesture state] == UIGestureRecognizerStateEnded ||
                [gesture state] == UIGestureRecognizerStateCancelled ||
                [gesture state] == UIGestureRecognizerStateFailed) {
+        displayLink.paused = YES;
         CGPoint p = [heldStackView convertPoint:CGRectGetMidPoint([heldStackView bounds]) toView:allStacksScrollView];
         [allStacksScrollView addSubview:heldStackView];
         heldStackView.center = p;
@@ -1299,6 +1312,65 @@
 
             [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
         } completion:nil];
+    }
+}
+
+
+- (void)updateScrollOffsetDuringDrag {
+    /**
+     * this helper block accepts an offset that may or may not
+     * be within the size bounds of the scroll view.
+     * the offset may be negative, or may be far below
+     * the end of the list of pages.
+     *
+     * the returned value is guarenteed to be the correct
+     * offset that will keep the pages visible on screen
+     * (including the add page button)
+     */
+    CGFloat (^validateOffset)(CGPoint) = ^(CGPoint possibleOffset) {
+        CGPoint actualOffset = possibleOffset;
+        CGFloat fullHeight = allStacksScrollView.contentSize.height;
+        if (actualOffset.y > fullHeight - [MMListPaperStackView screenHeight]) {
+            actualOffset.y = fullHeight - [MMListPaperStackView screenHeight];
+        }
+        if (actualOffset.y < 0) {
+            actualOffset.y = 0;
+        }
+        return possibleOffset.y - actualOffset.y;
+    };
+
+    //
+    // we're going to normalize the drag based on the
+    // midpoint of the screen.
+    CGFloat directionAndAmplitude = mostRecentLocationOfMoveGestureInView.y - [MMListPaperStackView screenHeight] / 2;
+    // make the max speed faster
+    directionAndAmplitude *= 1.5;
+
+    // save the middle half of the screen so that
+    // we never scroll
+    //
+    // anything above/below the middle half will begin
+    // to scroll
+    if (directionAndAmplitude > [MMListPaperStackView screenHeight] / 4) {
+        directionAndAmplitude -= [MMListPaperStackView screenHeight] / 4;
+    } else if (directionAndAmplitude < -[MMListPaperStackView screenHeight] / 4) {
+        directionAndAmplitude += [MMListPaperStackView screenHeight] / 4;
+    } else {
+        directionAndAmplitude = 0;
+    }
+
+    if (directionAndAmplitude) {
+        //
+        // the directionAndAmplitude is the number of points
+        // above/below the midpoint. so scale it down so that
+        // the user drags roughly 256 / 20 = 12 pts per
+        // display update
+        CGFloat offsetDelta = directionAndAmplitude * displayLink.duration * 3;
+        CGPoint newOffset = allStacksScrollView.contentOffset;
+        newOffset.y += offsetDelta;
+        CGFloat delta = validateOffset(newOffset);
+        newOffset.y -= delta;
+        allStacksScrollView.contentOffset = newOffset;
     }
 }
 

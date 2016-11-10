@@ -264,8 +264,9 @@ static MMAllStacksManager* _instance = nil;
     }
 
     if ([stackIDs indexOfObject:stackInfoDict] != index) {
+        NSInteger totalCount = [stackIDs count];
         [stackIDs removeObject:stackInfoDict];
-        index = MAX(0, MIN(index, [stackIDs count] - 1));
+        index = MAX(0, MIN(index, totalCount - 1));
         [stackIDs insertObject:stackInfoDict atIndex:index];
         [self saveToDisk];
     }
