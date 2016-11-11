@@ -620,7 +620,10 @@
         aStackView.frame = fr;
 
         void (^animationBlock)() = ^{
+            CGRect frWithY = fr;
             [self initializeAllStackViewsExcept:stackUUID viewMode:kViewModeCollapsed];
+            frWithY.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
+            aStackView.frame = frWithY;
             addNewStackButton.alpha = 1;
             listViewFeedbackButton.alpha = 1;
             listViewTutorialButton.alpha = 1;
