@@ -1314,7 +1314,9 @@
             heldStackView.userInteractionEnabled = YES;
 
             [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
-        } completion:nil];
+        } completion:^(BOOL finished) {
+            heldStackView = nil;
+        }];
     }
 }
 
