@@ -82,6 +82,7 @@ static const CGFloat frameBuffer = 20;
     if (smoothBorder) {
         self.layer.borderWidth = 4;
         self.layer.borderColor = [[UIColor clearColor] CGColor];
+        self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
         self.layer.shouldRasterize = YES;
     } else {
         self.layer.borderWidth = 0;
