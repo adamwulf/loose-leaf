@@ -17,6 +17,7 @@
 #import "NSArray+Extras.h"
 #import "UIScreen+MMSizing.h"
 #import "MMTrashButton.h"
+#import "MMColoredTextField.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -39,6 +40,9 @@
     MMTrashButton* deleteButton;
 
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
+
+    UIView* vibrantView;
+    MMColoredTextField* stackNameField;
 }
 
 @dynamic stackDelegate;
@@ -60,7 +64,7 @@
         CGFloat buffer = [MMListPaperStackView bufferWidth];
         CGFloat rowHeight = [MMListPaperStackView rowHeight] + 2 * buffer;
         CGFloat deleteButtonWidth = 80;
-        CGRect deleteRect = CGRectMake(self.bounds.size.width - 3 * buffer - deleteButtonWidth, (rowHeight - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
+        CGRect deleteRect = CGRectMake(self.bounds.size.width - 2 * buffer - deleteButtonWidth, (rowHeight - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
         deleteButton = [[MMTrashButton alloc] initWithFrame:deleteRect];
         [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         deleteButton.alpha = 0;
@@ -71,8 +75,26 @@
         deleteConfirmationPlaceholder = [[MMConfirmDeleteStackButton alloc] initWithFrame:confirmationRect];
         deleteConfirmationPlaceholder.delegate = self;
         [self addSubview:deleteConfirmationPlaceholder];
+
+        CGRect nameFieldFrame = CGRectWithHeight([self bounds], 50);
+        nameFieldFrame = CGRectTranslate(nameFieldFrame, 0, 10);
+        nameFieldFrame = CGRectInset(nameFieldFrame, [MMListPaperStackView bufferWidth], 10);
+        stackNameField = [[MMColoredTextField alloc] initWithFrame:nameFieldFrame];
+        stackNameField.font = [UIFont systemFontOfSize:24];
+        stackNameField.text = @"Random Stack Name";
+        [self addSubview:stackNameField];
     }
     return self;
+}
+
+- (CGRect)rectForColorConsideration {
+    CGRect targetRect = [stackNameField frame];
+    targetRect.size = [stackNameField sizeThatFits:targetRect.size];
+    return targetRect;
+}
+
+- (void)setNameColor:(UIColor*)color animated:(BOOL)animated {
+    [stackNameField setTintColor:color animated:animated];
 }
 
 - (void)setCurrentViewMode:(NSString*)currentViewMode {
@@ -95,17 +117,26 @@
 }
 
 - (void)cancelPendingConfirmationsAndResetToRow {
+    [self cancelPendingConfirmationsAndResetToRowQuickly:NO];
+}
+
+- (void)cancelPendingConfirmationsAndResetToRowQuickly:(BOOL)quickly {
     if (![self isPerfectlyAlignedIntoRow]) {
         deleteGesture.enabled = YES;
         squishFactor = .15;
-        [self finishSwipeToDelete:YES sendingDelegateNotifications:NO];
+        [self finishSwipeToDelete:!quickly sendingDelegateNotifications:NO];
     }
 }
 
 #pragma mark - Actions
 
 - (void)tapToExpandToListMode:(UIButton*)button {
-    [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
+    if ([self isPerfectlyAlignedIntoRow]) {
+        [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
+    } else if (deleteButton.alpha) {
+        [self cancelPendingConfirmationsAndResetToRowQuickly:YES];
+        [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
+    }
 }
 
 
@@ -163,6 +194,14 @@
 
 #pragma mark - Animate into row form
 
+- (CGRect)frameForListViewForPage:(MMPaperView*)page {
+    return CGRectTranslate([super frameForListViewForPage:page], 0, 20);
+}
+
+- (CGFloat)contentHeightForAllPages {
+    return [super contentHeightForAllPages] + 20;
+}
+
 - (CGRect)targetFrameInRowForPage:(MMPaperView*)aPage givenAllPages:(NSArray*)pagesToAlignIntoRow {
     // now we're going to animate all of the pages into a single row.
     // to do that, we find the first + list frames for pages, and equally
@@ -173,6 +212,7 @@
     NSInteger indexInList = [pagesToAlignIntoRow indexOfObject:aPage];
     CGRect targetFrame = firstFrame;
     targetFrame.origin.x += (lastFrame.origin.x - firstFrame.origin.x) * ((CGFloat)indexInList / minimumNumberOfPagesForSpacing);
+    targetFrame = CGRectTranslate(targetFrame, 0, 20);
     return targetFrame;
 }
 
@@ -253,6 +293,8 @@
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
         deleteConfirmationPlaceholder.alpha = 0;
+        deleteButton.alpha = 0;
+        squishFactor = 0;
     };
 
     //
@@ -504,7 +546,6 @@
     }
 
     [self setClipsToBounds:squishFactor == 0];
-    [expandButton setEnabled:squishFactor == 0];
     [deleteButton setEnabled:squishFactor > 0];
 
     CGFloat alphaForDelete = adjustment - .5;
@@ -513,19 +554,22 @@
     alphaForDelete = MIN(alphaForDelete, 1.0);
     //    deleteButton.alpha = alphaForDelete;
 
-    CGRect frameAtStart = [self frameForIndexInList:0];
-
     NSArray* pagesToAlign = [self pagesToAlignForRowView];
-    for (int i = 0; i < [pagesToAlign count]; i++) {
-        MMPaperView* aPage = pagesToAlign[i];
-        CGFloat ix = CGRectGetMidX([self targetFrameInRowForPage:aPage givenAllPages:pagesToAlign]);
-        CGFloat fx = CGRectGetMidX(frameAtStart) - 120 + i * 4;
-        CGFloat diff = fx - ix;
-        CGFloat x = ix + diff * easedOut;
 
-        aPage.center = CGPointMake(x + xTranslate, CGRectGetMidY(frameAtStart) + (RandomMod(i, 80) - 40) * easedOut);
+    if ([pagesToAlign count]) {
+        CGRect frameAtStart = [self targetFrameInRowForPage:pagesToAlign[0] givenAllPages:pagesToAlign];
 
-        aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]) + easedOut * 5 * RandomPhotoRotation([[aPage uuid] hash]));
+        for (int i = 0; i < [pagesToAlign count]; i++) {
+            MMPaperView* aPage = pagesToAlign[i];
+            CGFloat ix = CGRectGetMidX([self targetFrameInRowForPage:aPage givenAllPages:pagesToAlign]);
+            CGFloat fx = CGRectGetMidX(frameAtStart) - 120 + i * 4;
+            CGFloat diff = fx - ix;
+            CGFloat x = ix + diff * easedOut;
+
+            aPage.center = CGPointMake(x + xTranslate, CGRectGetMidY(frameAtStart) + (RandomMod(i, 80) - 40) * easedOut);
+
+            aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]) + easedOut * 5 * RandomPhotoRotation([[aPage uuid] hash]));
+        }
     }
 }
 

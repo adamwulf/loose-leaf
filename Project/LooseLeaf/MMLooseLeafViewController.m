@@ -50,9 +50,11 @@
 #import "MMFeedbackButton.h"
 #import "NSArray+MapReduce.h"
 #import "UIScreen+MMSizing.h"
+#import "UIColor+MMAdditions.h"
+#import "MMRotatingBackgroundViewDelegate.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate>
 
 @end
 
@@ -61,6 +63,8 @@
     MMMemoryManager* memoryManager;
     MMDeletePageSidebarController* deleteSidebar;
     MMCloudKitImportExportView* cloudKitExportView;
+
+    MMRotatingBackgroundView* rotatingBackgroundView;
 
     // image picker sidebar
     MMImageSidebarContainerView* importImageSidebar;
@@ -103,6 +107,8 @@
     CGPoint originalGestureLocationInView;
     CGPoint mostRecentLocationOfMoveGestureInView;
     MMCollapsableStackView* heldStackView;
+
+    BOOL isViewVisible;
 }
 
 @synthesize bezelPagesContainer;
@@ -140,7 +146,9 @@
 
         self.view.opaque = YES;
 
-        [self.view addSubview:[[MMRotatingBackgroundView alloc] initWithFrame:self.view.bounds]];
+        rotatingBackgroundView = [[MMRotatingBackgroundView alloc] initWithFrame:self.view.bounds];
+        rotatingBackgroundView.delegate = self;
+        [self.view addSubview:rotatingBackgroundView];
 
         deleteSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.view.bounds andDarkBorder:NO];
         deleteSidebar.deleteCompleteBlock = ^(UIView* pageToDelete) {
@@ -153,6 +161,7 @@
         [self.view addSubview:deleteSidebar.deleteSidebarBackground];
 
         allStacksScrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+        allStacksScrollView.delegate = self;
         [allStacksScrollView setAlwaysBounceVertical:YES];
         [self.view addSubview:allStacksScrollView];
 
@@ -396,6 +405,20 @@
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    isViewVisible = YES;
+
+    [self rotatingBackgroundViewDidUpdate:rotatingBackgroundView];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    isViewVisible = NO;
+}
+
 
 #pragma mark - application state
 
@@ -566,6 +589,8 @@
 
         addNewStackButton.alpha = 0;
         bezelPagesContainer.alpha = 1;
+
+        [self updateStackNameColorsAnimated:YES];
     };
 
     void (^completionStep)(BOOL) = ^(BOOL completed) {
@@ -631,6 +656,8 @@
             listViewFeedbackButton.alpha = 1;
             listViewTutorialButton.alpha = 1;
             bezelPagesContainer.alpha = 0;
+
+            [self updateStackNameColorsAnimated:YES];
         };
 
         void (^completedBlock)(BOOL) = ^(BOOL finished) {
@@ -1394,6 +1421,33 @@
         newOffset.y -= delta;
         allStacksScrollView.contentOffset = newOffset;
     }
+}
+
+- (void)updateStackNameColorsAnimated:(BOOL)animated {
+    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
+        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+
+        CGPoint p = [aStackView convertPoint:CGRectGetMidPoint([aStackView rectForColorConsideration]) toView:rotatingBackgroundView];
+        UIColor* color1 = [rotatingBackgroundView colorFromPoint:p];
+        UIColor* color2 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, -CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
+        UIColor* color3 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
+        UIColor* original = [[color1 blendWithColor:color2 withPercent:.5] blendWithColor:color3 withPercent:.3];
+
+        [aStackView setNameColor:original animated:animated];
+    }
+}
+
+#pragma mark - MMRotatingBackgroundViewDelegate
+
+- (void)rotatingBackgroundViewDidUpdate:(MMRotatingBackgroundView*)backgroundView {
+    [self updateStackNameColorsAnimated:isViewVisible];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView*)scrollView {
+    [self updateStackNameColorsAnimated:NO];
 }
 
 @end

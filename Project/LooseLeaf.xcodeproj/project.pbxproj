@@ -460,6 +460,11 @@
 		C570B5251CD4564100FAB432 /* MMPalmGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */; };
 		C570B5291CD46CFD00FAB432 /* MMTwitterFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */; };
 		C57559161DD6B65E00670875 /* UIScreen+MMSizing.m in Sources */ = {isa = PBXBuildFile; fileRef = C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */; };
+		C575591C1DD6D31500670875 /* UIColor+MMAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */; };
+		C575591F1DD6E45100670875 /* MMColoredTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C575591E1DD6E45100670875 /* MMColoredTextField.m */; };
+		C57559271DD6ED9700670875 /* NRTextTransitions.license in Resources */ = {isa = PBXBuildFile; fileRef = C57559221DD6ED9700670875 /* NRTextTransitions.license */; };
+		C57559281DD6ED9700670875 /* NRTextTransitionCompletionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C57559241DD6ED9700670875 /* NRTextTransitionCompletionManager.m */; };
+		C57559291DD6ED9700670875 /* UIView+NRTextTransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = C57559261DD6ED9700670875 /* UIView+NRTextTransitions.m */; };
 		C576C53C1CE1825A00A8F342 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = C576C53B1CE1825A00A8F342 /* MMPDF.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C58E6A1D1CDB1B4A00508F1D /* bg00.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E31CDB1B4A00508F1D /* bg00.jpg */; };
@@ -1502,6 +1507,16 @@
 		C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwitterFollow.m; sourceTree = "<group>"; };
 		C57559141DD6B65E00670875 /* UIScreen+MMSizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+MMSizing.h"; sourceTree = "<group>"; };
 		C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+MMSizing.m"; sourceTree = "<group>"; };
+		C575591A1DD6D31500670875 /* UIColor+MMAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+MMAdditions.h"; sourceTree = "<group>"; };
+		C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+MMAdditions.m"; sourceTree = "<group>"; };
+		C575591D1DD6E45100670875 /* MMColoredTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMColoredTextField.h; sourceTree = "<group>"; };
+		C575591E1DD6E45100670875 /* MMColoredTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMColoredTextField.m; sourceTree = "<group>"; };
+		C57559201DD6E5A100670875 /* MMRotatingBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotatingBackgroundViewDelegate.h; sourceTree = "<group>"; };
+		C57559221DD6ED9700670875 /* NRTextTransitions.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NRTextTransitions.license; sourceTree = "<group>"; };
+		C57559231DD6ED9700670875 /* NRTextTransitionCompletionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NRTextTransitionCompletionManager.h; sourceTree = "<group>"; };
+		C57559241DD6ED9700670875 /* NRTextTransitionCompletionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NRTextTransitionCompletionManager.m; sourceTree = "<group>"; };
+		C57559251DD6ED9700670875 /* UIView+NRTextTransitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+NRTextTransitions.h"; sourceTree = "<group>"; };
+		C57559261DD6ED9700670875 /* UIView+NRTextTransitions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+NRTextTransitions.m"; sourceTree = "<group>"; };
 		C576C53A1CE1825A00A8F342 /* MMPDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDF.h; sourceTree = "<group>"; };
 		C576C53B1CE1825A00A8F342 /* MMPDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDF.m; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
@@ -1961,6 +1976,8 @@
 				C50CBF6F1CE441240053885A /* UIImage+MMColor.m */,
 				C57559141DD6B65E00670875 /* UIScreen+MMSizing.h */,
 				C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */,
+				C575591A1DD6D31500670875 /* UIColor+MMAdditions.h */,
+				C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2289,6 +2306,8 @@
 				665182091937B57600CBEAB4 /* MMBackgroundTimer.m */,
 				6688D01D1A9BE5500084CA06 /* MMStopWatch.h */,
 				6688D01E1A9BE5500084CA06 /* MMStopWatch.m */,
+				C575591D1DD6E45100670875 /* MMColoredTextField.h */,
+				C575591E1DD6E45100670875 /* MMColoredTextField.m */,
 			);
 			name = "Helper Classes";
 			sourceTree = "<group>";
@@ -2573,6 +2592,7 @@
 		66684B36182D95CB005A27B4 /* Licenses */ = {
 			isa = PBXGroup;
 			children = (
+				C57559221DD6ED9700670875 /* NRTextTransitions.license */,
 				66684B37182D95EA005A27B4 /* generateLicenses.pl */,
 				66EDE44019B100B500A5623B /* ziparchive.license */,
 				6619D3BB1AACF2ED00484819 /* icons.license */,
@@ -3724,6 +3744,7 @@
 			children = (
 				C53F635B1CDA87F700091EF1 /* MMRotatingBackgroundView.h */,
 				C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */,
+				C57559201DD6E5A100670875 /* MMRotatingBackgroundViewDelegate.h */,
 			);
 			name = BackgroundView;
 			sourceTree = "<group>";
@@ -3757,6 +3778,17 @@
 				C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */,
 			);
 			name = Twitter;
+			sourceTree = "<group>";
+		};
+		C57559211DD6ED8400670875 /* NRTextTransitions */ = {
+			isa = PBXGroup;
+			children = (
+				C57559231DD6ED9700670875 /* NRTextTransitionCompletionManager.h */,
+				C57559241DD6ED9700670875 /* NRTextTransitionCompletionManager.m */,
+				C57559251DD6ED9700670875 /* UIView+NRTextTransitions.h */,
+				C57559261DD6ED9700670875 /* UIView+NRTextTransitions.m */,
+			);
+			name = NRTextTransitions;
 			sourceTree = "<group>";
 		};
 		C576C5391CE1824E00A8F342 /* PDFs */ = {
@@ -4098,6 +4130,7 @@
 		C5F1B3001D9B382800E0E9A8 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				C57559211DD6ED8400670875 /* NRTextTransitions */,
 				66FD31E71AE035AF00EDD1D5 /* Archiving Help */,
 				66343C681AC085F900801962 /* Newsletter */,
 				662B7D1C19E7A54C00C5529B /* Trackers */,
@@ -4426,6 +4459,7 @@
 				C58E6A361CDB1B4A00508F1D /* bg25.jpg in Resources */,
 				6652450B199576E400C36609 /* text.png in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
+				C57559271DD6ED9700670875 /* NRTextTransitions.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
 				6653B8A9195CC7AD001C6E15 /* Documents in Resources */,
 			);
@@ -4513,6 +4547,7 @@
 				6650DD1718F4849800ADF591 /* MMImageViewButton.m in Sources */,
 				6606674A193A8BC400C985E9 /* MMMemoryManager.m in Sources */,
 				6610D08A1AA8F50B0019C2FB /* MMDisplayAssetGroup.m in Sources */,
+				C57559281DD6ED9700670875 /* NRTextTransitionCompletionManager.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				C5F1B2B51D9B01BB00E0E9A8 /* MPNetwork.m in Sources */,
@@ -4575,6 +4610,7 @@
 				C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */,
 				660E1DB3159028560001DA12 /* NSArray+MapReduce.m in Sources */,
 				665CAC1D17B578B0000BD505 /* MMColorButton.m in Sources */,
+				C575591F1DD6E45100670875 /* MMColoredTextField.m in Sources */,
 				66C4734F19CB999000505BC0 /* MMAssetListLayout.m in Sources */,
 				C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */,
 				66524509199575A900C36609 /* MMTextShareItem.m in Sources */,
@@ -4692,6 +4728,7 @@
 				6652456A1996DAB800C36609 /* AFURLSessionManager.m in Sources */,
 				66EDA79617CA87F80067BA63 /* MMPanAndPinchScrapGestureRecognizer.m in Sources */,
 				665C593417BD7C42006DECBF /* Tool.m in Sources */,
+				C57559291DD6ED9700670875 /* UIView+NRTextTransitions.m in Sources */,
 				6688D1E91A99508700EB17EC /* MMTutorialView.m in Sources */,
 				66A7AF1D19A53AF400E0AA29 /* MMCloudKitShareItem.m in Sources */,
 				667AE6A219E5C81B0063DD51 /* MMScrapViewState+Trash.m in Sources */,
@@ -4739,6 +4776,7 @@
 				C5F1B2E11D9B01BB00E0E9A8 /* UIView+MPHelpers.m in Sources */,
 				662280771AAF9FFF00DAB609 /* MMAlbumGroupListLayout.m in Sources */,
 				66AC153D1805F2F8005315C8 /* MMLoadImageCache.m in Sources */,
+				C575591C1DD6D31500670875 /* UIColor+MMAdditions.m in Sources */,
 				66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */,
 				C5F1B2D41D9B01BB00E0E9A8 /* MPUIFontToNSDictionaryValueTransformer.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
