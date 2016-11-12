@@ -17,7 +17,11 @@
 
 - (void)didAskToSwitchToStack:(NSString*)stackUUID animated:(BOOL)animated viewMode:(NSString*)viewMode;
 
+- (void)mightAskToCollapseStack:(NSString*)stackUUID;
+
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated;
+
+- (void)didNotAskToCollapseStack:(NSString*)stackUUID;
 
 - (void)isPossiblyDeletingStack:(NSString*)stackUUID withPendingProbability:(CGFloat)probability;
 

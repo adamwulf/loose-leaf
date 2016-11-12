@@ -877,6 +877,10 @@
     // noop
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
+    // noop
+}
+
 #pragma mark - MMButtonAwareTapGestureRecognizer
 
 /**

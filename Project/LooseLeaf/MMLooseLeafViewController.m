@@ -93,6 +93,8 @@
 
     BOOL isShowingCollapsedView;
 
+    BOOL willPossiblyShowCollapsedView;
+
     CADisplayLink* displayLink;
     UIPanGestureRecognizer* panGesture;
     UILongPressGestureRecognizer* longPressGesture;
@@ -658,6 +660,20 @@
     }
 }
 
+- (void)mightAskToCollapseStack:(NSString*)stackUUID {
+    if (!willPossiblyShowCollapsedView) {
+        willPossiblyShowCollapsedView = YES;
+        [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
+    }
+}
+
+- (void)didNotAskToCollapseStack:(NSString*)stackUUID {
+    if (willPossiblyShowCollapsedView) {
+        willPossiblyShowCollapsedView = NO;
+        [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
+    }
+}
+
 - (void)isPossiblyDeletingStack:(NSString*)stackUUID withPendingProbability:(CGFloat)probability {
     if ([self isShowingCollapsedView]) {
         allStacksScrollView.scrollEnabled = NO;
@@ -820,7 +836,7 @@
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
     NSArray* arr = @[];
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView] || willPossiblyShowCollapsedView) {
         for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
             arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
         }

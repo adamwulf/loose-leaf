@@ -280,7 +280,6 @@ static MMPageCacheManager* _instance = nil;
                 // only allowed to unload pages that we haven't
                 // asked to load their full state
                 [page unloadCachedPreview];
-                [self.delegate findPagesInVisibleRowsOfListView];
                 [pagesWithLoadedCacheImages removeObject:page];
             }
         }

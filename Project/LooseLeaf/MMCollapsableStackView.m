@@ -111,6 +111,13 @@
 
 #pragma mark - UIScrollViewDelegate
 
+- (void)scrollViewDidScroll:(UIScrollView*)scrollView {
+    if ([scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
+        [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
+    }
+    [super scrollViewDidScroll:scrollView];
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
     if (scrollView.contentOffset.y < -100) {
         // Need to turn off bouncing so that the bounce animation from releasing the over-scroll
@@ -130,7 +137,11 @@
         initialScrollOffsetFromTransitionToListView = CGPointZero;
         pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:CGPointZero];
         [[self stackDelegate] didAskToCollapseStack:[self uuid] animated:YES];
+    } else {
+        [[self stackDelegate] didNotAskToCollapseStack:[self uuid]];
     }
+
+    [super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
 }
 
 #pragma mark - Helper
