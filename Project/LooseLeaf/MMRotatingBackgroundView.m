@@ -168,8 +168,8 @@ static const CGFloat durationOfTransition = 10;
 - (UIColor*)colorFromPoint:(CGPoint)point {
     point.x *= ratio;
     point.y *= ratio;
-    point.y = scaledHeight - point.y;
-    point.y = MAX(0, MIN(scaledHeight, point.y));
+    point.y = MAX(0, MIN(scaledHeight - 1, point.y));
+    point.y = scaledHeight - point.y - 1;
 
     [self rerenderToContext];
 
