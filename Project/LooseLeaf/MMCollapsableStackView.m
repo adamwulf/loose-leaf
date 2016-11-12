@@ -15,6 +15,7 @@
 #import "MMConfirmDeleteStackButtonDelegate.h"
 #import "AVHexColor.h"
 #import "NSArray+Extras.h"
+#import "UIScreen+MMSizing.h"
 #import "MMTrashButton.h"
 
 #define kMaxPageCountForRow 20
@@ -248,7 +249,7 @@
     //
     void (^step3)(BOOL finished) = ^(BOOL finished) {
         // ensure sane default for content size
-        [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [MMListPaperStackView screenHeight])];
+        [self setContentSize:CGSizeMake([UIScreen screenWidth], [UIScreen screenHeight])];
         listViewTutorialButton.alpha = 0;
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
@@ -352,7 +353,7 @@
         }
         // set our content height/offset for the pages
         [self setContentOffset:CGPointZero animated:NO];
-        [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [self contentHeightForAllPages])];
+        [self setContentSize:CGSizeMake([UIScreen screenWidth], [self contentHeightForAllPages])];
         [self finishUITransitionToListView];
         [self moveAddButtonToTop];
 

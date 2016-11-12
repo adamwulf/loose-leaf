@@ -18,6 +18,7 @@
 #import "MMVisibleStackHolderView.h"
 #import "MMHiddenStackHolderView.h"
 #import "MMBezelStackHolderView.h"
+#import "UIScreen+MMSizing.h"
 
 #define kBounceThreshhold .1
 
@@ -72,20 +73,23 @@
 
         _stackManager = [[MMSingleStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
 
+
+        //        228
+
         //
         // icons for moving and panning pages
         [self addSubview:visibleStackHolder];
         [self addSubview:hiddenStackHolder];
         [self addSubview:bezelStackHolder];
-        papersIcon = [[MMPapersIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+        papersIcon = [[MMPapersIcon alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 168, [UIScreen screenHeight] / 2 - 52, 80, 80)];
         [self addSubview:papersIcon];
-        paperIcon = [[MMPaperIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+        paperIcon = [[MMPaperIcon alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 168, [UIScreen screenHeight] / 2 - 52, 80, 80)];
         [self addSubview:paperIcon];
-        plusIcon = [[MMPlusIcon alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
+        plusIcon = [[MMPlusIcon alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 228, [UIScreen screenHeight] / 2 - 36, 46, 46)];
         [self addSubview:plusIcon];
-        leftArrow = [[MMLeftArrow alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
+        leftArrow = [[MMLeftArrow alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 228, [UIScreen screenHeight] / 2 - 36, 46, 46)];
         [self addSubview:leftArrow];
-        rightArrow = [[MMRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
+        rightArrow = [[MMRightArrow alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 88, [UIScreen screenHeight] / 2 - 36, 46, 46)];
         [self addSubview:rightArrow];
         papersIcon.alpha = 0;
         paperIcon.alpha = 0;

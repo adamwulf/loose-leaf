@@ -49,6 +49,7 @@
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMFeedbackButton.h"
 #import "NSArray+MapReduce.h"
+#import "UIScreen+MMSizing.h"
 
 
 @interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate>
@@ -604,8 +605,8 @@
 
     CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat targetYOffset = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID] * [self stackRowHeight];
-    CGFloat idealY = MIN(targetYOffset + [MMListPaperStackView screenHeight] * 3.0 / 5.0, fullHeight);
-    idealY = MAX(0, idealY - [MMListPaperStackView screenHeight]);
+    CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
+    idealY = MAX(0, idealY - [UIScreen screenHeight]);
 
     [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:NO];
 
@@ -1219,12 +1220,12 @@
 
 - (CGPoint)locationForTutorialButtonInCollapsedView {
     CGFloat adjustment = (CGRectGetWidth([listViewTutorialButton bounds]) + kWidthOfSidebarButtonBuffer) / 2;
-    return CGPointMake([MMListPaperStackView screenWidth] / 2 - adjustment, [self contentHeightForAllStacks] - 110);
+    return CGPointMake([UIScreen screenWidth] / 2 - adjustment, [self contentHeightForAllStacks] - 110);
 }
 
 - (CGPoint)locationForFeedbackButtonInCollapsedView {
     CGFloat adjustment = (CGRectGetWidth([listViewTutorialButton bounds]) + kWidthOfSidebarButtonBuffer) / 2;
-    return CGPointMake([MMListPaperStackView screenWidth] / 2 + adjustment, [self contentHeightForAllStacks] - 110);
+    return CGPointMake([UIScreen screenWidth] / 2 + adjustment, [self contentHeightForAllStacks] - 110);
 }
 
 - (void)feedbackButtonPressed:(MMTutorialSidebarButton*)tutorialButton {
@@ -1335,8 +1336,8 @@
     CGFloat (^validateOffset)(CGPoint) = ^(CGPoint possibleOffset) {
         CGPoint actualOffset = possibleOffset;
         CGFloat fullHeight = allStacksScrollView.contentSize.height;
-        if (actualOffset.y > fullHeight - [MMListPaperStackView screenHeight]) {
-            actualOffset.y = fullHeight - [MMListPaperStackView screenHeight];
+        if (actualOffset.y > fullHeight - [UIScreen screenHeight]) {
+            actualOffset.y = fullHeight - [UIScreen screenHeight];
         }
         if (actualOffset.y < 0) {
             actualOffset.y = 0;
@@ -1347,7 +1348,7 @@
     //
     // we're going to normalize the drag based on the
     // midpoint of the screen.
-    CGFloat directionAndAmplitude = mostRecentLocationOfMoveGestureInView.y - [MMListPaperStackView screenHeight] / 2;
+    CGFloat directionAndAmplitude = mostRecentLocationOfMoveGestureInView.y - [UIScreen screenHeight] / 2;
     // make the max speed faster
     directionAndAmplitude *= 1.5;
 
@@ -1356,10 +1357,10 @@
     //
     // anything above/below the middle half will begin
     // to scroll
-    if (directionAndAmplitude > [MMListPaperStackView screenHeight] / 4) {
-        directionAndAmplitude -= [MMListPaperStackView screenHeight] / 4;
-    } else if (directionAndAmplitude < -[MMListPaperStackView screenHeight] / 4) {
-        directionAndAmplitude += [MMListPaperStackView screenHeight] / 4;
+    if (directionAndAmplitude > [UIScreen screenHeight] / 4) {
+        directionAndAmplitude -= [UIScreen screenHeight] / 4;
+    } else if (directionAndAmplitude < -[UIScreen screenHeight] / 4) {
+        directionAndAmplitude += [UIScreen screenHeight] / 4;
     } else {
         directionAndAmplitude = 0;
     }

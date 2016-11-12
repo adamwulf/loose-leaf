@@ -459,6 +459,7 @@
 		C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4361CD070DE00C19BB0 /* MMBezelStackHolderView.m */; };
 		C570B5251CD4564100FAB432 /* MMPalmGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */; };
 		C570B5291CD46CFD00FAB432 /* MMTwitterFollow.m in Sources */ = {isa = PBXBuildFile; fileRef = C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */; };
+		C57559161DD6B65E00670875 /* UIScreen+MMSizing.m in Sources */ = {isa = PBXBuildFile; fileRef = C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */; };
 		C576C53C1CE1825A00A8F342 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = C576C53B1CE1825A00A8F342 /* MMPDF.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
 		C58E6A1D1CDB1B4A00508F1D /* bg00.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E31CDB1B4A00508F1D /* bg00.jpg */; };
@@ -1499,6 +1500,8 @@
 		C570B5241CD4564100FAB432 /* MMPalmGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPalmGestureRecognizer.m; sourceTree = "<group>"; };
 		C570B5271CD46CFD00FAB432 /* MMTwitterFollow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTwitterFollow.h; sourceTree = "<group>"; };
 		C570B5281CD46CFD00FAB432 /* MMTwitterFollow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTwitterFollow.m; sourceTree = "<group>"; };
+		C57559141DD6B65E00670875 /* UIScreen+MMSizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+MMSizing.h"; sourceTree = "<group>"; };
+		C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+MMSizing.m"; sourceTree = "<group>"; };
 		C576C53A1CE1825A00A8F342 /* MMPDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPDF.h; sourceTree = "<group>"; };
 		C576C53B1CE1825A00A8F342 /* MMPDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDF.m; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
@@ -1956,6 +1959,8 @@
 				665ACB821AF84BCA00A53FCA /* NSString+Contains.m */,
 				C50CBF6E1CE441240053885A /* UIImage+MMColor.h */,
 				C50CBF6F1CE441240053885A /* UIImage+MMColor.m */,
+				C57559141DD6B65E00670875 /* UIScreen+MMSizing.h */,
+				C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -4498,6 +4503,7 @@
 				66A790B9196898A90037F01A /* MMUndoRedoGroupItem.m in Sources */,
 				C5F1B2C51D9B01BB00E0E9A8 /* MPSequenceGenerator.m in Sources */,
 				C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */,
+				C57559161DD6B65E00670875 /* UIScreen+MMSizing.m in Sources */,
 				66EC2FEC19DD06F6008F2BB6 /* MMPanAndPinchGestureRecognizer.m in Sources */,
 				6652451019957AD600C36609 /* MMTwitterShareItem.m in Sources */,
 				C5F1B2D21D9B01BB00E0E9A8 /* MPUIControlBinding.m in Sources */,

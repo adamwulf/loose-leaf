@@ -44,8 +44,6 @@
     MMListAddPageButton* addPageButtonInListView;
 }
 
-+ (CGFloat)screenWidth;
-+ (CGFloat)screenHeight;
 + (CGFloat)columnWidth;
 + (CGFloat)rowHeight;
 + (CGFloat)bufferWidth;

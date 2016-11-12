@@ -14,6 +14,7 @@
 #import "MMExportablePaperView.h"
 #import "MMStretchPageGestureRecognizer.h"
 #import "NSArray+Map.h"
+#import "UIScreen+MMSizing.h"
 #import "Mixpanel.h"
 #include <map>
 #include <iterator>
@@ -42,29 +43,12 @@
 @synthesize deleteSidebar;
 @synthesize currentViewMode = currentViewMode;
 
-+ (CGFloat)screenWidth {
-    static CGFloat screenWidth = 0;
-    if (!screenWidth) {
-        screenWidth = CGRectGetWidth([[[UIScreen mainScreen] fixedCoordinateSpace] bounds]);
-    }
-    return screenWidth;
-}
-
-+ (CGFloat)screenHeight {
-    static CGFloat screenHeight = 0;
-    if (!screenHeight) {
-        screenHeight = CGRectGetHeight([[[UIScreen mainScreen] fixedCoordinateSpace] bounds]);
-    }
-
-    return screenHeight;
-}
-
 + (CGFloat)columnWidth {
-    return [MMListPaperStackView screenWidth] * kListPageZoom;
+    return [UIScreen screenWidth] * kListPageZoom;
 }
 
 + (CGFloat)rowHeight {
-    return [MMListPaperStackView columnWidth] * [MMListPaperStackView screenHeight] / [MMListPaperStackView screenWidth];
+    return [MMListPaperStackView columnWidth] * [UIScreen screenHeight] / [UIScreen screenWidth];
 }
 
 + (CGFloat)bufferWidth {
@@ -256,7 +240,7 @@
 
 - (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page {
     addPageButtonInListView.frame = [self frameForAddPageButton];
-    [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [self contentHeightForAllPages])];
+    [self setContentSize:CGSizeMake([UIScreen screenWidth], [self contentHeightForAllPages])];
     [self moveAddButtonToTop];
 
     CGRect fr = [self frameForListViewForPage:page];
@@ -674,7 +658,7 @@
                     aPage.hidden = YES;
                 } else {
                     CGRect rect = aPage.frame;
-                    if (rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= [MMListPaperStackView screenWidth] && rect.origin.y + rect.size.height >= [MMListPaperStackView screenHeight]) {
+                    if (rect.origin.x <= 0 && rect.origin.y <= 0 && rect.origin.x + rect.size.width >= [UIScreen screenWidth] && rect.origin.y + rect.size.height >= [UIScreen screenHeight]) {
                         // we just found the page that covers the whole screen,
                         // so remember it
                         lastPage = aPage;
@@ -761,7 +745,7 @@
         }
         // set our content height/offset for the pages
         [self setContentOffset:initialScrollOffsetFromTransitionToListView animated:NO];
-        [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [self contentHeightForAllPages])];
+        [self setContentSize:CGSizeMake([UIScreen screenWidth], [self contentHeightForAllPages])];
         [self finishUITransitionToListView];
         mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
@@ -1068,7 +1052,7 @@
 }
 
 - (CGSize)sizeOfFullscreenPage {
-    return CGSizeMake([MMListPaperStackView screenWidth], [MMListPaperStackView screenHeight]);
+    return CGSizeMake([UIScreen screenWidth], [UIScreen screenHeight]);
 }
 
 #pragma mark - MMStretchPageGestureRecognizerDelegate
@@ -1103,8 +1087,8 @@
     CGFloat (^validateOffset)(CGPoint) = ^(CGPoint possibleOffset) {
         CGPoint actualOffset = possibleOffset;
         CGFloat fullHeight = [self contentHeightForAllPages];
-        if (actualOffset.y > fullHeight - [MMListPaperStackView screenHeight]) {
-            actualOffset.y = fullHeight - [MMListPaperStackView screenHeight];
+        if (actualOffset.y > fullHeight - [UIScreen screenHeight]) {
+            actualOffset.y = fullHeight - [UIScreen screenHeight];
         }
         if (actualOffset.y < 0) {
             actualOffset.y = 0;
@@ -1138,7 +1122,7 @@
             // find the pages to align
             [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
             addPageButtonInListView.frame = [self frameForAddPageButton];
-            [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [self contentHeightForAllPages])];
+            [self setContentSize:CGSizeMake([UIScreen screenWidth], [self contentHeightForAllPages])];
             [self moveAddButtonToTop];
         }
 
@@ -1154,7 +1138,7 @@
     //
     // we're going to normalize the drag based on the
     // midpoint of the screen.
-    CGFloat directionAndAmplitude = lastDragPoint.y - [MMListPaperStackView screenHeight] / 2;
+    CGFloat directionAndAmplitude = lastDragPoint.y - [UIScreen screenHeight] / 2;
     // make the max speed faster
     directionAndAmplitude *= 1.5;
 
@@ -1163,10 +1147,10 @@
     //
     // anything above/below the middle half will begin
     // to scroll
-    if (directionAndAmplitude > [MMListPaperStackView screenHeight] / 4) {
-        directionAndAmplitude -= [MMListPaperStackView screenHeight] / 4;
-    } else if (directionAndAmplitude < -[MMListPaperStackView screenHeight] / 4) {
-        directionAndAmplitude += [MMListPaperStackView screenHeight] / 4;
+    if (directionAndAmplitude > [UIScreen screenHeight] / 4) {
+        directionAndAmplitude -= [UIScreen screenHeight] / 4;
+    } else if (directionAndAmplitude < -[UIScreen screenHeight] / 4) {
+        directionAndAmplitude += [UIScreen screenHeight] / 4;
     } else {
         directionAndAmplitude = 0;
     }
@@ -1497,7 +1481,7 @@
 
         MMPaperView* aPage = [visibleStackHolder peekSubview];
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
-        CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, [MMListPaperStackView screenWidth], [MMListPaperStackView screenHeight]);
+        CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, [UIScreen screenWidth], [UIScreen screenHeight]);
         if (aPage) {
             [pagesThatWouldBeVisible addObject:aPage];
             while ((aPage = [visibleStackHolder getPageBelow:aPage])) {
@@ -1775,7 +1759,7 @@
         // the wrong pages in list view
         [self setScrollEnabled:NO];
         [self setContentOffset:CGPointZero animated:NO]; // never animate this offset change, regardless of param
-        [self setContentSize:CGSizeMake([MMListPaperStackView screenWidth], [MMListPaperStackView screenHeight])];
+        [self setContentSize:CGSizeMake([UIScreen screenWidth], [UIScreen screenHeight])];
         mapOfFinalFramesForPagesBeingZoomed->clear();
         [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
 
@@ -1819,7 +1803,7 @@
             }
         }
         CGRect newHiddenFrame = visibleStackHolder.frame;
-        newHiddenFrame.origin.x += [MMListPaperStackView screenWidth];
+        newHiddenFrame.origin.x += [UIScreen screenWidth];
         newHiddenFrame.origin.x += 10;
         hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
