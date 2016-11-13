@@ -398,7 +398,7 @@ static BOOL isFirstLaunch = NO;
 
     NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
     [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {
-        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
+        [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
     }];
 
     @try {

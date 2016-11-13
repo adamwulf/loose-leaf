@@ -452,6 +452,7 @@
 		C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC19F1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m */; };
 		C55AC1A61D7E257100259558 /* MMReleaseNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC1A51D7E257100259558 /* MMReleaseNotesViewController.m */; };
 		C55AC1A91D7E2FDD00259558 /* MMTutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC1A81D7E2FDD00259558 /* MMTutorialViewController.m */; };
+		C55B80BB1DD7B88600321F01 /* ColorFromPointImageView.license in Resources */ = {isa = PBXBuildFile; fileRef = C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
 		C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */; };
 		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
@@ -1491,6 +1492,7 @@
 		C55AC1A51D7E257100259558 /* MMReleaseNotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMReleaseNotesViewController.m; sourceTree = "<group>"; };
 		C55AC1A71D7E2FDD00259558 /* MMTutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialViewController.h; sourceTree = "<group>"; };
 		C55AC1A81D7E2FDD00259558 /* MMTutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialViewController.m; sourceTree = "<group>"; };
+		C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ColorFromPointImageView.license; sourceTree = "<group>"; };
 		C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAllStacksManager.h; sourceTree = "<group>"; };
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
 		C56883A91D6D2B3500709FD8 /* MMTrashButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashButton.h; sourceTree = "<group>"; };
@@ -2592,6 +2594,7 @@
 		66684B36182D95CB005A27B4 /* Licenses */ = {
 			isa = PBXGroup;
 			children = (
+				C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */,
 				C57559221DD6ED9700670875 /* NRTextTransitions.license */,
 				66684B37182D95EA005A27B4 /* generateLicenses.pl */,
 				66EDE44019B100B500A5623B /* ziparchive.license */,
@@ -4402,6 +4405,7 @@
 				C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */,
 				66CC2A9B1AEB05C300C6A3F9 /* shake-to-reorder.mov in Resources */,
 				C5F1B28D1D9B01BB00E0E9A8 /* MPCloseButton.png in Resources */,
+				C55B80BB1DD7B88600321F01 /* ColorFromPointImageView.license in Resources */,
 				6652452F1996D1E500C36609 /* imgur@2x.png in Resources */,
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				C58E6A431CDB1B4A00508F1D /* bg38.jpg in Resources */,
