@@ -440,6 +440,19 @@
     // we can forget about the original frame locations
 }
 
+- (void)setButtonsVisible:(BOOL)visible animated:(BOOL)animated {
+    if (animated) {
+        if (stackNameField.alpha != !visible) {
+            [UIView animateWithDuration:.3 animations:^{
+                stackNameField.alpha = !visible;
+            }];
+        }
+    } else {
+        stackNameField.alpha = !visible;
+    }
+    [super setButtonsVisible:visible animated:animated];
+}
+
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer*)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {

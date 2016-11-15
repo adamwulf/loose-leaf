@@ -158,7 +158,8 @@ static const CGFloat durationOfTransition = 10;
 
         CGContextScaleCTM(context, ratio, ratio);
 
-        [self.layer.presentationLayer renderInContext:context];
+        CALayer* renderLayer = self.layer.presentationLayer ?: self.layer;
+        [renderLayer renderInContext:context];
 
         CGContextRelease(context);
         CGColorSpaceRelease(colorSpace);
