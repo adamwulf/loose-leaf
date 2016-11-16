@@ -247,9 +247,6 @@
         visibleStackHolder.layer.zPosition = 1;
 
         [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
-            // The smooth border forces us to rasterize the page layer, so we want
-            // to only set this to YES during page row mode, but never during list/page mode
-            [aPage setSmoothBorder:YES];
             aPage.layer.zPosition = [pagesToAlignIntoRow count] - idx;
         }];
         //
@@ -306,6 +303,12 @@
         listViewTutorialButton.alpha = 0;
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
+
+        [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
+            // The smooth border forces us to rasterize the page layer, so we want
+            // to only set this to YES during page row mode, but never during list/page mode
+            [aPage setSmoothBorder:YES];
+        }];
 
         [[NSUserDefaults standardUserDefaults] setObject:kViewModeCollapsed forKey:kCurrentViewMode];
     };
