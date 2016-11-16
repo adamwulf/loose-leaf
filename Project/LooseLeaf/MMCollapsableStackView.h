@@ -25,4 +25,6 @@
 - (CGPoint)effectiveRowCenter;
 - (void)setNameColor:(UIColor*)color animated:(BOOL)animated;
 
+- (NSArray*)pagesToAlignForRowView;
+
 @end

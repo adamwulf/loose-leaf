@@ -1450,4 +1450,29 @@
     [self updateStackNameColorsAnimated:NO];
 }
 
+- (void)enableAllSmoothBorders:(BOOL)enable {
+    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
+        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+        NSArray* pages = [aStackView pagesToAlignForRowView];
+        for (MMEditablePaperView* page in pages) {
+            [page setSmoothBorder:enable];
+        }
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView*)scrollView {
+    [self enableAllSmoothBorders:NO];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        [self enableAllSmoothBorders:YES];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
+    [self enableAllSmoothBorders:YES];
+}
+
 @end
