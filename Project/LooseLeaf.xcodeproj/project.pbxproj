@@ -521,8 +521,6 @@
 		C58E6A4F1CDB1B4A00508F1D /* bg50.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A151CDB1B4A00508F1D /* bg50.jpg */; };
 		C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A161CDB1B4A00508F1D /* bg51.jpg */; };
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
-		C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A181CDB1B4A00508F1D /* bg53.jpg */; };
-		C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A191CDB1B4A00508F1D /* bg54.jpg */; };
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		C5A8E1AD1DC308BF00CD608F /* MMCollapsableStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C542AA271D81AC8A0024FAD9 /* MMCollapsableStackView.m */; };
 		C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */; };
@@ -1576,8 +1574,6 @@
 		C58E6A151CDB1B4A00508F1D /* bg50.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg50.jpg; sourceTree = "<group>"; };
 		C58E6A161CDB1B4A00508F1D /* bg51.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg51.jpg; sourceTree = "<group>"; };
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
-		C58E6A181CDB1B4A00508F1D /* bg53.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg53.jpg; sourceTree = "<group>"; };
-		C58E6A191CDB1B4A00508F1D /* bg54.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg54.jpg; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
 		C5A8E1AE1DC308E400CD608F /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
 		C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
@@ -3736,8 +3732,6 @@
 				C58E6A151CDB1B4A00508F1D /* bg50.jpg */,
 				C58E6A161CDB1B4A00508F1D /* bg51.jpg */,
 				C58E6A171CDB1B4A00508F1D /* bg52.jpg */,
-				C58E6A181CDB1B4A00508F1D /* bg53.jpg */,
-				C58E6A191CDB1B4A00508F1D /* bg54.jpg */,
 			);
 			name = backgrounds;
 			sourceTree = "<group>";
@@ -4307,7 +4301,6 @@
 				6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */,
 				C5F1B28E1D9B01BB00E0E9A8 /* MPCloseButton@2x.png in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
-				C58E6A521CDB1B4A00508F1D /* bg53.jpg in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				C58E6A3C1CDB1B4A00508F1D /* bg31.jpg in Resources */,
 				C58E6A3D1CDB1B4A00508F1D /* bg32.jpg in Resources */,
@@ -4396,7 +4389,6 @@
 				C5C13E171D91FC5A0047B3EF /* list-view-clone-page.mp4 in Resources */,
 				C58E6A4C1CDB1B4A00508F1D /* bg47.jpg in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
-				C58E6A531CDB1B4A00508F1D /* bg54.jpg in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
 				C58E6A321CDB1B4A00508F1D /* bg21.jpg in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
