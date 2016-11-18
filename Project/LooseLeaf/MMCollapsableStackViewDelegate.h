@@ -29,4 +29,8 @@
 
 - (void)isNotGoingToDeleteStack:(NSString*)stackUUID;
 
+- (void)isBeginningToEditName:(NSString*)stackUUID;
+
+- (void)didFinishEditingName:(NSString*)stackUUID;
+
 @end

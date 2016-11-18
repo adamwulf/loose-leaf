@@ -176,11 +176,13 @@
 }
 
 - (void)tapToExpandToListMode:(UIButton*)button {
-    if ([self isPerfectlyAlignedIntoRow]) {
-        [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
-    } else if (deleteButton.alpha) {
-        [self cancelPendingConfirmationsAndResetToRowQuickly:YES];
-        [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
+    if ([self.stackDelegate isAllowedToInteractWithStack:self.uuid]) {
+        if ([self isPerfectlyAlignedIntoRow]) {
+            [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
+        } else if (deleteButton.alpha) {
+            [self cancelPendingConfirmationsAndResetToRowQuickly:YES];
+            [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
+        }
     }
 }
 
@@ -713,9 +715,21 @@
     return NO;
 }
 
+- (void)textFieldDidBeginEditing:(UITextField*)textField {
+    if ([self isShowingListView]) {
+        self.scrollEnabled = NO;
+    }
+    [self.stackDelegate isBeginningToEditName:self.uuid];
+}
+
 - (void)textFieldDidEndEditing:(UITextField*)textField {
     self.stackManager.name = textField.text;
     emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
+
+    if ([self isShowingListView]) {
+        self.scrollEnabled = YES;
+    }
+    [self.stackDelegate didFinishEditingName:self.uuid];
 }
 
 - (void)textFieldDidEndEditing:(UITextField*)textField reason:(UITextFieldDidEndEditingReason)reason {

@@ -763,8 +763,21 @@
 }
 
 - (BOOL)isAllowedToInteractWithStack:(NSString*)stackUUID {
-    return heldStackView == nil;
+    return heldStackView == nil && ![self stackIfNameInputFirstResponder];
 }
+
+- (void)isBeginningToEditName:(NSString*)stackUUID {
+    if ([self isShowingCollapsedView]) {
+        allStacksScrollView.scrollEnabled = NO;
+    }
+}
+
+- (void)didFinishEditingName:(NSString*)stackUUID {
+    if ([self isShowingCollapsedView]) {
+        allStacksScrollView.scrollEnabled = YES;
+    }
+}
+
 
 #pragma mark - MMStackControllerViewDelegate
 
