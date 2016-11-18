@@ -59,6 +59,20 @@
     [super drawRect:rect];
 }
 
++ (UIImage*)undoIconWithColor:(UIColor*)color {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(36, 40), NO, 0);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -2, 3);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), 18, 18);
+    CGContextRotateCTM(UIGraphicsGetCurrentContext(), M_PI);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -18, -18);
+
+    [MMUndoRedoButton drawArrowInRect:CGRectMake(0, 0, 40, 40) reversed:YES withColor:color];
+    UIImage* undoImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return undoImg;
+}
+
 + (void)drawArrowInRect:(CGRect)frame reversed:(BOOL)reverseArrow withColor:(UIColor*)strokeColor {
     UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
     UIColor* barelyWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];

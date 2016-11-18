@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMConfirmDeleteStackButtonDelegate.h"
+#import "MMFullWidthListButton.h"
 
 
-@interface MMConfirmDeleteStackButton : UIView
-
-@property (nonatomic, weak) NSObject<MMConfirmDeleteStackButtonDelegate>* delegate;
+@interface MMConfirmDeleteStackButton : MMFullWidthListButton
 
 @end

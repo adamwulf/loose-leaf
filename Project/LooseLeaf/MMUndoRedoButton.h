@@ -15,6 +15,6 @@
 
 @property (nonatomic) BOOL reverseArrow;
 
-+ (void)drawArrowInRect:(CGRect)frame reversed:(BOOL)reverseArrow withColor:(UIColor*)strokeColor;
++ (UIImage*)undoIconWithColor:(UIColor*)color;
 
 @end

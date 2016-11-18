@@ -12,7 +12,7 @@
 #import "MMContinuousSwipeGestureRecognizer.h"
 #import "MMDeleteButton.h"
 #import "MMConfirmDeleteStackButton.h"
-#import "MMConfirmDeleteStackButtonDelegate.h"
+#import "MMFullWidthListButtonDelegate.h"
 #import "AVHexColor.h"
 #import "NSArray+Extras.h"
 #import "UIScreen+MMSizing.h"
@@ -23,11 +23,13 @@
 #define kCollapseAnimationDuration 0.3
 
 
-@interface MMListPaperStackView (Protected) <UIGestureRecognizerDelegate, MMConfirmDeleteStackButtonDelegate>
+@interface MMListPaperStackView (Protected) <UIGestureRecognizerDelegate, MMFullWidthListButtonDelegate>
 
 @property (nonatomic, strong) NSString* currentViewMode;
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page;
+
+- (CGRect)frameForAddPageButton;
 
 @end
 
@@ -70,7 +72,7 @@
         deleteButton.alpha = 0;
         [self addSubview:deleteButton];
 
-        CGRect confirmationRect = CGRectMake(0, 0, self.bounds.size.width, rowHeight);
+        CGRect confirmationRect = CGRectMake(0, 60, self.bounds.size.width, rowHeight - 60);
 
         deleteConfirmationPlaceholder = [[MMConfirmDeleteStackButton alloc] initWithFrame:confirmationRect];
         deleteConfirmationPlaceholder.delegate = self;
@@ -193,6 +195,10 @@
 }
 
 #pragma mark - Animate into row form
+
+- (CGRect)frameForAddPageButton {
+    return CGRectTranslate([super frameForAddPageButton], 0, 20);
+}
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page {
     return CGRectTranslate([super frameForListViewForPage:page], 0, 20);
@@ -608,18 +614,26 @@
     deleteGesture.enabled = NO;
 }
 
-#pragma mark - MMConfirmDeleteStackButtonDelegate
+#pragma mark - MMFullWidthListButtonDelegate
 
-- (void)didConfirmToDeleteStack {
-    deleteGesture.enabled = YES;
-    squishFactor = 0;
-    [self.stackDelegate isAskingToDeleteStack:self.uuid];
+- (void)didTapLeftInFullWidthButton:(MMFullWidthListButton*)button {
+    if (button == deleteConfirmationPlaceholder) {
+        deleteGesture.enabled = YES;
+        squishFactor = 0;
+        [self.stackDelegate isAskingToDeleteStack:self.uuid];
+    } else {
+        // asking to delete
+    }
 }
 
-- (void)didCancelDeletingStack {
-    deleteGesture.enabled = YES;
-    squishFactor = .15;
-    [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
+- (void)didTapRightInFullWidthButton:(MMFullWidthListButton*)button {
+    if (button == deleteConfirmationPlaceholder) {
+        deleteGesture.enabled = YES;
+        squishFactor = .15;
+        [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
+    } else {
+        // asking to add three pages
+    }
 }
 
 #pragma mark - Row Animation Helpers

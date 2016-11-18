@@ -67,6 +67,16 @@
     [super drawRect:rect];
 }
 
++ (UIImage*)trashIconWithColor:(UIColor*)color {
+    UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -8, 0);
+    [MMTrashButton drawTrashCanInRect:CGRectMake(0, 0, 40, 40) withColor:color withBackground:halfGreyFill];
+    UIImage* trashImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return trashImg;
+}
+
 + (void)drawTrashCanInRect:(CGRect)frame withColor:(UIColor*)strokeColor withBackground:(UIColor*)backgroundColor {
     CGFloat trueWidth = CGRectGetWidth(frame);
     CGFloat lineWidth = trueWidth / 100.0 * 2.0;
