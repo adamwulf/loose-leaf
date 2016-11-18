@@ -453,6 +453,7 @@
 		C55AC1A61D7E257100259558 /* MMReleaseNotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC1A51D7E257100259558 /* MMReleaseNotesViewController.m */; };
 		C55AC1A91D7E2FDD00259558 /* MMTutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC1A81D7E2FDD00259558 /* MMTutorialViewController.m */; };
 		C55B4DC81DDE7EB5001DC9E4 /* MMFullWidthListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C55B4DC71DDE7EB5001DC9E4 /* MMFullWidthListButton.m */; };
+		C55B4DCB1DDE8222001DC9E4 /* MMEmptyStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C55B4DCA1DDE8222001DC9E4 /* MMEmptyStackButton.m */; };
 		C55B80BB1DD7B88600321F01 /* ColorFromPointImageView.license in Resources */ = {isa = PBXBuildFile; fileRef = C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
 		C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */; };
@@ -1493,6 +1494,8 @@
 		C55AC1A81D7E2FDD00259558 /* MMTutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTutorialViewController.m; sourceTree = "<group>"; };
 		C55B4DC61DDE7EB5001DC9E4 /* MMFullWidthListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFullWidthListButton.h; sourceTree = "<group>"; };
 		C55B4DC71DDE7EB5001DC9E4 /* MMFullWidthListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFullWidthListButton.m; sourceTree = "<group>"; };
+		C55B4DC91DDE8222001DC9E4 /* MMEmptyStackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmptyStackButton.h; sourceTree = "<group>"; };
+		C55B4DCA1DDE8222001DC9E4 /* MMEmptyStackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmptyStackButton.m; sourceTree = "<group>"; };
 		C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ColorFromPointImageView.license; sourceTree = "<group>"; };
 		C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAllStacksManager.h; sourceTree = "<group>"; };
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
@@ -3584,6 +3587,8 @@
 				C55B4DC61DDE7EB5001DC9E4 /* MMFullWidthListButton.h */,
 				C55B4DC71DDE7EB5001DC9E4 /* MMFullWidthListButton.m */,
 				C543284F1DCC4A02008CCB8A /* MMFullWidthListButtonDelegate.h */,
+				C55B4DC91DDE8222001DC9E4 /* MMEmptyStackButton.h */,
+				C55B4DCA1DDE8222001DC9E4 /* MMEmptyStackButton.m */,
 			);
 			name = "List View";
 			sourceTree = "<group>";
@@ -4551,6 +4556,7 @@
 				C57559281DD6ED9700670875 /* NRTextTransitionCompletionManager.m in Sources */,
 				661EBA57182AF1AD00893274 /* MMScissorTool.m in Sources */,
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
+				C55B4DCB1DDE8222001DC9E4 /* MMEmptyStackButton.m in Sources */,
 				C5F1B2B51D9B01BB00E0E9A8 /* MPNetwork.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
 				C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */,

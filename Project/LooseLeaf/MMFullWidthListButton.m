@@ -14,7 +14,9 @@
 #import "UIImage+MMColor.h"
 
 
-@implementation MMFullWidthListButton
+@implementation MMFullWidthListButton {
+    UILabel* lbl;
+}
 
 @synthesize delegate;
 
@@ -47,11 +49,14 @@
         [self.layer addSublayer:backgroundLayer];
         self.alpha = 0;
 
-        UILabel* lbl = [[UILabel alloc] initWithFrame:CGRectWithHeight(self.bounds, lblY)];
+        CGRect lblFrame = CGRectWithHeight(self.bounds, lblY);
+        lblFrame = CGRectInset(lblFrame, 60, 0);
+        lbl = [[UILabel alloc] initWithFrame:lblFrame];
         lbl.text = prompt;
         lbl.textColor = [UIColor colorWithWhite:.2 alpha:1.0];
         lbl.textAlignment = NSTextAlignmentCenter;
         lbl.font = [UIFont systemFontOfSize:20];
+        lbl.numberOfLines = 2;
         [self addSubview:lbl];
 
         MMRoundedButton* confirmButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
@@ -76,6 +81,14 @@
         confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, buttonY);
     }
     return self;
+}
+
+- (NSString*)prompt {
+    return lbl.text;
+}
+
+- (void)setPrompt:(NSString*)prompt {
+    lbl.text = prompt;
 }
 
 - (void)didTapLeftButton {

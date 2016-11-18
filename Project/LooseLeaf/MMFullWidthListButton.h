@@ -16,4 +16,6 @@
 
 @property (nonatomic, weak) NSObject<MMFullWidthListButtonDelegate>* delegate;
 
+@property (nonatomic, strong) NSString* prompt;
+
 @end

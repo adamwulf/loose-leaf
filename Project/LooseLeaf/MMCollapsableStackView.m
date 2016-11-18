@@ -18,6 +18,7 @@
 #import "UIScreen+MMSizing.h"
 #import "MMTrashButton.h"
 #import "MMColoredTextField.h"
+#import "MMEmptyStackButton.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -42,6 +43,7 @@
     MMTrashButton* deleteButton;
 
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
+    MMEmptyStackButton* emptyStackRowPlaceholder;
 
     UIView* vibrantView;
     MMColoredTextField* stackNameField;
@@ -78,6 +80,10 @@
         deleteConfirmationPlaceholder.delegate = self;
         [self addSubview:deleteConfirmationPlaceholder];
 
+        emptyStackRowPlaceholder = [[MMEmptyStackButton alloc] initWithFrame:confirmationRect];
+        emptyStackRowPlaceholder.delegate = self;
+        [self addSubview:emptyStackRowPlaceholder];
+
         CGRect nameFieldFrame = CGRectWithHeight([self bounds], 50);
         nameFieldFrame = CGRectTranslate(nameFieldFrame, 0, 10);
         nameFieldFrame = CGRectInset(nameFieldFrame, [MMListPaperStackView bufferWidth], 10);
@@ -85,6 +91,9 @@
         stackNameField.font = [UIFont systemFontOfSize:24];
         stackNameField.text = @"Random Stack Name";
         [self addSubview:stackNameField];
+
+
+        emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
     }
     return self;
 }
@@ -131,6 +140,32 @@
 }
 
 #pragma mark - Actions
+
+- (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages {
+    [self ensureAtLeast:3 pagesInStack:self.visibleStackHolder];
+
+    if ([self isShowingCollapsedView]) {
+        [self organizePagesIntoSingleRowAnimated:NO];
+
+        for (MMPaperView* page in [[self visibleStackHolder] subviews]) {
+            page.alpha = 0;
+            page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
+        }
+
+        CGFloat delay = 0;
+        [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+            emptyStackRowPlaceholder.alpha = 0;
+        } completion:nil];
+
+        for (MMPaperView* page in [[self visibleStackHolder] subviews]) {
+            [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+                page.alpha = 1;
+                page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
+            } completion:nil];
+            delay += .1;
+        }
+    }
+}
 
 - (void)tapToExpandToListMode:(UIButton*)button {
     if ([self isPerfectlyAlignedIntoRow]) {
@@ -296,6 +331,7 @@
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
         deleteConfirmationPlaceholder.alpha = 0;
+        emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0;
         deleteButton.alpha = 0;
         squishFactor = 0;
     };
@@ -471,7 +507,8 @@
 #pragma mark - Delete Inbox Items
 
 - (void)deleteGesture:(MMContinuousSwipeGestureRecognizer*)sender {
-    if (![[self stackDelegate] isAllowedToInteractWithStack:[self uuid]]) {
+    if (![[self stackDelegate] isAllowedToInteractWithStack:[self uuid]] ||
+        [[self pagesToAlignForRowView] count] == 0) {
         // cancel the gesture
         [sender setEnabled:NO];
         [sender setEnabled:YES];
@@ -482,6 +519,7 @@
         // also, don't let the user swipe to delete and scroll the stacks at the same time
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:0];
         deleteConfirmationPlaceholder.alpha = 0;
+        emptyStackRowPlaceholder.alpha = 0;
 
         initialAdjustment = squishFactor;
     } else if (sender.state == UIGestureRecognizerStateChanged) {
@@ -512,6 +550,7 @@
             }
             deleteButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 0;
+            emptyStackRowPlaceholder.alpha = [[self pagesToAlignForRowView] count] == 0;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:longerDuration ? .2 : .1 animations:^{
                 [self adjustForDelete:0 withTranslate:0];
@@ -525,6 +564,7 @@
             [self adjustForDelete:1 withTranslate:-250];
             deleteButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 1;
+            emptyStackRowPlaceholder.alpha = 0;
         } completion:nil];
         [UIView animateWithDuration:.2 delay:.1 options:UIViewAnimationOptionCurveEaseOut animations:^{
             if (sendDelegateNotifications) {
@@ -544,6 +584,7 @@
             }
             deleteButton.alpha = 1.0;
             deleteConfirmationPlaceholder.alpha = 0;
+            emptyStackRowPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.1 animations:^{
                 [self adjustForDelete:targetToShowButtons withTranslate:0];
@@ -610,6 +651,7 @@
     }];
     [UIView animateWithDuration:.3 delay:.4 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         deleteConfirmationPlaceholder.alpha = 1;
+        emptyStackRowPlaceholder.alpha = 0;
     } completion:nil];
     deleteGesture.enabled = NO;
 }
@@ -617,13 +659,9 @@
 #pragma mark - MMFullWidthListButtonDelegate
 
 - (void)didTapLeftInFullWidthButton:(MMFullWidthListButton*)button {
-    if (button == deleteConfirmationPlaceholder) {
-        deleteGesture.enabled = YES;
-        squishFactor = 0;
-        [self.stackDelegate isAskingToDeleteStack:self.uuid];
-    } else {
-        // asking to delete
-    }
+    deleteGesture.enabled = YES;
+    squishFactor = 0;
+    [self.stackDelegate isAskingToDeleteStack:self.uuid];
 }
 
 - (void)didTapRightInFullWidthButton:(MMFullWidthListButton*)button {
@@ -633,6 +671,7 @@
         [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
     } else {
         // asking to add three pages
+        [self ensureAtLeastPagesInStack:3];
     }
 }
 

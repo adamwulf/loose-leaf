@@ -1228,23 +1228,10 @@
 - (void)didTapAddButtonInListView {
     NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
     MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
-    [aStackView ensureAtLeast:3 pagesInStack:aStackView.visibleStackHolder];
 
     [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 
-    for (MMPaperView* page in [[aStackView visibleStackHolder] subviews]) {
-        page.alpha = 0;
-        page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
-    }
-
-    CGFloat delay = 0;
-    for (MMPaperView* page in [[aStackView visibleStackHolder] subviews]) {
-        [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
-            page.alpha = 1;
-            page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
-        } completion:nil];
-        delay += .1;
-    }
+    [aStackView ensureAtLeastPagesInStack:3];
 }
 
 #pragma mark - Tutorial and Feedback

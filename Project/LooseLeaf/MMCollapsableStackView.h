@@ -27,4 +27,6 @@
 
 - (NSArray*)pagesToAlignForRowView;
 
+- (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages;
+
 @end
