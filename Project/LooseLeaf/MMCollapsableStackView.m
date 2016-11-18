@@ -710,6 +710,11 @@
 
 #pragma mark - UITextFieldDelegate
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField*)textField {
+    return [self.stackDelegate isAllowedToInteractWithStack:self.uuid];
+}
+
+
 - (BOOL)textFieldShouldReturn:(UITextField*)textField {
     [textField resignFirstResponder];
     return NO;

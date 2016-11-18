@@ -1292,6 +1292,12 @@
     mostRecentLocationOfMoveGestureInView = [gesture locationInView:self.view];
 
     if ([gesture state] == UIGestureRecognizerStateBegan) {
+        if (![self isAllowedToInteractWithStack:nil]) {
+            [gesture setEnabled:NO];
+            [gesture setEnabled:YES];
+            return;
+        }
+
         [[allStacksScrollView subviews] enumerateObjectsUsingBlock:^(__kindof UIView* _Nonnull obj, NSUInteger idx, BOOL* _Nonnull stop) {
             if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
                 MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
