@@ -250,7 +250,10 @@
              @"Space Station Repair Guide",
              @"Spaceship Registration Log",
              @"Pluto is a Planet Thesis",
-             @"Autobiography: Chapter 1"];
+             @"Autobiography: Chapter 1",
+             @"Robot Construction Plans",
+             @"Robot Overlord Negotiations",
+             @"Autonomous Robot Design Plans"];
 }
 
 @end
