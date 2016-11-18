@@ -11,7 +11,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "AVHexColor.h"
 
-static const NSInteger numberOfBackgrounds = 55;
+static const NSInteger numberOfBackgrounds = 53;
 static const CGFloat durationBetweenBackgroundTransitions = 60;
 static const CGFloat durationOfTransition = 10;
 
