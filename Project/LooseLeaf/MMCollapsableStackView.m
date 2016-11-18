@@ -343,6 +343,7 @@
         deleteConfirmationPlaceholder.alpha = 0;
         emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0;
         deleteButton.alpha = 0;
+        stackNameField.alpha = 1;
         squishFactor = 0;
     };
 
@@ -442,6 +443,7 @@
         listViewTutorialButton.alpha = 1;
         listViewFeedbackButton.alpha = 1;
         addPageButtonInListView.alpha = 1;
+        stackNameField.alpha = 1;
         [self setButtonsVisible:NO animated:NO];
     };
 
@@ -495,17 +497,46 @@
     // we can forget about the original frame locations
 }
 
-- (void)setButtonsVisible:(BOOL)visible animated:(BOOL)animated {
-    if (animated) {
-        if (stackNameField.alpha != !visible) {
-            [UIView animateWithDuration:.3 animations:^{
-                stackNameField.alpha = !visible;
-            }];
-        }
+- (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated {
+    if (animated && CGPointEqualToPoint(self.contentOffset, CGPointZero)) {
+        [UIView animateWithDuration:.2 animations:^{
+            stackNameField.alpha = 0;
+        }];
     } else {
-        stackNameField.alpha = !visible;
+        stackNameField.alpha = 0;
     }
-    [super setButtonsVisible:visible animated:animated];
+
+    [super immediatelyTransitionToPageViewAnimated:animated];
+}
+
+- (void)finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated {
+    [super finishedScalingReallySmall:page animated:animated];
+    if (CGPointEqualToPoint(initialScrollOffsetFromTransitionToListView, CGPointZero)) {
+        if (animated) {
+            [UIView animateWithDuration:.3 animations:^{
+                stackNameField.alpha = 1;
+            }];
+        } else {
+            stackNameField.alpha = 1;
+        }
+    }
+}
+
+- (void)finishUITransitionToListView {
+    [super finishUITransitionToListView];
+    stackNameField.alpha = 1;
+}
+
+
+#pragma mark - MMStretchPageGestureRecognizerDelegate
+
+- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture {
+    [super didPickUpAPageInListView:gesture];
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        [UIView animateWithDuration:.2 animations:^{
+            stackNameField.alpha = 0;
+        }];
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate

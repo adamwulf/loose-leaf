@@ -63,40 +63,40 @@
 
 // protected
 
-- (void)immediatelyTransitionToListView;
+- (void)immediatelyTransitionToListView NS_REQUIRES_SUPER;
 
-- (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated;
+- (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated NS_REQUIRES_SUPER;
 
-- (void)beginUITransitionFromPageView;
+- (void)beginUITransitionFromPageView NS_REQUIRES_SUPER;
 
-- (void)beginUITransitionFromListView;
+- (void)beginUITransitionFromListView NS_REQUIRES_SUPER;
 
-- (void)finishUITransitionToListView;
+- (void)finishUITransitionToListView NS_REQUIRES_SUPER;
 
-- (void)finishUITransitionToPageView;
+- (void)finishUITransitionToPageView NS_REQUIRES_SUPER;
 
-- (void)deletePage:(MMPaperView*)page;
+- (void)deletePage:(MMPaperView*)page NS_REQUIRES_SUPER;
 
-- (void)transitionFromListToNewBlankPageIfInPageView;
+- (void)transitionFromListToNewBlankPageIfInPageView NS_REQUIRES_SUPER;
 
-- (CGFloat)contentHeightForAllPages;
+- (CGFloat)contentHeightForAllPages NS_REQUIRES_SUPER;
 
-- (void)moveAddButtonToBottom;
+- (void)moveAddButtonToBottom NS_REQUIRES_SUPER;
 
-- (void)moveAddButtonToTop;
+- (void)moveAddButtonToTop NS_REQUIRES_SUPER;
 
-- (void)subclassBeforeTransitionToListView;
+- (void)subclassBeforeTransitionToListView NS_REQUIRES_SUPER;
 
-- (void)subclassDuringTransitionToListView;
+- (void)subclassDuringTransitionToListView NS_REQUIRES_SUPER;
 
-- (void)tutorialShouldOpen:(NSNotification*)note;
+- (void)tutorialShouldOpen:(NSNotification*)note NS_REQUIRES_SUPER;
 
-- (void)tutorialShouldClose:(NSNotification*)note;
+- (void)tutorialShouldClose:(NSNotification*)note NS_REQUIRES_SUPER;
 
-- (CGRect)frameForIndexInList:(NSInteger)indexOfPage;
+- (CGRect)frameForIndexInList:(NSInteger)indexOfPage NS_REQUIRES_SUPER;
 
-- (CGRect)frameForListViewForPage:(MMPaperView*)page;
+- (CGRect)frameForListViewForPage:(MMPaperView*)page NS_REQUIRES_SUPER;
 
-- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
+- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture NS_REQUIRES_SUPER;
 
 @end
