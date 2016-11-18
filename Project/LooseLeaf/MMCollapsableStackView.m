@@ -24,7 +24,7 @@
 #define kCollapseAnimationDuration 0.3
 
 
-@interface MMListPaperStackView (Protected) <UIGestureRecognizerDelegate, MMFullWidthListButtonDelegate>
+@interface MMListPaperStackView (Protected) <UITextFieldDelegate, UIGestureRecognizerDelegate, MMFullWidthListButtonDelegate>
 
 @property (nonatomic, strong) NSString* currentViewMode;
 
@@ -46,10 +46,10 @@
     MMEmptyStackButton* emptyStackRowPlaceholder;
 
     UIView* vibrantView;
-    MMColoredTextField* stackNameField;
 }
 
 @dynamic stackDelegate;
+@synthesize stackNameField;
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
@@ -89,11 +89,10 @@
         nameFieldFrame = CGRectInset(nameFieldFrame, [MMListPaperStackView bufferWidth], 10);
         stackNameField = [[MMColoredTextField alloc] initWithFrame:nameFieldFrame];
         stackNameField.font = [UIFont systemFontOfSize:24];
-        stackNameField.text = @"Random Stack Name";
+        stackNameField.returnKeyType = UIReturnKeyDone;
+        stackNameField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+        stackNameField.delegate = self;
         [self addSubview:stackNameField];
-
-
-        emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
     }
     return self;
 }
@@ -137,6 +136,15 @@
         squishFactor = .15;
         [self finishSwipeToDelete:!quickly sendingDelegateNotifications:NO];
     }
+}
+
+#pragma mark - MMEditableStackView
+
+- (void)loadStacksFromDiskIntoListView {
+    [super loadStacksFromDiskIntoListView];
+
+    stackNameField.text = self.stackManager.name;
+    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
 }
 
 #pragma mark - Actions
@@ -695,6 +703,24 @@
         return CGPointMake(firstPage.center.x + diffx / 2, firstPage.center.y + diffy / 2);
     } else {
         return CGRectGetMidPoint([self bounds]);
+    }
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField*)textField {
+    [textField resignFirstResponder];
+    return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField*)textField {
+    self.stackManager.name = textField.text;
+    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
+}
+
+- (void)textFieldDidEndEditing:(UITextField*)textField reason:(UITextFieldDidEndEditingReason)reason {
+    if (reason == UITextFieldDidEndEditingReasonCommitted) {
+        [self textFieldDidEndEditing:textField];
     }
 }
 

@@ -36,6 +36,7 @@
 
     [UIView animateTextTransitionForObjects:@[self] withDuration:animated ? .75 : .2 delay:0 animations:^{
         [self setTextColor:color];
+        [super setTintColor:color];
         //        [self setBackgroundColor:tintColor];
     } completion:^{
         isAnimating = NO;

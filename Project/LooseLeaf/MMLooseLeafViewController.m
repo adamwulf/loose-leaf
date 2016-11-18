@@ -331,6 +331,12 @@
             }
         }];
 
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillChangeFrame:)
+                                                     name:UIKeyboardWillChangeFrameNotification
+                                                   object:nil];
+
         // Debug
 
         //        MMMemoryProfileView* memoryProfileView = [[MMMemoryProfileView alloc] initWithFrame:self.view.bounds];
@@ -1292,6 +1298,7 @@
 
                         [heldStackView squashPagesWhenInRowView:.2 withTranslate:80 + diff];
                         heldStackView.transform = CGAffineTransformMakeScale(1.1, 1.1);
+                        heldStackView.stackNameField.transform = CGAffineTransformMakeScale(.909, .909);
                     } completion:nil];
 
                     displayLink.paused = NO;
@@ -1341,6 +1348,7 @@
 
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             [heldStackView squashPagesWhenInRowView:0 withTranslate:0];
+            heldStackView.stackNameField.transform = CGAffineTransformIdentity;
             heldStackView.transform = CGAffineTransformIdentity;
             heldStackView.userInteractionEnabled = YES;
 
@@ -1460,6 +1468,43 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView {
     [self enableAllSmoothBorders:YES];
+}
+
+#pragma mark - Keyboard
+
+- (MMCollapsableStackView*)stackIfNameInputFirstResponder {
+    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
+        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+        if ([aStackView.stackNameField isFirstResponder]) {
+            return aStackView;
+        }
+    }
+    return nil;
+}
+
+- (void)adjustKeyboardForStack:(MMCollapsableStackView*)stack givenKeyboardUserInfo:(NSDictionary*)userInfo {
+    CGRect keyboardFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGFloat animationDuration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
+
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        CGRect stackFrame = [stack convertRect:[stack bounds] toView:nil];
+        if (CGRectIntersectsRect(keyboardFrame, stackFrame)) {
+            CGFloat insetForKeyboard = CGRectGetHeight(stackFrame) + CGRectGetHeight(keyboardFrame) - 40;
+
+            allStacksScrollView.contentInset = UIEdgeInsetsMake(0, 0, insetForKeyboard, 0);
+        } else {
+            allStacksScrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        }
+    } completion:nil];
+}
+
+- (void)keyboardWillChangeFrame:(NSNotification*)notification {
+    MMCollapsableStackView* stackView = [self stackIfNameInputFirstResponder];
+
+    if (stackView) {
+        [self adjustKeyboardForStack:stackView givenKeyboardUserInfo:notification.userInfo];
+    }
 }
 
 @end

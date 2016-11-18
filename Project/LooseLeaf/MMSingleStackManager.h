@@ -19,6 +19,7 @@
 }
 
 @property (nonatomic, readonly) NSString* uuid;
+@property (nonatomic, strong) NSString* name;
 @property (nonatomic, readonly) NSString* visiblePlistPath;
 @property (nonatomic, readonly) NSString* hiddenPlistPath;
 

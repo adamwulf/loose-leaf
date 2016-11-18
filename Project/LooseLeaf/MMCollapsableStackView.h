@@ -8,6 +8,7 @@
 
 #import "MMTutorialStackView.h"
 #import "MMCollapsableStackViewDelegate.h"
+#import "MMColoredTextField.h"
 
 
 @interface MMCollapsableStackView : MMTutorialStackView
@@ -16,6 +17,7 @@
 @property (nonatomic, readonly) BOOL isPerfectlyAlignedIntoRow;
 
 @property (nonatomic, readonly) CGRect rectForColorConsideration;
+@property (nonatomic, readonly) MMColoredTextField* stackNameField;
 
 - (void)organizePagesIntoSingleRowAnimated:(BOOL)animated;
 - (void)organizePagesIntoListAnimated:(BOOL)animated;
