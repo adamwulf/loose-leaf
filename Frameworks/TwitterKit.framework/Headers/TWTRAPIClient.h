@@ -141,9 +141,10 @@ typedef void(^TWTRRequestEmailCompletion)(NSString * _Nullable email, NSError * 
  *  Sends a Twitter request.
  *
  *  @param request    The request that will be sent asynchronously.
- *  @param completion Completion block to be called on response. Called on main queue.
+ *  @param completion Completion block to be called on response. Called on main queue. 
+ *  @return an NSProgress object which can be used to cancel the request.
  */
-- (void)sendTwitterRequest:(NSURLRequest *)request completion:(TWTRNetworkCompletion)completion;
+- (NSProgress *)sendTwitterRequest:(NSURLRequest *)request completion:(TWTRNetworkCompletion)completion;
 
 /**
  *  @name Common API Actions

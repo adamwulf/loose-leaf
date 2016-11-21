@@ -117,7 +117,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)tweetDetailViewController:(TWTRTweetDetailViewController *)controller didTapUserMention:(TWTRTweetUserMentionEntity *)userMention;
 
-
 @end
 
 NS_ASSUME_NONNULL_END
