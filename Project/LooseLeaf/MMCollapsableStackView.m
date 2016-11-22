@@ -56,12 +56,14 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
-        collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -10, 80, 80)];
+        collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -100, 80, 80)];
         collapseNoticeArrow.alpha = 0;
         [self addSubview:collapseNoticeArrow];
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
         collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
+        [collapseNoticeMessage sizeToFit];
+        collapseNoticeMessage.center = CGPointTranslate(collapseNoticeArrow.center, CGRectGetMidX(collapseNoticeMessage.bounds) + 40, 0);
         [self addSubview:collapseNoticeMessage];
 
         expandButton = [[UIButton alloc] initWithFrame:self.bounds];
@@ -209,10 +211,8 @@
     [collapseNoticeMessage setTextColor:stackNameField.textColor];
     [collapseNoticeArrow setBackgroundColor:stackNameField.textColor];
 
-    CGRect initialFrameMsg = CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20);
-
     CGFloat y = MIN(MAX(0, -scrollView.contentOffset.y), 100);
-    CGRect initialFrame = CGRectMake(CGRectGetMidX(self.bounds) - 150, -80, 80, 80);
+    CGRect initialFrame = CGRectMake(CGRectGetMidX(self.bounds) - CGRectGetMidX(collapseNoticeMessage.bounds) - 40, -80, 80, 80);
 
     CGFloat updatedAlpha = y / 100.0;
 
@@ -223,7 +223,7 @@
     collapseNoticeArrow.alpha = updatedAlpha;
     y = MAX(0, -scrollView.contentOffset.y - 100);
     collapseNoticeArrow.frame = CGRectOffset(initialFrame, 0, -y);
-    collapseNoticeMessage.frame = CGRectOffset(initialFrameMsg, 0, -y);
+    collapseNoticeMessage.center = CGPointTranslate(collapseNoticeArrow.center, CGRectGetMidX(collapseNoticeMessage.bounds) + 40, 0);
 
     [super scrollViewDidScroll:scrollView];
 }
