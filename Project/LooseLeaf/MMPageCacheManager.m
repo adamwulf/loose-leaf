@@ -8,6 +8,7 @@
 
 #import "MMPageCacheManager.h"
 #import "MMJotViewNilState.h"
+#import "MMPaperStackView.h"
 #import "Constants.h"
 
 
@@ -120,7 +121,7 @@ static MMPageCacheManager* _instance = nil;
         recentlyConfirmedPageUUID = topPage.uuid;
         [self ensureTopPageIsLoaded:topPage];
         [self updateVisiblePageImageCache];
-        DebugLog(@"did change top page to %@", topPage.uuid);
+        DebugLog(@"did change top page to %@:%@", [(MMPaperStackView*)topPage.delegate uuid], topPage.uuid);
         return YES;
     }
     return NO;
@@ -225,10 +226,10 @@ static MMPageCacheManager* _instance = nil;
                 } else if (![replacementEditablePage isStateLoaded]) {
                     // now we need to load the state for the page
                     // that will become editable
-                    DebugLog(@"MMPageCacheManager loading new top page %@", topPage.uuid);
+                    DebugLog(@"MMPageCacheManager loading new top page %@:%@", [(MMPaperStackView*)topPage.delegate uuid], topPage.uuid);
                     [replacementEditablePage loadStateAsynchronously:YES withSize:drawableView.pagePtSize andScale:drawableView.scale andContext:drawableView.context];
                 } else {
-                    DebugLog(@"MMPageCacheManager new current editable %@", topPage.uuid);
+                    DebugLog(@"MMPageCacheManager new current editable %@:%@", [(MMPaperStackView*)topPage.delegate uuid], topPage.uuid);
                     // now the old editable page is unloaded,
                     // and the new editable page is loaded,
                     // so give the drawable view to the new page
@@ -272,6 +273,7 @@ static MMPageCacheManager* _instance = nil;
         return ![visiblePages containsObject:obj];
     }];
     NSArray* invisiblePages = [pagesWithLoadedCacheImages objectsAtIndexes:indexes];
+
     for (MMEditablePaperView* page in invisiblePages) {
         @synchronized(stateLoadedPages) {
             if (![stateLoadedPages containsObject:page]) {
@@ -283,10 +285,14 @@ static MMPageCacheManager* _instance = nil;
         }
     }
     for (MMEditablePaperView* page in visiblePages) {
-        [page loadCachedPreview];
+        [self loadPageThumbnailToCache:page];
     }
+}
+
+- (void)loadPageThumbnailToCache:(MMEditablePaperView*)page {
+    [page loadCachedPreview];
     @synchronized(stateLoadedPages) {
-        [pagesWithLoadedCacheImages addObjectsFromArray:visiblePages];
+        [pagesWithLoadedCacheImages addObject:page];
     }
 }
 
@@ -333,6 +339,5 @@ static MMPageCacheManager* _instance = nil;
     }
     return totalBytes;
 }
-
 
 @end

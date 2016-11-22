@@ -10,6 +10,7 @@
 #define Paper_Stack_Contants_h
 
 #import "AuthConstants.h"
+#import "UIDevice+PPI.h"
 
 #define kDeletingInboxItemGesture @"kDeletingInboxItemGesture"
 #define kDeletingInboxItemTapped @"kDeletingInboxItemTapped"
@@ -34,12 +35,14 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define CGRectGetMidPoint(rect) CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
 #define CGRectFromSize(size) CGRectMake(0, 0, size.width, size.height)
 #define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, height)
+#define CGSizeMaxDim(size) MAX((size).width, (size).height)
 #define CGRectSquare(size) CGRectMake(0, 0, size, size)
 #define CGSizeScale(size, scale) CGSizeMake(size.width*(scale), size.height*(scale))
 #define CGRectScale(rect, scale) CGRectMake(rect.origin.x*(scale), rect.origin.y*(scale), rect.size.width*(scale), rect.size.height*(scale))
 #define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
 #define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
-
+#define CGPointTranslate(point, translatex, translatey) CGPointMake((point).x + translatex, (point).y + translatey)
+#define CGRectTranslate(rect, translatex, translatey) CGRectMake((rect).origin.x + translatex, (rect).origin.y + translatey, (rect).size.width, (rect).size.height)
 
 #define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)
 
@@ -143,10 +146,18 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kBrushPencil @"pencil"
 #define kBrushHighlighter @"highlighter"
 #define kBrushMarker @"marker"
-#define kIsShowingListView @"ShowingListView"
 #define kMarkerColor @"markerColor"
 #define kPencilColor @"pencilColor"
 #define kHighlighterColor @"highlighterColor"
+
+#define kIsShowingListView @"ShowingListView" // old. use kCurrentViewMode instead.
+
+#define kCurrentViewMode @"CurrentViewMode"
+#define kViewModeList @"kViewModeList"
+#define kViewModePage @"kViewModePage"
+#define kViewModeCollapsed @"kViewModeCollapsed"
+
+#define kCurrentStack @"CurrentStack"
 
 // Camera
 #define kCameraMargin 10
@@ -210,6 +221,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPNumberOfInvites @"Number of Invites"
 #define kMPNumberOfClippingExceptions @"Bezier Clip Exceptions"
 #define kMPFailedRotationReading @"Failed Rotation Reading"
+#define kMPEmailAddressField @"$email"
+#define kMPPushEnabled @"Push Enabled"
 
 #define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
 #define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
@@ -237,6 +250,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 // MixPanel Error Events
 #define kMPEventMemoryWarning @"Memory Warning"
 #define kMPEventCrash @"Crash Report"
+#define kMPEventCrashAverted @"Crash Averted"
 #define kMPEventGestureBug @"Gesture Bug"
 
 // MixPanel Events Properties
@@ -252,6 +266,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventImportPage @"Import Page"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
+#define kMPEventClonePage @"Clone Page"
+#define kMPEventCloneScrap @"Clone Scrap"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"
@@ -275,8 +291,9 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 // photo album
 #define kMaxPhotoRotationInDegrees 20
 #define kThumbnailMaxDim (100 * [[UIScreen mainScreen] scale])
-#define kPhotoImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
-#define kPDFImportMaxDim MAX([[UIScreen mainScreen] bounds].size.width, [[UIScreen mainScreen] bounds].size.height)
+#define kPhotoImportMaxDim [UIDevice advisedMaxImportDim]
+#define kPDFImportMaxDim [UIDevice advisedMaxImportDim]
+#define kMaxScrapImportSizeOnPageFromBounce 800
 
 // page cache manager
 #define kPageCacheManagerHasLoadedAnyPage @"PageCacheManagerLoadedFirstPage"
@@ -286,6 +303,13 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
     float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees / 2)) / 360.0 * M_PI; \
     srand((unsigned)time(NULL));                                                                                   \
     return output;                                                                                                 \
+})(a)
+
+#define RandomCollapsedPageRotation(a) (^float(NSInteger b) {    \
+    srand((unsigned)b);                                          \
+    float output = ((float)(rand() % 100 / 100.0 * .05 - .025)); \
+    srand((unsigned)time(NULL));                                 \
+    return output;                                               \
 })(a)
 
 #define RandomMod(a, b) (^float(NSInteger seed, int mod) { \

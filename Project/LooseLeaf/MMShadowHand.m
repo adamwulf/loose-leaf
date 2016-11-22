@@ -262,13 +262,13 @@
 }
 - (void)endDrawingAtTouch:(UITouch*)touch {
     if (isDrawing) {
-        if (!touch || [activeTouches isEqualToSet:[NSSet setWithObject:touch]]) {
-            activeTouches = nil;
-            isDrawing = NO;
-            if (!isPanning && !isBezeling) {
-                layer.opacity = 0;
-            }
+        //        if (!touch || [activeTouches isEqualToSet:[NSSet setWithObject:touch]]) {
+        activeTouches = nil;
+        isDrawing = NO;
+        if (!isPanning && !isBezeling) {
+            layer.opacity = 0;
         }
+        //        }
     }
 }
 

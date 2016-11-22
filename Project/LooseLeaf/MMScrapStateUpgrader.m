@@ -33,6 +33,7 @@
 }
 
 - (void)upgradeWithCompletionBlock:(void (^)())onComplete {
+    CheckMainThread;
     @autoreleasepool {
         if ([[NSFileManager defaultManager] fileExistsAtPath:[self scrapIDsPath]]) {
             CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
@@ -40,8 +41,9 @@
 
             [state loadStateAsynchronously:NO atPath:[self scrapIDsPath] andMakeEditable:NO andAdjustForScale:YES];
 
+            MMImmutableScrapCollectionState* immutableScrapState = [state immutableStateForPath:[self scrapIDsPath]];
             dispatch_async([MMScrapCollectionState importExportStateQueue], ^{
-                [[state immutableStateForPath:[self scrapIDsPath]] saveStateToDiskBlocking];
+                [immutableScrapState saveStateToDiskBlocking];
 
                 // unloading the scrap state will also remove them
                 // from their superview (us)

@@ -26,6 +26,7 @@
 @property (nonatomic, weak) NSObject<MMCountableSidebarContainerViewDelegate>* bubbleDelegate;
 
 - (id)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft NS_UNAVAILABLE;
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)countButton;
 
 - (BOOL)containsView:(ViewType)view;

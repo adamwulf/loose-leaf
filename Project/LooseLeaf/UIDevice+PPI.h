@@ -23,4 +23,6 @@
 
 + (NSString*)buildVersion;
 
++ (CGFloat)advisedMaxImportDim;
+
 @end

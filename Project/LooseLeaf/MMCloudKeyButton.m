@@ -48,6 +48,9 @@
 - (void)flipAnimatedToKeyWithCompletion:(void (^)())completion {
     if (![self isShowingKey]) {
         [needLoginView bounceAndFlipWithCompletion:completion];
+    } else {
+        if (completion)
+            completion();
     }
 }
 
@@ -99,19 +102,19 @@
 }
 
 - (void)bounceLightly {
-    CGFloat duration = 0.35;
-    [UIView animateKeyframesWithDuration:duration delay:0 options:UIViewKeyframeAnimationOptionCalculationModeCubic animations:^{
-        UIInterfaceOrientation orientation = [[MMRotationManager sharedInstance] lastBestOrientation];
-        [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.25 animations:^{
-            self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]), 0.9, 0.9);
-        }];
-        [UIView addKeyframeWithRelativeStartTime:.3 relativeDuration:.4 animations:^{
+    UIInterfaceOrientation orientation = [[MMRotationManager sharedInstance] lastBestOrientation];
+
+    [UIView animateWithDuration:.08 animations:^{
+        self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]), 0.9, 0.9);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:.14 animations:^{
             self.transform = CGAffineTransformScale(CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]), 1.1, 1.1);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:.12 animations:^{
+                self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
+            } completion:nil];
         }];
-        [UIView addKeyframeWithRelativeStartTime:.7 relativeDuration:.35 animations:^{
-            self.transform = CGAffineTransformMakeRotation([self idealRotationForOrientation:orientation]);
-        }];
-    } completion:nil];
+    }];
 }
 
 #pragma mark - Rotation

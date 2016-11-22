@@ -31,10 +31,6 @@
         [helpButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:helpButton extendFrame:NO];
 
-        if (![[MMTutorialManager sharedInstance] hasFinishedTutorial]) {
-            [[MMTutorialManager sharedInstance] startWatchingTutorials:[[MMTutorialManager sharedInstance] appIntroTutorialSteps]];
-        }
-
         CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
 
         listViewTutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
@@ -136,6 +132,8 @@
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
         listViewTutorialButton.rotation = [self sidebarButtonRotation];
         listViewTutorialButton.transform = rotationTransform;
+        listViewFeedbackButton.rotation = [self sidebarButtonRotation];
+        listViewFeedbackButton.transform = rotationTransform;
     }];
 }
 

@@ -37,6 +37,14 @@
 @synthesize insertImageButton;
 @synthesize shareButton;
 
++ (CGRect)insertImageButtonFrame {
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
+
++ (CGRect)shareButtonFrame {
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
+
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     self = [super initWithFrame:frame andUUID:_uuid];
     if (self) {
@@ -70,7 +78,7 @@
         [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:addPageSidebarButton extendFrame:NO];
 
-        shareButton = [[MMShareButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        shareButton = [[MMShareButton alloc] initWithFrame:[MMEditablePaperStackView shareButtonFrame]];
         shareButton.delegate = self;
         [self.toolbar addButton:shareButton extendFrame:NO];
 
@@ -96,7 +104,7 @@
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:scissorButton extendFrame:NO];
 
-        insertImageButton = [[MMImageButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        insertImageButton = [[MMImageButton alloc] initWithFrame:[MMEditablePaperStackView insertImageButtonFrame]];
         insertImageButton.delegate = self;
         [self.toolbar addButton:insertImageButton extendFrame:NO];
 
@@ -256,6 +264,7 @@ static UIWebView* pdfWebView;
     CGFloat rotationValue = -([[[MMRotationManager sharedInstance] currentRotationReading] angle] + M_PI / 2);
     if (isnan(rotationValue)) {
         [[[Mixpanel sharedInstance] people] set:kMPFailedRotationReading to:@(YES)];
+        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1644) }];
         rotationValue = 0;
     }
     return rotationValue;
@@ -556,11 +565,6 @@ static UIWebView* pdfWebView;
 
 #pragma mark = List View
 
-- (void)immediatelyTransitionToListView {
-    [super immediatelyTransitionToListView];
-    [self setButtonsVisible:NO animated:NO];
-}
-
 - (void)isBeginningToScaleReallySmall:(MMPaperView*)page {
     // make sure the currently edited page is being saved
     // to disk if need be
@@ -770,14 +774,14 @@ static UIWebView* pdfWebView;
                                              error:nil];
 }
 
-- (void)loadStacksFromDiskIntoListView:(BOOL)isListView {
+- (void)loadStacksFromDiskIntoListView {
     // check to see if we have any state to load at all, and if
     // not then build our default content
     if (![self.stackManager hasStateToLoad]) {
         // we don't have any pages, and we don't have any
         // state to load
         [self buildDefaultContent];
-        [self loadStacksFromDiskIntoListView:isListView];
+        [self loadStacksFromDiskIntoListView];
         return;
     } else {
         NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
@@ -787,29 +791,6 @@ static UIWebView* pdfWebView;
         for (MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]) {
             [self addPaperToBottomOfHiddenStack:page];
         }
-    }
-
-    if ([self hasPages]) {
-        // only load the image previews for the pages that will be visible
-        // other page previews will load as the user turns the page,
-        // or as they scroll the list view
-        CGPoint scrollOffset = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
-        NSArray* visiblePages = [self findPagesInVisibleRowsOfListViewGivenOffset:scrollOffset];
-        for (MMEditablePaperView* page in visiblePages) {
-            [page loadCachedPreview];
-        }
-        [self setButtonsVisible:YES animated:NO];
-
-        // Open to list view if needed
-        if (!isListView) {
-            [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[self visibleStackHolder] peekSubview]];
-        } else {
-            // open into list view if that was their last visible screen
-            [self immediatelyTransitionToListView];
-        }
-    } else {
-        // list is empty on purpose
-        [self immediatelyTransitionToListView];
     }
 }
 
@@ -953,6 +934,17 @@ static UIWebView* pdfWebView;
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     [super scrollViewDidScroll:scrollView];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
+}
+
+#pragma mark - List View Enable / Disable Helper Methods
+
+- (void)immediatelyTransitionToListView {
+    for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        aPage.hidden = NO;
+    }
+
+    [super immediatelyTransitionToListView];
+    [self setButtonsVisible:NO animated:NO];
 }
 
 #pragma mark - Gestures for List View

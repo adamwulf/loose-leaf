@@ -30,20 +30,20 @@ static MMTutorialManager* _instance = nil;
     if (_instance)
         return _instance;
     if ((self = [super init])) {
-#ifdef DEBUG
-//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
-//
-//        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
-//            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
-//        }
-//
-//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
-//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
-//        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
-//
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-
-#endif
+        //#ifdef DEBUG
+        //        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMPHasFinishedTutorial];
+        //
+        //        for (NSDictionary* tutorial in [[[self appIntroTutorialSteps] arrayByAddingObjectsFromArray:[self allTutorialStepsEver]] arrayByAddingObjectsFromArray:[self shareTutorialSteps]]) {
+        //            [[NSUserDefaults standardUserDefaults] removeObjectForKey:[kCurrentTutorialStep stringByAppendingString:[tutorial objectForKey:@"id"]]];
+        //        }
+        //
+        //        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasIgnoredNewsletter];
+        //        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasSignedUpForNewsletter];
+        //        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPendingEmailToSubscribe];
+        //
+        //        [[NSUserDefaults standardUserDefaults] synchronize];
+        //
+        //#endif
 
         hasFinishedTutorial = [[NSUserDefaults standardUserDefaults] boolForKey:kMPHasFinishedTutorial];
         timeSpentInTutorial = [[NSUserDefaults standardUserDefaults] floatForKey:kMPDurationWatchingTutorial];
@@ -144,9 +144,9 @@ static MMTutorialManager* _instance = nil;
             @"video": @"list-view-reorder-pages.mov"
         },
         @{
-            @"id": @"reorder-pages",
+            @"id": @"page-sidebar",
             @"title": @"Organize Your Pages",
-            @"video": @"reorder-pages.mp4"
+            @"video": @"page-sidebar.mp4"
         },
         @{
             @"id": @"list-view-delete-page",
@@ -231,6 +231,7 @@ static MMTutorialManager* _instance = nil;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
     [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];
+    [[[Mixpanel sharedInstance] people] set:kMPEmailAddressField to:email];
     [[Mixpanel sharedInstance] flush];
 }
 

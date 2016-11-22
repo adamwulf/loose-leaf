@@ -32,7 +32,7 @@
     [super setTitle:title forState:state];
     [self sizeToFit];
     CGRect b = self.bounds;
-    b.size.width += 40;
+    b.size.width += [self imageForState:UIControlStateNormal] ? 30 : 40;
     b.size.height += 12;
     self.bounds = b;
 }
@@ -44,6 +44,11 @@
     } else {
         [self setBackgroundColor:[UIColor clearColor]];
     }
+}
+
+- (void)setTitleColor:(UIColor*)color forState:(UIControlState)state {
+    [super setTitleColor:color forState:state];
+    self.layer.borderColor = [self titleColorForState:UIControlStateNormal].CGColor;
 }
 
 @end

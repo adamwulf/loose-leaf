@@ -19,7 +19,7 @@
 
 - (NSString*)stackDirectoryPathForUUID:(NSString*)uuid;
 
-- (NSString*)createStack;
+- (NSString*)createStack:(BOOL)withDefaultContent;
 
 - (void)deleteStack:(NSString*)stackUUID;
 
@@ -32,5 +32,7 @@
 - (void)updateCachedPages:(NSArray*)allPages forStackUUID:(NSString*)stackUUID;
 
 - (void)updateName:(NSString*)name forStack:(NSString*)stackUUID;
+
+- (void)moveStack:(NSString*)stackUUID toIndex:(NSInteger)index;
 
 @end

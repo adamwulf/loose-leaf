@@ -22,6 +22,10 @@
 
 - (BOOL)isShowingPageView;
 
+- (BOOL)isShowingListView;
+
+- (BOOL)isShowingCollapsedView;
+
 - (NSInteger)countAllPages;
 
 @end

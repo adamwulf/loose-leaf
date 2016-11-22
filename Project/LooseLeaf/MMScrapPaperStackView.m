@@ -572,14 +572,14 @@
     CGRect scrapRect = CGRectZero;
     CGSize buttonSize = [bufferedImage visibleImageSize];
 
-    if (asPage) {
-        CGSize pageSize = hiddenStackHolder.bounds.size;
-        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:MAX(pageSize.width, pageSize.height) andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
-        return;
-    }
-
     // max image size in any direction
     CGFloat maxDim = [asset preferredImportMaxDim] * [[UIScreen mainScreen] scale];
+
+    if (asPage) {
+        CGSize pageSize = hiddenStackHolder.bounds.size;
+        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
+        return;
+    }
 
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
 
@@ -647,8 +647,8 @@
 
         CGSize targetSizeAfterBounce = fullScaleSize;
         CGFloat targetScale = 1.0;
-        if (MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height) > 800) {
-            targetSizeAfterBounce = CGSizeFit(targetSizeAfterBounce, CGSizeMake(800, 800)).size;
+        if (MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height) > kMaxScrapImportSizeOnPageFromBounce) {
+            targetSizeAfterBounce = CGSizeFit(targetSizeAfterBounce, CGSizeMake(kMaxScrapImportSizeOnPageFromBounce, kMaxScrapImportSizeOnPageFromBounce)).size;
         }
         targetScale = targetSizeAfterBounce.width / fullScaleSize.width;
 
@@ -1486,6 +1486,8 @@
 
         @throw [NSException exceptionWithName:@"DroppedSplitScrap" reason:@"split scrap was dropped by pan gestures" userInfo:nil];
     }
+
+    [[Mixpanel sharedInstance] track:kMPEventCloneScrap];
 
     // now that the scrap is where it should be,
     // and contains its background, etc, then

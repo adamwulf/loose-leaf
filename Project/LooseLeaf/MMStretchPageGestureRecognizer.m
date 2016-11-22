@@ -53,7 +53,7 @@
 #pragma mark - Touch Methods
 
 - (NSOrderedSet*)additionalTouches {
-    return [additionalTouches array];
+    return [additionalTouches copy];
 }
 
 - (NSOrderedSet<UITouch*>*)allFourTouches {

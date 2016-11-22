@@ -47,6 +47,15 @@
 @synthesize presentationWindow;
 @synthesize isActive = isActive;
 
+static BOOL isFirstLaunch = NO;
+
++ (void)load {
+    NSString* uuid = [SSKeychain passwordForService:[[NSBundle mainBundle] bundleIdentifier] account:@"userID"];
+    if (!uuid) {
+        isFirstLaunch = YES;
+    }
+}
+
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
 
@@ -79,6 +88,10 @@
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
     [[MMAllStacksManager sharedInstance] upgradeIfNecessary:^{
+        if (![[[MMAllStacksManager sharedInstance] stackIDs] count]) {
+            [[MMAllStacksManager sharedInstance] createStack:YES];
+        }
+
         presentationWindow = [[MMPresentationWindow alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
         [presentationWindow makeKeyAndVisible];
 
@@ -136,8 +149,8 @@
     [[MMRotationManager sharedInstance] willResignActive];
     [self.viewController willResignActive];
     // stop the timer once "App Close" event is called
-    [[Mixpanel sharedInstance] track:kMPEventActiveSession];
-    [[Mixpanel sharedInstance] track:kMPEventResign];
+    [[Mixpanel sharedInstance] track:kMPEventActiveSession properties:@{ @"First Launch": @(isFirstLaunch) }];
+    [[Mixpanel sharedInstance] track:kMPEventResign properties:@{ @"First Launch": @(isFirstLaunch) }];
     [[Mixpanel sharedInstance] flush];
 }
 
@@ -172,10 +185,10 @@
         //
         // this'll also trigger when the app first launches, as resignedActiveStamp == 0
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfLaunches by:@(1)];
-        [[Mixpanel sharedInstance] track:kMPEventLaunch];
+        [[Mixpanel sharedInstance] track:kMPEventLaunch properties:@{ @"First Launch": @(isFirstLaunch) }];
     } else {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfResumes by:@(1)];
-        [[Mixpanel sharedInstance] track:kMPEventResume];
+        [[Mixpanel sharedInstance] track:kMPEventResume properties:@{ @"First Launch": @(isFirstLaunch) }];
     }
     [[MMRotationManager sharedInstance] didBecomeActive];
     [self saveDateOfLaunch];
@@ -236,10 +249,12 @@
 }
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken {
+    [[[Mixpanel sharedInstance] people] set:kMPPushEnabled to:@(YES)];
     [[Mixpanel sharedInstance].people addPushDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
+    [[[Mixpanel sharedInstance] people] set:kMPPushEnabled to:@(NO)];
     DebugLog(@"did fail register for remote notifications");
 }
 
@@ -395,7 +410,7 @@
 
     NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
     [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {
-        [mappedCrashProperties setObject:obj forKey:[@"Crashlytics: " stringByAppendingString:key]];
+        [mappedCrashProperties setObject:obj forKey:[@"Crash Property: " stringByAppendingString:key]];
     }];
 
     @try {

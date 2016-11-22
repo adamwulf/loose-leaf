@@ -13,6 +13,8 @@
 #import "MMRotationManager.h"
 #import "MMLoopIcon.h"
 #import "Constants.h"
+#import <Accounts/Accounts.h>
+#import <Social/Social.h>
 
 
 @interface MMNewsletterSignupForm () <UITextFieldDelegate>
@@ -27,8 +29,13 @@
     UILabel* pitchLbl;
     UILabel* validateInput;
     UILabel* validateInputRed;
+    UIButton* twitterFollowButton;
 
     UILabel* thanksPanel;
+
+    UILabel* stayLbl;
+    UILabel* inTheLbl;
+    MMLoopIcon* loopImage;
 }
 
 @synthesize delegate;
@@ -40,21 +47,21 @@
 - (id)initForm {
     if (self = [super initWithTitle:nil forTutorialId:nil]) {
         CGFloat scale = .3;
-        MMLoopIcon* loop = [[MMLoopIcon alloc] initWithFrame:CGRectMake(0, 0, 500 * scale, 360 * scale)];
-        loop.center = CGPointMake(self.bounds.size.width / 2 + 50, 105);
-        [self addSubview:loop];
+        loopImage = [[MMLoopIcon alloc] initWithFrame:CGRectMake(0, 0, 500 * scale, 360 * scale)];
+        loopImage.center = CGPointMake(self.bounds.size.width / 2 + 50, 105);
+        [self addSubview:loopImage];
 
-        UILabel* stay = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-        stay.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
-        stay.text = @"Stay";
-        stay.font = [UIFont fontWithName:@"Lato-Bold" size:36];
-        [self addSubview:stay];
+        stayLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
+        stayLbl.text = @"Stay";
+        stayLbl.font = [UIFont fontWithName:@"Lato-Bold" size:36];
+        [self addSubview:stayLbl];
 
-        UILabel* inLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-        inLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
-        inLbl.text = @"in the";
-        inLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:20];
-        [self addSubview:inLbl];
+        inTheLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
+        inTheLbl.text = @"in the";
+        inTheLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:20];
+        [self addSubview:inTheLbl];
 
         pitchLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
         pitchLbl.text = @"Tips, features, and offers to get the most out of Loose Leaf.";
@@ -98,6 +105,20 @@
         noThanksButton.bounds = b;
         [self addSubview:noThanksButton];
 
+
+        twitterFollowButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [twitterFollowButton setTitle:@"Follow @getlooseleaf" forState:UIControlStateNormal];
+        [twitterFollowButton sizeToFit];
+        [twitterFollowButton setBounds:CGRectResizeBy([twitterFollowButton bounds], 80, 10)];
+        [twitterFollowButton addTarget:self action:@selector(followOnTwitter:) forControlEvents:UIControlEventTouchUpInside];
+        b = twitterFollowButton.bounds;
+        b.size.width += 20;
+        b.size.height += 8;
+        twitterFollowButton.bounds = b;
+        twitterFollowButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:twitterFollowButton];
+
+
         thanksPanel = [[UILabel alloc] initWithFrame:self.bounds];
         thanksPanel.backgroundColor = [UIColor whiteColor];
         thanksPanel.textColor = [UIColor blackColor];
@@ -113,6 +134,72 @@
 }
 
 #pragma mark - Actions
+
+- (void)followOnTwitter:(id)button {
+    ACAccountStore* accountStore = [[ACAccountStore alloc] init];
+    ACAccountType* accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+
+    [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError* error) {
+        if (granted) {
+            // Get the list of Twitter accounts.
+            NSArray* accountsArray = [accountStore accountsWithAccountType:accountType];
+
+            // For the sake of brevity, we'll assume there is only one Twitter account present.
+            // You would ideally ask the user which account they want to tweet from, if there is more than one Twitter account present.
+            if ([accountsArray count] > 0) {
+                for (ACAccount* twitterAccount in accountsArray) {
+                    NSMutableDictionary* tempDict = [[NSMutableDictionary alloc] init];
+                    [tempDict setValue:@"getlooseleaf" forKey:@"screen_name"];
+                    [tempDict setValue:@"true" forKey:@"follow"];
+
+                    SLRequest* followRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodPOST URL:[NSURL URLWithString:@"https://api.twitter.com/1/friendships/create.json"] parameters:tempDict];
+
+                    [followRequest setAccount:twitterAccount];
+
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        //Update UI to show success
+                        [twitterFollowButton setTitle:@"..." forState:UIControlStateNormal];
+                        [twitterFollowButton setUserInteractionEnabled:NO];
+                    });
+
+                    [followRequest performRequestWithHandler:^(NSData* responseData, NSHTTPURLResponse* urlResponse, NSError* error) {
+                        if (twitterAccount == accountsArray[0]) {
+                            if (error) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    //Update UI to show follow request failed
+                                    [twitterFollowButton setTitle:@"Error: could not follow" forState:UIControlStateNormal];
+                                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                        [twitterFollowButton setTitle:@"Follow @getlooseleaf" forState:UIControlStateNormal];
+                                        [twitterFollowButton setUserInteractionEnabled:YES];
+                                    });
+                                });
+                            } else {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    //Update UI to show success
+                                    [twitterFollowButton setTitle:@"Followed! 🎉" forState:UIControlStateNormal];
+                                    [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                                    [twitterFollowButton setUserInteractionEnabled:NO];
+                                });
+                            }
+                        }
+                    }];
+                }
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [twitterFollowButton setTitle:@"No twitter accounts configured" forState:UIControlStateNormal];
+                    [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                    [twitterFollowButton setUserInteractionEnabled:NO];
+                });
+            }
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [twitterFollowButton setTitle:@"No twitter accounts available" forState:UIControlStateNormal];
+                [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                [twitterFollowButton setUserInteractionEnabled:NO];
+            });
+        }
+    }];
+}
 
 - (void)noThanksButtonTapped:(id)button {
     [[MMTutorialManager sharedInstance] optOutOfNewsletter];
@@ -162,17 +249,27 @@
 
         if (orientation == UIInterfaceOrientationPortrait ||
             orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            loopImage.center = CGPointMake(self.bounds.size.width / 2 + 50, 105);
+            stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
+            inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
             emailInput.center = CGPointMake(self.bounds.size.width / 2, 250);
             validateInput.center = CGPointMake(self.bounds.size.width / 2, 280);
-            signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width / 2, 330);
-            noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width / 2, 330);
+            signUpButton.center = CGPointMake(self.bounds.size.width - buttonMargin - signUpButton.bounds.size.width / 2, 330);
+            noThanksButton.center = CGPointMake(buttonMargin + noThanksButton.bounds.size.width / 2, 330);
             pitchLbl.center = CGPointMake(self.bounds.size.width / 2, 195);
+            twitterFollowButton.center = CGPointMake(self.bounds.size.width / 2, 400);
         } else {
-            emailInput.center = CGPointMake(self.bounds.size.width / 2, 220);
-            validateInput.center = CGPointMake(self.bounds.size.width / 2, 250);
-            signUpButton.center = CGPointMake(buttonMargin + signUpButton.bounds.size.width / 2, 300);
-            noThanksButton.center = CGPointMake(self.bounds.size.width - buttonMargin - noThanksButton.bounds.size.width / 2, 300);
-            pitchLbl.center = CGPointMake(self.bounds.size.width / 2, 180);
+            CGFloat moreMove = CGSizeMaxDim([[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size) <= 1024 ? 30 : 0;
+
+            loopImage.center = CGPointMake(self.bounds.size.width / 2 + 50, 105 - moreMove);
+            stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80 - moreMove);
+            inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110 - moreMove);
+            emailInput.center = CGPointMake(self.bounds.size.width / 2, 220 - moreMove);
+            validateInput.center = CGPointMake(self.bounds.size.width / 2, 250 - moreMove);
+            signUpButton.center = CGPointMake(self.bounds.size.width - buttonMargin - signUpButton.bounds.size.width / 2, 300 - moreMove);
+            noThanksButton.center = CGPointMake(buttonMargin + noThanksButton.bounds.size.width / 2, 300 - moreMove);
+            pitchLbl.center = CGPointMake(self.bounds.size.width / 2, 180 - moreMove);
+            twitterFollowButton.center = CGPointMake(self.bounds.size.width / 2, 400);
         }
         validateInputRed.center = validateInput.center;
     };

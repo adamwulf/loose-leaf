@@ -14,6 +14,7 @@
 
 
 @implementation MMImmutableScrapsOnPaperState {
+    NSMutableDictionary* scrapIdToProperties;
     MMScrapCollectionState* ownerState;
     NSArray* allScrapsForPage;
     NSArray* scrapsOnPageIDs;
@@ -22,13 +23,19 @@
 }
 
 - (id)initWithScrapIDsPath:(NSString*)_scrapIDsPath andAllScraps:(NSArray*)_allScraps andScrapsOnPage:(NSArray*)_scrapsOnPage andOwnerState:(MMScrapCollectionState*)_ownerState {
+    CheckMainThread;
     if (self = [super init]) {
+        scrapIdToProperties = [NSMutableDictionary dictionary];
         ownerState = _ownerState;
         scrapIDsPath = _scrapIDsPath;
         scrapsOnPageIDs = [_scrapsOnPage mapObjectsUsingBlock:^id(id obj, NSUInteger idx) {
             return [obj uuid];
         }];
         allScrapsForPage = [_allScraps copy];
+
+        for (MMScrapView* scrap in _allScraps) {
+            scrapIdToProperties[scrap.uuid] = [scrap propertiesDictionary];
+        }
     }
     return self;
 }
@@ -72,7 +79,7 @@
             };
 
             for (MMScrapView* scrap in allScrapsForPage) {
-                NSDictionary* properties = [scrap propertiesDictionary];
+                NSDictionary* properties = scrapIdToProperties[scrap.uuid];
                 [scrap saveScrapToDisk:doneSavingScrapBlock];
                 // save scraps
                 [allScrapProperties addObject:properties];
@@ -112,7 +119,7 @@
                 // otherwise, use our most recently saved hash
                 hashVal = prime * hashVal + [scrap.state lastSavedUndoHash];
             }
-            NSDictionary* properties = [scrap propertiesDictionary];
+            NSDictionary* properties = scrapIdToProperties[scrap.uuid];
             hashVal = prime * hashVal + [[properties objectForKey:@"center.x"] hash];
             hashVal = prime * hashVal + [[properties objectForKey:@"center.y"] hash];
             hashVal = prime * hashVal + [[properties objectForKey:@"rotation"] hash];

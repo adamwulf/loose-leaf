@@ -93,6 +93,86 @@
     return 264;
 }
 
+
+static CGFloat _advisedMaxImportDim = 0;
++ (CGFloat)advisedMaxImportDim {
+    if (_advisedMaxImportDim) {
+        return _advisedMaxImportDim;
+    }
+
+    NSString* machineId = [[EPPZDevice sharedDevice] machineID];
+    if ([machineId isEqualToString:@"iPad1,1"]) {
+        _advisedMaxImportDim = 400; // 1st gen ipad
+    } else if ([machineId isEqualToString:@"iPad2,1"]) {
+        _advisedMaxImportDim = 400; // ipad 2
+    } else if ([machineId isEqualToString:@"iPad2,2"]) {
+        _advisedMaxImportDim = 400; // ipad 2
+    } else if ([machineId isEqualToString:@"iPad2,3"]) {
+        _advisedMaxImportDim = 400; // ipad 2
+    } else if ([machineId isEqualToString:@"iPad2,4"]) {
+        _advisedMaxImportDim = 400; // ipad 2
+    } else if ([machineId isEqualToString:@"iPad2,5"]) {
+        _advisedMaxImportDim = 400; // ipad mini
+    } else if ([machineId isEqualToString:@"iPad2,6"]) {
+        _advisedMaxImportDim = 400; // ipad mini
+    } else if ([machineId isEqualToString:@"iPad2,7"]) {
+        _advisedMaxImportDim = 400; // ipad mini
+    } else if ([machineId isEqualToString:@"iPad3,1"]) {
+        _advisedMaxImportDim = 500; // iPad 3
+    } else if ([machineId isEqualToString:@"iPad3,2"]) {
+        _advisedMaxImportDim = 500; // iPad 3
+    } else if ([machineId isEqualToString:@"iPad3,3"]) {
+        _advisedMaxImportDim = 500; // iPad 3
+    } else if ([machineId isEqualToString:@"iPad3,4"]) {
+        _advisedMaxImportDim = 600; // iPad 4
+    } else if ([machineId isEqualToString:@"iPad3,5"]) {
+        _advisedMaxImportDim = 600; // iPad 4
+    } else if ([machineId isEqualToString:@"iPad3,6"]) {
+        _advisedMaxImportDim = 600; // iPad 4
+    } else if ([machineId isEqualToString:@"iPad4,1"]) {
+        _advisedMaxImportDim = 600; // iPad Air
+    } else if ([machineId isEqualToString:@"iPad4,2"]) {
+        _advisedMaxImportDim = 600; // iPad Air
+    } else if ([machineId isEqualToString:@"iPad4,3"]) {
+        _advisedMaxImportDim = 600; // iPad Air (China)
+    } else if ([machineId isEqualToString:@"iPad4,4"]) {
+        _advisedMaxImportDim = 500; // ipad mini retina
+    } else if ([machineId isEqualToString:@"iPad4,5"]) {
+        _advisedMaxImportDim = 500; // ipad mini retina
+    } else if ([machineId isEqualToString:@"iPad4,6"]) {
+        _advisedMaxImportDim = 500; // ipad mini retina
+    } else if ([machineId isEqualToString:@"iPad4,6"]) {
+        _advisedMaxImportDim = 500; // ipad mini retina
+    } else if ([machineId isEqualToString:@"iPad4,7"]) {
+        _advisedMaxImportDim = 500; // iPad Mini 3
+    } else if ([machineId isEqualToString:@"iPad4,8"]) {
+        _advisedMaxImportDim = 500; // iPad Mini 3
+    } else if ([machineId isEqualToString:@"iPad4,9"]) {
+        _advisedMaxImportDim = 500; // iPad Mini 3
+    } else if ([machineId isEqualToString:@"iPad5,1"]) {
+        _advisedMaxImportDim = 600; // iPad Mini 4 (WiFi)
+    } else if ([machineId isEqualToString:@"iPad5,2"]) {
+        _advisedMaxImportDim = 600; // iPad Mini 4 (LTE)
+    } else if ([machineId isEqualToString:@"iPad5,3"]) {
+        _advisedMaxImportDim = 800; // iPad Air 2
+    } else if ([machineId isEqualToString:@"iPad5,4"]) {
+        _advisedMaxImportDim = 800; // iPad Air 2
+    } else if ([machineId isEqualToString:@"iPad6,7"]) {
+        _advisedMaxImportDim = 1366; // iPad Pro 12.9in
+    } else if ([machineId isEqualToString:@"iPad6,8"]) {
+        _advisedMaxImportDim = 1366; // iPad Pro 12.9in
+    } else if ([machineId isEqualToString:@"iPad6,3"]) {
+        _advisedMaxImportDim = 1024; // iPad Pro 9.7in
+    } else if ([machineId isEqualToString:@"iPad6,4"]) {
+        _advisedMaxImportDim = 1024; // iPad Pro 9.7in
+    }
+
+    // sane default
+    _advisedMaxImportDim = MAX([[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size.width, [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size.height);
+
+    return _advisedMaxImportDim;
+}
+
 // points per cm
 + (CGFloat)ppc {
     return [UIDevice ppi] / 2.54;

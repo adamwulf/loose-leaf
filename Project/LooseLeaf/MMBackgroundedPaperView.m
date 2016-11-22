@@ -117,11 +117,12 @@
 - (void)loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context {
     [super loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context];
 
+    wantsBackgroundTextureLoaded = YES;
+
     if (isLoadingBackgroundTexture) {
         return;
     }
     isLoadingBackgroundTexture = YES;
-    wantsBackgroundTextureLoaded = YES;
 
     void (^loadPageBackgroundFromDisk)() = ^{
         if (![self pageBackgroundTexture]) {
@@ -274,6 +275,7 @@
     }
 
     if ([[self.drawableView state] isStateLoaded]) {
+        MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
             NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
 
@@ -316,7 +318,6 @@
                     // adjust so that (0,0) is the origin of the content rect in the PDF page,
                     // since the PDF may be much taller/wider than our screen
                     CGContextTranslateCTM(pdfContext, finalExportBounds.origin.x, finalExportBounds.origin.y);
-                    MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
 
                     for (MMScrapView* scrap in immutableScrapState.scraps) {
                         [self drawScrap:scrap intoContext:pdfContext withSize:finalExportBounds.size];
@@ -405,6 +406,7 @@
 
 
     if ([[self.drawableView state] isStateLoaded]) {
+        MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
             NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
 
@@ -448,7 +450,6 @@
                     // adjust so that (0,0) is the origin of the content rect in the PDF page,
                     // since the PDF may be much taller/wider than our screen
                     CGContextTranslateCTM(context, -finalExportBounds.origin.x, -finalExportBounds.origin.y);
-                    MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
 
                     for (MMScrapView* scrap in immutableScrapState.scraps) {
                         [self drawScrap:scrap intoContext:context withSize:screenSize];

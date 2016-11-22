@@ -29,9 +29,6 @@
     // animate between it's final state
     NSMutableDictionary* setOfInitialFramesForPagesBeingZoomed;
 
-    CGFloat screenWidth;
-    CGFloat screenHeight;
-
     MMStretchPageGestureRecognizer* pinchGesture;
     MMLongPressFromListViewGestureRecognizer* longPressGesture;
 
@@ -48,12 +45,15 @@
     MMListAddPageButton* addPageButtonInListView;
 }
 
++ (CGFloat)columnWidth;
++ (CGFloat)rowHeight;
++ (CGFloat)bufferWidth;
+
 @property (nonatomic, strong) MMDeletePageSidebarController* deleteSidebar;
 @property (nonatomic, readonly) MMButtonToolbarView* toolbar;
 @property (nonatomic, readonly) BOOL isAnimatingTowardPageView;
-@property (nonatomic, readonly) CGFloat columnWidth;
-@property (nonatomic, readonly) CGFloat rowHeight;
-@property (nonatomic, readonly) CGFloat bufferWidth;
+@property (nonatomic, readonly) NSString* currentViewMode;
+@property (nonatomic, weak) MMShadowHandView* silhouette;
 
 - (CGPoint)offsetNeededToShowPage:(MMPaperView*)page;
 - (NSArray*)findPagesInVisibleRowsOfListViewGivenOffset:(CGPoint)eventualOffsetOfListView;
@@ -61,48 +61,45 @@
 // returns yes if the imported page was handled
 - (BOOL)importAndShowPage:(MMExportablePaperView*)page;
 
-
-- (MMShadowHandView*)silhouette;
-
 - (CGPoint)addPageBackToListViewAndAnimateOtherPages:(MMPaperView*)page;
 
 
 // protected
 
-- (void)immediatelyTransitionToListView;
+- (void)immediatelyTransitionToListView NS_REQUIRES_SUPER;
 
-- (void)beginUITransitionFromPageView;
+- (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated NS_REQUIRES_SUPER;
 
-- (void)beginUITransitionFromListView;
+- (void)beginUITransitionFromPageView NS_REQUIRES_SUPER;
 
-- (void)finishUITransitionToListView;
+- (void)beginUITransitionFromListView NS_REQUIRES_SUPER;
 
-- (void)finishUITransitionToPageView;
+- (void)finishUITransitionToListView NS_REQUIRES_SUPER;
 
-- (void)deletePage:(MMPaperView*)page;
+- (void)finishUITransitionToPageView NS_REQUIRES_SUPER;
 
-- (void)transitionFromListToNewBlankPageIfInPageView;
+- (void)deletePage:(MMPaperView*)page NS_REQUIRES_SUPER;
 
-- (CGFloat)contentHeightForAllPages;
+- (void)transitionFromListToNewBlankPageIfInPageView NS_REQUIRES_SUPER;
 
-- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
+- (CGFloat)contentHeightForAllPages NS_REQUIRES_SUPER;
 
-- (void)transitionFromListToNewBlankPageIfInPageView;
+- (void)moveAddButtonToBottom NS_REQUIRES_SUPER;
 
-- (void)moveAddButtonToBottom;
+- (void)moveAddButtonToTop NS_REQUIRES_SUPER;
 
-- (void)moveAddButtonToTop;
+- (void)subclassBeforeTransitionToListView NS_REQUIRES_SUPER;
 
-- (void)subclassBeforeTransitionToListView;
+- (void)subclassDuringTransitionToListView NS_REQUIRES_SUPER;
 
-- (void)subclassDuringTransitionToListView;
+- (void)tutorialShouldOpen:(NSNotification*)note NS_REQUIRES_SUPER;
 
-- (void)tutorialShouldOpen:(NSNotification*)note;
+- (void)tutorialShouldClose:(NSNotification*)note NS_REQUIRES_SUPER;
 
-- (void)tutorialShouldClose:(NSNotification*)note;
+- (CGRect)frameForIndexInList:(NSInteger)indexOfPage NS_REQUIRES_SUPER;
 
-- (CGRect)frameForIndexInList:(NSInteger)indexOfPage;
+- (CGRect)frameForListViewForPage:(MMPaperView*)page NS_REQUIRES_SUPER;
 
-- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture;
+- (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture NS_REQUIRES_SUPER;
 
 @end
