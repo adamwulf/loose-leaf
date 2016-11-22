@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMTutorialStackView.h"
+#import "MMCollapsableStackView.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <TwitterKit/TwitterKit.h>
@@ -15,7 +15,7 @@
 
 
 @interface MMLooseLeafViewController : UIViewController <MMMemoryManagerDelegate> {
-    MMTutorialStackView* currentStackView;
+    MMCollapsableStackView* currentStackView;
 }
 
 - (id)init NS_UNAVAILABLE;

@@ -31,4 +31,6 @@
 
 - (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages;
 
+- (void)showCollapsedAnimation:(void (^)())onComplete;
+
 @end

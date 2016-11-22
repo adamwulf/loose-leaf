@@ -113,6 +113,8 @@
     BOOL isViewVisible;
 
     UITouch* touchForScrollShadow;
+
+    BOOL hasShownListCollapseTutorial;
 }
 
 @synthesize bezelPagesContainer;
@@ -127,6 +129,10 @@
         if (!currentStackForLaunch) {
             viewModeForLaunch = kViewModeCollapsed;
         }
+
+#ifdef DEBUG
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasEverCollapsedToShowAllStacks];
+#endif
 
         mightShowReleaseNotes = YES;
         isShowingCollapsedView = YES;
@@ -318,7 +324,6 @@
         [currentStackView immediatelyRelayoutIfInListMode];
         // TODO: above two lines might never run b/c currentStackView is always nil?
 
-
         // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
         if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
             [self didAskToSwitchToStack:currentStackForLaunch animated:NO viewMode:viewModeForLaunch];
@@ -427,6 +432,8 @@
     isViewVisible = YES;
 
     [self rotatingBackgroundViewDidUpdate:rotatingBackgroundView];
+
+    [self checkToShowListCollapseTutorial];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -435,6 +442,13 @@
     isViewVisible = NO;
 }
 
+- (void)checkToShowListCollapseTutorial {
+    BOOL hasEverCollapsed = [[NSUserDefaults standardUserDefaults] boolForKey:kHasEverCollapsedToShowAllStacks];
+    if ([self isShowingListView] && !hasShownListCollapseTutorial && ![self isShowingAnyModal] && !hasEverCollapsed) {
+        hasShownListCollapseTutorial = YES;
+        [currentStackView showCollapsedAnimation:nil];
+    }
+}
 
 #pragma mark - application state
 
@@ -494,7 +508,7 @@
 }
 
 - (BOOL)isShowingAnyModal {
-    return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingReleaseNotes];
+    return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingFeedbackForm];
 }
 
 - (BOOL)isShowingTutorial {
@@ -508,6 +522,19 @@
 - (BOOL)isShowingFeedbackForm {
     return feedbackViewController != nil;
 }
+
+- (void)didChangeToListView:(NSString*)stackUUID {
+    if ([[currentStackView uuid] isEqualToString:stackUUID]) {
+        [self.view insertSubview:bezelPagesContainer aboveSubview:bezelScrapContainer];
+    }
+}
+
+- (void)willChangeToPageView:(NSString*)stackUUID {
+    if ([[currentStackView uuid] isEqualToString:stackUUID]) {
+        [self.view insertSubview:bezelPagesContainer belowSubview:allStacksScrollView];
+    }
+}
+
 
 #pragma mark - MMTutorialStackViewDelegate
 
@@ -550,6 +577,11 @@
         return;
     }
 
+    // we need to change the current stack immediatley and not wait for the
+    // animation to complete. This way, the notifications from the stack
+    // as it is switched to will properly layout the page sidebar above/below
+    // the stack.
+    currentStackView = aStackView;
     isShowingCollapsedView = NO;
 
     longPressGesture.enabled = NO;
@@ -566,7 +598,6 @@
     if ([viewMode isEqualToString:kViewModeList]) {
         [aStackView organizePagesIntoListAnimated:animated];
     } else {
-        [aStackView organizePagesIntoListAnimated:NO];
         [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
 
@@ -604,15 +635,17 @@
         listViewFeedbackButton.alpha = 0;
 
         addNewStackButton.alpha = 0;
-        bezelPagesContainer.alpha = 1;
+
+        if ([viewMode isEqualToString:kViewModeList]) {
+            bezelPagesContainer.alpha = 1;
+        } else {
+            bezelPagesContainer.alpha = 0;
+        }
 
         [self updateStackNameColorsAnimated:YES];
     };
 
     void (^completionStep)(BOOL) = ^(BOOL completed) {
-        MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
-        currentStackView = aStackView;
-
         [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 
         cloudKitExportView.stackView = currentStackView;
@@ -624,6 +657,8 @@
         listViewTutorialButton.alpha = 0;
         listViewFeedbackButton.alpha = 0;
         addNewStackButton.alpha = 0;
+
+        [self checkToShowListCollapseTutorial];
     };
 
     if (animated) {
@@ -641,6 +676,10 @@
 }
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
+    if (animated) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasEverCollapsedToShowAllStacks];
+    }
+
     isShowingCollapsedView = YES;
 
     longPressGesture.enabled = YES;
@@ -896,6 +935,13 @@
     if ([self isShowingCollapsedView] || willPossiblyShowCollapsedView) {
         for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
             arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
+        }
+
+        if (willPossiblyShowCollapsedView) {
+            // only don't load the page sidebar into cache
+            // if we're already in collapsed view. still load
+            // if we're not yet in collapsed view.
+            arr = [arr arrayByAddingObjectsFromArray:[self.bezelPagesContainer viewsInSidebar]];
         }
     } else {
         arr = [currentStackView findPagesInVisibleRowsOfListView] ?: @[];

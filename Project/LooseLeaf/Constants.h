@@ -149,6 +149,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMarkerColor @"markerColor"
 #define kPencilColor @"pencilColor"
 #define kHighlighterColor @"highlighterColor"
+#define kHasEverCollapsedToShowAllStacks @"kHasEverCollapsedToShowAllStacks"
 
 #define kIsShowingListView @"ShowingListView" // old. use kCurrentViewMode instead.
 

@@ -33,4 +33,8 @@
 
 - (BOOL)isShowingTutorial;
 
+- (void)didChangeToListView:(NSString*)stackUUID;
+
+- (void)willChangeToPageView:(NSString*)stackUUID;
+
 @end

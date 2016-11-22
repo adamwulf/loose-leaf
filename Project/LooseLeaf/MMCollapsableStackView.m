@@ -21,6 +21,8 @@
 #import "MMEmptyStackButton.h"
 #import "MMShadowHand.h"
 #import "MMTapWithTouchGestureRecognizer.h"
+#import "MMArrowView.h"
+#import "UIColor+MMAdditions.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -47,7 +49,8 @@
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
 
-    UIView* vibrantView;
+    MMArrowView* collapseNoticeArrow;
+    UILabel* collapseNoticeMessage;
 }
 
 @dynamic stackDelegate;
@@ -55,6 +58,16 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
+        collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -100, 80, 80)];
+        collapseNoticeArrow.alpha = 0;
+        [self addSubview:collapseNoticeArrow];
+
+        collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
+        collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
+        [collapseNoticeMessage sizeToFit];
+        collapseNoticeMessage.center = CGPointTranslate(collapseNoticeArrow.center, CGRectGetMidX(collapseNoticeMessage.bounds) + 40, 0);
+        [self addSubview:collapseNoticeMessage];
+
         expandButton = [[UIButton alloc] initWithFrame:self.bounds];
         expandButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         expandButton.hidden = YES;
@@ -210,6 +223,25 @@
     if ([scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
         [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
     }
+
+    // update the arrow
+    [collapseNoticeMessage setTextColor:stackNameField.textColor];
+    [collapseNoticeArrow setBackgroundColor:stackNameField.textColor];
+
+    CGFloat y = MIN(MAX(0, -scrollView.contentOffset.y), 100);
+    CGRect initialFrame = CGRectMake(CGRectGetMidX(self.bounds) - CGRectGetMidX(collapseNoticeMessage.bounds) - 40, -80, 80, 80);
+
+    CGFloat updatedAlpha = y / 100.0;
+
+    if (updatedAlpha >= 1.0 && collapseNoticeArrow.alpha < 1.0) {
+        [collapseNoticeArrow bounce];
+    }
+
+    collapseNoticeArrow.alpha = updatedAlpha;
+    y = MAX(0, -scrollView.contentOffset.y - 100);
+    collapseNoticeArrow.frame = CGRectOffset(initialFrame, 0, -y);
+    collapseNoticeMessage.center = CGPointTranslate(collapseNoticeArrow.center, CGRectGetMidX(collapseNoticeMessage.bounds) + 40, 0);
+
     [super scrollViewDidScroll:scrollView];
 }
 
@@ -362,6 +394,7 @@
         deleteButton.alpha = 0;
         stackNameField.alpha = 1;
         squishFactor = 0;
+        [self setContentOffset:CGPointZero];
     };
 
     //
@@ -795,6 +828,35 @@
 - (void)textFieldDidEndEditing:(UITextField*)textField reason:(UITextFieldDidEndEditingReason)reason {
     if (reason == UITextFieldDidEndEditingReasonCommitted) {
         [self textFieldDidEndEditing:textField];
+    }
+}
+
+#pragma mark - Animation to show how to move back to collapsed view
+
+- (void)showCollapsedAnimation:(void (^)())onComplete {
+    if ([self isShowingListView]) {
+        self.userInteractionEnabled = NO;
+        [self scrollViewDidScroll:self];
+
+        [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.contentOffset = CGPointMake(0, -100);
+            [self scrollViewDidScroll:self];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                self.contentOffset = CGPointMake(0, -150);
+                [self scrollViewDidScroll:self];
+                [collapseNoticeArrow bounce];
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:1 delay:1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    self.contentOffset = CGPointZero;
+                    [self scrollViewDidScroll:self];
+                } completion:^(BOOL finished) {
+                    if (onComplete)
+                        onComplete();
+                    self.userInteractionEnabled = YES;
+                }];
+            }];
+        }];
     }
 }
 
