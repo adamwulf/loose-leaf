@@ -886,6 +886,13 @@
         for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
             arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
         }
+
+        if (willPossiblyShowCollapsedView) {
+            // only don't load the page sidebar into cache
+            // if we're already in collapsed view. still load
+            // if we're not yet in collapsed view.
+            arr = [arr arrayByAddingObjectsFromArray:[self.bezelPagesContainer viewsInSidebar]];
+        }
     } else {
         arr = [currentStackView findPagesInVisibleRowsOfListView] ?: @[];
 

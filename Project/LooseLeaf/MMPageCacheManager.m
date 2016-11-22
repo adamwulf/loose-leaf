@@ -269,6 +269,7 @@ static MMPageCacheManager* _instance = nil;
 
 - (void)updateVisiblePageImageCache {
     NSArray* visiblePages = [self.delegate findPagesInVisibleRowsOfListView];
+
     NSIndexSet* indexes = [pagesWithLoadedCacheImages indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger indx, BOOL* stop) {
         return ![visiblePages containsObject:obj];
     }];

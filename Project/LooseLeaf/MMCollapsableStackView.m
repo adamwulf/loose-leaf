@@ -45,7 +45,7 @@
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
 
-    UIView* vibrantView;
+    UIView* collapseNoticeView;
 }
 
 @dynamic stackDelegate;
@@ -53,6 +53,12 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
+        collapseNoticeView = [[UIView alloc] initWithFrame:CGRectMake(0, -100, CGRectGetWidth(frame), 100)];
+        collapseNoticeView.layer.borderColor = [[UIColor redColor] CGColor];
+        collapseNoticeView.layer.borderWidth = 3;
+        collapseNoticeView.alpha = 0;
+        [self addSubview:collapseNoticeView];
+
         expandButton = [[UIButton alloc] initWithFrame:self.bounds];
         expandButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [expandButton addTarget:self action:@selector(tapToExpandToListMode:) forControlEvents:UIControlEventTouchUpInside];
@@ -193,6 +199,14 @@
     if ([scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
         [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
     }
+
+    CGFloat y = MIN(MAX(0, -scrollView.contentOffset.y), 50);
+    CGRect initialFrame = CGRectMake(0, -100, CGRectGetWidth(self.bounds), 100);
+
+    collapseNoticeView.alpha = y / 50.0;
+    y = MAX(0, -scrollView.contentOffset.y - 100);
+    collapseNoticeView.frame = CGRectOffset(initialFrame, 0, -y);
+
     [super scrollViewDidScroll:scrollView];
 }
 
