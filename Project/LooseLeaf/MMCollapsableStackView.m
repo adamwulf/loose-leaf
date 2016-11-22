@@ -356,6 +356,10 @@
     // make sure all the pages go to the correct place
     // so that it looks like where they'll be in the row view
     void (^step2)(void) = ^{
+        // don't show the notice when animating into a row
+        collapseNoticeMessage.hidden = YES;
+        collapseNoticeArrow.hidden = YES;
+
         // animate all of the pages in the row to their final location.
         // we also rotate the pages slightly so that the view isn't
         // so sterile and boring.
@@ -484,6 +488,10 @@
     // all of the pages "look" like they're in the right place,
     // but we need to turn on the scroll view.
     void (^step3)(BOOL finished) = ^(BOOL finished) {
+        // show the notice only in list mode
+        collapseNoticeMessage.hidden = NO;
+        collapseNoticeArrow.hidden = NO;
+
         //
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
