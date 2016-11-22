@@ -61,7 +61,6 @@
         [self addSubview:collapseNoticeArrow];
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
-
         collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
         [self addSubview:collapseNoticeMessage];
 
@@ -378,6 +377,7 @@
         deleteButton.alpha = 0;
         stackNameField.alpha = 1;
         squishFactor = 0;
+        [self setContentOffset:CGPointZero];
     };
 
     //
