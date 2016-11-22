@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIView+Animations.m"
 
 
 @interface MMArrowView : UIView

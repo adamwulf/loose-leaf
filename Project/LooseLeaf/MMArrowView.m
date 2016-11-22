@@ -11,17 +11,15 @@
 
 
 @implementation MMArrowView {
-    CAShapeLayer* arrowBorder;
     CAShapeLayer* arrowFill;
-    CALayer* maskLayer;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        UIBezierPath* arrowPath = [self arrowPathForFrame:CGRectMake(0, 0, 80, 80)];
+        UIBezierPath* arrowPath = [self arrowPathForFrame:CGRectMake(0, 0, 60, 60)];
 
         arrowFill = [CAShapeLayer layer];
-        arrowFill.bounds = CGRectMake(0, 0, 80, 80);
+        arrowFill.bounds = CGRectMake(0, 0, 60, 60);
         arrowFill.path = arrowPath.CGPath;
         arrowFill.strokeColor = [UIColor clearColor].CGColor;
         arrowFill.fillColor = [UIColor whiteColor].CGColor;
@@ -29,6 +27,14 @@
         [[self layer] addSublayer:arrowFill];
     }
     return self;
+}
+
+- (void)setBackgroundColor:(UIColor*)backgroundColor {
+    arrowFill.fillColor = backgroundColor.CGColor;
+}
+
+- (UIColor*)backgroundColor {
+    return [UIColor colorWithCGColor:arrowFill.fillColor];
 }
 
 - (UIBezierPath*)arrowPathForFrame:(CGRect)frame {

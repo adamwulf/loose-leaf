@@ -20,6 +20,7 @@
 #import "MMColoredTextField.h"
 #import "MMEmptyStackButton.h"
 #import "MMArrowView.h"
+#import "UIColor+MMAdditions.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -46,7 +47,8 @@
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
 
-    MMArrowView* collapseNoticeView;
+    MMArrowView* collapseNoticeArrow;
+    UILabel* collapseNoticeMessage;
 }
 
 @dynamic stackDelegate;
@@ -54,9 +56,14 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
-        collapseNoticeView = [[MMArrowView alloc] initWithFrame:CGRectMake(0, -100, CGRectGetWidth(frame), 100)];
-        collapseNoticeView.alpha = 0;
-        [self addSubview:collapseNoticeView];
+        collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -10, 80, 80)];
+        collapseNoticeArrow.alpha = 0;
+        [self addSubview:collapseNoticeArrow];
+
+        collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
+
+        collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
+        [self addSubview:collapseNoticeMessage];
 
         expandButton = [[UIButton alloc] initWithFrame:self.bounds];
         expandButton.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -199,12 +206,25 @@
         [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
     }
 
-    CGFloat y = MIN(MAX(0, -scrollView.contentOffset.y), 50);
-    CGRect initialFrame = CGRectMake(0, -100, CGRectGetWidth(self.bounds), 100);
+    // update the arrow
+    [collapseNoticeMessage setTextColor:stackNameField.textColor];
+    [collapseNoticeArrow setBackgroundColor:stackNameField.textColor];
 
-    collapseNoticeView.alpha = y / 50.0;
+    CGRect initialFrameMsg = CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20);
+
+    CGFloat y = MIN(MAX(0, -scrollView.contentOffset.y), 100);
+    CGRect initialFrame = CGRectMake(CGRectGetMidX(self.bounds) - 150, -80, 80, 80);
+
+    CGFloat updatedAlpha = y / 100.0;
+
+    if (updatedAlpha >= 1.0 && collapseNoticeArrow.alpha < 1.0) {
+        [collapseNoticeArrow bounce];
+    }
+
+    collapseNoticeArrow.alpha = updatedAlpha;
     y = MAX(0, -scrollView.contentOffset.y - 100);
-    collapseNoticeView.frame = CGRectOffset(initialFrame, 0, -y);
+    collapseNoticeArrow.frame = CGRectOffset(initialFrame, 0, -y);
+    collapseNoticeMessage.frame = CGRectOffset(initialFrameMsg, 0, -y);
 
     [super scrollViewDidScroll:scrollView];
 }

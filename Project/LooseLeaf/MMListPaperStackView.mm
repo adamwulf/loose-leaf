@@ -36,7 +36,6 @@
     MMDeletePageSidebarController* deleteSidebar;
     NSMutableSet* pagesBeingAnimatedDuringDeleteGesture;
     BOOL isAnimatingTowardPageView;
-    NSString* _currentStackMode;
 }
 
 @synthesize toolbar;
