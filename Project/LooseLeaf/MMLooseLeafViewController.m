@@ -290,7 +290,7 @@
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
         bezelPagesContainer.delegate = self;
         bezelPagesContainer.bubbleDelegate = self;
-        [self.view insertSubview:bezelPagesContainer belowSubview:allStacksScrollView];
+        [self.view addSubview:bezelPagesContainer];
 
         [bezelPagesContainer loadFromDisk];
 

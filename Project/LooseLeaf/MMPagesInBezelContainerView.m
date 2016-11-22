@@ -138,6 +138,16 @@
     [view unloadCachedPreview];
 }
 
+- (void)show:(BOOL)animated {
+    [super show:animated];
+
+    [UIView animateWithDuration:.3 animations:^{
+        for (UIView* view in [bubbleForScrap allValues]) {
+            view.alpha = 0;
+        }
+    }];
+}
+
 #pragma mark - Rotation
 
 - (CGFloat)sidebarButtonRotation {
