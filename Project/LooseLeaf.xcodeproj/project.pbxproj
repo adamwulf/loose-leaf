@@ -442,6 +442,7 @@
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
+		C53AFA811DE3EF4C0054553D /* MMArrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53AFA801DE3EF4C0054553D /* MMArrowView.m */; };
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
@@ -1471,6 +1472,8 @@
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C53902801DB84917004C5281 /* MMPagesSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarButton.h; sourceTree = "<group>"; };
 		C53902811DB84917004C5281 /* MMPagesSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPagesSidebarButton.m; sourceTree = "<group>"; };
+		C53AFA7F1DE3EF4C0054553D /* MMArrowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMArrowView.h; sourceTree = "<group>"; };
+		C53AFA801DE3EF4C0054553D /* MMArrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMArrowView.m; sourceTree = "<group>"; };
 		C53F63541CDA871D00091EF1 /* UIImage+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
 		C53F63551CDA871D00091EF1 /* UIImage+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
 		C53F63561CDA871D00091EF1 /* UIImage+FXBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FXBlur.h"; sourceTree = "<group>"; };
@@ -3335,6 +3338,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
+				C53AFA7E1DE3EF300054553D /* Arrow View */,
 				C5C13E121D9107FF0047B3EF /* Clone Page */,
 				C569F42E1CD0709800C19BB0 /* Named Stack */,
 				C5860E131C14CA1000CD079B /* Toolbar */,
@@ -3684,6 +3688,15 @@
 				C50CBF8A1CE4522E0053885A /* Icons.xcassets */,
 			);
 			name = icons;
+			sourceTree = "<group>";
+		};
+		C53AFA7E1DE3EF300054553D /* Arrow View */ = {
+			isa = PBXGroup;
+			children = (
+				C53AFA7F1DE3EF4C0054553D /* MMArrowView.h */,
+				C53AFA801DE3EF4C0054553D /* MMArrowView.m */,
+			);
+			name = "Arrow View";
 			sourceTree = "<group>";
 		};
 		C53F633D1CDA85E900091EF1 /* backgrounds */ = {
@@ -4892,6 +4905,7 @@
 				6612C8901964CC76003A9575 /* MMUndoRedoStrokeItem.m in Sources */,
 				C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */,
 				66BC6F6419B7CEB500460E03 /* SPRMessage+Initials.m in Sources */,
+				C53AFA811DE3EF4C0054553D /* MMArrowView.m in Sources */,
 				6693C94918E4C55B0054FF41 /* MMLeftCloseButton.m in Sources */,
 				66ACECE219D4C28E000EA792 /* MMPhoto.m in Sources */,
 				6655E926176291C800E4F36A /* MMScissorButton.m in Sources */,

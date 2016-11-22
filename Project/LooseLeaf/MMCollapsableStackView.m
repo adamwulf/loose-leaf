@@ -19,6 +19,7 @@
 #import "MMTrashButton.h"
 #import "MMColoredTextField.h"
 #import "MMEmptyStackButton.h"
+#import "MMArrowView.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -45,7 +46,7 @@
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
 
-    UIView* collapseNoticeView;
+    MMArrowView* collapseNoticeView;
 }
 
 @dynamic stackDelegate;
@@ -53,9 +54,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
-        collapseNoticeView = [[UIView alloc] initWithFrame:CGRectMake(0, -100, CGRectGetWidth(frame), 100)];
-        collapseNoticeView.layer.borderColor = [[UIColor redColor] CGColor];
-        collapseNoticeView.layer.borderWidth = 3;
+        collapseNoticeView = [[MMArrowView alloc] initWithFrame:CGRectMake(0, -100, CGRectGetWidth(frame), 100)];
         collapseNoticeView.alpha = 0;
         [self addSubview:collapseNoticeView];
 
