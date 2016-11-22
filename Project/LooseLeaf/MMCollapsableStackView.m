@@ -807,4 +807,33 @@
     }
 }
 
+#pragma mark - Animation to show how to move back to collapsed view
+
+- (void)showCollapsedAnimation:(void (^)())onComplete {
+    if ([self isShowingListView]) {
+        self.userInteractionEnabled = NO;
+        [self scrollViewDidScroll:self];
+
+        [UIView animateWithDuration:1 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.contentOffset = CGPointMake(0, -100);
+            [self scrollViewDidScroll:self];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                self.contentOffset = CGPointMake(0, -150);
+                [self scrollViewDidScroll:self];
+                [collapseNoticeArrow bounce];
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:1 delay:1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                    self.contentOffset = CGPointZero;
+                    [self scrollViewDidScroll:self];
+                } completion:^(BOOL finished) {
+                    if (onComplete)
+                        onComplete();
+                    self.userInteractionEnabled = YES;
+                }];
+            }];
+        }];
+    }
+}
+
 @end

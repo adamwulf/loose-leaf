@@ -109,6 +109,7 @@
     MMCollapsableStackView* heldStackView;
 
     BOOL isViewVisible;
+    BOOL hasShownListCollapseTutorial;
 }
 
 @synthesize bezelPagesContainer;
@@ -121,6 +122,10 @@
         if (!currentStackForLaunch) {
             viewModeForLaunch = kViewModeCollapsed;
         }
+
+#ifdef DEBUG
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasEverCollapsedToShowAllStacks];
+#endif
 
         mightShowReleaseNotes = YES;
         isShowingCollapsedView = YES;
@@ -308,7 +313,6 @@
         [currentStackView immediatelyRelayoutIfInListMode];
         // TODO: above two lines might never run b/c currentStackView is always nil?
 
-
         // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
         if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
             [self didAskToSwitchToStack:currentStackForLaunch animated:NO viewMode:viewModeForLaunch];
@@ -417,6 +421,8 @@
     isViewVisible = YES;
 
     [self rotatingBackgroundViewDidUpdate:rotatingBackgroundView];
+
+    [self checkToShowListCollapseTutorial];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -425,6 +431,13 @@
     isViewVisible = NO;
 }
 
+- (void)checkToShowListCollapseTutorial {
+    BOOL hasEverCollapsed = [[NSUserDefaults standardUserDefaults] boolForKey:kHasEverCollapsedToShowAllStacks];
+    if ([self isShowingListView] && !hasShownListCollapseTutorial && ![self isShowingAnyModal] && !hasEverCollapsed) {
+        hasShownListCollapseTutorial = YES;
+        [currentStackView showCollapsedAnimation:nil];
+    }
+}
 
 #pragma mark - application state
 
@@ -484,7 +497,7 @@
 }
 
 - (BOOL)isShowingAnyModal {
-    return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingReleaseNotes];
+    return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingFeedbackForm];
 }
 
 - (BOOL)isShowingTutorial {
@@ -557,6 +570,12 @@
         [aStackView organizePagesIntoListAnimated:animated];
     } else {
         [aStackView organizePagesIntoListAnimated:NO];
+        if (!animated) {
+            // I need to set these immediately,
+            // otherwise they'll fade into / out of view
+            bezelPagesContainer.alpha = 0;
+            bezelScrapContainer.alpha = 1;
+        }
         [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
 
@@ -594,7 +613,12 @@
         listViewFeedbackButton.alpha = 0;
 
         addNewStackButton.alpha = 0;
-        bezelPagesContainer.alpha = 1;
+
+        if ([viewMode isEqualToString:kViewModeList]) {
+            bezelPagesContainer.alpha = 1;
+        } else {
+            bezelPagesContainer.alpha = 0;
+        }
 
         [self updateStackNameColorsAnimated:YES];
     };
@@ -614,6 +638,8 @@
         listViewTutorialButton.alpha = 0;
         listViewFeedbackButton.alpha = 0;
         addNewStackButton.alpha = 0;
+
+        [self checkToShowListCollapseTutorial];
     };
 
     if (animated) {
@@ -631,6 +657,10 @@
 }
 
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
+    if (animated) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasEverCollapsedToShowAllStacks];
+    }
+
     isShowingCollapsedView = YES;
 
     longPressGesture.enabled = YES;
