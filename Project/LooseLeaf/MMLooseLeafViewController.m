@@ -512,6 +512,19 @@
     return feedbackViewController != nil;
 }
 
+- (void)didChangeToListView:(NSString*)stackUUID {
+    if ([[currentStackView uuid] isEqualToString:stackUUID]) {
+        [self.view insertSubview:bezelPagesContainer aboveSubview:bezelScrapContainer];
+    }
+}
+
+- (void)willChangeToPageView:(NSString*)stackUUID {
+    if ([[currentStackView uuid] isEqualToString:stackUUID]) {
+        [self.view insertSubview:bezelPagesContainer belowSubview:allStacksScrollView];
+    }
+}
+
+
 #pragma mark - MMTutorialStackViewDelegate
 
 - (void)stackViewDidPressFeedbackButton:(MMTutorialStackView*)stackView {
@@ -553,6 +566,11 @@
         return;
     }
 
+    // we need to change the current stack immediatley and not wait for the
+    // animation to complete. This way, the notifications from the stack
+    // as it is switched to will properly layout the page sidebar above/below
+    // the stack.
+    currentStackView = aStackView;
     isShowingCollapsedView = NO;
 
     longPressGesture.enabled = NO;
@@ -569,13 +587,6 @@
     if ([viewMode isEqualToString:kViewModeList]) {
         [aStackView organizePagesIntoListAnimated:animated];
     } else {
-        [aStackView organizePagesIntoListAnimated:NO];
-        if (!animated) {
-            // I need to set these immediately,
-            // otherwise they'll fade into / out of view
-            bezelPagesContainer.alpha = 0;
-            bezelScrapContainer.alpha = 1;
-        }
         [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
 
@@ -624,9 +635,6 @@
     };
 
     void (^completionStep)(BOOL) = ^(BOOL completed) {
-        MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
-        currentStackView = aStackView;
-
         [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 
         cloudKitExportView.stackView = currentStackView;

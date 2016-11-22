@@ -346,6 +346,7 @@
         [self moveAddButtonToBottom];
     }];
     [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
+    [self.stackDelegate willChangeToPageView:self.uuid];
 }
 
 /**
@@ -372,6 +373,7 @@
     [[[Mixpanel sharedInstance] people] set:@{ kMPHasZoomedToList: @(YES) }];
     // set the top visible page to thumbnail view only
     [self didChangeTopPageTo:nil];
+    [self.stackDelegate didChangeToListView:self.uuid];
 }
 
 /**
@@ -782,6 +784,7 @@
 // in page view, there is no harm in calling a potentially
 // extra finishUITransitionToPageView
 - (void)animatePageToFullScreen:(MMPaperView*)page withDelay:(CGFloat)delay withBounce:(BOOL)bounce onComplete:(void (^)(BOOL finished))completionBlock {
+    [self.stackDelegate willChangeToPageView:self.uuid];
     [super animatePageToFullScreen:page withDelay:delay withBounce:bounce onComplete:^(BOOL finished) {
         [self finishUITransitionToPageView];
         if (completionBlock)
@@ -1718,6 +1721,8 @@
  */
 - (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated {
     CheckMainThread;
+
+    [self.stackDelegate willChangeToPageView:self.uuid];
 
     // load the state for the top page in the visible stack
     if (![[visibleStackHolder peekSubview] isStateLoaded]) {
