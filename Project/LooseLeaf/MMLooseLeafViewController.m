@@ -512,6 +512,25 @@
     return feedbackViewController != nil;
 }
 
+- (void)didAskToChangeButtonOpacity:(BOOL)visible animated:(BOOL)animated forStack:(NSString*)stackUUID {
+    if ([[currentStackView uuid] isEqualToString:stackUUID]) {
+        if (animated) {
+            if (self.bezelScrapContainer.alpha != visible ? 1 : 0) {
+                [UIView animateWithDuration:.3 animations:^{
+                    self.bezelScrapContainer.alpha = visible ? 1 : 0;
+                    self.bezelPagesContainer.alpha = visible ? 0 : 1;
+                }];
+            } else {
+                self.bezelScrapContainer.alpha = visible ? 1 : 0;
+                self.bezelPagesContainer.alpha = visible ? 0 : 1;
+            }
+        } else {
+            self.bezelScrapContainer.alpha = visible ? 1 : 0;
+            self.bezelPagesContainer.alpha = visible ? 0 : 1;
+        }
+    }
+}
+
 - (void)didChangeToListView:(NSString*)stackUUID {
     if ([[currentStackView uuid] isEqualToString:stackUUID]) {
         [self.view insertSubview:bezelPagesContainer aboveSubview:bezelScrapContainer];

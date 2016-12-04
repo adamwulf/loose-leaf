@@ -35,6 +35,8 @@
 
 - (void)didChangeToListView:(NSString*)stackUUID;
 
+- (void)didAskToChangeButtonOpacity:(BOOL)visible animated:(BOOL)animated forStack:(NSString*)stackUUID;
+
 - (void)willChangeToPageView:(NSString*)stackUUID;
 
 @end
