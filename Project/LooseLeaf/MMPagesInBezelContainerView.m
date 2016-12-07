@@ -25,6 +25,7 @@
 #import "MMPagesSidebarButton.h"
 #import "MMCollapsableStackView.h"
 #import "NSArray+Map.h"
+#import "UIScreen+MMSizing.h"
 
 #define kAnimationDuration 0.3
 
@@ -83,10 +84,18 @@
     }
 }
 
+- (CGFloat)offsetForSidebar {
+    if ([UIScreen screenWidth] > 768) {
+        return 20;
+    }
+
+    return 17;
+}
+
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
     if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
         CGSize sizeOfButton = [self sizeForButton];
-        CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - 20;
+        CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - [self offsetForSidebar];
         // midpoint calculates for 6 buttons
         CGFloat midPointY = (self.bounds.size.height - [self.viewsInSidebar count] * sizeOfButton.height) / 2;
         CGPoint ret = CGPointMake(rightBezelSide + sizeOfButton.width / 2, midPointY + sizeOfButton.height / 2);
