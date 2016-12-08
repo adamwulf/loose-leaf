@@ -844,4 +844,64 @@
     }
 }
 
+- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+}
+
+#pragma mark - Debug Actions
+
+static UIWebView* pdfWebView;
+
+- (void)exportAsPDF:(id)sender {
+    if (pdfWebView) {
+        [pdfWebView removeFromSuperview];
+        pdfWebView = nil;
+    }
+
+    JotView* exportJotView = [[JotView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
+
+    NSMutableArray* allPagePDFs = [NSMutableArray array];
+
+    __block void (^exportTopPageOf)(NSArray<MMEditablePaperView*>* pages);
+    exportTopPageOf = ^(NSArray<MMEditablePaperView*>* pages) {
+        MMExportablePaperView* page = [[self visibleStackHolder] peekSubview];
+        BOOL needsLoad = !page.isStateLoaded;
+        BOOL needsDrawable = !page.drawableView;
+
+        if (needsDrawable) {
+            [page setDrawableView:exportJotView];
+        }
+
+        if (needsLoad) {
+            [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
+        }
+
+        [page exportToPDF:^(NSURL* urlToPDF) {
+            if (urlToPDF) {
+                [allPagePDFs addObject:urlToPDF];
+            }
+
+            if (needsLoad) {
+                [page unloadState];
+            }
+
+            if (needsDrawable) {
+                [page setDrawableView:nil];
+            }
+
+            if ([pages count] > 1) {
+                exportTopPageOf([pages subarrayWithRange:NSMakeRange(1, [pages count] - 1)]);
+            } else {
+                exportTopPageOf = nil;
+
+                // done! our PDFs for each page are in allPagePDFs.
+                // next is to merge all these into 1 single PDF
+            }
+        }];
+    };
+
+    NSArray<MMEditablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+
+    exportTopPageOf(allPages);
+}
+
 @end
