@@ -269,7 +269,7 @@ dispatch_queue_t importThumbnailQueue;
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
-                     withThumbnailScale:0.5
+                     withThumbnailScale:1.0
                              onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState) {
                                  if (immutableState) {
                                      // sometimes, if we try to export multiple times
