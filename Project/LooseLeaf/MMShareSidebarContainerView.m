@@ -187,10 +187,6 @@
             orientation = UIImageOrientationDown;
         }
 
-#ifdef DEBUG
-        orientation = UIImageOrientationRight;
-#endif
-
         UIImage* imageToRotate = [UIImage imageWithContentsOfFile:pathOnDisk];
 
         if (!(orientation == UIImageOrientationUp || orientation == UIImageOrientationUpMirrored)) {
