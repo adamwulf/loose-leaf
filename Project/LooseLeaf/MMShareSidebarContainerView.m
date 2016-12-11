@@ -169,6 +169,10 @@
     }
 }
 
+- (NSString*)idealFileNameForShare {
+    return @"LooseLeaf";
+}
+
 - (NSURL*)urlToShare {
     if (exportAsImageButton.selected) {
         if (!_imageURLToShare) {

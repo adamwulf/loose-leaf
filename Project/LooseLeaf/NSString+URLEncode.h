@@ -13,4 +13,6 @@
 
 - (NSString*)urlEncodedString;
 
+- (NSString*)stringByRemovingWhiteSpace;
+
 @end

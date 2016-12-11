@@ -30,6 +30,8 @@
 
 - (NSURL*)urlToShare;
 
+- (NSString*)idealFileNameForShare;
+
 @end
 
 @protocol MMShareSidebarDelegate <MMShareDelegate>
@@ -41,6 +43,8 @@
 @end
 
 @protocol MMShareStackSidebarDelegate <MMShareDelegate>
+
+- (NSString*)nameOfCurrentStack;
 
 - (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock;
 

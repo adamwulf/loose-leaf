@@ -27,6 +27,7 @@
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMTutorialManager.h"
 #import "UIImage+MMColor.h"
+#import "NSString+URLEncode.h"
 #import <JotUI/JotUI.h>
 
 
@@ -155,6 +156,10 @@
 
 - (NSURL*)urlToShare {
     return _pdfURLToShare;
+}
+
+- (NSString*)idealFileNameForShare {
+    return [[[self shareDelegate] nameOfCurrentStack] stringByRemovingWhiteSpace];
 }
 
 - (NSString*)pathForOrientation:(UIImageOrientation)orientation givenURL:(NSURL*)url {
