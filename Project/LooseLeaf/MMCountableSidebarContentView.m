@@ -14,6 +14,7 @@
 #import "MMAppDelegate.h"
 #import "MMPresentationWindow.h"
 #import "MMCountableSidebarButton.h"
+#import "NSArray+Extras.h"
 #import <JotUI/JotUI.h>
 #import "Constants.h"
 
@@ -175,6 +176,11 @@ typedef struct RowOfViewsInSidebar {
 
     // determine how many rows of scraps that we'll need
     NSArray* allViews = [self.delegate viewsInSidebar];
+
+    if (self.shouldReverseInSidebar) {
+        allViews = [allViews reversedArray];
+    }
+
     int rowCount = ceilf((float)[allViews count] / self.columnCount);
     CGFloat maxDimOfView = (self.bounds.size.width - kColumnSideMargin) / self.columnCount;
 
@@ -253,6 +259,11 @@ typedef struct RowOfViewsInSidebar {
     // determine the variables that will affect
     // our layout
     NSArray* allViews = [self.delegate viewsInSidebar];
+
+    if (self.shouldReverseInSidebar) {
+        allViews = [allViews reversedArray];
+    }
+
     CGFloat sizeOfView = (self.bounds.size.width - kColumnSideMargin) / self.columnCount;
     int row = [self rowForYOffset:scrollView.contentOffset.y];
     int maxRow = [self rowForYOffset:scrollView.contentOffset.y + scrollView.bounds.size.height] + 1;

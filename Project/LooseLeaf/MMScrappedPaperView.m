@@ -95,6 +95,11 @@
     return self;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    scrapIDsPath = nil;
+}
+
 - (int)fullByteSize {
     return [super fullByteSize] + scrapsOnPaperState.fullByteSize;
 }

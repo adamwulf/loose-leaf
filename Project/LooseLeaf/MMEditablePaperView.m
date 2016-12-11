@@ -78,6 +78,14 @@ dispatch_queue_t importThumbnailQueue;
     return self;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    pagesPath = nil;
+    inkPath = nil;
+    plistPath = nil;
+    thumbnailPath = nil;
+}
+
 - (int)fullByteSize {
     return [super fullByteSize] + paperState.fullByteSize;
 }

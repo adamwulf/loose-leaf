@@ -83,6 +83,8 @@
     // it's not immediately clear when reading this, but something to be aware of when looking.
     CGPoint locInSelf = CGPointMake(CGRectGetMaxX(self.bounds), CGRectGetHeight(self.bounds) / 2 + self.contentOffset.y);
 
+    id<MMPaperViewDelegate> previousStack = page.delegate;
+
     NSArray* currentlyVisiblePages = [self findPagesInVisibleRowsOfListView];
     MMPaperView* nearbyPage = [self findPageClosestToOffset:locInSelf];
 
@@ -93,6 +95,10 @@
     } else {
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
+    // need to set the delegate, otherwise it's only reset in the nearbyPage case above.
+    page.delegate = self;
+
+    [(MMExportablePaperView*)page moveAssetsFrom:previousStack];
 
     // animate pages into their new location
     [self realignPagesInListView:[NSSet setWithArray:currentlyVisiblePages] animated:YES forceRecalculateAll:YES];

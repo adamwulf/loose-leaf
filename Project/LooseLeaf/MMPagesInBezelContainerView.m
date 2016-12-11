@@ -41,6 +41,7 @@
     if (self = [super initWithFrame:frame andCountButton:_countButton]) {
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
+        contentView.shouldReverseInSidebar = YES;
         [slidingSidebarView addSubview:contentView];
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];

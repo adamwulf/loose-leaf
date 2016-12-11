@@ -59,7 +59,6 @@ static MMTrashManager* _instance = nil;
     return _instance;
 }
 
-
 #pragma mark - Public Methods
 
 - (void)deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState {

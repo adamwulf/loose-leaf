@@ -63,4 +63,6 @@
 
 - (BOOL)areGesturesEnabled;
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate NS_REQUIRES_SUPER;
+
 @end

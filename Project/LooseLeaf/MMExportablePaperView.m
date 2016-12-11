@@ -14,6 +14,7 @@
 #import "MMTrashManager.h"
 #import "MMScrapsInBezelContainerView.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMSingleStackManager.h"
 #import "Mixpanel.h"
 
 
@@ -28,6 +29,22 @@
 
 @synthesize cloudKitSenderInfo;
 @synthesize isCurrentlySaving;
+
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+
+    NSString* previousDirectory = [MMEditablePaperView pagesPathForStackUUID:previousDelegate.stackManager.uuid andPageUUID:[self uuid]];
+    NSString* newDirectory = [MMEditablePaperView pagesPathForStackUUID:self.delegate.stackManager.uuid andPageUUID:[self uuid]];
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:previousDirectory]) {
+        NSError* err;
+        [[NSFileManager defaultManager] moveItemAtPath:previousDirectory toPath:newDirectory error:&err];
+
+        if (err) {
+            [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Error": [err description] }];
+        }
+    }
+}
 
 #pragma mark - Retry Saving, Exporting, and Unloading
 
