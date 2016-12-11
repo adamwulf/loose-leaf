@@ -20,8 +20,8 @@
 // a UIImage but was generated from a PDF
 - (void)saveOriginalBackgroundTextureFromURL:(NSURL*)originalAssetURL;
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock;
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock;
 
-- (void)exportToImage:(void (^)(NSURL* urlToImage))completionBlock;
+- (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock;
 
 @end

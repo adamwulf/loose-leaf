@@ -141,7 +141,7 @@
 
     if (exportAsImageButton.selected && !exportedImage) {
         exportedImage = YES;
-        [self.shareDelegate exportToImage:^(NSURL* urlToShare) {
+        [self.shareDelegate exportVisiblePageToImage:^(NSURL* urlToShare) {
             _imageURLToShare = urlToShare;
 
             // clear our rotated image cache
@@ -160,7 +160,7 @@
     if (exportAsPDFButton.selected && !exportedPDF) {
         exportedPDF = YES;
 
-        [self.shareDelegate exportToPDF:^(NSURL* urlToShare) {
+        [self.shareDelegate exportVisiblePageToPDF:^(NSURL* urlToShare) {
             _pdfURLToShare = urlToShare;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self updateShareOptions];
@@ -364,12 +364,12 @@
 
 #pragma mark - MMShareItemDelegate
 
-- (void)exportToImage:(void (^)(NSURL* urlToImage))completionBlock {
-    [shareDelegate exportToImage:completionBlock];
+- (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock {
+    [shareDelegate exportVisiblePageToImage:completionBlock];
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-    [shareDelegate exportToPDF:completionBlock];
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+    [shareDelegate exportVisiblePageToPDF:completionBlock];
 }
 
 - (NSDictionary*)cloudKitSenderInfo {

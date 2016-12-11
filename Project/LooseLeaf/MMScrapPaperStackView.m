@@ -1918,12 +1918,12 @@
 
 #pragma mark - MMShareSidebarDelegate
 
-- (void)exportToImage:(void (^)(NSURL*))completionBlock {
-    [[visibleStackHolder peekSubview] exportToImage:completionBlock];
+- (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
+    [[visibleStackHolder peekSubview] exportVisiblePageToImage:completionBlock];
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-    [[visibleStackHolder peekSubview] exportToPDF:completionBlock];
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+    [[visibleStackHolder peekSubview] exportVisiblePageToPDF:completionBlock];
 }
 
 - (NSDictionary*)cloudKitSenderInfo {

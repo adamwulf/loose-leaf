@@ -1127,12 +1127,12 @@
 
 #pragma mark - MMShareSidebarDelegate
 
-- (void)exportToImage:(void (^)(NSURL*))completionBlock {
-    [currentStackView exportToImage:completionBlock];
+- (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
+    [currentStackView exportVisiblePageToImage:completionBlock];
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-    [currentStackView exportToPDF:completionBlock];
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+    [currentStackView exportVisiblePageToPDF:completionBlock];
 }
 
 - (NSDictionary*)cloudKitSenderInfo {

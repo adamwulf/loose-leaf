@@ -190,7 +190,7 @@ static UIWebView* pdfWebView;
         [pdfWebView removeFromSuperview];
         pdfWebView = nil;
     }
-    [[[self visibleStackHolder] peekSubview] exportToImage:^(NSURL* urlToImage) {
+    [[[self visibleStackHolder] peekSubview] exportVisiblePageToImage:^(NSURL* urlToImage) {
         if (urlToImage) {
             pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
             [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];

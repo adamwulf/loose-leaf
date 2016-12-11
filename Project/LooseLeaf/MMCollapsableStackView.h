@@ -33,6 +33,4 @@
 
 - (void)showCollapsedAnimation:(void (^)())onComplete;
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock;
-
 @end

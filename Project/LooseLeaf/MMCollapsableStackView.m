@@ -21,6 +21,7 @@
 #import "MMEmptyStackButton.h"
 #import "MMArrowView.h"
 #import "UIColor+MMAdditions.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -844,9 +845,6 @@
     }
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-}
-
 #pragma mark - Debug Actions
 
 static UIWebView* pdfWebView;
@@ -861,21 +859,21 @@ static UIWebView* pdfWebView;
 
     NSMutableArray* allPagePDFs = [NSMutableArray array];
 
-    __block void (^exportTopPageOf)(NSArray<MMEditablePaperView*>* pages);
-    exportTopPageOf = ^(NSArray<MMEditablePaperView*>* pages) {
-        MMExportablePaperView* page = [[self visibleStackHolder] peekSubview];
+    __block void (^exportTopPageOf)(NSArray<MMExportablePaperView*>* pages);
+    exportTopPageOf = ^(NSArray<MMExportablePaperView*>* pages) {
+        MMExportablePaperView* page = [pages firstObject];
         BOOL needsLoad = !page.isStateLoaded;
         BOOL needsDrawable = !page.drawableView;
-
-        if (needsDrawable) {
-            [page setDrawableView:exportJotView];
-        }
 
         if (needsLoad) {
             [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
         }
 
-        [page exportToPDF:^(NSURL* urlToPDF) {
+        if (needsDrawable) {
+            [page setDrawableView:exportJotView];
+        }
+
+        [page exportVisiblePageToPDF:^(NSURL* urlToPDF) {
             if (urlToPDF) {
                 [allPagePDFs addObject:urlToPDF];
             }
@@ -895,11 +893,53 @@ static UIWebView* pdfWebView;
 
                 // done! our PDFs for each page are in allPagePDFs.
                 // next is to merge all these into 1 single PDF
+
+                // Loop variables
+                CGPDFPageRef page;
+                CGRect mediaBox;
+
+
+                NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+                NSURL* pdfURLOutput = [NSURL fileURLWithPath:tmpPagePath];
+                CGContextRef writeContext = CGPDFContextCreateWithURL((CFURLRef)pdfURLOutput, NULL, NULL);
+
+                // Read the first PDF and generate the output pages
+                for (NSURL* pdfURL in allPagePDFs) {
+                    @autoreleasepool {
+                        MMPDF* pdf = [[MMPDF alloc] initWithURL:pdfURL];
+                        CGPDFDocumentRef pdfRef1 = CGPDFDocumentCreateWithURL((CFURLRef)pdf.urlOnDisk);
+
+                        for (int i = 1; i <= [pdf pageCount]; i++) {
+                            @autoreleasepool {
+                                page = CGPDFDocumentGetPage(pdfRef1, i);
+                                mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+                                CGContextBeginPage(writeContext, &mediaBox);
+                                CGContextDrawPDFPage(writeContext, page);
+                                CGContextEndPage(writeContext);
+                            }
+                        }
+
+                        CGPDFDocumentRelease(pdfRef1);
+                    }
+                }
+
+                // Finalize the output file
+                CGPDFContextClose(writeContext);
+
+                // Release from memory
+                CGContextRelease(writeContext);
+
+
+                [[NSFileManager defaultManager] removeItemAtPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"] error:nil];
+
+                [[NSFileManager defaultManager] moveItemAtPath:[pdfURLOutput path] toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"] error:nil];
+
+                // wrote to [[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"]
             }
         }];
     };
 
-    NSArray<MMEditablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+    NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
 
     exportTopPageOf(allPages);
 }
