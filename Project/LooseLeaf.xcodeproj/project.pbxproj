@@ -525,6 +525,7 @@
 		C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A161CDB1B4A00508F1D /* bg51.jpg */; };
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */; };
 		C5A8E1AD1DC308BF00CD608F /* MMCollapsableStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C542AA271D81AC8A0024FAD9 /* MMCollapsableStackView.m */; };
 		C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */; };
 		C5A8E1B21DC3252900CD608F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B11DC3252900CD608F /* CloudKit.framework */; };
@@ -1584,6 +1585,8 @@
 		C58E6A161CDB1B4A00508F1D /* bg51.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg51.jpg; sourceTree = "<group>"; };
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareStackSidebarContainerView.h; sourceTree = "<group>"; };
+		C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareStackSidebarContainerView.m; sourceTree = "<group>"; };
 		C5A8E1AE1DC308E400CD608F /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
 		C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
 		C5A8E1B11DC3252900CD608F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -3110,7 +3113,7 @@
 			name = Operations;
 			sourceTree = "<group>";
 		};
-		66B42FBD19955A2C005D8214 /* Share Sidebar */ = {
+		66B42FBD19955A2C005D8214 /* Share Page Sidebar */ = {
 			isa = PBXGroup;
 			children = (
 				6652450419956FC800C36609 /* Share Items */,
@@ -3119,7 +3122,7 @@
 				663523E319A7E32000A26B88 /* MMShareOptionsView.h */,
 				663523E419A7E32000A26B88 /* MMShareOptionsView.m */,
 			);
-			name = "Share Sidebar";
+			name = "Share Page Sidebar";
 			sourceTree = "<group>";
 		};
 		66B62C4B17F245E6006D31EB /* Scrap Collection State */ = {
@@ -3838,6 +3841,15 @@
 			name = Toolbar;
 			sourceTree = "<group>";
 		};
+		C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */,
+				C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */,
+			);
+			name = "Share Stack Sidebar";
+			sourceTree = "<group>";
+		};
 		C5B905CA1CEACE1A002943BF /* Backgrounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -3935,7 +3947,8 @@
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
 				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
-				66B42FBD19955A2C005D8214 /* Share Sidebar */,
+				66B42FBD19955A2C005D8214 /* Share Page Sidebar */,
+				C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 			);
 			name = Sidebars;
@@ -4936,6 +4949,7 @@
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
 				C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */,
+				C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */,
 				C5F1B2D91D9B01BB00E0E9A8 /* NSInvocation+MPHelpers.m in Sources */,
 				662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */,
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,

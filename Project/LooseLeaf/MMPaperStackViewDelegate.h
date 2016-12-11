@@ -10,6 +10,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
 #import "MMPagesInBezelContainerView.h"
+#import "MMShareStackSidebarContainerView.h"
 
 @class MMPaperStackView;
 
@@ -24,6 +25,8 @@
 - (MMImageSidebarContainerView*)importImageSidebar;
 
 - (MMShareSidebarContainerView*)sharePageSidebar;
+
+- (MMShareStackSidebarContainerView*)shareStackSidebar;
 
 - (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 

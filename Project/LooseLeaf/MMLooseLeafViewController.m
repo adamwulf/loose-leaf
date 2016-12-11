@@ -52,9 +52,10 @@
 #import "UIScreen+MMSizing.h"
 #import "UIColor+MMAdditions.h"
 #import "MMRotatingBackgroundViewDelegate.h"
+#import "MMShareStackSidebarContainerView.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate>
 
 @end
 
@@ -71,6 +72,9 @@
 
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
+
+    // share stack sidebar
+    MMShareStackSidebarContainerView* shareStackSidebar;
 
     NSMutableDictionary* stackViewsByUUID;
 
@@ -299,6 +303,13 @@
 
         [bezelPagesContainer loadFromDisk];
 
+        // Share stack sidebar
+        shareStackSidebar = [[MMShareStackSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMCollapsableStackView shareStackButtonFrame] animateFromLeft:NO];
+        shareStackSidebar.delegate = self;
+        [shareStackSidebar hide:NO onComplete:nil];
+        shareStackSidebar.shareDelegate = self;
+        [self.view addSubview:shareStackSidebar];
+
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
         [self.view addGestureRecognizer:[MMPalmGestureRecognizer sharedInstance]];
@@ -482,6 +493,10 @@
 
 - (MMShareSidebarContainerView*)sharePageSidebar {
     return sharePageSidebar;
+}
+
+- (MMShareStackSidebarContainerView*)shareStackSidebar {
+    return shareStackSidebar;
 }
 
 - (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk {
@@ -1109,7 +1124,7 @@
 }
 
 - (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar {
-    if (sidebar == bezelPagesContainer) {
+    if (sidebar == bezelPagesContainer || sidebar == shareStackSidebar) {
         return self.view;
     }
     return [currentStackView blurViewForSidebar:sidebar];
@@ -1588,6 +1603,12 @@
     if (stackView) {
         [self adjustKeyboardForStack:stackView givenKeyboardUserInfo:notification.userInfo];
     }
+}
+
+#pragma mark - MMShareStackSidebarDelegate
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock {
+    [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
 }
 
 @end

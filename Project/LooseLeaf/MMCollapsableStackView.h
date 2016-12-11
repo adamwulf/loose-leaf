@@ -13,6 +13,8 @@
 
 @interface MMCollapsableStackView : MMTutorialStackView
 
++ (CGRect)shareStackButtonFrame;
+
 @property (nonatomic, weak) NSObject<MMCollapsableStackViewDelegate>* stackDelegate;
 @property (nonatomic, readonly) BOOL isPerfectlyAlignedIntoRow;
 
@@ -32,5 +34,7 @@
 - (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages;
 
 - (void)showCollapsedAnimation:(void (^)())onComplete;
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock;
 
 @end

@@ -50,10 +50,16 @@
 
     MMArrowView* collapseNoticeArrow;
     UILabel* collapseNoticeMessage;
+
+    MMShareButton* shareStackButton;
 }
 
 @dynamic stackDelegate;
 @synthesize stackNameField;
+
++ (CGRect)shareStackButtonFrame {
+    return CGRectMake([UIScreen screenWidth] - kWidthOfSidebar, 10, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
@@ -101,12 +107,18 @@
         CGRect nameFieldFrame = CGRectWithHeight([self bounds], 50);
         nameFieldFrame = CGRectTranslate(nameFieldFrame, 0, 10);
         nameFieldFrame = CGRectInset(nameFieldFrame, [MMListPaperStackView bufferWidth], 10);
+        nameFieldFrame.size.width -= 100;
         stackNameField = [[MMColoredTextField alloc] initWithFrame:nameFieldFrame];
         stackNameField.font = [UIFont systemFontOfSize:24];
         stackNameField.returnKeyType = UIReturnKeyDone;
         stackNameField.autocapitalizationType = UITextAutocapitalizationTypeWords;
         stackNameField.delegate = self;
         [self addSubview:stackNameField];
+
+        shareStackButton = [[MMShareButton alloc] initWithFrame:[MMCollapsableStackView shareStackButtonFrame]];
+        shareStackButton.delegate = self;
+        [shareStackButton addTarget:self action:@selector(shareStackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:shareStackButton];
     }
     return self;
 }
@@ -200,6 +212,13 @@
     }
 }
 
+- (void)shareStackButtonTapped:(UIButton*)_button {
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [self setButtonsVisible:NO withDuration:0.15];
+    [self.stackDelegate.shareStackSidebar show:YES];
+}
+
 
 #pragma mark - UIScrollViewDelegate
 
@@ -275,15 +294,15 @@
 #pragma mark - Animate into row form
 
 - (CGRect)frameForAddPageButton {
-    return CGRectTranslate([super frameForAddPageButton], 0, 20);
+    return CGRectTranslate([super frameForAddPageButton], 0, 30);
 }
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page {
-    return CGRectTranslate([super frameForListViewForPage:page], 0, 20);
+    return CGRectTranslate([super frameForListViewForPage:page], 0, 30);
 }
 
 - (CGFloat)contentHeightForAllPages {
-    return [super contentHeightForAllPages] + 20;
+    return [super contentHeightForAllPages] + 30;
 }
 
 - (CGRect)targetFrameInRowForPage:(MMPaperView*)aPage givenAllPages:(NSArray*)pagesToAlignIntoRow {
@@ -847,23 +866,20 @@
 
 #pragma mark - Debug Actions
 
-static UIWebView* pdfWebView;
-
-- (void)exportAsPDF:(id)sender {
-    if (pdfWebView) {
-        [pdfWebView removeFromSuperview];
-        pdfWebView = nil;
-    }
-
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock {
     JotView* exportJotView = [[JotView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
 
     NSMutableArray* allPagePDFs = [NSMutableArray array];
+
+    NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
 
     __block void (^exportTopPageOf)(NSArray<MMExportablePaperView*>* pages);
     exportTopPageOf = ^(NSArray<MMExportablePaperView*>* pages) {
         MMExportablePaperView* page = [pages firstObject];
         BOOL needsLoad = !page.isStateLoaded;
         BOOL needsDrawable = !page.drawableView;
+
+        progressBlock(1.0 - (CGFloat)[pages count] / [allPages count]);
 
         if (needsLoad) {
             [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
@@ -929,37 +945,10 @@ static UIWebView* pdfWebView;
                 // Release from memory
                 CGContextRelease(writeContext);
 
-
-                [[NSFileManager defaultManager] removeItemAtPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"] error:nil];
-
-                [[NSFileManager defaultManager] moveItemAtPath:[pdfURLOutput path] toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"] error:nil];
-
-                // wrote to [[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"]
-
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
-                    [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
-                    [[pdfWebView layer] setBorderWidth:2];
-                    pdfWebView.scalesPageToFit = YES;
-                    pdfWebView.contentMode = UIViewContentModeScaleAspectFit;
-
-                    NSURL* urlToImage = [NSURL fileURLWithPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"]];
-                    NSURLRequest* request = [NSURLRequest requestWithURL:urlToImage];
-                    [pdfWebView loadRequest:request];
-
-                    [self addSubview:pdfWebView];
-
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        [pdfWebView removeFromSuperview];
-                        pdfWebView = nil;
-                    });
-                });
+                completionBlock(pdfURLOutput);
             }
         }];
     };
-
-    NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
 
     exportTopPageOf(allPages);
 }

@@ -39,3 +39,9 @@
 - (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock;
 
 @end
+
+@protocol MMShareStackSidebarDelegate <MMShareDelegate>
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock;
+
+@end
