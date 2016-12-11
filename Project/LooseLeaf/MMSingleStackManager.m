@@ -108,7 +108,7 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:[self visiblePlistPath]];
 }
 
-- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds {
+- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds ignoringMeta:(NSArray*)pagesMetaToIgnore {
     isLoaded = YES;
 
     NSDictionary* plist = [MMSingleStackManager loadFromDiskForStackUUID:self.uuid];
@@ -150,10 +150,16 @@
         }
     }
 
-    BOOL (^pageExists)(NSString*) = ^(NSString* pageUUID) {
-        return [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] reduceToBool:^BOOL(MMPaperView* page, NSUInteger index, BOOL accum) {
+    BOOL (^pageExists)(NSString*) = ^BOOL(NSString* pageUUID) {
+        BOOL existsInStack = [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] reduceToBool:^BOOL(MMPaperView* page, NSUInteger index, BOOL accum) {
             return [page.uuid isEqualToString:pageUUID] || accum;
         }];
+        BOOL existsInMeta = [pagesMetaToIgnore reduceToBool:^BOOL(NSDictionary* obj, NSUInteger index, BOOL accum) {
+            BOOL matchesStack = [obj[@"stackUUID"] isEqualToString:self.uuid];
+            BOOL matchesPage = [obj[@"uuid"] isEqualToString:pageUUID];
+            return (matchesStack && matchesPage) || accum;
+        }];
+        return existsInStack || existsInMeta;
     };
 
     NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.uuid];
@@ -164,7 +170,7 @@
         if (!pageExists(pageUUID)) {
             // found orphan page, restore it to the stack
             MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
-            [hiddenPages addObject:page];
+            [hiddenPages insertObject:page atIndex:0];
         }
     } andErrorHandler:^BOOL(NSURL* url, NSError* error) {
         return YES;

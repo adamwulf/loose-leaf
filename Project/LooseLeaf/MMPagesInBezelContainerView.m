@@ -33,6 +33,8 @@
 @implementation MMPagesInBezelContainerView {
     BOOL hasLoaded;
     NSOperationQueue* opQueue;
+
+    NSArray* pagesMeta;
 }
 
 @dynamic bubbleDelegate;
@@ -45,8 +47,14 @@
         [slidingSidebarView addSubview:contentView];
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
+
+        pagesMeta = [[NSArray alloc] initWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
     }
     return self;
+}
+
+- (NSArray*)pagesMeta {
+    return pagesMeta;
 }
 
 #pragma mark - MMCountableSidebarContainerView
@@ -204,13 +212,13 @@ static NSString* bezelStatePath;
             // the opqueue makes sure that we will always save
             // to disk in the order that [saveToDisk] was called
             // on the main thread.
-            NSArray* sidebarPagesToWrite = [sidebarPages mapObjectsUsingBlock:^id(MMPaperView* page, NSUInteger idx) {
+            pagesMeta = [sidebarPages mapObjectsUsingBlock:^id(MMPaperView* page, NSUInteger idx) {
                 NSMutableDictionary* pageDictionary = [[page dictionaryDescription] mutableCopy];
                 pageDictionary[@"stackUUID"] = [page.delegate.stackManager uuid];
                 return pageDictionary;
             }];
 
-            [sidebarPagesToWrite writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
+            [pagesMeta writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
         }]];
     }];
 }
@@ -218,8 +226,6 @@ static NSString* bezelStatePath;
 - (void)loadFromDisk {
     // load from disk
     CGRect bounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
-
-    NSArray* pagesMeta = [[NSArray alloc] initWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
 
     for (NSDictionary* pageMeta in pagesMeta) {
         NSString* stackUUID = pageMeta[@"stackUUID"];

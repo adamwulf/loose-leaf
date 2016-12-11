@@ -754,17 +754,17 @@ static UIWebView* pdfWebView;
                                              error:nil];
 }
 
-- (void)loadStacksFromDiskIntoListView {
+- (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta {
     // check to see if we have any state to load at all, and if
     // not then build our default content
     if (![self.stackManager hasStateToLoad]) {
         // we don't have any pages, and we don't have any
         // state to load
         [self buildDefaultContent];
-        [self loadStacksFromDiskIntoListView];
+        [self loadStacksFromDiskIntoListViewIgnoringMeta:meta];
         return;
     } else {
-        NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
+        NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds ignoringMeta:meta];
         for (MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]) {
             [self addPaperToBottomOfStack:page];
         }

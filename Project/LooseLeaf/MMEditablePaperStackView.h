@@ -78,7 +78,7 @@
 
 - (void)saveStacksToDisk;
 
-- (void)loadStacksFromDiskIntoListView;
+- (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta;
 
 - (BOOL)hasPages;
 

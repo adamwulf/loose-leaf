@@ -166,8 +166,8 @@
 
 #pragma mark - MMEditableStackView
 
-- (void)loadStacksFromDiskIntoListView {
-    [super loadStacksFromDiskIntoListView];
+- (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta {
+    [super loadStacksFromDiskIntoListViewIgnoringMeta:meta];
 
     stackNameField.text = self.stackManager.name;
     emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];

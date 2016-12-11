@@ -259,8 +259,15 @@
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
-        // Load the stack
+        // build a pages sidebar so that our stacks can
+        // check with the sidebar if a page is orphaned or not
+        CGRect frame = [self.view bounds];
+        CGFloat rightBezelSide = frame.size.width - 100;
+        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
+        MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+        bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
 
+        // Load the stack
         [self initializeAllStackViewsExcept:nil viewMode:viewModeForLaunch];
 
         // Image import sidebar
@@ -277,9 +284,9 @@
         [self.view addSubview:sharePageSidebar];
 
         // scrap sidebar
-        CGRect frame = [self.view bounds];
-        CGFloat rightBezelSide = frame.size.width - 100;
-        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
+        frame = [self.view bounds];
+        rightBezelSide = frame.size.width - 100;
+        midPointY = (frame.size.height - 3 * 80) / 2;
         MMCountBubbleButton* countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
 
         bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
@@ -290,13 +297,6 @@
         [bezelScrapContainer loadFromDisk];
 
         // page sidebar
-
-        frame = [self.view bounds];
-        rightBezelSide = frame.size.width - 100;
-        midPointY = (frame.size.height - 3 * 80) / 2;
-        MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
-
-        bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
         bezelPagesContainer.delegate = self;
         bezelPagesContainer.bubbleDelegate = self;
         [self.view addSubview:bezelPagesContainer];
@@ -868,7 +868,7 @@
         aStackView.deleteSidebar = deleteSidebar;
         aStackView.center = self.view.center;
 
-        [aStackView loadStacksFromDiskIntoListView];
+        [aStackView loadStacksFromDiskIntoListViewIgnoringMeta:self.bezelPagesContainer.pagesMeta];
 
         stackViewsByUUID[stackUUID] = aStackView;
     }
