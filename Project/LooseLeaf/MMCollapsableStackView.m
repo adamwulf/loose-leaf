@@ -58,7 +58,7 @@
 @synthesize stackNameField;
 
 + (CGRect)shareStackButtonFrame {
-    return CGRectMake([UIScreen screenWidth] - kWidthOfSidebar, 10, kWidthOfSidebarButton, kWidthOfSidebarButton);
+    return CGRectMake([UIScreen screenWidth] - kWidthOfSidebar, 6, kWidthOfSidebarButton, kWidthOfSidebarButton);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
@@ -317,16 +317,22 @@
 
 #pragma mark - Animate into row form
 
+- (BOOL)isIPadPro {
+    return [UIScreen screenWidth] > 768;
+}
+
 - (CGRect)frameForAddPageButton {
-    return CGRectTranslate([super frameForAddPageButton], 0, 30);
+    CGRect r = [super frameForAddPageButton];
+    return CGRectTranslate(r, 0, [self isIPadPro] ? 30 : 40);
 }
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page {
-    return CGRectTranslate([super frameForListViewForPage:page], 0, 30);
+    CGRect r = [super frameForListViewForPage:page];
+    return CGRectTranslate(r, 0, [self isIPadPro] ? 30 : 40);
 }
 
 - (CGFloat)contentHeightForAllPages {
-    return [super contentHeightForAllPages] + 30;
+    return [super contentHeightForAllPages] + ([self isIPadPro] ? 30 : 40);
 }
 
 - (CGRect)targetFrameInRowForPage:(MMPaperView*)aPage givenAllPages:(NSArray*)pagesToAlignIntoRow {
@@ -423,6 +429,7 @@
         deleteConfirmationPlaceholder.alpha = 0;
         emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0;
         deleteButton.alpha = 0;
+        shareStackButton.alpha = 0;
         stackNameField.alpha = 1;
         squishFactor = 0;
         [self setContentOffset:CGPointZero];
@@ -524,6 +531,7 @@
         listViewTutorialButton.alpha = 1;
         listViewFeedbackButton.alpha = 1;
         addPageButtonInListView.alpha = 1;
+        shareStackButton.alpha = 1;
         stackNameField.alpha = 1;
         [self setButtonsVisible:NO animated:NO];
     };
@@ -585,9 +593,11 @@
 - (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated {
     if (animated && CGPointEqualToPoint(self.contentOffset, CGPointZero)) {
         [UIView animateWithDuration:.2 animations:^{
+            shareStackButton.alpha = 0;
             stackNameField.alpha = 0;
         }];
     } else {
+        shareStackButton.alpha = 0;
         stackNameField.alpha = 0;
     }
 
@@ -599,9 +609,11 @@
     if (CGPointEqualToPoint(initialScrollOffsetFromTransitionToListView, CGPointZero)) {
         if (animated) {
             [UIView animateWithDuration:.3 animations:^{
+                shareStackButton.alpha = 1;
                 stackNameField.alpha = 1;
             }];
         } else {
+            shareStackButton.alpha = 1;
             stackNameField.alpha = 1;
         }
     }
@@ -609,6 +621,7 @@
 
 - (void)finishUITransitionToListView {
     [super finishUITransitionToListView];
+    shareStackButton.alpha = 1;
     stackNameField.alpha = 1;
 }
 
@@ -619,6 +632,7 @@
     [super didPickUpAPageInListView:gesture];
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [UIView animateWithDuration:.2 animations:^{
+            shareStackButton.alpha = 0;
             stackNameField.alpha = 0;
         }];
     }

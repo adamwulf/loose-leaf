@@ -170,6 +170,7 @@
     addPageButtonInListView.alpha = 0;
     [self insertSubview:addPageButtonInListView atIndex:0];
 }
+
 - (void)moveAddButtonToTop {
     addPageButtonInListView.alpha = 1;
     addPageButtonInListView.frame = [self frameForAddPageButton];
