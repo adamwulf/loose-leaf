@@ -935,6 +935,26 @@ static UIWebView* pdfWebView;
                 [[NSFileManager defaultManager] moveItemAtPath:[pdfURLOutput path] toPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"] error:nil];
 
                 // wrote to [[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"]
+
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
+                    [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
+                    [[pdfWebView layer] setBorderWidth:2];
+                    pdfWebView.scalesPageToFit = YES;
+                    pdfWebView.contentMode = UIViewContentModeScaleAspectFit;
+
+                    NSURL* urlToImage = [NSURL fileURLWithPath:[[NSFileManager documentsPath] stringByAppendingPathComponent:@"test.pdf"]];
+                    NSURLRequest* request = [NSURLRequest requestWithURL:urlToImage];
+                    [pdfWebView loadRequest:request];
+
+                    [self addSubview:pdfWebView];
+
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [pdfWebView removeFromSuperview];
+                        pdfWebView = nil;
+                    });
+                });
             }
         }];
     };
