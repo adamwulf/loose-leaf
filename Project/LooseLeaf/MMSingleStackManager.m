@@ -18,6 +18,7 @@
 #import "MMAllStacksManager.h"
 #import "NSArray+Extras.h"
 #import <JotUI/UIImage+Alpha.h>
+#import "NSArray+MapReduce.h"
 
 
 @implementation MMSingleStackManager {
@@ -148,6 +149,26 @@
             hasFoundDuplicate++;
         }
     }
+
+    BOOL (^pageExists)(NSString*) = ^(NSString* pageUUID) {
+        return [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] reduceToBool:^BOOL(MMPaperView* page, NSUInteger index, BOOL accum) {
+            return [page.uuid isEqualToString:pageUUID] || accum;
+        }];
+    };
+
+    NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.uuid];
+    NSString* pagePath = [stackPath stringByAppendingPathComponent:@"Pages"];
+
+    [[NSFileManager defaultManager] enumerateDirectory:pagePath withBlock:^(NSURL* item, NSUInteger totalItemCount) {
+        NSString* pageUUID = [[item path] lastPathComponent];
+        if (!pageExists(pageUUID)) {
+            // found orphan page, restore it to the stack
+            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
+            [hiddenPages addObject:page];
+        }
+    } andErrorHandler:^BOOL(NSURL* url, NSError* error) {
+        return YES;
+    }];
 
     if (hasFoundDuplicate) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
