@@ -1080,6 +1080,7 @@
         @autoreleasepool {
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
+            [shareStackSidebar updateInterfaceTo:toOrient];
             [currentStackView didRotateToIdealOrientation:toOrient];
             [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                 [self.bezelScrapContainer didRotateToIdealOrientation:toOrient];
@@ -1156,6 +1157,7 @@
 
 - (void)didShare:(MMAbstractShareItem*)shareItem {
     [sharePageSidebar hide:YES onComplete:nil];
+    [shareStackSidebar hide:YES onComplete:nil];
     [currentStackView didShare:shareItem];
 }
 
@@ -1607,7 +1609,7 @@
 
 #pragma mark - MMShareStackSidebarDelegate
 
-- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock {
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
     [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
 }
 

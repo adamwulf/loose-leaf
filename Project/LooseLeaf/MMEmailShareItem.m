@@ -54,7 +54,7 @@
                 composer = [[MFMailComposeViewController alloc] init];
                 [composer setMailComposeDelegate:self];
                 if ([MFMailComposeViewController canSendMail] && composer) {
-                    [composer setSubject:@"Quick sketch from Loose Leaf"];
+                    [composer setSubject:@"Sent from Loose Leaf"];
                     [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
                     [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
 

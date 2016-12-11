@@ -291,6 +291,30 @@
     return pagesToAlignIntoRow;
 }
 
+- (CGFloat)collapsedViewButtonRotation {
+    if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait) {
+        return 0;
+    } else if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft) {
+        return -M_PI_2;
+    } else if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight) {
+        return M_PI_2;
+    } else {
+        return M_PI;
+    }
+}
+
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
+    CheckMainThread;
+
+    [super didRotateToIdealOrientation:orientation];
+
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self collapsedViewButtonRotation]);
+        shareStackButton.rotation = [self collapsedViewButtonRotation];
+        shareStackButton.transform = rotationTransform;
+    }];
+}
+
 #pragma mark - Animate into row form
 
 - (CGRect)frameForAddPageButton {
@@ -866,7 +890,7 @@
 
 #pragma mark - Debug Actions
 
-- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock {
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
     JotView* exportJotView = [[JotView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
 
     NSMutableArray* allPagePDFs = [NSMutableArray array];
@@ -879,7 +903,7 @@
         BOOL needsLoad = !page.isStateLoaded;
         BOOL needsDrawable = !page.drawableView;
 
-        progressBlock(1.0 - (CGFloat)[pages count] / [allPages count]);
+        progressBlock([allPagePDFs count], [allPages count]);
 
         if (needsLoad) {
             [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
@@ -906,6 +930,8 @@
                 exportTopPageOf([pages subarrayWithRange:NSMakeRange(1, [pages count] - 1)]);
             } else {
                 exportTopPageOf = nil;
+
+                progressBlock([allPagePDFs count], [allPages count]);
 
                 // done! our PDFs for each page are in allPagePDFs.
                 // next is to merge all these into 1 single PDF

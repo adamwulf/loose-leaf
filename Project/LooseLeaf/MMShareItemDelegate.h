@@ -42,6 +42,6 @@
 
 @protocol MMShareStackSidebarDelegate <MMShareDelegate>
 
-- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(CGFloat progress))progressBlock;
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock;
 
 @end

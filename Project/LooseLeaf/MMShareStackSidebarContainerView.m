@@ -39,6 +39,9 @@
     BOOL exportedPDF;
 
     NSURL* _pdfURLToShare;
+
+    UIView* exportingView;
+    UILabel* exportingLabel;
 }
 
 @synthesize shareDelegate;
@@ -53,12 +56,27 @@
         CGRect contentBounds = [slidingSidebarView contentBounds];
         CGRect buttonBounds = scrollViewBounds;
         buttonBounds.origin.y = 0;
-        buttonBounds.size.height = kHeightOfImportTypeButton + 10;
+        buttonBounds.size.height = 10;
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
         contentBounds.size.height -= buttonBounds.size.height;
         buttonView = [[UIView alloc] initWithFrame:contentBounds];
         [sharingContentView addSubview:buttonView];
         [slidingSidebarView addSubview:sharingContentView];
+
+
+        CGRect exportViewFrame = CGRectSquare(CGRectGetWidth([slidingSidebarView contentBounds]));
+        exportViewFrame.origin = [slidingSidebarView contentBounds].origin;
+        exportingView = [[UIView alloc] initWithFrame:exportViewFrame];
+
+        exportingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(exportViewFrame), 100)];
+        [exportingLabel setNumberOfLines:2];
+        [exportingLabel setTextColor:[UIColor whiteColor]];
+        [exportingLabel setFont:[UIFont systemFontOfSize:24]];
+        [exportingLabel setTextAlignment:NSTextAlignmentCenter];
+        [exportingLabel setText:@"Exporting all pages..."];
+        [exportingView addSubview:exportingLabel];
+
+        [sharingContentView addSubview:exportingView];
 
         //////////////////////////////////////////
         // buttons
@@ -92,17 +110,25 @@
 - (void)setExportType:(id)sender {
     CheckMainThread;
 
+    exportingView.alpha = 1;
+    buttonView.alpha = 0;
+
     [self updateShareOptions];
 
     exportedPDF = YES;
 
     [self.shareDelegate exportStackToPDF:^(NSURL* urlToPDF) {
+        CheckMainThread;
         _pdfURLToShare = urlToPDF;
         dispatch_async(dispatch_get_main_queue(), ^{
+            exportingView.alpha = 0;
+            buttonView.alpha = 1;
             [self updateShareOptions];
         });
-    } withProgress:^(CGFloat progress){
 
+    } withProgress:^(NSInteger pageSoFar, NSInteger totalPages) {
+        CheckMainThread;
+        [exportingLabel setText:[NSString stringWithFormat:@"Exporting all pages...\n %ld of %ld pages", (long)pageSoFar, (long)totalPages]];
     }];
 }
 
@@ -180,6 +206,8 @@
     tutorialButton.hidden = NO;
     [super show:animated];
 
+    [exportingLabel setText:@"Exporting all pages..."];
+
     [self setExportType:nil];
 }
 
@@ -235,6 +263,8 @@
             button.rotation = [self sidebarButtonRotation];
             button.transform = rotationTransform;
         }
+
+        exportingView.transform = rotationTransform;
     }];
 }
 
