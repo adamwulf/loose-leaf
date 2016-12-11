@@ -1609,7 +1609,7 @@
 
 #pragma mark - MMShareStackSidebarDelegate
 
-- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
     [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
 }
 

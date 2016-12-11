@@ -26,6 +26,7 @@
 #import "UIView+Debug.h"
 #import "MMLargeTutorialSidebarButton.h"
 #import "MMTutorialManager.h"
+#import "UIImage+MMColor.h"
 #import <JotUI/JotUI.h>
 
 
@@ -63,9 +64,8 @@
         [sharingContentView addSubview:buttonView];
         [slidingSidebarView addSubview:sharingContentView];
 
-
         CGRect exportViewFrame = CGRectSquare(CGRectGetWidth([slidingSidebarView contentBounds]));
-        exportViewFrame.origin = [slidingSidebarView contentBounds].origin;
+        exportViewFrame.origin.x = CGRectGetWidth(exportViewFrame) / 5;
         exportingView = [[UIView alloc] initWithFrame:exportViewFrame];
 
         exportingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(exportViewFrame), 100)];
@@ -75,6 +75,23 @@
         [exportingLabel setTextAlignment:NSTextAlignmentCenter];
         [exportingLabel setText:@"Exporting all pages..."];
         [exportingView addSubview:exportingLabel];
+
+
+        UIButton* cancelExportButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(exportViewFrame) * 4 / 5, 50)];
+        [cancelExportButton addTarget:self action:@selector(cancelStackExport:) forControlEvents:UIControlEventTouchUpInside];
+        [cancelExportButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        [cancelExportButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [cancelExportButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.5]] forState:UIControlStateNormal];
+        [cancelExportButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.7]] forState:UIControlStateHighlighted];
+        [cancelExportButton setClipsToBounds:YES];
+        [[cancelExportButton layer] setBorderColor:[[UIColor colorWithWhite:0 alpha:.6] CGColor]];
+        [[cancelExportButton layer] setBorderWidth:2];
+        [[cancelExportButton layer] setCornerRadius:8];
+
+        [exportingView addSubview:cancelExportButton];
+
+        CGFloat midpoint = CGRectGetWidth(exportViewFrame) / 2;
+        cancelExportButton.center = CGPointMake(midpoint, midpoint + 20);
 
         [sharingContentView addSubview:exportingView];
 
@@ -96,7 +113,6 @@
 
         [self updateShareOptions];
 
-
         tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray* {
             return [[MMTutorialManager sharedInstance] shareTutorialSteps];
         }];
@@ -105,6 +121,10 @@
         [sharingContentView addSubview:tutorialButton];
     }
     return self;
+}
+
+- (void)cancelStackExport:(UIButton*)button {
+    [self hide:YES onComplete:nil];
 }
 
 - (void)setExportType:(id)sender {
@@ -125,10 +145,11 @@
             buttonView.alpha = 1;
             [self updateShareOptions];
         });
-
-    } withProgress:^(NSInteger pageSoFar, NSInteger totalPages) {
+    } withProgress:^BOOL(NSInteger pageSoFar, NSInteger totalPages) {
         CheckMainThread;
         [exportingLabel setText:[NSString stringWithFormat:@"Exporting all pages...\n %ld of %ld pages", (long)pageSoFar, (long)totalPages]];
+        // cancel the export if we're hidden
+        return ![self isVisible];
     }];
 }
 
@@ -156,7 +177,6 @@
     CGRect buttonBounds = buttonView.bounds;
     buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height + kWidthOfSidebarButtonBuffer;
     buttonBounds.size.height = buttonWidth + kWidthOfSidebarButtonBuffer; // includes spacing buffer
-    //    buttonBounds.origin.x += 2 * kWidthOfSidebarButtonBuffer;
     buttonBounds.size.width -= 2 * kWidthOfSidebarButtonBuffer;
     return buttonBounds;
 }

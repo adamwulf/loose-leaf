@@ -890,7 +890,7 @@
 
 #pragma mark - Debug Actions
 
-- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(void (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
     JotView* exportJotView = [[JotView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
 
     NSMutableArray* allPagePDFs = [NSMutableArray array];
@@ -903,7 +903,13 @@
         BOOL needsLoad = !page.isStateLoaded;
         BOOL needsDrawable = !page.drawableView;
 
-        progressBlock([allPagePDFs count], [allPages count]);
+        if (progressBlock([allPagePDFs count], [allPages count])) {
+            // check if the user has asked to cancel
+            for (NSURL* url in allPagePDFs) {
+                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+            }
+            return;
+        }
 
         if (needsLoad) {
             [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
@@ -931,47 +937,61 @@
             } else {
                 exportTopPageOf = nil;
 
-                progressBlock([allPagePDFs count], [allPages count]);
-
-                // done! our PDFs for each page are in allPagePDFs.
-                // next is to merge all these into 1 single PDF
-
-                // Loop variables
-                CGPDFPageRef page;
-                CGRect mediaBox;
-
-
-                NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
-                NSURL* pdfURLOutput = [NSURL fileURLWithPath:tmpPagePath];
-                CGContextRef writeContext = CGPDFContextCreateWithURL((CFURLRef)pdfURLOutput, NULL, NULL);
-
-                // Read the first PDF and generate the output pages
-                for (NSURL* pdfURL in allPagePDFs) {
-                    @autoreleasepool {
-                        MMPDF* pdf = [[MMPDF alloc] initWithURL:pdfURL];
-                        CGPDFDocumentRef pdfRef1 = CGPDFDocumentCreateWithURL((CFURLRef)pdf.urlOnDisk);
-
-                        for (int i = 1; i <= [pdf pageCount]; i++) {
-                            @autoreleasepool {
-                                page = CGPDFDocumentGetPage(pdfRef1, i);
-                                mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
-                                CGContextBeginPage(writeContext, &mediaBox);
-                                CGContextDrawPDFPage(writeContext, page);
-                                CGContextEndPage(writeContext);
-                            }
-                        }
-
-                        CGPDFDocumentRelease(pdfRef1);
+                if (progressBlock([allPagePDFs count], [allPages count])) {
+                    // check if the user has asked to cancel
+                    for (NSURL* url in allPagePDFs) {
+                        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
                     }
+                    return;
                 }
 
-                // Finalize the output file
-                CGPDFContextClose(writeContext);
+                dispatch_async(dispatch_get_main_queue(), ^{
 
-                // Release from memory
-                CGContextRelease(writeContext);
+                    // done! our PDFs for each page are in allPagePDFs.
+                    // next is to merge all these into 1 single PDF
 
-                completionBlock(pdfURLOutput);
+                    // Loop variables
+                    CGPDFPageRef page;
+                    CGRect mediaBox;
+
+
+                    NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+                    NSURL* pdfURLOutput = [NSURL fileURLWithPath:tmpPagePath];
+                    CGContextRef writeContext = CGPDFContextCreateWithURL((CFURLRef)pdfURLOutput, NULL, NULL);
+
+                    // Read the first PDF and generate the output pages
+                    for (NSURL* pdfURL in allPagePDFs) {
+                        @autoreleasepool {
+                            MMPDF* pdf = [[MMPDF alloc] initWithURL:pdfURL];
+                            CGPDFDocumentRef pdfRef1 = CGPDFDocumentCreateWithURL((CFURLRef)pdf.urlOnDisk);
+
+                            for (int i = 1; i <= [pdf pageCount]; i++) {
+                                @autoreleasepool {
+                                    page = CGPDFDocumentGetPage(pdfRef1, i);
+                                    mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+                                    CGContextBeginPage(writeContext, &mediaBox);
+                                    CGContextDrawPDFPage(writeContext, page);
+                                    CGContextEndPage(writeContext);
+                                }
+                            }
+
+                            CGPDFDocumentRelease(pdfRef1);
+                        }
+                    }
+
+                    // Finalize the output file
+                    CGPDFContextClose(writeContext);
+
+                    // Release from memory
+                    CGContextRelease(writeContext);
+
+                    // delete per-page PDFs
+                    for (NSURL* url in allPagePDFs) {
+                        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                    }
+
+                    completionBlock(pdfURLOutput);
+                });
             }
         }];
     };
