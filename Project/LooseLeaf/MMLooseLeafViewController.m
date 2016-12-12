@@ -114,6 +114,8 @@
 
     BOOL isViewVisible;
     BOOL hasShownListCollapseTutorial;
+
+    NSString* isActivelyExportingStackUUID;
 }
 
 @synthesize bezelPagesContainer;
@@ -850,6 +852,10 @@
     }
 }
 
+- (void)didAskToExportStack:(NSString*)stackUUID {
+    isActivelyExportingStackUUID = stackUUID;
+}
+
 
 #pragma mark - MMStackControllerViewDelegate
 
@@ -1081,7 +1087,12 @@
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [shareStackSidebar updateInterfaceTo:toOrient];
-            [currentStackView didRotateToIdealOrientation:toOrient];
+
+            for (NSString* stackUUIDs in [[MMAllStacksManager sharedInstance] stackIDs]) {
+                MMCollapsableStackView* aStackView = [self stackForUUID:stackUUIDs];
+                [aStackView didRotateToIdealOrientation:toOrient];
+            }
+
             [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                 [self.bezelScrapContainer didRotateToIdealOrientation:toOrient];
                 [self.bezelPagesContainer didRotateToIdealOrientation:toOrient];
@@ -1406,6 +1417,11 @@
             }
         }];
 
+        if (!heldStackView) {
+            // don't continue the gesture if we're not holding a stack
+            [gesture setEnabled:NO];
+            [gesture setEnabled:YES];
+        }
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         // moving
         CGPoint translation = CGPointMake(mostRecentLocationOfMoveGestureInView.x - originalGestureLocationInView.x, mostRecentLocationOfMoveGestureInView.y - originalGestureLocationInView.y);
@@ -1614,7 +1630,13 @@
 }
 
 - (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
-    [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
+    if (isActivelyExportingStackUUID) {
+        MMCollapsableStackView* stack = [self stackForUUID:isActivelyExportingStackUUID];
+        [stack exportStackToPDF:completionBlock withProgress:progressBlock];
+        isActivelyExportingStackUUID = nil;
+    } else {
+        [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
+    }
 }
 
 @end

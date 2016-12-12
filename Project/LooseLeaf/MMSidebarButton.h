@@ -17,7 +17,7 @@
 
 @property (nonatomic, weak) NSObject<MMSidebarButtonDelegate>* delegate;
 @property (nonatomic, readonly) UIColor* backgroundColor;
-@property (nonatomic, readonly) UIColor* borderColor;
+@property (nonatomic, strong) UIColor* borderColor;
 @property (nonatomic) UIColor* shadowColor;
 @property (nonatomic) CGFloat shadowInset;
 

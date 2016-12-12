@@ -183,7 +183,7 @@ dispatch_queue_t importThumbnailQueue;
         drawableView = _drawableView;
         if (drawableView) {
             [self generateDebugView:YES];
-            [self setFrame:self.frame];
+            //            [self setFrame:self.frame];
             if (([self.delegate isPageEditable:self] || [MMPageCacheManager sharedInstance].drawableView != _drawableView) && [self isStateLoaded]) {
                 // drawableView might be animating from
                 // it's old page, so remove that animation

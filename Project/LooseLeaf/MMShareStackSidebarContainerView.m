@@ -69,7 +69,7 @@
         exportViewFrame.origin.x = CGRectGetWidth(exportViewFrame) / 5;
         exportingView = [[UIView alloc] initWithFrame:exportViewFrame];
 
-        exportingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(exportViewFrame), 100)];
+        exportingLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, CGRectGetWidth(exportViewFrame), 100)];
         [exportingLabel setNumberOfLines:2];
         [exportingLabel setTextColor:[UIColor whiteColor]];
         [exportingLabel setFont:[UIFont systemFontOfSize:24]];

@@ -26,8 +26,6 @@
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
-#import "MMLargeTutorialSidebarButton.h"
-#import "MMTutorialManager.h"
 #import <JotUI/JotUI.h>
 
 
@@ -47,7 +45,6 @@
 
     MMCloudKitShareItem* cloudKitShareItem;
 
-    MMLargeTutorialSidebarButton* tutorialButton;
     UIButton* exportAsImageButton;
     UIButton* exportAsPDFButton;
 
@@ -118,14 +115,6 @@
         [shareItems addObject:[[MMOpenInAppShareItem alloc] init]];
 
         [self updateShareOptions];
-
-
-        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton) andTutorialList:^NSArray* {
-            return [[MMTutorialManager sharedInstance] shareTutorialSteps];
-        }];
-        tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width / 2, sharingContentView.bounds.size.height - 100);
-        [tutorialButton addTarget:self action:@selector(startWatchingExportTutorials) forControlEvents:UIControlEventTouchUpInside];
-        [sharingContentView addSubview:tutorialButton];
     }
     return self;
 }
@@ -224,10 +213,6 @@
     return [NSTemporaryDirectory() stringByAppendingPathComponent:fileNameForOrientation];
 }
 
-- (void)startWatchingExportTutorials {
-    [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
-}
-
 - (CGFloat)buttonWidth {
     CGFloat buttonWidth = buttonView.bounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
     buttonWidth /= 4; // four buttons wide
@@ -287,8 +272,6 @@
     }
     [activeOptionsView reset];
     [activeOptionsView show];
-    // hide tutorial if we have an options view visible
-    tutorialButton.hidden = (BOOL)activeOptionsView;
     [super show:animated];
 
     [self setExportType:[[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault] ? exportAsPDFButton : exportAsImageButton];
@@ -328,7 +311,6 @@
         [activeOptionsView removeFromSuperview];
         [activeOptionsView reset];
         activeOptionsView = nil;
-        tutorialButton.hidden = NO;
     }
     MMAbstractShareItem* shareItemForButton = nil;
     for (MMAbstractShareItem* shareItem in shareItems) {
@@ -359,7 +341,7 @@
     [activeOptionsView updateInterfaceTo:orientation];
     [UIView animateWithDuration:.3 animations:^{
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        for (MMBounceButton* button in [buttonView.subviews arrayByAddingObject:tutorialButton]) {
+        for (MMBounceButton* button in buttonView.subviews) {
             button.rotation = [self sidebarButtonRotation];
             button.transform = rotationTransform;
         }
@@ -401,9 +383,6 @@
                 activeOptionsView.frame = frForOptions;
                 [shareItem setShowingOptionsView:YES];
                 [sharingContentView addSubview:activeOptionsView];
-                tutorialButton.hidden = YES;
-            } else {
-                tutorialButton.hidden = NO;
             }
 
             [shareDelegate mayShare:shareItem];
@@ -417,7 +396,6 @@
     // if any
     [self closeActiveSharingOptionsForButton:nil];
     activeOptionsView = nil;
-    tutorialButton.hidden = NO;
 }
 
 - (void)didShare:(MMAbstractShareItem*)shareItem {

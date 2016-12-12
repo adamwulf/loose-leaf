@@ -20,6 +20,10 @@
 
 @synthesize delegate;
 
+- (void)setReferenceButtonFrame:(CGRect)frame {
+    [slidingSidebarView setReferenceButtonFrame:frame];
+}
+
 - (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
     self = [super initWithFrame:frame];
     if (self) {
