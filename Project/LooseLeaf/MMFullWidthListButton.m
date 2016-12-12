@@ -67,18 +67,22 @@
         [confirmButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
         [self addSubview:confirmButton];
 
-        MMRoundedButton* cancelButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
-        [cancelButton setImage:rightIcon forState:UIControlStateNormal];
-        [cancelButton setTitle:rightTitle forState:UIControlStateNormal];
-        [cancelButton addTarget:self action:@selector(didTapRightButton) forControlEvents:UIControlEventTouchUpInside];
-        [cancelButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
-        [cancelButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
-        [self addSubview:cancelButton];
+        if (rightIcon && rightTitle) {
+            MMRoundedButton* cancelButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
+            [cancelButton setImage:rightIcon forState:UIControlStateNormal];
+            [cancelButton setTitle:rightTitle forState:UIControlStateNormal];
+            [cancelButton addTarget:self action:@selector(didTapRightButton) forControlEvents:UIControlEventTouchUpInside];
+            [cancelButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
+            [cancelButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
+            [self addSubview:cancelButton];
 
-        CGFloat widthOfButtons = confirmButton.bounds.size.width + cancelButton.bounds.size.width + 20;
-        CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
-        cancelButton.center = CGPointMake(self.bounds.size.width - buttonMargin - cancelButton.bounds.size.width / 2, buttonY);
-        confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, buttonY);
+            CGFloat widthOfButtons = confirmButton.bounds.size.width + cancelButton.bounds.size.width + 20;
+            CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
+            cancelButton.center = CGPointMake(self.bounds.size.width - buttonMargin - cancelButton.bounds.size.width / 2, buttonY);
+            confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, buttonY);
+        } else {
+            confirmButton.center = CGPointMake(self.bounds.size.width / 2, buttonY);
+        }
     }
     return self;
 }

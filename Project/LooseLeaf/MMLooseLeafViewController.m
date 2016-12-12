@@ -54,6 +54,9 @@
 #import "MMRotatingBackgroundViewDelegate.h"
 #import "MMShareStackSidebarContainerView.h"
 
+#import "MMPDFAssetGroup.h"
+#import "MMDisplayAsset.h"
+
 
 @interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate>
 
@@ -1027,13 +1030,18 @@
     } else {
         NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
-        [aStackView ensureAtLeast:1 pagesInStack:aStackView.visibleStackHolder];
 
         [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 
-        [self didAskToSwitchToStack:[aStackView uuid] animated:NO viewMode:kViewModePage];
+        CGPoint offset = CGPointMake(0, allStacksScrollView.contentSize.height - CGRectGetHeight(allStacksScrollView.bounds));
+        offset.y = MAX(offset.y, 0);
+        [allStacksScrollView setContentOffset:offset animated:YES];
 
-        [aStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^{
+                // done importing
+            }];
+        });
     }
 }
 

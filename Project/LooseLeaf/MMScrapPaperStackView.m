@@ -196,6 +196,9 @@
         if ([self imageMatchesPaperDimensions:scrapBacking]) {
             CGSize pageSize = hiddenStackHolder.bounds.size;
             [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
             return;
         }
 
@@ -214,7 +217,6 @@
 }
 
 - (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
-    [self transitionFromListToNewBlankPageIfInPageView];
     [[NSThread mainThread] performBlock:^{
         if (pdfDoc.isEncrypted) {
             // show PDF sidebar
@@ -378,7 +380,7 @@
     [self enableAllGesturesForPageView];
 }
 
-- (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication {
+- (MMExportablePaperView*)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication {
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
     [page setPageBackgroundTexture:imageToImport];
@@ -391,8 +393,6 @@
     [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
     [page updateThumbnailVisibility];
     [hiddenStackHolder pushSubview:page];
-    [[visibleStackHolder peekSubview] enableAllGestures];
-    [self popTopPageOfHiddenStack];
     [page saveToDisk:nil];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
@@ -409,7 +409,7 @@
 
     [[Mixpanel sharedInstance] track:kMPEventImportPage properties:properties];
 
-    [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+    return page;
 }
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage {
@@ -420,6 +420,9 @@
         CGSize pageSize = hiddenStackHolder.bounds.size;
         img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
         [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil];
+        [[visibleStackHolder peekSubview] enableAllGestures];
+        [self popTopPageOfHiddenStack];
+        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
         return;
     }
 
@@ -533,6 +536,9 @@
     if (asPage) {
         CGSize pageSize = hiddenStackHolder.bounds.size;
         [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
+        [[visibleStackHolder peekSubview] enableAllGestures];
+        [self popTopPageOfHiddenStack];
+        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
         return;
     }
 

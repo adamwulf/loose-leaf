@@ -23,4 +23,6 @@
 
 - (void)didEnterBackground;
 
+- (MMExportablePaperView*)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication;
+
 @end

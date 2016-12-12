@@ -13,5 +13,6 @@
 
 + (CGFloat)screenWidth;
 + (CGFloat)screenHeight;
++ (CGSize)screenSize;
 
 @end

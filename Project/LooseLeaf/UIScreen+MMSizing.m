@@ -28,4 +28,8 @@
     return screenHeight;
 }
 
++ (CGSize)screenSize {
+    return CGSizeMake([UIScreen screenWidth], [UIScreen screenHeight]);
+}
+
 @end
