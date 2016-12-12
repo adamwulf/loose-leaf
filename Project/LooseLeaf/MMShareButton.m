@@ -16,6 +16,7 @@
 @synthesize arrowColor;
 @synthesize topBgColor;
 @synthesize bottomBgColor;
+@synthesize borderColor;
 
 - (UIColor*)topBgColor {
     if (!topBgColor) {
@@ -92,7 +93,11 @@
 
     //// Oval Drawing
     ovalPath.lineWidth = 1;
-    [darkerGreyBorder setStroke];
+    if (self.borderColor) {
+        [self.borderColor setStroke];
+    } else {
+        [darkerGreyBorder setStroke];
+    }
     [ovalPath stroke];
 
     // fill background with gradient

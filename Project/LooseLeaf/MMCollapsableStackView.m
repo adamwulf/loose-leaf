@@ -44,6 +44,7 @@
     CGFloat squishFactor;
     CGFloat initialAdjustment;
     MMTrashButton* deleteButton;
+    MMShareButton* shareButton;
 
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
@@ -85,14 +86,25 @@
         deleteGesture.enabled = NO;
         [self addGestureRecognizer:deleteGesture];
 
+        CGFloat nameSpace = 40;
         CGFloat buffer = [MMListPaperStackView bufferWidth];
         CGFloat rowHeight = [MMListPaperStackView rowHeight] + 2 * buffer;
         CGFloat deleteButtonWidth = 80;
-        CGRect deleteRect = CGRectMake(self.bounds.size.width - 2 * buffer - deleteButtonWidth, (rowHeight - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
+        CGRect deleteRect = CGRectMake(self.bounds.size.width - 2 * buffer - deleteButtonWidth, roundf(nameSpace + (rowHeight - nameSpace) / 2 - deleteButtonWidth) + .5, deleteButtonWidth, deleteButtonWidth);
         deleteButton = [[MMTrashButton alloc] initWithFrame:deleteRect];
         [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         deleteButton.alpha = 0;
         [self addSubview:deleteButton];
+
+        CGRect shareRect = CGRectTranslate(deleteRect, 0, 80);
+        shareButton = [[MMShareButton alloc] initWithFrame:shareRect];
+        [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        shareButton.alpha = 0;
+        shareButton.topBgColor = deleteButton.backgroundColor;
+        shareButton.bottomBgColor = deleteButton.backgroundColor;
+        shareButton.borderColor = deleteButton.borderColor;
+        shareButton.arrowColor = [UIColor darkGrayColor];
+        [self addSubview:shareButton];
 
         CGRect confirmationRect = CGRectMake(0, 60, self.bounds.size.width, rowHeight - 60);
 
@@ -429,6 +441,7 @@
         deleteConfirmationPlaceholder.alpha = 0;
         emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0;
         deleteButton.alpha = 0;
+        shareButton.alpha = 0;
         shareStackButton.alpha = 0;
         stackNameField.alpha = 1;
         squishFactor = 0;
@@ -670,6 +683,7 @@
         [self adjustForDelete:updatedSquish withTranslate:0];
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:MAX(0, updatedSquish - .3) * 1.8];
         deleteButton.alpha = MIN(.2, MAX(0, updatedSquish)) / .2;
+        shareButton.alpha = deleteButton.alpha;
     } else if (sender.state == UIGestureRecognizerStateEnded ||
                sender.state == UIGestureRecognizerStateCancelled) {
         // enable scrolling stack list
@@ -689,6 +703,7 @@
                 [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             }
             deleteButton.alpha = 0;
+            shareButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 0;
             emptyStackRowPlaceholder.alpha = [[self pagesToAlignForRowView] count] == 0;
         } completion:^(BOOL finished) {
@@ -703,6 +718,7 @@
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self adjustForDelete:1 withTranslate:-250];
             deleteButton.alpha = 0;
+            shareButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 1;
             emptyStackRowPlaceholder.alpha = 0;
         } completion:nil];
@@ -723,6 +739,7 @@
                 [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             }
             deleteButton.alpha = 1.0;
+            shareButton.alpha = 1.0;
             deleteConfirmationPlaceholder.alpha = 0;
             emptyStackRowPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
@@ -750,6 +767,7 @@
 
     [self setClipsToBounds:squishFactor == 0];
     [deleteButton setEnabled:squishFactor > 0];
+    [shareButton setEnabled:squishFactor > 0];
 
     CGFloat alphaForDelete = adjustment - .5;
     alphaForDelete = MAX(alphaForDelete, 0);
@@ -776,6 +794,10 @@
     }
 }
 
+- (IBAction)shareButtonTapped:(id)sender {
+    // share tapped
+}
+
 - (IBAction)deleteButtonTapped:(id)sender {
     [UIView animateWithDuration:.4 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         [self adjustForDelete:.9 withTranslate:0];
@@ -783,6 +805,7 @@
     [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:1.0];
         deleteButton.alpha = 0;
+        shareButton.alpha = 0;
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
