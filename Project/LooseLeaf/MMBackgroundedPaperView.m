@@ -69,40 +69,49 @@
     }
     paperBackgroundView.image = img;
 
+    if (self.isBrandNewPage || saveToDisk) {
+        [self writeBackgroundImageToDisk:img andSaveToDisk:saveToDisk];
+    }
+}
+
+- (void)writeBackgroundImageToDisk:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk {
     BOOL wasBrandNewPage = self.isBrandNewPage;
     if (self.isBrandNewPage) {
-        CGSize thumbSize = self.bounds.size;
-        thumbSize.width = floorf(thumbSize.width / 2);
-        thumbSize.height = floorf(thumbSize.height / 2);
+        @autoreleasepool {
+            CGSize thumbSize = self.bounds.size;
+            thumbSize.width = floorf(thumbSize.width / 2);
+            thumbSize.height = floorf(thumbSize.height / 2);
 
-        // use same calculations to generate a thumbnail
-        // as the [export] methods below
-        CGFloat scale = [[UIScreen mainScreen] scale];
-        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
+            // use same calculations to generate a thumbnail
+            // as the [export] methods below
+            CGFloat scale = [[UIScreen mainScreen] scale];
+            UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
 
-        CGRect rectForImage = CGSizeFill([img size], thumbSize);
-        [img drawInRect:rectForImage];
+            CGRect rectForImage = CGSizeFill([img size], thumbSize);
+            [img drawInRect:rectForImage];
 
-        UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
 
-        UIGraphicsEndImageContext();
+            UIGraphicsEndImageContext();
 
-        [UIImagePNGRepresentation(outputImage) writeToFile:[self thumbnailPath] atomically:YES];
-        [UIImagePNGRepresentation(outputImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
+            [UIImagePNGRepresentation(outputImage) writeToFile:[self thumbnailPath] atomically:YES];
+            [UIImagePNGRepresentation(outputImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+            [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
+            [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
+        }
     }
     if (saveToDisk) {
         dispatch_async([MMEditablePaperView importThumbnailQueue], ^{
-            [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
-            if (wasBrandNewPage) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    definitelyDoesNotHaveAnInkThumbnail = NO;
-                    definitelyDoesNotHaveAScrappedThumbnail = NO;
-                    fileExistsAtInkPath = NO;
-                    cachedImgViewImage = nil;
-                    [self loadCachedPreviewAndDecompressImmediately:YES];
-                });
+            @autoreleasepool {
+                [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
+                if (wasBrandNewPage) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        definitelyDoesNotHaveAnInkThumbnail = NO;
+                        definitelyDoesNotHaveAScrappedThumbnail = NO;
+                        fileExistsAtInkPath = NO;
+                        cachedImgViewImage = nil;
+                    });
+                }
             }
         });
     }
@@ -157,6 +166,13 @@
     [paperBackgroundView removeFromSuperview];
     paperBackgroundView = nil;
     wantsBackgroundTextureLoaded = NO;
+}
+
+- (void)unloadCachedPreview {
+    [super unloadCachedPreview];
+    paperBackgroundView.image = nil;
+    [paperBackgroundView removeFromSuperview];
+    paperBackgroundView = nil;
 }
 
 #pragma mark - Thumbnail Generation

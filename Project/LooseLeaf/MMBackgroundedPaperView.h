@@ -24,4 +24,6 @@
 
 - (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock;
 
+- (void)writeBackgroundImageToDisk:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk;
+
 @end

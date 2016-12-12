@@ -1049,7 +1049,6 @@
     [currentStackView failedToProcessIncomingURL:url fromApp:sourceApplication];
 }
 
-
 #pragma mark - MMCloudKitManagerDelegate
 
 - (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState {

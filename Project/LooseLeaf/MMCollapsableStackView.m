@@ -278,28 +278,32 @@
                         importingPDFListButton.alpha = 0;
                     }];
 
-                    for (NSInteger pageIndex = 0; pageIndex < [allPages count] && pageIndex < kMaxPageCountForRow; pageIndex++) {
+                    for (NSInteger pageIndex = 0; pageIndex < [allPages count]; pageIndex++) {
                         MMPaperView* page = allPages[pageIndex];
 
-                        page.alpha = 0;
-                        page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
+                        if (pageIndex < kMaxPageCountForRow) {
+                            page.alpha = 0;
+                            page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
 
-                        void (^animationCompletionBlock)(BOOL) = nil;
+                            void (^animationCompletionBlock)(BOOL) = nil;
 
-                        if (pageIndex == [allPages count] - 1 || pageIndex == kMaxPageCountForRow - 1) {
-                            // last page
-                            animationCompletionBlock = ^(BOOL finished) {
-                                if (completionBlock) {
-                                    completionBlock();
-                                }
-                            };
-                        }
+                            if (pageIndex == [allPages count] - 1 || pageIndex == kMaxPageCountForRow - 1) {
+                                // last page
+                                animationCompletionBlock = ^(BOOL finished) {
+                                    if (completionBlock) {
+                                        completionBlock();
+                                    }
+                                };
+                            }
 
-                        [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+                            [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+                                page.alpha = 1;
+                                page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
+                            } completion:animationCompletionBlock];
+                            delay += .1;
+                        } else {
                             page.alpha = 1;
-                            page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
-                        } completion:animationCompletionBlock];
-                        delay += .1;
+                        }
                     }
                 };
 
@@ -316,18 +320,25 @@
                             // show the page number for the upcoming page
                             [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)pdfDoc.pdf.pageCount - [displayAssets count], (long)pdfDoc.pdf.pageCount]];
 
-                            dispatch_async(dispatch_get_main_queue(), ^{
+                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                 @autoreleasepool {
                                     NSURL* assetURL = [asset fullResolutionURL];
-                                    [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:nil referringApp:sourceApplication];
+                                    MMBackgroundedPaperView* page = [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:nil referringApp:sourceApplication];
 
-                                    [self.visibleStackHolder pushSubview:[self.hiddenStackHolder popSubview]];
+                                    // move page to end
+                                    if ([self.visibleStackHolder.subviews count] == 0) {
+                                        [self.visibleStackHolder pushSubview:[self.hiddenStackHolder peekSubview]];
+                                    } else {
+                                        [self.hiddenStackHolder insertSubview:page atIndex:0];
+                                    }
 
-                                    [self.visibleStackHolder peekSubview].alpha = 0;
+                                    page.alpha = 0;
+
+                                    [page unloadCachedPreview];
 
                                     dispatch_async(dispatch_get_main_queue(), importAnotherPage);
                                 }
-                            });
+                            }];
                         } else {
                             importAnotherPage = nil;
                             finishedImportingAllPages();

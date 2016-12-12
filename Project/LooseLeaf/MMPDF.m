@@ -140,6 +140,7 @@
             sizeOfPage = [UIScreen mainScreen].bounds.size;
         }
 
+
         UIGraphicsBeginImageContextWithOptions(sizeOfPage, NO, 0);
         CGContextRef cgContext = UIGraphicsGetCurrentContext();
         if (!cgContext) {
