@@ -384,7 +384,7 @@
 - (MMExportablePaperView*)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication {
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
-    [page writeBackgroundImageToDisk:imageToImport andSaveToDisk:YES];
+    [page writeBackgroundImageToDisk:imageToImport];
     if (!assetURL) {
         NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
         [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
