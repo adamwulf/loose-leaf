@@ -100,6 +100,8 @@
 
     [(MMExportablePaperView*)page moveAssetsFrom:previousStack];
 
+    currentlyVisiblePages = [currentlyVisiblePages arrayByAddingObject:page];
+
     // animate pages into their new location
     [self realignPagesInListView:[NSSet setWithArray:currentlyVisiblePages] animated:YES forceRecalculateAll:YES];
 
