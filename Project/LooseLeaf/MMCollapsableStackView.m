@@ -328,6 +328,9 @@
                                     NSURL* assetURL = [asset fullResolutionURL];
                                     MMBackgroundedPaperView* page = [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:nil referringApp:sourceApplication];
 
+                                    [self.hiddenStackHolder pushSubview:page];
+                                    [page saveToDisk:nil];
+
                                     // move page to end
                                     if ([self.visibleStackHolder.subviews count] == 0) {
                                         [self.visibleStackHolder pushSubview:[self.hiddenStackHolder peekSubview]];

@@ -13,6 +13,8 @@
 
 - (UIImage*)pageBackgroundTexture;
 
+- (NSString*)backgroundTexturePath;
+
 // saves the file at the input URL as the background's original
 // asset file. This is useful for a background that is set as
 // a UIImage but was generated from a PDF
@@ -22,6 +24,6 @@
 
 - (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock;
 
-- (void)writeBackgroundImageToDisk:(UIImage*)img;
++ (void)writeBackgroundImageToDisk:(UIImage*)img thumbSize:(CGSize)thumbSize thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath backgroundTexturePath:(NSString*)backgroundTexturePath;
 
 @end

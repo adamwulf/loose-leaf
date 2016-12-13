@@ -66,12 +66,8 @@
     paperBackgroundView.image = img;
 }
 
-- (void)writeBackgroundImageToDisk:(UIImage*)img {
++ (void)writeBackgroundImageToDisk:(UIImage*)img thumbSize:(CGSize)thumbSize thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath backgroundTexturePath:(NSString*)backgroundTexturePath {
     @autoreleasepool {
-        CGSize thumbSize = self.bounds.size;
-        thumbSize.width = floorf(thumbSize.width / 2);
-        thumbSize.height = floorf(thumbSize.height / 2);
-
         // use same calculations to generate a thumbnail
         // as the [export] methods below
         CGFloat scale = [[UIScreen mainScreen] scale];
@@ -92,11 +88,6 @@
         [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
 
         [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
-
-        definitelyDoesNotHaveAnInkThumbnail = NO;
-        definitelyDoesNotHaveAScrappedThumbnail = NO;
-        fileExistsAtInkPath = NO;
-        cachedImgViewImage = nil;
     }
 }
 

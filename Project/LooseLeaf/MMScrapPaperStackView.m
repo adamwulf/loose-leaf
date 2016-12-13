@@ -195,6 +195,8 @@
         if ([self imageMatchesPaperDimensions:scrapBacking]) {
             CGSize pageSize = hiddenStackHolder.bounds.size;
             MMBackgroundedPaperView* page = [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication];
+            [hiddenStackHolder pushSubview:page];
+            [page saveToDisk:nil];
             [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
             [page updateThumbnailVisibility];
             [[visibleStackHolder peekSubview] enableAllGestures];
@@ -382,17 +384,23 @@
 }
 
 - (MMExportablePaperView*)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication {
+    CGSize thumbSize = hiddenStackHolder.bounds.size;
+    thumbSize.width = floorf(thumbSize.width / 2);
+    thumbSize.height = floorf(thumbSize.height / 2);
+
+
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
-    [page writeBackgroundImageToDisk:imageToImport];
+
+    [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
+    [MMExportablePaperView writeBackgroundImageToDisk:imageToImport thumbSize:thumbSize thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath] backgroundTexturePath:[page backgroundTexturePath]];
     if (!assetURL) {
         NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
         [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
         assetURL = [NSURL fileURLWithPath:tmpImagePath];
     }
     [page saveOriginalBackgroundTextureFromURL:assetURL];
-    [hiddenStackHolder pushSubview:page];
-    [page saveToDisk:nil];
+
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
 
@@ -419,6 +427,8 @@
         CGSize pageSize = hiddenStackHolder.bounds.size;
         img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
         MMBackgroundedPaperView* page = [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil];
+        [hiddenStackHolder pushSubview:page];
+        [page saveToDisk:nil];
         [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
         [page updateThumbnailVisibility];
         [[visibleStackHolder peekSubview] enableAllGestures];
@@ -537,6 +547,8 @@
     if (asPage) {
         CGSize pageSize = hiddenStackHolder.bounds.size;
         MMBackgroundedPaperView* page = [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
+        [hiddenStackHolder pushSubview:page];
+        [page saveToDisk:nil];
         [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
         [page updateThumbnailVisibility];
         [[visibleStackHolder peekSubview] enableAllGestures];
