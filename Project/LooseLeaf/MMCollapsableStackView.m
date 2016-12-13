@@ -327,7 +327,8 @@
                 return;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-                for (MMExportablePaperView* page in pages) {
+                for (NSInteger index = 0; index < [pages count]; index++) {
+                    MMExportablePaperView* page = pages[index];
                     [page saveToDisk:nil];
 
                     // move page to end
@@ -339,9 +340,14 @@
 
                     page.alpha = 0;
 
-                    [page unloadCachedPreview];
+                    if (index < kMaxPageCountForRow) {
+                        [page loadCachedPreview];
+                    } else {
+                        [page unloadCachedPreview];
+                    }
                 }
-                finishedImportingAllPages();
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), finishedImportingAllPages);
             });
         }];
 
