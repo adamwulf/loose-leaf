@@ -96,6 +96,7 @@
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
     // need to set the delegate, otherwise it's only reset in the nearbyPage case above.
+    // this delegate also determines the stack UUID for the page's paths
     page.delegate = self;
 
     [(MMExportablePaperView*)page moveAssetsFrom:previousStack];

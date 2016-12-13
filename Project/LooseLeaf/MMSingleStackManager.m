@@ -34,6 +34,9 @@
         hiddenStack = _hiddenStack;
         bezelStack = _bezelStack;
 
+        NSString* pagesPath = [[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:uuid] stringByAppendingPathComponent:@"Pages"];
+        [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
+
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
     }

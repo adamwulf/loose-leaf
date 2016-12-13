@@ -36,12 +36,29 @@
     NSString* previousDirectory = [MMEditablePaperView pagesPathForStackUUID:previousDelegate.stackManager.uuid andPageUUID:[self uuid]];
     NSString* newDirectory = [MMEditablePaperView pagesPathForStackUUID:self.delegate.stackManager.uuid andPageUUID:[self uuid]];
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:previousDirectory]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:previousDirectory] && ![previousDirectory isEqualToString:newDirectory]) {
+        if ([[NSFileManager defaultManager] fileExistsAtPath:newDirectory]) {
+            // Yikes! We should never have the same page UUID directory in two places
+            [[NSFileManager defaultManager] removeItemAtPath:newDirectory error:nil];
+#ifdef DEBUG
+            @throw [NSException exceptionWithName:@"DuplicateUUIDDirectoryException" reason:@"A page UUID should never have two directories" userInfo:nil];
+#endif
+        }
+
         NSError* err;
         [[NSFileManager defaultManager] moveItemAtPath:previousDirectory toPath:newDirectory error:&err];
 
         if (err) {
             [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Error": [err description] }];
+#ifdef DEBUG
+            @throw [NSException exceptionWithName:@"MoveDirectoryException" reason:[err description] userInfo:nil];
+#endif
+        }
+
+        if ([[NSFileManager defaultManager] fileExistsAtPath:previousDirectory] || ![[NSFileManager defaultManager] fileExistsAtPath:newDirectory]) {
+#ifdef DEBUG
+            @throw [NSException exceptionWithName:@"MoveDirectoryException" reason:@"The move did not complete properly" userInfo:nil];
+#endif
         }
     }
 }
@@ -109,6 +126,26 @@
         if (onComplete)
             onComplete(hadEditsToSave);
     }];
+}
+
+#pragma mark - Unload State Listener
+
+- (void)setDidUnloadState:(void (^)())didUnloadState {
+    if ([self isStateLoaded] && didUnloadState) {
+        _didUnloadState = didUnloadState;
+    } else if (didUnloadState) {
+        didUnloadState();
+    }
+}
+
+#pragma mark - JotViewStateProxyDelegate
+
+- (void)didUnloadState:(JotViewStateProxy*)state {
+    [super didUnloadState:state];
+    if (_didUnloadState) {
+        _didUnloadState();
+        _didUnloadState = nil;
+    }
 }
 
 #pragma mark - Load and Unload

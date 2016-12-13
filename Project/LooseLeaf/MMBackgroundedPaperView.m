@@ -31,6 +31,11 @@
     BOOL wantsBackgroundTextureLoaded;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    backgroundTexturePath = nil;
+}
+
 - (BOOL)isVert:(UIImage*)img {
     return img.imageOrientation == UIImageOrientationDown ||
         img.imageOrientation == UIImageOrientationDownMirrored ||

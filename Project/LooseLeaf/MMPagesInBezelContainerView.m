@@ -35,12 +35,18 @@
     NSOperationQueue* opQueue;
 
     NSArray* pagesMeta;
+
+    // We'll use a stack as a container for all the pages that are added
+    // to the sidebar.
+    MMCollapsableStackView* pageSidebarStack;
 }
 
 @dynamic bubbleDelegate;
 
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
     if (self = [super initWithFrame:frame andCountButton:_countButton]) {
+        pageSidebarStack = [[MMCollapsableStackView alloc] initWithFrame:frame andUUID:@"PageSidebar"];
+
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
         contentView.shouldReverseInSidebar = YES;
@@ -142,13 +148,25 @@
     return bubble;
 }
 
-- (void)addViewToCountableSidebar:(MMEditablePaperView*)page animated:(BOOL)animated {
+- (void)addViewToCountableSidebar:(MMExportablePaperView*)page animated:(BOOL)animated {
     // make sure we've saved its current state
     if (animated) {
         // only save when it's animated. non-animated is loading
         // from disk at start up
         [page saveToDisk:nil];
     }
+
+    __weak MMExportablePaperView* weakPage = page;
+    [page setDidUnloadState:^{
+        id<MMPaperViewDelegate> previousStack = weakPage.delegate;
+        weakPage.delegate = pageSidebarStack;
+        if (previousStack != pageSidebarStack) {
+            // don't move attempt to move assets to the same place. This happens
+            // when loading from disk during startup, we add all the pages
+            // so the sidebar as we load them from disk
+            [weakPage moveAssetsFrom:previousStack];
+        }
+    }];
 
     // unload the scrap state, so that it shows the
     // image preview instead of an editable state
@@ -232,9 +250,7 @@ static NSString* bezelStatePath;
             // to disk in the order that [saveToDisk] was called
             // on the main thread.
             pagesMeta = [sidebarPages mapObjectsUsingBlock:^id(MMPaperView* page, NSUInteger idx) {
-                NSMutableDictionary* pageDictionary = [[page dictionaryDescription] mutableCopy];
-                pageDictionary[@"stackUUID"] = [page.delegate.stackManager uuid];
-                return pageDictionary;
+                return [page dictionaryDescription];
             }];
 
             [pagesMeta writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
@@ -247,12 +263,11 @@ static NSString* bezelStatePath;
     CGRect bounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
 
     for (NSDictionary* pageMeta in pagesMeta) {
-        NSString* stackUUID = pageMeta[@"stackUUID"];
         NSString* pageUUID = pageMeta[@"uuid"];
 
         MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
         page.isBrandNewPage = NO;
-        page.delegate = [self.bubbleDelegate stackForUUID:stackUUID];
+        page.delegate = pageSidebarStack;
         [page disableAllGestures];
 
         // scale the page down. we can't initialize with this bounds,
