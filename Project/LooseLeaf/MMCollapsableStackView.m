@@ -252,6 +252,14 @@
     [self.stackDelegate.shareStackSidebar show:YES];
 }
 
+- (void)showUIToPrepareForImport {
+    [self organizePagesIntoSingleRowAnimated:NO];
+    emptyStackRowPlaceholder.alpha = 0;
+    importingPDFListButton.alpha = 1;
+
+    [importingPDFListButton setPrompt:@"Importing PDF..."];
+}
+
 - (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)())completionBlock {
     if ([self isShowingCollapsedView]) {
         if ([pdfDoc.pdf.title length]) {

@@ -1026,23 +1026,25 @@
 
 - (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
     if (currentStackView) {
-        [currentStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
-    } else {
-        NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
-        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
-
-        [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
-
-        CGPoint offset = CGPointMake(0, allStacksScrollView.contentSize.height - CGRectGetHeight(allStacksScrollView.bounds));
-        offset.y = MAX(offset.y, 0);
-        [allStacksScrollView setContentOffset:offset animated:YES];
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^{
-                // done importing
-            }];
-        });
+        [self didAskToCollapseStack:currentStackView.uuid animated:NO];
     }
+
+    NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
+    MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+
+    [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
+    CGPoint offset = CGPointMake(0, allStacksScrollView.contentSize.height - CGRectGetHeight(allStacksScrollView.bounds));
+    offset.y = MAX(offset.y, 0);
+    [allStacksScrollView setContentOffset:offset animated:NO];
+
+    [aStackView showUIToPrepareForImport];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^{
+            // done importing
+        }];
+    });
 }
 
 - (void)failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
