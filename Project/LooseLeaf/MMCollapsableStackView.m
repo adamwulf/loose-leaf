@@ -322,6 +322,9 @@
 
                             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                                 @autoreleasepool {
+                                    // move this to a background thread and parallelize it.
+                                    // then after all assets are written to disk in the correct format,
+                                    // I can build the page objects and add them to the stack on the main thread.
                                     NSURL* assetURL = [asset fullResolutionURL];
                                     MMBackgroundedPaperView* page = [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:nil referringApp:sourceApplication];
 

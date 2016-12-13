@@ -50,10 +50,6 @@
 }
 
 - (void)setPageBackgroundTexture:(UIImage*)img {
-    [self setPageBackgroundTexture:img andSaveToDisk:YES];
-}
-
-- (void)setPageBackgroundTexture:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk {
     CheckMainThread;
     if (img.size.width > img.size.height) {
         // rotate
@@ -69,13 +65,12 @@
     }
     paperBackgroundView.image = img;
 
-    if (self.isBrandNewPage || saveToDisk) {
-        [self writeBackgroundImageToDisk:img andSaveToDisk:saveToDisk];
+    if (self.isBrandNewPage) {
+        [self writeBackgroundImageToDisk:img andSaveToDisk:NO];
     }
 }
 
 - (void)writeBackgroundImageToDisk:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk {
-    BOOL wasBrandNewPage = self.isBrandNewPage;
     if (self.isBrandNewPage) {
         @autoreleasepool {
             CGSize thumbSize = self.bounds.size;
@@ -94,26 +89,27 @@
 
             UIGraphicsEndImageContext();
 
-            [UIImagePNGRepresentation(outputImage) writeToFile:[self thumbnailPath] atomically:YES];
-            [UIImagePNGRepresentation(outputImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
+            NSData* imgData = UIImagePNGRepresentation(outputImage);
+            [imgData writeToFile:[self thumbnailPath] atomically:YES];
+            [imgData writeToFile:[self scrappedThumbnailPath] atomically:YES];
             [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
             [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
         }
     }
     if (saveToDisk) {
-        dispatch_async([MMEditablePaperView importThumbnailQueue], ^{
-            @autoreleasepool {
-                [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
-                if (wasBrandNewPage) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        definitelyDoesNotHaveAnInkThumbnail = NO;
-                        definitelyDoesNotHaveAScrappedThumbnail = NO;
-                        fileExistsAtInkPath = NO;
-                        cachedImgViewImage = nil;
-                    });
+        if (self.isBrandNewPage) {
+            [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
+            definitelyDoesNotHaveAnInkThumbnail = NO;
+            definitelyDoesNotHaveAScrappedThumbnail = NO;
+            fileExistsAtInkPath = NO;
+            cachedImgViewImage = nil;
+        } else {
+            dispatch_async([MMEditablePaperView importThumbnailQueue], ^{
+                @autoreleasepool {
+                    [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
                 }
-            }
-        });
+            });
+        }
     }
 }
 
@@ -140,7 +136,7 @@
             if (img) {
                 [[NSThread mainThread] performBlock:^{
                     if (wantsBackgroundTextureLoaded) {
-                        [self setPageBackgroundTexture:img andSaveToDisk:NO];
+                        [self setPageBackgroundTexture:img];
                     };
                     isLoadingBackgroundTexture = NO;
                 }];

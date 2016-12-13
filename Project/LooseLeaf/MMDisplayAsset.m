@@ -22,31 +22,9 @@
 }
 
 - (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio {
-    UIImage* ret;
     @autoreleasepool {
-        ret = [self aspectThumbnailWithMaxPixelSize:maxDim];
-
-        CGSize size = [self fullResolutionSize];
-        CGFloat pdfRatio = ret.size.width / ret.size.height;
-
-        if ((pdfRatio > 1 && ratio < 1) || (pdfRatio < 1 && ratio > 1)) {
-            ratio = 1 / ratio;
-        }
-
-        if (pdfRatio != ratio) {
-            if (pdfRatio > 1) {
-                size.width = maxDim;
-                size.height = maxDim * ratio;
-            } else {
-                size.height = maxDim;
-                size.width = maxDim * ratio;
-            }
-
-            ret = [ret resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:size interpolationQuality:kCGInterpolationHigh];
-        }
+        return [self aspectThumbnailWithMaxPixelSize:maxDim];
     }
-
-    return ret;
 }
 
 - (NSURL*)fullResolutionURL {
