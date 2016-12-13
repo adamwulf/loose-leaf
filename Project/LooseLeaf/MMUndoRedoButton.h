@@ -15,4 +15,6 @@
 
 @property (nonatomic) BOOL reverseArrow;
 
++ (UIImage*)undoIconWithColor:(UIColor*)color;
+
 @end

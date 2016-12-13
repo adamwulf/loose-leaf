@@ -59,7 +59,6 @@ static MMTrashManager* _instance = nil;
     return _instance;
 }
 
-
 #pragma mark - Public Methods
 
 - (void)deleteScrap:(NSString*)scrapUUID inScrapCollectionState:(MMScrapCollectionState*)scrapCollectionState {
@@ -128,7 +127,9 @@ static MMTrashManager* _instance = nil;
                     }
                 }
             }
-            [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
+            [[MMMainOperationQueue sharedQueue] addOperationWithBlock:^{
+                [pageOriginalDelegate.bezelContainerView saveScrapContainerToDisk];
+            }];
 
             //
             // deleting scraps above will add blocks to the trashManagerQueue

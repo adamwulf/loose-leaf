@@ -20,7 +20,11 @@
 
 @synthesize delegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft {
+- (void)setReferenceButtonFrame:(CGRect)frame {
+    [slidingSidebarView setReferenceButtonFrame:frame];
+}
+
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
     self = [super initWithFrame:frame];
     if (self) {
         // this direction controls if the sidebar will slide from the left or right
@@ -35,7 +39,7 @@
 
         // the sidebar content view will hold all of the content and menus
         CGRect imagePickerBounds = [self defaultSidebarFrame];
-        slidingSidebarView = [[MMSlidingSidebarView alloc] initWithFrame:imagePickerBounds forButton:_button animateFromLeft:directionIsFromLeft];
+        slidingSidebarView = [[MMSlidingSidebarView alloc] initWithFrame:imagePickerBounds forReferenceButtonFrame:buttonFrame animateFromLeft:fromLeft];
         slidingSidebarView.delegate = self;
         [self addSubview:slidingSidebarView];
 

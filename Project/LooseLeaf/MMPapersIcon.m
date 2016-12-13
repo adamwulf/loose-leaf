@@ -34,13 +34,28 @@
     }
 }
 
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
+    UIColor* strokeColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+    [MMPapersIcon drawPapersInRect:rect withColor:strokeColor andNumber:self.numberToShowIfApplicable];
+}
+
+
++ (UIImage*)papersIconWithColor:(UIColor*)color {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
+    [MMPapersIcon drawPapersInRect:CGRectMake(0, 7, 26, 26) withColor:color andNumber:0];
+    UIImage* papersImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return papersImg;
+}
+
++ (void)drawPapersInRect:(CGRect)rect withColor:(UIColor*)strokeColor andNumber:(NSInteger)numberToShowIfApplicable {
     // Drawing code
     //// Frames
-    CGFloat largest = MAX(self.bounds.size.width, self.bounds.size.height);
-    CGRect frame = CGRectMake(0, 0, largest * 42 / 49, largest);
+    CGFloat largest = MAX(rect.size.width, rect.size.height);
+    CGRect frame = CGRectMake(rect.origin.x, rect.origin.y, largest * 42 / 49, largest);
 
     //// General Declarations
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -49,7 +64,6 @@
     //// Color Declarations
     UIColor* darkerGrey = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.33];
     UIColor* halfWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.36];
-    UIColor* strokeColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
 
     //// Gradient Declarations
     NSArray* frontOfPaperColors = [NSArray arrayWithObjects:
@@ -99,7 +113,7 @@
 
 
     UIBezierPath* glyphPath = nil;
-    if (self.numberToShowIfApplicable > 1) {
+    if (numberToShowIfApplicable > 1) {
         glyphPath = [[UIFont boldSystemFontOfSize:(int)(largest * 2 / 3)] bezierPathForString:[NSString stringWithFormat:@"%d", (int)numberToShowIfApplicable]];
         CGRect glyphRect = [glyphPath bounds];
         CGFloat iconWidth = [bezierPath bounds].size.width;

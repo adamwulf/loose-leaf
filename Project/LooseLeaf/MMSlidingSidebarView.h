@@ -18,7 +18,9 @@
 
 @property (nonatomic, weak) MMFullScreenSidebarContainingView* delegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft;
+- (void)setReferenceButtonFrame:(CGRect)frame;
+
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft;
 
 - (CGRect)contentBounds;
 

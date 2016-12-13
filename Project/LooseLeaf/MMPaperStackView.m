@@ -18,6 +18,7 @@
 #import "MMVisibleStackHolderView.h"
 #import "MMHiddenStackHolderView.h"
 #import "MMBezelStackHolderView.h"
+#import "UIScreen+MMSizing.h"
 
 #define kBounceThreshhold .1
 
@@ -77,15 +78,15 @@
         [self addSubview:visibleStackHolder];
         [self addSubview:hiddenStackHolder];
         [self addSubview:bezelStackHolder];
-        papersIcon = [[MMPapersIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+        papersIcon = [[MMPapersIcon alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 168, [UIScreen screenHeight] / 2 - 52, 80, 80)];
         [self addSubview:papersIcon];
-        paperIcon = [[MMPaperIcon alloc] initWithFrame:CGRectMake(600, 460, 80, 80)];
+        paperIcon = [[MMPaperIcon alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 168, [UIScreen screenHeight] / 2 - 52, 80, 80)];
         [self addSubview:paperIcon];
-        plusIcon = [[MMPlusIcon alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
+        plusIcon = [[MMPlusIcon alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 228, [UIScreen screenHeight] / 2 - 36, 46, 46)];
         [self addSubview:plusIcon];
-        leftArrow = [[MMLeftArrow alloc] initWithFrame:CGRectMake(540, 476, 46, 46)];
+        leftArrow = [[MMLeftArrow alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 228, [UIScreen screenHeight] / 2 - 36, 46, 46)];
         [self addSubview:leftArrow];
-        rightArrow = [[MMRightArrow alloc] initWithFrame:CGRectMake(680, 476, 46, 46)];
+        rightArrow = [[MMRightArrow alloc] initWithFrame:CGRectMake([UIScreen screenWidth] - 88, [UIScreen screenHeight] / 2 - 36, 46, 46)];
         [self addSubview:rightArrow];
         papersIcon.alpha = 0;
         paperIcon.alpha = 0;
@@ -132,6 +133,7 @@
         [stackView addSubviewToBottomOfStack:page];
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     }
+    [self saveStacksToDisk];
 }
 
 /**
@@ -457,7 +459,6 @@
 
         // make sure we have two pages, the one we're pulling, and
         // the one below it
-        [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
         [[visibleStackHolder peekSubview] removeAllAnimationsAndPreservePresentationFrame];
         [bezelStackHolder pushSubview:[visibleStackHolder peekSubview]];
         [self mayChangeTopPageTo:[visibleStackHolder peekSubview]];
@@ -482,6 +483,10 @@
         // to the hidden stack
 
         if ([bezelStackHolder.subviews count]) {
+            if ([visibleStackHolder.subviews count] == 0) {
+                [self animateAdditionalPageIntoVisibleStackFromLeft];
+            }
+
             NSArray* pagesToDisable = [bezelStackHolder.subviews copy];
             [self willNotChangeTopPageTo:[bezelStackHolder peekSubview]];
             [self willChangeTopPageTo:[visibleStackHolder peekSubview]];
@@ -560,7 +565,7 @@
         while (bezelGesture.numberOfRepeatingBezels != [bezelStackHolder.subviews count]) {
             //
             // we need to add another page
-            [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
+            [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
             if ([[visibleStackHolder peekSubview] isBeingPannedAndZoomed]) {
                 [[visibleStackHolder peekSubview] cancelAllGestures];
             }
@@ -976,12 +981,6 @@
 - (CGRect)isBeginning:(BOOL)isBeginningGesture toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches {
     BOOL isPanningTopPage = page == [visibleStackHolder peekSubview];
 
-    if (page == [visibleStackHolder.subviews objectAtIndex:0]) {
-        // they're panning the bottom page in the visible stack,
-        // so add another
-        [self ensureAtLeast:[visibleStackHolder.subviews count] + 1 pagesInStack:visibleStackHolder];
-    }
-
     //
     // resume normal behavior for any pages
     // of normal scale
@@ -1269,6 +1268,11 @@
         // or, i bezeled right a bottom page and am holding the top page
         if (justFinishedPanningTheTopPage) {
             MMScrappedPaperView* oldTopVisiblePage = [visibleStackHolder peekSubview];
+
+            if ([visibleStackHolder.subviews count] == 1) {
+                [self animateAdditionalPageIntoVisibleStackFromLeft];
+            }
+
             //
             // we bezeled right the top page.
             // send as many as necessary to the hidden stack
@@ -1375,6 +1379,10 @@
     [self realignPagesInVisibleStackExcept:page animated:YES];
 
     if (justFinishedPanningTheTopPage && [self shouldPopPageFromVisibleStack:page withFrame:toFrame]) {
+        if ([visibleStackHolder.subviews count] == 1) {
+            [self animateAdditionalPageIntoVisibleStackFromLeft];
+        }
+
         //        DebugLog(@"should pop from visible");
         //
         // bezelStackHolder debugging DONE
@@ -1422,6 +1430,24 @@
         BOOL shouldBounce = ABS(page.scale - 1) > kBounceThreshhold;
         [self animatePageToFullScreen:page withDelay:0 withBounce:shouldBounce onComplete:nil];
     }
+}
+
+- (void)animateAdditionalPageIntoVisibleStackFromLeft {
+    // this would make the visible stack empty, so add an additional page below this one and animate in from the left
+    MMPaperView* addedPage;
+    if ([visibleStackHolder peekSubview]) {
+        [self ensureAtLeast:2 pagesInStack:visibleStackHolder];
+        addedPage = [visibleStackHolder getPageBelow:[visibleStackHolder peekSubview]];
+    } else {
+        [self ensureAtLeast:1 pagesInStack:visibleStackHolder];
+        addedPage = [visibleStackHolder peekSubview];
+    }
+
+    addedPage.frame = CGRectTranslate([addedPage bounds], -CGRectGetWidth([addedPage bounds]) + 40, 0);
+
+    [UIView animateWithDuration:.3 animations:^{
+        addedPage.frame = addedPage.bounds;
+    }];
 }
 
 - (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture {

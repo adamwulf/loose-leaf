@@ -24,7 +24,7 @@
 @synthesize countButton;
 
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
-    if (self = [super initWithFrame:frame forButton:_countButton animateFromLeft:NO]) {
+    if (self = [super initWithFrame:frame forReferenceButtonFrame:[_countButton frame] animateFromLeft:NO]) {
         targetAlpha = 1;
         viewsInSidebar = [NSMutableArray array];
         bubbleForScrap = [NSMutableDictionary dictionary];

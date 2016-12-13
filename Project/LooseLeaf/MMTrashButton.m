@@ -59,10 +59,51 @@
     [ovalPath stroke];
 
 
-    CGFloat trueWidth = 80;
+    frame = CGRectInset(frame, 2, 2);
+    frame.origin.y += 1;
+
+    [MMTrashButton drawTrashCanInRect:frame withColor:[UIColor darkGrayColor] withBackground:nil];
+
+    [super drawRect:rect];
+}
+
++ (UIImage*)trashIconWithColor:(UIColor*)color {
+    UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -8, 0);
+    [MMTrashButton drawTrashCanInRect:CGRectMake(0, 0, 40, 40) withColor:color withBackground:halfGreyFill];
+    UIImage* trashImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return trashImg;
+}
+
++ (void)drawTrashCanInRect:(CGRect)frame withColor:(UIColor*)strokeColor withBackground:(UIColor*)backgroundColor {
+    CGFloat trueWidth = CGRectGetWidth(frame);
     CGFloat lineWidth = trueWidth / 100.0 * 2.0;
 
-    rect = CGRectInset(frame, 2, 2);
+    if (backgroundColor) {
+        UIBezierPath* trashOutlinePath = [UIBezierPath bezierPath];
+        [trashOutlinePath moveToPoint:CGPointMake(CGRectGetMinX(frame) + 0.52001 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.20001 * CGRectGetHeight(frame))];
+        [trashOutlinePath addCurveToPoint:CGPointMake(CGRectGetMinX(frame) + 0.54000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame)) controlPoint1:CGPointMake(CGRectGetMinX(frame) + 0.52000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.20000 * CGRectGetHeight(frame)) controlPoint2:CGPointMake(CGRectGetMinX(frame) + 0.54000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.77000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.78000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.25000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.74000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.25000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.73500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.29000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.66500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.80000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.33500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.80000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.26500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.29000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.26500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.25000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.22000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.25000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.23000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.43996 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addCurveToPoint:CGPointMake(CGRectGetMinX(frame) + 0.46000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.20000 * CGRectGetHeight(frame)) controlPoint1:CGPointMake(CGRectGetMinX(frame) + 0.44000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame)) controlPoint2:CGPointMake(CGRectGetMinX(frame) + 0.46000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.20000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.51999 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.20000 * CGRectGetHeight(frame))];
+        [trashOutlinePath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.52001 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.20001 * CGRectGetHeight(frame))];
+        [trashOutlinePath closePath];
+
+        [backgroundColor setFill];
+        [trashOutlinePath fill];
+    }
 
     //// trash can Drawing
     UIBezierPath* trashCanPath = [UIBezierPath bezierPath];
@@ -76,7 +117,7 @@
     [trashCanPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.75000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28000 * CGRectGetHeight(frame))];
     [trashCanPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.74000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34000 * CGRectGetHeight(frame))];
     [trashCanPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.73000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.34000 * CGRectGetHeight(frame))];
-    [UIColor.darkGrayColor setStroke];
+    [strokeColor setStroke];
     trashCanPath.lineWidth = lineWidth;
     [trashCanPath stroke];
 
@@ -85,7 +126,7 @@
     UIBezierPath* detailLine2Path = [UIBezierPath bezierPath];
     [detailLine2Path moveToPoint:CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28000 * CGRectGetHeight(frame))];
     [detailLine2Path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.50000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.74500 * CGRectGetHeight(frame))];
-    [UIColor.darkGrayColor setStroke];
+    [strokeColor setStroke];
     detailLine2Path.lineWidth = lineWidth;
     [detailLine2Path stroke];
 
@@ -94,7 +135,7 @@
     UIBezierPath* detailLine3Path = [UIBezierPath bezierPath];
     [detailLine3Path moveToPoint:CGPointMake(CGRectGetMinX(frame) + 0.63000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28000 * CGRectGetHeight(frame))];
     [detailLine3Path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.59500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.74500 * CGRectGetHeight(frame))];
-    [UIColor.darkGrayColor setStroke];
+    [strokeColor setStroke];
     detailLine3Path.lineWidth = lineWidth;
     [detailLine3Path stroke];
 
@@ -103,7 +144,7 @@
     UIBezierPath* detailLine1Path = [UIBezierPath bezierPath];
     [detailLine1Path moveToPoint:CGPointMake(CGRectGetMinX(frame) + 0.37000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.28000 * CGRectGetHeight(frame))];
     [detailLine1Path addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.40500 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.74500 * CGRectGetHeight(frame))];
-    [UIColor.darkGrayColor setStroke];
+    [strokeColor setStroke];
     detailLine1Path.lineWidth = lineWidth;
     [detailLine1Path stroke];
 
@@ -120,11 +161,9 @@
     [trashLidPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.22000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.25000 * CGRectGetHeight(frame))];
     [trashLidPath addLineToPoint:CGPointMake(CGRectGetMinX(frame) + 0.23000 * CGRectGetWidth(frame), CGRectGetMinY(frame) + 0.22000 * CGRectGetHeight(frame))];
     [trashLidPath closePath];
-    [UIColor.darkGrayColor setStroke];
+    [strokeColor setStroke];
     trashLidPath.lineWidth = lineWidth;
     [trashLidPath stroke];
-
-    [super drawRect:rect];
 }
 
 @end

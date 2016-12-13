@@ -78,6 +78,14 @@ dispatch_queue_t importThumbnailQueue;
     return self;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    pagesPath = nil;
+    inkPath = nil;
+    plistPath = nil;
+    thumbnailPath = nil;
+}
+
 - (int)fullByteSize {
     return [super fullByteSize] + paperState.fullByteSize;
 }
@@ -175,8 +183,8 @@ dispatch_queue_t importThumbnailQueue;
         drawableView = _drawableView;
         if (drawableView) {
             [self generateDebugView:YES];
-            [self setFrame:self.frame];
-            if ([self.delegate isPageEditable:self] && [self isStateLoaded]) {
+            //            [self setFrame:self.frame];
+            if (([self.delegate isPageEditable:self] || [MMPageCacheManager sharedInstance].drawableView != _drawableView) && [self isStateLoaded]) {
                 // drawableView might be animating from
                 // it's old page, so remove that animation
                 // if any
@@ -269,7 +277,7 @@ dispatch_queue_t importThumbnailQueue;
             [drawableView exportImageTo:[self inkPath]
                          andThumbnailTo:[self thumbnailPath]
                              andStateTo:[self plistPath]
-                     withThumbnailScale:0.5
+                     withThumbnailScale:1.0
                              onComplete:^(UIImage* ink, UIImage* thumbnail, JotViewImmutableState* immutableState) {
                                  if (immutableState) {
                                      // sometimes, if we try to export multiple times

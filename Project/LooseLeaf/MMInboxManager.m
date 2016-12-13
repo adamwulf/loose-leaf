@@ -17,6 +17,8 @@
 #import "Constants.h"
 #import "NSArray+MapReduce.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#include <CommonCrypto/CommonDigest.h>
+#import "Mixpanel.h"
 
 
 @implementation MMInboxManager {
@@ -63,11 +65,68 @@ static dispatch_queue_t fileSystemQueue;
     return fileSystemQueue;
 }
 
-#pragma mark - Public Methods
+- (NSString*)shaForURL:(NSURL*)url {
+    CC_SHA1_CTX ctx;
+    CC_SHA1_Init(&ctx);
+    unsigned char digest[CC_SHA1_DIGEST_LENGTH];
 
-- (NSURL*)moveURLIntoInbox:(NSURL*)itemURL {
+    uint8_t buffer[2048];
+    NSInputStream* inStream = [[NSInputStream alloc] initWithURL:url];
+    [inStream open];
+
+    do {
+        NSInteger bytesRead = [inStream read:buffer maxLength:2048];
+        if (bytesRead != -1) {
+            CC_SHA1_Update(&ctx, buffer, (CC_LONG)bytesRead);
+        } else {
+            [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Error": [[inStream streamError] description] }];
+            return nil;
+        }
+    } while ([inStream hasBytesAvailable]);
+
+    [inStream close];
+
+    CC_SHA1_Final(digest, &ctx);
+
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+
+    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++) {
+        [output appendFormat:@"%02x", digest[i]];
+    }
+
+    return output;
+}
+
+- (MMInboxItem*)inboxItemForSha:(NSString*)sha {
+    for (MMInboxItem* item in contents) {
+        NSString* filename = [[[item urlOnDisk] lastPathComponent] stringByDeletingPathExtension];
+        if ([filename isEqualToString:sha]) {
+            return item;
+        }
+    }
+
+    return nil;
+}
+
+#pragma mark - Protected Methods
+
+- (NSURL*)moveURLIntoInbox:(NSURL*)itemURL withSha:(NSString*)sha {
     NSString* ourInbox = [self pdfInboxFolderPath];
-    NSString* itemName = [[NSString createStringUUID] stringByAppendingPathExtension:[itemURL pathExtension]];
+
+    __block NSURL* foundURL = nil;
+
+    [[NSFileManager defaultManager] enumerateDirectory:ourInbox withBlock:^(NSURL* item, NSUInteger totalItemCount) {
+        NSString* filename = [[item lastPathComponent] stringByDeletingPathExtension];
+        if ([filename isEqualToString:sha]) {
+            foundURL = item;
+        }
+    } andErrorHandler:nil];
+
+    if (foundURL) {
+        return foundURL;
+    }
+
+    NSString* itemName = [sha stringByAppendingPathExtension:[itemURL pathExtension]];
     ourInbox = [ourInbox stringByAppendingPathComponent:itemName];
     NSURL* ourInboxURL = [[NSURL alloc] initFileURLWithPath:ourInbox];
 
@@ -81,16 +140,25 @@ static dispatch_queue_t fileSystemQueue;
 - (void)processInboxItem:(NSURL*)itemURL fromApp:(NSString*)sourceApplication {
     NSString* uti = [itemURL universalTypeID];
 
-    if (UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)) {
-        NSURL* ourInboxURL = [self moveURLIntoInbox:itemURL];
+    NSString* sha = [self shaForURL:itemURL] ?: [[NSUUID UUID] UUIDString];
+
+    MMInboxItem* existingItem = [self inboxItemForSha:sha];
+
+    if ([existingItem isKindOfClass:[MMImageInboxItem class]]) {
+        [self.delegate didProcessIncomingImage:(MMImageInboxItem*)existingItem fromURL:[existingItem urlOnDisk] fromApp:sourceApplication];
+    } else if ([existingItem isKindOfClass:[MMPDFInboxItem class]]) {
+        [self.delegate didProcessIncomingPDF:(MMPDFInboxItem*)existingItem fromURL:[existingItem urlOnDisk] fromApp:sourceApplication];
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypeImage)) {
+        NSURL* ourInboxURL = [self moveURLIntoInbox:itemURL withSha:sha];
         MMImageInboxItem* importedImage = [[MMImageInboxItem alloc] initWithURL:ourInboxURL];
         @synchronized(self) {
             [contents insertObject:importedImage atIndex:0];
         }
         [self.delegate didProcessIncomingImage:importedImage fromURL:itemURL fromApp:sourceApplication];
     } else if (UTTypeConformsTo((__bridge CFStringRef)(uti), kUTTypePDF)) {
-        DebugLog(@"PDF!");
-        NSURL* ourInboxURL = [self moveURLIntoInbox:itemURL];
+        [itemURL hash];
+
+        NSURL* ourInboxURL = [self moveURLIntoInbox:itemURL withSha:sha];
 
         MMPDFInboxItem* importedPDF = [[MMPDFInboxItem alloc] initWithURL:ourInboxURL];
         @synchronized(self) {

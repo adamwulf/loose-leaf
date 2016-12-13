@@ -46,8 +46,8 @@
 
 @dynamic delegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft {
-    self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft];
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
+    self = [super initWithFrame:frame forReferenceButtonFrame:buttonFrame animateFromLeft:fromLeft];
     if (self) {
         CGRect contentBounds = [slidingSidebarView contentBounds];
 

@@ -26,8 +26,6 @@
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "UIView+Debug.h"
-#import "MMLargeTutorialSidebarButton.h"
-#import "MMTutorialManager.h"
 #import <JotUI/JotUI.h>
 
 
@@ -47,7 +45,6 @@
 
     MMCloudKitShareItem* cloudKitShareItem;
 
-    MMLargeTutorialSidebarButton* tutorialButton;
     UIButton* exportAsImageButton;
     UIButton* exportAsPDFButton;
 
@@ -57,8 +54,8 @@
 
 @synthesize shareDelegate;
 
-- (id)initWithFrame:(CGRect)frame forButton:(MMSidebarButton*)_button animateFromLeft:(BOOL)fromLeft {
-    if (self = [super initWithFrame:frame forButton:_button animateFromLeft:fromLeft]) {
+- (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
+    if (self = [super initWithFrame:frame forReferenceButtonFrame:buttonFrame animateFromLeft:fromLeft]) {
         // Initialization code
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(updateShareOptions)
@@ -118,15 +115,6 @@
         [shareItems addObject:[[MMOpenInAppShareItem alloc] init]];
 
         [self updateShareOptions];
-
-
-        CGRect typicalBounds = [[shareItems lastObject] button].bounds;
-        tutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
-            return [[MMTutorialManager sharedInstance] shareTutorialSteps];
-        }];
-        tutorialButton.center = CGPointMake(sharingContentView.bounds.size.width / 2, sharingContentView.bounds.size.height - 100);
-        [tutorialButton addTarget:self action:@selector(startWatchingExportTutorials) forControlEvents:UIControlEventTouchUpInside];
-        [sharingContentView addSubview:tutorialButton];
     }
     return self;
 }
@@ -142,7 +130,7 @@
 
     if (exportAsImageButton.selected && !exportedImage) {
         exportedImage = YES;
-        [self.shareDelegate exportToImage:^(NSURL* urlToShare) {
+        [self.shareDelegate exportVisiblePageToImage:^(NSURL* urlToShare) {
             _imageURLToShare = urlToShare;
 
             // clear our rotated image cache
@@ -161,13 +149,17 @@
     if (exportAsPDFButton.selected && !exportedPDF) {
         exportedPDF = YES;
 
-        [self.shareDelegate exportToPDF:^(NSURL* urlToShare) {
+        [self.shareDelegate exportVisiblePageToPDF:^(NSURL* urlToShare) {
             _pdfURLToShare = urlToShare;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self updateShareOptions];
             });
         }];
     }
+}
+
+- (NSString*)idealFileNameForShare {
+    return @"LooseLeaf";
 }
 
 - (NSURL*)urlToShare {
@@ -187,10 +179,6 @@
         } else if ([[MMRotationManager sharedInstance] lastBestOrientation] == UIInterfaceOrientationMaskPortraitUpsideDown) {
             orientation = UIImageOrientationDown;
         }
-
-#ifdef DEBUG
-        orientation = UIImageOrientationRight;
-#endif
 
         UIImage* imageToRotate = [UIImage imageWithContentsOfFile:pathOnDisk];
 
@@ -223,10 +211,6 @@
 - (NSString*)pathForOrientation:(UIImageOrientation)orientation givenURL:(NSURL*)url {
     NSString* fileNameForOrientation = [NSString stringWithFormat:@"%@%ld.png", [url lastPathComponent], (long)orientation];
     return [NSTemporaryDirectory() stringByAppendingPathComponent:fileNameForOrientation];
-}
-
-- (void)startWatchingExportTutorials {
-    [[MMTutorialManager sharedInstance] startWatchingTutorials:tutorialButton.tutorialList];
 }
 
 - (CGFloat)buttonWidth {
@@ -288,8 +272,6 @@
     }
     [activeOptionsView reset];
     [activeOptionsView show];
-    // hide tutorial if we have an options view visible
-    tutorialButton.hidden = (BOOL)activeOptionsView;
     [super show:animated];
 
     [self setExportType:[[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault] ? exportAsPDFButton : exportAsImageButton];
@@ -329,7 +311,6 @@
         [activeOptionsView removeFromSuperview];
         [activeOptionsView reset];
         activeOptionsView = nil;
-        tutorialButton.hidden = NO;
     }
     MMAbstractShareItem* shareItemForButton = nil;
     for (MMAbstractShareItem* shareItem in shareItems) {
@@ -360,7 +341,7 @@
     [activeOptionsView updateInterfaceTo:orientation];
     [UIView animateWithDuration:.3 animations:^{
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        for (MMBounceButton* button in [buttonView.subviews arrayByAddingObject:tutorialButton]) {
+        for (MMBounceButton* button in buttonView.subviews) {
             button.rotation = [self sidebarButtonRotation];
             button.transform = rotationTransform;
         }
@@ -369,12 +350,12 @@
 
 #pragma mark - MMShareItemDelegate
 
-- (void)exportToImage:(void (^)(NSURL* urlToImage))completionBlock {
-    [shareDelegate exportToImage:completionBlock];
+- (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock {
+    [shareDelegate exportVisiblePageToImage:completionBlock];
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-    [shareDelegate exportToPDF:completionBlock];
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+    [shareDelegate exportVisiblePageToPDF:completionBlock];
 }
 
 - (NSDictionary*)cloudKitSenderInfo {
@@ -402,9 +383,6 @@
                 activeOptionsView.frame = frForOptions;
                 [shareItem setShowingOptionsView:YES];
                 [sharingContentView addSubview:activeOptionsView];
-                tutorialButton.hidden = YES;
-            } else {
-                tutorialButton.hidden = NO;
             }
 
             [shareDelegate mayShare:shareItem];
@@ -418,7 +396,6 @@
     // if any
     [self closeActiveSharingOptionsForButton:nil];
     activeOptionsView = nil;
-    tutorialButton.hidden = NO;
 }
 
 - (void)didShare:(MMAbstractShareItem*)shareItem {

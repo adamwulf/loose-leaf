@@ -132,6 +132,8 @@
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self listViewButtonRotation]);
         listViewTutorialButton.rotation = [self sidebarButtonRotation];
         listViewTutorialButton.transform = rotationTransform;
+        listViewFeedbackButton.rotation = [self sidebarButtonRotation];
+        listViewFeedbackButton.transform = rotationTransform;
     }];
 }
 

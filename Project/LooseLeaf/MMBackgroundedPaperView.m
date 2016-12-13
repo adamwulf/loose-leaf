@@ -16,6 +16,7 @@
 #import "UIDevice+PPI.h"
 #import "MMPDF.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 
 @interface MMBackgroundedPaperView () <MMGenericBackgroundViewDelegate>
@@ -28,6 +29,11 @@
     NSString* backgroundTexturePath;
     BOOL isLoadingBackgroundTexture;
     BOOL wantsBackgroundTextureLoaded;
+}
+
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    backgroundTexturePath = nil;
 }
 
 - (BOOL)isVert:(UIImage*)img {
@@ -49,10 +55,6 @@
 }
 
 - (void)setPageBackgroundTexture:(UIImage*)img {
-    [self setPageBackgroundTexture:img andSaveToDisk:YES];
-}
-
-- (void)setPageBackgroundTexture:(UIImage*)img andSaveToDisk:(BOOL)saveToDisk {
     CheckMainThread;
     if (img.size.width > img.size.height) {
         // rotate
@@ -67,43 +69,23 @@
         paperBackgroundView.hidden = self.drawableView.hidden;
     }
     paperBackgroundView.image = img;
+}
 
-    BOOL wasBrandNewPage = self.isBrandNewPage;
-    if (self.isBrandNewPage) {
-        CGSize thumbSize = self.bounds.size;
-        thumbSize.width = floorf(thumbSize.width / 2);
-        thumbSize.height = floorf(thumbSize.height / 2);
++ (void)writeBackgroundImageToDisk:(UIImage*)img backgroundTexturePath:(NSString*)backgroundTexturePath {
+    @autoreleasepool {
+        [UIImagePNGRepresentation(img) writeToFile:backgroundTexturePath atomically:YES];
 
-        // use same calculations to generate a thumbnail
-        // as the [export] methods below
-        CGFloat scale = [[UIScreen mainScreen] scale];
-        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
-
-        CGRect rectForImage = CGSizeFill([img size], thumbSize);
-        [img drawInRect:rectForImage];
-
-        UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
-
-        UIGraphicsEndImageContext();
-
-        [UIImagePNGRepresentation(outputImage) writeToFile:[self thumbnailPath] atomically:YES];
-        [UIImagePNGRepresentation(outputImage) writeToFile:[self scrappedThumbnailPath] atomically:YES];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:backgroundTexturePath];
     }
-    if (saveToDisk) {
-        dispatch_async([MMEditablePaperView importThumbnailQueue], ^{
-            [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
-            if (wasBrandNewPage) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    definitelyDoesNotHaveAnInkThumbnail = NO;
-                    definitelyDoesNotHaveAScrappedThumbnail = NO;
-                    fileExistsAtInkPath = NO;
-                    cachedImgViewImage = nil;
-                    [self loadCachedPreviewAndDecompressImmediately:YES];
-                });
-            }
-        });
+}
+
++ (void)writeThumbnailImagesToDisk:(UIImage*)img thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath {
+    @autoreleasepool {
+        NSData* imgData = UIImagePNGRepresentation(img);
+        [imgData writeToFile:thumbnailPath atomically:YES];
+        [imgData writeToFile:scrappedThumbnailPath atomically:YES];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:thumbnailPath];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:scrappedThumbnailPath];
     }
 }
 
@@ -117,11 +99,12 @@
 - (void)loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context {
     [super loadStateAsynchronously:async withSize:pagePtSize andScale:scale andContext:context];
 
+    wantsBackgroundTextureLoaded = YES;
+
     if (isLoadingBackgroundTexture) {
         return;
     }
     isLoadingBackgroundTexture = YES;
-    wantsBackgroundTextureLoaded = YES;
 
     void (^loadPageBackgroundFromDisk)() = ^{
         if (![self pageBackgroundTexture]) {
@@ -129,12 +112,33 @@
             if (img) {
                 [[NSThread mainThread] performBlock:^{
                     if (wantsBackgroundTextureLoaded) {
-                        [self setPageBackgroundTexture:img andSaveToDisk:NO];
+                        [self setPageBackgroundTexture:img];
                     };
                     isLoadingBackgroundTexture = NO;
                 }];
             } else {
-                isLoadingBackgroundTexture = NO;
+                __block NSURL* backgroundAssetURL;
+
+                [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL* item, NSUInteger totalItemCount) {
+                    if ([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]) {
+                        backgroundAssetURL = item;
+                    }
+                } andErrorHandler:nil];
+
+                if (backgroundAssetURL && [[backgroundAssetURL path] hasSuffix:@"pdf"]) {
+                    CGFloat maxDim = kPDFImportMaxDim * [[UIScreen mainScreen] scale];
+                    MMPDF* pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
+                    UIImage* img = [pdf imageForPage:0 withMaxDim:maxDim];
+                    [[NSThread mainThread] performBlock:^{
+                        if (wantsBackgroundTextureLoaded) {
+                            [self setPageBackgroundTexture:img];
+                        };
+                        isLoadingBackgroundTexture = NO;
+                    }];
+                    [MMBackgroundedPaperView writeBackgroundImageToDisk:img backgroundTexturePath:[self backgroundTexturePath]];
+                } else {
+                    isLoadingBackgroundTexture = NO;
+                }
             }
         } else {
             isLoadingBackgroundTexture = NO;
@@ -155,6 +159,13 @@
     [paperBackgroundView removeFromSuperview];
     paperBackgroundView = nil;
     wantsBackgroundTextureLoaded = NO;
+}
+
+- (void)unloadCachedPreview {
+    [super unloadCachedPreview];
+    paperBackgroundView.image = nil;
+    [paperBackgroundView removeFromSuperview];
+    paperBackgroundView = nil;
 }
 
 #pragma mark - Thumbnail Generation
@@ -211,7 +222,7 @@
 
 #pragma mark - Export to PDF
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
     __block NSURL* backgroundAssetURL;
 
     [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL* item, NSUInteger totalItemCount) {
@@ -275,68 +286,74 @@
 
     if ([[self.drawableView state] isStateLoaded]) {
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
-        [self.drawableView exportToImageOnComplete:^(UIImage* image) {
-            NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.03 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.drawableView exportToImageOnComplete:^(UIImage* image) {
+                NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
 
-            CGRect exportedPageSize = CGRectFromSize(pagePtSize);
-            CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &exportedPageSize, NULL);
-            UIGraphicsPushContext(pdfContext);
+                CGRect exportedPageSize = CGRectFromSize(pagePtSize);
+                CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &exportedPageSize, NULL);
+                UIGraphicsPushContext(pdfContext);
 
-            CGPDFContextBeginPage(pdfContext, (CFDictionaryRef) @{ @"Rotate": @(defaultRotation) });
+                CFDataRef boxData = CFDataCreate(NULL, (const UInt8*)&exportedPageSize, sizeof(CGRect));
 
-            CGContextSaveThenRestoreForBlock(pdfContext, ^{
-                // flip
-                CGContextSetInterpolationQuality(pdfContext, kCGInterpolationHigh);
-
-                CGContextSaveThenRestoreForBlock(pdfContext, ^{
-                    CGContextScaleCTM(pdfContext, 1, -1);
-                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
-
-                    if (pdf) {
-                        // PDF background
-                        [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
-                    } else if (backgroundImage) {
-                        // image background
-                        CGContextSaveThenRestoreForBlock(pdfContext, ^{
-                            [backgroundImage drawInRect:CGRectFromSize(pagePtSize)];
-                        });
-                    } else {
-                        CGContextSetFillColorWithColor(pdfContext, [[UIColor whiteColor] CGColor]);
-                        CGContextFillRect(pdfContext, finalExportBounds);
-                    }
-                });
-
-                // Ink
-                CGContextDrawImage(pdfContext, finalExportBounds, [image CGImage]);
+                CGPDFContextBeginPage(pdfContext, (CFDictionaryRef) @{ @"Rotate": @(defaultRotation),
+                                                                       (NSString*)kCGPDFContextMediaBox: (__bridge NSData*)boxData });
 
                 CGContextSaveThenRestoreForBlock(pdfContext, ^{
-                    CGContextScaleCTM(pdfContext, 1, -1);
-                    CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
+                    // flip
+                    CGContextSetInterpolationQuality(pdfContext, kCGInterpolationHigh);
 
-                    // Scraps
-                    // adjust so that (0,0) is the origin of the content rect in the PDF page,
-                    // since the PDF may be much taller/wider than our screen
-                    CGContextTranslateCTM(pdfContext, finalExportBounds.origin.x, finalExportBounds.origin.y);
+                    CGContextSaveThenRestoreForBlock(pdfContext, ^{
+                        CGContextScaleCTM(pdfContext, 1, -1);
+                        CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
 
-                    for (MMScrapView* scrap in immutableScrapState.scraps) {
-                        [self drawScrap:scrap intoContext:pdfContext withSize:finalExportBounds.size];
-                    }
-                    CGContextTranslateCTM(pdfContext, -finalExportBounds.origin.x, -finalExportBounds.origin.y);
+                        if (pdf) {
+                            // PDF background
+                            [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
+                        } else if (backgroundImage) {
+                            // image background
+                            CGContextSaveThenRestoreForBlock(pdfContext, ^{
+                                [backgroundImage drawInRect:CGRectFromSize(pagePtSize)];
+                            });
+                        } else {
+                            CGContextSetFillColorWithColor(pdfContext, [[UIColor whiteColor] CGColor]);
+                            CGContextFillRect(pdfContext, finalExportBounds);
+                        }
+                    });
+
+                    // Ink
+                    CGContextDrawImage(pdfContext, finalExportBounds, [image CGImage]);
+
+                    CGContextSaveThenRestoreForBlock(pdfContext, ^{
+                        CGContextScaleCTM(pdfContext, 1, -1);
+                        CGContextTranslateCTM(pdfContext, 0, -pagePtSize.height);
+
+                        // Scraps
+                        // adjust so that (0,0) is the origin of the content rect in the PDF page,
+                        // since the PDF may be much taller/wider than our screen
+                        CGContextTranslateCTM(pdfContext, finalExportBounds.origin.x, finalExportBounds.origin.y);
+
+                        for (MMScrapView* scrap in immutableScrapState.scraps) {
+                            [self drawScrap:scrap intoContext:pdfContext withSize:finalExportBounds.size];
+                        }
+                        CGContextTranslateCTM(pdfContext, -finalExportBounds.origin.x, -finalExportBounds.origin.y);
+                    });
                 });
-            });
 
-            CGPDFContextEndPage(pdfContext);
-            UIGraphicsPopContext();
-            CFRelease(pdfContext);
+                CGPDFContextEndPage(pdfContext);
+                UIGraphicsPopContext();
+                CFRelease(pdfContext);
+                CFRelease(boxData);
 
-            NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
+                NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
 
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completionBlock)
-                    completionBlock(fullyRenderedPDFURL);
-            });
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (completionBlock)
+                        completionBlock(fullyRenderedPDFURL);
+                });
 
-        } withScale:self.drawableView.scale];
+            } withScale:self.drawableView.scale];
+        });
         return;
     }
 
@@ -347,7 +364,7 @@
 // NOTE: this method will always export a portrait image
 // of the canvas. Rotation to match the iPad's orientation
 // is handled in the MMShareSidebarContainerView
-- (void)exportToImage:(void (^)(NSURL* urlToImage))completionBlock {
+- (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock {
     __block NSURL* backgroundAssetURL;
 
     [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL* item, NSUInteger totalItemCount) {

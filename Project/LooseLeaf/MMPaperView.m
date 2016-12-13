@@ -16,6 +16,7 @@
 
 @implementation MMPaperView {
     CGRect originalUnscaledBounds;
+    //    UILabel* lbl;
 }
 
 @synthesize scale;
@@ -48,6 +49,11 @@
         [self.layer setMasksToBounds:YES];
         self.scale = 1;
 
+        //        lbl = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 1024, 20)];
+        //        lbl.text = self.uuid;
+        //        lbl.numberOfLines = 2;
+        //        [self addSubview:lbl];
+        //
         //
         // allow the user to select an object by long pressing
         // on it. this'll allow the user to select + move/scale/rotate
@@ -84,9 +90,18 @@
     return self;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    // noop
+}
+
 - (int)fullByteSize {
     return 0;
 }
+
+//-(void) setDelegate:(id)_delegate{
+//    delegate = _delegate;
+//    lbl.text = [NSString stringWithFormat:@"page %@\nstack%@", self.uuid, [_delegate uuid]];
+//}
 
 
 - (void)setScale:(CGFloat)_scale {

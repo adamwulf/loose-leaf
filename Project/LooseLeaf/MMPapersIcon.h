@@ -15,4 +15,6 @@
 
 @property (nonatomic, assign) NSInteger numberToShowIfApplicable;
 
++ (UIImage*)papersIconWithColor:(UIColor*)color;
+
 @end

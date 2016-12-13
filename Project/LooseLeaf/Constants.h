@@ -37,7 +37,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define CGRectScale(rect, scale) CGRectMake(rect.origin.x*(scale), rect.origin.y*(scale), rect.size.width*(scale), rect.size.height*(scale))
 #define CGSizeFill(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, YES)
 #define CGSizeFit(sizeToScale, sizeToFill) _CGSizeAspectFillFit(sizeToScale, sizeToFill, NO)
-
+#define CGPointTranslate(point, translatex, translatey) CGPointMake((point).x + (translatex), (point).y + (translatey))
+#define CGRectTranslate(rect, translatex, translatey) CGRectMake((rect).origin.x + (translatex), (rect).origin.y + (translatey), (rect).size.width, (rect).size.height)
 
 #define UIViewAutoresizingFlexibleAllMargins (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin)
 
@@ -141,10 +142,19 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kBrushPencil @"pencil"
 #define kBrushHighlighter @"highlighter"
 #define kBrushMarker @"marker"
-#define kIsShowingListView @"ShowingListView"
 #define kMarkerColor @"markerColor"
 #define kPencilColor @"pencilColor"
 #define kHighlighterColor @"highlighterColor"
+#define kHasEverCollapsedToShowAllStacks @"kHasEverCollapsedToShowAllStacks"
+
+#define kIsShowingListView @"ShowingListView" // old. use kCurrentViewMode instead.
+
+#define kCurrentViewMode @"CurrentViewMode"
+#define kViewModeList @"kViewModeList"
+#define kViewModePage @"kViewModePage"
+#define kViewModeCollapsed @"kViewModeCollapsed"
+
+#define kCurrentStack @"CurrentStack"
 
 // Camera
 #define kCameraMargin 10
@@ -251,6 +261,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventImportPage @"Import Page"
+#define kMPEventImportStack @"Import Stack"
+#define kMPEventImportDuration @"Import Duration (s)"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
 #define kMPEventClonePage @"Clone Page"
@@ -290,6 +302,13 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
     float output = ((float)(rand() % kMaxPhotoRotationInDegrees - kMaxPhotoRotationInDegrees / 2)) / 360.0 * M_PI; \
     srand((unsigned)time(NULL));                                                                                   \
     return output;                                                                                                 \
+})(a)
+
+#define RandomCollapsedPageRotation(a) (^float(NSInteger b) {    \
+    srand((unsigned)b);                                          \
+    float output = ((float)(rand() % 100 / 100.0 * .05 - .025)); \
+    srand((unsigned)time(NULL));                                 \
+    return output;                                               \
 })(a)
 
 #define RandomMod(a, b) (^float(NSInteger seed, int mod) { \

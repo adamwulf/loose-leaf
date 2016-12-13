@@ -11,4 +11,6 @@
 
 @interface MMTrashButton : MMDarkSidebarButton
 
++ (UIImage*)trashIconWithColor:(UIColor*)color;
+
 @end

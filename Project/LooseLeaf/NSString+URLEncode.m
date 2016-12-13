@@ -31,4 +31,10 @@
     return output;
 }
 
+- (NSString*)stringByRemovingWhiteSpace {
+    return [self stringByReplacingOccurrencesOfString:@"\\s" withString:@""
+                                              options:NSRegularExpressionSearch
+                                                range:NSMakeRange(0, [self length])];
+}
+
 @end

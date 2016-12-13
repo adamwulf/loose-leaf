@@ -54,13 +54,15 @@
                 composer = [[MFMailComposeViewController alloc] init];
                 [composer setMailComposeDelegate:self];
                 if ([MFMailComposeViewController canSendMail] && composer) {
-                    [composer setSubject:@"Quick sketch from Loose Leaf"];
-                    [composer setMessageBody:@"\n\n\n\nDrawn with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
+                    [composer setSubject:@"Sent from Loose Leaf"];
+                    [composer setMessageBody:@"\n\n\n\nCreated with Loose Leaf. http://getlooseleaf.com" isHTML:NO];
                     [composer setModalTransitionStyle:UIModalTransitionStyleCoverVertical];
 
                     NSURL* urlToShare = [self.delegate urlToShare];
                     NSData* data = [NSData dataWithContentsOfURL:urlToShare];
-                    [composer addAttachmentData:data mimeType:[urlToShare mimeType] fileName:[@"LooseLeaf" stringByAppendingString:[urlToShare pathExtension]]];
+
+                    NSString* filename = [self.delegate idealFileNameForShare] ?: @"LooseLeaf";
+                    [composer addAttachmentData:data mimeType:[urlToShare mimeType] fileName:[filename stringByAppendingPathExtension:[urlToShare pathExtension]]];
 
                     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
                     MMPresentationWindow* presentationWindow = [(MMAppDelegate*)[[UIApplication sharedApplication] delegate] presentationWindow];

@@ -69,13 +69,16 @@
     MMRulerView* rulerView;
 }
 
++ (CGRect)insertImageButtonFrame;
++ (CGRect)shareButtonFrame;
+
 @property (nonatomic, readonly) MMImageButton* insertImageButton;
 @property (nonatomic, readonly) MMShareButton* shareButton;
 @property (nonatomic, readonly) BOOL buttonsVisible;
 
 - (void)saveStacksToDisk;
 
-- (void)loadStacksFromDiskIntoListView:(BOOL)isListView;
+- (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta;
 
 - (BOOL)hasPages;
 

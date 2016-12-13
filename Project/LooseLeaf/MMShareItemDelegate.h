@@ -30,12 +30,22 @@
 
 - (NSURL*)urlToShare;
 
+- (NSString*)idealFileNameForShare;
+
 @end
 
 @protocol MMShareSidebarDelegate <MMShareDelegate>
 
-- (void)exportToImage:(void (^)(NSURL* urlToImage))completionBlock;
+- (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock;
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock;
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock;
+
+@end
+
+@protocol MMShareStackSidebarDelegate <MMShareDelegate>
+
+- (NSString*)nameOfCurrentStack;
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock;
 
 @end

@@ -117,15 +117,24 @@ static UIImage* lockThumbnail;
         CGFloat dimMin = MIN(imageBounds.size.width, imageBounds.size.height);
         CGFloat lockWidth = dimMin / 2;
         CGRect lockFrame = CGRectMake((imageBounds.size.width - lockWidth) / 2, (imageBounds.size.height - lockWidth) / 2, lockWidth, lockWidth);
-        [self drawLockInFrame:lockFrame];
+        [MMPDFPageAsset drawLockInFrame:lockFrame withColor:[UIColor blackColor]];
 
         lockThumbnail = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     });
 }
 
++ (UIImage*)lockIconWithColor:(UIColor*)color {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
+    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -8, 0);
+    [MMPDFPageAsset drawLockInFrame:CGRectMake(6, 6, 28, 28) withColor:color];
+    UIImage* trashImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return trashImg;
+}
 
-- (void)drawLockInFrame:(CGRect)frame {
+
++ (void)drawLockInFrame:(CGRect)frame withColor:(UIColor*)color {
     //// Subframes
     CGRect group = CGRectMake(CGRectGetMinX(frame) + floor(CGRectGetWidth(frame) * 0.17403 - 0.25) + 0.75, CGRectGetMinY(frame) + floor(CGRectGetHeight(frame) * 0.00000 - 0.2) + 0.7, floor(CGRectGetWidth(frame) * 0.82517 - 0.05) - floor(CGRectGetWidth(frame) * 0.17403 - 0.25) - 0.2, floor(CGRectGetHeight(frame) * 1.00034 + 0.5) - floor(CGRectGetHeight(frame) * 0.00000 - 0.2) - 0.7);
 
@@ -152,7 +161,7 @@ static UIImage* lockThumbnail;
         [lockTopPath closePath];
         lockTopPath.miterLimit = 4;
 
-        [UIColor.blackColor setFill];
+        [color setFill];
         [lockTopPath fill];
 
 
@@ -185,7 +194,7 @@ static UIImage* lockThumbnail;
         [lockBodyPath closePath];
         lockBodyPath.miterLimit = 4;
 
-        [UIColor.blackColor setFill];
+        [color setFill];
         [lockBodyPath fill];
     }
 }

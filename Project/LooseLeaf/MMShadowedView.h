@@ -13,6 +13,7 @@
     UIView* contentView;
 }
 @property (nonatomic, readonly) UIView* contentView;
+@property (nonatomic, assign) BOOL smoothBorder;
 
 + (CGRect)expandFrame:(CGRect)rect;
 + (CGRect)contractFrame:(CGRect)rect;
@@ -20,4 +21,5 @@
 + (CGRect)contractBounds:(CGRect)rect;
 
 + (CGFloat)shadowWidth;
+
 @end

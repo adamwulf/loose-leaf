@@ -77,7 +77,6 @@
         frame.size.width = frame.size.height;
         frame.size.height = t;
     }
-    DebugLog(@"building frame of %f %f %f %f", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
 
     if ((self = [super initWithFrame:frame andUUID:_uuid])) {
         self.autoresizingMask = UIViewAutoresizingNone;
@@ -195,7 +194,15 @@
     [[NSThread mainThread] performBlock:^{
         if ([self imageMatchesPaperDimensions:scrapBacking]) {
             CGSize pageSize = hiddenStackHolder.bounds.size;
-            [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication];
+            [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication onComplete:^(MMExportablePaperView* page) {
+                [hiddenStackHolder pushSubview:page];
+                [page saveToDisk:nil];
+                [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+                [page updateThumbnailVisibility];
+                [[visibleStackHolder peekSubview] enableAllGestures];
+                [self popTopPageOfHiddenStack];
+                [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+            }];
             return;
         }
 
@@ -214,7 +221,6 @@
 }
 
 - (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
-    [self transitionFromListToNewBlankPageIfInPageView];
     [[NSThread mainThread] performBlock:^{
         if (pdfDoc.isEncrypted) {
             // show PDF sidebar
@@ -378,38 +384,60 @@
     [self enableAllGesturesForPageView];
 }
 
-- (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication {
+- (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)inAssetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock {
+    CGSize thumbSize = hiddenStackHolder.bounds.size;
+    thumbSize.width = floorf(thumbSize.width / 2);
+    thumbSize.height = floorf(thumbSize.height / 2);
+
+
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
-    [page setPageBackgroundTexture:imageToImport];
-    if (!assetURL) {
-        NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
-        [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
-        assetURL = [NSURL fileURLWithPath:tmpImagePath];
-    }
-    [page saveOriginalBackgroundTextureFromURL:assetURL];
-    [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-    [page updateThumbnailVisibility];
-    [hiddenStackHolder pushSubview:page];
-    [[visibleStackHolder peekSubview] enableAllGestures];
-    [self popTopPageOfHiddenStack];
-    [page saveToDisk:nil];
-    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-    [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+    __block NSURL* assetURL = inAssetURL;
 
-    NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [assetURL fileExtension] ?: @"png",
-                                          kMPEventImportPropFileType: [assetURL universalTypeID] ?: [NSURL UTIForExtension:@"png"],
-                                          kMPEventImportPropResult: @"Success" } mutableCopy];
-    if (containerDescription) {
-        properties[kMPEventImportPropSource] = containerDescription;
-    }
-    if (sourceApplication) {
-        properties[kMPEventImportPropSourceApplication] = sourceApplication;
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
+        [MMBackgroundedPaperView writeBackgroundImageToDisk:imageToImport backgroundTexturePath:[page backgroundTexturePath]];
 
-    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:properties];
 
-    [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        CGFloat scale = [[UIScreen mainScreen] scale];
+        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
+
+        CGRect rectForImage = CGSizeFill([imageToImport size], thumbSize);
+        [imageToImport drawInRect:rectForImage];
+
+        UIImage* thumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
+
+        UIGraphicsEndImageContext();
+
+        [MMExportablePaperView writeThumbnailImagesToDisk:thumbnailImage thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
+        if (!assetURL) {
+            NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
+            [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
+            assetURL = [NSURL fileURLWithPath:tmpImagePath];
+        }
+        [page saveOriginalBackgroundTextureFromURL:assetURL];
+
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+
+        NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [assetURL fileExtension] ?: @"png",
+                                              kMPEventImportPropFileType: [assetURL universalTypeID] ?: [NSURL UTIForExtension:@"png"],
+                                              kMPEventImportPropResult: @"Success" } mutableCopy];
+        if (containerDescription) {
+            properties[kMPEventImportPropSource] = containerDescription;
+        }
+        if (sourceApplication) {
+            properties[kMPEventImportPropSourceApplication] = sourceApplication;
+        }
+
+        [[Mixpanel sharedInstance] track:kMPEventImportPage properties:properties];
+
+        if (completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(page);
+            });
+        }
+    });
 }
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage {
@@ -419,7 +447,15 @@
     if (asPage) {
         CGSize pageSize = hiddenStackHolder.bounds.size;
         img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
-        [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil];
+        [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil onComplete:^(MMExportablePaperView* page) {
+            [hiddenStackHolder pushSubview:page];
+            [page saveToDisk:nil];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        }];
         return;
     }
 
@@ -532,7 +568,15 @@
 
     if (asPage) {
         CGSize pageSize = hiddenStackHolder.bounds.size;
-        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
+        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil onComplete:^(MMExportablePaperView* page) {
+            [hiddenStackHolder pushSubview:page];
+            [page saveToDisk:nil];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        }];
         return;
     }
 
@@ -1536,20 +1580,7 @@
 }
 
 - (void)setButtonsVisible:(BOOL)visible animated:(BOOL)animated {
-    if (animated) {
-        if (self.stackDelegate.bezelScrapContainer.alpha != visible ? 1 : 0) {
-            [UIView animateWithDuration:.3 animations:^{
-                self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
-                self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
-            }];
-        } else {
-            self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
-            self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
-        }
-    } else {
-        self.stackDelegate.bezelScrapContainer.alpha = visible ? 1 : 0;
-        self.stackDelegate.bezelPagesContainer.alpha = visible ? 0 : 1;
-    }
+    [self.stackDelegate didAskToChangeButtonOpacity:visible animated:animated forStack:self.uuid];
     [super setButtonsVisible:visible animated:animated];
 }
 
@@ -1931,12 +1962,12 @@
 
 #pragma mark - MMShareSidebarDelegate
 
-- (void)exportToImage:(void (^)(NSURL*))completionBlock {
-    [[visibleStackHolder peekSubview] exportToImage:completionBlock];
+- (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
+    [[visibleStackHolder peekSubview] exportVisiblePageToImage:completionBlock];
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-    [[visibleStackHolder peekSubview] exportToPDF:completionBlock];
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+    [[visibleStackHolder peekSubview] exportVisiblePageToPDF:completionBlock];
 }
 
 - (NSDictionary*)cloudKitSenderInfo {

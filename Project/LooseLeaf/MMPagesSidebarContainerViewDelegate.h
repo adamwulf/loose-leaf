@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class MMTutorialStackView;
+@class MMCollapsableStackView;
 
 @protocol MMPagesSidebarContainerViewDelegate <MMCountableSidebarContainerViewDelegate>
 
-- (MMTutorialStackView*)stackForUUID:(NSString*)uuid;
+- (MMCollapsableStackView*)stackForUUID:(NSString*)uuid;
 
 @end
