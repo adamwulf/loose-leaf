@@ -842,8 +842,6 @@
 
 - (void)isAskingToDeleteStack:(NSString*)stackUUID {
     if ([self isShowingCollapsedView]) {
-        @throw [NSException exceptionWithName:@"DeleteStackException" reason:@"Don't delete pages in the sidebar that originated from this stack" userInfo:nil];
-
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* stackView = stackViewsByUUID[stackUUID];
         [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
