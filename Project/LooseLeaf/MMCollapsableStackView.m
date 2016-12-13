@@ -196,7 +196,10 @@
 
 - (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta {
     [super loadStacksFromDiskIntoListViewIgnoringMeta:meta];
+    [self refreshNameFromStackManager];
+}
 
+- (void)refreshNameFromStackManager {
     stackNameField.text = self.stackManager.name;
     emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
 }
@@ -251,6 +254,11 @@
 
 - (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)())completionBlock {
     if ([self isShowingCollapsedView]) {
+        if ([pdfDoc.pdf.title length]) {
+            self.stackManager.name = pdfDoc.pdf.title;
+            [self refreshNameFromStackManager];
+        }
+
         cancelImport = NO;
         [self organizePagesIntoSingleRowAnimated:NO];
         __block CGFloat delay = 0;
@@ -297,6 +305,7 @@
                     if (pageIndex == [allPages count] - 1 || pageIndex == kMaxPageCountForRow - 1) {
                         // last page
                         animationCompletionBlock = ^(BOOL finished) {
+                            [self saveStacksToDisk];
                             if (completionBlock) {
                                 completionBlock();
                             }

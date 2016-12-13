@@ -31,6 +31,17 @@
         pageCount = CGPDFDocumentGetNumberOfPages(pdf);
         isEncrypted = CGPDFDocumentIsEncrypted(pdf);
 
+        CGPDFDictionaryRef info = CGPDFDocumentGetInfo(pdf);
+
+        if (info) {
+            CGPDFStringRef outTitleString;
+            CGPDFDictionaryGetString(info, [@"Title" cStringUsingEncoding:NSUTF8StringEncoding], &outTitleString);
+
+            if (outTitleString) {
+                _title = (NSString*)CFBridgingRelease(CGPDFStringCopyTextString(outTitleString));
+            }
+        }
+
         CGPDFDocumentRelease(pdf);
 
         if ([self isEncrypted]) {
