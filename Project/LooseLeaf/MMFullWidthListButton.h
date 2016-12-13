@@ -18,4 +18,6 @@
 
 @property (nonatomic, strong) NSString* prompt;
 
+@property (nonatomic, readonly) CGFloat additionalVerticalSpacing;
+
 @end

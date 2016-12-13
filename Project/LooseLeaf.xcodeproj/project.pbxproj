@@ -527,6 +527,7 @@
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */; };
 		C5A5C4911DFE5A1E00FD2555 /* MMImportingPDFListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */; };
+		C5A5C4A91DFFC91700FD2555 /* MMDecryptPDFStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */; };
 		C5A8E1AD1DC308BF00CD608F /* MMCollapsableStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C542AA271D81AC8A0024FAD9 /* MMCollapsableStackView.m */; };
 		C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */; };
 		C5A8E1B21DC3252900CD608F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B11DC3252900CD608F /* CloudKit.framework */; };
@@ -1590,6 +1591,8 @@
 		C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareStackSidebarContainerView.m; sourceTree = "<group>"; };
 		C5A5C48F1DFE5A1E00FD2555 /* MMImportingPDFListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImportingPDFListButton.h; sourceTree = "<group>"; };
 		C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImportingPDFListButton.m; sourceTree = "<group>"; };
+		C5A5C4A71DFFC91700FD2555 /* MMDecryptPDFStackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDecryptPDFStackButton.h; sourceTree = "<group>"; };
+		C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDecryptPDFStackButton.m; sourceTree = "<group>"; };
 		C5A8E1AE1DC308E400CD608F /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
 		C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
 		C5A8E1B11DC3252900CD608F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -3601,6 +3604,8 @@
 				C55B4DCA1DDE8222001DC9E4 /* MMEmptyStackButton.m */,
 				C5A5C48F1DFE5A1E00FD2555 /* MMImportingPDFListButton.h */,
 				C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */,
+				C5A5C4A71DFFC91700FD2555 /* MMDecryptPDFStackButton.h */,
+				C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */,
 			);
 			name = "List View";
 			sourceTree = "<group>";
@@ -4630,6 +4635,7 @@
 				66C3CBE11A29046200D7EE42 /* MMRulerAdjustment.m in Sources */,
 				662280731AAF570A00DAB609 /* MMInboxAssetGroupCell.m in Sources */,
 				6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */,
+				C5A5C4A91DFFC91700FD2555 /* MMDecryptPDFStackButton.m in Sources */,
 				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				6677C5951AAB9A7000B2E46C /* MMDeleteButton.m in Sources */,

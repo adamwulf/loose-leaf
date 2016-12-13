@@ -25,6 +25,7 @@
         CGFloat rowHeight = [MMListPaperStackView rowHeight];
         CGFloat lblY = 215.0 / 273.0 * rowHeight;
         CGFloat buttonY = 185.0 / 273.0 * rowHeight;
+        buttonY += self.additionalVerticalSpacing / 2;
 
         UIColor* quarterWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
         CGFloat cornerRadius = roundf(.125 * [MMListPaperStackView columnWidth]);
@@ -51,6 +52,7 @@
 
         CGRect lblFrame = CGRectWithHeight(self.bounds, lblY);
         lblFrame = CGRectInset(lblFrame, 60, 0);
+        lblFrame.origin.y -= self.additionalVerticalSpacing / 2;
         lbl = [[UILabel alloc] initWithFrame:lblFrame];
         lbl.text = prompt;
         lbl.textColor = [UIColor colorWithWhite:.2 alpha:1.0];

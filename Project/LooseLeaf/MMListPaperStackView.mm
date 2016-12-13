@@ -894,7 +894,7 @@
  * to that page as the top of the visible stack
  */
 - (void)didTapScrollView:(MMButtonAwareTapGestureRecognizer*)_tapGesture {
-    if (_tapGesture.state == UIGestureRecognizerStateRecognized) {
+    if ([self isShowingListView] && _tapGesture.state == UIGestureRecognizerStateRecognized) {
         //
         // first, we should find which page the user tapped
         CGPoint locationOfTap = [_tapGesture locationInView:self];

@@ -606,6 +606,21 @@
         return;
     }
 
+    NSArray<MMCollapsableStackView*>* importingStacks = [[allStacksScrollView subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nullable obj, NSDictionary<NSString*, id>* _Nullable bindings) {
+        if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
+            MMCollapsableStackView* anyStackView = (MMCollapsableStackView*)obj;
+            return [anyStackView isCurrentlyHandlingImport];
+        }
+        return NO;
+    }]];
+
+    if ([importingStacks count]) {
+        // don't all switching to a stack while an import is in progress
+        [self safelyScrollToOffsetY:CGRectGetMinY([importingStacks[0] frame]) animated:YES];
+        return;
+    }
+
+
     // we need to change the current stack immediatley and not wait for the
     // animation to complete. This way, the notifications from the stack
     // as it is switched to will properly layout the page sidebar above/below
@@ -704,6 +719,14 @@
     allStacksScrollView.scrollEnabled = NO;
 }
 
+- (void)safelyScrollToOffsetY:(CGFloat)targetYOffset animated:(BOOL)animated {
+    CGFloat fullHeight = [self contentHeightForAllStacks];
+    CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
+    idealY = MAX(0, idealY - [UIScreen screenHeight]);
+
+    [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:animated];
+}
+
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
     if (animated) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasEverCollapsedToShowAllStacks];
@@ -714,12 +737,8 @@
     longPressGesture.enabled = YES;
     panGesture.enabled = YES;
 
-    CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat targetYOffset = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID] * [self stackRowHeight];
-    CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
-    idealY = MAX(0, idealY - [UIScreen screenHeight]);
-
-    [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:NO];
+    [self safelyScrollToOffsetY:targetYOffset animated:NO];
 
     if (!allStacksScrollView.scrollEnabled) {
         allStacksScrollView.scrollEnabled = YES;
@@ -1030,6 +1049,9 @@
         [self didAskToCollapseStack:currentStackView.uuid animated:NO];
     }
 
+    [longPressGesture setEnabled:NO];
+    [panGesture setEnabled:NO];
+
     NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
     MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
 
@@ -1039,31 +1061,42 @@
     offset.y = MAX(offset.y, 0);
     [allStacksScrollView setContentOffset:offset animated:NO];
 
-    [aStackView showUIToPrepareForImport];
+    [aStackView showUIToPrepareForImportingPDF:pdfDoc onComplete:^{
+        // check to see if the user decrypted it if necessary
+        if (![pdfDoc isEncrypted]) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                MMStopWatch* timer = [[MMStopWatch alloc] init];
+                [timer start];
+                [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^(BOOL success) {
+                    // done importing
+                    CGFloat duration = [timer stop];
+                    NSString* result = success ? @"Success" : @"Cancelled";
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        MMStopWatch* timer = [[MMStopWatch alloc] init];
-        [timer start];
-        [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^{
-            // done importing
+                    if (success) {
+                        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(pdfDoc.pdf.pageCount)];
+                        [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+                    }
 
-            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(pdfDoc.pdf.pageCount)];
-            [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+                    NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [url fileExtension] ?: @"png",
+                                                          kMPEventImportPropFileType: [url universalTypeID] ?: [NSURL UTIForExtension:@"png"],
+                                                          kMPEventImportPropResult: result,
+                                                          kMPEventImportDuration: @(duration),
+                                                          kMPNumberOfPages: @(pdfDoc.pdf.pageCount) } mutableCopy];
+                    if (sourceApplication) {
+                        properties[kMPEventImportPropSourceApplication] = sourceApplication;
+                    }
 
-            CGFloat duration = [timer stop];
-            NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [url fileExtension] ?: @"png",
-                                                  kMPEventImportPropFileType: [url universalTypeID] ?: [NSURL UTIForExtension:@"png"],
-                                                  kMPEventImportPropResult: @"Success",
-                                                  kMPEventImportDuration: @(duration),
-                                                  kMPNumberOfPages: @(pdfDoc.pdf.pageCount) } mutableCopy];
-            if (sourceApplication) {
-                properties[kMPEventImportPropSourceApplication] = sourceApplication;
-            }
+                    [[Mixpanel sharedInstance] track:kMPEventImportStack properties:properties];
 
-            [[Mixpanel sharedInstance] track:kMPEventImportStack properties:properties];
-
-        }];
-    });
+                    [longPressGesture setEnabled:YES];
+                    [panGesture setEnabled:YES];
+                }];
+            });
+        } else {
+            [longPressGesture setEnabled:YES];
+            [panGesture setEnabled:YES];
+        }
+    }];
 }
 
 - (void)failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
@@ -1423,6 +1456,14 @@
                 MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
                 // only allow moving stack views
                 if (CGRectContainsPoint([aStackView frame], pointInScrollView)) {
+                    if ([aStackView isCurrentlyHandlingImport] || ![aStackView isPerfectlyAlignedIntoRow]) {
+                        // only allow moving stacks that are perfectly aligned
+                        // and not currently importing
+                        [gesture setEnabled:NO];
+                        [gesture setEnabled:YES];
+                        return;
+                    }
+
                     heldStackView = aStackView;
                     heldStackViewOffset = [heldStackView effectiveRowCenter];
                     originalGestureLocationInView = mostRecentLocationOfMoveGestureInView;
@@ -1496,7 +1537,11 @@
             heldStackView.transform = CGAffineTransformIdentity;
             heldStackView.userInteractionEnabled = YES;
 
-            [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+            if (heldStackView) {
+                // only reset if we were holding a stack.
+                // we might've been cancelled before the gesture truly began
+                [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+            }
         } completion:^(BOOL finished) {
             heldStackView = nil;
         }];

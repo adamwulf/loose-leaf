@@ -31,17 +31,6 @@
         pageCount = CGPDFDocumentGetNumberOfPages(pdf);
         isEncrypted = CGPDFDocumentIsEncrypted(pdf);
 
-        CGPDFDictionaryRef info = CGPDFDocumentGetInfo(pdf);
-
-        if (info) {
-            CGPDFStringRef outTitleString;
-            CGPDFDictionaryGetString(info, [@"Title" cStringUsingEncoding:NSUTF8StringEncoding], &outTitleString);
-
-            if (outTitleString) {
-                _title = (NSString*)CFBridgingRelease(CGPDFStringCopyTextString(outTitleString));
-            }
-        }
-
         CGPDFDocumentRelease(pdf);
 
         if ([self isEncrypted]) {
@@ -49,8 +38,32 @@
             // to auto-open encrypted PDFs
             [self attemptToDecrypt:@""];
         }
+
+        [self refreshTitle];
     }
     return self;
+}
+
+- (void)refreshTitle {
+    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)self.urlOnDisk);
+
+    if (password) {
+        const char* key = [password UTF8String];
+        CGPDFDocumentUnlockWithPassword(pdf, key);
+    }
+
+    CGPDFDictionaryRef info = CGPDFDocumentGetInfo(pdf);
+
+    if (info) {
+        CGPDFStringRef outTitleString;
+        CGPDFDictionaryGetString(info, [@"Title" cStringUsingEncoding:NSUTF8StringEncoding], &outTitleString);
+
+        if (outTitleString) {
+            _title = (NSString*)CFBridgingRelease(CGPDFStringCopyTextString(outTitleString));
+        }
+    }
+
+    CGPDFDocumentRelease(pdf);
 }
 
 #pragma mark - Properties
@@ -66,6 +79,7 @@
 
         if (success) {
             password = _password;
+            [self refreshTitle];
         }
     }
 

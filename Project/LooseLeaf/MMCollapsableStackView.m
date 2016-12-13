@@ -25,6 +25,7 @@
 #import "MMPDFAssetGroup.h"
 #import "MMImportingPDFListButton.h"
 #import "MMBlockOperation.h"
+#import "MMDecryptPDFStackButton.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -52,6 +53,7 @@
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
     MMImportingPDFListButton* importingPDFListButton;
+    MMDecryptPDFStackButton* unlockPDFListButton;
 
     MMArrowView* collapseNoticeArrow;
     UILabel* collapseNoticeMessage;
@@ -61,6 +63,9 @@
     BOOL cancelImport;
 
     NSOperationQueue* importOperationQueue;
+
+    MMPDF* pdfToDecrypt;
+    void (^finishDecryptingPDFBlock)();
 }
 
 @dynamic stackDelegate;
@@ -132,6 +137,10 @@
         importingPDFListButton.delegate = self;
         [self addSubview:importingPDFListButton];
 
+        unlockPDFListButton = [[MMDecryptPDFStackButton alloc] initWithFrame:confirmationRect];
+        unlockPDFListButton.delegate = self;
+        [self addSubview:unlockPDFListButton];
+
         CGRect nameFieldFrame = CGRectWithHeight([self bounds], 50);
         nameFieldFrame = CGRectTranslate(nameFieldFrame, 0, 10);
         nameFieldFrame = CGRectInset(nameFieldFrame, [MMListPaperStackView bufferWidth], 10);
@@ -177,7 +186,11 @@
 }
 
 - (BOOL)isPerfectlyAlignedIntoRow {
-    return squishFactor == 0;
+    return squishFactor == 0 && !unlockPDFListButton.alpha && !importingPDFListButton.alpha;
+}
+
+- (BOOL)isCurrentlyHandlingImport {
+    return unlockPDFListButton.alpha || importingPDFListButton.alpha;
 }
 
 - (void)cancelPendingConfirmationsAndResetToRow {
@@ -252,15 +265,25 @@
     [self.stackDelegate.shareStackSidebar show:YES];
 }
 
-- (void)showUIToPrepareForImport {
+- (void)showUIToPrepareForImportingPDF:(MMPDFInboxItem*)pdfDoc onComplete:(void (^)())completionBlock {
     [self organizePagesIntoSingleRowAnimated:NO];
     emptyStackRowPlaceholder.alpha = 0;
     importingPDFListButton.alpha = 1;
 
     [importingPDFListButton setPrompt:@"Importing PDF..."];
+
+    if ([pdfDoc.pdf isEncrypted]) {
+        importingPDFListButton.alpha = 0;
+        unlockPDFListButton.alpha = 1;
+
+        pdfToDecrypt = pdfDoc.pdf;
+        finishDecryptingPDFBlock = completionBlock;
+    } else {
+        completionBlock(pdfDoc);
+    }
 }
 
-- (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)())completionBlock {
+- (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)(BOOL success))completionBlock {
     if ([self isShowingCollapsedView]) {
         if ([pdfDoc.pdf.title length]) {
             self.stackManager.name = pdfDoc.pdf.title;
@@ -291,6 +314,9 @@
 
         void (^finishedImportingAllPages)() = ^{
             if (cancelImport) {
+                if (completionBlock) {
+                    completionBlock(NO);
+                }
                 return;
             }
 
@@ -315,7 +341,7 @@
                         animationCompletionBlock = ^(BOOL finished) {
                             [self saveStacksToDisk];
                             if (completionBlock) {
-                                completionBlock();
+                                completionBlock(YES);
                             }
                         };
                     }
@@ -341,6 +367,9 @@
 
         MMBlockOperation* finalBlock = [[MMBlockOperation alloc] initWithBlock:^{
             if (cancelImport) {
+                if (completionBlock) {
+                    completionBlock(NO);
+                }
                 return;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -358,7 +387,11 @@
                     page.alpha = 0;
 
                     if (index < kMaxPageCountForRow) {
-                        [page loadCachedPreview];
+                        if (index == 0) {
+                            [page loadCachedPreviewAndDecompressImmediately:YES];
+                        } else {
+                            [page loadCachedPreview];
+                        }
                     } else {
                         [page unloadCachedPreview];
                     }
@@ -375,6 +408,9 @@
         for (NSInteger index = 0; index < [pages count]; index++) {
             MMBlockOperation* blockOp = [[MMBlockOperation alloc] initWithBlock:^{
                 if (cancelImport) {
+                    // don't call completion block here,
+                    // we'll call it in the final block that
+                    // depends on these
                     return;
                 }
 
@@ -399,7 +435,7 @@
     }
 
     if ([pdfDoc pageCount] == 0 && completionBlock) {
-        completionBlock();
+        completionBlock(NO);
     }
 }
 
@@ -614,7 +650,8 @@
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
         deleteConfirmationPlaceholder.alpha = 0;
-        emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0;
+        unlockPDFListButton.alpha = pdfToDecrypt ? 1 : 0;
+        emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0 && !pdfToDecrypt;
         deleteRowButton.alpha = 0;
         shareRowButton.alpha = 0;
         shareStackButton.alpha = 0;
@@ -995,22 +1032,42 @@
 #pragma mark - MMFullWidthListButtonDelegate
 
 - (void)didTapLeftInFullWidthButton:(MMFullWidthListButton*)button {
-    if (button == importingPDFListButton) {
+    if (button == importingPDFListButton || button == unlockPDFListButton) {
         cancelImport = YES;
     }
     deleteGesture.enabled = YES;
     squishFactor = 0;
     [self.stackDelegate isAskingToDeleteStack:self.uuid];
+
+    if (button == unlockPDFListButton && finishDecryptingPDFBlock) {
+        importingPDFListButton.alpha = 1;
+        unlockPDFListButton.alpha = 0;
+        finishDecryptingPDFBlock();
+        finishDecryptingPDFBlock = nil;
+        pdfToDecrypt = nil;
+    }
 }
 
 - (void)didTapRightInFullWidthButton:(MMFullWidthListButton*)button {
-    if (button == deleteConfirmationPlaceholder) {
+    if (button == unlockPDFListButton) {
+        if (![pdfToDecrypt attemptToDecrypt:unlockPDFListButton.password]) {
+            [unlockPDFListButton bouncePasswordInput];
+        }
+    } else if (button == deleteConfirmationPlaceholder) {
         deleteGesture.enabled = YES;
         squishFactor = .15;
         [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
     } else {
         // asking to add three pages
         [self ensureAtLeastPagesInStack:3];
+    }
+
+    if (button == unlockPDFListButton && finishDecryptingPDFBlock && ![pdfToDecrypt isEncrypted]) {
+        importingPDFListButton.alpha = 1;
+        unlockPDFListButton.alpha = 0;
+        finishDecryptingPDFBlock();
+        finishDecryptingPDFBlock = nil;
+        pdfToDecrypt = nil;
     }
 }
 
