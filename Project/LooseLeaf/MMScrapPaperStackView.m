@@ -194,14 +194,15 @@
     [[NSThread mainThread] performBlock:^{
         if ([self imageMatchesPaperDimensions:scrapBacking]) {
             CGSize pageSize = hiddenStackHolder.bounds.size;
-            MMBackgroundedPaperView* page = [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication];
-            [hiddenStackHolder pushSubview:page];
-            [page saveToDisk:nil];
-            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-            [page updateThumbnailVisibility];
-            [[visibleStackHolder peekSubview] enableAllGestures];
-            [self popTopPageOfHiddenStack];
-            [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+            [self importImageAsNewPage:[scrapBacking imageForPage:0 forMaxDim:MAX(pageSize.width, pageSize.height)] withAssetURL:url fromContainer:kMPEventImportPropSourceApplication referringApp:sourceApplication onComplete:^(MMExportablePaperView* page) {
+                [hiddenStackHolder pushSubview:page];
+                [page saveToDisk:nil];
+                [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+                [page updateThumbnailVisibility];
+                [[visibleStackHolder peekSubview] enableAllGestures];
+                [self popTopPageOfHiddenStack];
+                [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+            }];
             return;
         }
 
@@ -383,7 +384,7 @@
     [self enableAllGesturesForPageView];
 }
 
-- (MMExportablePaperView*)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication {
+- (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)inAssetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock {
     CGSize thumbSize = hiddenStackHolder.bounds.size;
     thumbSize.width = floorf(thumbSize.width / 2);
     thumbSize.height = floorf(thumbSize.height / 2);
@@ -391,32 +392,52 @@
 
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
+    __block NSURL* assetURL = inAssetURL;
 
-    [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
-    [MMExportablePaperView writeBackgroundImageToDisk:imageToImport thumbSize:thumbSize thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath] backgroundTexturePath:[page backgroundTexturePath]];
-    if (!assetURL) {
-        NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
-        [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
-        assetURL = [NSURL fileURLWithPath:tmpImagePath];
-    }
-    [page saveOriginalBackgroundTextureFromURL:assetURL];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
+        [MMBackgroundedPaperView writeBackgroundImageToDisk:imageToImport backgroundTexturePath:[page backgroundTexturePath]];
 
-    [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
-    [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
 
-    NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [assetURL fileExtension] ?: @"png",
-                                          kMPEventImportPropFileType: [assetURL universalTypeID] ?: [NSURL UTIForExtension:@"png"],
-                                          kMPEventImportPropResult: @"Success" } mutableCopy];
-    if (containerDescription) {
-        properties[kMPEventImportPropSource] = containerDescription;
-    }
-    if (sourceApplication) {
-        properties[kMPEventImportPropSourceApplication] = sourceApplication;
-    }
+        CGFloat scale = [[UIScreen mainScreen] scale];
+        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
 
-    [[Mixpanel sharedInstance] track:kMPEventImportPage properties:properties];
+        CGRect rectForImage = CGSizeFill([imageToImport size], thumbSize);
+        [imageToImport drawInRect:rectForImage];
 
-    return page;
+        UIImage* thumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
+
+        UIGraphicsEndImageContext();
+
+        [MMExportablePaperView writeThumbnailImagesToDisk:thumbnailImage thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
+        if (!assetURL) {
+            NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
+            [UIImagePNGRepresentation(imageToImport) writeToFile:tmpImagePath atomically:YES];
+            assetURL = [NSURL fileURLWithPath:tmpImagePath];
+        }
+        [page saveOriginalBackgroundTextureFromURL:assetURL];
+
+        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
+        [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+
+        NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [assetURL fileExtension] ?: @"png",
+                                              kMPEventImportPropFileType: [assetURL universalTypeID] ?: [NSURL UTIForExtension:@"png"],
+                                              kMPEventImportPropResult: @"Success" } mutableCopy];
+        if (containerDescription) {
+            properties[kMPEventImportPropSource] = containerDescription;
+        }
+        if (sourceApplication) {
+            properties[kMPEventImportPropSourceApplication] = sourceApplication;
+        }
+
+        [[Mixpanel sharedInstance] track:kMPEventImportPage properties:properties];
+
+        if (completionBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionBlock(page);
+            });
+        }
+    });
 }
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage {
@@ -426,14 +447,15 @@
     if (asPage) {
         CGSize pageSize = hiddenStackHolder.bounds.size;
         img = [img resizedImageWithContentMode:UIViewContentModeScaleAspectFit bounds:pageSize interpolationQuality:kCGInterpolationHigh];
-        MMBackgroundedPaperView* page = [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil];
-        [hiddenStackHolder pushSubview:page];
-        [page saveToDisk:nil];
-        [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-        [page updateThumbnailVisibility];
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popTopPageOfHiddenStack];
-        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        [self importImageAsNewPage:img withAssetURL:nil fromContainer:@"Camera" referringApp:nil onComplete:^(MMExportablePaperView* page) {
+            [hiddenStackHolder pushSubview:page];
+            [page saveToDisk:nil];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        }];
         return;
     }
 
@@ -546,14 +568,15 @@
 
     if (asPage) {
         CGSize pageSize = hiddenStackHolder.bounds.size;
-        MMBackgroundedPaperView* page = [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil];
-        [hiddenStackHolder pushSubview:page];
-        [page saveToDisk:nil];
-        [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
-        [page updateThumbnailVisibility];
-        [[visibleStackHolder peekSubview] enableAllGestures];
-        [self popTopPageOfHiddenStack];
-        [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:containerDescription referringApp:nil onComplete:^(MMExportablePaperView* page) {
+            [hiddenStackHolder pushSubview:page];
+            [page saveToDisk:nil];
+            [page loadCachedPreviewAndDecompressImmediately:NO]; // needed to make sure the background is showing properly
+            [page updateThumbnailVisibility];
+            [[visibleStackHolder peekSubview] enableAllGestures];
+            [self popTopPageOfHiddenStack];
+            [self.stackDelegate.importImageSidebar hide:YES onComplete:nil];
+        }];
         return;
     }
 

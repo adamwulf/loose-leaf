@@ -66,28 +66,21 @@
     paperBackgroundView.image = img;
 }
 
-+ (void)writeBackgroundImageToDisk:(UIImage*)img thumbSize:(CGSize)thumbSize thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath backgroundTexturePath:(NSString*)backgroundTexturePath {
++ (void)writeBackgroundImageToDisk:(UIImage*)img backgroundTexturePath:(NSString*)backgroundTexturePath {
     @autoreleasepool {
-        // use same calculations to generate a thumbnail
-        // as the [export] methods below
-        CGFloat scale = [[UIScreen mainScreen] scale];
-        UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
+        [UIImagePNGRepresentation(img) writeToFile:backgroundTexturePath atomically:YES];
 
-        CGRect rectForImage = CGSizeFill([img size], thumbSize);
-        [img drawInRect:rectForImage];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:backgroundTexturePath];
+    }
+}
 
-        UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
-
-        UIGraphicsEndImageContext();
-
-        NSData* imgData = UIImagePNGRepresentation(outputImage);
-        [imgData writeToFile:[self thumbnailPath] atomically:YES];
-        [imgData writeToFile:[self scrappedThumbnailPath] atomically:YES];
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self thumbnailPath]];
-
-        [UIImagePNGRepresentation(img) writeToFile:[self backgroundTexturePath] atomically:YES];
-
-        [[MMLoadImageCache sharedInstance] clearCacheForPath:[self scrappedThumbnailPath]];
++ (void)writeThumbnailImagesToDisk:(UIImage*)img thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath {
+    @autoreleasepool {
+        NSData* imgData = UIImagePNGRepresentation(img);
+        [imgData writeToFile:thumbnailPath atomically:YES];
+        [imgData writeToFile:scrappedThumbnailPath atomically:YES];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:thumbnailPath];
+        [[MMLoadImageCache sharedInstance] clearCacheForPath:scrappedThumbnailPath];
     }
 }
 
@@ -119,7 +112,28 @@
                     isLoadingBackgroundTexture = NO;
                 }];
             } else {
-                isLoadingBackgroundTexture = NO;
+                __block NSURL* backgroundAssetURL;
+
+                [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL* item, NSUInteger totalItemCount) {
+                    if ([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]) {
+                        backgroundAssetURL = item;
+                    }
+                } andErrorHandler:nil];
+
+                if (backgroundAssetURL && [[backgroundAssetURL path] hasSuffix:@"pdf"]) {
+                    CGFloat maxDim = kPDFImportMaxDim * [[UIScreen mainScreen] scale];
+                    MMPDF* pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
+                    UIImage* img = [pdf imageForPage:0 withMaxDim:maxDim];
+                    [[NSThread mainThread] performBlock:^{
+                        if (wantsBackgroundTextureLoaded) {
+                            [self setPageBackgroundTexture:img];
+                        };
+                        isLoadingBackgroundTexture = NO;
+                    }];
+                    [MMBackgroundedPaperView writeBackgroundImageToDisk:img backgroundTexturePath:[self backgroundTexturePath]];
+                } else {
+                    isLoadingBackgroundTexture = NO;
+                }
             }
         } else {
             isLoadingBackgroundTexture = NO;

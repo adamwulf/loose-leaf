@@ -24,6 +24,8 @@
 
 - (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock;
 
-+ (void)writeBackgroundImageToDisk:(UIImage*)img thumbSize:(CGSize)thumbSize thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath backgroundTexturePath:(NSString*)backgroundTexturePath;
++ (void)writeBackgroundImageToDisk:(UIImage*)img backgroundTexturePath:(NSString*)backgroundTexturePath;
+
++ (void)writeThumbnailImagesToDisk:(UIImage*)img thumbnailPath:(NSString*)thumbnailPath scrappedThumbnailPath:(NSString*)scrappedThumbnailPath;
 
 @end

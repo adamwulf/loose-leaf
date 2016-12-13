@@ -24,6 +24,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMPDFAssetGroup.h"
 #import "MMImportingPDFListButton.h"
+#import "MMBlockOperation.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -58,6 +59,8 @@
     MMShareButton* shareStackButton;
 
     BOOL cancelImport;
+
+    NSOperationQueue* importOperationQueue;
 }
 
 @dynamic stackDelegate;
@@ -72,6 +75,10 @@
         collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -100, 80, 80)];
         collapseNoticeArrow.alpha = 0;
         [self addSubview:collapseNoticeArrow];
+
+        importOperationQueue = [[NSOperationQueue alloc] init];
+        importOperationQueue.maxConcurrentOperationCount = 4;
+        importOperationQueue.name = @"importOperationQueue";
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
         collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
@@ -252,109 +259,120 @@
 
         [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)1, (long)pdfDoc.pdf.pageCount]];
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            CGSize pageSize = [UIScreen screenSize];
-            CGFloat maxDim = kPDFImportMaxDim * [[UIScreen mainScreen] scale];
+        NSIndexSet* pageSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [pdfDoc pageCount])];
+        MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
+        NSMutableArray* displayAssets = [NSMutableArray array];
+        NSMutableArray* pages = [NSMutableArray array];
+        @autoreleasepool {
+            [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset* asset, NSUInteger index, BOOL* stop) {
+                [displayAssets addObject:asset];
+                MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+                [pages addObject:page];
+                page.delegate = self;
+            }];
+        }
 
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                NSIndexSet* pageSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [pdfDoc pageCount])];
-                MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
-                NSMutableArray* displayAssets = [NSMutableArray array];
-                @autoreleasepool {
-                    [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset* asset, NSUInteger index, BOOL* stop) {
-                        [displayAssets addObject:asset];
-                    }];
+
+        void (^finishedImportingAllPages)() = ^{
+            if (cancelImport) {
+                return;
+            }
+
+            NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+            [self organizePagesIntoSingleRowAnimated:NO];
+
+            [UIView animateWithDuration:.2 animations:^{
+                importingPDFListButton.alpha = 0;
+            }];
+
+            for (NSInteger pageIndex = 0; pageIndex < [allPages count]; pageIndex++) {
+                MMPaperView* page = allPages[pageIndex];
+
+                if (pageIndex < kMaxPageCountForRow) {
+                    page.alpha = 0;
+                    page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
+
+                    void (^animationCompletionBlock)(BOOL) = nil;
+
+                    if (pageIndex == [allPages count] - 1 || pageIndex == kMaxPageCountForRow - 1) {
+                        // last page
+                        animationCompletionBlock = ^(BOOL finished) {
+                            if (completionBlock) {
+                                completionBlock();
+                            }
+                        };
+                    }
+
+                    [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+                        page.alpha = 1;
+                        page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
+                    } completion:animationCompletionBlock];
+                    delay += .1;
+                } else {
+                    page.alpha = 1;
+                }
+            }
+        };
+
+
+        __block NSInteger totalImportedPages = 0;
+        void (^updateImportProgressLabel)() = ^{
+            totalImportedPages++;
+            [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)totalImportedPages, (long)pdfDoc.pdf.pageCount]];
+        };
+
+
+        MMBlockOperation* finalBlock = [[MMBlockOperation alloc] initWithBlock:^{
+            if (cancelImport) {
+                return;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                for (MMExportablePaperView* page in pages) {
+                    [page saveToDisk:nil];
+
+                    // move page to end
+                    if ([self.visibleStackHolder.subviews count] == 0) {
+                        [self.visibleStackHolder pushSubview:page];
+                    } else {
+                        [self.hiddenStackHolder insertSubview:page atIndex:0];
+                    }
+
+                    page.alpha = 0;
+
+                    [page unloadCachedPreview];
+                }
+                finishedImportingAllPages();
+            });
+        }];
+
+        CGSize thumbSize = hiddenStackHolder.bounds.size;
+        thumbSize.width = floorf(thumbSize.width / 2);
+        thumbSize.height = floorf(thumbSize.height / 2);
+
+        for (NSInteger index = 0; index < [pages count]; index++) {
+            MMBlockOperation* blockOp = [[MMBlockOperation alloc] initWithBlock:^{
+                if (cancelImport) {
+                    return;
                 }
 
-                void (^finishedImportingAllPages)() = ^{
-                    if (cancelImport) {
-                        return;
-                    }
+                dispatch_async(dispatch_get_main_queue(), updateImportProgressLabel);
 
-                    NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
-                    [self organizePagesIntoSingleRowAnimated:NO];
+                MMDisplayAsset* asset = displayAssets[index];
+                MMBackgroundedPaperView* page = pages[index];
+                NSURL* assetURL = [asset fullResolutionURL];
 
-                    [UIView animateWithDuration:.2 animations:^{
-                        importingPDFListButton.alpha = 0;
-                    }];
+                UIImage* thumbImageToImport = [asset aspectThumbnailWithMaxPixelSize:CGSizeMaxDim(thumbSize)];
+                [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
 
-                    for (NSInteger pageIndex = 0; pageIndex < [allPages count]; pageIndex++) {
-                        MMPaperView* page = allPages[pageIndex];
+                [MMExportablePaperView writeThumbnailImagesToDisk:thumbImageToImport thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
 
-                        if (pageIndex < kMaxPageCountForRow) {
-                            page.alpha = 0;
-                            page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
+                [page saveOriginalBackgroundTextureFromURL:assetURL];
+            }];
+            [finalBlock addDependency:blockOp];
+            [importOperationQueue addOperation:blockOp];
+        }
 
-                            void (^animationCompletionBlock)(BOOL) = nil;
-
-                            if (pageIndex == [allPages count] - 1 || pageIndex == kMaxPageCountForRow - 1) {
-                                // last page
-                                animationCompletionBlock = ^(BOOL finished) {
-                                    if (completionBlock) {
-                                        completionBlock();
-                                    }
-                                };
-                            }
-
-                            [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
-                                page.alpha = 1;
-                                page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
-                            } completion:animationCompletionBlock];
-                            delay += .1;
-                        } else {
-                            page.alpha = 1;
-                        }
-                    }
-                };
-
-                __block void (^importAnotherPage)();
-                importAnotherPage = ^{
-                    if (cancelImport) {
-                        return;
-                    }
-                    @autoreleasepool {
-                        if ([displayAssets count]) {
-                            MMDisplayAsset* asset = [displayAssets firstObject];
-                            [displayAssets removeObjectAtIndex:0];
-
-                            // show the page number for the upcoming page
-                            [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)pdfDoc.pdf.pageCount - [displayAssets count], (long)pdfDoc.pdf.pageCount]];
-
-                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                                @autoreleasepool {
-                                    // move this to a background thread and parallelize it.
-                                    // then after all assets are written to disk in the correct format,
-                                    // I can build the page objects and add them to the stack on the main thread.
-                                    NSURL* assetURL = [asset fullResolutionURL];
-                                    MMBackgroundedPaperView* page = [self importImageAsNewPage:[asset aspectThumbnailWithMaxPixelSize:maxDim andRatio:pageSize.width / pageSize.height] withAssetURL:assetURL fromContainer:nil referringApp:sourceApplication];
-
-                                    [self.hiddenStackHolder pushSubview:page];
-                                    [page saveToDisk:nil];
-
-                                    // move page to end
-                                    if ([self.visibleStackHolder.subviews count] == 0) {
-                                        [self.visibleStackHolder pushSubview:[self.hiddenStackHolder peekSubview]];
-                                    } else {
-                                        [self.hiddenStackHolder insertSubview:page atIndex:0];
-                                    }
-
-                                    page.alpha = 0;
-
-                                    [page unloadCachedPreview];
-
-                                    dispatch_async(dispatch_get_main_queue(), importAnotherPage);
-                                }
-                            }];
-                        } else {
-                            importAnotherPage = nil;
-                            finishedImportingAllPages();
-                        }
-                    }
-                };
-
-                [NSThread performBlockOnMainThread:importAnotherPage];
-            });
-        });
+        [importOperationQueue addOperation:finalBlock];
     }
 
     if ([pdfDoc pageCount] == 0 && completionBlock) {
