@@ -258,6 +258,20 @@ static NSString* bezelStatePath;
     }];
 }
 
+- (void)upgradeIfNecessary:(MMExportablePaperView*)page withMeta:(NSDictionary*)meta {
+    NSString* stackUUID = meta[@"stackUUID"];
+
+    if (stackUUID) {
+        MMCollapsableStackView* previousStack = [self.bubbleDelegate stackForUUID:stackUUID];
+        NSString* originalPagesPath = [MMEditablePaperView pagesPathForStackUUID:stackUUID andPageUUID:page.uuid];
+        if (previousStack && [[NSFileManager defaultManager] fileExistsAtPath:originalPagesPath]) {
+            // The assets still exist in the previous stack, so move them
+            // into the sidebar stack
+            [page moveAssetsFrom:previousStack];
+        }
+    }
+}
+
 - (void)loadFromDisk {
     // load from disk
     CGRect bounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
@@ -265,10 +279,14 @@ static NSString* bezelStatePath;
     for (NSDictionary* pageMeta in pagesMeta) {
         NSString* pageUUID = pageMeta[@"uuid"];
 
-        MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
+        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
         page.isBrandNewPage = NO;
         page.delegate = pageSidebarStack;
         [page disableAllGestures];
+
+        // we might need to move assets from the original stack
+        // into our own sidebar stack
+        [self upgradeIfNecessary:page withMeta:pageMeta];
 
         // scale the page down. we can't initialize with this bounds,
         // because the initialied bounds is also our drawable resolution.
