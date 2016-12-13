@@ -53,6 +53,7 @@
 #import "UIColor+MMAdditions.h"
 #import "MMRotatingBackgroundViewDelegate.h"
 #import "MMShareStackSidebarContainerView.h"
+#import "MMStopWatch.h"
 
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
@@ -1041,8 +1042,26 @@
     [aStackView showUIToPrepareForImport];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        MMStopWatch* timer = [[MMStopWatch alloc] init];
+        [timer start];
         [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^{
             // done importing
+
+            [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(pdfDoc.pdf.pageCount)];
+            [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+
+            CGFloat duration = [timer stop];
+            NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [url fileExtension] ?: @"png",
+                                                  kMPEventImportPropFileType: [url universalTypeID] ?: [NSURL UTIForExtension:@"png"],
+                                                  kMPEventImportPropResult: @"Success",
+                                                  kMPEventImportDuration: @(duration),
+                                                  kMPNumberOfPages: @(pdfDoc.pdf.pageCount) } mutableCopy];
+            if (sourceApplication) {
+                properties[kMPEventImportPropSourceApplication] = sourceApplication;
+            }
+
+            [[Mixpanel sharedInstance] track:kMPEventImportStack properties:properties];
+
         }];
     });
 }

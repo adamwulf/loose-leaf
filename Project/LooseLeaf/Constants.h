@@ -261,6 +261,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventTakePhoto @"Take Photo"
 #define kMPEventImportPhoto @"Import Photo"
 #define kMPEventImportPage @"Import Page"
+#define kMPEventImportStack @"Import Stack"
+#define kMPEventImportDuration @"Import Duration (s)"
 #define kMPEventImportPhotoFailed @"Import Photo Failed"
 #define kMPEventExport @"Export Page"
 #define kMPEventClonePage @"Clone Page"
