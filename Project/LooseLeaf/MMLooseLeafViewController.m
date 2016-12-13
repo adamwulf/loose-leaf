@@ -133,10 +133,6 @@
             viewModeForLaunch = kViewModeCollapsed;
         }
 
-#ifdef DEBUG
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasEverCollapsedToShowAllStacks];
-#endif
-
         mightShowReleaseNotes = YES;
         isShowingCollapsedView = YES;
 
@@ -330,10 +326,18 @@
         [currentStackView immediatelyRelayoutIfInListMode];
         // TODO: above two lines might never run b/c currentStackView is always nil?
 
+        MMCollapsableStackView* initialStackView = nil;
+
+        if (currentStackForLaunch) {
+            initialStackView = stackViewsByUUID[currentStackForLaunch];
+        }
+
         // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
-        if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
+        if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch && initialStackView) {
             [self didAskToSwitchToStack:currentStackForLaunch animated:NO viewMode:viewModeForLaunch];
         } else {
+            [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
             [currentStackView setButtonsVisible:NO animated:NO];
             bezelPagesContainer.alpha = 0;
             bezelScrapContainer.alpha = 0;

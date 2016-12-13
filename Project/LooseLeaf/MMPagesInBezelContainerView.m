@@ -49,6 +49,25 @@
         [opQueue setMaxConcurrentOperationCount:1];
 
         pagesMeta = [[NSArray alloc] initWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
+
+
+        NSMutableArray* pagesSoFar = [NSMutableArray array];
+
+        pagesMeta = [pagesMeta filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSDictionary* _Nullable evaluatedObject, NSDictionary<NSString*, id>* _Nullable bindings) {
+            // filter out duplicates, just in case.
+            // I ran into a situation where I did have duplicate pages in the sidebar,
+            // likely a sideeffect of being in debug mode, but better safe than sorry
+
+            NSString* stackUUID = evaluatedObject[@"stackUUID"] ?: @"";
+            NSString* pageUUID = evaluatedObject[@"uuid"] ?: @"";
+            NSString* key = [stackUUID stringByAppendingString:pageUUID];
+
+            BOOL alreadySeen = [pagesSoFar containsObject:key];
+
+            [pagesSoFar addObject:key];
+
+            return !alreadySeen;
+        }]];
     }
     return self;
 }
@@ -230,6 +249,7 @@ static NSString* bezelStatePath;
     for (NSDictionary* pageMeta in pagesMeta) {
         NSString* stackUUID = pageMeta[@"stackUUID"];
         NSString* pageUUID = pageMeta[@"uuid"];
+
         MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
         page.isBrandNewPage = NO;
         page.delegate = [self.bubbleDelegate stackForUUID:stackUUID];
