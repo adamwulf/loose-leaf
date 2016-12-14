@@ -10,6 +10,7 @@
 #import "MMJotViewNilState.h"
 #import "MMPaperStackView.h"
 #import "Constants.h"
+#import "Mixpanel.h"
 
 
 @implementation MMPageCacheManager {
@@ -99,7 +100,7 @@ static MMPageCacheManager* _instance = nil;
     if (!page && [delegate countAllPages]) {
         // don't allow changing to nil page unless
         // there are no pages to change to (count is zero)
-        @throw [NSException exceptionWithName:@"NilPageException" reason:@"will change to nil page" userInfo:nil];
+        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1558) }];
     }
     [self ensureTopPageIsLoaded:currentlyTopPage];
     if (!page) {
