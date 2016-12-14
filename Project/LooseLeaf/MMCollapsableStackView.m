@@ -1162,109 +1162,116 @@
 
 - (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
     JotView* exportJotView = [[JotView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
-
-    NSMutableArray* allPagePDFs = [NSMutableArray array];
-
+    
+    NSMutableArray* allPageImages = [NSMutableArray array];
+    
     NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
-
+    
     __block void (^exportTopPageOf)(NSArray<MMExportablePaperView*>* pages);
     exportTopPageOf = ^(NSArray<MMExportablePaperView*>* pages) {
         MMExportablePaperView* page = [pages firstObject];
         BOOL needsLoad = !page.isStateLoaded;
         BOOL needsDrawable = !page.drawableView;
-
-        if (progressBlock([allPagePDFs count], [allPages count])) {
+        
+        if (progressBlock([allPageImages count], [allPages count])) {
             // check if the user has asked to cancel
-            for (NSURL* url in allPagePDFs) {
+            for (NSURL* url in allPageImages) {
                 [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
             }
             return;
         }
-
+        
         if (needsLoad) {
-            [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
+            @autoreleasepool {
+                [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
+            }
         }
-
+        
         if (needsDrawable) {
             [page setDrawableView:exportJotView];
         }
-
-        [page exportVisiblePageToPDF:^(NSURL* urlToPDF) {
-            if (urlToPDF) {
-                [allPagePDFs addObject:urlToPDF];
-            }
-
-            if (needsLoad) {
-                [page unloadState];
-            }
-
-            if (needsDrawable) {
-                [page setDrawableView:nil];
-            }
-
-            if ([pages count] > 1) {
-                exportTopPageOf([pages subarrayWithRange:NSMakeRange(1, [pages count] - 1)]);
-            } else {
-                exportTopPageOf = nil;
-
-                if (progressBlock([allPagePDFs count], [allPages count])) {
-                    // check if the user has asked to cancel
-                    for (NSURL* url in allPagePDFs) {
-                        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-                    }
-                    return;
+        
+        @autoreleasepool {
+            [page exportVisiblePageToImage:^(NSURL *urlToImage) {
+                if (urlToImage) {
+                    [allPageImages addObject:urlToImage];
                 }
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // done! our PDFs for each page are in allPagePDFs.
-                    // next is to merge all these into 1 single PDF
-
-                    // Loop variables
-                    CGPDFPageRef page;
-                    CGRect mediaBox;
-
-                    NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
-                    NSURL* pdfURLOutput = [NSURL fileURLWithPath:tmpPagePath];
-                    CGContextRef writeContext = CGPDFContextCreateWithURL((CFURLRef)pdfURLOutput, NULL, NULL);
-
-                    // Read the first PDF and generate the output pages
-                    for (NSURL* pdfURL in allPagePDFs) {
+                
+                if (needsLoad) {
+                    [page unloadState];
+                }
+                
+                if (needsDrawable) {
+                    [page setDrawableView:nil];
+                }
+                
+                if ([pages count] > 1) {
+                    NSLog(@"exporting next page");
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         @autoreleasepool {
-                            MMPDF* pdf = [[MMPDF alloc] initWithURL:pdfURL];
-                            CGPDFDocumentRef pdfRef1 = CGPDFDocumentCreateWithURL((CFURLRef)pdf.urlOnDisk);
-
-                            for (int i = 1; i <= [pdf pageCount]; i++) {
+                            exportTopPageOf([pages subarrayWithRange:NSMakeRange(1, [pages count] - 1)]);
+                        }
+                    });
+                } else {
+                    exportTopPageOf = nil;
+                    
+                    if (progressBlock([allPageImages count], [allPages count])) {
+                        // check if the user has asked to cancel
+                        for (NSURL* url in allPageImages) {
+                            [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                        }
+                        return;
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        @autoreleasepool {
+                            // done! our PDFs for each page are in allPagePDFs.
+                            // next is to merge all these into 1 single PDF
+                            
+                            // Loop variables
+                            CGRect mediaBox;
+                            
+                            NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+                            NSURL* pdfURLOutput = [NSURL fileURLWithPath:tmpPagePath];
+                            CGContextRef writeContext = CGPDFContextCreateWithURL((CFURLRef)pdfURLOutput, NULL, NULL);
+                            
+                            // Read the first PDF and generate the output pages
+                            for (NSURL* imageURL in allPageImages) {
                                 @autoreleasepool {
-                                    page = CGPDFDocumentGetPage(pdfRef1, i);
-                                    mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
-                                    CGContextBeginPage(writeContext, &mediaBox);
-                                    CGContextDrawPDFPage(writeContext, page);
-                                    CGContextEndPage(writeContext);
+                                    UIImage* img = [UIImage imageWithContentsOfFile:[imageURL path]];
+                                    
+                                    if(img){
+                                        mediaBox = CGRectFromSize(img.size);
+                                        CGContextBeginPage(writeContext, &mediaBox);
+                                        CGContextDrawImage(writeContext, mediaBox, img.CGImage);
+                                        CGContextEndPage(writeContext);
+                                    }
                                 }
                             }
-
-                            CGPDFDocumentRelease(pdfRef1);
+                            
+                            // Finalize the output file
+                            CGPDFContextClose(writeContext);
+                            
+                            // Release from memory
+                            CGContextRelease(writeContext);
+                            
+                            // delete per-page PDFs
+                            for (NSURL* url in allPageImages) {
+                                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                            }
+                            
+                            completionBlock(pdfURLOutput);
                         }
-                    }
-
-                    // Finalize the output file
-                    CGPDFContextClose(writeContext);
-
-                    // Release from memory
-                    CGContextRelease(writeContext);
-
-                    // delete per-page PDFs
-                    for (NSURL* url in allPagePDFs) {
-                        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-                    }
-
-                    completionBlock(pdfURLOutput);
-                });
-            }
-        }];
+                    });
+                }
+            }];
+        }
     };
 
-    exportTopPageOf(allPages);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSLog(@"exporting first page");
+        exportTopPageOf(allPages);
+    });
 }
 
 @end
