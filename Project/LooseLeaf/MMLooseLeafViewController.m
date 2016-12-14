@@ -649,7 +649,9 @@
         [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
 
-    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[aStackView visibleStackHolder] peekSubview]];
+    if ([[aStackView visibleStackHolder] peekSubview]) {
+        [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[aStackView visibleStackHolder] peekSubview]];
+    }
 
     void (^animationStep)() = ^{
         NSInteger targetStackIndex = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
