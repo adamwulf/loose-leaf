@@ -386,7 +386,6 @@
 }
 
 - (void)pageCacheManagerDidLoadPage {
-    [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 

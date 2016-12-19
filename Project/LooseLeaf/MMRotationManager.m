@@ -61,59 +61,61 @@ static MMRotationManager* _instance = nil;
         if (shouldIgnoreEvents) {
             return;
         }
-        //
-        // if z == -1, x == 0, y == 0
-        //   then it's flat up on a table
-        // if z == 1, x == 0, y == 0
-        //   then it's flat down on a table
-        // if z == 0, x == 0, y == -1
-        //   then it's up in portrait
-        // if z == 0, x == 0, y == 1
-        //   then it's upside down in portrait
-        // if z == 0, x == 1, y == 0
-        //   then it's landscape button left
-        // if z == 0, x == -1, y == 0
-        //   then it's landscape button right
-        accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
-        accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
-        accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
-        //            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
-        //            DebugLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
-        currentTrust += (goalTrust - currentTrust) / 10.0;
-        currentTrust = goalTrust;
+        @autoreleasepool {
+            //
+            // if z == -1, x == 0, y == 0
+            //   then it's flat up on a table
+            // if z == 1, x == 0, y == 0
+            //   then it's flat down on a table
+            // if z == 0, x == 0, y == -1
+            //   then it's up in portrait
+            // if z == 0, x == 0, y == 1
+            //   then it's upside down in portrait
+            // if z == 0, x == 1, y == 0
+            //   then it's landscape button left
+            // if z == 0, x == -1, y == 0
+            //   then it's landscape button right
+            accelerationX = data.acceleration.x * kFilteringFactor + accelerationX * (1.0 - kFilteringFactor);
+            accelerationY = data.acceleration.y * kFilteringFactor + accelerationY * (1.0 - kFilteringFactor);
+            accelerationZ = data.acceleration.z * kFilteringFactor + accelerationZ * (1.0 - kFilteringFactor);
+            //            CGFloat absZ = accelerationZ < 0 ? -accelerationZ : accelerationZ;
+            //            DebugLog(@"x: %f   y: %f   z: %f   diff: %f", accelerationX, accelerationY, absZ);
+            currentTrust += (goalTrust - currentTrust) / 10.0;
+            currentTrust = goalTrust;
 
-        MMVector* actualRawReading = [MMVector vectorWithAngle:atan2(accelerationY, accelerationX)];
-        MMVector* orientationRotationReading = [self idealRotationReadingForCurrentOrientation];
+            MMVector* actualRawReading = [MMVector vectorWithAngle:atan2(accelerationY, accelerationX)];
+            MMVector* orientationRotationReading = [self idealRotationReadingForCurrentOrientation];
 
-        @synchronized(self) {
-            CGFloat diffOrient = [currentRotationReading angleBetween:orientationRotationReading];
-            CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
+            @synchronized(self) {
+                CGFloat diffOrient = [currentRotationReading angleBetween:orientationRotationReading];
+                CGFloat diffActual = [currentRotationReading angleBetween:actualRawReading];
 
-            CGFloat diffCombined = currentTrust * diffActual + (1 - currentTrust) * diffOrient;
-            //            DebugLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
-            // now tone it down so that we don't jump around too much, make
-            // sure it only changes by max of 5 degrees
-            if (ABS(diffCombined) > .05 || isFirstReading) {
-                diffCombined = diffCombined > .2 ? .2 : diffCombined < -.2 ? -.2 : diffCombined;
-                currentRotationReading = [currentRotationReading rotateBy:diffCombined];
-                isFirstReading = NO;
-                [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
+                CGFloat diffCombined = currentTrust * diffActual + (1 - currentTrust) * diffOrient;
+                //            DebugLog(@"currVec: %@  actualVec: %@  orientVec: %@  trust: %f", currentRotationReading, actualRawReading, orientationRotationReading, currentTrust);
+                // now tone it down so that we don't jump around too much, make
+                // sure it only changes by max of 5 degrees
+                if (ABS(diffCombined) > .05 || isFirstReading) {
+                    diffCombined = diffCombined > .2 ? .2 : diffCombined < -.2 ? -.2 : diffCombined;
+                    currentRotationReading = [currentRotationReading rotateBy:diffCombined];
+                    isFirstReading = NO;
+                    [self.delegate didUpdateAccelerometerWithReading:currentRotationReading];
+                }
+                currentRawRotationReading = actualRawReading;
+                [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
             }
-            currentRawRotationReading = actualRawReading;
-            [self.delegate didUpdateAccelerometerWithRawReading:currentRawRotationReading andX:accelerationX andY:accelerationY andZ:accelerationZ];
-        }
 
-        if (currentTrust > .75) {
-            if (currentOrientation == UIDeviceOrientationPortrait ||
-                currentOrientation == UIDeviceOrientationPortraitUpsideDown ||
-                currentOrientation == UIDeviceOrientationLandscapeLeft ||
-                currentOrientation == UIDeviceOrientationLandscapeRight) {
-                if (currentOrientation != UIDeviceOrientationFaceUp &&
-                    currentOrientation != UIDeviceOrientationFaceDown &&
-                    currentOrientation != UIDeviceOrientationUnknown &&
-                    currentOrientation != (UIDeviceOrientation)lastBestOrientation) {
-                    lastBestOrientation = (UIInterfaceOrientation)currentOrientation;
-                    [self.delegate didRotateToIdealOrientation:lastBestOrientation];
+            if (currentTrust > .75) {
+                if (currentOrientation == UIDeviceOrientationPortrait ||
+                    currentOrientation == UIDeviceOrientationPortraitUpsideDown ||
+                    currentOrientation == UIDeviceOrientationLandscapeLeft ||
+                    currentOrientation == UIDeviceOrientationLandscapeRight) {
+                    if (currentOrientation != UIDeviceOrientationFaceUp &&
+                        currentOrientation != UIDeviceOrientationFaceDown &&
+                        currentOrientation != UIDeviceOrientationUnknown &&
+                        currentOrientation != (UIDeviceOrientation)lastBestOrientation) {
+                        lastBestOrientation = (UIInterfaceOrientation)currentOrientation;
+                        [self.delegate didRotateToIdealOrientation:lastBestOrientation];
+                    }
                 }
             }
         }

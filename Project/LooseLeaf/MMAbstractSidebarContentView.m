@@ -127,7 +127,6 @@
 
 - (void)show:(BOOL)animated {
     BOOL needsReload = !isShowing;
-    [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [self updatePhotoRotation:NO];
     isShowing = YES;
     [self updateEmptyErrorMessage];
