@@ -1207,6 +1207,10 @@
             } else {
                 exportTopPageOf = nil;
 
+                // make sure our JotView is dead.
+                // this will also add it to the trash manager
+                [exportJotView invalidate];
+
                 if (progressBlock([allPagePDFs count], [allPages count])) {
                     // check if the user has asked to cancel
                     for (NSURL* url in allPagePDFs) {
