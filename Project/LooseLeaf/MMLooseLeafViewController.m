@@ -54,6 +54,7 @@
 #import "MMRotatingBackgroundViewDelegate.h"
 #import "MMShareStackSidebarContainerView.h"
 #import "MMStopWatch.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
@@ -443,6 +444,8 @@
     [self rotatingBackgroundViewDidUpdate:rotatingBackgroundView];
 
     [self checkToShowListCollapseTutorial];
+
+    [self deleteOldTmpFiles];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -1715,6 +1718,36 @@
     } else {
         [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
     }
+}
+
+#pragma mark - Tmp Files
+
+- (void)deleteOldTmpFiles {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSURL* directoryURL = [NSURL fileURLWithPath:NSTemporaryDirectory()];
+        NSFileManager* fileManager = [[NSFileManager alloc] init];
+        NSDirectoryEnumerator* directoryEnumerator =
+
+            [fileManager enumeratorAtURL:directoryURL
+                includingPropertiesForKeys:@[NSURLCreationDateKey]
+                                   options:NSDirectoryEnumerationSkipsHiddenFiles
+                              errorHandler:nil];
+
+        NSMutableArray<NSURL*>* filesToDelete = [NSMutableArray array];
+        for (NSURL* fileURL in directoryEnumerator) {
+            NSDate* createdDate = nil;
+            [fileURL getResourceValue:&createdDate forKey:NSURLCreationDateKey error:nil];
+
+            if ([createdDate earlierDate:[NSDate dateWithTimeIntervalSinceNow:-60 * 15]] == createdDate) {
+                // if the file was created more than 15 minutes ago, then delete it
+                [filesToDelete addObject:fileURL];
+            }
+        }
+
+        for (NSURL* urlToDelete in filesToDelete) {
+            [fileManager removeItemAtURL:urlToDelete error:nil];
+        }
+    });
 }
 
 @end
