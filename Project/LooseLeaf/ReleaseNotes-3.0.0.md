@@ -1,7 +1,7 @@
 # New in 3.0.0!
 1. Organize your pages into lists
 
-[list-view-clone-page.mp4]
+[collapse-stack.mp4]
 
 2. Move pages between lists
 
@@ -9,7 +9,7 @@
 
 3. Import and export full PDFs
 
-[release-notes-feedback-feature.png]
+[export-stack.png]
 
 # Thanks!
 Thanks for your support!
