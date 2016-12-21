@@ -449,6 +449,7 @@
 		C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */; };
 		C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */; };
 		C50DBAFF1E0B2F8F0006F58A /* delete-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */; };
+		C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB001E0B338B0006F58A /* export-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -1508,6 +1509,7 @@
 		C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapseButton.m; sourceTree = "<group>"; };
 		C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "collapse-stack.mp4"; sourceTree = "<group>"; };
 		C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "delete-stack.mp4"; sourceTree = "<group>"; };
+		C50DBB001E0B338B0006F58A /* export-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "export-stack.mp4"; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -3808,6 +3810,7 @@
 			isa = PBXGroup;
 			children = (
 				C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */,
+				C50DBB001E0B338B0006F58A /* export-stack.mp4 */,
 				C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */,
 			);
 			name = "stack-view";
@@ -4507,6 +4510,7 @@
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
+				C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */,
 				C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */,
 				C58E6A3E1CDB1B4A00508F1D /* bg33.jpg in Resources */,
 				667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */,

@@ -149,9 +149,9 @@ static MMTutorialManager* _instance = nil;
             @"video": @"delete-stack.mp4"
         },
         @{
-            @"id": @"list-view-delete-page",
-            @"title": @"Delete a Page",
-            @"video": @"list-view-delete-page.mov"
+            @"id": @"export-stack",
+            @"title": @"Export Your Notes",
+            @"video": @"export-stack.mp4"
         },
         @{
             @"id": @"list-view-clone-page",
