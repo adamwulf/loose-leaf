@@ -446,6 +446,7 @@
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C50CBF6F1CE441240053885A /* UIImage+MMColor.m */; };
 		C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C50CBF8A1CE4522E0053885A /* Icons.xcassets */; };
+		C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -561,7 +562,7 @@
 		C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */; };
 		C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */; };
 		C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */; };
-		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.2.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */; };
+		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */; };
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
 		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
@@ -1501,6 +1502,8 @@
 		C50CBF6E1CE441240053885A /* UIImage+MMColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMColor.h"; sourceTree = "<group>"; };
 		C50CBF6F1CE441240053885A /* UIImage+MMColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMColor.m"; sourceTree = "<group>"; };
 		C50CBF8A1CE4522E0053885A /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapseButton.h; sourceTree = "<group>"; };
+		C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapseButton.m; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -1662,7 +1665,7 @@
 		C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../Submodules/cloudkit-manager/SimpleCloudKitManager/build/Release-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
 		C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/ClippingBezier/Submodules/PerformanceBezier/build/Release-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../Submodules/ClippingBezier/build/Release-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
-		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-2.2.0.md"; sourceTree = "<group>"; };
+		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-3.0.0.md"; sourceTree = "<group>"; };
 		C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMMarkdown.framework; path = "../Submodules/MMMarkdown/build/Debug-iphoneos/MMMarkdown.framework"; sourceTree = "<group>"; };
 		C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.license; sourceTree = "<group>"; };
 		C5C298FB1D7BFD2E009AE6BE /* MMReleaseNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesView.h; sourceTree = "<group>"; };
@@ -3429,7 +3432,7 @@
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
 				C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */,
-				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */,
+				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3653,6 +3656,8 @@
 				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
 				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
 				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */,
+				C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */,
 				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
 				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
 				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
@@ -4399,7 +4404,7 @@
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
 				C5C298E81D7B9633009AE6BE /* stencil.fsh in Resources */,
 				C5C298E91D7B9633009AE6BE /* point.fsh in Resources */,
-				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.2.0.md in Resources */,
+				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.0.md in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
@@ -5087,6 +5092,7 @@
 				C5C13E0F1D90C1D00047B3EF /* MMInboxImage.m in Sources */,
 				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
+				C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,
