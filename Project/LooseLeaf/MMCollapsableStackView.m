@@ -274,14 +274,16 @@
 }
 
 - (void)tapToExpandToListMode:(UIButton*)button {
-    if ([self.stackDelegate isAllowedToInteractWithStack:self.uuid]) {
-        if ([self isPerfectlyAlignedIntoRow]) {
-            [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
-        } else if (deleteRowButton.alpha) {
-            [self cancelPendingConfirmationsAndResetToRowQuickly:YES];
-            [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([self.stackDelegate isAllowedToInteractWithStack:self.uuid]) {
+            if ([self isPerfectlyAlignedIntoRow]) {
+                [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
+            } else if (deleteRowButton.alpha) {
+                [self cancelPendingConfirmationsAndResetToRowQuickly:YES];
+                [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
+            }
         }
-    }
+    });
 }
 
 - (void)collapseStackButtonTapped:(UIButton*)_button {
