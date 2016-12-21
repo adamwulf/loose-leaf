@@ -136,6 +136,31 @@ static MMTutorialManager* _instance = nil;
     ];
 }
 
+- (NSArray*)stackViewTutorialSteps {
+    return @[
+        @{
+            @"id": @"collapse-stack",
+            @"title": @"Move Between Pages",
+            @"video": @"collapse-stack.mp4"
+        },
+        @{
+            @"id": @"page-sidebar",
+            @"title": @"Organize Your Pages",
+            @"video": @"page-sidebar.mp4"
+        },
+        @{
+            @"id": @"list-view-delete-page",
+            @"title": @"Delete a Page",
+            @"video": @"list-view-delete-page.mov"
+        },
+        @{
+            @"id": @"list-view-clone-page",
+            @"title": @"Duplicate a Page",
+            @"video": @"list-view-clone-page.mp4"
+        }
+    ];
+}
+
 - (NSArray*)listViewTutorialSteps {
     return @[
         @{

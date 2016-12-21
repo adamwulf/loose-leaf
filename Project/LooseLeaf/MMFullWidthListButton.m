@@ -61,29 +61,29 @@
         lbl.numberOfLines = 2;
         [self addSubview:lbl];
 
-        MMRoundedButton* confirmButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
-        [confirmButton setImage:leftIcon forState:UIControlStateNormal];
-        [confirmButton setTitle:leftTitle forState:UIControlStateNormal];
-        [confirmButton addTarget:self action:@selector(didTapLeftButton) forControlEvents:UIControlEventTouchUpInside];
-        [confirmButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
-        [confirmButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
-        [self addSubview:confirmButton];
+        _leftButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
+        [_leftButton setImage:leftIcon forState:UIControlStateNormal];
+        [_leftButton setTitle:leftTitle forState:UIControlStateNormal];
+        [_leftButton addTarget:self action:@selector(didTapLeftButton) forControlEvents:UIControlEventTouchUpInside];
+        [_leftButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
+        [_leftButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
+        [self addSubview:_leftButton];
 
         if (rightIcon && rightTitle) {
-            MMRoundedButton* cancelButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
-            [cancelButton setImage:rightIcon forState:UIControlStateNormal];
-            [cancelButton setTitle:rightTitle forState:UIControlStateNormal];
-            [cancelButton addTarget:self action:@selector(didTapRightButton) forControlEvents:UIControlEventTouchUpInside];
-            [cancelButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
-            [cancelButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
-            [self addSubview:cancelButton];
+            _rightButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
+            [_rightButton setImage:rightIcon forState:UIControlStateNormal];
+            [_rightButton setTitle:rightTitle forState:UIControlStateNormal];
+            [_rightButton addTarget:self action:@selector(didTapRightButton) forControlEvents:UIControlEventTouchUpInside];
+            [_rightButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
+            [_rightButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
+            [self addSubview:_rightButton];
 
-            CGFloat widthOfButtons = confirmButton.bounds.size.width + cancelButton.bounds.size.width + 20;
+            CGFloat widthOfButtons = _leftButton.bounds.size.width + _rightButton.bounds.size.width + 20;
             CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
-            cancelButton.center = CGPointMake(self.bounds.size.width - buttonMargin - cancelButton.bounds.size.width / 2, buttonY);
-            confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, buttonY);
+            _rightButton.center = CGPointMake(self.bounds.size.width - buttonMargin - _rightButton.bounds.size.width / 2, buttonY);
+            _leftButton.center = CGPointMake(buttonMargin + _leftButton.bounds.size.width / 2, buttonY);
         } else {
-            confirmButton.center = CGPointMake(self.bounds.size.width / 2, buttonY);
+            _leftButton.center = CGPointMake(self.bounds.size.width / 2, buttonY);
         }
     }
     return self;

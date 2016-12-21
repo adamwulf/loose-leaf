@@ -20,4 +20,7 @@
 
 @property (nonatomic, readonly) CGFloat additionalVerticalSpacing;
 
+@property (nonatomic, readonly) UIButton* leftButton;
+@property (nonatomic, readonly) UIButton* rightButton;
+
 @end

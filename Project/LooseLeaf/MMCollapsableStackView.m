@@ -171,6 +171,10 @@
         collapseStackButton.delegate = self;
         [collapseStackButton addTarget:self action:@selector(collapseStackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:collapseStackButton];
+
+
+        tapGesture = [[MMTapWithTouchGestureRecognizer alloc] initWithTarget:self action:@selector(didTapToUndo:)];
+        [[deleteConfirmationPlaceholder rightButton] addGestureRecognizer:tapGesture];
     }
     return self;
 }
@@ -186,6 +190,19 @@
     });
 
     [self tapToExpandToListMode:expandButton];
+}
+
+- (void)didTapToUndo:(MMTapWithTouchGestureRecognizer*)tapGesture {
+    UITouch* touch = [tapGesture.touches firstObject];
+    if (!self.silhouette.rightHand.isDrawing) {
+        [self.silhouette startDrawingAtTouch:touch immediately:YES];
+    }
+    [self.silhouette continueDrawingAtTouch:touch];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.silhouette endDrawingAtTouch:touch];
+    });
+
+    [self didTapRightInFullWidthButton:deleteConfirmationPlaceholder];
 }
 
 - (CGRect)rectForColorConsideration {

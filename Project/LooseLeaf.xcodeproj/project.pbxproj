@@ -447,6 +447,7 @@
 		C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C50CBF6F1CE441240053885A /* UIImage+MMColor.m */; };
 		C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C50CBF8A1CE4522E0053885A /* Icons.xcassets */; };
 		C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */; };
+		C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -1504,6 +1505,7 @@
 		C50CBF8A1CE4522E0053885A /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
 		C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapseButton.h; sourceTree = "<group>"; };
 		C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapseButton.m; sourceTree = "<group>"; };
+		C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "collapse-stack.mp4"; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -2216,6 +2218,7 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				C50DBAFB1E0B29130006F58A /* stack-view */,
 				66CC2A8F1AEAEA6900C6A3F9 /* share */,
 				665F7F601AE096C900635D56 /* list-view */,
 				665F7F5F1AE096BF00635D56 /* un-used */,
@@ -3799,6 +3802,14 @@
 			name = icons;
 			sourceTree = "<group>";
 		};
+		C50DBAFB1E0B29130006F58A /* stack-view */ = {
+			isa = PBXGroup;
+			children = (
+				C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */,
+			);
+			name = "stack-view";
+			sourceTree = "<group>";
+		};
 		C53AFA7E1DE3EF300054553D /* Arrow View */ = {
 			isa = PBXGroup;
 			children = (
@@ -4052,7 +4063,7 @@
 				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
+				66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */,
 				66B42FBD19955A2C005D8214 /* Share Page Sidebar */,
 				C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
@@ -4396,6 +4407,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
+				C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */,
 				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
 				C5F1B28F1D9B01BB00E0E9A8 /* MPCloseButton@3x.png in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
