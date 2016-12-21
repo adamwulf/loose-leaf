@@ -439,6 +439,7 @@
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C50CBF6F1CE441240053885A /* UIImage+MMColor.m */; };
 		C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C50CBF8A1CE4522E0053885A /* Icons.xcassets */; };
+		C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -1469,6 +1470,8 @@
 		C50CBF6E1CE441240053885A /* UIImage+MMColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMColor.h"; sourceTree = "<group>"; };
 		C50CBF6F1CE441240053885A /* UIImage+MMColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMColor.m"; sourceTree = "<group>"; };
 		C50CBF8A1CE4522E0053885A /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapseButton.h; sourceTree = "<group>"; };
+		C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapseButton.m; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -3562,6 +3565,8 @@
 				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
 				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
 				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */,
+				C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */,
 				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
 				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
 				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
@@ -4992,6 +4997,7 @@
 				66343C5E1AC06FDA00801962 /* MMLoopIcon.m in Sources */,
 				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
+				C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,
