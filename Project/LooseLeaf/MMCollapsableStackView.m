@@ -197,9 +197,14 @@
     if (!self.silhouette.rightHand.isDrawing) {
         [self.silhouette startDrawingAtTouch:touch immediately:YES];
     }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[deleteConfirmationPlaceholder rightButton] setHighlighted:YES];
+    });
+
     [self.silhouette continueDrawingAtTouch:touch];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self.silhouette endDrawingAtTouch:touch];
+        [[deleteConfirmationPlaceholder rightButton] setHighlighted:NO];
     });
 
     [self didTapRightInFullWidthButton:deleteConfirmationPlaceholder];
