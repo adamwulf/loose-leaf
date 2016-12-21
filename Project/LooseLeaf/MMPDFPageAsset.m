@@ -68,10 +68,13 @@ static UIImage* lockThumbnail;
         CGContextScaleCTM(pdfContext, 1, -1);
         CGContextTranslateCTM(pdfContext, 0, -pageSize.height);
 
-        [pdfItem.pdf renderPage:pageNumber intoContext:pdfContext withSize:pageSize];
+        CGPDFDocumentRef pdfDocRef = [pdfItem.pdf openPDF];
+        [pdfItem.pdf renderPage:pageNumber intoContext:pdfContext withSize:pageSize withPDFRef:pdfDocRef];
 
         CGPDFContextEndPage(pdfContext);
+        CGPDFContextClose(pdfContext);
         CFRelease(pdfContext);
+        CGPDFDocumentRelease(pdfDocRef);
 
         pagePDFPath = tmpPagePath;
     }

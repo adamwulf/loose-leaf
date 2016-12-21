@@ -88,7 +88,7 @@
         [self addSubview:collapseNoticeArrow];
 
         importOperationQueue = [[NSOperationQueue alloc] init];
-        importOperationQueue.maxConcurrentOperationCount = 4;
+        importOperationQueue.maxConcurrentOperationCount = 1;
         importOperationQueue.name = @"importOperationQueue";
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];

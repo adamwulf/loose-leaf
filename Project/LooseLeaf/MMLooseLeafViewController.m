@@ -1072,7 +1072,7 @@
     [aStackView showUIToPrepareForImportingPDF:pdfDoc onComplete:^{
         // check to see if the user decrypted it if necessary
         if (![pdfDoc isEncrypted]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 MMStopWatch* timer = [[MMStopWatch alloc] init];
                 [timer start];
                 [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^(BOOL success) {
