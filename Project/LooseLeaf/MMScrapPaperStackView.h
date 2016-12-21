@@ -30,4 +30,9 @@
 
 - (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock;
 
+
+- (void)deletingInboxItemGesture:(NSNotification*)note;
+- (void)deleteInboxItemTapped:(NSNotification*)note;
+- (void)deleteInboxItemTappedDown:(NSNotification*)note;
+
 @end

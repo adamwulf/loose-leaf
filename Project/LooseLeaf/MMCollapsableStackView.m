@@ -319,9 +319,11 @@
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
-    [self.stackDelegate didAskToExportStack:self.uuid];
-    [self.stackDelegate.shareStackSidebar setReferenceButtonFrame:[_button convertRect:_button.bounds toView:nil]];
-    [self.stackDelegate.shareStackSidebar show:YES];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.stackDelegate didAskToExportStack:self.uuid];
+        [self.stackDelegate.shareStackSidebar setReferenceButtonFrame:[_button convertRect:_button.bounds toView:nil]];
+        [self.stackDelegate.shareStackSidebar show:YES];
+    });
 }
 
 - (void)showUIToPrepareForImportingPDF:(MMPDFInboxItem*)pdfDoc onComplete:(void (^)())completionBlock {
@@ -1345,6 +1347,26 @@
     };
 
     exportTopPageOf(allPages);
+}
+
+#pragma mark - Deleting Inbox Item
+
+- (void)deletingInboxItemGesture:(NSNotification*)note {
+    if (![self isPerfectlyAlignedIntoRow]) {
+        [super deletingInboxItemGesture:note];
+    }
+}
+
+- (void)deleteInboxItemTapped:(NSNotification*)note {
+    if (![self isPerfectlyAlignedIntoRow]) {
+        [super deleteInboxItemTapped:note];
+    }
+}
+
+- (void)deleteInboxItemTappedDown:(NSNotification*)note {
+    if (![self isPerfectlyAlignedIntoRow]) {
+        [super deleteInboxItemTappedDown:note];
+    }
 }
 
 @end
