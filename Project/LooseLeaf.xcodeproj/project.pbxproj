@@ -450,6 +450,7 @@
 		C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */; };
 		C50DBAFF1E0B2F8F0006F58A /* delete-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */; };
 		C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB001E0B338B0006F58A /* export-stack.mp4 */; };
+		C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -1510,6 +1511,7 @@
 		C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "collapse-stack.mp4"; sourceTree = "<group>"; };
 		C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "delete-stack.mp4"; sourceTree = "<group>"; };
 		C50DBB001E0B338B0006F58A /* export-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "export-stack.mp4"; sourceTree = "<group>"; };
+		C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "reorder-stack.mp4"; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -3811,6 +3813,7 @@
 			children = (
 				C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */,
 				C50DBB001E0B338B0006F58A /* export-stack.mp4 */,
+				C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */,
 				C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */,
 			);
 			name = "stack-view";
@@ -4509,6 +4512,7 @@
 				66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */,
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
+				C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */,
 				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
 				C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */,
 				C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */,

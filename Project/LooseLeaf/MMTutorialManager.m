@@ -144,6 +144,11 @@ static MMTutorialManager* _instance = nil;
             @"video": @"collapse-stack.mp4"
         },
         @{
+            @"id": @"reorder-stack",
+            @"title": @"Organize Your pages",
+            @"video": @"reorder-stack.mp4"
+        },
+        @{
             @"id": @"delete-stack",
             @"title": @"Delete Your Notes",
             @"video": @"delete-stack.mp4"
@@ -152,11 +157,6 @@ static MMTutorialManager* _instance = nil;
             @"id": @"export-stack",
             @"title": @"Export Your Notes",
             @"video": @"export-stack.mp4"
-        },
-        @{
-            @"id": @"list-view-clone-page",
-            @"title": @"Duplicate a Page",
-            @"video": @"list-view-clone-page.mp4"
         }
     ];
 }
