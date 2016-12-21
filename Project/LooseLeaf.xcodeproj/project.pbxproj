@@ -444,6 +444,7 @@
 		C50DBAFF1E0B2F8F0006F58A /* delete-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */; };
 		C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB001E0B338B0006F58A /* export-stack.mp4 */; };
 		C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */; };
+		C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB041E0B426F0006F58A /* import-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -1480,6 +1481,7 @@
 		C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "delete-stack.mp4"; sourceTree = "<group>"; };
 		C50DBB001E0B338B0006F58A /* export-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "export-stack.mp4"; sourceTree = "<group>"; };
 		C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "reorder-stack.mp4"; sourceTree = "<group>"; };
+		C50DBB041E0B426F0006F58A /* import-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "import-stack.mp4"; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -3721,6 +3723,7 @@
 			isa = PBXGroup;
 			children = (
 				C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */,
+				C50DBB041E0B426F0006F58A /* import-stack.mp4 */,
 				C50DBB001E0B338B0006F58A /* export-stack.mp4 */,
 				C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */,
 				C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */,
@@ -3981,7 +3984,7 @@
 				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */,
+				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
 				66B42FBD19955A2C005D8214 /* Share Page Sidebar */,
 				C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
@@ -4439,6 +4442,7 @@
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */,
 				C58E6A261CDB1B4A00508F1D /* bg09.jpg in Resources */,
+				C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */,
 				C58E6A3A1CDB1B4A00508F1D /* bg29.jpg in Resources */,
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				C58E6A471CDB1B4A00508F1D /* bg42.jpg in Resources */,

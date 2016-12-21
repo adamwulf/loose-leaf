@@ -9,7 +9,7 @@
 
 3. Import and export full PDFs
 
-[export-stack.png]
+[import-stack.png]
 
 # Thanks!
 Thanks for your support!
