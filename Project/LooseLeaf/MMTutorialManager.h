@@ -25,6 +25,8 @@
 
 - (NSArray*)listViewTutorialSteps;
 
+- (NSArray*)stackViewTutorialSteps;
+
 - (BOOL)hasCompletedStep:(NSString*)stepID;
 
 - (void)didCompleteStep:(NSString*)stepID;

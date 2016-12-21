@@ -136,6 +136,36 @@ static MMTutorialManager* _instance = nil;
     ];
 }
 
+- (NSArray*)stackViewTutorialSteps {
+    return @[
+        @{
+            @"id": @"collapse-stack",
+            @"title": @"Move Between Pages",
+            @"video": @"collapse-stack.mp4"
+        },
+        @{
+            @"id": @"reorder-stack",
+            @"title": @"Organize Your pages",
+            @"video": @"reorder-stack.mp4"
+        },
+        @{
+            @"id": @"delete-stack",
+            @"title": @"Delete Your Notes",
+            @"video": @"delete-stack.mp4"
+        },
+        @{
+            @"id": @"export-stack",
+            @"title": @"Export Your Notes",
+            @"video": @"export-stack.mp4"
+        },
+        @{
+            @"id": @"import-stack",
+            @"title": @"Import Full PDFs",
+            @"video": @"import-stack.mp4"
+        }
+    ];
+}
+
 - (NSArray*)listViewTutorialSteps {
     return @[
         @{

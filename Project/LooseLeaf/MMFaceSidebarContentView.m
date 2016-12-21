@@ -22,6 +22,11 @@
     return self;
 }
 
+- (void)show:(BOOL)animated {
+    [super show:animated];
+    [[MMPhotoManager sharedInstance] initializeAlbumCache];
+}
+
 - (void)reset:(BOOL)animated {
     if ([self hasPermission]) {
         [super reset:animated];

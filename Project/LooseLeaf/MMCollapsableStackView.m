@@ -26,6 +26,7 @@
 #import "MMImportingPDFListButton.h"
 #import "MMBlockOperation.h"
 #import "MMDecryptPDFStackButton.h"
+#import "MMCollapseButton.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -59,6 +60,7 @@
     UILabel* collapseNoticeMessage;
 
     MMShareButton* shareStackButton;
+    MMCollapseButton* collapseStackButton;
 
     BOOL cancelImport;
 
@@ -75,6 +77,10 @@
     return CGRectMake([UIScreen screenWidth] - kWidthOfSidebar, 6, kWidthOfSidebarButton, kWidthOfSidebarButton);
 }
 
++ (CGRect)collapseStackButtonFrame {
+    return CGRectTranslate([MMCollapsableStackView shareStackButtonFrame], -kWidthOfSidebarButton - kWidthOfSidebarButtonBuffer, 0);
+}
+
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -100, 80, 80)];
@@ -82,7 +88,7 @@
         [self addSubview:collapseNoticeArrow];
 
         importOperationQueue = [[NSOperationQueue alloc] init];
-        importOperationQueue.maxConcurrentOperationCount = 4;
+        importOperationQueue.maxConcurrentOperationCount = 1;
         importOperationQueue.name = @"importOperationQueue";
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
@@ -156,6 +162,11 @@
         shareStackButton.delegate = self;
         [shareStackButton addTarget:self action:@selector(shareStackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:shareStackButton];
+
+        collapseStackButton = [[MMCollapseButton alloc] initWithFrame:[MMCollapsableStackView collapseStackButtonFrame]];
+        collapseStackButton.delegate = self;
+        [collapseStackButton addTarget:self action:@selector(collapseStackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:collapseStackButton];
     }
     return self;
 }
@@ -254,6 +265,11 @@
             [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
         }
     }
+}
+
+- (void)collapseStackButtonTapped:(UIButton*)_button {
+    [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
+    [[self stackDelegate] didAskToCollapseStack:[self uuid] animated:YES];
 }
 
 - (void)shareStackButtonTapped:(UIButton*)_button {
@@ -531,6 +547,8 @@
         CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self collapsedViewButtonRotation]);
         shareStackButton.rotation = [self collapsedViewButtonRotation];
         shareStackButton.transform = rotationTransform;
+        collapseStackButton.rotation = [self collapsedViewButtonRotation];
+        collapseStackButton.transform = rotationTransform;
         deleteRowButton.rotation = [self collapsedViewButtonRotation];
         deleteRowButton.transform = rotationTransform;
         shareRowButton.rotation = [self collapsedViewButtonRotation];
@@ -655,6 +673,7 @@
         deleteRowButton.alpha = 0;
         shareRowButton.alpha = 0;
         shareStackButton.alpha = 0;
+        collapseStackButton.alpha = 0;
         stackNameField.alpha = 1;
         squishFactor = 0;
         [self setContentOffset:CGPointZero];
@@ -757,6 +776,7 @@
         listViewFeedbackButton.alpha = 1;
         addPageButtonInListView.alpha = 1;
         shareStackButton.alpha = 1;
+        collapseStackButton.alpha = 1;
         stackNameField.alpha = 1;
         [self setButtonsVisible:NO animated:NO];
     };
@@ -819,10 +839,12 @@
     if (animated && CGPointEqualToPoint(self.contentOffset, CGPointZero)) {
         [UIView animateWithDuration:.2 animations:^{
             shareStackButton.alpha = 0;
+            collapseStackButton.alpha = 0;
             stackNameField.alpha = 0;
         }];
     } else {
         shareStackButton.alpha = 0;
+        collapseStackButton.alpha = 0;
         stackNameField.alpha = 0;
     }
 
@@ -835,10 +857,12 @@
         if (animated) {
             [UIView animateWithDuration:.3 animations:^{
                 shareStackButton.alpha = 1;
+                collapseStackButton.alpha = 1;
                 stackNameField.alpha = 1;
             }];
         } else {
             shareStackButton.alpha = 1;
+            collapseStackButton.alpha = 1;
             stackNameField.alpha = 1;
         }
     }
@@ -847,6 +871,7 @@
 - (void)finishUITransitionToListView {
     [super finishUITransitionToListView];
     shareStackButton.alpha = 1;
+    collapseStackButton.alpha = 1;
     stackNameField.alpha = 1;
 }
 
@@ -858,6 +883,7 @@
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [UIView animateWithDuration:.2 animations:^{
             shareStackButton.alpha = 0;
+            collapseStackButton.alpha = 0;
             stackNameField.alpha = 0;
         }];
     }
@@ -1206,6 +1232,10 @@
                 exportTopPageOf([pages subarrayWithRange:NSMakeRange(1, [pages count] - 1)]);
             } else {
                 exportTopPageOf = nil;
+
+                // make sure our JotView is dead.
+                // this will also add it to the trash manager
+                [exportJotView invalidate];
 
                 if (progressBlock([allPagePDFs count], [allPages count])) {
                     // check if the user has asked to cancel

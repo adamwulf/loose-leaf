@@ -54,6 +54,7 @@
 #import "MMRotatingBackgroundViewDelegate.h"
 #import "MMShareStackSidebarContainerView.h"
 #import "MMStopWatch.h"
+#import "NSFileManager+DirectoryOptimizations.h"
 
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
@@ -191,7 +192,7 @@
 
         CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
         listViewTutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
-            return [[MMTutorialManager sharedInstance] listViewTutorialSteps];
+            return [[MMTutorialManager sharedInstance] stackViewTutorialSteps];
         }];
         listViewTutorialButton.center = [self locationForTutorialButtonInCollapsedView];
         [listViewTutorialButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -386,7 +387,6 @@
 }
 
 - (void)pageCacheManagerDidLoadPage {
-    [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 
@@ -444,6 +444,8 @@
     [self rotatingBackgroundViewDidUpdate:rotatingBackgroundView];
 
     [self checkToShowListCollapseTutorial];
+
+    [self deleteOldTmpFiles];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -1070,7 +1072,7 @@
     [aStackView showUIToPrepareForImportingPDF:pdfDoc onComplete:^{
         // check to see if the user decrypted it if necessary
         if (![pdfDoc isEncrypted]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 MMStopWatch* timer = [[MMStopWatch alloc] init];
                 [timer start];
                 [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^(BOOL success) {
@@ -1716,6 +1718,36 @@
     } else {
         [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
     }
+}
+
+#pragma mark - Tmp Files
+
+- (void)deleteOldTmpFiles {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSURL* directoryURL = [NSURL fileURLWithPath:NSTemporaryDirectory()];
+        NSFileManager* fileManager = [[NSFileManager alloc] init];
+        NSDirectoryEnumerator* directoryEnumerator =
+
+            [fileManager enumeratorAtURL:directoryURL
+                includingPropertiesForKeys:@[NSURLCreationDateKey]
+                                   options:NSDirectoryEnumerationSkipsHiddenFiles
+                              errorHandler:nil];
+
+        NSMutableArray<NSURL*>* filesToDelete = [NSMutableArray array];
+        for (NSURL* fileURL in directoryEnumerator) {
+            NSDate* createdDate = nil;
+            [fileURL getResourceValue:&createdDate forKey:NSURLCreationDateKey error:nil];
+
+            if ([createdDate earlierDate:[NSDate dateWithTimeIntervalSinceNow:-60 * 15]] == createdDate) {
+                // if the file was created more than 15 minutes ago, then delete it
+                [filesToDelete addObject:fileURL];
+            }
+        }
+
+        for (NSURL* urlToDelete in filesToDelete) {
+            [fileManager removeItemAtURL:urlToDelete error:nil];
+        }
+    });
 }
 
 @end

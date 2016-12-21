@@ -439,6 +439,12 @@
 		C50C0D761C3D077A00DFC079 /* MMMarkerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50C0D751C3D077A00DFC079 /* MMMarkerButton.m */; };
 		C50CBF701CE441240053885A /* UIImage+MMColor.m in Sources */ = {isa = PBXBuildFile; fileRef = C50CBF6F1CE441240053885A /* UIImage+MMColor.m */; };
 		C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C50CBF8A1CE4522E0053885A /* Icons.xcassets */; };
+		C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */; };
+		C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */; };
+		C50DBAFF1E0B2F8F0006F58A /* delete-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */; };
+		C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB001E0B338B0006F58A /* export-stack.mp4 */; };
+		C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */; };
+		C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB041E0B426F0006F58A /* import-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
@@ -548,7 +554,7 @@
 		C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */; };
 		C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */; };
 		C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */; };
-		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.2.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */; };
+		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */; };
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
 		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
@@ -1469,6 +1475,13 @@
 		C50CBF6E1CE441240053885A /* UIImage+MMColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMColor.h"; sourceTree = "<group>"; };
 		C50CBF6F1CE441240053885A /* UIImage+MMColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMColor.m"; sourceTree = "<group>"; };
 		C50CBF8A1CE4522E0053885A /* Icons.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Icons.xcassets; sourceTree = "<group>"; };
+		C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapseButton.h; sourceTree = "<group>"; };
+		C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapseButton.m; sourceTree = "<group>"; };
+		C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "collapse-stack.mp4"; sourceTree = "<group>"; };
+		C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "delete-stack.mp4"; sourceTree = "<group>"; };
+		C50DBB001E0B338B0006F58A /* export-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "export-stack.mp4"; sourceTree = "<group>"; };
+		C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "reorder-stack.mp4"; sourceTree = "<group>"; };
+		C50DBB041E0B426F0006F58A /* import-stack.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "import-stack.mp4"; sourceTree = "<group>"; };
 		C518C86D1C8412C800F1895C /* Highlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Highlighter.h; sourceTree = "<group>"; };
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
@@ -1623,7 +1636,7 @@
 		C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../Submodules/cloudkit-manager/SimpleCloudKitManager/build/Release-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
 		C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/ClippingBezier/Submodules/PerformanceBezier/build/Release-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../Submodules/ClippingBezier/build/Release-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
-		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-2.2.0.md"; sourceTree = "<group>"; };
+		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-3.0.0.md"; sourceTree = "<group>"; };
 		C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMMarkdown.framework; path = "../Submodules/MMMarkdown/build/Debug-iphoneos/MMMarkdown.framework"; sourceTree = "<group>"; };
 		C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.license; sourceTree = "<group>"; };
 		C5C298FB1D7BFD2E009AE6BE /* MMReleaseNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesView.h; sourceTree = "<group>"; };
@@ -2173,6 +2186,7 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				C50DBAFB1E0B29130006F58A /* stack-view */,
 				66CC2A8F1AEAEA6900C6A3F9 /* share */,
 				665F7F601AE096C900635D56 /* list-view */,
 				665F7F5F1AE096BF00635D56 /* un-used */,
@@ -3339,7 +3353,7 @@
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
 				C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */,
-				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-2.2.0.md */,
+				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -3562,6 +3576,8 @@
 				66BD6E6F1593A8CC00D4544C /* MMPlusButton.m */,
 				66BD6E9D15941B7A00D4544C /* MMShareButton.h */,
 				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
+				C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */,
+				C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */,
 				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
 				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
 				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
@@ -3701,6 +3717,18 @@
 				C50CBF8A1CE4522E0053885A /* Icons.xcassets */,
 			);
 			name = icons;
+			sourceTree = "<group>";
+		};
+		C50DBAFB1E0B29130006F58A /* stack-view */ = {
+			isa = PBXGroup;
+			children = (
+				C50DBAFC1E0B291C0006F58A /* collapse-stack.mp4 */,
+				C50DBB041E0B426F0006F58A /* import-stack.mp4 */,
+				C50DBB001E0B338B0006F58A /* export-stack.mp4 */,
+				C50DBB021E0B355E0006F58A /* reorder-stack.mp4 */,
+				C50DBAFE1E0B2F8F0006F58A /* delete-stack.mp4 */,
+			);
+			name = "stack-view";
 			sourceTree = "<group>";
 		};
 		C53AFA7E1DE3EF300054553D /* Arrow View */ = {
@@ -4307,6 +4335,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
+				C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */,
 				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
 				C5F1B28F1D9B01BB00E0E9A8 /* MPCloseButton@3x.png in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
@@ -4315,7 +4344,7 @@
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
 				C5C298E81D7B9633009AE6BE /* stencil.fsh in Resources */,
 				C5C298E91D7B9633009AE6BE /* point.fsh in Resources */,
-				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-2.2.0.md in Resources */,
+				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.0.md in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
@@ -4364,6 +4393,7 @@
 				6600BAA71B6DE4F400D8B2DB /* new-user-intro.png in Resources */,
 				66E2240019D631EF000FCA96 /* settings-privacy@2x.png in Resources */,
 				C5F1B2B81D9B01BB00E0E9A8 /* MPNotification~ipad.storyboard in Resources */,
+				C50DBAFF1E0B2F8F0006F58A /* delete-stack.mp4 in Resources */,
 				66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */,
 				C5F1B2911D9B01BB00E0E9A8 /* MPDismissKeyboard@2x.png in Resources */,
 				C58E6A411CDB1B4A00508F1D /* bg36.jpg in Resources */,
@@ -4401,7 +4431,9 @@
 				66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */,
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
+				C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */,
 				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
+				C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */,
 				C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */,
 				C58E6A3E1CDB1B4A00508F1D /* bg33.jpg in Resources */,
 				667D98C4192FDB4300625879 /* UIImagePDF.license in Resources */,
@@ -4410,6 +4442,7 @@
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
 				6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */,
 				C58E6A261CDB1B4A00508F1D /* bg09.jpg in Resources */,
+				C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */,
 				C58E6A3A1CDB1B4A00508F1D /* bg29.jpg in Resources */,
 				66EDE44119B100B500A5623B /* ziparchive.license in Resources */,
 				C58E6A471CDB1B4A00508F1D /* bg42.jpg in Resources */,
@@ -4992,6 +5025,7 @@
 				66343C5E1AC06FDA00801962 /* MMLoopIcon.m in Sources */,
 				6634856919DB551B00B5CF2D /* MMTrashIcon.m in Sources */,
 				66CE11F717CFD8A600882275 /* MMScrapPaperStackView.m in Sources */,
+				C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				66EDE42A19AFDD2D00A5623B /* MMCloudKitExportCoordinator.m in Sources */,

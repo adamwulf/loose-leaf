@@ -44,6 +44,9 @@ static MMPhotoManager* _instance = nil;
 
 - (NSArray*)loadDefaultPhotoAlbums {
     NSString* directoryOfAlbums = [[NSBundle mainBundle] pathForResource:@"BundledPhotos" ofType:nil];
+    if (!directoryOfAlbums) {
+        return @[];
+    }
     NSArray* defaultAlbumList = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:directoryOfAlbums error:nil];
     DebugLog(@"defaultAlbumList: %@", defaultAlbumList);
 

@@ -30,6 +30,8 @@
 
 - (UIImage*)imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
 
-- (void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size;
+- (CGPDFDocumentRef)openPDF;
+
+- (void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size withPDFRef:(CGPDFDocumentRef)pdf;
 
 @end
