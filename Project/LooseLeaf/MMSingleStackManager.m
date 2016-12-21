@@ -18,6 +18,7 @@
 #import "MMAllStacksManager.h"
 #import "NSArray+Extras.h"
 #import <JotUI/UIImage+Alpha.h>
+#import "NSArray+MapReduce.h"
 
 
 @implementation MMSingleStackManager {
@@ -32,6 +33,9 @@
         visibleStack = _visibleStack;
         hiddenStack = _hiddenStack;
         bezelStack = _bezelStack;
+
+        NSString* pagesPath = [[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:uuid] stringByAppendingPathComponent:@"Pages"];
+        [NSFileManager ensureDirectoryExistsAtPath:pagesPath];
 
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
@@ -107,7 +111,7 @@
     return [[NSFileManager defaultManager] fileExistsAtPath:[self visiblePlistPath]];
 }
 
-- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds {
+- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds ignoringMeta:(NSArray*)pagesMetaToIgnore {
     isLoaded = YES;
 
     NSDictionary* plist = [MMSingleStackManager loadFromDiskForStackUUID:self.uuid];
@@ -148,6 +152,32 @@
             hasFoundDuplicate++;
         }
     }
+
+    BOOL (^pageExists)(NSString*) = ^BOOL(NSString* pageUUID) {
+        BOOL existsInStack = [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] reduceToBool:^BOOL(MMPaperView* page, NSUInteger index, BOOL accum) {
+            return [page.uuid isEqualToString:pageUUID] || accum;
+        }];
+        BOOL existsInMeta = [pagesMetaToIgnore reduceToBool:^BOOL(NSDictionary* obj, NSUInteger index, BOOL accum) {
+            BOOL matchesStack = [obj[@"stackUUID"] isEqualToString:self.uuid];
+            BOOL matchesPage = [obj[@"uuid"] isEqualToString:pageUUID];
+            return (matchesStack && matchesPage) || accum;
+        }];
+        return existsInStack || existsInMeta;
+    };
+
+    NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.uuid];
+    NSString* pagePath = [stackPath stringByAppendingPathComponent:@"Pages"];
+
+    [[NSFileManager defaultManager] enumerateDirectory:pagePath withBlock:^(NSURL* item, NSUInteger totalItemCount) {
+        NSString* pageUUID = [[item path] lastPathComponent];
+        if (!pageExists(pageUUID)) {
+            // found orphan page, restore it to the stack
+            MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
+            [hiddenPages insertObject:page atIndex:0];
+        }
+    } andErrorHandler:^BOOL(NSURL* url, NSError* error) {
+        return YES;
+    }];
 
     if (hasFoundDuplicate) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];

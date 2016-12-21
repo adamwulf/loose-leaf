@@ -25,6 +25,7 @@
 #import "MMPagesSidebarButton.h"
 #import "MMCollapsableStackView.h"
 #import "NSArray+Map.h"
+#import "UIScreen+MMSizing.h"
 
 #define kAnimationDuration 0.3
 
@@ -32,19 +33,53 @@
 @implementation MMPagesInBezelContainerView {
     BOOL hasLoaded;
     NSOperationQueue* opQueue;
+
+    NSArray* pagesMeta;
+
+    // We'll use a stack as a container for all the pages that are added
+    // to the sidebar.
+    MMCollapsableStackView* pageSidebarStack;
 }
 
 @dynamic bubbleDelegate;
 
 - (id)initWithFrame:(CGRect)frame andCountButton:(MMCountBubbleButton*)_countButton {
     if (self = [super initWithFrame:frame andCountButton:_countButton]) {
+        pageSidebarStack = [[MMCollapsableStackView alloc] initWithFrame:frame andUUID:@"PageSidebar"];
+
         contentView = [[MMCountableSidebarContentView alloc] initWithFrame:[slidingSidebarView contentBounds]];
         contentView.delegate = self;
+        contentView.shouldReverseInSidebar = YES;
         [slidingSidebarView addSubview:contentView];
         opQueue = [[NSOperationQueue alloc] init];
         [opQueue setMaxConcurrentOperationCount:1];
+
+        pagesMeta = [[NSArray alloc] initWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
+
+
+        NSMutableArray* pagesSoFar = [NSMutableArray array];
+
+        pagesMeta = [pagesMeta filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(NSDictionary* _Nullable evaluatedObject, NSDictionary<NSString*, id>* _Nullable bindings) {
+            // filter out duplicates, just in case.
+            // I ran into a situation where I did have duplicate pages in the sidebar,
+            // likely a sideeffect of being in debug mode, but better safe than sorry
+
+            NSString* stackUUID = evaluatedObject[@"stackUUID"] ?: @"";
+            NSString* pageUUID = evaluatedObject[@"uuid"] ?: @"";
+            NSString* key = [stackUUID stringByAppendingString:pageUUID];
+
+            BOOL alreadySeen = [pagesSoFar containsObject:key];
+
+            [pagesSoFar addObject:key];
+
+            return !alreadySeen;
+        }]];
     }
     return self;
+}
+
+- (NSArray*)pagesMeta {
+    return pagesMeta;
 }
 
 #pragma mark - MMCountableSidebarContainerView
@@ -83,10 +118,18 @@
     }
 }
 
+- (CGFloat)offsetForSidebar {
+    if ([UIScreen screenWidth] > 768) {
+        return 20;
+    }
+
+    return 17;
+}
+
 - (CGPoint)centerForBubbleAtIndex:(NSInteger)index {
     if ([[self viewsInSidebar] count] <= kMaxButtonsInBezelSidebar) {
         CGSize sizeOfButton = [self sizeForButton];
-        CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - 20;
+        CGFloat rightBezelSide = self.bounds.size.width - sizeOfButton.width - [self offsetForSidebar];
         // midpoint calculates for 6 buttons
         CGFloat midPointY = (self.bounds.size.height - [self.viewsInSidebar count] * sizeOfButton.height) / 2;
         CGPoint ret = CGPointMake(rightBezelSide + sizeOfButton.width / 2, midPointY + sizeOfButton.height / 2);
@@ -105,13 +148,25 @@
     return bubble;
 }
 
-- (void)addViewToCountableSidebar:(MMEditablePaperView*)page animated:(BOOL)animated {
+- (void)addViewToCountableSidebar:(MMExportablePaperView*)page animated:(BOOL)animated {
     // make sure we've saved its current state
     if (animated) {
         // only save when it's animated. non-animated is loading
         // from disk at start up
         [page saveToDisk:nil];
     }
+
+    __weak MMExportablePaperView* weakPage = page;
+    [page setDidUnloadState:^{
+        id<MMPaperViewDelegate> previousStack = weakPage.delegate;
+        weakPage.delegate = pageSidebarStack;
+        if (previousStack != pageSidebarStack) {
+            // don't move attempt to move assets to the same place. This happens
+            // when loading from disk during startup, we add all the pages
+            // so the sidebar as we load them from disk
+            [weakPage moveAssetsFrom:previousStack];
+        }
+    }];
 
     // unload the scrap state, so that it shows the
     // image preview instead of an editable state
@@ -194,30 +249,44 @@ static NSString* bezelStatePath;
             // the opqueue makes sure that we will always save
             // to disk in the order that [saveToDisk] was called
             // on the main thread.
-            NSArray* sidebarPagesToWrite = [sidebarPages mapObjectsUsingBlock:^id(MMPaperView* page, NSUInteger idx) {
-                NSMutableDictionary* pageDictionary = [[page dictionaryDescription] mutableCopy];
-                pageDictionary[@"stackUUID"] = [page.delegate.stackManager uuid];
-                return pageDictionary;
+            pagesMeta = [sidebarPages mapObjectsUsingBlock:^id(MMPaperView* page, NSUInteger idx) {
+                return [page dictionaryDescription];
             }];
 
-            [sidebarPagesToWrite writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
+            [pagesMeta writeToFile:[MMPagesInBezelContainerView pathToPlist] atomically:YES];
         }]];
     }];
+}
+
+- (void)upgradeIfNecessary:(MMExportablePaperView*)page withMeta:(NSDictionary*)meta {
+    NSString* stackUUID = meta[@"stackUUID"];
+
+    if (stackUUID) {
+        MMCollapsableStackView* previousStack = [self.bubbleDelegate stackForUUID:stackUUID];
+        NSString* originalPagesPath = [MMEditablePaperView pagesPathForStackUUID:stackUUID andPageUUID:page.uuid];
+        if (previousStack && [[NSFileManager defaultManager] fileExistsAtPath:originalPagesPath]) {
+            // The assets still exist in the previous stack, so move them
+            // into the sidebar stack
+            [page moveAssetsFrom:previousStack];
+        }
+    }
 }
 
 - (void)loadFromDisk {
     // load from disk
     CGRect bounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
 
-    NSArray* pagesMeta = [[NSArray alloc] initWithContentsOfFile:[MMPagesInBezelContainerView pathToPlist]];
-
     for (NSDictionary* pageMeta in pagesMeta) {
-        NSString* stackUUID = pageMeta[@"stackUUID"];
         NSString* pageUUID = pageMeta[@"uuid"];
-        MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
+
+        MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
         page.isBrandNewPage = NO;
-        page.delegate = [self.bubbleDelegate stackForUUID:stackUUID];
+        page.delegate = pageSidebarStack;
         [page disableAllGestures];
+
+        // we might need to move assets from the original stack
+        // into our own sidebar stack
+        [self upgradeIfNecessary:page withMeta:pageMeta];
 
         // scale the page down. we can't initialize with this bounds,
         // because the initialied bounds is also our drawable resolution.

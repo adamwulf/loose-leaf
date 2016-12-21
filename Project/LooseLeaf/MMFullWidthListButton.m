@@ -25,6 +25,7 @@
         CGFloat rowHeight = [MMListPaperStackView rowHeight];
         CGFloat lblY = 215.0 / 273.0 * rowHeight;
         CGFloat buttonY = 185.0 / 273.0 * rowHeight;
+        buttonY += self.additionalVerticalSpacing / 2;
 
         UIColor* quarterWhite = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.25];
         CGFloat cornerRadius = roundf(.125 * [MMListPaperStackView columnWidth]);
@@ -51,6 +52,7 @@
 
         CGRect lblFrame = CGRectWithHeight(self.bounds, lblY);
         lblFrame = CGRectInset(lblFrame, 60, 0);
+        lblFrame.origin.y -= self.additionalVerticalSpacing / 2;
         lbl = [[UILabel alloc] initWithFrame:lblFrame];
         lbl.text = prompt;
         lbl.textColor = [UIColor colorWithWhite:.2 alpha:1.0];
@@ -67,18 +69,22 @@
         [confirmButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
         [self addSubview:confirmButton];
 
-        MMRoundedButton* cancelButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
-        [cancelButton setImage:rightIcon forState:UIControlStateNormal];
-        [cancelButton setTitle:rightTitle forState:UIControlStateNormal];
-        [cancelButton addTarget:self action:@selector(didTapRightButton) forControlEvents:UIControlEventTouchUpInside];
-        [cancelButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
-        [cancelButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
-        [self addSubview:cancelButton];
+        if (rightIcon && rightTitle) {
+            MMRoundedButton* cancelButton = [[MMRoundedButton alloc] initWithFrame:CGRectZero];
+            [cancelButton setImage:rightIcon forState:UIControlStateNormal];
+            [cancelButton setTitle:rightTitle forState:UIControlStateNormal];
+            [cancelButton addTarget:self action:@selector(didTapRightButton) forControlEvents:UIControlEventTouchUpInside];
+            [cancelButton setTitleColor:lbl.textColor forState:UIControlStateNormal];
+            [cancelButton setTitleColor:[UIColor colorWithWhite:.6 alpha:1.0] forState:UIControlStateHighlighted];
+            [self addSubview:cancelButton];
 
-        CGFloat widthOfButtons = confirmButton.bounds.size.width + cancelButton.bounds.size.width + 20;
-        CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
-        cancelButton.center = CGPointMake(self.bounds.size.width - buttonMargin - cancelButton.bounds.size.width / 2, buttonY);
-        confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, buttonY);
+            CGFloat widthOfButtons = confirmButton.bounds.size.width + cancelButton.bounds.size.width + 20;
+            CGFloat buttonMargin = (self.bounds.size.width - widthOfButtons) / 2;
+            cancelButton.center = CGPointMake(self.bounds.size.width - buttonMargin - cancelButton.bounds.size.width / 2, buttonY);
+            confirmButton.center = CGPointMake(buttonMargin + confirmButton.bounds.size.width / 2, buttonY);
+        } else {
+            confirmButton.center = CGPointMake(self.bounds.size.width / 2, buttonY);
+        }
     }
     return self;
 }

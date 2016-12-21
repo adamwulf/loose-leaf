@@ -23,6 +23,11 @@
 #import "MMTapWithTouchGestureRecognizer.h"
 #import "MMArrowView.h"
 #import "UIColor+MMAdditions.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+#import "MMPDFAssetGroup.h"
+#import "MMImportingPDFListButton.h"
+#import "MMBlockOperation.h"
+#import "MMDecryptPDFStackButton.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -44,23 +49,43 @@
     MMContinuousSwipeGestureRecognizer* deleteGesture;
     CGFloat squishFactor;
     CGFloat initialAdjustment;
-    MMTrashButton* deleteButton;
+    MMTrashButton* deleteRowButton;
+    MMShareButton* shareRowButton;
 
     MMConfirmDeleteStackButton* deleteConfirmationPlaceholder;
     MMEmptyStackButton* emptyStackRowPlaceholder;
+    MMImportingPDFListButton* importingPDFListButton;
+    MMDecryptPDFStackButton* unlockPDFListButton;
 
     MMArrowView* collapseNoticeArrow;
     UILabel* collapseNoticeMessage;
+
+    MMShareButton* shareStackButton;
+
+    BOOL cancelImport;
+
+    NSOperationQueue* importOperationQueue;
+
+    MMPDF* pdfToDecrypt;
+    void (^finishDecryptingPDFBlock)();
 }
 
 @dynamic stackDelegate;
 @synthesize stackNameField;
+
++ (CGRect)shareStackButtonFrame {
+    return CGRectMake([UIScreen screenWidth] - kWidthOfSidebar, 6, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
 
 - (instancetype)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (self = [super initWithFrame:frame andUUID:_uuid]) {
         collapseNoticeArrow = [[MMArrowView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 150, -100, 80, 80)];
         collapseNoticeArrow.alpha = 0;
         [self addSubview:collapseNoticeArrow];
+
+        importOperationQueue = [[NSOperationQueue alloc] init];
+        importOperationQueue.maxConcurrentOperationCount = 4;
+        importOperationQueue.name = @"importOperationQueue";
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
         collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
@@ -82,14 +107,25 @@
         deleteGesture.enabled = NO;
         [self addGestureRecognizer:deleteGesture];
 
+        CGFloat nameSpace = 40;
         CGFloat buffer = [MMListPaperStackView bufferWidth];
         CGFloat rowHeight = [MMListPaperStackView rowHeight] + 2 * buffer;
         CGFloat deleteButtonWidth = 80;
-        CGRect deleteRect = CGRectMake(self.bounds.size.width - 2 * buffer - deleteButtonWidth, (rowHeight - deleteButtonWidth) / 2, deleteButtonWidth, deleteButtonWidth);
-        deleteButton = [[MMTrashButton alloc] initWithFrame:deleteRect];
-        [deleteButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        deleteButton.alpha = 0;
-        [self addSubview:deleteButton];
+        CGRect deleteRect = CGRectMake(self.bounds.size.width - 2 * buffer - deleteButtonWidth, roundf(nameSpace + (rowHeight - nameSpace) / 2 - deleteButtonWidth) + .5, deleteButtonWidth, deleteButtonWidth);
+        deleteRowButton = [[MMTrashButton alloc] initWithFrame:deleteRect];
+        [deleteRowButton addTarget:self action:@selector(deleteButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        deleteRowButton.alpha = 0;
+        [self addSubview:deleteRowButton];
+
+        CGRect shareRect = CGRectTranslate(deleteRect, 0, 80);
+        shareRowButton = [[MMShareButton alloc] initWithFrame:shareRect];
+        [shareRowButton addTarget:self action:@selector(shareStackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        shareRowButton.alpha = 0;
+        shareRowButton.topBgColor = deleteRowButton.backgroundColor;
+        shareRowButton.bottomBgColor = deleteRowButton.backgroundColor;
+        shareRowButton.borderColor = deleteRowButton.borderColor;
+        shareRowButton.arrowColor = [UIColor darkGrayColor];
+        [self addSubview:shareRowButton];
 
         CGRect confirmationRect = CGRectMake(0, 60, self.bounds.size.width, rowHeight - 60);
 
@@ -101,15 +137,29 @@
         emptyStackRowPlaceholder.delegate = self;
         [self addSubview:emptyStackRowPlaceholder];
 
+        importingPDFListButton = [[MMImportingPDFListButton alloc] initWithFrame:confirmationRect];
+        importingPDFListButton.delegate = self;
+        [self addSubview:importingPDFListButton];
+
+        unlockPDFListButton = [[MMDecryptPDFStackButton alloc] initWithFrame:confirmationRect];
+        unlockPDFListButton.delegate = self;
+        [self addSubview:unlockPDFListButton];
+
         CGRect nameFieldFrame = CGRectWithHeight([self bounds], 50);
         nameFieldFrame = CGRectTranslate(nameFieldFrame, 0, 10);
         nameFieldFrame = CGRectInset(nameFieldFrame, [MMListPaperStackView bufferWidth], 10);
+        nameFieldFrame.size.width -= 100;
         stackNameField = [[MMColoredTextField alloc] initWithFrame:nameFieldFrame];
         stackNameField.font = [UIFont systemFontOfSize:24];
         stackNameField.returnKeyType = UIReturnKeyDone;
         stackNameField.autocapitalizationType = UITextAutocapitalizationTypeWords;
         stackNameField.delegate = self;
         [self addSubview:stackNameField];
+
+        shareStackButton = [[MMShareButton alloc] initWithFrame:[MMCollapsableStackView shareStackButtonFrame]];
+        shareStackButton.delegate = self;
+        [shareStackButton addTarget:self action:@selector(shareStackButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:shareStackButton];
     }
     return self;
 }
@@ -153,7 +203,11 @@
 }
 
 - (BOOL)isPerfectlyAlignedIntoRow {
-    return squishFactor == 0;
+    return squishFactor == 0 && !unlockPDFListButton.alpha && !importingPDFListButton.alpha;
+}
+
+- (BOOL)isCurrentlyHandlingImport {
+    return unlockPDFListButton.alpha || importingPDFListButton.alpha;
 }
 
 - (void)cancelPendingConfirmationsAndResetToRow {
@@ -170,9 +224,12 @@
 
 #pragma mark - MMEditableStackView
 
-- (void)loadStacksFromDiskIntoListView {
-    [super loadStacksFromDiskIntoListView];
+- (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta {
+    [super loadStacksFromDiskIntoListViewIgnoringMeta:meta];
+    [self refreshNameFromStackManager];
+}
 
+- (void)refreshNameFromStackManager {
     stackNameField.text = self.stackManager.name;
     emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
 }
@@ -209,13 +266,195 @@
     if ([self.stackDelegate isAllowedToInteractWithStack:self.uuid]) {
         if ([self isPerfectlyAlignedIntoRow]) {
             [[self stackDelegate] didAskToSwitchToStack:[self uuid] animated:YES viewMode:kViewModeList];
-        } else if (deleteButton.alpha) {
+        } else if (deleteRowButton.alpha) {
             [self cancelPendingConfirmationsAndResetToRowQuickly:YES];
             [[self stackDelegate] isNotGoingToDeleteStack:[self uuid]];
         }
     }
 }
 
+- (void)shareStackButtonTapped:(UIButton*)_button {
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [self setButtonsVisible:NO withDuration:0.15];
+    [self.stackDelegate didAskToExportStack:self.uuid];
+    [self.stackDelegate.shareStackSidebar setReferenceButtonFrame:[_button convertRect:_button.bounds toView:nil]];
+    [self.stackDelegate.shareStackSidebar show:YES];
+}
+
+- (void)showUIToPrepareForImportingPDF:(MMPDFInboxItem*)pdfDoc onComplete:(void (^)())completionBlock {
+    [self organizePagesIntoSingleRowAnimated:NO];
+    emptyStackRowPlaceholder.alpha = 0;
+    importingPDFListButton.alpha = 1;
+
+    [importingPDFListButton setPrompt:@"Importing PDF..."];
+
+    if ([pdfDoc.pdf isEncrypted]) {
+        importingPDFListButton.alpha = 0;
+        unlockPDFListButton.alpha = 1;
+
+        pdfToDecrypt = pdfDoc.pdf;
+        finishDecryptingPDFBlock = completionBlock;
+    } else {
+        completionBlock(pdfDoc);
+    }
+}
+
+- (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)(BOOL success))completionBlock {
+    if ([self isShowingCollapsedView]) {
+        if ([pdfDoc.pdf.title length]) {
+            self.stackManager.name = pdfDoc.pdf.title;
+            [self refreshNameFromStackManager];
+        }
+
+        cancelImport = NO;
+        [self organizePagesIntoSingleRowAnimated:NO];
+        __block CGFloat delay = 0;
+        emptyStackRowPlaceholder.alpha = 0;
+        importingPDFListButton.alpha = 1;
+
+        [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)1, (long)pdfDoc.pdf.pageCount]];
+
+        NSIndexSet* pageSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [pdfDoc pageCount])];
+        MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
+        NSMutableArray* displayAssets = [NSMutableArray array];
+        NSMutableArray* pages = [NSMutableArray array];
+        @autoreleasepool {
+            [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset* asset, NSUInteger index, BOOL* stop) {
+                [displayAssets addObject:asset];
+                MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+                [pages addObject:page];
+                page.delegate = self;
+            }];
+        }
+
+
+        void (^finishedImportingAllPages)() = ^{
+            if (cancelImport) {
+                if (completionBlock) {
+                    completionBlock(NO);
+                }
+                return;
+            }
+
+            NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+            [self organizePagesIntoSingleRowAnimated:NO];
+
+            [UIView animateWithDuration:.2 animations:^{
+                importingPDFListButton.alpha = 0;
+            }];
+
+            for (NSInteger pageIndex = 0; pageIndex < [allPages count]; pageIndex++) {
+                MMPaperView* page = allPages[pageIndex];
+
+                if (pageIndex < kMaxPageCountForRow) {
+                    page.alpha = 0;
+                    page.transform = CGAffineTransformTranslate(CGAffineTransformMakeScale(.9, .9), -40, 0);
+
+                    void (^animationCompletionBlock)(BOOL) = nil;
+
+                    if (pageIndex == [allPages count] - 1 || pageIndex == kMaxPageCountForRow - 1) {
+                        // last page
+                        animationCompletionBlock = ^(BOOL finished) {
+                            [self saveStacksToDisk];
+                            if (completionBlock) {
+                                completionBlock(YES);
+                            }
+                        };
+                    }
+
+                    [UIView animateWithDuration:.3 delay:delay options:UIViewAnimationOptionCurveEaseOut animations:^{
+                        page.alpha = 1;
+                        page.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[page uuid] hash]));
+                    } completion:animationCompletionBlock];
+                    delay += .1;
+                } else {
+                    page.alpha = 1;
+                }
+            }
+        };
+
+
+        __block NSInteger totalImportedPages = 0;
+        void (^updateImportProgressLabel)() = ^{
+            totalImportedPages++;
+            [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)totalImportedPages, (long)pdfDoc.pdf.pageCount]];
+        };
+
+
+        MMBlockOperation* finalBlock = [[MMBlockOperation alloc] initWithBlock:^{
+            if (cancelImport) {
+                if (completionBlock) {
+                    completionBlock(NO);
+                }
+                return;
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                for (NSInteger index = 0; index < [pages count]; index++) {
+                    MMExportablePaperView* page = pages[index];
+                    [page saveToDisk:nil];
+
+                    // move page to end
+                    if ([self.visibleStackHolder.subviews count] == 0) {
+                        [self.visibleStackHolder pushSubview:page];
+                    } else {
+                        [self.hiddenStackHolder insertSubview:page atIndex:0];
+                    }
+
+                    page.alpha = 0;
+
+                    if (index < kMaxPageCountForRow) {
+                        if (index == 0) {
+                            [page loadCachedPreviewAndDecompressImmediately:YES];
+                        } else {
+                            [page loadCachedPreview];
+                        }
+                    } else {
+                        [page unloadCachedPreview];
+                    }
+                }
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), finishedImportingAllPages);
+            });
+        }];
+
+        CGSize thumbSize = hiddenStackHolder.bounds.size;
+        thumbSize.width = floorf(thumbSize.width / 2);
+        thumbSize.height = floorf(thumbSize.height / 2);
+
+        for (NSInteger index = 0; index < [pages count]; index++) {
+            MMBlockOperation* blockOp = [[MMBlockOperation alloc] initWithBlock:^{
+                if (cancelImport) {
+                    // don't call completion block here,
+                    // we'll call it in the final block that
+                    // depends on these
+                    return;
+                }
+
+                dispatch_async(dispatch_get_main_queue(), updateImportProgressLabel);
+
+                MMDisplayAsset* asset = displayAssets[index];
+                MMBackgroundedPaperView* page = pages[index];
+                NSURL* assetURL = [asset fullResolutionURL];
+
+                UIImage* thumbImageToImport = [asset aspectThumbnailWithMaxPixelSize:CGSizeMaxDim(thumbSize)];
+                [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
+
+                [MMExportablePaperView writeThumbnailImagesToDisk:thumbImageToImport thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
+
+                [page saveOriginalBackgroundTextureFromURL:assetURL];
+            }];
+            [finalBlock addDependency:blockOp];
+            [importOperationQueue addOperation:blockOp];
+        }
+
+        [importOperationQueue addOperation:finalBlock];
+    }
+
+    if ([pdfDoc pageCount] == 0 && completionBlock) {
+        completionBlock(NO);
+    }
+}
 
 #pragma mark - UIScrollViewDelegate
 
@@ -288,18 +527,52 @@
     return pagesToAlignIntoRow;
 }
 
+- (CGFloat)collapsedViewButtonRotation {
+    if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait) {
+        return 0;
+    } else if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft) {
+        return -M_PI_2;
+    } else if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight) {
+        return M_PI_2;
+    } else {
+        return M_PI;
+    }
+}
+
+- (void)didRotateToIdealOrientation:(UIInterfaceOrientation)orientation {
+    CheckMainThread;
+
+    [super didRotateToIdealOrientation:orientation];
+
+    [UIView animateWithDuration:.3 animations:^{
+        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self collapsedViewButtonRotation]);
+        shareStackButton.rotation = [self collapsedViewButtonRotation];
+        shareStackButton.transform = rotationTransform;
+        deleteRowButton.rotation = [self collapsedViewButtonRotation];
+        deleteRowButton.transform = rotationTransform;
+        shareRowButton.rotation = [self collapsedViewButtonRotation];
+        shareRowButton.transform = rotationTransform;
+    }];
+}
+
 #pragma mark - Animate into row form
 
+- (BOOL)isIPadPro {
+    return [UIScreen screenWidth] > 768;
+}
+
 - (CGRect)frameForAddPageButton {
-    return CGRectTranslate([super frameForAddPageButton], 0, 20);
+    CGRect r = [super frameForAddPageButton];
+    return CGRectTranslate(r, 0, [self isIPadPro] ? 30 : 40);
 }
 
 - (CGRect)frameForListViewForPage:(MMPaperView*)page {
-    return CGRectTranslate([super frameForListViewForPage:page], 0, 20);
+    CGRect r = [super frameForListViewForPage:page];
+    return CGRectTranslate(r, 0, [self isIPadPro] ? 30 : 40);
 }
 
 - (CGFloat)contentHeightForAllPages {
-    return [super contentHeightForAllPages] + 20;
+    return [super contentHeightForAllPages] + ([self isIPadPro] ? 30 : 40);
 }
 
 - (CGRect)targetFrameInRowForPage:(MMPaperView*)aPage givenAllPages:(NSArray*)pagesToAlignIntoRow {
@@ -394,8 +667,11 @@
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
         deleteConfirmationPlaceholder.alpha = 0;
-        emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0;
-        deleteButton.alpha = 0;
+        unlockPDFListButton.alpha = pdfToDecrypt ? 1 : 0;
+        emptyStackRowPlaceholder.alpha = [pagesToAlignIntoRow count] == 0 && !pdfToDecrypt;
+        deleteRowButton.alpha = 0;
+        shareRowButton.alpha = 0;
+        shareStackButton.alpha = 0;
         stackNameField.alpha = 1;
         squishFactor = 0;
         [self setContentOffset:CGPointZero];
@@ -497,6 +773,7 @@
         listViewTutorialButton.alpha = 1;
         listViewFeedbackButton.alpha = 1;
         addPageButtonInListView.alpha = 1;
+        shareStackButton.alpha = 1;
         stackNameField.alpha = 1;
         [self setButtonsVisible:NO animated:NO];
     };
@@ -558,9 +835,11 @@
 - (void)immediatelyTransitionToPageViewAnimated:(BOOL)animated {
     if (animated && CGPointEqualToPoint(self.contentOffset, CGPointZero)) {
         [UIView animateWithDuration:.2 animations:^{
+            shareStackButton.alpha = 0;
             stackNameField.alpha = 0;
         }];
     } else {
+        shareStackButton.alpha = 0;
         stackNameField.alpha = 0;
     }
 
@@ -572,9 +851,11 @@
     if (CGPointEqualToPoint(initialScrollOffsetFromTransitionToListView, CGPointZero)) {
         if (animated) {
             [UIView animateWithDuration:.3 animations:^{
+                shareStackButton.alpha = 1;
                 stackNameField.alpha = 1;
             }];
         } else {
+            shareStackButton.alpha = 1;
             stackNameField.alpha = 1;
         }
     }
@@ -582,6 +863,7 @@
 
 - (void)finishUITransitionToListView {
     [super finishUITransitionToListView];
+    shareStackButton.alpha = 1;
     stackNameField.alpha = 1;
 }
 
@@ -592,6 +874,7 @@
     [super didPickUpAPageInListView:gesture];
     if (gesture.state == UIGestureRecognizerStateBegan) {
         [UIView animateWithDuration:.2 animations:^{
+            shareStackButton.alpha = 0;
             stackNameField.alpha = 0;
         }];
     }
@@ -611,6 +894,7 @@
         // cancel the gesture
         [sender setEnabled:NO];
         [sender setEnabled:YES];
+        [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
         return;
     }
     if (sender.state == UIGestureRecognizerStateBegan) {
@@ -633,10 +917,12 @@
         CGFloat updatedSquish = initialAdjustment + amount / (CGRectGetMidX(lastFrame) - CGRectGetMidX(firstFrame));
         [self adjustForDelete:updatedSquish withTranslate:0];
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:MAX(0, updatedSquish - .3) * 1.8];
-        deleteButton.alpha = MIN(.2, MAX(0, updatedSquish)) / .2;
+        deleteRowButton.alpha = MIN(.2, MAX(0, updatedSquish)) / .2;
+        shareRowButton.alpha = deleteRowButton.alpha;
         [self.silhouette continueDrawingAtTouch:sender.touch];
     } else if (sender.state == UIGestureRecognizerStateEnded ||
-               sender.state == UIGestureRecognizerStateCancelled) {
+               sender.state == UIGestureRecognizerStateCancelled ||
+               sender.state == UIGestureRecognizerStateFailed) {
         // enable scrolling stack list
         [self finishSwipeToDelete:NO sendingDelegateNotifications:YES];
         [self.silhouette endDrawingAtTouch:sender.touch];
@@ -654,7 +940,8 @@
             if (sendDelegateNotifications) {
                 [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             }
-            deleteButton.alpha = 0;
+            deleteRowButton.alpha = 0;
+            shareRowButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 0;
             emptyStackRowPlaceholder.alpha = [[self pagesToAlignForRowView] count] == 0;
         } completion:^(BOOL finished) {
@@ -668,7 +955,8 @@
         // delete immediately
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
             [self adjustForDelete:1 withTranslate:-250];
-            deleteButton.alpha = 0;
+            deleteRowButton.alpha = 0;
+            shareRowButton.alpha = 0;
             deleteConfirmationPlaceholder.alpha = 1;
             emptyStackRowPlaceholder.alpha = 0;
         } completion:nil];
@@ -688,7 +976,8 @@
             if (sendDelegateNotifications) {
                 [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
             }
-            deleteButton.alpha = 1.0;
+            deleteRowButton.alpha = 1.0;
+            shareRowButton.alpha = 1.0;
             deleteConfirmationPlaceholder.alpha = 0;
             emptyStackRowPlaceholder.alpha = 0;
         } completion:^(BOOL finished) {
@@ -715,7 +1004,8 @@
     }
 
     [self setClipsToBounds:squishFactor == 0];
-    [deleteButton setEnabled:squishFactor > 0];
+    [deleteRowButton setEnabled:squishFactor > 0];
+    [shareRowButton setEnabled:squishFactor > 0];
 
     CGFloat alphaForDelete = adjustment - .5;
     alphaForDelete = MAX(alphaForDelete, 0);
@@ -748,7 +1038,8 @@
     } completion:nil];
     [UIView animateWithDuration:.5 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
         [[self stackDelegate] isPossiblyDeletingStack:self.uuid withPendingProbability:1.0];
-        deleteButton.alpha = 0;
+        deleteRowButton.alpha = 0;
+        shareRowButton.alpha = 0;
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
             [self.stackDelegate isNotGoingToDeleteStack:self.uuid];
@@ -765,19 +1056,42 @@
 #pragma mark - MMFullWidthListButtonDelegate
 
 - (void)didTapLeftInFullWidthButton:(MMFullWidthListButton*)button {
+    if (button == importingPDFListButton || button == unlockPDFListButton) {
+        cancelImport = YES;
+    }
     deleteGesture.enabled = YES;
     squishFactor = 0;
     [self.stackDelegate isAskingToDeleteStack:self.uuid];
+
+    if (button == unlockPDFListButton && finishDecryptingPDFBlock) {
+        importingPDFListButton.alpha = 1;
+        unlockPDFListButton.alpha = 0;
+        finishDecryptingPDFBlock();
+        finishDecryptingPDFBlock = nil;
+        pdfToDecrypt = nil;
+    }
 }
 
 - (void)didTapRightInFullWidthButton:(MMFullWidthListButton*)button {
-    if (button == deleteConfirmationPlaceholder) {
+    if (button == unlockPDFListButton) {
+        if (![pdfToDecrypt attemptToDecrypt:unlockPDFListButton.password]) {
+            [unlockPDFListButton bouncePasswordInput];
+        }
+    } else if (button == deleteConfirmationPlaceholder) {
         deleteGesture.enabled = YES;
         squishFactor = .15;
         [self finishSwipeToDelete:YES sendingDelegateNotifications:YES];
     } else {
         // asking to add three pages
         [self ensureAtLeastPagesInStack:3];
+    }
+
+    if (button == unlockPDFListButton && finishDecryptingPDFBlock && ![pdfToDecrypt isEncrypted]) {
+        importingPDFListButton.alpha = 1;
+        unlockPDFListButton.alpha = 0;
+        finishDecryptingPDFBlock();
+        finishDecryptingPDFBlock = nil;
+        pdfToDecrypt = nil;
     }
 }
 
@@ -866,6 +1180,119 @@
             }];
         }];
     }
+}
+
+#pragma mark - Debug Actions
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
+    JotView* exportJotView = [[JotView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
+
+    NSMutableArray* allPagePDFs = [NSMutableArray array];
+
+    NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+
+    __block void (^exportTopPageOf)(NSArray<MMExportablePaperView*>* pages);
+    exportTopPageOf = ^(NSArray<MMExportablePaperView*>* pages) {
+        MMExportablePaperView* page = [pages firstObject];
+        BOOL needsLoad = !page.isStateLoaded;
+        BOOL needsDrawable = !page.drawableView;
+
+        if (progressBlock([allPagePDFs count], [allPages count])) {
+            // check if the user has asked to cancel
+            for (NSURL* url in allPagePDFs) {
+                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+            }
+            return;
+        }
+
+        if (needsLoad) {
+            [page loadStateAsynchronously:NO withSize:exportJotView.pagePtSize andScale:exportJotView.scale andContext:exportJotView.context];
+        }
+
+        if (needsDrawable) {
+            [page setDrawableView:exportJotView];
+        }
+
+        [page exportVisiblePageToPDF:^(NSURL* urlToPDF) {
+            if (urlToPDF) {
+                [allPagePDFs addObject:urlToPDF];
+            }
+
+            if (needsLoad) {
+                [page unloadState];
+            }
+
+            if (needsDrawable) {
+                [page setDrawableView:nil];
+            }
+
+            if ([pages count] > 1) {
+                exportTopPageOf([pages subarrayWithRange:NSMakeRange(1, [pages count] - 1)]);
+            } else {
+                exportTopPageOf = nil;
+
+                // make sure our JotView is dead.
+                // this will also add it to the trash manager
+                [exportJotView invalidate];
+
+                if (progressBlock([allPagePDFs count], [allPages count])) {
+                    // check if the user has asked to cancel
+                    for (NSURL* url in allPagePDFs) {
+                        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                    }
+                    return;
+                }
+
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // done! our PDFs for each page are in allPagePDFs.
+                    // next is to merge all these into 1 single PDF
+
+                    // Loop variables
+                    CGPDFPageRef page;
+                    CGRect mediaBox;
+
+                    NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+                    NSURL* pdfURLOutput = [NSURL fileURLWithPath:tmpPagePath];
+                    CGContextRef writeContext = CGPDFContextCreateWithURL((CFURLRef)pdfURLOutput, NULL, NULL);
+
+                    // Read the first PDF and generate the output pages
+                    for (NSURL* pdfURL in allPagePDFs) {
+                        @autoreleasepool {
+                            MMPDF* pdf = [[MMPDF alloc] initWithURL:pdfURL];
+                            CGPDFDocumentRef pdfRef1 = CGPDFDocumentCreateWithURL((CFURLRef)pdf.urlOnDisk);
+
+                            for (int i = 1; i <= [pdf pageCount]; i++) {
+                                @autoreleasepool {
+                                    page = CGPDFDocumentGetPage(pdfRef1, i);
+                                    mediaBox = CGPDFPageGetBoxRect(page, kCGPDFMediaBox);
+                                    CGContextBeginPage(writeContext, &mediaBox);
+                                    CGContextDrawPDFPage(writeContext, page);
+                                    CGContextEndPage(writeContext);
+                                }
+                            }
+
+                            CGPDFDocumentRelease(pdfRef1);
+                        }
+                    }
+
+                    // Finalize the output file
+                    CGPDFContextClose(writeContext);
+
+                    // Release from memory
+                    CGContextRelease(writeContext);
+
+                    // delete per-page PDFs
+                    for (NSURL* url in allPagePDFs) {
+                        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                    }
+
+                    completionBlock(pdfURLOutput);
+                });
+            }
+        }];
+    };
+
+    exportTopPageOf(allPages);
 }
 
 @end

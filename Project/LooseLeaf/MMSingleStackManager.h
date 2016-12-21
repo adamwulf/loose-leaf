@@ -29,9 +29,7 @@
 
 - (BOOL)hasStateToLoad;
 
-- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds;
-
-+ (NSDictionary*)loadFromDiskForStackUUID:(NSString*)stackUUID;
+- (NSDictionary*)loadFromDiskWithBounds:(CGRect)bounds ignoringMeta:(NSArray*)pagesMetaToIgnore;
 
 + (UIImage*)hasThumbail:(BOOL*)thumbExists forPage:(NSString*)pageUUID forStack:(NSString*)stackUUID;
 

@@ -18,6 +18,7 @@
 @property (nonatomic, weak) MMCountableSidebarContainerView* delegate;
 @property (nonatomic, assign) NSInteger columnCount;
 @property (nonatomic, readonly) NSArray* itemViews;
+@property (nonatomic, assign) BOOL shouldReverseInSidebar;
 
 - (void)setRotation:(CGFloat)radians;
 

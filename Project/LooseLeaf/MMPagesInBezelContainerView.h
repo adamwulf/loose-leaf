@@ -25,4 +25,6 @@
 
 - (void)loadFromDisk;
 
+@property (nonatomic, readonly) NSArray* pagesMeta;
+
 @end

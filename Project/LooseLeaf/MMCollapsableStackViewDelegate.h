@@ -33,4 +33,6 @@
 
 - (void)didFinishEditingName:(NSString*)stackUUID;
 
+- (void)didAskToExportStack:(NSString*)stackUUID;
+
 @end

@@ -95,6 +95,11 @@
     return self;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    scrapIDsPath = nil;
+}
+
 - (int)fullByteSize {
     return [super fullByteSize] + scrapsOnPaperState.fullByteSize;
 }
@@ -200,6 +205,7 @@
     CheckMainThread;
     // default will be to just append drawable view. subclasses
     // can (and will) change behavior
+    drawableView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
     [self.contentView insertSubview:drawableView belowSubview:scrapsOnPaperState.scrapContainerView];
 }
 
@@ -1430,9 +1436,7 @@
 
 - (void)didUnloadState:(JotViewStateProxy*)state {
     lastSavedPaperStateHashForGeneratedThumbnail = 0;
-    [NSThread performBlockOnMainThread:^{
-        [[MMPageCacheManager sharedInstance] didUnloadStateForPage:self];
-    }];
+    [super didUnloadState:state];
 }
 
 #pragma mark - Paths

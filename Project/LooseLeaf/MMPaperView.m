@@ -90,6 +90,10 @@
     return self;
 }
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    // noop
+}
+
 - (int)fullByteSize {
     return 0;
 }

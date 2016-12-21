@@ -73,9 +73,6 @@
 
         _stackManager = [[MMSingleStackManager alloc] initWithUUID:self.uuid visibleStack:visibleStackHolder andHiddenStack:hiddenStackHolder andBezelStack:bezelStackHolder];
 
-
-        //        228
-
         //
         // icons for moving and panning pages
         [self addSubview:visibleStackHolder];

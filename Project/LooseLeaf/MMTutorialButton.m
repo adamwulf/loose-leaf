@@ -122,6 +122,9 @@
         [darkerGreyBorder setStroke];
         ovalPath.lineWidth = 1;
         [ovalPath stroke];
+
+        CGGradientRelease(blueGradient);
+        CGColorSpaceRelease(colorSpace);
     }
 }
 

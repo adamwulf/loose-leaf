@@ -28,4 +28,6 @@
 
 - (void)didEnterBackground;
 
+- (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)assetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock;
+
 @end

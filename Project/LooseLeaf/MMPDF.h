@@ -13,6 +13,7 @@
 
 @property (nonatomic, readonly) NSURL* urlOnDisk;
 @property (nonatomic, readonly) NSUInteger pageCount;
+@property (nonatomic, readonly) NSString* title;
 
 // the ppi used for PDF contexts
 + (CGFloat)ppi;

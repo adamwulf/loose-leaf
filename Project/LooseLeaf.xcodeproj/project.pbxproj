@@ -535,6 +535,9 @@
 		C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A161CDB1B4A00508F1D /* bg51.jpg */; };
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */; };
+		C5A5C4911DFE5A1E00FD2555 /* MMImportingPDFListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */; };
+		C5A5C4A91DFFC91700FD2555 /* MMDecryptPDFStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */; };
 		C5A8E1AD1DC308BF00CD608F /* MMCollapsableStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C542AA271D81AC8A0024FAD9 /* MMCollapsableStackView.m */; };
 		C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */; };
 		C5A8E1B21DC3252900CD608F /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B11DC3252900CD608F /* CloudKit.framework */; };
@@ -1623,6 +1626,12 @@
 		C58E6A161CDB1B4A00508F1D /* bg51.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg51.jpg; sourceTree = "<group>"; };
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareStackSidebarContainerView.h; sourceTree = "<group>"; };
+		C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareStackSidebarContainerView.m; sourceTree = "<group>"; };
+		C5A5C48F1DFE5A1E00FD2555 /* MMImportingPDFListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImportingPDFListButton.h; sourceTree = "<group>"; };
+		C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImportingPDFListButton.m; sourceTree = "<group>"; };
+		C5A5C4A71DFFC91700FD2555 /* MMDecryptPDFStackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDecryptPDFStackButton.h; sourceTree = "<group>"; };
+		C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDecryptPDFStackButton.m; sourceTree = "<group>"; };
 		C5A8E1AE1DC308E400CD608F /* MMListSidebarStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMListSidebarStackView.h; sourceTree = "<group>"; };
 		C5A8E1AF1DC308E400CD608F /* MMListSidebarStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMListSidebarStackView.m; sourceTree = "<group>"; };
 		C5A8E1B11DC3252900CD608F /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -3180,7 +3189,7 @@
 			name = Operations;
 			sourceTree = "<group>";
 		};
-		66B42FBD19955A2C005D8214 /* Share Sidebar */ = {
+		66B42FBD19955A2C005D8214 /* Share Page Sidebar */ = {
 			isa = PBXGroup;
 			children = (
 				6652450419956FC800C36609 /* Share Items */,
@@ -3189,7 +3198,7 @@
 				663523E319A7E32000A26B88 /* MMShareOptionsView.h */,
 				663523E419A7E32000A26B88 /* MMShareOptionsView.m */,
 			);
-			name = "Share Sidebar";
+			name = "Share Page Sidebar";
 			sourceTree = "<group>";
 		};
 		66B62C4B17F245E6006D31EB /* Scrap Collection State */ = {
@@ -3684,6 +3693,10 @@
 				C543284F1DCC4A02008CCB8A /* MMFullWidthListButtonDelegate.h */,
 				C55B4DC91DDE8222001DC9E4 /* MMEmptyStackButton.h */,
 				C55B4DCA1DDE8222001DC9E4 /* MMEmptyStackButton.m */,
+				C5A5C48F1DFE5A1E00FD2555 /* MMImportingPDFListButton.h */,
+				C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */,
+				C5A5C4A71DFFC91700FD2555 /* MMDecryptPDFStackButton.h */,
+				C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */,
 			);
 			name = "List View";
 			sourceTree = "<group>";
@@ -3929,6 +3942,15 @@
 			name = Toolbar;
 			sourceTree = "<group>";
 		};
+		C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */,
+				C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */,
+			);
+			name = "Share Stack Sidebar";
+			sourceTree = "<group>";
+		};
 		C5B905CA1CEACE1A002943BF /* Backgrounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -4025,8 +4047,9 @@
 				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Overlay */,
-				66B42FBD19955A2C005D8214 /* Share Sidebar */,
+				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
+				66B42FBD19955A2C005D8214 /* Share Page Sidebar */,
+				C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
 			);
 			name = Sidebars;
@@ -4700,6 +4723,7 @@
 				66C3CBE11A29046200D7EE42 /* MMRulerAdjustment.m in Sources */,
 				662280731AAF570A00DAB609 /* MMInboxAssetGroupCell.m in Sources */,
 				6650943419AD37E200D58118 /* MMCloudKitShareListVerticalLayout.m in Sources */,
+				C5A5C4A91DFFC91700FD2555 /* MMDecryptPDFStackButton.m in Sources */,
 				6635BE9D19758BFF00DFCBBA /* MMImmutableScrapsInSidebarState.m in Sources */,
 				660E1DB0158FC7DB0001DA12 /* MMPaperIcon.m in Sources */,
 				6677C5951AAB9A7000B2E46C /* MMDeleteButton.m in Sources */,
@@ -4963,6 +4987,7 @@
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
 				C5F1B2BB1D9B01BB00E0E9A8 /* MPNSAttributedStringToNSDictionaryValueTransformer.m in Sources */,
 				C5F1B2C41D9B01BB00E0E9A8 /* MPResources.m in Sources */,
+				C5A5C4911DFE5A1E00FD2555 /* MMImportingPDFListButton.m in Sources */,
 				66FA039819BEBAB300AF0DC4 /* MMCloudKeyIconLayer.m in Sources */,
 				66A471C217C7DEF200C2A5B6 /* SYShape+Bezier.m in Sources */,
 				66B3522517A9D17500AE58AB /* UIGestureRecognizer+GestureDebug.m in Sources */,
@@ -5027,6 +5052,7 @@
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
 				C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */,
+				C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */,
 				C5F1B2D91D9B01BB00E0E9A8 /* NSInvocation+MPHelpers.m in Sources */,
 				662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */,
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,

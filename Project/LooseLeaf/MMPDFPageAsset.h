@@ -13,5 +13,6 @@
 @interface MMPDFPageAsset : MMDisplayAsset
 
 - (id)initWithPDF:(MMPDFInboxItem*)pdf andPage:(NSInteger)pageNum;
++ (UIImage*)lockIconWithColor:(UIColor*)color;
 
 @end

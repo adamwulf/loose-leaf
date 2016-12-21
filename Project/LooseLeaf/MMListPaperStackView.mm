@@ -170,6 +170,7 @@
     addPageButtonInListView.alpha = 0;
     [self insertSubview:addPageButtonInListView atIndex:0];
 }
+
 - (void)moveAddButtonToTop {
     addPageButtonInListView.alpha = 1;
     addPageButtonInListView.frame = [self frameForAddPageButton];
@@ -893,7 +894,7 @@
  * to that page as the top of the visible stack
  */
 - (void)didTapScrollView:(MMButtonAwareTapGestureRecognizer*)_tapGesture {
-    if (_tapGesture.state == UIGestureRecognizerStateRecognized) {
+    if ([self isShowingListView] && _tapGesture.state == UIGestureRecognizerStateRecognized) {
         //
         // first, we should find which page the user tapped
         CGPoint locationOfTap = [_tapGesture locationInView:self];

@@ -21,6 +21,8 @@
 
 - (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft;
 
+- (void)setReferenceButtonFrame:(CGRect)frame;
+
 - (void)sidebarCloseButtonWasTapped;
 
 - (BOOL)isVisible;

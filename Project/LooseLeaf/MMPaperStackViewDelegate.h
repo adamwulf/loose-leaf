@@ -10,6 +10,7 @@
 #import "MMImageSidebarContainerView.h"
 #import "MMShareSidebarContainerView.h"
 #import "MMPagesInBezelContainerView.h"
+#import "MMShareStackSidebarContainerView.h"
 
 @class MMPaperStackView;
 
@@ -25,6 +26,8 @@
 
 - (MMShareSidebarContainerView*)sharePageSidebar;
 
+- (MMShareStackSidebarContainerView*)shareStackSidebar;
+
 - (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;
 
 - (void)didFailToExportPage:(MMPaperView*)page;
@@ -34,6 +37,8 @@
 - (BOOL)isShowingTutorial;
 
 - (void)didChangeToListView:(NSString*)stackUUID;
+
+- (void)didAskToChangeButtonOpacity:(BOOL)visible animated:(BOOL)animated forStack:(NSString*)stackUUID;
 
 - (void)willChangeToPageView:(NSString*)stackUUID;
 

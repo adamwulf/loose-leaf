@@ -32,6 +32,11 @@
 @synthesize undoRedoManager;
 @synthesize undoStatePath;
 
+- (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
+    [super moveAssetsFrom:previousDelegate];
+    undoStatePath = nil;
+}
+
 - (NSUndoManager*)undoManager {
     @throw [NSException exceptionWithName:@"MMUnknownUndoManager" reason:@"undoManager property is disabled" userInfo:nil];
 }

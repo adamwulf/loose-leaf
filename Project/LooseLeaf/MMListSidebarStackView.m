@@ -8,6 +8,7 @@
 
 #import "MMListSidebarStackView.h"
 #import "NSArray+Extras.h"
+#import "UIScreen+MMSizing.h"
 
 
 @interface MMListPaperStackView (Protected)
@@ -25,6 +26,25 @@
 
 @implementation MMListSidebarStackView
 
+// This affects how much the pages are squished together
+- (CGFloat)pageSidebarWidth {
+    if ([UIScreen screenWidth] > 768) {
+        return roundf([UIScreen screenWidth] * 1.18 / 10.0);
+    }
+
+    return roundf([UIScreen screenWidth] * 1.17 / 10.0);
+}
+
+// This affects how far the pages are offset to the left
+- (CGFloat)pageSidebarOffset {
+    if ([UIScreen screenWidth] > 768) {
+        // ipad pro 12in
+        return 4;
+    }
+
+    return 1;
+}
+
 - (void)immediatelyRelayoutIfInListMode {
     if (!self.isShowingPageView) {
         NSArray* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[hiddenStackHolder subviews]];
@@ -36,9 +56,9 @@
     CGRect fr = [super frameForListViewForPage:page];
 
     if ([[self.stackDelegate.bezelPagesContainer viewsInSidebar] count]) {
-        CGFloat maxMove = 120;
+        CGFloat maxMove = [self pageSidebarWidth];
         CGFloat maxX = CGRectGetWidth([self.stackDelegate.bezelPagesContainer bounds]);
-        CGFloat movement = (fr.origin.x) / maxX * maxMove + kWidthOfSidebarButtonBuffer;
+        CGFloat movement = (fr.origin.x) / maxX * maxMove + kWidthOfSidebarButtonBuffer + [self pageSidebarOffset];
         fr.origin.x -= movement;
     }
 
@@ -49,9 +69,9 @@
     CGRect fr = [super frameForAddPageButton];
 
     if ([[self.stackDelegate.bezelPagesContainer viewsInSidebar] count]) {
-        CGFloat maxMove = 120;
+        CGFloat maxMove = [self pageSidebarWidth];
         CGFloat maxX = CGRectGetWidth([self.stackDelegate.bezelPagesContainer bounds]);
-        CGFloat movement = (fr.origin.x) / maxX * maxMove + kWidthOfSidebarButtonBuffer;
+        CGFloat movement = (fr.origin.x) / maxX * maxMove + kWidthOfSidebarButtonBuffer + [self pageSidebarOffset];
         fr.origin.x -= movement;
     }
 
@@ -63,6 +83,8 @@
     // it's not immediately clear when reading this, but something to be aware of when looking.
     CGPoint locInSelf = CGPointMake(CGRectGetMaxX(self.bounds), CGRectGetHeight(self.bounds) / 2 + self.contentOffset.y);
 
+    id<MMPaperViewDelegate> previousStack = page.delegate;
+
     NSArray* currentlyVisiblePages = [self findPagesInVisibleRowsOfListView];
     MMPaperView* nearbyPage = [self findPageClosestToOffset:locInSelf];
 
@@ -73,6 +95,13 @@
     } else {
         [hiddenStackHolder addSubviewToBottomOfStack:page];
     }
+    // need to set the delegate, otherwise it's only reset in the nearbyPage case above.
+    // this delegate also determines the stack UUID for the page's paths
+    page.delegate = self;
+
+    [(MMExportablePaperView*)page moveAssetsFrom:previousStack];
+
+    currentlyVisiblePages = [currentlyVisiblePages arrayByAddingObject:page];
 
     // animate pages into their new location
     [self realignPagesInListView:[NSSet setWithArray:currentlyVisiblePages] animated:YES forceRecalculateAll:YES];

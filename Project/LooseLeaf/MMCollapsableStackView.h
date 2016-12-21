@@ -13,8 +13,11 @@
 
 @interface MMCollapsableStackView : MMTutorialStackView
 
++ (CGRect)shareStackButtonFrame;
+
 @property (nonatomic, weak) NSObject<MMCollapsableStackViewDelegate>* stackDelegate;
 @property (nonatomic, readonly) BOOL isPerfectlyAlignedIntoRow;
+@property (nonatomic, readonly) BOOL isCurrentlyHandlingImport;
 
 @property (nonatomic, readonly) CGRect rectForColorConsideration;
 @property (nonatomic, readonly) MMColoredTextField* stackNameField;
@@ -32,5 +35,11 @@
 - (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages;
 
 - (void)showCollapsedAnimation:(void (^)())onComplete;
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock;
+
+- (void)showUIToPrepareForImportingPDF:(MMPDFInboxItem*)pdfDoc onComplete:(void (^)())completionBlock;
+
+- (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)(BOOL success))completionBlock;
 
 @end

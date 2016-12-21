@@ -54,9 +54,15 @@
 #import "MMRotatingBackgroundViewDelegate.h"
 #import "MMShadowHand.h"
 #import "MMPanWithTouchesGestureRecognizer.h"
+#import "MMShareStackSidebarContainerView.h"
+#import "MMStopWatch.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+
+#import "MMPDFAssetGroup.h"
+#import "MMDisplayAsset.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, UIGestureRecognizerDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate, UIGestureRecognizerDelegate>
 
 @end
 
@@ -73,6 +79,9 @@
 
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
+
+    // share stack sidebar
+    MMShareStackSidebarContainerView* shareStackSidebar;
 
     NSMutableDictionary* stackViewsByUUID;
 
@@ -115,6 +124,8 @@
     UITouch* touchForScrollShadow;
 
     BOOL hasShownListCollapseTutorial;
+
+    NSString* isActivelyExportingStackUUID;
 }
 
 @synthesize bezelPagesContainer;
@@ -129,10 +140,6 @@
         if (!currentStackForLaunch) {
             viewModeForLaunch = kViewModeCollapsed;
         }
-
-#ifdef DEBUG
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kHasEverCollapsedToShowAllStacks];
-#endif
 
         mightShowReleaseNotes = YES;
         isShowingCollapsedView = YES;
@@ -266,8 +273,15 @@
 
         memoryManager = [[MMMemoryManager alloc] initWithDelegate:self];
 
-        // Load the stack
+        // build a pages sidebar so that our stacks can
+        // check with the sidebar if a page is orphaned or not
+        CGRect frame = [self.view bounds];
+        CGFloat rightBezelSide = frame.size.width - 100;
+        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
+        MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
+        bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
 
+        // Load the stack
         [self initializeAllStackViewsExcept:nil viewMode:viewModeForLaunch];
 
         // Image import sidebar
@@ -284,9 +298,9 @@
         [self.view addSubview:sharePageSidebar];
 
         // scrap sidebar
-        CGRect frame = [self.view bounds];
-        CGFloat rightBezelSide = frame.size.width - 100;
-        CGFloat midPointY = (frame.size.height - 3 * 80) / 2;
+        frame = [self.view bounds];
+        rightBezelSide = frame.size.width - 100;
+        midPointY = (frame.size.height - 3 * 80) / 2;
         MMCountBubbleButton* countButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
 
         bezelScrapContainer = [[MMScrapsInBezelContainerView alloc] initWithFrame:frame andCountButton:countButton];
@@ -297,18 +311,18 @@
         [bezelScrapContainer loadFromDisk];
 
         // page sidebar
-
-        frame = [self.view bounds];
-        rightBezelSide = frame.size.width - 100;
-        midPointY = (frame.size.height - 3 * 80) / 2;
-        MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
-
-        bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
         bezelPagesContainer.delegate = self;
         bezelPagesContainer.bubbleDelegate = self;
         [self.view addSubview:bezelPagesContainer];
 
         [bezelPagesContainer loadFromDisk];
+
+        // Share stack sidebar
+        shareStackSidebar = [[MMShareStackSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMCollapsableStackView shareStackButtonFrame] animateFromLeft:NO];
+        shareStackSidebar.delegate = self;
+        [shareStackSidebar hide:NO onComplete:nil];
+        shareStackSidebar.shareDelegate = self;
+        [self.view addSubview:shareStackSidebar];
 
         // Gesture Recognizers
         [self.view addGestureRecognizer:[MMTouchVelocityGestureRecognizer sharedInstance]];
@@ -324,10 +338,18 @@
         [currentStackView immediatelyRelayoutIfInListMode];
         // TODO: above two lines might never run b/c currentStackView is always nil?
 
+        MMCollapsableStackView* initialStackView = nil;
+
+        if (currentStackForLaunch) {
+            initialStackView = stackViewsByUUID[currentStackForLaunch];
+        }
+
         // setup the stack and page sidebar to be appropriately visible and collapsed/list/page
-        if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch) {
+        if (![viewModeForLaunch isEqualToString:kViewModeCollapsed] && [[[MMAllStacksManager sharedInstance] stackIDs] count] && currentStackForLaunch && initialStackView) {
             [self didAskToSwitchToStack:currentStackForLaunch animated:NO viewMode:viewModeForLaunch];
         } else {
+            [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
             [currentStackView setButtonsVisible:NO animated:NO];
             bezelPagesContainer.alpha = 0;
             bezelScrapContainer.alpha = 0;
@@ -376,7 +398,6 @@
 }
 
 - (void)pageCacheManagerDidLoadPage {
-    [[MMPhotoManager sharedInstance] initializeAlbumCache];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kPageCacheManagerHasLoadedAnyPage object:nil];
 }
 
@@ -434,6 +455,8 @@
     [self rotatingBackgroundViewDidUpdate:rotatingBackgroundView];
 
     [self checkToShowListCollapseTutorial];
+
+    [self deleteOldTmpFiles];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -495,6 +518,10 @@
     return sharePageSidebar;
 }
 
+- (MMShareStackSidebarContainerView*)shareStackSidebar {
+    return shareStackSidebar;
+}
+
 - (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk {
     [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
 }
@@ -521,6 +548,25 @@
 
 - (BOOL)isShowingFeedbackForm {
     return feedbackViewController != nil;
+}
+
+- (void)didAskToChangeButtonOpacity:(BOOL)visible animated:(BOOL)animated forStack:(NSString*)stackUUID {
+    if ([[currentStackView uuid] isEqualToString:stackUUID]) {
+        if (animated) {
+            if (self.bezelScrapContainer.alpha != visible ? 1 : 0) {
+                [UIView animateWithDuration:.3 animations:^{
+                    self.bezelScrapContainer.alpha = visible ? 1 : 0;
+                    self.bezelPagesContainer.alpha = visible ? 0 : 1;
+                }];
+            } else {
+                self.bezelScrapContainer.alpha = visible ? 1 : 0;
+                self.bezelPagesContainer.alpha = visible ? 0 : 1;
+            }
+        } else {
+            self.bezelScrapContainer.alpha = visible ? 1 : 0;
+            self.bezelPagesContainer.alpha = visible ? 0 : 1;
+        }
+    }
 }
 
 - (void)didChangeToListView:(NSString*)stackUUID {
@@ -577,6 +623,21 @@
         return;
     }
 
+    NSArray<MMCollapsableStackView*>* importingStacks = [[allStacksScrollView subviews] filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nullable obj, NSDictionary<NSString*, id>* _Nullable bindings) {
+        if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
+            MMCollapsableStackView* anyStackView = (MMCollapsableStackView*)obj;
+            return [anyStackView isCurrentlyHandlingImport];
+        }
+        return NO;
+    }]];
+
+    if ([importingStacks count]) {
+        // don't all switching to a stack while an import is in progress
+        [self safelyScrollToOffsetY:CGRectGetMinY([importingStacks[0] frame]) animated:YES];
+        return;
+    }
+
+
     // we need to change the current stack immediatley and not wait for the
     // animation to complete. This way, the notifications from the stack
     // as it is switched to will properly layout the page sidebar above/below
@@ -601,7 +662,9 @@
         [aStackView immediatelyTransitionToPageViewAnimated:animated];
     }
 
-    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[aStackView visibleStackHolder] peekSubview]];
+    if ([[aStackView visibleStackHolder] peekSubview]) {
+        [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[[aStackView visibleStackHolder] peekSubview]];
+    }
 
     void (^animationStep)() = ^{
         NSInteger targetStackIndex = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
@@ -675,6 +738,14 @@
     allStacksScrollView.scrollEnabled = NO;
 }
 
+- (void)safelyScrollToOffsetY:(CGFloat)targetYOffset animated:(BOOL)animated {
+    CGFloat fullHeight = [self contentHeightForAllStacks];
+    CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
+    idealY = MAX(0, idealY - [UIScreen screenHeight]);
+
+    [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:animated];
+}
+
 - (void)didAskToCollapseStack:(NSString*)stackUUID animated:(BOOL)animated {
     if (animated) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasEverCollapsedToShowAllStacks];
@@ -685,12 +756,8 @@
     longPressGesture.enabled = YES;
     panGesture.enabled = YES;
 
-    CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat targetYOffset = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID] * [self stackRowHeight];
-    CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
-    idealY = MAX(0, idealY - [UIScreen screenHeight]);
-
-    [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:NO];
+    [self safelyScrollToOffsetY:targetYOffset animated:NO];
 
     if (!allStacksScrollView.scrollEnabled) {
         allStacksScrollView.scrollEnabled = YES;
@@ -827,6 +894,10 @@
     }
 }
 
+- (void)didAskToExportStack:(NSString*)stackUUID {
+    isActivelyExportingStackUUID = stackUUID;
+}
+
 
 #pragma mark - MMStackControllerViewDelegate
 
@@ -846,7 +917,7 @@
         aStackView.center = self.view.center;
         aStackView.silhouette = self.silhouette;
 
-        [aStackView loadStacksFromDiskIntoListView];
+        [aStackView loadStacksFromDiskIntoListViewIgnoringMeta:self.bezelPagesContainer.pagesMeta];
 
         stackViewsByUUID[stackUUID] = aStackView;
     }
@@ -995,24 +1066,62 @@
 
 - (void)didProcessIncomingPDF:(MMPDFInboxItem*)pdfDoc fromURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
     if (currentStackView) {
-        [currentStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
-    } else {
-        NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
-        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
-        [aStackView ensureAtLeast:1 pagesInStack:aStackView.visibleStackHolder];
-
-        [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
-
-        [self didAskToSwitchToStack:[aStackView uuid] animated:NO viewMode:kViewModePage];
-
-        [aStackView didProcessIncomingPDF:pdfDoc fromURL:url fromApp:sourceApplication];
+        [self didAskToCollapseStack:currentStackView.uuid animated:NO];
     }
+
+    [longPressGesture setEnabled:NO];
+    [panGesture setEnabled:NO];
+
+    NSString* stackUUID = [[MMAllStacksManager sharedInstance] createStack:NO];
+    MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+
+    [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+
+    CGPoint offset = CGPointMake(0, allStacksScrollView.contentSize.height - CGRectGetHeight(allStacksScrollView.bounds));
+    offset.y = MAX(offset.y, 0);
+    [allStacksScrollView setContentOffset:offset animated:NO];
+
+    [aStackView showUIToPrepareForImportingPDF:pdfDoc onComplete:^{
+        // check to see if the user decrypted it if necessary
+        if (![pdfDoc isEncrypted]) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                MMStopWatch* timer = [[MMStopWatch alloc] init];
+                [timer start];
+                [aStackView importAllPagesFromPDFInboxItem:pdfDoc fromSourceApplication:sourceApplication onComplete:^(BOOL success) {
+                    // done importing
+                    CGFloat duration = [timer stop];
+                    NSString* result = success ? @"Success" : @"Cancelled";
+
+                    if (success) {
+                        [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(pdfDoc.pdf.pageCount)];
+                        [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
+                    }
+
+                    NSMutableDictionary* properties = [@{ kMPEventImportPropFileExt: [url fileExtension] ?: @"png",
+                                                          kMPEventImportPropFileType: [url universalTypeID] ?: [NSURL UTIForExtension:@"png"],
+                                                          kMPEventImportPropResult: result,
+                                                          kMPEventImportDuration: @(duration),
+                                                          kMPNumberOfPages: @(pdfDoc.pdf.pageCount) } mutableCopy];
+                    if (sourceApplication) {
+                        properties[kMPEventImportPropSourceApplication] = sourceApplication;
+                    }
+
+                    [[Mixpanel sharedInstance] track:kMPEventImportStack properties:properties];
+
+                    [longPressGesture setEnabled:YES];
+                    [panGesture setEnabled:YES];
+                }];
+            });
+        } else {
+            [longPressGesture setEnabled:YES];
+            [panGesture setEnabled:YES];
+        }
+    }];
 }
 
 - (void)failedToProcessIncomingURL:(NSURL*)url fromApp:(NSString*)sourceApplication {
     [currentStackView failedToProcessIncomingURL:url fromApp:sourceApplication];
 }
-
 
 #pragma mark - MMCloudKitManagerDelegate
 
@@ -1058,7 +1167,13 @@
         @autoreleasepool {
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
-            [currentStackView didRotateToIdealOrientation:toOrient];
+            [shareStackSidebar updateInterfaceTo:toOrient];
+
+            for (NSString* stackUUIDs in [[MMAllStacksManager sharedInstance] stackIDs]) {
+                MMCollapsableStackView* aStackView = [self stackForUUID:stackUUIDs];
+                [aStackView didRotateToIdealOrientation:toOrient];
+            }
+
             [UIView animateWithDuration:.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
                 [self.bezelScrapContainer didRotateToIdealOrientation:toOrient];
                 [self.bezelPagesContainer didRotateToIdealOrientation:toOrient];
@@ -1102,7 +1217,7 @@
 }
 
 - (UIView*)blurViewForSidebar:(MMFullScreenSidebarContainingView*)sidebar {
-    if (sidebar == bezelPagesContainer) {
+    if (sidebar == bezelPagesContainer || sidebar == shareStackSidebar) {
         return self.view;
     }
     return [currentStackView blurViewForSidebar:sidebar];
@@ -1120,12 +1235,12 @@
 
 #pragma mark - MMShareSidebarDelegate
 
-- (void)exportToImage:(void (^)(NSURL*))completionBlock {
-    [currentStackView exportToImage:completionBlock];
+- (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
+    [currentStackView exportVisiblePageToImage:completionBlock];
 }
 
-- (void)exportToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
-    [currentStackView exportToPDF:completionBlock];
+- (void)exportVisiblePageToPDF:(void (^)(NSURL* urlToPDF))completionBlock {
+    [currentStackView exportVisiblePageToPDF:completionBlock];
 }
 
 - (NSDictionary*)cloudKitSenderInfo {
@@ -1134,6 +1249,7 @@
 
 - (void)didShare:(MMAbstractShareItem*)shareItem {
     [sharePageSidebar hide:YES onComplete:nil];
+    [shareStackSidebar hide:YES onComplete:nil];
     [currentStackView didShare:shareItem];
 }
 
@@ -1366,6 +1482,14 @@
                 MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
                 // only allow moving stack views
                 if (CGRectContainsPoint([aStackView frame], pointInScrollView)) {
+                    if ([aStackView isCurrentlyHandlingImport] || ![aStackView isPerfectlyAlignedIntoRow]) {
+                        // only allow moving stacks that are perfectly aligned
+                        // and not currently importing
+                        [gesture setEnabled:NO];
+                        [gesture setEnabled:YES];
+                        return;
+                    }
+
                     heldStackView = aStackView;
                     heldStackViewOffset = [heldStackView effectiveRowCenter];
                     originalGestureLocationInView = mostRecentLocationOfMoveGestureInView;
@@ -1388,6 +1512,11 @@
             }
         }];
 
+        if (!heldStackView) {
+            // don't continue the gesture if we're not holding a stack
+            [gesture setEnabled:NO];
+            [gesture setEnabled:YES];
+        }
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
         if ([gesture isKindOfClass:[MMPanWithTouchesGestureRecognizer class]]) {
             MMPanWithTouchesGestureRecognizer* panG = (MMPanWithTouchesGestureRecognizer*)gesture;
@@ -1444,7 +1573,11 @@
             heldStackView.transform = CGAffineTransformIdentity;
             heldStackView.userInteractionEnabled = YES;
 
-            [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+            if (heldStackView) {
+                // only reset if we were holding a stack.
+                // we might've been cancelled before the gesture truly began
+                [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+            }
         } completion:^(BOOL finished) {
             heldStackView = nil;
         }];
@@ -1631,6 +1764,52 @@
     if (stackView) {
         [self adjustKeyboardForStack:stackView givenKeyboardUserInfo:notification.userInfo];
     }
+}
+
+#pragma mark - MMShareStackSidebarDelegate
+
+- (NSString*)nameOfCurrentStack {
+    return [[currentStackView stackManager] name];
+}
+
+- (void)exportStackToPDF:(void (^)(NSURL* urlToPDF))completionBlock withProgress:(BOOL (^)(NSInteger pageSoFar, NSInteger totalPages))progressBlock {
+    if (isActivelyExportingStackUUID) {
+        MMCollapsableStackView* stack = [self stackForUUID:isActivelyExportingStackUUID];
+        [stack exportStackToPDF:completionBlock withProgress:progressBlock];
+        isActivelyExportingStackUUID = nil;
+    } else {
+        [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
+    }
+}
+
+#pragma mark - Tmp Files
+
+- (void)deleteOldTmpFiles {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSURL* directoryURL = [NSURL fileURLWithPath:NSTemporaryDirectory()];
+        NSFileManager* fileManager = [[NSFileManager alloc] init];
+        NSDirectoryEnumerator* directoryEnumerator =
+
+            [fileManager enumeratorAtURL:directoryURL
+                includingPropertiesForKeys:@[NSURLCreationDateKey]
+                                   options:NSDirectoryEnumerationSkipsHiddenFiles
+                              errorHandler:nil];
+
+        NSMutableArray<NSURL*>* filesToDelete = [NSMutableArray array];
+        for (NSURL* fileURL in directoryEnumerator) {
+            NSDate* createdDate = nil;
+            [fileURL getResourceValue:&createdDate forKey:NSURLCreationDateKey error:nil];
+
+            if ([createdDate earlierDate:[NSDate dateWithTimeIntervalSinceNow:-60 * 15]] == createdDate) {
+                // if the file was created more than 15 minutes ago, then delete it
+                [filesToDelete addObject:fileURL];
+            }
+        }
+
+        for (NSURL* urlToDelete in filesToDelete) {
+            [fileManager removeItemAtURL:urlToDelete error:nil];
+        }
+    });
 }
 
 @end

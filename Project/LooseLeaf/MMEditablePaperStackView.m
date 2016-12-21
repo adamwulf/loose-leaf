@@ -52,7 +52,9 @@
 
         [[NSFileManager defaultManager] preCacheDirectoryListingAt:[[[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.stackManager.uuid] stringByAppendingPathComponent:@"Pages"]];
 
-        [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        if (![MMPageCacheManager sharedInstance].drawableView) {
+            [MMPageCacheManager sharedInstance].drawableView = [[JotView alloc] initWithFrame:self.bounds];
+        }
 
         highlighter = [[Highlighter alloc] init];
 
@@ -180,29 +182,7 @@
 static UIWebView* pdfWebView;
 
 - (void)exportAsPDF:(id)sender {
-    if (pdfWebView) {
-        [pdfWebView removeFromSuperview];
-        pdfWebView = nil;
-    }
-    [[[self visibleStackHolder] peekSubview] exportToPDF:^(NSURL* urlToPDF) {
-        if (urlToPDF) {
-            // https://openradar.appspot.com/25489061
-            // UIPDFPageRenderOperation object %p overreleased while already deallocating; break on objc_overrelease_during_dealloc_error to debug
-            pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
-            [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
-            [[pdfWebView layer] setBorderWidth:2];
-
-            NSURLRequest* request = [NSURLRequest requestWithURL:urlToPDF];
-            [pdfWebView loadRequest:request];
-
-            [self addSubview:pdfWebView];
-        }
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [pdfWebView removeFromSuperview];
-            pdfWebView = nil;
-        });
-    }];
+    @throw kAbstractMethodException;
 }
 
 - (void)exportAsImage:(id)sender {
@@ -210,7 +190,7 @@ static UIWebView* pdfWebView;
         [pdfWebView removeFromSuperview];
         pdfWebView = nil;
     }
-    [[[self visibleStackHolder] peekSubview] exportToImage:^(NSURL* urlToImage) {
+    [[[self visibleStackHolder] peekSubview] exportVisiblePageToImage:^(NSURL* urlToImage) {
         if (urlToImage) {
             pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
             [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
@@ -774,17 +754,17 @@ static UIWebView* pdfWebView;
                                              error:nil];
 }
 
-- (void)loadStacksFromDiskIntoListView {
+- (void)loadStacksFromDiskIntoListViewIgnoringMeta:(NSArray*)meta {
     // check to see if we have any state to load at all, and if
     // not then build our default content
     if (![self.stackManager hasStateToLoad]) {
         // we don't have any pages, and we don't have any
         // state to load
         [self buildDefaultContent];
-        [self loadStacksFromDiskIntoListView];
+        [self loadStacksFromDiskIntoListViewIgnoringMeta:meta];
         return;
     } else {
-        NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds];
+        NSDictionary* pages = [self.stackManager loadFromDiskWithBounds:self.bounds ignoringMeta:meta];
         for (MMPaperView* page in [[pages objectForKey:@"visiblePages"] reverseObjectEnumerator]) {
             [self addPaperToBottomOfStack:page];
         }
