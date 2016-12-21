@@ -144,9 +144,9 @@ static MMTutorialManager* _instance = nil;
             @"video": @"collapse-stack.mp4"
         },
         @{
-            @"id": @"page-sidebar",
-            @"title": @"Organize Your Pages",
-            @"video": @"page-sidebar.mp4"
+            @"id": @"delete-stack",
+            @"title": @"Delete Your Notes",
+            @"video": @"delete-stack.mp4"
         },
         @{
             @"id": @"list-view-delete-page",
