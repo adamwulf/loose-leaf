@@ -192,7 +192,7 @@
 
         CGRect typicalBounds = CGRectMake(0, 0, 80, 80);
         listViewTutorialButton = [[MMLargeTutorialSidebarButton alloc] initWithFrame:typicalBounds andTutorialList:^NSArray* {
-            return [[MMTutorialManager sharedInstance] listViewTutorialSteps];
+            return [[MMTutorialManager sharedInstance] stackViewTutorialSteps];
         }];
         listViewTutorialButton.center = [self locationForTutorialButtonInCollapsedView];
         [listViewTutorialButton addTarget:self action:@selector(tutorialButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
