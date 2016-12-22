@@ -26,7 +26,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        pinterest = [[Pinterest alloc] initWithClientId:@"YOUR_PINTEREST_APP_ID" urlSchemeSuffix:@"looseleaf"];
+        pinterest = [[Pinterest alloc] initWithClientId:PINTEREST_APP_ID urlSchemeSuffix:@"looseleaf"];
 
         button = [[MMProgressedImageViewButton alloc] initWithFrame:CGRectMake(0, 0, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         [button setImage:[UIImage imageNamed:@"pinterest"]];
