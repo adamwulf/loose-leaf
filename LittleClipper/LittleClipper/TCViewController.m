@@ -9,7 +9,6 @@
 #import "TCViewController.h"
 #import <TouchShape/TouchShape.h>
 #import <ClippingBezier/ClippingBezier.h>
-#import <DrawKit-iOS/DrawKit-iOS.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 #import "SYSaveMessageView.h"
 #import "SYTableBase.h"
@@ -140,6 +139,8 @@
             ele1End = ele1.points[1];
         }else if(ele1.type == kCGPathElementCloseSubpath){
             ele1End = shape.bezierPath.firstPoint;
+        }else{
+            @throw [NSException exceptionWithName:@"BezierException" reason:[NSString stringWithFormat:@"Unknown element type: %d", ele1.type] userInfo:nil];
         }
         
         
@@ -161,9 +162,9 @@
                 
                 
                 if(ele2.type != kCGPathElementMoveToPoint){
-                    CGPoint intersection = Intersection3(ele1Start, ele1End, ele2Start, ele2End);
+                    CGPoint intersection = [UIBezierPath intersects2D:ele1Start to:ele1End andLine:ele2Start to:ele2End];
                     
-                    if(!CGPointEqualToPoint(intersection, CGNotFoundPoint) &&
+                    if(!CGPointEqualToPoint(intersection, CGPointNotFound) &&
                        (roundf(intersection.x*100) != roundf(ele1Start.x*100) ||
                         roundf(intersection.y*100) != roundf(ele1Start.y*100)) &&
                        (roundf(intersection.x*100) != roundf(ele1End.x*100) ||
@@ -267,6 +268,10 @@
 
 -(IBAction) redrawFilledShape{
     [filledShapeView setNeedsDisplay];
+}
+
+-(IBAction) clearShape:(id)sender{
+    [filledShapeView clear];
 }
 
 
