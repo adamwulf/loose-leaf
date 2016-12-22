@@ -1640,7 +1640,7 @@
 
 - (void)beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     [super beginShapeWithTouch:touch withTool:tool];
-    [silhouette startDrawingAtTouch:touch immediately:NO];
+    //    [silhouette startDrawingAtTouch:touch immediately:NO];
 }
 
 - (void)continueShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
