@@ -173,22 +173,33 @@
         }
         [[UIColor whiteColor] setFill];
         CGContextFillRect(cgContext, CGRectMake(0, 0, sizeOfPage.width, sizeOfPage.height));
-        [self renderPage:page intoContext:cgContext withSize:sizeOfPage];
+        CGPDFDocumentRef pdfDocRef = [self openPDF];
+        [self renderPage:page intoContext:cgContext withSize:sizeOfPage withPDFRef:pdfDocRef];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+
+        CGPDFDocumentRelease(pdfDocRef);
     }
     return image;
 }
 
-- (void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size {
+
+// must call CGPDFDocumentRelease(pdf); yourself
+- (CGPDFDocumentRef)openPDF {
+    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)self.urlOnDisk);
+
+    if (password) {
+        const char* key = [password UTF8String];
+        CGPDFDocumentUnlockWithPassword(pdf, key);
+    }
+
+    return pdf;
+}
+
+// must pass in the PDF ref that's generated from [openPDF]
+// and CGPDFDocumentRelease after you've closed your own ctx
+- (void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size withPDFRef:(CGPDFDocumentRef)pdf {
     @autoreleasepool {
-        CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)self.urlOnDisk);
-
-        if (password) {
-            const char* key = [password UTF8String];
-            CGPDFDocumentUnlockWithPassword(pdf, key);
-        }
-
         CGContextSaveGState(ctx);
         /*
          * Reference: http://www.cocoanetics.com/2010/06/rendering-pdf-is-easier-than-you-thought/
@@ -207,8 +218,6 @@
         CGContextDrawPDFPage(ctx, pageref);
 
         CGContextRestoreGState(ctx);
-
-        CGPDFDocumentRelease(pdf);
     }
 }
 

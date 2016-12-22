@@ -157,6 +157,11 @@ static MMTutorialManager* _instance = nil;
             @"id": @"export-stack",
             @"title": @"Export Your Notes",
             @"video": @"export-stack.mp4"
+        },
+        @{
+            @"id": @"import-stack",
+            @"title": @"Import Full PDFs",
+            @"video": @"import-stack.mp4"
         }
     ];
 }

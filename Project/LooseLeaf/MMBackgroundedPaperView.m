@@ -289,6 +289,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.03 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self.drawableView exportToImageOnComplete:^(UIImage* image) {
                 NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"pdf"];
+                __block CGPDFDocumentRef pdfDocRef = NULL;
 
                 CGRect exportedPageSize = CGRectFromSize(pagePtSize);
                 CGContextRef pdfContext = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &exportedPageSize, NULL);
@@ -309,7 +310,8 @@
 
                         if (pdf) {
                             // PDF background
-                            [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize];
+                            pdfDocRef = [pdf openPDF];
+                            [pdf renderPage:0 intoContext:pdfContext withSize:pagePtSize withPDFRef:pdfDocRef];
                         } else if (backgroundImage) {
                             // image background
                             CGContextSaveThenRestoreForBlock(pdfContext, ^{
@@ -341,9 +343,11 @@
                 });
 
                 CGPDFContextEndPage(pdfContext);
+                CGPDFContextClose(pdfContext);
                 UIGraphicsPopContext();
                 CFRelease(pdfContext);
                 CFRelease(boxData);
+                CGPDFDocumentRelease(pdfDocRef);
 
                 NSURL* fullyRenderedPDFURL = [NSURL fileURLWithPath:tmpPagePath];
 
@@ -426,6 +430,7 @@
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
             NSString* tmpPagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
 
+            __block CGPDFDocumentRef pdfDocRef = NULL;
             UIGraphicsBeginImageContextWithOptions(finalExportBounds.size, NO, scale);
             CGContextRef context = UIGraphicsGetCurrentContext();
 
@@ -439,7 +444,8 @@
                 if (pdf) {
                     CGContextSaveThenRestoreForBlock(context, ^{
                         // PDF background
-                        [pdf renderPage:0 intoContext:context withSize:finalExportBounds.size];
+                        pdfDocRef = [pdf openPDF];
+                        [pdf renderPage:0 intoContext:context withSize:finalExportBounds.size withPDFRef:pdfDocRef];
                     });
                 } else if (backgroundImage) {
                     // image background
@@ -478,8 +484,9 @@
             UIImage* outputImage = UIGraphicsGetImageFromCurrentImageContext();
             [UIImagePNGRepresentation(outputImage) writeToFile:tmpPagePath atomically:YES];
 
-
             UIGraphicsEndImageContext();
+
+            CGPDFDocumentRelease(pdfDocRef);
 
             NSURL* fullyRenderedImageURL = [NSURL fileURLWithPath:tmpPagePath];
 
