@@ -15,7 +15,6 @@
                 <outlet property="filledShapeView" destination="u8b-wO-8ks" id="SqN-m8-pJr"/>
                 <outlet property="paintView" destination="17" id="100"/>
                 <outlet property="shapeVsScissorChooser" destination="KX6-wU-SF2" id="hHV-Ys-K1g"/>
-                <outlet property="successRateLabel" destination="XMB-8O-e7E" id="Eoe-Ta-gyf"/>
                 <outlet property="toleranceLabel" destination="123" id="125"/>
                 <outlet property="toleranceSlider" destination="119" id="121"/>
                 <outlet property="vectorView" destination="25" id="28"/>
@@ -46,18 +45,13 @@
                         <outlet property="delegate" destination="-1" id="brr-iF-OTt"/>
                     </connections>
                 </view>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XMB-8O-e7E" userLabel="Success Rate Label">
-                    <rect key="frame" x="114" y="25" width="70" height="21"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="21" id="QL1-XT-hFX"/>
-                        <constraint firstAttribute="width" constant="70" id="jOW-NL-uih"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Bp-sB-18a" userLabel="Refresh Button">
-                    <rect key="frame" x="61" y="13" width="45" height="45"/>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u8b-wO-8ks" customClass="MMFilledShapeView">
+                    <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Bp-sB-18a" userLabel="Refresh Button">
+                    <rect key="frame" x="8" y="13" width="45" height="45"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="45" id="pNJ-QV-esn"/>
                         <constraint firstAttribute="width" constant="45" id="qFX-bo-gYj"/>
@@ -68,11 +62,6 @@
                         <action selector="clearShape:" destination="-1" eventType="touchUpInside" id="b9u-nC-neQ"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u8b-wO-8ks" customClass="MMFilledShapeView">
-                    <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                </view>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="KX6-wU-SF2">
                     <rect key="frame" x="866" y="20" width="150" height="29"/>
                     <constraints>
@@ -138,6 +127,7 @@
                 <constraint firstItem="114" firstAttribute="top" secondItem="117" secondAttribute="bottom" constant="1" id="KRU-pC-DYZ"/>
                 <constraint firstItem="123" firstAttribute="top" secondItem="119" secondAttribute="bottom" constant="8" id="LAP-C5-jVg"/>
                 <constraint firstAttribute="bottom" secondItem="122" secondAttribute="bottom" constant="100" id="NAX-bN-UZd"/>
+                <constraint firstItem="8Bp-sB-18a" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="8" id="QMm-ai-TH0"/>
                 <constraint firstItem="122" firstAttribute="top" secondItem="114" secondAttribute="bottom" constant="8" id="W15-uo-2hK"/>
                 <constraint firstItem="8Bp-sB-18a" firstAttribute="top" secondItem="2" secondAttribute="top" constant="13" id="Xuk-Ed-TXp"/>
                 <constraint firstItem="123" firstAttribute="centerX" secondItem="119" secondAttribute="centerX" id="c8L-V0-i9S"/>
@@ -145,11 +135,9 @@
                 <constraint firstItem="119" firstAttribute="leading" secondItem="114" secondAttribute="trailing" constant="80" id="eZT-6f-B4o"/>
                 <constraint firstItem="122" firstAttribute="centerX" secondItem="117" secondAttribute="centerX" id="est-bg-cFS"/>
                 <constraint firstItem="114" firstAttribute="leading" secondItem="2" secondAttribute="leading" constant="32" id="g5o-9F-Wvu"/>
-                <constraint firstItem="XMB-8O-e7E" firstAttribute="leading" secondItem="8Bp-sB-18a" secondAttribute="trailing" constant="8" id="ghf-PG-9tT"/>
                 <constraint firstItem="118" firstAttribute="centerX" secondItem="119" secondAttribute="centerX" id="i2K-lW-X4N"/>
                 <constraint firstItem="114" firstAttribute="centerX" secondItem="117" secondAttribute="centerX" id="l0k-Dg-A6K"/>
                 <constraint firstItem="123" firstAttribute="bottom" secondItem="122" secondAttribute="bottom" id="msb-IE-7te"/>
-                <constraint firstItem="XMB-8O-e7E" firstAttribute="top" secondItem="2" secondAttribute="top" constant="25" id="td5-T2-zYw"/>
             </constraints>
             <point key="canvasLocation" x="-134" y="-5"/>
         </view>
