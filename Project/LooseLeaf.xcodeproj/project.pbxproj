@@ -452,7 +452,6 @@
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
-		C5419ED81E0E0C6100183265 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C5419ED71E0E0C6100183265 /* README.md */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1491,6 +1490,8 @@
 		C53902811DB84917004C5281 /* MMPagesSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPagesSidebarButton.m; sourceTree = "<group>"; };
 		C53AFA7F1DE3EF4C0054553D /* MMArrowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMArrowView.h; sourceTree = "<group>"; };
 		C53AFA801DE3EF4C0054553D /* MMArrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMArrowView.m; sourceTree = "<group>"; };
+		C53BA3911E1327E300EB0C64 /* AppIds-Template.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AppIds-Template.plist"; sourceTree = "<group>"; };
+		C53BA3931E1327F500EB0C64 /* AppIds.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppIds.plist; sourceTree = "<group>"; };
 		C53F63541CDA871D00091EF1 /* UIImage+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
 		C53F63551CDA871D00091EF1 /* UIImage+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
 		C53F63561CDA871D00091EF1 /* UIImage+FXBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FXBlur.h"; sourceTree = "<group>"; };
@@ -3357,6 +3358,8 @@
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
 				C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */,
 				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */,
+				C53BA3931E1327F500EB0C64 /* AppIds.plist */,
+				C53BA3911E1327E300EB0C64 /* AppIds-Template.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4252,12 +4255,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
+				C53BA3951E13297000EB0C64 /* Generate Auth Constants */,
 				66684B3C182DA0D3005A27B4 /* Generate Licenses in Settings Bundle */,
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
 				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
 				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
+				C53BA3971E132F2B00EB0C64 /* App Keys for Info.plist */,
 				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
 			);
 			buildRules = (
@@ -4601,6 +4606,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\n# GIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n# GIT_RELEASE_VERSION=`git rev-parse --short HEAD`\n# GIT_RELEASE_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
+			showEnvVarsInLog = 0;
+		};
+		C53BA3951E13297000EB0C64 /* Generate Auth Constants */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Auth Constants";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateAuthConstants.sh";
+			showEnvVarsInLog = 0;
+		};
+		C53BA3971E132F2B00EB0C64 /* App Keys for Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "App Keys for Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateInfoPlist.sh \"${BUILT_PRODUCTS_DIR}\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -4998,7 +5033,6 @@
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
 				C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */,
 				C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */,
-				C5419ED81E0E0C6100183265 /* README.md in Sources */,
 				C5F1B2D91D9B01BB00E0E9A8 /* NSInvocation+MPHelpers.m in Sources */,
 				662B7D1F19E7A55700C5529B /* MMStatTracker.m in Sources */,
 				666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */,
@@ -5173,7 +5207,7 @@
 					"DEBUGUSERDEFAULTS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -5202,7 +5236,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",

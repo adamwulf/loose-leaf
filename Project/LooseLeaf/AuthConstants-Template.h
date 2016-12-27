@@ -12,13 +12,13 @@
 #ifndef LooseLeaf_AuthConstants_h
 #define LooseLeaf_AuthConstants_h
 
-#define FACEBOOK_APP_ID @"YOUR_FACEBOOK_APP_ID"
-#define PINTEREST_APP_ID @"YOUR_PINTEREST_APP_ID"
+#define kFacebookAppId @"YOUR_FACEBOOK_APP_ID"
+#define kPinterestAppId @"YOUR_PINTEREST_APP_ID"
 
 #ifdef DEBUG
-#define MIXPANEL_TOKEN @"YOUR_DEBUG_MIXPANEL_TOKEN"
+#define kMixpanelToken @"YOUR_DEBUG_MIXPANEL_TOKEN"
 #else
-#define MIXPANEL_TOKEN @"YOUR_PROD_MIXPANEL_TOKEN"
+#define kMixpanelToken @"YOUR_PROD_MIXPANEL_TOKEN"
 #endif
 
 // Imgur
