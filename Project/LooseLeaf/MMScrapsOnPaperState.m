@@ -20,6 +20,7 @@
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <TwitterKit/TwitterKit.h>
+#import "Mixpanel.h"
 
 
 @interface MMImmutableScrapsOnPaperState (Private)
@@ -139,8 +140,8 @@
                     return;
                 }
                 // load all the states async
-                if ([scrapProps count]) {
-                    for (NSDictionary* scrapProperties in scrapProps) {
+                if ([scrapIDsOnPage count]) {
+                    for (NSString* scrapUUID in scrapIDsOnPage) {
                         if (self.isForgetful) {
                             return;
                         }
@@ -153,7 +154,24 @@
                             }
                         }
 
-                        NSString* scrapUUID = [scrapProperties objectForKey:@"uuid"];
+                        NSDictionary* scrapProperties = [scrapProps jotReduce:^id(NSDictionary* obj, NSUInteger index, id accum) {
+                            if ([obj[@"uuid"] isEqualToString:scrapUUID]) {
+                                return obj;
+                            }
+                            return accum;
+                        }];
+
+                        if (!scrapProperties) {
+                            [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1722) }];
+
+                            CGRect screenBounds = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds];
+                            scrapProperties = @{ @"uuid": scrapUUID,
+                                                 @"center.x": @(CGRectGetWidth(screenBounds) / 2),
+                                                 @"center.y": @(CGRectGetHeight(screenBounds) / 2),
+                                                 @"scale": @(1),
+                                                 @"rotation": @(0),
+                                                 @"subviewIndex": @(0) };
+                        }
 
                         MMScrapView* scrap = [delegate scrapForUUIDIfAlreadyExistsInOtherContainer:scrapUUID];
 

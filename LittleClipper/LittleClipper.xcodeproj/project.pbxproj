@@ -29,7 +29,6 @@
 		66AFAD491A8DE0FF00FD0263 /* TouchShape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AFAD481A8DE0FF00FD0263 /* TouchShape.framework */; };
 		66AFAD4C1A8DE15C00FD0263 /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AFAD4B1A8DE15C00FD0263 /* ClippingBezier.framework */; };
 		66AFAD501A8DE1DE00FD0263 /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AFAD4E1A8DE1DE00FD0263 /* PerformanceBezier.framework */; };
-		66AFAD521A8DE26700FD0263 /* DrawKit-iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66AFAD511A8DE26700FD0263 /* DrawKit-iOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,7 +84,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66AFAD521A8DE26700FD0263 /* DrawKit-iOS.framework in Frameworks */,
 				66AFAD501A8DE1DE00FD0263 /* PerformanceBezier.framework in Frameworks */,
 				66AFAD4C1A8DE15C00FD0263 /* ClippingBezier.framework in Frameworks */,
 				66AFAD491A8DE0FF00FD0263 /* TouchShape.framework in Frameworks */,
@@ -253,8 +251,13 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MM;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Adam Wulf";
+				TargetAttributes = {
+					6693BB6A18775521002898D6 = {
+						DevelopmentTeam = MU27A4SCKC;
+					};
+				};
 			};
 			buildConfigurationList = 6693BB6618775521002898D6 /* Build configuration list for PBXProject "LittleClipper" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -349,13 +352,19 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -368,7 +377,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -388,20 +397,25 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -413,20 +427,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/LittleClipper",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/ClippingBezier/Submodules/DrawKit-iOS/build/Debug-iphoneos",
-				);
+				DEVELOPMENT_TEAM = MU27A4SCKC;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LittleClipper/LittleClipper-Prefix.pch";
 				INFOPLIST_FILE = "LittleClipper/LittleClipper-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.milestonemade.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -437,20 +448,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/LittleClipper",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Frameworks",
-					"/Users/adam/Documents/Code/loose-leaf/LooseLeaf/Submodules/ClippingBezier/Submodules/DrawKit-iOS/build/Debug-iphoneos",
-				);
+				DEVELOPMENT_TEAM = MU27A4SCKC;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LittleClipper/LittleClipper-Prefix.pch";
 				INFOPLIST_FILE = "LittleClipper/LittleClipper-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.milestonemade.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

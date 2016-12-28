@@ -30,6 +30,9 @@
 
 - (UIImage*)imageForPage:(NSUInteger)page withMaxDim:(CGFloat)maxDim;
 
+// must open the PDF before calling [renderPage:]
+// info here: http://stackoverflow.com/questions/25129757/ios-crash-inside-uigraphicsbeginpdfpagewithinfo
+// it has to do with the PDF document ref getting released /after/ the context that it's drawn into
 - (CGPDFDocumentRef)openPDF;
 
 - (void)renderPage:(NSUInteger)page intoContext:(CGContextRef)ctx withSize:(CGSize)size withPDFRef:(CGPDFDocumentRef)pdf;

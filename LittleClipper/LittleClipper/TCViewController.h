@@ -18,7 +18,7 @@
 @class SYVectorView;
 @class SYTableBase;
 
-@interface TCViewController : UIViewController <MFMailComposeViewControllerDelegate,SYPaintViewDelegate> {
+@interface TCViewController : UIViewController <SYPaintViewDelegate> {
     
     IBOutlet UISegmentedControl* shapeVsScissorChooser;
     IBOutlet MMFilledShapeView* filledShapeView;
@@ -30,14 +30,8 @@
     IBOutlet UISlider *continuitySlider;
     IBOutlet UISlider *toleranceSlider;
     IBOutlet UILabel *continuityLabel;
-    IBOutlet UILabel *toleranceLabel;
-    
-    IBOutlet UILabel *successRateLabel;
-    
+    IBOutlet UILabel *toleranceLabel;    
 }
-
-// Test Methods
-- (IBAction) saveCase:(id)sender;
 
 - (SYShape*) getFigurePainted;
 

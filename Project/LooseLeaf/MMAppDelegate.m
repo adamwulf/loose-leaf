@@ -59,7 +59,7 @@ static BOOL isFirstLaunch = NO;
 
     isActive = YES;
 
-    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    [Mixpanel sharedInstanceWithToken:kMixpanelToken];
     [[Mixpanel sharedInstance] identify:[MMAppDelegate userID]];
     [[[Mixpanel sharedInstance] people] set:kMPID to:[MMAppDelegate userID]];
 
