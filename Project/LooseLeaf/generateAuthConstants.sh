@@ -1,3 +1,9 @@
+if [ ! -f AppIds.plist ]; then
+echo "error: AppIds.plist is missing. Copy AppIds-Template.plist to AppIds.plist and fill with your API keys."
+exit 1
+fi
+
+
 FacebookAppId="$(/usr/libexec/PlistBuddy -c 'print :FacebookAppId' AppIds.plist)"
 PinterestAppId="$(/usr/libexec/PlistBuddy -c 'print :PinterestAppId' AppIds.plist)"
 MixpanelTokenDebug="$(/usr/libexec/PlistBuddy -c 'print :MixpanelTokenDebug' AppIds.plist)"

@@ -1,4 +1,7 @@
-echo "read from: $(pwd)"
+if [ ! -f AppIds.plist ]; then
+echo "error: AppIds.plist is missing. Copy AppIds-Template.plist to AppIds.plist and fill with your API keys."
+exit 1
+fi
 
 FacebookAppId="$(/usr/libexec/PlistBuddy -c 'print :FacebookAppId' AppIds.plist)"
 PinterestAppId="$(/usr/libexec/PlistBuddy -c 'print :PinterestAppId' AppIds.plist)"
@@ -25,9 +28,6 @@ echo "FabricKey: ${FabricKey}"
 
 cd $1
 cd LooseLeaf.app
-
-echo "moving to:"
-echo $1
 
 plutil -convert xml1 Info.plist
 
