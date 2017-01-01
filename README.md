@@ -19,6 +19,8 @@ cp Project/LooseLeaf/AppIds-Template.plist Project/LooseLeaf/AppIds.plist
 open Project/LooseLeaf/AppIds.plist
 ```
 
+If you don't have ids for some of these services, leaving them blank will still let you build and run the app, though some features may not work. 
+
 That's it for configuration - now you can build the app and run it on your iPad!
 
 ## Get Involved
