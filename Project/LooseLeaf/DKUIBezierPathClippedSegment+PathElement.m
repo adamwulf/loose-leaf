@@ -22,7 +22,7 @@
                                   andScale:(CGFloat)scale
                               andStepWidth:(CGFloat)stepWidth
                                andRotation:(CGFloat)rotation {
-    return [self.pathSegment1 convertToPathElementsFromTValue:self.startIntersection.tValue1
+    return [self.pathSegment convertToPathElementsFromTValue:self.startIntersection.tValue1
                                                      toTValue:self.endIntersection.tValue1
                                                     fromColor:fromColor
                                                       toColor:toColor
