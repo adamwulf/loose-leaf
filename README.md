@@ -2,6 +2,31 @@
 
 Loose Leaf is a notes app for iPad created by [Adam Wulf](http://welcome.totheinter.net). Learn more and see demo videos at [https://getlooseleaf.com](https://getlooseleaf.com). Support this project and [download the app on the App Store](https://itunes.apple.com/us/app/loose-leaf/id625659452?mt=8&uo=4&at=10lNUI).
 
+## Unique Gestures
+
+Organize pages into documents:
+
+<img src='example-gif/collapse-stack.gif' width=240 />
+
+Duplicate pages and scraps with gestures:
+
+<img src='example-gif/clone-image.gif' width=240 />
+<img src='example-gif/clone-page.gif' width=240 />
+
+Ink sticks to imported images:
+
+<img src='example-gif/draw-over.gif' width=240 />
+
+Use ruler for straight or curved lines:
+
+<img src='example-gif/ruler.gif' width=240 />
+
+Scissors can cut imported images:
+
+<img src='example-gif/scissors.gif' width=240 />
+
+More gesture videos available on the <a href='http://getlooseleaf.com'>Loose Leaf site</a>.
+
 ## Building Loose Leaf
 
 First, clone the Loose Leaf repository and initialize all submodules:
