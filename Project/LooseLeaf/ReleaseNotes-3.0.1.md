@@ -1,4 +1,4 @@
-# New in 3.0.0!
+# New in 3.0.1!
 1. Organize your pages into lists
 
 [collapse-stack.mp4]
