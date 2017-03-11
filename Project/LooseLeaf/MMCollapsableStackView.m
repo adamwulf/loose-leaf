@@ -27,6 +27,7 @@
 #import "MMBlockOperation.h"
 #import "MMDecryptPDFStackButton.h"
 #import "MMCollapseButton.h"
+#import "UIImage+MMRotation.h"
 
 #define kMaxPageCountForRow 20
 #define kCollapseAnimationDuration 0.3
@@ -435,8 +436,17 @@
                 MMDisplayAsset* asset = displayAssets[index];
                 MMBackgroundedPaperView* page = pages[index];
                 NSURL* assetURL = [asset fullResolutionURL];
-
+                
+                CGSize size = [asset fullResolutionSize];
+                
                 UIImage* thumbImageToImport = [asset aspectThumbnailWithMaxPixelSize:CGSizeMaxDim(thumbSize)];
+                
+                if(size.width > size.height){
+                    // it's a landscape page, so we need to rotate the thumbnail
+                    // to match the actual page content
+                    thumbImageToImport = [thumbImageToImport rotateClockwise:NO];
+                }
+
                 [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
 
                 [MMExportablePaperView writeThumbnailImagesToDisk:thumbImageToImport thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
