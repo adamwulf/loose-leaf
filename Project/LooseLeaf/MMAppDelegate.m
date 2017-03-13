@@ -71,10 +71,11 @@ static BOOL isFirstLaunch = NO;
         [[NSUserDefaults standardUserDefaults] setObject:str forKey:kMixpanelUUID];
         [[NSUserDefaults standardUserDefaults] synchronize];
     });
-
+    
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
-                                                                                                  [MMAppDelegate userID], kMPID, nil]];
-
+                                                        [UIDevice modelName], kMPiPadModel,
+                                                        [MMAppDelegate userID], kMPID, nil]];
+    
     [[Crashlytics sharedInstance] setDelegate:self];
     [[Twitter sharedInstance] startWithConsumerKey:@"your_key" consumerSecret:@"your_secret"];
     [Fabric with:@[CrashlyticsKit, [Twitter class]]];

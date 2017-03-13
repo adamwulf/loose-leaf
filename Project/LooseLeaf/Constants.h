@@ -178,6 +178,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPShareStatusSinaWeibo @"Share Status: Sina Weibo"
 
 // MixPanel People Properties
+#define kMPiPadModel @"iPad Model"
 #define kMPStatScissorSegments @"Stat: Scissor Segment Count"
 #define kMPStatScrapPathSegments @"Stat: Scrap Segment Count"
 #define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
