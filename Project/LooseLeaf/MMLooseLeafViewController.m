@@ -216,7 +216,6 @@
 
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
-
         // book keeping
 
         NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
