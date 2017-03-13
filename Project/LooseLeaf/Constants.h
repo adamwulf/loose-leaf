@@ -224,6 +224,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 
 #define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
 #define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
+#define kMPReleaseNotesFeedback @"Release Notes Feedback"
 #define kMPUpgradeFeedback @"Upgrade Feedback"
 #define kMPUpgradeFeedbackResult @"Feedback"
 #define kMPUpgradeAppStoreReview @"App Store Review"
@@ -239,6 +240,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
+#define kMPNewsletterResponse @"Newsletter Response"
+#define kMPTwitterFollow @"Followed on Twitter"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
@@ -268,6 +271,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventExport @"Export Page"
 #define kMPEventClonePage @"Clone Page"
 #define kMPEventCloneScrap @"Clone Scrap"
+
+#define kMPNewsletterResponseSubscribed @"Subscribed to Newsletter"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"

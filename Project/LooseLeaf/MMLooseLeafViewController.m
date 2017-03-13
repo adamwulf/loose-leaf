@@ -256,7 +256,8 @@
                                                        kMPShareStatusTencentWeibo: kMPShareStatusUnknown,
                                                        kMPShareStatusSinaWeibo: kMPShareStatusUnknown,
                                                        kMPNumberOfPages: @(0),
-                                                       kMPPushEnabled: @(NO)
+                                                       kMPPushEnabled: @(NO),
+                                                       kMPTwitterFollow: @(NO)
         }];
         [[Mixpanel sharedInstance] flush];
 
