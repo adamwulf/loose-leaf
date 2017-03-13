@@ -225,7 +225,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 
 #define kMPNumberOfHappyUpgrades @"Number of Happy Upgrades"
 #define kMPNumberOfSadUpgrades @"Number of Sad Upgrades"
-#define kMPReleaseNotesFeedback @"Release Notes Feedback"
+#define kMPGeneralFeedback @"General Feedback"
 #define kMPUpgradeFeedback @"Upgrade Feedback"
 #define kMPUpgradeFeedbackResult @"Feedback"
 #define kMPUpgradeAppStoreReview @"App Store Review"

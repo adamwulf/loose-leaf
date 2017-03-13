@@ -298,10 +298,10 @@
     NSString* feedbackText = feedbackTextView.text ?: @"";
     
     if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        [[Mixpanel sharedInstance] track:kMPReleaseNotesFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad" }];
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad" }];
     }else{
-        [[Mixpanel sharedInstance] track:kMPReleaseNotesFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
-                                                                               kMPUpgradeFeedbackReply: feedbackText }];
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
     
     [feedbackTextView resignFirstResponder];
