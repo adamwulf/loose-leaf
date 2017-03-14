@@ -535,7 +535,7 @@ static UIWebView* pdfWebView;
 
 - (void)didDrawStrokeOfCm:(CGFloat)distanceInCentimeters {
     @autoreleasepool {
-        if ([self activePen] == pen) {
+        if ([self activePen] == pen || [self activePen] == marker || [self activePen] == highlighter) {
             [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
         } else if ([self activePen] == eraser) {
             [[[Mixpanel sharedInstance] people] increment:kMPDistanceErased by:@(distanceInCentimeters / 100.0)];
