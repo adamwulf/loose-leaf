@@ -230,6 +230,9 @@
                                                        kMPDurationWatchingTutorial: @(0),
                                                        kMPFirstLaunchDate: [NSDate date],
                                                        kMPHasAddedPage: @(NO),
+                                                       kMPHasDeletedPage: @(NO),
+                                                       kMPHasAddedStack: @(NO),
+                                                       kMPHasDeletedStack: @(NO),
                                                        kMPHasZoomedToList: @(NO),
                                                        kMPHasReorderedPage: @(NO),
                                                        kMPHasBookTurnedPage: @(NO),
@@ -859,6 +862,8 @@
         } completion:^(BOOL finished) {
             [stackView removeFromSuperview];
             [stackViewsByUUID removeObjectForKey:stackUUID];
+            
+            [[[Mixpanel sharedInstance] people] set:@{ kMPHasDeletedStack: @(YES) }];
         }];
     }
 }
@@ -1415,6 +1420,8 @@
     [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 
     [aStackView ensureAtLeastPagesInStack:3];
+    
+    [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedStack: @(YES) }];
 }
 
 #pragma mark - Tutorial and Feedback
