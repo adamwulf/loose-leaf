@@ -182,7 +182,29 @@
 static UIWebView* pdfWebView;
 
 - (void)exportAsPDF:(id)sender {
-    @throw kAbstractMethodException;
+    if (pdfWebView) {
+        [pdfWebView removeFromSuperview];
+        pdfWebView = nil;
+    }
+    [[[self visibleStackHolder] peekSubview] exportVisiblePageToPDF:^(NSURL *urlToPDF) {
+        if (urlToPDF) {
+            pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
+            [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
+            [[pdfWebView layer] setBorderWidth:2];
+            pdfWebView.scalesPageToFit = YES;
+            pdfWebView.contentMode = UIViewContentModeScaleAspectFit;
+            
+            NSURLRequest* request = [NSURLRequest requestWithURL:urlToPDF];
+            [pdfWebView loadRequest:request];
+            
+            [self addSubview:pdfWebView];
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [pdfWebView removeFromSuperview];
+            pdfWebView = nil;
+        });
+    }];
 }
 
 - (void)exportAsImage:(id)sender {

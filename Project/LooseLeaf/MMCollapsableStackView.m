@@ -444,7 +444,7 @@
                 if(size.width > size.height){
                     // it's a landscape page, so we need to rotate the thumbnail
                     // to match the actual page content
-                    thumbImageToImport = [thumbImageToImport rotateClockwise:NO];
+                    thumbImageToImport = [thumbImageToImport rotateClockwise:YES];
                 }
 
                 [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
