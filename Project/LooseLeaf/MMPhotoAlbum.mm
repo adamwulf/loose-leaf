@@ -172,6 +172,9 @@ BOOL isEnumerating = NO;
                     } @catch (NSException* e) {
                         // noop. we might be asking for images beyond the allowed range.
                         [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1643) }];
+                    } @catch (...) {
+                        DebugLog(@"caught unkown");
+                        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(537) }];
                     }
                 }
             }
