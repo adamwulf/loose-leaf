@@ -334,8 +334,7 @@
     
     // default the page size to the screen dimensions in PDF ppi.
     CGSize screenSize = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size;
-    CGSize pagePtSize = screenSize;
-    __block CGRect finalExportBounds = CGRectFromSize(pagePtSize);
+    __block CGRect finalExportBounds = CGRectFromSize(screenSize);
     CGSize backgroundSize = CGSizeZero;
     CGFloat defaultRotation = 0;
     CGFloat scale = [[UIScreen mainScreen] scale];
@@ -343,7 +342,7 @@
     if ([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]) {
         pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
         if ([pdf pageCount]) {
-            pagePtSize = [pdf sizeForPage:0];
+            backgroundSize = [pdf sizeForPage:0];
             defaultRotation = [pdf rotationForPage:0];
             //            CGSize pageInSize = CGSizeScale([pdf sizeForPage:0], 1 / [MMPDF ppi]);
             //
@@ -361,12 +360,10 @@
             //            NSLog(@"Fill screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
             //
             
-            backgroundSize = pagePtSize;
-            
             if(backgroundSize.height > backgroundSize.width){
-                finalExportBounds = CGSizeFill(pagePtSize, screenSize);
+                finalExportBounds = CGSizeFill(backgroundSize, screenSize);
             }else{
-                finalExportBounds = CGSizeFill(pagePtSize, CGSizeSwap(screenSize));
+                finalExportBounds = CGSizeFill(backgroundSize, CGSizeSwap(screenSize));
             }
             //
             //            NSLog(@"Fit screen to PDF (pts): %.2f %.2f %.2f %.2f", scaledScreen.origin.x, scaledScreen.origin.y, scaledScreen.size.width, scaledScreen.size.height);
@@ -376,19 +373,13 @@
             backgroundAssetURL = [NSURL fileURLWithPath:[self backgroundTexturePath]];
             backgroundImage = [UIImage imageWithContentsOfFile:[backgroundAssetURL path]];
             if (backgroundImage) {
-                if (backgroundImage.size.width > backgroundImage.size.height) {
-                    // rotate
-                    UIImageOrientation rotationForLandscape = UIImageOrientationLeft;
-                    if([self usesCorrectBackgroundRotation]){
-                        rotationForLandscape = UIImageOrientationRight;
-                    }
-                    
-                    backgroundImage = [[UIImage alloc] initWithCGImage:backgroundImage.CGImage scale:backgroundImage.scale orientation:([self isVert:backgroundImage] ? rotationForLandscape : UIImageOrientationUp)];
-                }
-                
                 backgroundSize = [backgroundImage size];
                 
-                finalExportBounds = CGSizeFill([backgroundImage size], finalExportBounds.size);
+                if(backgroundSize.height > backgroundSize.width){
+                    finalExportBounds = CGSizeFill(backgroundSize, screenSize);
+                }else{
+                    finalExportBounds = CGSizeFill(backgroundSize, CGSizeSwap(screenSize));
+                }
             }
         }
     }
@@ -421,7 +412,7 @@
                     });
                 }
                 
-                if(pdf && backgroundSize.width > backgroundSize.height){
+                if(backgroundSize.width > backgroundSize.height){
                     // if the PDF is landscape, then we need to rotate our
                     // canvas so that the landscape PDF is drawn on our
                     // vertical canvas properly.
@@ -435,6 +426,7 @@
                     CGContextTranslateCTM(context, -finalExportBounds.size.height / 2, -finalExportBounds.size.width / 2);
                     
                     finalExportBounds.size = CGSizeSwap(finalExportBounds.size);
+                    finalExportBounds.origin = CGPointSwap(finalExportBounds.origin);
                 }
                 
                 CGContextSaveThenRestoreForBlock(context, ^{
