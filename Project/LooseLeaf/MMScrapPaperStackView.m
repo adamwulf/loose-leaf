@@ -385,9 +385,6 @@
 }
 
 - (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)inAssetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock {
-    CGSize thumbSize = hiddenStackHolder.bounds.size;
-    thumbSize.width = floorf(thumbSize.width / 2);
-    thumbSize.height = floorf(thumbSize.height / 2);
 
 
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
@@ -395,20 +392,40 @@
     __block NSURL* assetURL = inAssetURL;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        CGSize thumbSize = hiddenStackHolder.bounds.size;
+        thumbSize.width = floorf(thumbSize.width / 2);
+        thumbSize.height = floorf(thumbSize.height / 2);
+
         [NSFileManager ensureDirectoryExistsAtPath:[page pagesPath]];
         [MMBackgroundedPaperView writeBackgroundImageToDisk:imageToImport backgroundTexturePath:[page backgroundTexturePath]];
 
-
         CGFloat scale = [[UIScreen mainScreen] scale];
         UIGraphicsBeginImageContextWithOptions(thumbSize, NO, scale);
+        CGContextRef context = UIGraphicsGetCurrentContext();
 
-        CGRect rectForImage = CGSizeFill([imageToImport size], thumbSize);
+        CGSize imgSize = [imageToImport size];
+        
+        if(imageToImport && imgSize.width > imgSize.height){
+            // if the PDF is landscape, then we need to rotate our
+            // canvas so that the landscape PDF is drawn on our
+            // vertical canvas properly.
+            CGFloat theta = 90.0 * M_PI / 180.0;
+            
+            CGContextTranslateCTM(context, thumbSize.width / 2, thumbSize.height / 2);
+            CGContextRotateCTM(context, theta);
+            CGContextTranslateCTM(context, -thumbSize.height / 2, -thumbSize.width / 2);
+            
+            thumbSize = CGSizeSwap(thumbSize);
+        }
+        
+        CGRect rectForImage = CGSizeFill(imgSize, thumbSize);
         [imageToImport drawInRect:rectForImage];
 
         UIImage* thumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
 
         UIGraphicsEndImageContext();
-
+        
+        
         [MMExportablePaperView writeThumbnailImagesToDisk:thumbnailImage thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
         if (!assetURL) {
             NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];

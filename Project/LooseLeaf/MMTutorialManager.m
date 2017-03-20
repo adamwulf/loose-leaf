@@ -253,11 +253,13 @@ static MMTutorialManager* _instance = nil;
 
 - (void)optOutOfNewsletter {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasIgnoredNewsletter];
+    [[Mixpanel sharedInstance] track:kMPNewsletterResponse properties:@{ kMPNewsletterResponseSubscribed: @(NO) }];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Opt Out"];
     [[Mixpanel sharedInstance] flush];
 }
 
 - (void)signUpForNewsletter:(NSString*)email {
+    [[Mixpanel sharedInstance] track:kMPNewsletterResponse properties:@{ kMPNewsletterResponseSubscribed: @(YES) }];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
     [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];

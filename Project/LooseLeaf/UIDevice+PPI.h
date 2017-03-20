@@ -25,4 +25,6 @@
 
 + (CGFloat)advisedMaxImportDim;
 
++ (NSString*)modelName;
+
 @end

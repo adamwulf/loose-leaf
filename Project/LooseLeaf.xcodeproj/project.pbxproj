@@ -417,6 +417,7 @@
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
+		C50490981E748A9500533119 /* UIImage+MMRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C50490971E748A9500533119 /* UIImage+MMRotation.m */; };
 		C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */; };
 		C504E6EC1CFAA86C00914A0E /* RHAdditions.license in Resources */ = {isa = PBXBuildFile; fileRef = C504E6EB1CFAA86C00914A0E /* RHAdditions.license */; };
 		C504E70A1CFE685D00914A0E /* MMUpgradeInProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */; };
@@ -1439,6 +1440,8 @@
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
 		66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLargeTutorialSidebarButton.h; sourceTree = "<group>"; };
 		66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLargeTutorialSidebarButton.m; sourceTree = "<group>"; };
+		C50490961E748A9500533119 /* UIImage+MMRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMRotation.h"; sourceTree = "<group>"; };
+		C50490971E748A9500533119 /* UIImage+MMRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMRotation.m"; sourceTree = "<group>"; };
 		C504E6E81CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RHInterpolationAdditions.h"; sourceTree = "<group>"; };
 		C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RHInterpolationAdditions.m"; sourceTree = "<group>"; };
 		C504E6EB1CFAA86C00914A0E /* RHAdditions.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RHAdditions.license; sourceTree = "<group>"; };
@@ -2010,6 +2013,8 @@
 				C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */,
 				C575591A1DD6D31500670875 /* UIColor+MMAdditions.h */,
 				C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */,
+				C50490961E748A9500533119 /* UIImage+MMRotation.h */,
+				C50490971E748A9500533119 /* UIImage+MMRotation.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -4995,6 +5000,7 @@
 				668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */,
 				66343C5A1ABFA8FC00801962 /* MMEmailInputField.m in Sources */,
 				66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */,
+				C50490981E748A9500533119 /* UIImage+MMRotation.m in Sources */,
 				C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,

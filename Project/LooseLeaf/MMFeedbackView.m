@@ -164,11 +164,11 @@
     NSString* feedbackText = feedbackTextView.text ?: @"";
 
     if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        feedbackText = @"";
+        [[Mixpanel sharedInstance] track:kMPGeneralFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral" }];
+    }else{
+        [[Mixpanel sharedInstance] track:kMPGeneralFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
-
-    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 
     [feedbackTextView resignFirstResponder];
 
@@ -189,11 +189,11 @@
     NSString* feedbackText = feedbackTextView.text ?: @"";
 
     if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        feedbackText = @"";
+        [[Mixpanel sharedInstance] track:kMPGeneralFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral" }];
+    }else{
+        [[Mixpanel sharedInstance] track:kMPGeneralFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
-
-    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 }
 
 

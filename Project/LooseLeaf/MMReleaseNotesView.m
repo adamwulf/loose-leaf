@@ -296,16 +296,16 @@
 
 - (void)sendFeedback:(UIButton*)button {
     NSString* feedbackText = feedbackTextView.text ?: @"";
-
+    
     if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        feedbackText = @"";
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad" }];
+    }else{
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
-
-    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
-                                                                      kMPUpgradeFeedbackReply: feedbackText }];
-
+    
     [feedbackTextView resignFirstResponder];
-
+    
     [UIView animateWithDuration:.3 animations:^{
         thanksView.alpha = 1;
     } completion:^(BOOL finished) {
@@ -323,11 +323,11 @@
     NSString* feedbackText = feedbackTextView.text ?: @"";
 
     if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        feedbackText = @"";
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad" }];
+    }else{
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
-
-    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
-                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 }
 
 

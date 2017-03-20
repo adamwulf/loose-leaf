@@ -15,6 +15,7 @@
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMTrashManager.h"
 #import "Constants.h"
+#import "Mixpanel.h"
 
 #define kPageUUIDForBezelCollectionState @"Bezel"
 
@@ -217,11 +218,22 @@
 - (void)scrapIsAddedToSidebar:(MMScrapView*)scrap {
     @synchronized(allLoadedScraps) {
         if (![allLoadedScraps containsObject:scrap]) {
-            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:[scrap propertiesDictionary]];
-            [props setObject:[scrap owningPageUUID] forKey:@"pageUUID"];
-            [allPropertiesForScraps insertObject:props atIndex:0];
-            [allLoadedScraps insertObject:scrap atIndex:0];
-            hasEditsToSave = YES;
+            if(scrap){
+                NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:[scrap propertiesDictionary]];
+                [props setObject:[scrap owningPageUUID] ?: kPageUUIDForBezelCollectionState forKey:@"pageUUID"];
+                
+                [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1523),
+                                                                                    @"scrap" : @(YES),
+                                                                                    @"scrapState.scrapsOnPaperState" : scrap.state.scrapsOnPaperState ? @(YES) : @(NO),
+                                                                                    @"scrapState.scrapsOnPaperState.delegate" : scrap.state.scrapsOnPaperState.delegate ? @(YES) : @(NO)}];
+                
+                [allPropertiesForScraps insertObject:props atIndex:0];
+                [allLoadedScraps insertObject:scrap atIndex:0];
+                hasEditsToSave = YES;
+            }else{
+                [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1523),
+                                                                                    @"scrap" : @(NO) }];
+            }
         }
     }
 }
