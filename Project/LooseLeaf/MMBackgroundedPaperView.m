@@ -31,8 +31,6 @@
     NSString* backgroundTexturePath;
     BOOL isLoadingBackgroundTexture;
     BOOL wantsBackgroundTextureLoaded;
-    
-    UILabel* debuglbl;
 }
 
 -(instancetype) initWithFrame:(CGRect)frame{
@@ -40,16 +38,6 @@
         _usesCorrectBackgroundRotation = YES;
     }
     
-    return self;
-}
-
--(instancetype) initWithFrame:(CGRect)frame andUUID:(NSString *)_uuid{
-    if(self = [super initWithFrame:frame andUUID:_uuid]){
-        debuglbl = [[UILabel alloc] initWithFrame:CGRectMake(60, 60, 100, 100)];
-        debuglbl.backgroundColor = [UIColor whiteColor];
-        debuglbl.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:debuglbl];
-    }
     return self;
 }
 
@@ -177,10 +165,6 @@
                     isLoadingBackgroundTexture = NO;
                 }
             }
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                debuglbl.text = [self usesCorrectBackgroundRotation] ? @"YES" : @"NO";
-            });
         } else {
             isLoadingBackgroundTexture = NO;
         }
@@ -314,9 +298,9 @@
 }
 
 
-// NOTE: this method will always export a portrait image
-// of the canvas. Rotation to match the iPad's orientation
-// is handled in the MMShareSidebarContainerView
+// NOTE: this method will export the image in the same
+// orientation as its original background. if there is
+// no background, then it will be exported portrait
 - (void)exportVisiblePage:(void (^)(NSURL* urlToImage))completionBlock
      startingContextBlock:(CGContextRef (^)(CGRect finalExportBounds, CGFloat scale, CGFloat defaultRotation))startContextBlock
        endingContextBlock:(NSURL* (^)())endContextBlock{
