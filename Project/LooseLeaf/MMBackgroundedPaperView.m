@@ -107,8 +107,20 @@
 }
 
 - (void)updateThumbnailVisibility:(BOOL)forceUpdateIconImage {
-    [super updateThumbnailVisibility:forceUpdateIconImage];
-    paperBackgroundView.hidden = self.drawableView.hidden;
+    if(isLoadingBackgroundTexture){
+        // if we're still loading our background image, then
+        // keep the thumbnail visible, otherwise defer to
+        // our superclass.
+        [self setThumbnailTo:[self scrappedImgViewImage]];
+        scrapsOnPaperState.scrapContainerView.hidden = YES;
+        drawableView.hidden = YES;
+        shapeBuilderView.hidden = YES;
+        cachedImgView.hidden = NO;
+        [self isShowingDrawableView:NO andIsShowingThumbnail:YES];
+    }else{
+        [super updateThumbnailVisibility:forceUpdateIconImage];
+        paperBackgroundView.hidden = self.drawableView.hidden;
+    }
 }
 
 #pragma mark - Loading and Unloading State
@@ -140,6 +152,7 @@
                         [self setPageBackgroundTexture:img];
                     };
                     isLoadingBackgroundTexture = NO;
+                    [self updateThumbnailVisibility];
                 }];
             } else {
                 __block NSURL* backgroundAssetURL;
@@ -159,14 +172,17 @@
                             [self setPageBackgroundTexture:img];
                         };
                         isLoadingBackgroundTexture = NO;
+                        [self updateThumbnailVisibility];
                     }];
                     [MMBackgroundedPaperView writeBackgroundImageToDisk:img backgroundTexturePath:[self backgroundTexturePath]];
                 } else {
                     isLoadingBackgroundTexture = NO;
+                    [self performSelectorOnMainThread:@selector(updateThumbnailVisibility) withObject:nil waitUntilDone:NO];
                 }
             }
         } else {
             isLoadingBackgroundTexture = NO;
+            [self performSelectorOnMainThread:@selector(updateThumbnailVisibility) withObject:nil waitUntilDone:NO];
         }
     };
 
