@@ -48,6 +48,10 @@
     UIButton* exportAsImageButton;
     UIButton* exportAsPDFButton;
 
+    UIButton* landscapeLeftButton;
+    UIButton* portraitButton;
+    UIButton* landscapeRightButton;
+
     BOOL exportedImage;
     BOOL exportedPDF;
 }
@@ -69,7 +73,7 @@
         CGRect contentBounds = [slidingSidebarView contentBounds];
         CGRect buttonBounds = scrollViewBounds;
         buttonBounds.origin.y = 0;
-        buttonBounds.size.height = kHeightOfImportTypeButton + 10;
+        buttonBounds.size.height = kHeightOfImportTypeButton + kHeightOfRotationTypeButton + 10;
         contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
         contentBounds.size.height -= buttonBounds.size.height;
         buttonView = [[UIView alloc] initWithFrame:contentBounds];
@@ -77,7 +81,7 @@
         [slidingSidebarView addSubview:sharingContentView];
 
         //////////////////////////////////////////
-        // buttons
+        // export type buttons
 
 
         exportAsImageButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
@@ -96,7 +100,33 @@
         exportAsPDFButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
         [slidingSidebarView addSubview:exportAsPDFButton];
 
-
+        //////////////////////////////////////////
+        // rotation buttons
+        
+        landscapeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10 + kHeightOfImportTypeButton + 10, kHeightOfRotationTypeButton, kHeightOfRotationTypeButton)];
+        [landscapeLeftButton setBackgroundImage:[UIImage imageNamed:@"landscapeLeftOrientation"] forState:UIControlStateNormal];
+        [landscapeLeftButton setBackgroundImage:[UIImage imageNamed:@"landscapeLeftOrientationHighlighted"] forState:UIControlStateSelected];
+        [landscapeLeftButton setAdjustsImageWhenHighlighted:NO];
+//        [landscapeLeftButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
+//        landscapeLeftButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
+        [slidingSidebarView addSubview:landscapeLeftButton];
+        
+        portraitButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMidX(buttonBounds) - kHeightOfRotationTypeButton / 2, 10 + kHeightOfImportTypeButton + 10, kHeightOfRotationTypeButton, kHeightOfRotationTypeButton)];
+        [portraitButton setBackgroundImage:[UIImage imageNamed:@"portraitOrientation"] forState:UIControlStateNormal];
+        [portraitButton setBackgroundImage:[UIImage imageNamed:@"portraitOrientationHighlighted"] forState:UIControlStateSelected];
+        [portraitButton setAdjustsImageWhenHighlighted:NO];
+        //        [portraitButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
+        //        portraitButton = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
+        [slidingSidebarView addSubview:portraitButton];
+        
+        landscapeRightButton = [[UIButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds) + (CGRectGetWidth(buttonBounds) - 2 * kHeightOfRotationTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10 + kHeightOfImportTypeButton + 10, kHeightOfRotationTypeButton, kHeightOfRotationTypeButton)];
+        [landscapeRightButton setBackgroundImage:[UIImage imageNamed:@"landscapeRightOrientation"] forState:UIControlStateNormal];
+        [landscapeRightButton setBackgroundImage:[UIImage imageNamed:@"landscapeRightOrientationHighlighted"] forState:UIControlStateSelected];
+        [landscapeRightButton setAdjustsImageWhenHighlighted:NO];
+        //        [landscapeRightButton addTarget:self action:@selector(setExportType:) forControlEvents:UIControlEventTouchUpInside];
+        //        landscapeRightButton = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
+        [slidingSidebarView addSubview:landscapeRightButton];
+        
         cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
 
         shareItems = [NSMutableArray array];

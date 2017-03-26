@@ -124,6 +124,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
 #define kHeightOfImportTypeButton 80.0
+#define kHeightOfRotationTypeButton 50.0
 #define kMinScaleDelta .0
 #define kShadowDepth 7
 #define kShadowBend 3
