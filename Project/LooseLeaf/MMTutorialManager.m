@@ -106,7 +106,7 @@ static MMTutorialManager* _instance = nil;
         @{
             @"id": @"app-intro-pen",
             @"title": @"Draw and Erase",
-            @"video": @"hello.mp4"
+            @"video": @"draw-tools.mp4"
         },
         @{
             @"id": @"app-intro-pinch",
