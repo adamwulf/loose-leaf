@@ -57,6 +57,7 @@
 #import "MMShareStackSidebarContainerView.h"
 #import "MMStopWatch.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMContinuousSwipeGestureRecognizer.h"
 
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
@@ -397,6 +398,10 @@
     MMLooseLeafView* looseLeafView = [[MMLooseLeafView alloc] initWithFrame:[[[UIScreen mainScreen] fixedCoordinateSpace] bounds]];
     looseLeafView.looseLeafController = self;
     self.view = looseLeafView;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletingInboxItemGesture:) name:kDeletingInboxItemGesture object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteInboxItemTapped:) name:kDeletingInboxItemTapped object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteInboxItemTappedDown:) name:kDeletingInboxItemTappedDown object:nil];
 }
 
 - (void)dealloc {
@@ -1819,6 +1824,30 @@
             [fileManager removeItemAtURL:urlToDelete error:nil];
         }
     });
+}
+
+#pragma mark - Deleting Inbox Item
+
+- (void)deletingInboxItemGesture:(NSNotification*)note {
+    MMContinuousSwipeGestureRecognizer* gesture = note.object;
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        [_silhouette startDrawingAtTouch:gesture.touch immediately:NO];
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+        [_silhouette continueDrawingAtTouch:gesture.touch];
+    } else if (gesture.state == UIGestureRecognizerStateCancelled ||
+               gesture.state == UIGestureRecognizerStateEnded) {
+        [_silhouette endDrawingAtTouch:gesture.touch];
+    }
+}
+
+- (void)deleteInboxItemTapped:(NSNotification*)note {
+    [[NSThread mainThread] performBlock:^{
+        [_silhouette endDrawingAtTouch:note.object];
+    } afterDelay:.25];
+}
+
+- (void)deleteInboxItemTappedDown:(NSNotification*)note {
+    [_silhouette startDrawingAtTouch:note.object immediately:NO];
 }
 
 @end

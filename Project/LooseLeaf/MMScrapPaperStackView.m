@@ -133,10 +133,6 @@
         //        testImageView = [[UIImageView alloc] initWithFrame:CGRectMake(450, 50, 200, 200)];
         //        [testImageView showDebugBorder];
         //        [self addSubview:testImageView];
-
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deletingInboxItemGesture:) name:kDeletingInboxItemGesture object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteInboxItemTapped:) name:kDeletingInboxItemTapped object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteInboxItemTappedDown:) name:kDeletingInboxItemTappedDown object:nil];
     }
     return self;
 }
@@ -1649,30 +1645,6 @@
 
 - (MMUndoablePaperView*)owningPageForScrap:(MMScrapView*)scrap {
     return (MMUndoablePaperView*)scrap.state.scrapsOnPaperState.delegate;
-}
-
-#pragma mark - Deleting Inbox Item
-
-- (void)deletingInboxItemGesture:(NSNotification*)note {
-    MMContinuousSwipeGestureRecognizer* gesture = note.object;
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        [silhouette startDrawingAtTouch:gesture.touch immediately:NO];
-    } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        [silhouette continueDrawingAtTouch:gesture.touch];
-    } else if (gesture.state == UIGestureRecognizerStateCancelled ||
-               gesture.state == UIGestureRecognizerStateEnded) {
-        [silhouette endDrawingAtTouch:gesture.touch];
-    }
-}
-
-- (void)deleteInboxItemTapped:(NSNotification*)note {
-    [[NSThread mainThread] performBlock:^{
-        [silhouette endDrawingAtTouch:note.object];
-    } afterDelay:.25];
-}
-
-- (void)deleteInboxItemTappedDown:(NSNotification*)note {
-    [silhouette startDrawingAtTouch:note.object immediately:NO];
 }
 
 
