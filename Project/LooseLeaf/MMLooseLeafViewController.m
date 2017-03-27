@@ -945,9 +945,8 @@
                 [aStackView immediatelyTransitionToPageViewAnimated:NO];
             }
         }
-        CGRect fr = aStackView.bounds;
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
-            fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
+            CGRect fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
             fr.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
             aStackView.frame = fr;
             if (![allStacksScrollView.subviews containsObject:aStackView]) {

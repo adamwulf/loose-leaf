@@ -456,7 +456,7 @@
             
             NSURL* fullyRenderedPDFURL = endContextBlock();
             
-            CGPDFDocumentRelease(pdfDocRef);
+            [pdf closePDF];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (completionBlock)

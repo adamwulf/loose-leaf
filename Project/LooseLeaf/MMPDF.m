@@ -14,6 +14,9 @@
 
     BOOL isEncrypted;
     NSString* password;
+    
+    CGPDFDocumentRef openedPDFDocRef;
+    NSInteger numOpened;
 }
 
 @synthesize urlOnDisk;
@@ -178,7 +181,7 @@
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
 
-        CGPDFDocumentRelease(pdfDocRef);
+        [self closePDF];
     }
     return image;
 }
@@ -186,14 +189,31 @@
 
 // must call CGPDFDocumentRelease(pdf); yourself
 - (CGPDFDocumentRef)openPDF {
-    CGPDFDocumentRef pdf = CGPDFDocumentCreateWithURL((__bridge CFURLRef)self.urlOnDisk);
-
-    if (password) {
-        const char* key = [password UTF8String];
-        CGPDFDocumentUnlockWithPassword(pdf, key);
+    @synchronized (self) {
+        if(!openedPDFDocRef){
+            openedPDFDocRef = CGPDFDocumentCreateWithURL((__bridge CFURLRef)self.urlOnDisk);
+            
+            if (password) {
+                const char* key = [password UTF8String];
+                CGPDFDocumentUnlockWithPassword(openedPDFDocRef, key);
+            }
+            numOpened = 1;
+        }else{
+            numOpened += 1;
+        }
+        
+        return openedPDFDocRef;
     }
+}
 
-    return pdf;
+-(void) closePDF{
+    @synchronized (self) {
+        numOpened -= 1;
+        if(numOpened == 0){
+            CGPDFDocumentRelease(openedPDFDocRef);
+            openedPDFDocRef = NULL;
+        }
+    }
 }
 
 // must pass in the PDF ref that's generated from [openPDF]

@@ -270,7 +270,7 @@
 		6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMCountableSidebarButton.m */; };
 		6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699715117DBA02700E81467 /* MMDebugDrawView.m */; };
 		669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */; };
-		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; };
 		66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9919A1D1950013EFAE /* EPPZSingleton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */ = {isa = PBXBuildFile; fileRef = 66A02F9B19A1DBE90013EFAE /* Eppz.license */; };
 		66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */; };

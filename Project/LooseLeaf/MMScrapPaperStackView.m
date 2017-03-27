@@ -1759,7 +1759,7 @@
     // which page should get the scrap, and it'll tell us
     // the center/scale to use
     CGPoint center;
-    CGFloat scale;
+    CGFloat scale = 1;
     MMUndoablePaperView* page = [self pageWouldDropScrap:originalScrap atCenter:&center andScale:&scale];
 
     [originalScrap blockToFireWhenStateLoads:^{
