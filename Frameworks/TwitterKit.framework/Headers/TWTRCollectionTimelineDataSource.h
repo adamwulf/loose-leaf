@@ -10,6 +10,7 @@
 #import "TWTRTimelineDataSource.h"
 
 @class TWTRAPIClient;
+@class TWTRTimelineFilter;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -24,6 +25,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  ID of the collection.
  */
 @property (nonatomic, copy, readonly) NSString *collectionID;
+
+/*
+ *  A filtering object that hides certain tweets.
+ */
+@property (nonatomic, copy, nullable) TWTRTimelineFilter *timelineFilter;
 
 /**
  *  Convenience initializer.

@@ -9,6 +9,7 @@
 #import <TwitterKit/TWTRTimelineDataSource.h>
 
 @class TWTRAPIClient;
+@class TWTRTimelineFilter;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -45,6 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  Defaults to YES.
  */
 @property (nonatomic, readonly) BOOL includeRetweets;
+
+/*
+ *  A filtering object that hides certain tweets.
+ */
+@property (nonatomic, copy, nullable) TWTRTimelineFilter *timelineFilter;
 
 /**
  *  Convenience initializer. Uses default values for `maxTweetsPerRequest` and `includeRetweets`.

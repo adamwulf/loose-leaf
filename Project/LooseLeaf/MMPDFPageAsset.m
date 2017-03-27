@@ -74,7 +74,8 @@ static UIImage* lockThumbnail;
         CGPDFContextEndPage(pdfContext);
         CGPDFContextClose(pdfContext);
         CFRelease(pdfContext);
-        CGPDFDocumentRelease(pdfDocRef);
+        
+        [pdfItem.pdf closePDF];
 
         pagePDFPath = tmpPagePath;
     }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FacebookAppId</key>
+	<string>Your Facebook App Id</string>
+	<key>PinterestAppId</key>
+	<string>Your Pinterest App Id</string>
+	<key>MixpanelTokenDebug</key>
+	<string>Your Mixpanel Token for Debug Builds</string>
+	<key>MixpanelTokenProd</key>
+	<string>Your Mixpanel Token for Production Builds</string>
+	<key>ImgurClientID</key>
+	<string>Your Imgur Client Id</string>
+	<key>ImgurClientSecret</key>
+	<string>Your Imgur Client Secret</string>
+	<key>MashapeClientID</key>
+	<string>Your Mashape Client Id</string>
+	<key>TwitterKey</key>
+	<string>Your Twitter Key</string>
+	<key>TwitterSecret</key>
+	<string>Your Twitter Secret</string>
+	<key>FabricKey</key>
+	<string>Your Fabric API Key</string>
+</dict>
+</plist>

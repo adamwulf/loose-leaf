@@ -121,12 +121,14 @@ static const void* const kImportExportScrapStateQueueIdentifier = &kImportExport
 
     if ([[NSFileManager defaultManager] fileExistsAtPath:self.scrapPropertiesPlistPath] ||
         [[NSFileManager defaultManager] fileExistsAtPath:self.bundledScrapPropertiesPlistPath]) {
+        UIBezierPath* initialBezierPath;
+        
         NSDictionary* properties = [NSDictionary dictionaryWithContentsOfFile:self.scrapPropertiesPlistPath];
         if (!properties) {
             properties = [NSDictionary dictionaryWithContentsOfFile:self.bundledScrapPropertiesPlistPath];
         }
         if ([properties objectForKey:@"bezierPath"]) {
-            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
+            initialBezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:[properties objectForKey:@"bezierPath"]];
         } else {
             NSData* bezierData = [NSData dataWithContentsOfFile:[self scrapBezierPath]];
             if (!bezierData) {
@@ -134,7 +136,7 @@ static const void* const kImportExportScrapStateQueueIdentifier = &kImportExport
             }
             // bezier wasn't in the settings, so load it from
             // its own bezier file
-            bezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:bezierData];
+            initialBezierPath = [NSKeyedUnarchiver unarchiveObjectWithData:bezierData];
         }
 
         NSUInteger lsuh = [[properties objectForKey:@"lastSavedUndoHash"] unsignedIntegerValue];
@@ -143,7 +145,7 @@ static const void* const kImportExportScrapStateQueueIdentifier = &kImportExport
         // now load the background image from disk, if any
         [backingView loadBackgroundFromDiskWithProperties:properties];
 
-        return [self initWithUUID:uuid andBezierPath:bezierPath andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
+        return [self initWithUUID:_uuid andBezierPath:initialBezierPath needsFlip:NO andBackgroundView:backingView andPaperState:_scrapsOnPaperState andLastSavedUndoHash:lsuh];
     } else {
         // we don't have a file that we should have, so don't load the scrap
         DebugLog(@"can't find file at %@ or %@", self.scrapPropertiesPlistPath, self.bundledScrapPropertiesPlistPath);
@@ -153,10 +155,10 @@ static const void* const kImportExportScrapStateQueueIdentifier = &kImportExport
 }
 
 - (id)initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState {
-    return [self initWithUUID:_uuid andBezierPath:_path andBackgroundView:nil andPaperState:_scrapsOnPaperState andLastSavedUndoHash:0];
+    return [self initWithUUID:_uuid andBezierPath:_path needsFlip:YES andBackgroundView:nil andPaperState:_scrapsOnPaperState andLastSavedUndoHash:0];
 }
 
-- (id)initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh {
+- (id)initWithUUID:(NSString*)_uuid andBezierPath:(UIBezierPath*)_path needsFlip:(BOOL)needsFlip andBackgroundView:(MMScrapBackgroundView*)backingView andPaperState:(MMScrapCollectionState*)_scrapsOnPaperState andLastSavedUndoHash:(NSUInteger)lsuh {
     if (self = [super init]) {
         // save our UUID, everything depends on this
         scrapsOnPaperState = _scrapsOnPaperState;
@@ -165,8 +167,10 @@ static const void* const kImportExportScrapStateQueueIdentifier = &kImportExport
         lastSavedUndoHash = lsuh;
 
         if (!bezierPath) {
-            CGRect originalBounds = _path.bounds;
-            [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + kScrapShadowBufferSize, -originalBounds.origin.y + kScrapShadowBufferSize)];
+            if(needsFlip){
+                CGRect originalBounds = _path.bounds;
+                [_path applyTransform:CGAffineTransformMakeTranslation(-originalBounds.origin.x + kScrapShadowBufferSize, -originalBounds.origin.y + kScrapShadowBufferSize)];
+            }
             bezierPath = _path;
 
             //save initial bezier path to disk

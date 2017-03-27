@@ -273,7 +273,7 @@
 		6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMCountableSidebarButton.m */; };
 		6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699715117DBA02700E81467 /* MMDebugDrawView.m */; };
 		669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */; };
-		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; };
 		66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9919A1D1950013EFAE /* EPPZSingleton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */ = {isa = PBXBuildFile; fileRef = 66A02F9B19A1DBE90013EFAE /* Eppz.license */; };
 		66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */; };
@@ -424,6 +424,7 @@
 		66FD2E991A76C7B100ED7DFA /* MMThumbAndIndexShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD2E981A76C7B100ED7DFA /* MMThumbAndIndexShadow.m */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
+		C50490981E748A9500533119 /* UIImage+MMRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = C50490971E748A9500533119 /* UIImage+MMRotation.m */; };
 		C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */; };
 		C504E6EC1CFAA86C00914A0E /* RHAdditions.license in Resources */ = {isa = PBXBuildFile; fileRef = C504E6EB1CFAA86C00914A0E /* RHAdditions.license */; };
 		C504E70A1CFE685D00914A0E /* MMUpgradeInProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C504E7091CFE685D00914A0E /* MMUpgradeInProgressViewController.m */; };
@@ -567,7 +568,7 @@
 		C5C298EE1D7BF182009AE6BE /* SimpleCloudKitManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */; };
 		C5C298F01D7BF196009AE6BE /* PerformanceBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */; };
 		C5C298F21D7BF1AA009AE6BE /* ClippingBezier.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */; };
-		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.0.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */; };
+		C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.1.md in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.1.md */; };
 		C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */ = {isa = PBXBuildFile; fileRef = C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */; };
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
 		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
@@ -1471,6 +1472,8 @@
 		66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUnknownObject.m; sourceTree = "<group>"; };
 		66FD31EB1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLargeTutorialSidebarButton.h; sourceTree = "<group>"; };
 		66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLargeTutorialSidebarButton.m; sourceTree = "<group>"; };
+		C50490961E748A9500533119 /* UIImage+MMRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MMRotation.h"; sourceTree = "<group>"; };
+		C50490971E748A9500533119 /* UIImage+MMRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MMRotation.m"; sourceTree = "<group>"; };
 		C504E6E81CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RHInterpolationAdditions.h"; sourceTree = "<group>"; };
 		C504E6E91CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RHInterpolationAdditions.m"; sourceTree = "<group>"; };
 		C504E6EB1CFAA86C00914A0E /* RHAdditions.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RHAdditions.license; sourceTree = "<group>"; };
@@ -1529,12 +1532,15 @@
 		C53AFA7C1DE3C3530054553D /* MMTapWithTouchGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTapWithTouchGestureRecognizer.m; sourceTree = "<group>"; };
 		C53AFA7F1DE3EF4C0054553D /* MMArrowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMArrowView.h; sourceTree = "<group>"; };
 		C53AFA801DE3EF4C0054553D /* MMArrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMArrowView.m; sourceTree = "<group>"; };
+		C53BA3911E1327E300EB0C64 /* AppIds-Template.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AppIds-Template.plist"; sourceTree = "<group>"; };
+		C53BA3931E1327F500EB0C64 /* AppIds.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppIds.plist; sourceTree = "<group>"; };
 		C53F63541CDA871D00091EF1 /* UIImage+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
 		C53F63551CDA871D00091EF1 /* UIImage+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
 		C53F63561CDA871D00091EF1 /* UIImage+FXBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FXBlur.h"; sourceTree = "<group>"; };
 		C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FXBlur.m"; sourceTree = "<group>"; };
 		C53F635B1CDA87F700091EF1 /* MMRotatingBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotatingBackgroundView.h; sourceTree = "<group>"; };
 		C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingBackgroundView.m; sourceTree = "<group>"; };
+		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
 		C542AA271D81AC8A0024FAD9 /* MMCollapsableStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCollapsableStackView.m; sourceTree = "<group>"; };
@@ -1675,7 +1681,7 @@
 		C5C298ED1D7BF182009AE6BE /* SimpleCloudKitManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleCloudKitManager.framework; path = "../Submodules/cloudkit-manager/SimpleCloudKitManager/build/Release-iphoneos/SimpleCloudKitManager.framework"; sourceTree = "<group>"; };
 		C5C298EF1D7BF196009AE6BE /* PerformanceBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PerformanceBezier.framework; path = "../Submodules/ClippingBezier/Submodules/PerformanceBezier/build/Release-iphoneos/PerformanceBezier.framework"; sourceTree = "<group>"; };
 		C5C298F11D7BF1AA009AE6BE /* ClippingBezier.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ClippingBezier.framework; path = "../Submodules/ClippingBezier/build/Release-iphoneos/ClippingBezier.framework"; sourceTree = "<group>"; };
-		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-3.0.0.md"; sourceTree = "<group>"; };
+		C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.1.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = "ReleaseNotes-3.0.1.md"; sourceTree = "<group>"; };
 		C5C298F51D7BF915009AE6BE /* MMMarkdown.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMMarkdown.framework; path = "../Submodules/MMMarkdown/build/Debug-iphoneos/MMMarkdown.framework"; sourceTree = "<group>"; };
 		C5C298F81D7BFB63009AE6BE /* MMMarkdown.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MMMarkdown.license; sourceTree = "<group>"; };
 		C5C298FB1D7BFD2E009AE6BE /* MMReleaseNotesView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesView.h; sourceTree = "<group>"; };
@@ -2047,6 +2053,8 @@
 				C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */,
 				C575591A1DD6D31500670875 /* UIColor+MMAdditions.h */,
 				C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */,
+				C50490961E748A9500533119 /* UIImage+MMRotation.h */,
+				C50490971E748A9500533119 /* UIImage+MMRotation.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -3434,6 +3442,7 @@
 				C55AC19C1D7C0BDD00259558 /* logo@2x.png */,
 				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
 				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
+				C5419ED71E0E0C6100183265 /* README.md */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				667D98A9192D010900625879 /* Loose-Leaf_76.png */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
@@ -3443,7 +3452,9 @@
 				664516B8159030FC0012FACA /* Constants.m */,
 				662280741AAF75BC00DAB609 /* AuthConstants.h */,
 				C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */,
-				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.0.md */,
+				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes-3.0.1.md */,
+				C53BA3931E1327F500EB0C64 /* AppIds.plist */,
+				C53BA3911E1327E300EB0C64 /* AppIds-Template.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4333,12 +4344,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
+				C53BA3951E13297000EB0C64 /* Generate Auth Constants */,
 				66684B3C182DA0D3005A27B4 /* Generate Licenses in Settings Bundle */,
 				66DCFB821581BCEF00B4918C /* Sources */,
 				66DCFB831581BCEF00B4918C /* Frameworks */,
 				66DCFB841581BCEF00B4918C /* Resources */,
 				66C0C9D217838C91009491B3 /* Git Version into Info.plist */,
 				6673C684182E0EA0005CEFAF /* Git Version into Settings Bundle */,
+				C53BA3971E132F2B00EB0C64 /* App Keys for Info.plist */,
 				6616CCCD18B6AD7800CAD0F3 /* Crashlytics Script */,
 			);
 			buildRules = (
@@ -4428,7 +4441,7 @@
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
 				C5C298E81D7B9633009AE6BE /* stencil.fsh in Resources */,
 				C5C298E91D7B9633009AE6BE /* point.fsh in Resources */,
-				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.0.md in Resources */,
+				C5C298F71D7BFA19009AE6BE /* ReleaseNotes-3.0.1.md in Resources */,
 				C5060FB61CAA170400B9721C /* top-buttons.png in Resources */,
 				C58E6A221CDB1B4A00508F1D /* bg05.jpg in Resources */,
 				C5060FB71CAA170400B9721C /* top-buttons@2x.png in Resources */,
@@ -4683,6 +4696,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Update the CFBundleShortVersionString in the generated Info.plist using the most recent Git tag.\n# Idea taken from http://tinyurl.com/3usjj9d by Joachim Bondo.\n\n# Get the current release description from Git.\nGIT_RELEASE_SHORT_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\n# GIT_RELEASE_VERSION=`git describe --tags --abbrev=0`\n# GIT_RELEASE_VERSION=`git rev-parse --short HEAD`\n# GIT_RELEASE_VERSION=`git describe --tags | awk '{split($0,a,\"-\"); print a[1]}'`\nGIT_RELEASE_VERSION=`git rev-list HEAD | wc -l | tr -d ' '`\n\necho \"built products dir/info plist\"\necho \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\"\necho $GIT_RELEASE_VERSION\necho $GIT_RELEASE_SHORT_VERSION\n\n# Set the CFBundleShortVersionString in the generated Info.plist (stripping off the leading \"v\").\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleShortVersionString\" \"$GIT_RELEASE_SHORT_VERSION\"\ndefaults write \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}\" \"CFBundleVersion\" \"$GIT_RELEASE_VERSION\"\n\ntouch \"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH%.*}.plist\"";
+			showEnvVarsInLog = 0;
+		};
+		C53BA3951E13297000EB0C64 /* Generate Auth Constants */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Auth Constants";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateAuthConstants.sh";
+			showEnvVarsInLog = 0;
+		};
+		C53BA3971E132F2B00EB0C64 /* App Keys for Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "App Keys for Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateInfoPlist.sh \"${BUILT_PRODUCTS_DIR}\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -5048,6 +5091,7 @@
 				66343C5A1ABFA8FC00801962 /* MMEmailInputField.m in Sources */,
 				C53AFA711DE3B9150054553D /* MPNetwork.m in Sources */,
 				66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */,
+				C50490981E748A9500533119 /* UIImage+MMRotation.m in Sources */,
 				C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
 				66B21A7A175E595B0049F1AF /* MMBlockOperation.m in Sources */,
@@ -5265,7 +5309,7 @@
 					"DEBUGUSERDEFAULTS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -5294,7 +5338,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",

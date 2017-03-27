@@ -15,6 +15,8 @@
     CALayer* layer;
     CALayer* whiteBorderLayer;
     CGFloat rotation;
+    
+    CGImageRef layerContents;
 }
 
 @synthesize image;
@@ -95,16 +97,17 @@ CGFloat buffer = 2;
 }
 
 - (void)updateLayerContentsWith:(CGImageRef)imageRef {
-    if (imageRef) {
-        CFRetain(imageRef);
+    if(layerContents){
+        CFRelease(layerContents);
+        layerContents = NULL;
     }
-    CGImageRef oldImageRef = (__bridge CGImageRef)(layer.contents);
+    if (imageRef) {
+        layerContents = imageRef;
+        CFRetain(layerContents);
+    }
     // bridge, so ARC doesn't own the object, i'll manage retains myself
     // http://stackoverflow.com/questions/8577894/setting-the-contents-of-a-calayer-to-a-cgimageref-on-ios-with-arc-on
-    layer.contents = (__bridge id)(imageRef);
-    if (oldImageRef) {
-        CFRelease(oldImageRef);
-    }
+    layer.contents = (__bridge id)(layerContents);
 }
 
 - (void)setHidden:(BOOL)hidden {

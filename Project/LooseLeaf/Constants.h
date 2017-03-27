@@ -36,6 +36,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define CGRectFromSize(size) CGRectMake(0, 0, size.width, size.height)
 #define CGRectWithHeight(rect, height) CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, height)
 #define CGSizeMaxDim(size) MAX((size).width, (size).height)
+#define CGSizeSwap(size) CGSizeMake((size).height, (size).width)
+#define CGPointSwap(point) CGPointMake((point).y, (point).x)
 #define CGRectSquare(size) CGRectMake(0, 0, size, size)
 #define CGSizeScale(size, scale) CGSizeMake(size.width*(scale), size.height*(scale))
 #define CGRectScale(rect, scale) CGRectMake(rect.origin.x*(scale), rect.origin.y*(scale), rect.size.width*(scale), rect.size.height*(scale))
@@ -181,6 +183,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPShareStatusSinaWeibo @"Share Status: Sina Weibo"
 
 // MixPanel People Properties
+#define kMPiPadModel @"iPad Model"
 #define kMPStatScissorSegments @"Stat: Scissor Segment Count"
 #define kMPStatScrapPathSegments @"Stat: Scrap Segment Count"
 #define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
@@ -195,6 +198,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPHasBookTurnedPage @"Has Ever Turned Page"
 #define kMPHasReorderedPage @"Has Ever Reordered Page"
 #define kMPHasAddedPage @"Has Ever Added Page"
+#define kMPHasAddedStack @"Has Ever Added Stack"
 #define kMPNumberOfPenUses @"Number of Pen Uses"
 #define kMPNumberOfEraserUses @"Number of Eraser Uses"
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
@@ -210,6 +214,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPHasZoomedToList @"Has Zoomed Out to List"
 #define kMPHasZoomedToPage @"Has Zoomed Into Page"
 #define kMPHasDeletedPage @"Has Deleted Page"
+#define kMPHasDeletedStack @"Has Deleted Stack"
 #define kMPHasShakeToReorder @"Has Shaken Scrap"
 #define kMPHasBezelledScrap @"Has Bezelled Scrap"
 #define kMPNumberOfLaunches @"Number Of Launches"
@@ -242,6 +247,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPBackgroundDuringTutorial @"Background During Tutorial"
 #define kCurrentTutorialStep @"kCurrentTutorialStep"
 #define kMPNewsletterStatus @"Signed Up For Newsletter"
+#define kMPNewsletterResponse @"Newsletter Response"
+#define kMPTwitterFollow @"Followed on Twitter"
 
 // invite properties
 #define kMPEventInvite @"Invite Friend"
@@ -271,6 +278,8 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPEventExport @"Export Page"
 #define kMPEventClonePage @"Clone Page"
 #define kMPEventCloneScrap @"Clone Scrap"
+
+#define kMPNewsletterResponseSubscribed @"Subscribed to Newsletter"
 
 #define kMPEventExportPropDestination @"Export Destination"
 #define kMPEventExportPropResult @"Export Result"

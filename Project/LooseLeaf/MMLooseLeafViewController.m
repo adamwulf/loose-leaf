@@ -227,18 +227,23 @@
 
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
-
         // book keeping
 
         NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredLanguage
                                              to:language];
+        [[[Mixpanel sharedInstance] people] set:kMPiPadModel
+                                             to:[UIDevice modelName]];
+        
         [[[Mixpanel sharedInstance] people] setOnce:@{ kMPDidBackgroundDuringTutorial: @(NO),
                                                        kMPNewsletterStatus: @"Unknown",
                                                        kMPHasFinishedTutorial: @(NO),
                                                        kMPDurationWatchingTutorial: @(0),
                                                        kMPFirstLaunchDate: [NSDate date],
                                                        kMPHasAddedPage: @(NO),
+                                                       kMPHasDeletedPage: @(NO),
+                                                       kMPHasAddedStack: @(NO),
+                                                       kMPHasDeletedStack: @(NO),
                                                        kMPHasZoomedToList: @(NO),
                                                        kMPHasReorderedPage: @(NO),
                                                        kMPHasBookTurnedPage: @(NO),
@@ -267,7 +272,8 @@
                                                        kMPShareStatusTencentWeibo: kMPShareStatusUnknown,
                                                        kMPShareStatusSinaWeibo: kMPShareStatusUnknown,
                                                        kMPNumberOfPages: @(0),
-                                                       kMPPushEnabled: @(NO)
+                                                       kMPPushEnabled: @(NO),
+                                                       kMPTwitterFollow: @(NO)
         }];
         [[Mixpanel sharedInstance] flush];
 
@@ -867,6 +873,8 @@
         } completion:^(BOOL finished) {
             [stackView removeFromSuperview];
             [stackViewsByUUID removeObjectForKey:stackUUID];
+            
+            [[[Mixpanel sharedInstance] people] set:@{ kMPHasDeletedStack: @(YES) }];
         }];
     }
 }
@@ -949,9 +957,8 @@
                 [aStackView immediatelyTransitionToPageViewAnimated:NO];
             }
         }
-        CGRect fr = aStackView.bounds;
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
-            fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
+            CGRect fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
             fr.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
             aStackView.frame = fr;
             if (![allStacksScrollView.subviews containsObject:aStackView]) {
@@ -1424,6 +1431,8 @@
     [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 
     [aStackView ensureAtLeastPagesInStack:3];
+    
+    [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedStack: @(YES) }];
 }
 
 #pragma mark - Tutorial and Feedback

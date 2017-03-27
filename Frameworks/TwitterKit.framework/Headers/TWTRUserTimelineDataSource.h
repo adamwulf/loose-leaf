@@ -48,6 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) BOOL includeRetweets;
 
+/*
+ *  A filtering object that hides certain tweets.
+ */
+@property (nonatomic, copy, nullable) TWTRTimelineFilter *timelineFilter;
+
 /**
  *  Convenience initializer. Uses default values for `maxTweetsPerRequest`, `includeReplies` and `includeRetweets`.
  *

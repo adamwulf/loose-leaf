@@ -15,6 +15,7 @@
 #import "Constants.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
+#import "Mixpanel.h"
 
 
 @interface MMNewsletterSignupForm () <UITextFieldDelegate>
@@ -105,7 +106,6 @@
         noThanksButton.bounds = b;
         [self addSubview:noThanksButton];
 
-
         twitterFollowButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [twitterFollowButton setTitle:@"Follow @getlooseleaf" forState:UIControlStateNormal];
         [twitterFollowButton sizeToFit];
@@ -117,7 +117,6 @@
         twitterFollowButton.bounds = b;
         twitterFollowButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:twitterFollowButton];
-
 
         thanksPanel = [[UILabel alloc] initWithFrame:self.bounds];
         thanksPanel.backgroundColor = [UIColor whiteColor];
@@ -138,6 +137,9 @@
 - (void)followOnTwitter:(id)button {
     ACAccountStore* accountStore = [[ACAccountStore alloc] init];
     ACAccountType* accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+
+    [[Mixpanel sharedInstance] track:kMPTwitterFollow];
+    [[[Mixpanel sharedInstance] people] set:kMPTwitterFollow to:@(YES)];
 
     [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError* error) {
         if (granted) {

@@ -163,12 +163,10 @@
 - (void)sendFeedback:(UIButton*)button {
     NSString* feedbackText = feedbackTextView.text ?: @"";
 
-    if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        feedbackText = @"";
+    if (![feedbackText isEqualToString:kFeedbackPlaceholderText]) {
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
-
-    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 
     [feedbackTextView resignFirstResponder];
 
@@ -188,12 +186,10 @@
 
     NSString* feedbackText = feedbackTextView.text ?: @"";
 
-    if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        feedbackText = @"";
+    if (![feedbackText isEqualToString:kFeedbackPlaceholderText]){
+        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                                          kMPUpgradeFeedbackReply: feedbackText }];
     }
-
-    [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                      kMPUpgradeFeedbackReply: feedbackText }];
 }
 
 
