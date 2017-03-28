@@ -388,9 +388,6 @@
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
             CGContextRef context = startContextBlock(finalExportBounds, scale, defaultRotation);
-
-            __block CGPDFDocumentRef pdfDocRef = NULL;
-
             CGContextSaveThenRestoreForBlock(context, ^{
                 // flip
                 CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
@@ -401,7 +398,7 @@
                 if (pdf) {
                     CGContextSaveThenRestoreForBlock(context, ^{
                         // PDF background
-                        pdfDocRef = [pdf openPDF];
+                        CGPDFDocumentRef pdfDocRef = [pdf openPDF];
                         [pdf renderPage:0 intoContext:context withSize:finalExportBounds.size withPDFRef:pdfDocRef];
                     });
                 } else if (backgroundImage) {
@@ -413,7 +410,7 @@
                 }
                 
                 if(backgroundSize.width > backgroundSize.height){
-                    // if the PDF is landscape, then we need to rotate our
+                    // if the background is landscape, then we need to rotate our
                     // canvas so that the landscape PDF is drawn on our
                     // vertical canvas properly.
                     CGFloat theta = 90.0 * M_PI / 180.0;
@@ -423,10 +420,10 @@
                     
                     CGContextTranslateCTM(context, finalExportBounds.size.width / 2, finalExportBounds.size.height / 2);
                     CGContextRotateCTM(context, theta);
-                    CGContextTranslateCTM(context, -finalExportBounds.size.height / 2, -finalExportBounds.size.width / 2);
                     
-                    finalExportBounds.size = CGSizeSwap(finalExportBounds.size);
-                    finalExportBounds.origin = CGPointSwap(finalExportBounds.origin);
+                    finalExportBounds = CGRectSwap(finalExportBounds);
+
+                    CGContextTranslateCTM(context, -finalExportBounds.size.width / 2, -finalExportBounds.size.height / 2);
                 }
                 
                 CGContextSaveThenRestoreForBlock(context, ^{
