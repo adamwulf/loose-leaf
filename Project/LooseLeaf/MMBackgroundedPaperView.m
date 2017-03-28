@@ -384,14 +384,61 @@
         }
     }
     
+    // negative == rotate right
+    // positive == rotate left
+    NSInteger fullRotation = 3;
+    
     if ([[self.drawableView state] isStateLoaded]) {
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
-            CGContextRef context = startContextBlock(finalExportBounds, scale, defaultRotation);
+            NSInteger targetRotation = fullRotation;
+
+            ////////////////////////////////////////////////////////
+            //
+            // Rotation Step #1
+            // calculate the proper export bounds for the page
+            // given the input preference for landscape left, landscape
+            // right, or portrait
+            //
+            CGRect preRotationExportBounds = finalExportBounds;
+            CGRect postRotationExportBounds = finalExportBounds;
+            while(targetRotation != 0){
+                postRotationExportBounds = CGRectSwap(postRotationExportBounds);
+
+                // move 1 closer to 0
+                targetRotation -= SIGN(fullRotation);
+            }
+            //
+            ////////////////////////////////////////////////////////
+
+            CGContextRef context = startContextBlock(postRotationExportBounds, scale, defaultRotation);
             CGContextSaveThenRestoreForBlock(context, ^{
                 // flip
                 CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
                 
+                ////////////////////////////////////////////////////////
+                //
+                // Rotation Step #2
+                // Handle rotating the canvas to adjust for user specified
+                // landscape left, landscape right, or portrait rotation
+                //
+                NSInteger targetRotation = fullRotation;
+
+                CGContextTranslateCTM(context, postRotationExportBounds.size.width / 2, postRotationExportBounds.size.height / 2);
+
+                while(targetRotation != 0){
+                    CGFloat theta = 90.0 * M_PI / 180.0 * -1 * SIGN(fullRotation);
+                    CGContextRotateCTM(context, theta);
+                    
+                    // move 1 closer to 0
+                    targetRotation -= SIGN(fullRotation);
+                }
+                
+                CGContextTranslateCTM(context, -preRotationExportBounds.size.width / 2, -preRotationExportBounds.size.height / 2);
+                //
+                ////////////////////////////////////////////////////////
+
+                // guarantee at least a white background
                 [[UIColor whiteColor] setFill];
                 [[UIBezierPath bezierPathWithRect:finalExportBounds] fill];
                 
