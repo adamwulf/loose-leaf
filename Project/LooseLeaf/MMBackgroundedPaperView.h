@@ -8,12 +8,22 @@
 
 #import "MMUndoablePaperView.h"
 
+typedef enum : NSInteger {
+    ExportRotationBackgroundDefault = 0,
+    ExportRotationLandscapeLeft,
+    ExportRotationPortrait,
+    ExportRotationLandscapeRight
+} ExportRotation;
 
 @interface MMBackgroundedPaperView : MMUndoablePaperView
+
+@property (nonatomic, assign) ExportRotation idealExportRotation;
 
 - (UIImage*)pageBackgroundTexture;
 
 - (NSString*)backgroundTexturePath;
+
+-(ExportRotation) idealExportRotation;
 
 // saves the file at the input URL as the background's original
 // asset file. This is useful for a background that is set as

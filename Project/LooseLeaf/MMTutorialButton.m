@@ -41,26 +41,16 @@
 
         //// Color Declarations
         UIColor* darkerGreyBorder = [self borderColor];
-
+        UIColor* lightWhite = [UIColor colorWithWhite:1.0 alpha:.8];
+        UIColor* lighterWhite = [UIColor colorWithWhite:1.0 alpha:.5];
 
         //// Oval
         UIBezierPath* ovalPath = [self ovalPath];
-        //        [halfGreyFill setFill];
-        //
-        //        [ovalPath fill];
-        //        [[[AVHexColor colorWithHexString:@"3C7BFF"] colorWithAlphaComponent:.4] setFill];
-        //        [ovalPath fill];
-
-        UIColor* lightBlue = [AVHexColor colorWithHexString:@"0E94FB"];
-        UIColor* lighterBlue = [AVHexColor colorWithHexString:@"84C7fA"];
-        lightBlue = [UIColor colorWithWhite:1.0 alpha:.8];
-        lighterBlue = [UIColor colorWithWhite:1.0 alpha:.5];
-
 
         //// Gradient Declarations
         NSArray* blueGradientColors = [NSArray arrayWithObjects:
-                                                   (id)lightBlue.CGColor,
-                                                   (id)lighterBlue.CGColor, nil];
+                                                   (id)lightWhite.CGColor,
+                                                   (id)lighterWhite.CGColor, nil];
         CGFloat blueGradientLocations[] = {0, 1};
         CGGradientRef blueGradient = CGGradientCreateWithColors(colorSpace, (CFArrayRef)blueGradientColors, blueGradientLocations);
 

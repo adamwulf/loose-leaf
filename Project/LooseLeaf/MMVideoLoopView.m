@@ -45,8 +45,11 @@
 
         AVURLAsset* asset = [AVURLAsset URLAssetWithURL:videoURL options:nil];
         AVAssetImageGenerator* imageGenerator = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
-        UIImage* image = [UIImage imageWithCGImage:[imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil]];
+        CGImageRef cgImage = [imageGenerator copyCGImageAtTime:CMTimeMake(0, 1) actualTime:nil error:nil];
+        UIImage* image = [UIImage imageWithCGImage:cgImage];
         imageView.image = image;
+        
+        CFRelease(cgImage);
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 

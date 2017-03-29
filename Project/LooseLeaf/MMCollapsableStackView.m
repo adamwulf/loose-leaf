@@ -198,7 +198,7 @@
 }
 
 - (BOOL)isPerfectlyAlignedIntoRow {
-    return squishFactor == 0 && !unlockPDFListButton.alpha && !importingPDFListButton.alpha;
+    return squishFactor == 0 && !unlockPDFListButton.alpha && !importingPDFListButton.alpha && ![self isShowingPageView];
 }
 
 - (BOOL)isCurrentlyHandlingImport {

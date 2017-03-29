@@ -31,7 +31,11 @@
     NSString* backgroundTexturePath;
     BOOL isLoadingBackgroundTexture;
     BOOL wantsBackgroundTextureLoaded;
+    
+    ExportRotation _defaultExportRotation;
 }
+
+@synthesize idealExportRotation = _idealExportRotation;
 
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
@@ -39,6 +43,20 @@
     }
     
     return self;
+}
+
+-(void) setDelegate:(NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate> *)_delegate{
+    [super setDelegate:_delegate];
+    
+    if(_usesCorrectBackgroundRotation){
+        // if we're here, then we're setting the delegate
+        // immediately after initWithFrame above.
+        // otherwise we initialized with a uuid etc,
+        // and _usesCorrectBackgroundRotation would be NO.
+        // we only want to save properties for new pages
+        // that have _usesCorrectBackgroundRotation = YES
+        [self saveAdditionalBackgroundProperties:YES];
+    }
 }
 
 - (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
@@ -63,8 +81,16 @@
     NSURL* toURL = [NSURL fileURLWithPath:backgroundAssetPath];
     [[NSFileManager defaultManager] copyItemAtURL:originalAssetURL toURL:toURL error:&error];
 
-    NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]) };
-    [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
+    [self saveAdditionalBackgroundProperties:NO];
+}
+
+-(void) saveAdditionalBackgroundProperties:(BOOL)forceSave{
+    if(forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture)){
+        NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]),
+                                   @"idealExportRotation" : @(_idealExportRotation),
+                                   @"defaultExportRotation" : @(_defaultExportRotation) };
+        [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
+    }
 }
 
 - (void)setPageBackgroundTexture:(UIImage*)img {
@@ -123,6 +149,71 @@
     }
 }
 
+#pragma mark - Properties
+
+-(NSURL*)backgroundAssetURL{
+    __block NSURL* backgroundAssetURL;
+    
+    [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL* item, NSUInteger totalItemCount) {
+        if ([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]) {
+            backgroundAssetURL = item;
+        }
+    } andErrorHandler:nil];
+    
+    return backgroundAssetURL;
+}
+
+-(void) setIdealExportRotation:(ExportRotation)idealExportRotation{
+    if(_idealExportRotation != idealExportRotation){
+        _idealExportRotation = idealExportRotation;
+        
+        [self saveAdditionalBackgroundProperties:NO];
+    }
+}
+
+-(ExportRotation) idealExportRotation{
+    if(_defaultExportRotation == ExportRotationBackgroundDefault){
+        // haven't calculated our default yet
+        _defaultExportRotation = ExportRotationPortrait;
+        
+        NSURL* backgroundAssetURL = [self backgroundAssetURL];
+        CGSize backgroundSize = CGSizeZero;
+        
+        @autoreleasepool {
+            if ([[[[backgroundAssetURL path] pathExtension] lowercaseString] isEqualToString:@"pdf"]) {
+                MMPDF* pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
+                if ([pdf pageCount]) {
+                    backgroundSize = [pdf sizeForPage:0];
+                }
+            } else if ([self backgroundTexturePath]) {
+                if ([[NSFileManager defaultManager] fileExistsAtPath:[self backgroundTexturePath]]) {
+                    backgroundAssetURL = [NSURL fileURLWithPath:[self backgroundTexturePath]];
+                    UIImage* backgroundImage = [UIImage imageWithContentsOfFile:[backgroundAssetURL path]];
+                    if (backgroundImage) {
+                        backgroundSize = [backgroundImage size];
+                    }
+                }
+            }
+        }
+        
+        if(backgroundSize.width > backgroundSize.height){
+            // if the background is landscape, then we need to rotate our
+            // canvas so that the landscape PDF is drawn on our
+            // vertical canvas properly.
+            _defaultExportRotation = ExportRotationLandscapeRight;
+            if([self usesCorrectBackgroundRotation]){
+                _defaultExportRotation = ExportRotationLandscapeLeft;
+            }
+        }
+    }
+    
+    if(_idealExportRotation == ExportRotationBackgroundDefault){
+        _idealExportRotation = _defaultExportRotation;
+    }
+    
+    return _idealExportRotation;
+}
+
 #pragma mark - Loading and Unloading State
 
 -(NSString*)backgroundInfoPlist{
@@ -143,6 +234,9 @@
         NSDictionary* bgInfo = [NSDictionary dictionaryWithContentsOfFile:[self backgroundInfoPlist]];
         
         _usesCorrectBackgroundRotation = [bgInfo[@"usesCorrectBackgroundRotation"] boolValue];
+        _idealExportRotation = [bgInfo[@"idealExportRotation"] integerValue];
+        _defaultExportRotation = [bgInfo[@"defaultExportRotation"] integerValue];
+        _idealExportRotation = MIN(ExportRotationLandscapeRight, MAX(ExportRotationBackgroundDefault, _idealExportRotation));
         
         if (![self pageBackgroundTexture]) {
             UIImage* img = [UIImage imageWithContentsOfFile:[self backgroundTexturePath]];
@@ -269,7 +363,7 @@
     __block CGContextRef context;
     __block CFDataRef boxData;
     
-    [self exportVisiblePage:completionBlock startingContextBlock:^CGContextRef(CGRect finalExportBounds, CGFloat scale, CGFloat defaultRotation) {
+    [self exportVisiblePage:completionBlock rotation:ExportRotationPortrait startingContextBlock:^CGContextRef(CGRect finalExportBounds, CGFloat scale, CGFloat defaultRotation) {
         CGRect exportedPageSize = CGRectFromSize(finalExportBounds.size);
         context = CGPDFContextCreateWithURL((__bridge CFURLRef)([NSURL fileURLWithPath:tmpPagePath]), &exportedPageSize, NULL);
         UIGraphicsPushContext(context);
@@ -295,7 +389,7 @@
 }
 
 - (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock {
-    [self exportVisiblePage:completionBlock startingContextBlock:^CGContextRef(CGRect finalExportBounds, CGFloat scale, CGFloat defaultRotation) {
+    [self exportVisiblePage:completionBlock rotation:ExportRotationPortrait startingContextBlock:^CGContextRef(CGRect finalExportBounds, CGFloat scale, CGFloat defaultRotation) {
         
         UIGraphicsBeginImageContextWithOptions(finalExportBounds.size, NO, scale);
         CGContextRef context = UIGraphicsGetCurrentContext();
@@ -313,24 +407,17 @@
     }];
 }
 
-
 // NOTE: this method will export the image in the same
 // orientation as its original background. if there is
 // no background, then it will be exported portrait
 - (void)exportVisiblePage:(void (^)(NSURL* urlToImage))completionBlock
+                 rotation:(ExportRotation)exportRotation
      startingContextBlock:(CGContextRef (^)(CGRect finalExportBounds, CGFloat scale, CGFloat defaultRotation))startContextBlock
        endingContextBlock:(NSURL* (^)())endContextBlock{
     
-    __block NSURL* backgroundAssetURL;
-    
-    [[NSFileManager defaultManager] enumerateDirectory:[self pagesPath] withBlock:^(NSURL* item, NSUInteger totalItemCount) {
-        if ([[[item path] lastPathComponent] hasPrefix:@"backgroundTexture.asset"]) {
-            backgroundAssetURL = item;
-        }
-    } andErrorHandler:nil];
-    
     MMPDF* pdf = nil;
     UIImage* backgroundImage = nil;
+    NSURL* backgroundAssetURL = [self backgroundAssetURL];
     
     // default the page size to the screen dimensions in PDF ppi.
     CGSize screenSize = [[[UIScreen mainScreen] fixedCoordinateSpace] bounds].size;
@@ -384,24 +471,84 @@
         }
     }
     
+    // determine how many times we need to rotate the page content
+    // for it to be in the target rotation
+    // negative == rotate right
+    // positive == rotate left
+    NSInteger fullRotation = 0;
+    
+    if(_idealExportRotation == ExportRotationLandscapeLeft){
+        fullRotation = 1;
+    }else if(_idealExportRotation == ExportRotationLandscapeRight){
+        fullRotation = -1;
+    }
+    
+    if(_defaultExportRotation == ExportRotationLandscapeLeft){
+        fullRotation = fullRotation - 1;
+    }else if(_defaultExportRotation == ExportRotationLandscapeRight){
+        fullRotation = fullRotation + 1;
+    }
+    
+    // now we know our target rotation, so let's export:
+    
     if ([[self.drawableView state] isStateLoaded]) {
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
-            CGContextRef context = startContextBlock(finalExportBounds, scale, defaultRotation);
+            NSInteger targetRotation = fullRotation;
 
-            __block CGPDFDocumentRef pdfDocRef = NULL;
+            ////////////////////////////////////////////////////////
+            //
+            // Rotation Step #1
+            // calculate the proper export bounds for the page
+            // given the input preference for landscape left, landscape
+            // right, or portrait
+            //
+            CGRect preRotationExportBounds = finalExportBounds;
+            CGRect postRotationExportBounds = finalExportBounds;
+            while(targetRotation != 0){
+                postRotationExportBounds = CGRectSwap(postRotationExportBounds);
 
+                // move 1 closer to 0
+                targetRotation -= SIGN(fullRotation);
+            }
+            //
+            ////////////////////////////////////////////////////////
+
+            CGContextRef context = startContextBlock(postRotationExportBounds, scale, defaultRotation);
             CGContextSaveThenRestoreForBlock(context, ^{
                 // flip
                 CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
                 
+                ////////////////////////////////////////////////////////
+                //
+                // Rotation Step #2
+                // Handle rotating the canvas to adjust for user specified
+                // landscape left, landscape right, or portrait rotation
+                //
+                NSInteger targetRotation = fullRotation;
+
+                CGContextTranslateCTM(context, postRotationExportBounds.size.width / 2, postRotationExportBounds.size.height / 2);
+
+                while(targetRotation != 0){
+                    CGFloat theta = 90.0 * M_PI / 180.0 * -1 * SIGN(fullRotation);
+                    CGContextRotateCTM(context, theta);
+                    
+                    // move 1 closer to 0
+                    targetRotation -= SIGN(fullRotation);
+                }
+                
+                CGContextTranslateCTM(context, -preRotationExportBounds.size.width / 2, -preRotationExportBounds.size.height / 2);
+                //
+                ////////////////////////////////////////////////////////
+
+                // guarantee at least a white background
                 [[UIColor whiteColor] setFill];
                 [[UIBezierPath bezierPathWithRect:finalExportBounds] fill];
                 
                 if (pdf) {
                     CGContextSaveThenRestoreForBlock(context, ^{
                         // PDF background
-                        pdfDocRef = [pdf openPDF];
+                        CGPDFDocumentRef pdfDocRef = [pdf openPDF];
                         [pdf renderPage:0 intoContext:context withSize:finalExportBounds.size withPDFRef:pdfDocRef];
                     });
                 } else if (backgroundImage) {
@@ -413,7 +560,7 @@
                 }
                 
                 if(backgroundSize.width > backgroundSize.height){
-                    // if the PDF is landscape, then we need to rotate our
+                    // if the background is landscape, then we need to rotate our
                     // canvas so that the landscape PDF is drawn on our
                     // vertical canvas properly.
                     CGFloat theta = 90.0 * M_PI / 180.0;
@@ -423,10 +570,10 @@
                     
                     CGContextTranslateCTM(context, finalExportBounds.size.width / 2, finalExportBounds.size.height / 2);
                     CGContextRotateCTM(context, theta);
-                    CGContextTranslateCTM(context, -finalExportBounds.size.height / 2, -finalExportBounds.size.width / 2);
                     
-                    finalExportBounds.size = CGSizeSwap(finalExportBounds.size);
-                    finalExportBounds.origin = CGPointSwap(finalExportBounds.origin);
+                    finalExportBounds = CGRectSwap(finalExportBounds);
+
+                    CGContextTranslateCTM(context, -finalExportBounds.size.width / 2, -finalExportBounds.size.height / 2);
                 }
                 
                 CGContextSaveThenRestoreForBlock(context, ^{
@@ -456,7 +603,7 @@
             
             NSURL* fullyRenderedPDFURL = endContextBlock();
             
-            CGPDFDocumentRelease(pdfDocRef);
+            [pdf closePDF];
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (completionBlock)

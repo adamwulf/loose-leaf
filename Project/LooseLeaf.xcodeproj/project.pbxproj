@@ -170,7 +170,6 @@
 		6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6652457C1996ECF900C36609 /* MMOpenInAppShareItem.m */; };
 		6653B8A9195CC7AD001C6E15 /* Documents in Resources */ = {isa = PBXBuildFile; fileRef = 6653B8A8195CC7AD001C6E15 /* Documents */; };
 		6655E926176291C800E4F36A /* MMScissorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6655E925176291C800E4F36A /* MMScissorButton.m */; };
-		665810891B6DAF0A00A2C603 /* hello.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 665810881B6DAF0A00A2C603 /* hello.mp4 */; };
 		665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */ = {isa = PBXBuildFile; fileRef = 665ACB821AF84BCA00A53FCA /* NSString+Contains.m */; };
 		665C592E17BD7692006DECBF /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 665C592D17BD7692006DECBF /* Accelerate.framework */; };
 		665C593417BD7C42006DECBF /* Tool.m in Sources */ = {isa = PBXBuildFile; fileRef = 665C593317BD7C42006DECBF /* Tool.m */; };
@@ -270,7 +269,7 @@
 		6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699714C17DA5EDB00E81467 /* MMCountableSidebarButton.m */; };
 		6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6699715117DBA02700E81467 /* MMDebugDrawView.m */; };
 		669B764F18E9FE490041DAE7 /* ALAsset+Thumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 669B764E18E9FE490041DAE7 /* ALAsset+Thumbnail.m */; };
-		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9519A1D1500013EFAE /* EPPZDevice.m */; };
 		66A02F9A19A1D1950013EFAE /* EPPZSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A02F9919A1D1950013EFAE /* EPPZSingleton.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */ = {isa = PBXBuildFile; fileRef = 66A02F9B19A1DBE90013EFAE /* Eppz.license */; };
 		66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A08E70196B242F00476F99 /* MMUndoRedoMoveScrapItem.m */; };
@@ -560,6 +559,7 @@
 		C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C298FC1D7BFD2E009AE6BE /* MMReleaseNotesView.m */; };
 		C5C45A1C1DC14CFA00C50EA7 /* MMLooseLeafView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */; };
 		C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C45A1D1DC154AD00C50EA7 /* page-sidebar.mp4 */; };
+		C5D987C01E89D799000EA722 /* draw-tools.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5D987BF1E89D799000EA722 /* draw-tools.mp4 */; };
 		C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29781D7C013A00D868EC /* MMMarkdown.m */; };
 		C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297C1D7C013A00D868EC /* MMDocument.m */; };
 		C5DA29941D7C013A00D868EC /* MMElement.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297E1D7C013A00D868EC /* MMElement.m */; };
@@ -1650,6 +1650,7 @@
 		C5C45A1A1DC14CFA00C50EA7 /* MMLooseLeafView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLooseLeafView.h; sourceTree = "<group>"; };
 		C5C45A1B1DC14CFA00C50EA7 /* MMLooseLeafView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLooseLeafView.m; sourceTree = "<group>"; };
 		C5C45A1D1DC154AD00C50EA7 /* page-sidebar.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-sidebar.mp4"; sourceTree = "<group>"; };
+		C5D987BF1E89D799000EA722 /* draw-tools.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "draw-tools.mp4"; sourceTree = "<group>"; };
 		C5DA29771D7C013A00D868EC /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMMarkdown.h; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.h; sourceTree = "<group>"; };
 		C5DA29781D7C013A00D868EC /* MMMarkdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMMarkdown.m; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.m; sourceTree = "<group>"; };
 		C5DA29791D7C013A00D868EC /* MMMarkdown-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MMMarkdown-Prefix.pch"; path = "../../Submodules/MMMarkdown/Source/MMMarkdown-Prefix.pch"; sourceTree = "<group>"; };
@@ -2576,7 +2577,7 @@
 			isa = PBXGroup;
 			children = (
 				6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */,
-				665810881B6DAF0A00A2C603 /* hello.mp4 */,
+				C5D987BF1E89D799000EA722 /* draw-tools.mp4 */,
 				66468E551B75D1C600DD90B0 /* pinch-to-list.mp4 */,
 				665F7F5A1AE08B8600635D56 /* import-and-scissor.mov */,
 				66CC2A9C1AEC3EAD00C6A3F9 /* scrap-to-sidebar.mov */,
@@ -2589,6 +2590,7 @@
 		665F7F5F1AE096BF00635D56 /* un-used */ = {
 			isa = PBXGroup;
 			children = (
+				665810881B6DAF0A00A2C603 /* hello.mp4 */,
 				66FC3BB61ABA631B00F2DE37 /* silly-face.mov */,
 				662808FC1A9BB6D500CA3F9A /* ruler-for-curve-2.mov */,
 				662808FA1A9BB6C800CA3F9A /* draw-clip-2-2.mov */,
@@ -4501,6 +4503,8 @@
 				C58E6A2E1CDB1B4A00508F1D /* bg17.jpg in Resources */,
 				665F7F641AE096D500635D56 /* list-view-reorder-pages.mov in Resources */,
 				665244FF1995673900C36609 /* email.png in Resources */,
+				66CC2A991AEB01F900C6A3F9 /* scrap-to-sidebar.mov in Resources */,
+				C5D987C01E89D799000EA722 /* draw-tools.mp4 in Resources */,
 				66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */,
 				6672EFE619C3A61E0076009F /* iCloudDrive@2x.png in Resources */,
 				C5F1B2871D9B01BB00E0E9A8 /* MPArrowLeft.png in Resources */,
@@ -4519,7 +4523,6 @@
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
 				C5F1B2931D9B01BB00E0E9A8 /* MPLogo@2x.png in Resources */,
 				C58E6A401CDB1B4A00508F1D /* bg35.jpg in Resources */,
-				665810891B6DAF0A00A2C603 /* hello.mp4 in Resources */,
 				C58E6A4B1CDB1B4A00508F1D /* bg46.jpg in Resources */,
 				C50CBF8B1CE4522E0053885A /* Icons.xcassets in Resources */,
 				C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */,

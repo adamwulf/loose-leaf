@@ -600,7 +600,7 @@
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
 
     CGSize fullScaleSize = CGSizeScale(scrapBacking.size, 1 / [[UIScreen mainScreen] scale]);
-
+    
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
     CGFloat ratio = buttonSize.width / fullScaleSize.width;
@@ -608,6 +608,29 @@
 
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = buttonSize;
+    
+    UIImageOrientation (^rotateOrientationLeft)(UIImageOrientation) = ^(UIImageOrientation initialOrientation){
+        if(initialOrientation == UIImageOrientationUp || initialOrientation == UIImageOrientationUpMirrored){
+            return UIImageOrientationLeft;
+        }else if(initialOrientation == UIImageOrientationLeft || initialOrientation == UIImageOrientationLeftMirrored){
+            return UIImageOrientationDown;
+        }else if(initialOrientation == UIImageOrientationDown || initialOrientation == UIImageOrientationDownMirrored){
+            return UIImageOrientationRight;
+        }else if(initialOrientation == UIImageOrientationRight || initialOrientation == UIImageOrientationRightMirrored){
+            return UIImageOrientationUp;
+        }
+        
+        return UIImageOrientationUp;
+    };
+
+    if(fullScaleSize.width > fullScaleSize.height){
+        fullScaleSize = CGSizeSwap(fullScaleSize);
+        scrapRect.size = CGSizeSwap(scrapRect.size);
+        rotation += M_PI / 2.0;
+        scrapBacking = [UIImage imageWithCGImage:scrapBacking.CGImage scale:scrapBacking.scale orientation:rotateOrientationLeft(scrapBacking.imageOrientation)];
+    }
+    
+    
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
 
     //
@@ -1736,7 +1759,7 @@
     // which page should get the scrap, and it'll tell us
     // the center/scale to use
     CGPoint center;
-    CGFloat scale;
+    CGFloat scale = 1;
     MMUndoablePaperView* page = [self pageWouldDropScrap:originalScrap atCenter:&center andScale:&scale];
 
     [originalScrap blockToFireWhenStateLoads:^{
@@ -1978,6 +2001,14 @@
 }
 
 #pragma mark - MMShareSidebarDelegate
+
+-(ExportRotation)idealExportRotation{
+    return [[visibleStackHolder peekSubview] idealExportRotation];
+}
+
+-(void) setIdealExportRotation:(ExportRotation)idealExportRotation{
+    [[visibleStackHolder peekSubview] setIdealExportRotation:idealExportRotation];
+}
 
 - (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
     [[visibleStackHolder peekSubview] exportVisiblePageToImage:completionBlock];

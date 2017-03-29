@@ -193,7 +193,8 @@ static UIWebView* pdfWebView;
             [[pdfWebView layer] setBorderWidth:2];
             pdfWebView.scalesPageToFit = YES;
             pdfWebView.contentMode = UIViewContentModeScaleAspectFit;
-            
+            pdfWebView.backgroundColor = [UIColor lightGrayColor];
+
             NSURLRequest* request = [NSURLRequest requestWithURL:urlToPDF];
             [pdfWebView loadRequest:request];
             
@@ -219,6 +220,7 @@ static UIWebView* pdfWebView;
             [[pdfWebView layer] setBorderWidth:2];
             pdfWebView.scalesPageToFit = YES;
             pdfWebView.contentMode = UIViewContentModeScaleAspectFit;
+            pdfWebView.backgroundColor = [UIColor lightGrayColor];
 
             NSURLRequest* request = [NSURLRequest requestWithURL:urlToImage];
             [pdfWebView loadRequest:request];

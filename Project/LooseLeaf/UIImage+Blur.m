@@ -22,7 +22,7 @@
 
 #import <Accelerate/Accelerate.h>
 #import <UIKit/UIKit.h>
-
+#import "Constants.h"
 
 @implementation UIImage (Blur)
 
@@ -58,8 +58,9 @@
     error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL,
                                        0, 0, boxSize, boxSize, NULL,
                                        kvImageEdgeExtend);
-    //    if (error)
-    //        APLog(@"blur error: convolution failed");
+    if (error){
+        DebugLog(@"blur error: convolution failed");
+    }
 
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
