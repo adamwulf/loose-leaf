@@ -31,6 +31,8 @@
     NSString* backgroundTexturePath;
     BOOL isLoadingBackgroundTexture;
     BOOL wantsBackgroundTextureLoaded;
+    
+    ExportRotation _defaultExportRotation;
 }
 
 @synthesize idealExportRotation = _idealExportRotation;
@@ -41,6 +43,20 @@
     }
     
     return self;
+}
+
+-(void) setDelegate:(NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate> *)_delegate{
+    [super setDelegate:_delegate];
+    
+    if(_usesCorrectBackgroundRotation){
+        // if we're here, then we're setting the delegate
+        // immediately after initWithFrame above.
+        // otherwise we initialized with a uuid etc,
+        // and _usesCorrectBackgroundRotation would be NO.
+        // we only want to save properties for new pages
+        // that have _usesCorrectBackgroundRotation = YES
+        [self saveAdditionalBackgroundProperties:YES];
+    }
 }
 
 - (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
@@ -65,13 +81,14 @@
     NSURL* toURL = [NSURL fileURLWithPath:backgroundAssetPath];
     [[NSFileManager defaultManager] copyItemAtURL:originalAssetURL toURL:toURL error:&error];
 
-    [self saveAdditionalBackgroundProperties];
+    [self saveAdditionalBackgroundProperties:NO];
 }
 
--(void) saveAdditionalBackgroundProperties{
-    if([self isStateLoaded] && !isLoadingBackgroundTexture){
+-(void) saveAdditionalBackgroundProperties:(BOOL)forceSave{
+    if(forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture)){
         NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]),
-                                   @"idealExportRotation" : @(_idealExportRotation) };
+                                   @"idealExportRotation" : @(_idealExportRotation),
+                                   @"defaultExportRotation" : @(_defaultExportRotation) };
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
     }
 }
@@ -150,13 +167,14 @@
     if(_idealExportRotation != idealExportRotation){
         _idealExportRotation = idealExportRotation;
         
-        [self saveAdditionalBackgroundProperties];
+        [self saveAdditionalBackgroundProperties:NO];
     }
 }
 
 -(ExportRotation) idealExportRotation{
-    if(_idealExportRotation == ExportRotationBackgroundDefault){
-        _idealExportRotation = ExportRotationPortrait;
+    if(_defaultExportRotation == ExportRotationBackgroundDefault){
+        // haven't calculated our default yet
+        _defaultExportRotation = ExportRotationPortrait;
         
         NSURL* backgroundAssetURL = [self backgroundAssetURL];
         CGSize backgroundSize = CGSizeZero;
@@ -182,11 +200,15 @@
             // if the background is landscape, then we need to rotate our
             // canvas so that the landscape PDF is drawn on our
             // vertical canvas properly.
-            _idealExportRotation = ExportRotationLandscapeRight;
+            _defaultExportRotation = ExportRotationLandscapeRight;
             if([self usesCorrectBackgroundRotation]){
-                _idealExportRotation = ExportRotationLandscapeLeft;
+                _defaultExportRotation = ExportRotationLandscapeLeft;
             }
         }
+    }
+    
+    if(_idealExportRotation == ExportRotationBackgroundDefault){
+        _idealExportRotation = _defaultExportRotation;
     }
     
     return _idealExportRotation;
@@ -213,6 +235,7 @@
         
         _usesCorrectBackgroundRotation = [bgInfo[@"usesCorrectBackgroundRotation"] boolValue];
         _idealExportRotation = [bgInfo[@"idealExportRotation"] integerValue];
+        _defaultExportRotation = [bgInfo[@"defaultExportRotation"] integerValue];
         _idealExportRotation = MIN(ExportRotationLandscapeRight, MAX(ExportRotationBackgroundDefault, _idealExportRotation));
         
         if (![self pageBackgroundTexture]) {
@@ -448,9 +471,25 @@
         }
     }
     
+    // determine how many times we need to rotate the page content
+    // for it to be in the target rotation
     // negative == rotate right
     // positive == rotate left
-    NSInteger fullRotation = 3;
+    NSInteger fullRotation = 0;
+    
+    if(_idealExportRotation == ExportRotationLandscapeLeft){
+        fullRotation = 1;
+    }else if(_idealExportRotation == ExportRotationLandscapeRight){
+        fullRotation = -1;
+    }
+    
+    if(_defaultExportRotation == ExportRotationLandscapeLeft){
+        fullRotation = fullRotation - 1;
+    }else if(_defaultExportRotation == ExportRotationLandscapeRight){
+        fullRotation = fullRotation + 1;
+    }
+    
+    // now we know our target rotation, so let's export:
     
     if ([[self.drawableView state] isStateLoaded]) {
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
