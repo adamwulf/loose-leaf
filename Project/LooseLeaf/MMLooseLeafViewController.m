@@ -1230,6 +1230,14 @@
 
 #pragma mark - MMShareSidebarDelegate
 
+-(ExportRotation)idealExportRotation{
+    return [currentStackView idealExportRotation];
+}
+
+-(void) setIdealExportRotation:(ExportRotation)idealExportRotation{
+    return [currentStackView setIdealExportRotation:idealExportRotation];
+}
+
 - (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
     [currentStackView exportVisiblePageToImage:completionBlock];
 }

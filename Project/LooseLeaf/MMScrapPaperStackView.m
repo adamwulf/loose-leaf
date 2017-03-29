@@ -2002,6 +2002,14 @@
 
 #pragma mark - MMShareSidebarDelegate
 
+-(ExportRotation)idealExportRotation{
+    return [[visibleStackHolder peekSubview] idealExportRotation];
+}
+
+-(void) setIdealExportRotation:(ExportRotation)idealExportRotation{
+    [[visibleStackHolder peekSubview] setIdealExportRotation:idealExportRotation];
+}
+
 - (void)exportVisiblePageToImage:(void (^)(NSURL*))completionBlock {
     [[visibleStackHolder peekSubview] exportVisiblePageToImage:completionBlock];
 }
