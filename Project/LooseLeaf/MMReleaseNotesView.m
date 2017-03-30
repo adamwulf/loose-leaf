@@ -12,6 +12,7 @@
 #import "UIColor+Shadow.h"
 #import "MMLoopingVideoView.h"
 #import "Mixpanel.h"
+#import <StoreKit/StoreKit.h>
 
 #define kFeedbackPlaceholderText @"Any feedback is very much appreciated!"
 
@@ -235,9 +236,10 @@
 
         [happyResponseView setConfirmBlock:^{
             [[weakSelf delegate] didTapToCloseRoundedSquareView:weakSelf];
+            
             // This URL opens the review page (as of iOS 9) and has worked for at least 2 years
             // according to http://stackoverflow.com/questions/18905686/itunes-review-url-and-ios-7-ask-user-to-rate-our-app-appstore-show-a-blank-pag
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=625659452&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"]];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=625659452&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8&action=write-review"]];
 
             [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Happy",
                                                                               kMPUpgradeAppStoreReview: @(YES) }];
