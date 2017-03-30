@@ -18,6 +18,7 @@
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMRuledBackgroundView.h"
 #import <CoreGraphics/CoreGraphics.h>
+#import "UIView+MPHelpers.h"
 
 
 @interface MMBackgroundedPaperView () <MMGenericBackgroundViewDelegate>
@@ -43,7 +44,7 @@
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         _usesCorrectBackgroundRotation = YES;
-        _ruledOrGridBackgroundView = [[MMRuledBackgroundView alloc] initWithFrame:[self bounds]];
+        _ruledOrGridBackgroundView = [[MMRuledBackgroundView alloc] initWithFrame:[self bounds] andProperties:@{}];
         [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
     }
     
@@ -96,10 +97,17 @@
 
 -(void) saveAdditionalBackgroundProperties:(BOOL)forceSave{
     if(forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture)){
+        NSDictionary* backgroundClassName = _ruledOrGridBackgroundView ? [_ruledOrGridBackgroundView properties] : @{};
+        
         NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]),
                                    @"idealExportRotation" : @(_idealExportRotation),
-                                   @"defaultExportRotation" : @(_defaultExportRotation) };
+                                   @"defaultExportRotation" : @(_defaultExportRotation),
+                                   @"ruledOrGridBackgroundProps" : backgroundClassName};
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
+        
+        if(_ruledOrGridBackgroundView){
+            [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self thumbnailPath]];
+        }
     }
 }
 
@@ -252,6 +260,20 @@
         _defaultExportRotation = [bgInfo[@"defaultExportRotation"] integerValue];
         _idealExportRotation = MIN(ExportRotationLandscapeRight, MAX(ExportRotationBackgroundDefault, _idealExportRotation));
         
+        if(!_ruledOrGridBackgroundView){
+            // if we've already loaded it, don't reload
+            NSString* bgClassName = bgInfo[@"ruledOrGridBackgroundProps"][@"class"];
+            if([bgClassName length]){
+                Class bgClass = NSClassFromString(bgClassName);
+                if(bgClass){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        _ruledOrGridBackgroundView = [[bgClass alloc] initWithFrame:[self bounds] andProperties:bgInfo];
+                        [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+                    });
+                }
+            }
+        }
+        
         if (![self pageBackgroundTexture]) {
             CGSize backgroundSize = CGSizeZero;
             
@@ -336,6 +358,15 @@
 
         [paperBackgroundView.image drawInRect:scaledScreen];
 
+        UIGraphicsPopContext();
+    }else if(_ruledOrGridBackgroundView){
+        UIGraphicsPushContext(context);
+
+        [_ruledOrGridBackgroundView drawInContext:context forSize:thumbSize];
+        
+        UIImage* bg = [UIImage imageWithContentsOfFile:[_ruledOrGridBackgroundView cachePath]];
+        [bg drawInRect:[self bounds]];
+        
         UIGraphicsPopContext();
     }
 }
@@ -515,6 +546,7 @@
     // now we know our target rotation, so let's export:
     
     if ([[self.drawableView state] isStateLoaded]) {
+        
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
             NSInteger targetRotation = fullRotation;
@@ -580,6 +612,8 @@
                         CGRect rectForImage = CGSizeFill(backgroundSize, finalExportBounds.size);
                         [backgroundImage drawInRect:rectForImage];
                     });
+                } else if(_ruledOrGridBackgroundView){
+                    [_ruledOrGridBackgroundView drawInContext:context forSize:finalExportBounds.size];
                 }
                 
                 if(backgroundSize.width > backgroundSize.height){

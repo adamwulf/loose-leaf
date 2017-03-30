@@ -12,6 +12,19 @@
 
 @interface MMRuledBackgroundView : UIView
 
+-(instancetype) init NS_UNAVAILABLE;
+-(instancetype) initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
+-(instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+-(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties;
+
 - (MMScrapBackgroundView*)stampBackgroundFor:(MMScrapViewState*)targetScrapState;
+
+-(void) drawInContext:(CGContextRef)context forSize:(CGSize)size;
+
+-(NSDictionary*) properties;
+
+-(void) saveDefaultThumbToPath:(NSString*)path;
+
+-(NSString*) cachePath;
 
 @end

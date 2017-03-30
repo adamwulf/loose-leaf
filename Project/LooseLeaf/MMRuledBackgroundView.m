@@ -9,10 +9,13 @@
 #import "MMRuledBackgroundView.h"
 #import "MMScrapViewState.h"
 #import "MMScrapBackgroundView.h"
+#import "NSFileManager+DirectoryOptimizations.h"
+#import "UIView+MPHelpers.h"
+#import "Constants.h"
 
 @implementation MMRuledBackgroundView
 
--(instancetype) initWithFrame:(CGRect)frame{
+-(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
         
         CAShapeLayer* shape = [CAShapeLayer layer];
@@ -28,6 +31,12 @@
     }
     
     return self;
+}
+
+-(NSDictionary*) properties{
+    return @{
+             @"class" : NSStringFromClass([self class])
+             };
 }
 
 // this will create a copy of the current background and will align
@@ -97,5 +106,42 @@
     }
 }
 
+-(NSString*) cachePath{
+    NSString* cacheDir = [[NSFileManager cachesPath] stringByAppendingPathComponent:@"defaultThumbnails"];
+    [NSFileManager ensureDirectoryExistsAtPath:cacheDir];
+    
+    return [[cacheDir stringByAppendingString:NSStringFromClass([self class])] stringByAppendingPathExtension:@"png"];
+}
+
+-(void) drawInContext:(CGContextRef)context forSize:(CGSize)size{
+    CGRect scaledScreen = CGSizeFill(self.bounds.size, size);
+
+    UIBezierPath* path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(200, 200, 300, 400)];
+    CGContextSaveThenRestoreForBlock(context, ^{
+        // Scraps
+        // adjust so that (0,0) is the origin of the content rect in the PDF page,
+        // since the PDF may be much taller/wider than our screen
+        CGContextScaleCTM(context, size.width / self.bounds.size.width, size.height / self.bounds.size.height);
+        CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
+
+        [[UIColor lightGrayColor] setFill];
+        [path fill];
+    });
+}
+
+-(void) saveDefaultThumbToPath:(NSString*)path{
+    if([[NSFileManager defaultManager] fileExistsAtPath:[self cachePath]]){
+        [[NSFileManager defaultManager] copyItemAtPath:[self cachePath] toPath:path error:nil];
+    }else{
+        // need to generate the thumbnail
+        dispatch_async(dispatch_get_main_queue(), ^{
+            UIImage* img = [self mp_snapshotImage];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),^{
+                [UIImagePNGRepresentation(img) writeToFile:[self cachePath] atomically:YES];
+                [[NSFileManager defaultManager] copyItemAtPath:[self cachePath] toPath:path error:nil];
+            });
+        });
+    }
+}
 
 @end
