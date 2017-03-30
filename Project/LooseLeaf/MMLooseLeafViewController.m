@@ -1287,7 +1287,7 @@
     //#endif
 
     if (version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]) {
-        NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:[NSString stringWithFormat:@"ReleaseNotes-%@", version] withExtension:@"md"];
+        NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:@"ReleaseNotes" withExtension:@"md"];
         NSString* releaseNotes = [NSString stringWithContentsOfURL:releaseNotesFile encoding:NSUTF8StringEncoding error:nil];
 
         if (releaseNotes) {

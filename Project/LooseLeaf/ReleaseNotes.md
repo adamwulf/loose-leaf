@@ -1,3 +1,9 @@
+# New in 3.0.2!
+
+1. Choose page rotation when exporting
+
+2. Bug fixes and performance improvements
+
 # New in 3.0.0!
 1. Organize your pages into lists
 
