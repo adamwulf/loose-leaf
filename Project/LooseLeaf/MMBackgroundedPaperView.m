@@ -16,6 +16,7 @@
 #import "UIDevice+PPI.h"
 #import "MMPDF.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMRuledBackgroundView.h"
 #import <CoreGraphics/CoreGraphics.h>
 
 
@@ -33,6 +34,8 @@
     BOOL wantsBackgroundTextureLoaded;
     
     ExportRotation _defaultExportRotation;
+    
+    MMRuledBackgroundView* _ruledOrGridBackgroundView;
 }
 
 @synthesize idealExportRotation = _idealExportRotation;
@@ -40,9 +43,16 @@
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         _usesCorrectBackgroundRotation = YES;
+        _ruledOrGridBackgroundView = [[MMRuledBackgroundView alloc] initWithFrame:[self bounds]];
+        [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
     }
     
     return self;
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    _ruledOrGridBackgroundView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
 -(void) setDelegate:(NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate> *)_delegate{
@@ -349,6 +359,8 @@
         [pageBackground aspectFillBackgroundImageIntoView];
 
         [addedScrap setBackgroundView:[pageBackground stampBackgroundFor:[addedScrap state]]];
+    }else if(_ruledOrGridBackgroundView){
+        [addedScrap setBackgroundView:[_ruledOrGridBackgroundView stampBackgroundFor:[addedScrap state]]];
     }
 }
 

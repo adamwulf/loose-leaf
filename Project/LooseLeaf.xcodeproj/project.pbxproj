@@ -531,6 +531,7 @@
 		C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A161CDB1B4A00508F1D /* bg51.jpg */; };
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C5A02B8D1E8D947700D43EC7 /* MMRuledBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */; };
 		C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */; };
 		C5A5C4911DFE5A1E00FD2555 /* MMImportingPDFListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */; };
 		C5A5C4A91DFFC91700FD2555 /* MMDecryptPDFStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4A81DFFC91700FD2555 /* MMDecryptPDFStackButton.m */; };
@@ -1606,6 +1607,8 @@
 		C58E6A161CDB1B4A00508F1D /* bg51.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg51.jpg; sourceTree = "<group>"; };
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C5A02B8B1E8D947700D43EC7 /* MMRuledBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRuledBackgroundView.h; sourceTree = "<group>"; };
+		C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRuledBackgroundView.m; sourceTree = "<group>"; };
 		C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareStackSidebarContainerView.h; sourceTree = "<group>"; };
 		C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMShareStackSidebarContainerView.m; sourceTree = "<group>"; };
 		C5A5C48F1DFE5A1E00FD2555 /* MMImportingPDFListButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImportingPDFListButton.h; sourceTree = "<group>"; };
@@ -3904,6 +3907,8 @@
 		C5B905CA1CEACE1A002943BF /* Backgrounds */ = {
 			isa = PBXGroup;
 			children = (
+				C5A02B8B1E8D947700D43EC7 /* MMRuledBackgroundView.h */,
+				C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */,
 				C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */,
 				C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */,
 				C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */,
@@ -5035,6 +5040,7 @@
 				66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */,
 				C5F1B2AB1D9B01BB00E0E9A8 /* MPCGColorRefToNSStringValueTransformer.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
+				C5A02B8D1E8D947700D43EC7 /* MMRuledBackgroundView.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
