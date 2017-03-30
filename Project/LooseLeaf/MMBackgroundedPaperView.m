@@ -171,6 +171,18 @@
     }
 }
 
+-(void) setDefaultRotationForBackgroundSize:(CGSize)backgroundSize{
+    if(backgroundSize.width > backgroundSize.height){
+        // if the background is landscape, then we need to rotate our
+        // canvas so that the landscape PDF is drawn on our
+        // vertical canvas properly.
+        _defaultExportRotation = ExportRotationLandscapeRight;
+        if([self usesCorrectBackgroundRotation]){
+            _defaultExportRotation = ExportRotationLandscapeLeft;
+        }
+    }
+}
+
 -(ExportRotation) idealExportRotation{
     if(_defaultExportRotation == ExportRotationBackgroundDefault){
         // haven't calculated our default yet
@@ -196,15 +208,7 @@
             }
         }
         
-        if(backgroundSize.width > backgroundSize.height){
-            // if the background is landscape, then we need to rotate our
-            // canvas so that the landscape PDF is drawn on our
-            // vertical canvas properly.
-            _defaultExportRotation = ExportRotationLandscapeRight;
-            if([self usesCorrectBackgroundRotation]){
-                _defaultExportRotation = ExportRotationLandscapeLeft;
-            }
-        }
+        [self setDefaultRotationForBackgroundSize:backgroundSize];
     }
     
     if(_idealExportRotation == ExportRotationBackgroundDefault){
@@ -239,6 +243,8 @@
         _idealExportRotation = MIN(ExportRotationLandscapeRight, MAX(ExportRotationBackgroundDefault, _idealExportRotation));
         
         if (![self pageBackgroundTexture]) {
+            CGSize backgroundSize = CGSizeZero;
+            
             UIImage* img = [UIImage imageWithContentsOfFile:[self backgroundTexturePath]];
             if (img) {
                 [[NSThread mainThread] performBlock:^{
@@ -248,6 +254,8 @@
                     isLoadingBackgroundTexture = NO;
                     [self updateThumbnailVisibility];
                 }];
+                
+                backgroundSize = img.size;
             } else {
                 __block NSURL* backgroundAssetURL;
 
@@ -261,6 +269,7 @@
                     CGFloat maxDim = kPDFImportMaxDim * [[UIScreen mainScreen] scale];
                     MMPDF* pdf = [[MMPDF alloc] initWithURL:backgroundAssetURL];
                     UIImage* img = [pdf imageForPage:0 withMaxDim:maxDim];
+                    backgroundSize = [pdf sizeForPage:0];
                     [[NSThread mainThread] performBlock:^{
                         if (wantsBackgroundTextureLoaded) {
                             [self setPageBackgroundTexture:img];
@@ -274,6 +283,8 @@
                     [self performSelectorOnMainThread:@selector(updateThumbnailVisibility) withObject:nil waitUntilDone:NO];
                 }
             }
+            
+            [self setDefaultRotationForBackgroundSize:backgroundSize];
         } else {
             isLoadingBackgroundTexture = NO;
             [self performSelectorOnMainThread:@selector(updateThumbnailVisibility) withObject:nil waitUntilDone:NO];
