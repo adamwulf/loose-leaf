@@ -106,7 +106,7 @@
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
         
         if(_ruledOrGridBackgroundView){
-            [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self thumbnailPath]];
+            [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath]];
         }
     }
 }
