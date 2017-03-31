@@ -10,6 +10,7 @@
 #import "MMStopWatch.h"
 #import "Mixpanel.h"
 #import "Constants.h"
+#import "MMAppDelegate.h"
 
 
 @implementation MMTutorialManager {
@@ -263,6 +264,7 @@ static MMTutorialManager* _instance = nil;
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kHasSignedUpForNewsletter];
     [[[Mixpanel sharedInstance] people] set:kMPNewsletterStatus to:@"Subscribed"];
     [[NSUserDefaults standardUserDefaults] setObject:email forKey:kPendingEmailToSubscribe];
+    [MMAppDelegate setEmail:email];
     [[[Mixpanel sharedInstance] people] set:kMPEmailAddressField to:email];
     [[Mixpanel sharedInstance] flush];
 }

@@ -53,6 +53,14 @@ static BOOL isFirstLaunch = NO;
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
+    
+    NSString* email = [[NSUserDefaults standardUserDefaults] stringForKey:kPendingEmailToSubscribe];
+    
+    if (email) {
+        // make sure its in keychain too
+        [MMAppDelegate setEmail:email];
+    }
+
 
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
@@ -304,6 +312,23 @@ static BOOL isFirstLaunch = NO;
         [SSKeychain setPassword:uuid forService:[[NSBundle mainBundle] bundleIdentifier] account:@"userID"];
     }
     return uuid;
+}
+
++ (NSString*)email {
+    NSString* email = [[NSUserDefaults standardUserDefaults] stringForKey:kMPEmailAddressField];
+    
+    if(!email){
+        email = [[NSUserDefaults standardUserDefaults] stringForKey:kPendingEmailToSubscribe];
+    }
+    
+    return email;
+}
+
++ (void)setEmail:(NSString*)email {
+    if (email) {
+        [[NSUserDefaults standardUserDefaults] setObject:email forKey:kMPEmailAddressField];
+        [SSKeychain setPassword:email forService:[[NSBundle mainBundle] bundleIdentifier] account:kMPEmailAddressField];
+    }
 }
 
 #pragma mark - Track Memory Crash
