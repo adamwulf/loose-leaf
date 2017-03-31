@@ -23,8 +23,6 @@
 
 -(NSDictionary*) properties;
 
--(void) saveDefaultThumbToPath:(NSString*)path;
-
--(NSString*) cachePath;
+-(void) saveDefaultThumbToPath:(NSString*)path forSize:(CGSize)size;
 
 @end

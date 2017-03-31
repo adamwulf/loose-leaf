@@ -106,7 +106,7 @@
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
         
         if(_ruledOrGridBackgroundView){
-            [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath]];
+            [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath] forSize:[self thumbnailSize]];
         }
     }
 }
@@ -267,8 +267,10 @@
                 Class bgClass = NSClassFromString(bgClassName);
                 if(bgClass){
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        _ruledOrGridBackgroundView = [[bgClass alloc] initWithFrame:[self bounds] andProperties:bgInfo];
-                        [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+                        if(!_ruledOrGridBackgroundView){
+                            _ruledOrGridBackgroundView = [[bgClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:bgInfo];
+                            [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+                        }
                     });
                 }
             }
@@ -364,9 +366,6 @@
 
         [_ruledOrGridBackgroundView drawInContext:context forSize:thumbSize];
         
-        UIImage* bg = [UIImage imageWithContentsOfFile:[_ruledOrGridBackgroundView cachePath]];
-        [bg drawInRect:[self bounds]];
-        
         UIGraphicsPopContext();
     }
 }
@@ -386,7 +385,7 @@
 - (void)newlyCutScrapFromPaperView:(MMScrapView*)addedScrap {
     if (self.pageBackgroundTexture) {
         MMGenericBackgroundView* pageBackground = [[MMGenericBackgroundView alloc] initWithImage:self.pageBackgroundTexture andDelegate:self];
-        pageBackground.bounds = self.bounds;
+        pageBackground.bounds = self.originalUnscaledBounds;
         [pageBackground aspectFillBackgroundImageIntoView];
 
         [addedScrap setBackgroundView:[pageBackground stampBackgroundFor:[addedScrap state]]];
@@ -406,7 +405,7 @@
 }
 
 - (CGPoint)currentCenterOfBackgroundForGenericBackground:(MMGenericBackgroundView*)backgroundView {
-    return CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    return CGPointMake(CGRectGetMidX(self.originalUnscaledBounds), CGRectGetMidY(self.originalUnscaledBounds));
 }
 
 #pragma mark - Export to PDF

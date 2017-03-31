@@ -13,10 +13,21 @@
 #import "UIView+MPHelpers.h"
 #import "Constants.h"
 
-@implementation MMRuledBackgroundView
+@implementation MMRuledBackgroundView{
+    CGSize originalSize;
+}
+
+#ifdef DEBUG
+
++(void) load{
+    [[NSFileManager defaultManager] removeItemAtPath:[MMRuledBackgroundView cachePath] error:nil];
+}
+
+#endif
 
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
+        originalSize = frame.size;
         
         CAShapeLayer* shape = [CAShapeLayer layer];
         shape.path = [[UIBezierPath bezierPathWithOvalInRect:CGRectMake(200, 200, 300, 400)] CGPath];
@@ -54,10 +65,10 @@
         CGFloat rotDiff = orgRot - newRot;
         
         // also calculate its center vs our center
-        CGPoint backgroundCenter = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+        CGPoint backgroundCenter = CGPointMake(originalSize.width / 2, originalSize.height / 2);
         CGPoint convertedC = [targetScrapState.contentView convertPoint:backgroundCenter fromView:self];
         
-        CGSize backingImageSize = self.bounds.size;
+        CGSize backingImageSize = originalSize;
         CGSize targetImageSize = targetScrapState.originalSize;
         CGFloat targetRotation = rotDiff;
         CGFloat targetScale = 1;
@@ -106,7 +117,7 @@
     }
 }
 
--(NSString*) cachePath{
++(NSString*) cachePath{
     NSString* cacheDir = [[NSFileManager cachesPath] stringByAppendingPathComponent:@"defaultThumbnails"];
     [NSFileManager ensureDirectoryExistsAtPath:cacheDir];
     
@@ -114,14 +125,14 @@
 }
 
 -(void) drawInContext:(CGContextRef)context forSize:(CGSize)size{
-    CGRect scaledScreen = CGSizeFill(self.bounds.size, size);
+    CGRect scaledScreen = CGSizeFill(originalSize, size);
 
     UIBezierPath* path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(200, 200, 300, 400)];
     CGContextSaveThenRestoreForBlock(context, ^{
         // Scraps
         // adjust so that (0,0) is the origin of the content rect in the PDF page,
         // since the PDF may be much taller/wider than our screen
-        CGContextScaleCTM(context, size.width / self.bounds.size.width, size.height / self.bounds.size.height);
+        CGContextScaleCTM(context, size.width / originalSize.width, size.height / originalSize.height);
         CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
 
         [[UIColor lightGrayColor] setFill];
@@ -129,18 +140,26 @@
     });
 }
 
--(void) saveDefaultThumbToPath:(NSString*)path{
-    if([[NSFileManager defaultManager] fileExistsAtPath:[self cachePath]]){
-        [[NSFileManager defaultManager] copyItemAtPath:[self cachePath] toPath:path error:nil];
-    }else{
-        // need to generate the thumbnail
-        dispatch_async(dispatch_get_main_queue(), ^{
-            UIImage* img = [self mp_snapshotImage];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0),^{
-                [UIImagePNGRepresentation(img) writeToFile:[self cachePath] atomically:YES];
-                [[NSFileManager defaultManager] copyItemAtPath:[self cachePath] toPath:path error:nil];
-            });
-        });
+-(void) saveDefaultThumbToPath:(NSString*)path forSize:(CGSize)thumbSize{
+    @autoreleasepool {
+        if([[NSFileManager defaultManager] fileExistsAtPath:[MMRuledBackgroundView cachePath]]){
+            [[NSFileManager defaultManager] copyItemAtPath:[MMRuledBackgroundView cachePath] toPath:path error:nil];
+        }else{
+            UIGraphicsBeginImageContext(thumbSize);
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            
+            [[UIColor whiteColor] setFill];
+            CGContextFillRect(context, CGRectMake(0, 0, thumbSize.width, thumbSize.height));
+            
+            [self drawInContext:context forSize:thumbSize];
+            
+            UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+            
+            UIGraphicsEndImageContext();
+            
+            [UIImagePNGRepresentation(image) writeToFile:[MMRuledBackgroundView cachePath] atomically:YES];
+            [[NSFileManager defaultManager] copyItemAtPath:[MMRuledBackgroundView cachePath] toPath:path error:nil];
+        }
     }
 }
 
