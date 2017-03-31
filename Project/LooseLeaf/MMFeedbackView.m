@@ -218,9 +218,33 @@
         }
         
         if (![feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-            [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                              kMPUpgradeFeedbackReply: feedbackText,
-                                                                              kMPEmailAddressField : [MMAppDelegate email] ?: @"none" }];
+            
+            NSArray<NSString*>* feedbacks = @[];
+            
+            while ([feedbackText length]) {
+                if([feedbackText length] > 255){
+                    feedbacks = [feedbacks arrayByAddingObject:[feedbackText substringToIndex:255]];
+                    feedbackText = [feedbackText substringFromIndex:255];
+                }else{
+                    feedbacks = [feedbacks arrayByAddingObject:feedbackText];
+                    feedbackText = @"";
+                }
+            }
+            
+            // track longer strings into the event as well
+            NSMutableDictionary* properties = [@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                 kMPEmailAddressField : [MMAppDelegate email] ?: @"none" } mutableCopy];
+            
+            for (int i=0; i<[feedbacks count]; i++) {
+                NSString* feedback = feedbacks[i];
+                NSString* key = kMPUpgradeFeedbackReply;
+                if(i > 0){
+                    key = [NSString stringWithFormat:@"%@ %d", kMPUpgradeFeedbackReply, i+1];
+                }
+                properties[key] = feedback;
+            }
+            
+            [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:properties];
         }
         
         [feedbackTextView resignFirstResponder];
