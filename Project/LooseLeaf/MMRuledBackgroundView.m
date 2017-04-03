@@ -14,6 +14,7 @@
 #import "Constants.h"
 
 @implementation MMRuledBackgroundView{
+    CGSize pageSize;
     CGSize originalSize;
 }
 
@@ -27,7 +28,9 @@
 
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
-        originalSize = frame.size;
+        NSValue* propSize = [properties objectForKey:@"originalSize"];
+        originalSize = propSize ? [propSize CGSizeValue] : frame.size;
+        pageSize = frame.size;
         
         CAShapeLayer* blueLines = [CAShapeLayer layer];
         blueLines.path = [[self pathForBlueLines] CGPath];
@@ -62,16 +65,20 @@
     return [UIColor colorWithRed:238/255.0 green:91/255.0 blue:162/255.0 alpha:1.0];
 }
 
+-(CGPoint) scale{
+    return CGPointMake(pageSize.width / originalSize.width, pageSize.height / originalSize.height);
+}
+
 -(UIBezierPath*) pathForBlueLines{
     
-    CGFloat verticalSpacing = [UIDevice ppc] * .71 / [[UIScreen mainScreen] scale];
-    CGFloat verticalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale];
+    CGFloat verticalSpacing = [UIDevice ppc] * .71 / [[UIScreen mainScreen] scale] * [self scale].y;
+    CGFloat verticalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale] * [self scale].y;
     
     UIBezierPath* path = [UIBezierPath bezierPath];
     CGFloat y = verticalMargin;
-    while (y < originalSize.height) {
+    while (y < pageSize.height) {
         [path moveToPoint:CGPointMake(0, y)];
-        [path addLineToPoint:CGPointMake(originalSize.width, y)];
+        [path addLineToPoint:CGPointMake(pageSize.width, y)];
         y += verticalSpacing;
     }
     
@@ -79,13 +86,13 @@
 }
 
 -(UIBezierPath*) pathForRedLines{
-    CGFloat horizontalSpacing = [UIDevice ppc] * 3.2 / [[UIScreen mainScreen] scale];
+    CGFloat horizontalSpacing = [UIDevice ppc] * 3.2 / [[UIScreen mainScreen] scale] * [self scale].x;
     
     UIBezierPath* path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake(horizontalSpacing, 0)];
-    [path addLineToPoint:CGPointMake(horizontalSpacing, originalSize.height)];
+    [path addLineToPoint:CGPointMake(horizontalSpacing, pageSize.height)];
     [path moveToPoint:CGPointMake(horizontalSpacing + 2, 0)];
-    [path addLineToPoint:CGPointMake(horizontalSpacing + 2, originalSize.height)];
+    [path addLineToPoint:CGPointMake(horizontalSpacing + 2, pageSize.height)];
 
     return path;
 }
@@ -93,7 +100,8 @@
 
 -(NSDictionary*) properties{
     return @{
-             @"class" : NSStringFromClass([self class])
+             @"class" : NSStringFromClass([self class]),
+             @"originalSize" : [NSValue valueWithCGSize:originalSize]
              };
 }
 
