@@ -28,8 +28,10 @@
 
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
-        NSValue* propSize = [properties objectForKey:@"originalSize"];
-        originalSize = propSize ? [propSize CGSizeValue] : frame.size;
+        NSNumber* originalWidth = [properties objectForKey:@"originalSize.width"];
+        NSNumber* originalHeight = [properties objectForKey:@"originalSize.height"];
+        
+        originalSize = originalWidth && originalHeight ? CGSizeMake([originalWidth doubleValue], [originalHeight doubleValue]) : frame.size;
         pageSize = frame.size;
         
         CAShapeLayer* blueLines = [CAShapeLayer layer];
@@ -101,7 +103,8 @@
 -(NSDictionary*) properties{
     return @{
              @"class" : NSStringFromClass([self class]),
-             @"originalSize" : [NSValue valueWithCGSize:originalSize]
+             @"originalSize.width" : @(originalSize.width),
+             @"originalSize.height" : @(originalSize.height)
              };
 }
 
@@ -186,7 +189,7 @@
         // Scraps
         // adjust so that (0,0) is the origin of the content rect in the PDF page,
         // since the PDF may be much taller/wider than our screen
-        CGContextScaleCTM(context, size.width / originalSize.width, size.height / originalSize.height);
+        CGContextScaleCTM(context, size.width / pageSize.width, size.height / pageSize.height);
         CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
 
         [[self lightBlue] setStroke];

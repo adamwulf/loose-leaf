@@ -97,14 +97,13 @@
 
 -(void) saveAdditionalBackgroundProperties:(BOOL)forceSave{
     if(forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture)){
-        NSDictionary* backgroundClassName = _ruledOrGridBackgroundView ? [_ruledOrGridBackgroundView properties] : @{};
+        NSDictionary* backgroundProperties = _ruledOrGridBackgroundView ? [_ruledOrGridBackgroundView properties] : @{};
         
         NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]),
                                    @"idealExportRotation" : @(_idealExportRotation),
                                    @"defaultExportRotation" : @(_defaultExportRotation),
-                                   @"ruledOrGridBackgroundProps" : backgroundClassName};
+                                   @"ruledOrGridBackgroundProps" : backgroundProperties};
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
-        
         if(_ruledOrGridBackgroundView){
             [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath] forSize:[self thumbnailSize]];
         }
@@ -268,7 +267,7 @@
                 if(bgClass){
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if(!_ruledOrGridBackgroundView){
-                            _ruledOrGridBackgroundView = [[bgClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:bgInfo];
+                            _ruledOrGridBackgroundView = [[bgClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:bgInfo[@"ruledOrGridBackgroundProps"]];
                             [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
                         }
                     });
