@@ -29,12 +29,22 @@
     if(self = [super initWithFrame:frame]){
         originalSize = frame.size;
         
-        CAShapeLayer* shape = [CAShapeLayer layer];
-        shape.path = [[UIBezierPath bezierPathWithOvalInRect:CGRectMake(200, 200, 300, 400)] CGPath];
-        shape.backgroundColor = [UIColor clearColor].CGColor;
-        shape.fillColor = [UIColor lightGrayColor].CGColor;
+        CAShapeLayer* blueLines = [CAShapeLayer layer];
+        blueLines.path = [[self pathForBlueLines] CGPath];
+        blueLines.backgroundColor = [UIColor clearColor].CGColor;
+        blueLines.strokeColor = [self lightBlue].CGColor;
+        blueLines.fillColor = [UIColor clearColor].CGColor;
         
-        [[self layer] addSublayer:shape];
+        [[self layer] addSublayer:blueLines];
+
+        
+        CAShapeLayer* redLines = [CAShapeLayer layer];
+        redLines.path = [[self pathForRedLines] CGPath];
+        redLines.backgroundColor = [UIColor clearColor].CGColor;
+        redLines.strokeColor = [self lightRed].CGColor;
+        redLines.fillColor = [UIColor clearColor].CGColor;
+        
+        [[self layer] addSublayer:redLines];
 
         // always scale from our top left
         self.layer.anchorPoint = CGPointMake(0, 0);
@@ -43,6 +53,43 @@
     
     return self;
 }
+
+-(UIColor*)lightBlue{
+    return [UIColor colorWithRed:16/255.0 green:178/255.0 blue:242/255.0 alpha:1.0];
+}
+
+-(UIColor*)lightRed{
+    return [UIColor colorWithRed:238/255.0 green:91/255.0 blue:162/255.0 alpha:1.0];
+}
+
+-(UIBezierPath*) pathForBlueLines{
+    
+    CGFloat verticalSpacing = [UIDevice ppc] * .71 / [[UIScreen mainScreen] scale];
+    CGFloat verticalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale];
+    
+    UIBezierPath* path = [UIBezierPath bezierPath];
+    CGFloat y = verticalMargin;
+    while (y < originalSize.height) {
+        [path moveToPoint:CGPointMake(0, y)];
+        [path addLineToPoint:CGPointMake(originalSize.width, y)];
+        y += verticalSpacing;
+    }
+    
+    return path;
+}
+
+-(UIBezierPath*) pathForRedLines{
+    CGFloat horizontalSpacing = [UIDevice ppc] * 3.2 / [[UIScreen mainScreen] scale];
+    
+    UIBezierPath* path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(horizontalSpacing, 0)];
+    [path addLineToPoint:CGPointMake(horizontalSpacing, originalSize.height)];
+    [path moveToPoint:CGPointMake(horizontalSpacing + 2, 0)];
+    [path addLineToPoint:CGPointMake(horizontalSpacing + 2, originalSize.height)];
+
+    return path;
+}
+
 
 -(NSDictionary*) properties{
     return @{
@@ -127,7 +174,6 @@
 -(void) drawInContext:(CGContextRef)context forSize:(CGSize)size{
     CGRect scaledScreen = CGSizeFill(originalSize, size);
 
-    UIBezierPath* path = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(200, 200, 300, 400)];
     CGContextSaveThenRestoreForBlock(context, ^{
         // Scraps
         // adjust so that (0,0) is the origin of the content rect in the PDF page,
@@ -135,8 +181,11 @@
         CGContextScaleCTM(context, size.width / originalSize.width, size.height / originalSize.height);
         CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
 
-        [[UIColor lightGrayColor] setFill];
-        [path fill];
+        [[self lightBlue] setStroke];
+        [[self pathForBlueLines] stroke];
+
+        [[self lightRed] setStroke];
+        [[self pathForRedLines] stroke];
     });
 }
 
