@@ -188,6 +188,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPStatSegmentTestCount @"Stat: Clipping Test Count"
 #define kMPStatSegmentCompareCount @"Stat: Clipping Compare Count"
 #define kMPPreferredLanguage @"Language"
+#define kMPPreferredPaper @"Paper Style"
 #define kMPID @"Mixpanel ID"
 #define kMPScreenScale @"Screen Scale"
 #define kMPDurationAppOpen @"Duration App Open"

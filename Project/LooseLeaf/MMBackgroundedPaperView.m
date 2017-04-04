@@ -21,7 +21,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "UIView+MPHelpers.h"
 #import "MMUndoRedoPageBackgroundItem.h"
-
+#import "Mixpanel.h"
 
 @interface MMBackgroundedPaperView () <MMGenericBackgroundViewDelegate>
 
@@ -53,6 +53,10 @@
 
 +(void) setDefaultBackgroundClass:(NSString*)background{
     if(background){
+        NSString* paperStyleEventName = [NSString stringWithFormat:@"%@ %@", kMPPreferredPaper, background];
+        [[[Mixpanel sharedInstance] people] set:kMPPreferredPaper to:background];
+        [[[Mixpanel sharedInstance] people] increment:paperStyleEventName by:@(1)];
+        [[Mixpanel sharedInstance] track:paperStyleEventName];
         [[NSUserDefaults standardUserDefaults] setObject:background forKey:kDefaultPaperBackgroundStyle];
     }
 }
