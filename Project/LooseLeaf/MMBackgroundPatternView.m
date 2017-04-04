@@ -10,6 +10,7 @@
 #import "MMScrapViewState.h"
 #import "MMScrapBackgroundView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMEmptyBackgroundView.h"
 
 @implementation MMBackgroundPatternView
 
@@ -21,13 +22,32 @@
 
 #endif
 
++(Class) backgroundClassForString:(NSString*)currentBackgroundStyle{
+    Class backgroundClass = [MMEmptyBackgroundView class];
+    
+    if([currentBackgroundStyle length]){
+        backgroundClass = NSClassFromString(currentBackgroundStyle);
+        if(![backgroundClass isSubclassOfClass:[MMBackgroundPatternView class]]){
+            backgroundClass = [MMEmptyBackgroundView class];
+        }
+    }
+    
+    return backgroundClass;
+}
+
++(MMBackgroundPatternView*) viewForFrame:(CGRect)frame andProperties:(NSDictionary *)properties{
+    Class backgroundClass = [MMBackgroundPatternView backgroundClassForString:properties[@"class"]];
+    
+    return [[backgroundClass alloc] initWithFrame:frame andProperties:properties];
+}
+
 -(instancetype) initWithFrame:(CGRect)frame andOriginalSize:(CGSize)_originalSize andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
         originalSize = _originalSize;
         pageSize = frame.size;
         pageSize = frame.size;
         
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self finishBackgroundPaperViewInit];
     }
     
     return self;
@@ -42,10 +62,18 @@
         pageSize = frame.size;
         pageSize = frame.size;
         
-        [self setBackgroundColor:[UIColor whiteColor]];
+        [self finishBackgroundPaperViewInit];
     }
     
     return self;
+}
+
+-(void) finishBackgroundPaperViewInit{
+    [self setBackgroundColor:[UIColor whiteColor]];
+    
+    // always scale from our top left
+    self.layer.anchorPoint = CGPointMake(0, 0);
+    self.layer.position = CGPointMake(0, 0);
 }
 
 -(CGPoint) scale{
@@ -134,8 +162,8 @@
 
 -(void) saveDefaultThumbToPath:(NSString*)path forSize:(CGSize)thumbSize{
     @autoreleasepool {
-        if([[NSFileManager defaultManager] fileExistsAtPath:[MMBackgroundPatternView cachePath]]){
-            [[NSFileManager defaultManager] copyItemAtPath:[MMBackgroundPatternView cachePath] toPath:path error:nil];
+        if([[NSFileManager defaultManager] fileExistsAtPath:[[self class] cachePath]]){
+            [[NSFileManager defaultManager] copyItemAtPath:[[self class] cachePath] toPath:path error:nil];
         }else{
             UIGraphicsBeginImageContext(thumbSize);
             CGContextRef context = UIGraphicsGetCurrentContext();
@@ -149,8 +177,8 @@
             
             UIGraphicsEndImageContext();
             
-            [UIImagePNGRepresentation(image) writeToFile:[MMBackgroundPatternView cachePath] atomically:YES];
-            [[NSFileManager defaultManager] copyItemAtPath:[MMBackgroundPatternView cachePath] toPath:path error:nil];
+            [UIImagePNGRepresentation(image) writeToFile:[[self class] cachePath] atomically:YES];
+            [[NSFileManager defaultManager] copyItemAtPath:[[self class] cachePath] toPath:path error:nil];
         }
     }
 }

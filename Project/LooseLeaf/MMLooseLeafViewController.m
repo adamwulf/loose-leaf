@@ -56,12 +56,12 @@
 #import "MMStopWatch.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMBackgroundStyleContainerView.h"
-
+#import "MMBackgroundStyleContainerViewDelegate.h"
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate,MMBackgroundStyleContainerViewDelegate>
 
 @end
 
@@ -292,6 +292,7 @@
         // page background sidebar
         backgroundStyleSidebar = [[MMBackgroundStyleContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView backgroundStyleButtonFrame] animateFromLeft:YES];
         backgroundStyleSidebar.delegate = self;
+        backgroundStyleSidebar.bgDelegate = self;
         [backgroundStyleSidebar hide:NO onComplete:nil];
         [self.view addSubview:backgroundStyleSidebar];
         
@@ -1162,7 +1163,6 @@
 
 #pragma mark - MMRotationManagerDelegate
 
-
 - (void)willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient {
     [currentStackView willRotateInterfaceFrom:fromOrient to:toOrient];
 }
@@ -1752,6 +1752,17 @@
     } else {
         [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
     }
+}
+
+#pragma mark - MMBackgroundStyleContainerViewDelegate
+
+-(NSString*) currentBackgroundStyleType{
+    return [currentStackView currentBackgroundStyleType];
+}
+
+-(void) setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle{
+    [MMBackgroundedPaperView setDefaultBackgroundClass:currentBackgroundStyle];    
+    [currentStackView setCurrentBackgroundStyleType:currentBackgroundStyle];
 }
 
 #pragma mark - Tmp Files

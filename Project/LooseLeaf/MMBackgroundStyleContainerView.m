@@ -16,12 +16,16 @@
 #import "MMRuledBackgroundView.h"
 #import "MMEmptyBackgroundView.h"
 #import "Constants.h"
+#import "MMBackgroundedPaperView.h"
 
 #define kNumberOfButtonColumns 2
 
 @implementation MMBackgroundStyleContainerView {
     UIView* sharingContentView;
+    NSArray<Class>* backgroundStyles;
 }
+
+@synthesize bgDelegate;
 
 - (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
     if (self = [super initWithFrame:frame forReferenceButtonFrame:buttonFrame animateFromLeft:fromLeft]) {
@@ -30,39 +34,58 @@
         scrollViewBounds.size.width = [slidingSidebarView contentBounds].origin.x + [slidingSidebarView contentBounds].size.width;
         sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
+        
         [slidingSidebarView addSubview:sharingContentView];
 
         // add page types to buttonView
-        NSArray<Class>* backgroundStyles = [NSArray array];
+        backgroundStyles = [NSArray array];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyBackgroundView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledBackgroundView class]];
-        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledBackgroundView class]];
-        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyBackgroundView class]];
-        
+
         int buttonIndex = 0;
         CGFloat buttonWidth = [self buttonWidth];
         CGRect buttonBounds = [self buttonBounds];
         for (Class backgroundClass in backgroundStyles) {
-            MMBackgroundPatternView* button = [[backgroundClass alloc] initWithFrame:CGRectMake(0,0,[self buttonWidth], [self buttonHeight])
-                                                                     andOriginalSize:[[UIScreen mainScreen] bounds].size
-                                                                       andProperties:@{}];
-            
             int column = (buttonIndex % kNumberOfButtonColumns);
             int row = floor(buttonIndex / (CGFloat)kNumberOfButtonColumns);
-            button.frame = CGRectMake(buttonBounds.origin.x + column * (buttonWidth + kWidthOfSidebarButtonBuffer),
-                                      buttonBounds.origin.y + row * ([self buttonHeight] + kWidthOfSidebarButtonBuffer),
+            CGRect frame = CGRectMake(2 * kWidthOfSidebarButtonBuffer + buttonBounds.origin.x + column * (buttonWidth + 2 * kWidthOfSidebarButtonBuffer),
+                                      2 * kWidthOfSidebarButtonBuffer + buttonBounds.origin.y + row * ([self buttonHeight] + 2 * kWidthOfSidebarButtonBuffer),
                                       buttonWidth, [self buttonHeight]);
+            MMBackgroundPatternView* bgView = [[backgroundClass alloc] initWithFrame:frame
+                                                                     andOriginalSize:[[UIScreen mainScreen] bounds].size
+                                                                       andProperties:@{}];
+            [bgView setUserInteractionEnabled:YES];
+            bgView.layer.opaque = YES;
+            bgView.layer.shadowOffset = CGSizeZero;
+            bgView.layer.shadowRadius = 8;
+            bgView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
+            bgView.layer.shadowOpacity = 1;
+            bgView.layer.anchorPoint = CGPointMake(.5, .5);
+            bgView.layer.position = CGPointMake(.5, .5);
+            [sharingContentView addSubview:bgView];
             
-            [sharingContentView insertSubview:button atIndex:buttonIndex];
+            UIButton* button = [[UIButton alloc] initWithFrame:frame];
+            [button addTarget:self action:@selector(backgroundTypeTapped:) forControlEvents:UIControlEventTouchUpInside];
             
+            [sharingContentView addSubview:button];
+            
+            [bgView setFrame:frame];
+            [button setFrame:frame];
+            
+            [bgView setTag:buttonIndex];
+            [button setTag:buttonIndex];
+
             buttonIndex += 1;
         }
+        
+        NSString *defaultBackground = [MMBackgroundedPaperView defaultBackgroundClass];
+        [self selectButtonForBackgroundClass:NSClassFromString(defaultBackground)];
     }
     return self;
 }
 
 - (CGFloat)buttonWidth {
-    CGFloat buttonWidth = sharingContentView.bounds.size.width - kWidthOfSidebarButtonBuffer * (kNumberOfButtonColumns + 1);
+    CGFloat buttonWidth = sharingContentView.bounds.size.width - 3 * kWidthOfSidebarButtonBuffer * (kNumberOfButtonColumns + 1);
     buttonWidth /= kNumberOfButtonColumns; // two buttons wide
     return buttonWidth;
 }
@@ -81,6 +104,42 @@
     buttonBounds.origin.x += 2 * kWidthOfSidebarButtonBuffer;
     buttonBounds.size.width -= 2 * kWidthOfSidebarButtonBuffer;
     return buttonBounds;
+}
+
+-(void) selectButtonForBackgroundClass:(Class)backgroundClass{
+    NSInteger index = backgroundClass ? [backgroundStyles indexOfObject:backgroundClass] : NSNotFound;
+    for (UIView* styleView in [sharingContentView subviews]) {
+        if(![styleView isKindOfClass:[UIButton class]]){
+            if([styleView tag] == index){
+                styleView.transform = CGAffineTransformIdentity;
+            }else{
+                styleView.transform = CGAffineTransformMakeScale(.7, .7);
+            }
+        }
+    }
+}
+
+#pragma mark - Sidebar
+
+-(void) show:(BOOL)animated{
+    
+    NSString* bgStyle = [[self bgDelegate] currentBackgroundStyleType];
+    
+    [self selectButtonForBackgroundClass:NSClassFromString(bgStyle)];
+    
+    [super show:animated];
+}
+
+#pragma mark - Action
+
+-(IBAction)backgroundTypeTapped:(UIButton*)sender{
+    [self selectButtonForBackgroundClass:backgroundStyles[sender.tag]];
+    
+    [[self bgDelegate] setCurrentBackgroundStyleType:NSStringFromClass(backgroundStyles[sender.tag])];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hide:YES onComplete:nil];
+    });
 }
 
 #pragma mark - Dealloc

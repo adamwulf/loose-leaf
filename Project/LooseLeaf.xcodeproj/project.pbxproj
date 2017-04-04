@@ -455,6 +455,7 @@
 		C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */; };
 		C53F97C31E9329C100A1233E /* MMBackgroundPatternView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */; };
 		C53F97C71E932C2000A1233E /* MMEmptyBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */; };
+		C53F97CB1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1511,6 +1512,9 @@
 		C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundPatternView.m; sourceTree = "<group>"; };
 		C53F97C51E932C2000A1233E /* MMEmptyBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmptyBackgroundView.h; sourceTree = "<group>"; };
 		C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmptyBackgroundView.m; sourceTree = "<group>"; };
+		C53F97C81E93513500A1233E /* MMBackgroundStyleContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundStyleContainerViewDelegate.h; sourceTree = "<group>"; };
+		C53F97C91E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoPageBackgroundItem.h; sourceTree = "<group>"; };
+		C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoPageBackgroundItem.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -2120,6 +2124,8 @@
 				6635BE9519748AA500DFCBBA /* MMUndoRedoBezeledScrapItem.m */,
 				6635BE9E197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.h */,
 				6635BE9F197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m */,
+				C53F97C91E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.h */,
+				C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */,
 			);
 			name = Items;
 			sourceTree = "<group>";
@@ -3840,6 +3846,7 @@
 			children = (
 				C53F97BE1E931BA500A1233E /* MMBackgroundStyleContainerView.h */,
 				C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */,
+				C53F97C81E93513500A1233E /* MMBackgroundStyleContainerViewDelegate.h */,
 			);
 			name = "Page Background Sidebar";
 			sourceTree = "<group>";
@@ -4847,6 +4854,7 @@
 				6627DFA719003DF900592EEF /* CaptureSessionManager.m in Sources */,
 				665182071937B41800CBEAB4 /* MMMemoryProfileView.m in Sources */,
 				66BD6E971593E98D00D4544C /* MMTextButton.m in Sources */,
+				C53F97CB1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m in Sources */,
 				6614DCC619CBE04100AF5D3D /* NSIndexSet+Map.m in Sources */,
 				66BD6E9C15940D7500D4544C /* MMPencilButton.m in Sources */,
 				C5F1B2A71D9B01BB00E0E9A8 /* MPApplicationStateSerializer.m in Sources */,

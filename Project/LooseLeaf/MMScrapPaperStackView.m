@@ -850,7 +850,6 @@
     [self.stackDelegate.sharePageSidebar show:YES];
 }
 
-
 #pragma mark - MMPencilAndPaletteViewDelegate
 
 - (void)highlighterTapped:(UIButton*)button {
@@ -2000,7 +1999,7 @@
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 - (BOOL)shouldPrioritizeSidebarButtonsForTaps {
-    return ![self.stackDelegate.importImageSidebar isVisible] && ![self.stackDelegate.sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
+    return ![self.stackDelegate.backgroundStyleSidebar isVisible] && ![self.stackDelegate.importImageSidebar isVisible] && ![self.stackDelegate.sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 #pragma mark - Check for Active Gestures

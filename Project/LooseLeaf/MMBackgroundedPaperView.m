@@ -20,6 +20,7 @@
 #import "MMEmptyBackgroundView.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import "UIView+MPHelpers.h"
+#import "MMUndoRedoPageBackgroundItem.h"
 
 
 @interface MMBackgroundedPaperView () <MMGenericBackgroundViewDelegate>
@@ -40,20 +41,30 @@
 
 @synthesize idealExportRotation = _idealExportRotation;
 
++(NSString*) defaultBackgroundClass{
+    NSString* ret = [[NSUserDefaults standardUserDefaults] stringForKey:kDefaultPaperBackgroundStyle];
+    
+    if(!ret || !NSClassFromString(ret)){
+        ret = NSStringFromClass([MMEmptyBackgroundView class]);
+    }
+    
+    return ret;
+}
+
++(void) setDefaultBackgroundClass:(NSString*)background{
+    if(background){
+        [[NSUserDefaults standardUserDefaults] setObject:background forKey:kDefaultPaperBackgroundStyle];
+    }
+}
+
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         _usesCorrectBackgroundRotation = YES;
         
-        NSString* backgroundStyle = [[NSUserDefaults standardUserDefaults] stringForKey:@"ruledOrGridBackgroundView"];
+        NSString* backgroundStyle = [[NSUserDefaults standardUserDefaults] stringForKey:kDefaultPaperBackgroundStyle];
+        Class backgroundClass = [MMBackgroundPatternView backgroundClassForString:backgroundStyle];
         
-        Class backgroundClass = [MMEmptyBackgroundView class];
-        if([backgroundStyle length]){
-            Class backgroundClass = NSClassFromString(backgroundStyle);
-            if(![backgroundClass isSubclassOfClass:[MMBackgroundPatternView class]]){
-                backgroundClass = [MMEmptyBackgroundView class];
-            }
-        }
-        self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:[self bounds] andProperties:@{}];
+        self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:@{}];
     }
     
     return self;
@@ -97,6 +108,10 @@
         img.imageOrientation == UIImageOrientationDownMirrored ||
         img.imageOrientation == UIImageOrientationUp ||
         img.imageOrientation == UIImageOrientationUpMirrored;
+}
+
+-(BOOL) hasBackgroundAsset{
+    return paperBackgroundView.image || [[NSFileManager defaultManager] fileExistsAtPath:[self backgroundTexturePath]] || [[NSFileManager defaultManager] fileExistsAtPath:[[self backgroundAssetURL] path]];
 }
 
 - (UIImage*)pageBackgroundTexture {
@@ -689,6 +704,27 @@
     
     if (completionBlock)
         completionBlock(nil);
+}
+
+#pragma mark - MMBackgroundStyleContainerViewDelegate
+
+-(NSString*)currentBackgroundStyleType{
+    return NSStringFromClass([_ruledOrGridBackgroundView class]);
+}
+
+-(void) setCurrentBackgroundStyleType:(NSString *)currentBackgroundStyle{
+    Class backgroundClass = [MMBackgroundPatternView backgroundClassForString:currentBackgroundStyle];
+    
+    if(backgroundClass && ![[self ruledOrGridBackgroundView] isKindOfClass:backgroundClass]){
+        NSDictionary* originalProps = [self.ruledOrGridBackgroundView properties];
+        
+        self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:@{}];
+        [self saveToDisk:nil];
+
+        NSDictionary* updatedProps = [self.ruledOrGridBackgroundView properties];
+
+        [self.undoRedoManager addUndoItem:[MMUndoRedoPageBackgroundItem itemForPage:self andOriginalBackground:originalProps andUpdatedBackground:updatedProps]];
+    }
 }
 
 @end

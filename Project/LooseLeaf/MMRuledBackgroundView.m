@@ -48,10 +48,6 @@
     redLines.fillColor = [UIColor clearColor].CGColor;
     
     [[self layer] addSublayer:redLines];
-    
-    // always scale from our top left
-    self.layer.anchorPoint = CGPointMake(0, 0);
-    self.layer.position = CGPointMake(0, 0);
 }
 
 -(UIColor*)lightBlue{
