@@ -55,6 +55,7 @@
 #import "MMShareStackSidebarContainerView.h"
 #import "MMStopWatch.h"
 #import "NSFileManager+DirectoryOptimizations.h"
+#import "MMBackgroundStyleContainerView.h"
 
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
@@ -75,6 +76,9 @@
     // image picker sidebar
     MMImageSidebarContainerView* importImageSidebar;
 
+    // page background sidebar
+    MMBackgroundStyleContainerView* backgroundStyleSidebar;
+    
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
 
@@ -285,6 +289,12 @@
         [importImageSidebar hide:NO onComplete:nil];
         [self.view addSubview:importImageSidebar];
 
+        // page background sidebar
+        backgroundStyleSidebar = [[MMBackgroundStyleContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView backgroundStyleButtonFrame] animateFromLeft:YES];
+        backgroundStyleSidebar.delegate = self;
+        [backgroundStyleSidebar hide:NO onComplete:nil];
+        [self.view addSubview:backgroundStyleSidebar];
+        
         // Share sidebar
         sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView shareButtonFrame] animateFromLeft:YES];
         sharePageSidebar.delegate = self;
@@ -507,6 +517,10 @@
 
 - (MMImageSidebarContainerView*)importImageSidebar {
     return importImageSidebar;
+}
+
+-(MMBackgroundStyleContainerView*) backgroundStyleSidebar{
+    return backgroundStyleSidebar;
 }
 
 - (MMShareSidebarContainerView*)sharePageSidebar {
@@ -1160,6 +1174,7 @@
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient {
     [NSThread performBlockOnMainThread:^{
         @autoreleasepool {
+            [backgroundStyleSidebar updateInterfaceTo:toOrient];
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [shareStackSidebar updateInterfaceTo:toOrient];
@@ -1190,7 +1205,8 @@
 - (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar {
     if (sidebar == bezelScrapContainer ||
         sidebar == importImageSidebar ||
-        sidebar == sharePageSidebar) {
+        sidebar == sharePageSidebar ||
+        sidebar == backgroundStyleSidebar) {
         [currentStackView sidebarCloseButtonWasTapped:sidebar];
     }
 }
@@ -1198,7 +1214,8 @@
 - (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar {
     if (sidebar == bezelScrapContainer ||
         sidebar == importImageSidebar ||
-        sidebar == sharePageSidebar) {
+        sidebar == sharePageSidebar ||
+        sidebar == backgroundStyleSidebar) {
         [currentStackView sidebarWillShow:sidebar];
     }
 }
@@ -1206,7 +1223,8 @@
 - (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar {
     if (sidebar == bezelScrapContainer ||
         sidebar == importImageSidebar ||
-        sidebar == sharePageSidebar) {
+        sidebar == sharePageSidebar ||
+        sidebar == backgroundStyleSidebar) {
         [currentStackView sidebarWillHide:sidebar];
     }
 }

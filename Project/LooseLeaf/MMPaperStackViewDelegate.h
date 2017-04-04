@@ -26,6 +26,8 @@
 
 - (MMShareSidebarContainerView*)sharePageSidebar;
 
+- (MMShareSidebarContainerView*)backgroundStyleSidebar;
+
 - (MMShareStackSidebarContainerView*)shareStackSidebar;
 
 - (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk;

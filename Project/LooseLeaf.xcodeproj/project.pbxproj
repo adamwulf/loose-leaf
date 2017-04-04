@@ -452,6 +452,7 @@
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
+		C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1502,6 +1503,8 @@
 		C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FXBlur.m"; sourceTree = "<group>"; };
 		C53F635B1CDA87F700091EF1 /* MMRotatingBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRotatingBackgroundView.h; sourceTree = "<group>"; };
 		C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingBackgroundView.m; sourceTree = "<group>"; };
+		C53F97BE1E931BA500A1233E /* MMBackgroundStyleContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundStyleContainerView.h; sourceTree = "<group>"; };
+		C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundStyleContainerView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3025,10 +3028,10 @@
 		66A7462F176B85FD00466AA4 /* Unused */ = {
 			isa = PBXGroup;
 			children = (
+				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
+				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
 				66C0C9CE178386B8009491B3 /* MMLikeButton.h */,
 				66C0C9CF178386B8009491B3 /* MMLikeButton.m */,
-				66BD6E2E1591B57B00D4544C /* MMPaperButton.h */,
-				66BD6E2F1591B57B00D4544C /* MMPaperButton.m */,
 				66BD6E8C1593D18800D4544C /* MMPolylineButton.h */,
 				66BD6E8D1593D18800D4544C /* MMPolylineButton.m */,
 				669329681595A87E0033E557 /* MMMapButton.h */,
@@ -3594,8 +3597,8 @@
 				66BD6E9E15941B7B00D4544C /* MMShareButton.m */,
 				C50DBAF81E0B207B0006F58A /* MMCollapseButton.h */,
 				C50DBAF91E0B207B0006F58A /* MMCollapseButton.m */,
-				66C0C9D61783EEEB009491B3 /* MMAdonitButton.h */,
-				66C0C9D71783EEEB009491B3 /* MMAdonitButton.m */,
+				66BD6E2E1591B57B00D4544C /* MMPaperButton.h */,
+				66BD6E2F1591B57B00D4544C /* MMPaperButton.m */,
 				663C1876175538A800706A05 /* MMPencilEraserButton.h */,
 				663C1877175538A800706A05 /* MMPencilEraserButton.m */,
 				66BD6E8F1593DE4E00D4544C /* MMPolygonButton.h */,
@@ -3826,6 +3829,15 @@
 			name = BackgroundView;
 			sourceTree = "<group>";
 		};
+		C53F97BD1E93184600A1233E /* Page Background Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				C53F97BE1E931BA500A1233E /* MMBackgroundStyleContainerView.h */,
+				C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */,
+			);
+			name = "Page Background Sidebar";
+			sourceTree = "<group>";
+		};
 		C56883A81D6D2B1A00709FD8 /* Bezel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3999,6 +4011,7 @@
 		C5EFA5991D9C9A6B00BBE8CD /* Sidebars */ = {
 			isa = PBXGroup;
 			children = (
+				C53F97BD1E93184600A1233E /* Page Background Sidebar */,
 				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
@@ -4731,6 +4744,7 @@
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
+				C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */,
 				C5F1B2B21D9B01BB00E0E9A8 /* MPDesignerTrackMessage.m in Sources */,
 				663326CD1AB09CD9003915E6 /* MMImageInboxItem.m in Sources */,
 				66EC7B7519ABD5FC00406D97 /* MMCloudKitFriendCollectionViewCell.m in Sources */,
