@@ -13,18 +13,10 @@
 #import "UIView+MPHelpers.h"
 #import "Constants.h"
 
-@implementation MMRuledBackgroundView{
-    CGSize originalSize;
-}
+@implementation MMRuledBackgroundView
 
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame andProperties:properties]){
-        NSNumber* originalWidth = [properties objectForKey:@"originalSize.width"];
-        NSNumber* originalHeight = [properties objectForKey:@"originalSize.height"];
-        
-        originalSize = originalWidth && originalHeight ? CGSizeMake([originalWidth doubleValue], [originalHeight doubleValue]) : frame.size;
-        pageSize = frame.size;
-        
         CAShapeLayer* blueLines = [CAShapeLayer layer];
         blueLines.path = [[self pathForBlueLines] CGPath];
         blueLines.backgroundColor = [UIColor clearColor].CGColor;
@@ -56,10 +48,6 @@
 
 -(UIColor*)lightRed{
     return [UIColor colorWithRed:238/255.0 green:91/255.0 blue:162/255.0 alpha:1.0];
-}
-
--(CGPoint) scale{
-    return CGPointMake(pageSize.width / originalSize.width, pageSize.height / originalSize.height);
 }
 
 -(UIBezierPath*) pathForBlueLines{

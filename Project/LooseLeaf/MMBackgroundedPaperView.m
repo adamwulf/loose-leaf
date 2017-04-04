@@ -17,6 +17,7 @@
 #import "MMPDF.h"
 #import "MMImmutableScrapsOnPaperState.h"
 #import "MMRuledBackgroundView.h"
+#import "MMEmptyBackgroundView.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import "UIView+MPHelpers.h"
 
@@ -35,8 +36,6 @@
     BOOL wantsBackgroundTextureLoaded;
     
     ExportRotation _defaultExportRotation;
-    
-    MMRuledBackgroundView* _ruledOrGridBackgroundView;
 }
 
 @synthesize idealExportRotation = _idealExportRotation;
@@ -44,8 +43,17 @@
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         _usesCorrectBackgroundRotation = YES;
-        _ruledOrGridBackgroundView = [[MMRuledBackgroundView alloc] initWithFrame:[self bounds] andProperties:@{}];
-        [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+        
+        NSString* backgroundStyle = [[NSUserDefaults standardUserDefaults] stringForKey:@"ruledOrGridBackgroundView"];
+        
+        Class backgroundClass = [MMEmptyBackgroundView class];
+        if([backgroundStyle length]){
+            Class backgroundClass = NSClassFromString(backgroundStyle);
+            if(![backgroundClass isSubclassOfClass:[MMBackgroundPatternView class]]){
+                backgroundClass = [MMEmptyBackgroundView class];
+            }
+        }
+        self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:[self bounds] andProperties:@{}];
     }
     
     return self;
@@ -54,6 +62,15 @@
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     _ruledOrGridBackgroundView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
+}
+
+-(void) setRuledOrGridBackgroundView:(MMBackgroundPatternView *)ruledOrGridBackgroundView{
+    if(_ruledOrGridBackgroundView != ruledOrGridBackgroundView){
+        [_ruledOrGridBackgroundView removeFromSuperview];
+        _ruledOrGridBackgroundView = ruledOrGridBackgroundView;
+        [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+        [self saveAdditionalBackgroundProperties:YES];
+    }
 }
 
 -(void) setDelegate:(NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate> *)_delegate{
@@ -96,7 +113,7 @@
 }
 
 -(void) saveAdditionalBackgroundProperties:(BOOL)forceSave{
-    if(forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture)){
+    if(self.delegate && (forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture))){
         NSDictionary* backgroundProperties = _ruledOrGridBackgroundView ? [_ruledOrGridBackgroundView properties] : @{};
         
         NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]),
@@ -104,6 +121,7 @@
                                    @"defaultExportRotation" : @(_defaultExportRotation),
                                    @"ruledOrGridBackgroundProps" : backgroundProperties};
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
+
         if(_ruledOrGridBackgroundView){
             [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath] forSize:[self thumbnailSize]];
         }

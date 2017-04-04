@@ -21,13 +21,21 @@
 
 #endif
 
-
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
+        NSNumber* originalWidth = [properties objectForKey:@"originalSize.width"];
+        NSNumber* originalHeight = [properties objectForKey:@"originalSize.height"];
+        
+        originalSize = originalWidth && originalHeight ? CGSizeMake([originalWidth doubleValue], [originalHeight doubleValue]) : frame.size;
+        pageSize = frame.size;
         pageSize = frame.size;
     }
     
     return self;
+}
+
+-(CGPoint) scale{
+    return CGPointMake(pageSize.width / originalSize.width, pageSize.height / originalSize.height);
 }
 
 -(NSDictionary*) properties{

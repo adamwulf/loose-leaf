@@ -454,6 +454,7 @@
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
 		C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */; };
 		C53F97C31E9329C100A1233E /* MMBackgroundPatternView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */; };
+		C53F97C71E932C2000A1233E /* MMEmptyBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1508,6 +1509,8 @@
 		C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundStyleContainerView.m; sourceTree = "<group>"; };
 		C53F97C11E9329C100A1233E /* MMBackgroundPatternView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundPatternView.h; sourceTree = "<group>"; };
 		C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundPatternView.m; sourceTree = "<group>"; };
+		C53F97C51E932C2000A1233E /* MMEmptyBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmptyBackgroundView.h; sourceTree = "<group>"; };
+		C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmptyBackgroundView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3937,6 +3940,8 @@
 				C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */,
 				C5A02B8B1E8D947700D43EC7 /* MMRuledBackgroundView.h */,
 				C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */,
+				C53F97C51E932C2000A1233E /* MMEmptyBackgroundView.h */,
+				C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4943,6 +4948,7 @@
 				C504E70A1CFE685D00914A0E /* MMUpgradeInProgressViewController.m in Sources */,
 				661708EE19841988006A73EF /* MMTrashManager.m in Sources */,
 				66A4BD4616321ABC00C45070 /* NSThread+BlockAdditions.m in Sources */,
+				C53F97C71E932C2000A1233E /* MMEmptyBackgroundView.m in Sources */,
 				66B42FC019955A47005D8214 /* MMShareSidebarContainerView.m in Sources */,
 				6699715217DBA02700E81467 /* MMDebugDrawView.m in Sources */,
 				663326BA1AAFE409003915E6 /* MMAbstractShareItem.m in Sources */,

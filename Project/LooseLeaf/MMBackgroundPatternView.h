@@ -11,6 +11,7 @@
 @class MMScrapViewState, MMScrapBackgroundView;
 
 @interface MMBackgroundPatternView : UIView{
+    CGSize originalSize;
     CGSize pageSize;
 }
 
@@ -18,6 +19,8 @@
 -(instancetype) initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 -(instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties;
+
+@property (nonatomic, readonly) CGPoint scale;
 
 - (MMScrapBackgroundView*)stampBackgroundFor:(MMScrapViewState*)targetScrapState;
 
