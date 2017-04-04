@@ -21,6 +21,18 @@
 
 #endif
 
+-(instancetype) initWithFrame:(CGRect)frame andOriginalSize:(CGSize)_originalSize andProperties:(NSDictionary*)properties{
+    if(self = [super initWithFrame:frame]){
+        originalSize = _originalSize;
+        pageSize = frame.size;
+        pageSize = frame.size;
+        
+        [self setBackgroundColor:[UIColor whiteColor]];
+    }
+    
+    return self;
+}
+
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame]){
         NSNumber* originalWidth = [properties objectForKey:@"originalSize.width"];
@@ -29,6 +41,8 @@
         originalSize = originalWidth && originalHeight ? CGSizeMake([originalWidth doubleValue], [originalHeight doubleValue]) : frame.size;
         pageSize = frame.size;
         pageSize = frame.size;
+        
+        [self setBackgroundColor:[UIColor whiteColor]];
     }
     
     return self;

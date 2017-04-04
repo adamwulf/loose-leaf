@@ -18,6 +18,8 @@
 -(instancetype) init NS_UNAVAILABLE;
 -(instancetype) initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 -(instancetype) initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+
+-(instancetype) initWithFrame:(CGRect)frame andOriginalSize:(CGSize)originalSize andProperties:(NSDictionary*)properties;
 -(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties;
 
 @property (nonatomic, readonly) CGPoint scale;

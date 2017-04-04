@@ -1174,7 +1174,6 @@
 - (void)didRotateToIdealOrientation:(UIInterfaceOrientation)toOrient {
     [NSThread performBlockOnMainThread:^{
         @autoreleasepool {
-            [backgroundStyleSidebar updateInterfaceTo:toOrient];
             [sharePageSidebar updateInterfaceTo:toOrient];
             [importImageSidebar updateInterfaceTo:toOrient];
             [shareStackSidebar updateInterfaceTo:toOrient];

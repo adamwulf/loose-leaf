@@ -15,31 +15,43 @@
 
 @implementation MMRuledBackgroundView
 
--(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
-    if(self = [super initWithFrame:frame andProperties:properties]){
-        CAShapeLayer* blueLines = [CAShapeLayer layer];
-        blueLines.path = [[self pathForBlueLines] CGPath];
-        blueLines.backgroundColor = [UIColor clearColor].CGColor;
-        blueLines.strokeColor = [self lightBlue].CGColor;
-        blueLines.fillColor = [UIColor clearColor].CGColor;
-        
-        [[self layer] addSublayer:blueLines];
-
-        
-        CAShapeLayer* redLines = [CAShapeLayer layer];
-        redLines.path = [[self pathForRedLines] CGPath];
-        redLines.backgroundColor = [UIColor clearColor].CGColor;
-        redLines.strokeColor = [self lightRed].CGColor;
-        redLines.fillColor = [UIColor clearColor].CGColor;
-        
-        [[self layer] addSublayer:redLines];
-
-        // always scale from our top left
-        self.layer.anchorPoint = CGPointMake(0, 0);
-        self.layer.position = CGPointMake(0, 0);
+-(instancetype) initWithFrame:(CGRect)frame andOriginalSize:(CGSize)_originalSize andProperties:(NSDictionary*)properties{
+    if(self = [super initWithFrame:frame andOriginalSize:_originalSize andProperties:properties]){
+        [self finishInit];
     }
     
     return self;
+}
+
+-(instancetype) initWithFrame:(CGRect)frame andProperties:(NSDictionary*)properties{
+    if(self = [super initWithFrame:frame andProperties:properties]){
+        [self finishInit];
+    }
+    
+    return self;
+}
+
+-(void) finishInit{
+    CAShapeLayer* blueLines = [CAShapeLayer layer];
+    blueLines.path = [[self pathForBlueLines] CGPath];
+    blueLines.backgroundColor = [UIColor clearColor].CGColor;
+    blueLines.strokeColor = [self lightBlue].CGColor;
+    blueLines.fillColor = [UIColor clearColor].CGColor;
+    
+    [[self layer] addSublayer:blueLines];
+    
+    
+    CAShapeLayer* redLines = [CAShapeLayer layer];
+    redLines.path = [[self pathForRedLines] CGPath];
+    redLines.backgroundColor = [UIColor clearColor].CGColor;
+    redLines.strokeColor = [self lightRed].CGColor;
+    redLines.fillColor = [UIColor clearColor].CGColor;
+    
+    [[self layer] addSublayer:redLines];
+    
+    // always scale from our top left
+    self.layer.anchorPoint = CGPointMake(0, 0);
+    self.layer.position = CGPointMake(0, 0);
 }
 
 -(UIColor*)lightBlue{

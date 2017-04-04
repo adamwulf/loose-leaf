@@ -13,10 +13,14 @@
 #import "Constants.h"
 #import "UIView+Debug.h"
 #import <JotUI/JotUI.h>
+#import "MMRuledBackgroundView.h"
+#import "MMEmptyBackgroundView.h"
+#import "Constants.h"
+
+#define kNumberOfButtonColumns 2
 
 @implementation MMBackgroundStyleContainerView {
     UIView* sharingContentView;
-    UIView* buttonView;
 }
 
 - (id)initWithFrame:(CGRect)frame forReferenceButtonFrame:(CGRect)buttonFrame animateFromLeft:(BOOL)fromLeft {
@@ -26,60 +30,57 @@
         scrollViewBounds.size.width = [slidingSidebarView contentBounds].origin.x + [slidingSidebarView contentBounds].size.width;
         sharingContentView = [[UIView alloc] initWithFrame:scrollViewBounds];
         
-        CGRect contentBounds = [slidingSidebarView contentBounds];
-        CGRect buttonBounds = scrollViewBounds;
-        buttonBounds.origin.y = 0;
-        buttonBounds.size.height = kHeightOfImportTypeButton + kHeightOfRotationTypeButton + 10;
-        contentBounds.origin.y = buttonBounds.origin.y + buttonBounds.size.height;
-        contentBounds.size.height -= buttonBounds.size.height;
-
-        buttonView = [[UIView alloc] initWithFrame:contentBounds];
-        [sharingContentView addSubview:buttonView];
         [slidingSidebarView addSubview:sharingContentView];
 
         // add page types to buttonView
+        NSArray<Class>* backgroundStyles = [NSArray array];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyBackgroundView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledBackgroundView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledBackgroundView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyBackgroundView class]];
+        
+        int buttonIndex = 0;
+        CGFloat buttonWidth = [self buttonWidth];
+        CGRect buttonBounds = [self buttonBounds];
+        for (Class backgroundClass in backgroundStyles) {
+            MMBackgroundPatternView* button = [[backgroundClass alloc] initWithFrame:CGRectMake(0,0,[self buttonWidth], [self buttonHeight])
+                                                                     andOriginalSize:[[UIScreen mainScreen] bounds].size
+                                                                       andProperties:@{}];
+            
+            int column = (buttonIndex % kNumberOfButtonColumns);
+            int row = floor(buttonIndex / (CGFloat)kNumberOfButtonColumns);
+            button.frame = CGRectMake(buttonBounds.origin.x + column * (buttonWidth + kWidthOfSidebarButtonBuffer),
+                                      buttonBounds.origin.y + row * ([self buttonHeight] + kWidthOfSidebarButtonBuffer),
+                                      buttonWidth, [self buttonHeight]);
+            
+            [sharingContentView insertSubview:button atIndex:buttonIndex];
+            
+            buttonIndex += 1;
+        }
     }
     return self;
 }
 
 - (CGFloat)buttonWidth {
-    CGFloat buttonWidth = buttonView.bounds.size.width - kWidthOfSidebarButtonBuffer; // four buffers (3 between, and 1 on the right side)
-    buttonWidth /= 4; // four buttons wide
+    CGFloat buttonWidth = sharingContentView.bounds.size.width - kWidthOfSidebarButtonBuffer * (kNumberOfButtonColumns + 1);
+    buttonWidth /= kNumberOfButtonColumns; // two buttons wide
     return buttonWidth;
+}
+
+- (CGFloat)buttonHeight {
+    CGSize size = [[UIScreen mainScreen] bounds].size;
+    
+    return size.height * [self buttonWidth] / size.width;
 }
 
 - (CGRect)buttonBounds {
     CGFloat buttonWidth = [self buttonWidth];
-    CGRect buttonBounds = buttonView.bounds;
+    CGRect buttonBounds = sharingContentView.bounds;
     buttonBounds.origin.y = [UIApplication sharedApplication].statusBarFrame.size.height + kWidthOfSidebarButtonBuffer;
     buttonBounds.size.height = buttonWidth + kWidthOfSidebarButtonBuffer; // includes spacing buffer
     buttonBounds.origin.x += 2 * kWidthOfSidebarButtonBuffer;
     buttonBounds.size.width -= 2 * kWidthOfSidebarButtonBuffer;
     return buttonBounds;
-}
-
-#pragma mark - Rotation
-
-- (CGFloat)sidebarButtonRotation {
-    if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationPortrait) {
-        return 0;
-    } else if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeLeft) {
-        return -M_PI_2;
-    } else if ([MMRotationManager sharedInstance].lastBestOrientation == UIInterfaceOrientationLandscapeRight) {
-        return M_PI_2;
-    } else {
-        return M_PI;
-    }
-}
-
-- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation {
-    CheckMainThread;
-    [UIView animateWithDuration:.3 animations:^{
-        CGAffineTransform rotationTransform = CGAffineTransformMakeRotation([self sidebarButtonRotation]);
-        for (MMBounceButton* button in buttonView.subviews) {
-            button.transform = rotationTransform;
-        }
-    }];
 }
 
 #pragma mark - Dealloc

@@ -10,6 +10,4 @@
 
 @interface MMBackgroundStyleContainerView : MMFullScreenSidebarContainingView
 
-- (void)updateInterfaceTo:(UIInterfaceOrientation)orientation;
-
 @end
