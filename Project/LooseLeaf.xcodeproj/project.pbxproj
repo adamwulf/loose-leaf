@@ -453,6 +453,7 @@
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
 		C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */; };
+		C53F97C31E9329C100A1233E /* MMBackgroundPatternView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1505,6 +1506,8 @@
 		C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingBackgroundView.m; sourceTree = "<group>"; };
 		C53F97BE1E931BA500A1233E /* MMBackgroundStyleContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundStyleContainerView.h; sourceTree = "<group>"; };
 		C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundStyleContainerView.m; sourceTree = "<group>"; };
+		C53F97C11E9329C100A1233E /* MMBackgroundPatternView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundPatternView.h; sourceTree = "<group>"; };
+		C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundPatternView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3838,6 +3841,16 @@
 			name = "Page Background Sidebar";
 			sourceTree = "<group>";
 		};
+		C53F97C41E9329F600A1233E /* Scraps */ = {
+			isa = PBXGroup;
+			children = (
+				C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */,
+				C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */,
+				C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */,
+			);
+			name = Scraps;
+			sourceTree = "<group>";
+		};
 		C56883A81D6D2B1A00709FD8 /* Bezel */ = {
 			isa = PBXGroup;
 			children = (
@@ -3919,11 +3932,11 @@
 		C5B905CA1CEACE1A002943BF /* Backgrounds */ = {
 			isa = PBXGroup;
 			children = (
+				C53F97C41E9329F600A1233E /* Scraps */,
+				C53F97C11E9329C100A1233E /* MMBackgroundPatternView.h */,
+				C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */,
 				C5A02B8B1E8D947700D43EC7 /* MMRuledBackgroundView.h */,
 				C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */,
-				C5B905CB1CEACE3B002943BF /* MMGenericBackgroundView.h */,
-				C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */,
-				C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4973,6 +4986,7 @@
 				C5F1B2C01D9B01BB00E0E9A8 /* MPObjectSerializerConfig.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
+				C53F97C31E9329C100A1233E /* MMBackgroundPatternView.m in Sources */,
 				665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */,
