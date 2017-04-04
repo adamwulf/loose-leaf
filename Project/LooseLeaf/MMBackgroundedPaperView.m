@@ -79,7 +79,9 @@
     if(_ruledOrGridBackgroundView != ruledOrGridBackgroundView){
         [_ruledOrGridBackgroundView removeFromSuperview];
         _ruledOrGridBackgroundView = ruledOrGridBackgroundView;
-        [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+        if(_ruledOrGridBackgroundView){
+            [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+        }
         [self saveAdditionalBackgroundProperties:YES];
     }
 }
@@ -137,7 +139,7 @@
                                    @"ruledOrGridBackgroundProps" : backgroundProperties};
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
 
-        if(_ruledOrGridBackgroundView){
+        if(_ruledOrGridBackgroundView && forceSave){
             [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath] forSize:[self thumbnailSize]];
         }
     }
@@ -158,6 +160,9 @@
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
+        if(_ruledOrGridBackgroundView){
+            [self setRuledOrGridBackgroundView:nil];
+        }
         [self.contentView insertSubview:paperBackgroundView atIndex:0];
         paperBackgroundView.hidden = self.drawableView.hidden;
     }
@@ -296,11 +301,11 @@
             // if we've already loaded it, don't reload
             NSString* bgClassName = bgInfo[@"ruledOrGridBackgroundProps"][@"class"];
             if([bgClassName length]){
-                Class bgClass = NSClassFromString(bgClassName);
+                Class bgClass = [MMBackgroundPatternView backgroundClassForString:bgClassName];
                 if(bgClass){
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if(!_ruledOrGridBackgroundView){
-                            _ruledOrGridBackgroundView = [[bgClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:bgInfo[@"ruledOrGridBackgroundProps"]];
+                            _ruledOrGridBackgroundView = [MMBackgroundPatternView viewForFrame:self.originalUnscaledBounds andProperties:bgInfo[@"ruledOrGridBackgroundProps"]];
                             [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
                         }
                     });
@@ -709,7 +714,7 @@
 #pragma mark - MMBackgroundStyleContainerViewDelegate
 
 -(NSString*)currentBackgroundStyleType{
-    return NSStringFromClass([_ruledOrGridBackgroundView class]);
+    return _ruledOrGridBackgroundView ? NSStringFromClass([_ruledOrGridBackgroundView class]) : nil;
 }
 
 -(void) setCurrentBackgroundStyleType:(NSString *)currentBackgroundStyle{
