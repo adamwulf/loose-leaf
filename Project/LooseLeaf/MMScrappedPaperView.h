@@ -84,4 +84,6 @@
 
 - (void)newlyCutScrapFromPaperView:(MMScrapView*)scrap;
 
+-(void) forgetLastThumbnailSaveHash;
+
 @end

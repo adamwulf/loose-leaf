@@ -719,11 +719,14 @@
         NSDictionary* originalProps = [self.ruledOrGridBackgroundView properties];
         
         self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:@{}];
-        [self saveToDisk:nil];
 
         NSDictionary* updatedProps = [self.ruledOrGridBackgroundView properties];
 
         [self.undoRedoManager addUndoItem:[MMUndoRedoPageBackgroundItem itemForPage:self andOriginalBackground:originalProps andUpdatedBackground:updatedProps]];
+
+        [self forgetLastThumbnailSaveHash];
+        
+        [self saveToDisk:nil];
     }
 }
 
