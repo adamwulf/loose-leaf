@@ -459,6 +459,7 @@
 		C53FCED71E94A09300AA4BEC /* MMTodoListTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */; };
 		C53FCEDA1E94A3A800AA4BEC /* MMBoxNotesTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */; };
 		C53FCEDD1E94A64C00AA4BEC /* MMMusicTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */; };
+		C53FCEE01E94AA1100AA4BEC /* MMCmGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1524,6 +1525,8 @@
 		C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBoxNotesTemplateView.m; sourceTree = "<group>"; };
 		C53FCEDB1E94A64C00AA4BEC /* MMMusicTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMusicTemplateView.h; sourceTree = "<group>"; };
 		C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMusicTemplateView.m; sourceTree = "<group>"; };
+		C53FCEDE1E94AA1100AA4BEC /* MMCmGridTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCmGridTemplateView.h; sourceTree = "<group>"; };
+		C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCmGridTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3964,6 +3967,8 @@
 				C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */,
 				C53FCEDB1E94A64C00AA4BEC /* MMMusicTemplateView.h */,
 				C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */,
+				C53FCEDE1E94AA1100AA4BEC /* MMCmGridTemplateView.h */,
+				C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4784,6 +4789,7 @@
 				665245761996EA2300C36609 /* Reachability.m in Sources */,
 				C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */,
 				66A02F9619A1D1500013EFAE /* EPPZDevice.m in Sources */,
+				C53FCEE01E94AA1100AA4BEC /* MMCmGridTemplateView.m in Sources */,
 				C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */,
 				C5F1B2B21D9B01BB00E0E9A8 /* MPDesignerTrackMessage.m in Sources */,
 				663326CD1AB09CD9003915E6 /* MMImageInboxItem.m in Sources */,
