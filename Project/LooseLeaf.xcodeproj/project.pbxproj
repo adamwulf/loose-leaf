@@ -453,9 +453,10 @@
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
 		C53F97C01E931BA500A1233E /* MMBackgroundStyleContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */; };
-		C53F97C31E9329C100A1233E /* MMBackgroundPatternView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */; };
+		C53F97C31E9329C100A1233E /* MMPaperTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C21E9329C100A1233E /* MMPaperTemplateView.m */; };
 		C53F97C71E932C2000A1233E /* MMEmptyBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */; };
 		C53F97CB1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */; };
+		C53FCED71E94A09300AA4BEC /* MMTodoListPaperTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED61E94A09300AA4BEC /* MMTodoListPaperTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1508,13 +1509,15 @@
 		C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRotatingBackgroundView.m; sourceTree = "<group>"; };
 		C53F97BE1E931BA500A1233E /* MMBackgroundStyleContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundStyleContainerView.h; sourceTree = "<group>"; };
 		C53F97BF1E931BA500A1233E /* MMBackgroundStyleContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundStyleContainerView.m; sourceTree = "<group>"; };
-		C53F97C11E9329C100A1233E /* MMBackgroundPatternView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundPatternView.h; sourceTree = "<group>"; };
-		C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBackgroundPatternView.m; sourceTree = "<group>"; };
+		C53F97C11E9329C100A1233E /* MMPaperTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperTemplateView.h; sourceTree = "<group>"; };
+		C53F97C21E9329C100A1233E /* MMPaperTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPaperTemplateView.m; sourceTree = "<group>"; };
 		C53F97C51E932C2000A1233E /* MMEmptyBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEmptyBackgroundView.h; sourceTree = "<group>"; };
 		C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEmptyBackgroundView.m; sourceTree = "<group>"; };
 		C53F97C81E93513500A1233E /* MMBackgroundStyleContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBackgroundStyleContainerViewDelegate.h; sourceTree = "<group>"; };
 		C53F97C91E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUndoRedoPageBackgroundItem.h; sourceTree = "<group>"; };
 		C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoPageBackgroundItem.m; sourceTree = "<group>"; };
+		C53FCED51E94A09300AA4BEC /* MMTodoListPaperTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTodoListPaperTemplateView.h; sourceTree = "<group>"; };
+		C53FCED61E94A09300AA4BEC /* MMTodoListPaperTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTodoListPaperTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3943,12 +3946,14 @@
 			isa = PBXGroup;
 			children = (
 				C53F97C41E9329F600A1233E /* Scraps */,
-				C53F97C11E9329C100A1233E /* MMBackgroundPatternView.h */,
-				C53F97C21E9329C100A1233E /* MMBackgroundPatternView.m */,
-				C5A02B8B1E8D947700D43EC7 /* MMRuledBackgroundView.h */,
-				C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */,
+				C53F97C11E9329C100A1233E /* MMPaperTemplateView.h */,
+				C53F97C21E9329C100A1233E /* MMPaperTemplateView.m */,
 				C53F97C51E932C2000A1233E /* MMEmptyBackgroundView.h */,
 				C53F97C61E932C2000A1233E /* MMEmptyBackgroundView.m */,
+				C5A02B8B1E8D947700D43EC7 /* MMRuledBackgroundView.h */,
+				C5A02B8C1E8D947700D43EC7 /* MMRuledBackgroundView.m */,
+				C53FCED51E94A09300AA4BEC /* MMTodoListPaperTemplateView.h */,
+				C53FCED61E94A09300AA4BEC /* MMTodoListPaperTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4872,6 +4877,7 @@
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
+				C53FCED71E94A09300AA4BEC /* MMTodoListPaperTemplateView.m in Sources */,
 				C5F1B2AD1D9B01BB00E0E9A8 /* MPCGRectToNSDictionaryValueTransformer.m in Sources */,
 				C5F1B2B31D9B01BB00E0E9A8 /* MPEnumDescription.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
@@ -5000,7 +5006,7 @@
 				C5F1B2C01D9B01BB00E0E9A8 /* MPObjectSerializerConfig.m in Sources */,
 				661885D418F9AED50016A333 /* MMDarkSidebarButton.m in Sources */,
 				66BEBFF419BBEA950032D30C /* MMReplyButton.m in Sources */,
-				C53F97C31E9329C100A1233E /* MMBackgroundPatternView.m in Sources */,
+				C53F97C31E9329C100A1233E /* MMPaperTemplateView.m in Sources */,
 				665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */,

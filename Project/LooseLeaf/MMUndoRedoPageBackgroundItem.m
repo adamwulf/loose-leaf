@@ -7,7 +7,7 @@
 //
 
 #import "MMUndoRedoPageBackgroundItem.h"
-#import "MMBackgroundPatternView.h"
+#import "MMPaperTemplateView.h"
 #import "MMTrashManager.h"
 
 @implementation MMUndoRedoPageBackgroundItem{
@@ -24,11 +24,11 @@
 - (id)initForPage:(MMBackgroundedPaperView*)_page andOriginalBackground:(NSDictionary *)originalProps andUpdatedBackground:(NSDictionary *)updatedProps{
     __weak MMUndoRedoPageBackgroundItem* weakSelf = self;
     if (self = [super initWithUndoBlock:^{
-        MMBackgroundPatternView* originalBackground = [MMBackgroundPatternView viewForFrame:page.originalUnscaledBounds andProperties:originalProperties];
+        MMPaperTemplateView* originalBackground = [MMPaperTemplateView viewForFrame:page.originalUnscaledBounds andProperties:originalProperties];
         
         [weakSelf.page setRuledOrGridBackgroundView:originalBackground];
     } andRedoBlock:^{
-        MMBackgroundPatternView* updatedBackground = [MMBackgroundPatternView viewForFrame:page.originalUnscaledBounds andProperties:updatedProperties];
+        MMPaperTemplateView* updatedBackground = [MMPaperTemplateView viewForFrame:page.originalUnscaledBounds andProperties:updatedProperties];
         
         [weakSelf.page setRuledOrGridBackgroundView:updatedBackground];
     } forPage:_page]) {

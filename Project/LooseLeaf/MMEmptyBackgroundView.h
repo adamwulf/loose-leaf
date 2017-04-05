@@ -6,8 +6,8 @@
 //  Copyright © 2017 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMBackgroundPatternView.h"
+#import "MMPaperTemplateView.h"
 
-@interface MMEmptyBackgroundView : MMBackgroundPatternView
+@interface MMEmptyBackgroundView : MMPaperTemplateView
 
 @end

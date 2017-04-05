@@ -66,7 +66,7 @@
         _usesCorrectBackgroundRotation = YES;
         
         NSString* backgroundStyle = [[NSUserDefaults standardUserDefaults] stringForKey:kDefaultPaperBackgroundStyle];
-        Class backgroundClass = [MMBackgroundPatternView backgroundClassForString:backgroundStyle];
+        Class backgroundClass = [MMPaperTemplateView backgroundClassForString:backgroundStyle];
         
         self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:@{}];
     }
@@ -79,7 +79,7 @@
     _ruledOrGridBackgroundView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
 }
 
--(void) setRuledOrGridBackgroundView:(MMBackgroundPatternView *)ruledOrGridBackgroundView{
+-(void) setRuledOrGridBackgroundView:(MMPaperTemplateView *)ruledOrGridBackgroundView{
     if(_ruledOrGridBackgroundView != ruledOrGridBackgroundView){
         [_ruledOrGridBackgroundView removeFromSuperview];
         _ruledOrGridBackgroundView = ruledOrGridBackgroundView;
@@ -305,11 +305,11 @@
             // if we've already loaded it, don't reload
             NSString* bgClassName = bgInfo[@"ruledOrGridBackgroundProps"][@"class"];
             if([bgClassName length]){
-                Class bgClass = [MMBackgroundPatternView backgroundClassForString:bgClassName];
+                Class bgClass = [MMPaperTemplateView backgroundClassForString:bgClassName];
                 if(bgClass){
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if(!_ruledOrGridBackgroundView){
-                            _ruledOrGridBackgroundView = [MMBackgroundPatternView viewForFrame:self.originalUnscaledBounds andProperties:bgInfo[@"ruledOrGridBackgroundProps"]];
+                            _ruledOrGridBackgroundView = [MMPaperTemplateView viewForFrame:self.originalUnscaledBounds andProperties:bgInfo[@"ruledOrGridBackgroundProps"]];
                             [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
                         }
                     });
@@ -722,7 +722,7 @@
 }
 
 -(void) setCurrentBackgroundStyleType:(NSString *)currentBackgroundStyle{
-    Class backgroundClass = [MMBackgroundPatternView backgroundClassForString:currentBackgroundStyle];
+    Class backgroundClass = [MMPaperTemplateView backgroundClassForString:currentBackgroundStyle];
     
     if(backgroundClass && ![[self ruledOrGridBackgroundView] isKindOfClass:backgroundClass]){
         NSDictionary* originalProps = [self.ruledOrGridBackgroundView properties];

@@ -17,6 +17,7 @@
 #import "MMEmptyBackgroundView.h"
 #import "Constants.h"
 #import "MMBackgroundedPaperView.h"
+#import "MMTodoListPaperTemplateView.h"
 
 #define kNumberOfButtonColumns 2
 
@@ -41,6 +42,7 @@
         backgroundStyles = [NSArray array];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyBackgroundView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledBackgroundView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMTodoListPaperTemplateView class]];
 
         int buttonIndex = 0;
         CGFloat buttonWidth = [self buttonWidth];
@@ -51,7 +53,7 @@
             CGRect frame = CGRectMake(2 * kWidthOfSidebarButtonBuffer + buttonBounds.origin.x + column * (buttonWidth + 2 * kWidthOfSidebarButtonBuffer),
                                       2 * kWidthOfSidebarButtonBuffer + buttonBounds.origin.y + row * ([self buttonHeight] + 2 * kWidthOfSidebarButtonBuffer),
                                       buttonWidth, [self buttonHeight]);
-            MMBackgroundPatternView* bgView = [[backgroundClass alloc] initWithFrame:frame
+            MMPaperTemplateView* bgView = [[backgroundClass alloc] initWithFrame:frame
                                                                      andOriginalSize:[[UIScreen mainScreen] bounds].size
                                                                        andProperties:@{}];
             [bgView setUserInteractionEnabled:YES];

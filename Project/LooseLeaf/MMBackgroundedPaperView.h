@@ -16,7 +16,7 @@ typedef enum : NSInteger {
     ExportRotationLandscapeRight
 } ExportRotation;
 
-@class MMBackgroundPatternView;
+@class MMPaperTemplateView;
 
 @interface MMBackgroundedPaperView : MMUndoablePaperView<MMBackgroundStyleContainerViewDelegate>
 
@@ -25,7 +25,7 @@ typedef enum : NSInteger {
 
 
 @property (nonatomic, assign) ExportRotation idealExportRotation;
-@property (nonatomic, strong) MMBackgroundPatternView* ruledOrGridBackgroundView;
+@property (nonatomic, strong) MMPaperTemplateView* ruledOrGridBackgroundView;
 @property (nonatomic, readonly) BOOL hasBackgroundAsset;
 
 - (UIImage*)pageBackgroundTexture;

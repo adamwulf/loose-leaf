@@ -1,5 +1,5 @@
 //
-//  MMBackgroundPatternView.h
+//  MMPaperTemplateView.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 4/3/17.
@@ -10,13 +10,13 @@
 
 @class MMScrapViewState, MMScrapBackgroundView;
 
-@interface MMBackgroundPatternView : UIView{
+@interface MMPaperTemplateView : UIView{
     CGSize originalSize;
     CGSize pageSize;
 }
 
 +(Class) backgroundClassForString:(NSString*)backgroundClassname;
-+(MMBackgroundPatternView*) viewForFrame:(CGRect)frame andProperties:(NSDictionary *)properties;
++(MMPaperTemplateView*) viewForFrame:(CGRect)frame andProperties:(NSDictionary *)properties;
 
 -(instancetype) init NS_UNAVAILABLE;
 -(instancetype) initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;

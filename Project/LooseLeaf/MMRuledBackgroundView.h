@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMBackgroundPatternView.h"
+#import "MMPaperTemplateView.h"
 
-@interface MMRuledBackgroundView : MMBackgroundPatternView
+@interface MMRuledBackgroundView : MMPaperTemplateView
 
 @end

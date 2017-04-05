@@ -1,23 +1,23 @@
 //
-//  MMBackgroundPatternView.m
+//  MMPaperTemplateView.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 4/3/17.
 //  Copyright © 2017 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMBackgroundPatternView.h"
+#import "MMPaperTemplateView.h"
 #import "MMScrapViewState.h"
 #import "MMScrapBackgroundView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "MMEmptyBackgroundView.h"
 
-@implementation MMBackgroundPatternView
+@implementation MMPaperTemplateView
 
 #ifdef DEBUG
 
 +(void) load{
-    [[NSFileManager defaultManager] removeItemAtPath:[MMBackgroundPatternView cachePath] error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:[MMPaperTemplateView cachePath] error:nil];
 }
 
 #endif
@@ -27,7 +27,7 @@
     
     if([currentBackgroundStyle length]){
         backgroundClass = NSClassFromString(currentBackgroundStyle);
-        if(![backgroundClass isSubclassOfClass:[MMBackgroundPatternView class]]){
+        if(![backgroundClass isSubclassOfClass:[MMPaperTemplateView class]]){
             backgroundClass = [MMEmptyBackgroundView class];
         }
     }
@@ -35,8 +35,8 @@
     return backgroundClass;
 }
 
-+(MMBackgroundPatternView*) viewForFrame:(CGRect)frame andProperties:(NSDictionary *)properties{
-    Class backgroundClass = [MMBackgroundPatternView backgroundClassForString:properties[@"class"]];
++(MMPaperTemplateView*) viewForFrame:(CGRect)frame andProperties:(NSDictionary *)properties{
+    Class backgroundClass = [MMPaperTemplateView backgroundClassForString:properties[@"class"]];
     
     return [[backgroundClass alloc] initWithFrame:frame andProperties:properties];
 }
