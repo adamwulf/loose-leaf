@@ -1,19 +1,19 @@
 //
-//  MMTodoListTemplateView.m
+//  MMBoxNotesTemplateView.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 4/4/17.
 //  Copyright © 2017 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMTodoListTemplateView.h"
+#import "MMBoxNotesTemplateView.h"
 #import "MMScrapViewState.h"
 #import "MMScrapBackgroundView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
 #import "UIView+MPHelpers.h"
 #import "Constants.h"
 
-@implementation MMTodoListTemplateView
+@implementation MMBoxNotesTemplateView
 
 -(instancetype) initWithFrame:(CGRect)frame andOriginalSize:(CGSize)_originalSize andProperties:(NSDictionary*)properties{
     if(self = [super initWithFrame:frame andOriginalSize:_originalSize andProperties:properties]){
@@ -33,7 +33,7 @@
 
 -(void) finishInit{
     CAShapeLayer* blueLines = [CAShapeLayer layer];
-    blueLines.path = [[self pathForCheckboxes] CGPath];
+    blueLines.path = [[self path] CGPath];
     blueLines.backgroundColor = [UIColor clearColor].CGColor;
     blueLines.strokeColor = [UIColor blackColor].CGColor;
     blueLines.fillColor = [UIColor clearColor].CGColor;
@@ -41,19 +41,21 @@
     [[self layer] addSublayer:blueLines];
 }
 
--(UIBezierPath*) pathForCheckboxes{
+-(UIBezierPath*) path{
     
-    CGFloat verticalSpacing = [UIDevice ppi] * .70 / [[UIScreen mainScreen] scale];
+    CGFloat verticalSpacing = [UIDevice ppc] * .87 / [[UIScreen mainScreen] scale];
     CGFloat verticalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale];
     CGFloat horizontalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale];
     CGFloat checkbox = [UIDevice ppc] * .5 / [[UIScreen mainScreen] scale];
     
     UIBezierPath* path = [UIBezierPath bezierPath];
-    CGFloat y = verticalMargin;
+
+    [path appendPath:[UIBezierPath bezierPathWithRoundedRect:CGRectMake(horizontalMargin, verticalMargin, originalSize.width - 2 * verticalMargin, 2 * verticalMargin) cornerRadius:checkbox / 4]];
+
+    CGFloat y = verticalMargin * 3 + 2 * verticalSpacing;
+    
     while (y < originalSize.height - verticalMargin) {
-        [path appendPath:[UIBezierPath bezierPathWithRoundedRect:CGRectMake(horizontalMargin - checkbox/2, y - checkbox, checkbox, checkbox) cornerRadius:checkbox / 4]];
-        
-        [path moveToPoint:CGPointMake(horizontalMargin + checkbox * 1.5, y)];
+        [path moveToPoint:CGPointMake(horizontalMargin, y)];
         [path addLineToPoint:CGPointMake(originalSize.width - horizontalMargin, y)];
         y += verticalSpacing;
     }
@@ -74,7 +76,7 @@
         CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
         
         [[UIColor blackColor] setStroke];
-        [[self pathForCheckboxes] stroke];
+        [[self path] stroke];
     });
 }
 

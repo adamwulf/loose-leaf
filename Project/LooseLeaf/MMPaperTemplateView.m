@@ -14,14 +14,6 @@
 
 @implementation MMPaperTemplateView
 
-#ifdef DEBUG
-
-+(void) load{
-    [[NSFileManager defaultManager] removeItemAtPath:[MMPaperTemplateView cachePath] error:nil];
-}
-
-#endif
-
 +(Class) backgroundClassForString:(NSString*)currentBackgroundStyle{
     Class backgroundClass = [MMEmptyTemplateView class];
     
@@ -48,6 +40,10 @@
         pageSize = frame.size;
         
         [self finishBackgroundPaperViewInit];
+        
+#ifdef DEBUG
+        [[NSFileManager defaultManager] removeItemAtPath:[[self class] cachePath] error:nil];
+#endif
     }
     
     return self;
@@ -82,7 +78,9 @@
 
 -(NSDictionary*) properties{
     return @{
-             @"class" : NSStringFromClass([self class])
+             @"class" : NSStringFromClass([self class]),
+             @"originalSize.width" : @(originalSize.width),
+             @"originalSize.height" : @(originalSize.height)
              };
 }
 

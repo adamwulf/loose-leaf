@@ -91,15 +91,6 @@
 }
 
 
--(NSDictionary*) properties{
-    NSMutableDictionary* properties = [[super properties] mutableCopy];
-    
-    properties[@"originalSize.width"] = @(originalSize.width);
-    properties[@"originalSize.height"] = @(originalSize.height);
-    
-    return properties;
-}
-
 -(void) drawInContext:(CGContextRef)context forSize:(CGSize)size{
     CGRect scaledScreen = CGSizeFill(originalSize, size);
 

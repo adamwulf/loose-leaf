@@ -18,6 +18,7 @@
 #import "Constants.h"
 #import "MMBackgroundedPaperView.h"
 #import "MMTodoListTemplateView.h"
+#import "MMBoxNotesTemplateView.h"
 
 #define kNumberOfButtonColumns 2
 
@@ -43,6 +44,7 @@
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyTemplateView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledTemplateView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMTodoListTemplateView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMBoxNotesTemplateView class]];
 
         int buttonIndex = 0;
         CGFloat buttonWidth = [self buttonWidth];

@@ -457,6 +457,7 @@
 		C53F97C71E932C2000A1233E /* MMEmptyTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97C61E932C2000A1233E /* MMEmptyTemplateView.m */; };
 		C53F97CB1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */; };
 		C53FCED71E94A09300AA4BEC /* MMTodoListTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */; };
+		C53FCEDA1E94A3A800AA4BEC /* MMBoxNotesTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1518,6 +1519,8 @@
 		C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMUndoRedoPageBackgroundItem.m; sourceTree = "<group>"; };
 		C53FCED51E94A09300AA4BEC /* MMTodoListTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTodoListTemplateView.h; sourceTree = "<group>"; };
 		C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTodoListTemplateView.m; sourceTree = "<group>"; };
+		C53FCED81E94A3A800AA4BEC /* MMBoxNotesTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBoxNotesTemplateView.h; sourceTree = "<group>"; };
+		C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBoxNotesTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3954,6 +3957,8 @@
 				C5A02B8C1E8D947700D43EC7 /* MMRuledTemplateView.m */,
 				C53FCED51E94A09300AA4BEC /* MMTodoListTemplateView.h */,
 				C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */,
+				C53FCED81E94A3A800AA4BEC /* MMBoxNotesTemplateView.h */,
+				C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4930,6 +4935,7 @@
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				C5F1B29F1D9B01BB00E0E9A8 /* MPABTestDesignerConnection.m in Sources */,
 				C5F1B2D01D9B01BB00E0E9A8 /* MPTypeDescription.m in Sources */,
+				C53FCEDA1E94A3A800AA4BEC /* MMBoxNotesTemplateView.m in Sources */,
 				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,
 				C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */,
 				66EC2FEF19DD11E0008F2BB6 /* MMJotViewNilState.m in Sources */,
