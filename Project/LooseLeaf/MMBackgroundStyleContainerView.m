@@ -29,6 +29,10 @@
 
 #define kNumberOfButtonColumns 2
 
+@interface MMBackgroundStyleContainerView ()<UIGestureRecognizerDelegate>
+
+@end
+
 @implementation MMBackgroundStyleContainerView {
     UIView* sharingContentView;
     NSArray<Class>* backgroundStyles;
@@ -95,6 +99,13 @@
 
             buttonIndex += 1;
         }
+        
+        MMImmovableTapGestureRecognizer* tapGesture = [[MMImmovableTapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
+        tapGesture.cancelsTouchesInView = NO;
+        tapGesture.delaysTouchesBegan = NO;
+        tapGesture.delaysTouchesEnded = NO;
+        tapGesture.delegate = self;
+        [self addGestureRecognizer:tapGesture];
         
         NSString *defaultBackground = [MMBackgroundedPaperView defaultBackgroundClass];
         [self selectButtonForBackgroundClass:NSClassFromString(defaultBackground)];
@@ -164,6 +175,31 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - Deleting Inbox Item
+
+- (void)tapGesture:(MMImmovableTapGestureRecognizer*)tapGesture{
+    [self.silhouette startDrawingAtTouch:[tapGesture.touches anyObject] immediately:YES];
+
+    [[NSThread mainThread] performBlock:^{
+        [self.silhouette endDrawingAtTouch:[tapGesture.touches anyObject]];
+    } afterDelay:.25];
+}
+
+- (BOOL)canPreventGestureRecognizer:(UIGestureRecognizer *)preventedGestureRecognizer{
+    return NO;
+}
+- (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer{
+    return NO;
+}
+
+// same behavior as the equivalent delegate methods, but can be used by subclasses to define class-wide failure requirements
+- (BOOL)shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
+}
+- (BOOL)shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return NO;
 }
 
 @end

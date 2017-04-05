@@ -475,6 +475,8 @@
 		C53FCEE91E94B3FF00AA4BEC /* MMHandwritingTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE81E94B3FF00AA4BEC /* MMHandwritingTemplateView.m */; };
 		C53FCEEC1E94BC7700AA4BEC /* MMWeekTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEEB1E94BC7700AA4BEC /* MMWeekTemplateView.m */; };
 		C53FCEEF1E94BE0E00AA4BEC /* MMMonthTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */; };
+		C53FCEF21E94C55400AA4BEC /* page-template.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF11E94C55400AA4BEC /* page-template.mp4 */; };
+		C53FCEF41E94C57200AA4BEC /* page-rotation.png in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF31E94C57200AA4BEC /* page-rotation.png */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1581,6 +1583,8 @@
 		C53FCEEB1E94BC7700AA4BEC /* MMWeekTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMWeekTemplateView.m; sourceTree = "<group>"; };
 		C53FCEED1E94BE0E00AA4BEC /* MMMonthTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMonthTemplateView.h; sourceTree = "<group>"; };
 		C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMonthTemplateView.m; sourceTree = "<group>"; };
+		C53FCEF11E94C55400AA4BEC /* page-template.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-template.mp4"; sourceTree = "<group>"; };
+		C53FCEF31E94C57200AA4BEC /* page-rotation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "page-rotation.png"; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -2280,6 +2284,7 @@
 		662809021A9BBF2000CA3F9A /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				C53FCEF01E94C53F00AA4BEC /* release-notes */,
 				C50DBAFB1E0B29130006F58A /* stack-view */,
 				66CC2A8F1AEAEA6900C6A3F9 /* share */,
 				665F7F601AE096C900635D56 /* list-view */,
@@ -3979,6 +3984,15 @@
 			name = Scraps;
 			sourceTree = "<group>";
 		};
+		C53FCEF01E94C53F00AA4BEC /* release-notes */ = {
+			isa = PBXGroup;
+			children = (
+				C53FCEF11E94C55400AA4BEC /* page-template.mp4 */,
+				C53FCEF31E94C57200AA4BEC /* page-rotation.png */,
+			);
+			name = "release-notes";
+			sourceTree = "<group>";
+		};
 		C56883A81D6D2B1A00709FD8 /* Bezel */ = {
 			isa = PBXGroup;
 			children = (
@@ -4605,6 +4619,7 @@
 				C58E6A291CDB1B4A00508F1D /* bg12.jpg in Resources */,
 				66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */,
 				66E2241319D64644000FCA96 /* ios7-settings-photos@2x.png in Resources */,
+				C53FCEF41E94C57200AA4BEC /* page-rotation.png in Resources */,
 				663326C11AAFE9F9003915E6 /* clipboard-icon.png in Resources */,
 				667C636F199FF41300E93CD6 /* copy.png in Resources */,
 				C58E6A371CDB1B4A00508F1D /* bg26.jpg in Resources */,
@@ -4616,6 +4631,7 @@
 				661C4B281A83F8D00014DB20 /* pinterest.png in Resources */,
 				663326BC1AAFE819003915E6 /* photos-icon.png in Resources */,
 				66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */,
+				C53FCEF21E94C55400AA4BEC /* page-template.mp4 in Resources */,
 				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */,
@@ -5005,7 +5021,6 @@
 				6635BE9919749BD600DFCBBA /* MMScrapsInSidebarState.m in Sources */,
 				66D0A8CB1A64684A0003BBF7 /* MMTwoFingerPanShadow.m in Sources */,
 				C5F1B2981D9B01BB00E0E9A8 /* MixpanelPeople.m in Sources */,
-				66E2240B19D63B8B000FCA96 /* MMPhotosPermissionCell.m in Sources */,
 				C53FCEEF1E94BE0E00AA4BEC /* MMMonthTemplateView.m in Sources */,
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,

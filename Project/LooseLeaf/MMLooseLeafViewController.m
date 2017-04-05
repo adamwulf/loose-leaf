@@ -305,6 +305,7 @@
         backgroundStyleSidebar.delegate = self;
         backgroundStyleSidebar.bgDelegate = self;
         [backgroundStyleSidebar hide:NO onComplete:nil];
+        backgroundStyleSidebar.silhouette = self.silhouette;
         [self.view addSubview:backgroundStyleSidebar];
         
         // Share sidebar
