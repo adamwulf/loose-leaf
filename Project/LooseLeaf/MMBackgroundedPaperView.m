@@ -196,7 +196,9 @@
         // if we're still loading our background image, then
         // keep the thumbnail visible, otherwise defer to
         // our superclass.
-        [self setThumbnailTo:[self scrappedImgViewImage]];
+        if([scrappedImgViewImage isDecompressed]){
+            [self setThumbnailTo:scrappedImgViewImage.image];
+        }
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
@@ -384,9 +386,11 @@
 
 - (void)unloadCachedPreview {
     [super unloadCachedPreview];
-    paperBackgroundView.image = nil;
-    [paperBackgroundView removeFromSuperview];
-    paperBackgroundView = nil;
+    @autoreleasepool {
+        paperBackgroundView.image = nil;
+        [paperBackgroundView removeFromSuperview];
+        paperBackgroundView = nil;
+    }
 }
 
 #pragma mark - Thumbnail Generation

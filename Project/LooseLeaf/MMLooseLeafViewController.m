@@ -748,11 +748,15 @@
     allStacksScrollView.scrollEnabled = NO;
 }
 
-- (void)safelyScrollToOffsetY:(CGFloat)targetYOffset animated:(BOOL)animated {
+-(CGFloat) idealYForYOffset:(CGFloat)targetYOffset{
     CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
     idealY = MAX(0, idealY - [UIScreen screenHeight]);
+    return idealY;
+}
 
+- (void)safelyScrollToOffsetY:(CGFloat)targetYOffset animated:(BOOL)animated {
+    CGFloat idealY = [self idealYForYOffset:targetYOffset];
     [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:animated];
 }
 
@@ -834,7 +838,7 @@
 }
 
 - (void)isPossiblyDeletingStack:(NSString*)stackUUID withPendingProbability:(CGFloat)probability {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = NO;
         [deleteSidebar showSidebarWithPercent:probability withTargetView:stackViewsByUUID[stackUUID]];
 
@@ -866,7 +870,7 @@
 }
 
 - (void)isAskingToDeleteStack:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* stackView = stackViewsByUUID[stackUUID];
         [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
@@ -884,7 +888,7 @@
 }
 
 - (void)isNotGoingToDeleteStack:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = YES;
         [deleteSidebar showSidebarWithPercent:0 withTargetView:stackViewsByUUID[stackUUID]];
     }
@@ -895,13 +899,13 @@
 }
 
 - (void)isBeginningToEditName:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = NO;
     }
 }
 
 - (void)didFinishEditingName:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = YES;
     }
 }
@@ -1013,11 +1017,26 @@
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
     NSArray* arr = @[];
-    if ([self isShowingCollapsedView] || willPossiblyShowCollapsedView) {
-        for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
-            arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
-        }
+    if ([self isShowingCollapsedView:[currentStackView uuid]] || willPossiblyShowCollapsedView) {
 
+        CGFloat bottomY = MAX(0, allStacksScrollView.contentOffset.y);
+        if(currentStackView){
+            bottomY = [self targetYForFrameForStackInCollapsedList:[currentStackView uuid]];
+            bottomY = [self idealYForYOffset:bottomY];
+        }
+        
+        for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
+            CGFloat y = [self targetYForFrameForStackInCollapsedList:[aStackView uuid]];
+            CGFloat topY = bottomY + CGRectGetHeight([allStacksScrollView bounds]);
+            topY = MIN(topY, allStacksScrollView.contentSize.height);
+            bottomY = MAX(0, topY - CGRectGetHeight([allStacksScrollView bounds]));
+            
+            if(y < topY && y + [self stackRowHeight] > bottomY){
+                // only add stacks that will be visible in our scrolled area
+                arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
+            }
+        }
+        
         if (willPossiblyShowCollapsedView) {
             // only don't load the page sidebar into cache
             // if we're already in collapsed view. still load
@@ -1048,8 +1067,10 @@
     return [currentStackView isShowingListView] && !isShowingCollapsedView;
 }
 
-- (BOOL)isShowingCollapsedView {
-    return isShowingCollapsedView;
+// return YES if the input stack is in collapsed mode
+// NO otherwise.
+- (BOOL)isShowingCollapsedView:(NSString*)stackUUID {
+    return isShowingCollapsedView || (!currentStackView || ![[currentStackView uuid] isEqualToString:stackUUID]);
 }
 
 - (NSInteger)countAllPages {
@@ -1674,6 +1695,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     [self updateStackNameColorsAnimated:NO];
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
 - (void)enableAllSmoothBorders:(BOOL)enable {

@@ -69,6 +69,11 @@
 
     MMPDF* pdfToDecrypt;
     void (^finishDecryptingPDFBlock)();
+    
+    BOOL _isActivelyDraggingScrollView;
+    MMColoredTextField* stackNameField;
+    
+    CGRect cachedStackNameFieldFrame;
 }
 
 @dynamic stackDelegate;
@@ -173,9 +178,11 @@
 }
 
 - (CGRect)rectForColorConsideration {
-    CGRect targetRect = [stackNameField frame];
-    targetRect.size = [stackNameField sizeThatFits:targetRect.size];
-    return targetRect;
+    if(CGRectEqualToRect(CGRectZero, cachedStackNameFieldFrame)){
+        cachedStackNameFieldFrame = [stackNameField frame];
+        cachedStackNameFieldFrame.size = [stackNameField sizeThatFits:cachedStackNameFieldFrame.size];
+    }
+    return cachedStackNameFieldFrame;
 }
 
 - (void)setNameColor:(UIColor*)color animated:(BOOL)animated {
@@ -184,11 +191,11 @@
 
 - (void)setCurrentViewMode:(NSString*)currentViewMode {
     [super setCurrentViewMode:currentViewMode];
-    deleteGesture.enabled = [self isShowingCollapsedView];
+    deleteGesture.enabled = [self isShowingCollapsedView:[self uuid]];
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
-    if ([self.stackDelegate isShowingCollapsedView]) {
+    if ([self.stackDelegate isShowingCollapsedView:[self uuid]]) {
         // if we're collapsed, then we want to show the same pages
         // that would appear in our row view
         return [self pagesToAlignForRowView];
@@ -234,7 +241,7 @@
 - (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages {
     [self ensureAtLeast:3 pagesInStack:self.visibleStackHolder];
 
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:[self uuid]]) {
         [self organizePagesIntoSingleRowAnimated:NO];
 
         for (MMPaperView* page in [[self visibleStackHolder] subviews]) {
@@ -301,9 +308,10 @@
 }
 
 - (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)(BOOL success))completionBlock {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:[self uuid]]) {
         if ([pdfDoc.pdf.title length]) {
             self.stackManager.name = pdfDoc.pdf.title;
+            cachedStackNameFieldFrame = CGRectZero;
             [self refreshNameFromStackManager];
         }
 
@@ -468,7 +476,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    if ([scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
+    if (_isActivelyDraggingScrollView && [scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
         [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
     }
 
@@ -481,7 +489,7 @@
 
     CGFloat updatedAlpha = y / 100.0;
 
-    if (updatedAlpha >= 1.0 && collapseNoticeArrow.alpha < 1.0) {
+    if (_isActivelyDraggingScrollView && updatedAlpha >= 1.0 && collapseNoticeArrow.alpha < 1.0) {
         [collapseNoticeArrow bounce];
     }
 
@@ -493,7 +501,13 @@
     [super scrollViewDidScroll:scrollView];
 }
 
+-(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    _isActivelyDraggingScrollView = YES;
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
+    _isActivelyDraggingScrollView = NO;
+    
     if (scrollView.contentOffset.y < -100) {
         // Need to turn off bouncing so that the bounce animation from releasing the over-scroll
         // doesn't occur. otherwise it interferes with the row animation.
@@ -1150,6 +1164,7 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField*)textField {
+    cachedStackNameFieldFrame = CGRectZero;
     self.stackManager.name = textField.text;
     emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
 
@@ -1321,5 +1336,10 @@
     }
 }
 
+#pragma mark - MMPageCacheManagerDelegate
+
+- (BOOL)isShowingCollapsedView:(NSString*)uuid {
+    return [super isShowingCollapsedView:uuid] || [self.stackDelegate isShowingCollapsedView:uuid];
+}
 
 @end

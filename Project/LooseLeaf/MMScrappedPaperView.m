@@ -45,7 +45,6 @@
 
 @implementation MMScrappedPaperView {
     NSString* scrapIDsPath;
-    MMDecompressImagePromise* scrappedImgViewImage;
     // track if we should have our thumbnail loaded
     // this will help us since we use lots of threads
     // during thumbnail loading.
@@ -139,7 +138,9 @@
             // scrap state isn't loaded, so show
             // our thumbnail
             //            DebugLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
-            [self setThumbnailTo:scrappedImgViewImage.image];
+            if([scrappedImgViewImage isDecompressed]){
+                [self setThumbnailTo:scrappedImgViewImage.image];
+            }
             scrapsOnPaperState.scrapContainerView.hidden = YES;
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
@@ -164,7 +165,9 @@
     } else {
         //        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
         //        DebugLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
-        [self setThumbnailTo:scrappedImgViewImage.image];
+        if([scrappedImgViewImage isDecompressed]){
+            [self setThumbnailTo:scrappedImgViewImage.image];
+        }
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;

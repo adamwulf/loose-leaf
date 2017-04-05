@@ -11,7 +11,7 @@
 
 @protocol MMCollapsableStackViewDelegate <MMTutorialStackViewDelegate>
 
-- (BOOL)isShowingCollapsedView;
+- (BOOL)isShowingCollapsedView:(NSString*)stackUUID;
 
 - (BOOL)isAllowedToInteractWithStack:(NSString*)stackUUID;
 
