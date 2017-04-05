@@ -458,6 +458,7 @@
 		C53F97CB1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F97CA1E935EBF00A1233E /* MMUndoRedoPageBackgroundItem.m */; };
 		C53FCED71E94A09300AA4BEC /* MMTodoListTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */; };
 		C53FCEDA1E94A3A800AA4BEC /* MMBoxNotesTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */; };
+		C53FCEDD1E94A64C00AA4BEC /* MMMusicTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1521,6 +1522,8 @@
 		C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTodoListTemplateView.m; sourceTree = "<group>"; };
 		C53FCED81E94A3A800AA4BEC /* MMBoxNotesTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMBoxNotesTemplateView.h; sourceTree = "<group>"; };
 		C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMBoxNotesTemplateView.m; sourceTree = "<group>"; };
+		C53FCEDB1E94A64C00AA4BEC /* MMMusicTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMMusicTemplateView.h; sourceTree = "<group>"; };
+		C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMusicTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3959,6 +3962,8 @@
 				C53FCED61E94A09300AA4BEC /* MMTodoListTemplateView.m */,
 				C53FCED81E94A3A800AA4BEC /* MMBoxNotesTemplateView.h */,
 				C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */,
+				C53FCEDB1E94A64C00AA4BEC /* MMMusicTemplateView.h */,
+				C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4825,6 +4830,7 @@
 				C5F1B2861D9B01BB00E0E9A8 /* _MPTweakBindObserver.m in Sources */,
 				C5C298FD1D7BFD2E009AE6BE /* MMReleaseNotesView.m in Sources */,
 				66CE120317D3AD7C00882275 /* MMBounceButton.m in Sources */,
+				C53FCEDD1E94A64C00AA4BEC /* MMMusicTemplateView.m in Sources */,
 				66BD6E3B1592CFE600D4544C /* UIView+SubviewStacks.m in Sources */,
 				66AC8D8318E88F4700A65036 /* MMPhotoAlbum.mm in Sources */,
 				6610D0951AA9041B0019C2FB /* NSString+MD5.m in Sources */,
