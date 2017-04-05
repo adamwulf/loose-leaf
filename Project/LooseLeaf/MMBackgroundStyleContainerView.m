@@ -21,6 +21,7 @@
 #import "MMBoxNotesTemplateView.h"
 #import "MMMusicTemplateView.h"
 #import "MMCmGridTemplateView.h"
+#import "MMInGridTemplateView.h"
 
 #define kNumberOfButtonColumns 2
 
@@ -49,6 +50,7 @@
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMBoxNotesTemplateView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMMusicTemplateView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMCmGridTemplateView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMInGridTemplateView class]];
 
         int buttonIndex = 0;
         CGFloat buttonWidth = [self buttonWidth];

@@ -58,7 +58,7 @@
 
     BOOL first = YES;
     CGFloat y = 0;
-    while (y < originalSize.height) {
+    while (y < originalSize.height / 2) {
         [path moveToPoint:CGPointMake(0, originalSize.height / 2 - y)];
         [path addLineToPoint:CGPointMake(originalSize.width, originalSize.height / 2 - y)];
 
@@ -83,7 +83,7 @@
     
     BOOL first = YES;
     CGFloat y = 0;
-    while (y < originalSize.height) {
+    while (y < originalSize.width / 2) {
         [path moveToPoint:CGPointMake(originalSize.width / 2 - y, 0)];
         [path addLineToPoint:CGPointMake(originalSize.width / 2 - y, originalSize.height)];
         

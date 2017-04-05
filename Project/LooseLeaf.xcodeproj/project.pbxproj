@@ -460,6 +460,7 @@
 		C53FCEDA1E94A3A800AA4BEC /* MMBoxNotesTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCED91E94A3A800AA4BEC /* MMBoxNotesTemplateView.m */; };
 		C53FCEDD1E94A64C00AA4BEC /* MMMusicTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */; };
 		C53FCEE01E94AA1100AA4BEC /* MMCmGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */; };
+		C53FCEE31E94ABCE00AA4BEC /* MMInGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1527,6 +1528,8 @@
 		C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMusicTemplateView.m; sourceTree = "<group>"; };
 		C53FCEDE1E94AA1100AA4BEC /* MMCmGridTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCmGridTemplateView.h; sourceTree = "<group>"; };
 		C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCmGridTemplateView.m; sourceTree = "<group>"; };
+		C53FCEE11E94ABCE00AA4BEC /* MMInGridTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInGridTemplateView.h; sourceTree = "<group>"; };
+		C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInGridTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3969,6 +3972,8 @@
 				C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */,
 				C53FCEDE1E94AA1100AA4BEC /* MMCmGridTemplateView.h */,
 				C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */,
+				C53FCEE11E94ABCE00AA4BEC /* MMInGridTemplateView.h */,
+				C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -5073,6 +5078,7 @@
 				668D19DC19F8572700A65DCF /* UIApplication+Version.m in Sources */,
 				66343C5A1ABFA8FC00801962 /* MMEmailInputField.m in Sources */,
 				66EDE42D19AFE27300A5623B /* MMExportablePaperView.m in Sources */,
+				C53FCEE31E94ABCE00AA4BEC /* MMInGridTemplateView.m in Sources */,
 				C50490981E748A9500533119 /* UIImage+MMRotation.m in Sources */,
 				C5A8E1B01DC308E400CD608F /* MMListSidebarStackView.m in Sources */,
 				665245681996DAB800C36609 /* AFURLRequestSerialization.m in Sources */,
