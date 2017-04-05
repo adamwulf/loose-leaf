@@ -748,11 +748,15 @@
     allStacksScrollView.scrollEnabled = NO;
 }
 
-- (void)safelyScrollToOffsetY:(CGFloat)targetYOffset animated:(BOOL)animated {
+-(CGFloat) idealYForYOffset:(CGFloat)targetYOffset{
     CGFloat fullHeight = [self contentHeightForAllStacks];
     CGFloat idealY = MIN(targetYOffset + [UIScreen screenHeight] * 3.0 / 5.0, fullHeight);
     idealY = MAX(0, idealY - [UIScreen screenHeight]);
+    return idealY;
+}
 
+- (void)safelyScrollToOffsetY:(CGFloat)targetYOffset animated:(BOOL)animated {
+    CGFloat idealY = [self idealYForYOffset:targetYOffset];
     [allStacksScrollView setContentOffset:CGPointMake(0, idealY) animated:animated];
 }
 
@@ -1014,8 +1018,20 @@
 - (NSArray*)findPagesInVisibleRowsOfListView {
     NSArray* arr = @[];
     if ([self isShowingCollapsedView:[currentStackView uuid]] || willPossiblyShowCollapsedView) {
+
+        CGFloat bottomY = allStacksScrollView.contentOffset.y;
+        if(currentStackView){
+            bottomY = [self targetYForFrameForStackInCollapsedList:[currentStackView uuid]];
+            bottomY = [self idealYForYOffset:bottomY];
+        }
+        
         for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
-            arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
+            CGFloat y = [self targetYForFrameForStackInCollapsedList:[aStackView uuid]];
+            CGFloat topY = bottomY + CGRectGetHeight([allStacksScrollView bounds]);
+            if(y < topY && y + [self stackRowHeight] > bottomY){
+                // only add stacks that will be visible in our scrolled area
+                arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
+            }
         }
 
         if (willPossiblyShowCollapsedView) {
@@ -1676,6 +1692,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     [self updateStackNameColorsAnimated:NO];
+    [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
 - (void)enableAllSmoothBorders:(BOOL)enable {

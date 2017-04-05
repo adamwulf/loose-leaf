@@ -71,6 +71,9 @@
     void (^finishDecryptingPDFBlock)();
     
     BOOL _isActivelyDraggingScrollView;
+    MMColoredTextField* stackNameField;
+    
+    CGRect cachedStackNameFieldFrame;
 }
 
 @dynamic stackDelegate;
@@ -175,9 +178,11 @@
 }
 
 - (CGRect)rectForColorConsideration {
-    CGRect targetRect = [stackNameField frame];
-    targetRect.size = [stackNameField sizeThatFits:targetRect.size];
-    return targetRect;
+    if(CGRectEqualToRect(CGRectZero, cachedStackNameFieldFrame)){
+        cachedStackNameFieldFrame = [stackNameField frame];
+        cachedStackNameFieldFrame.size = [stackNameField sizeThatFits:cachedStackNameFieldFrame.size];
+    }
+    return cachedStackNameFieldFrame;
 }
 
 - (void)setNameColor:(UIColor*)color animated:(BOOL)animated {
@@ -306,6 +311,7 @@
     if ([self isShowingCollapsedView:[self uuid]]) {
         if ([pdfDoc.pdf.title length]) {
             self.stackManager.name = pdfDoc.pdf.title;
+            cachedStackNameFieldFrame = CGRectZero;
             [self refreshNameFromStackManager];
         }
 
@@ -1158,6 +1164,7 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField*)textField {
+    cachedStackNameFieldFrame = CGRectZero;
     self.stackManager.name = textField.text;
     emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
 

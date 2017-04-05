@@ -20,7 +20,7 @@
 @property (nonatomic, readonly) BOOL isCurrentlyHandlingImport;
 
 @property (nonatomic, readonly) CGRect rectForColorConsideration;
-@property (nonatomic, readonly) MMColoredTextField* stackNameField;
+@property (nonatomic, readonly) UIView* stackNameField;
 
 - (void)organizePagesIntoSingleRowAnimated:(BOOL)animated;
 - (void)organizePagesIntoListAnimated:(BOOL)animated;

@@ -386,9 +386,11 @@
 
 - (void)unloadCachedPreview {
     [super unloadCachedPreview];
-    paperBackgroundView.image = nil;
-    [paperBackgroundView removeFromSuperview];
-    paperBackgroundView = nil;
+    @autoreleasepool {
+        paperBackgroundView.image = nil;
+        [paperBackgroundView removeFromSuperview];
+        paperBackgroundView = nil;
+    }
 }
 
 #pragma mark - Thumbnail Generation
