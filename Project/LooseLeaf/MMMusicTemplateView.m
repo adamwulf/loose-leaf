@@ -32,13 +32,17 @@
 }
 
 -(void) finishInit{
-    CAShapeLayer* blueLines = [CAShapeLayer layer];
-    blueLines.path = [[self path] CGPath];
-    blueLines.backgroundColor = [UIColor clearColor].CGColor;
-    blueLines.strokeColor = [UIColor blackColor].CGColor;
-    blueLines.fillColor = [UIColor clearColor].CGColor;
+    CAShapeLayer* lines = [CAShapeLayer layer];
+    lines.path = [[self path] CGPath];
+    lines.backgroundColor = [UIColor clearColor].CGColor;
+    lines.strokeColor = [UIColor blackColor].CGColor;
+    lines.fillColor = [UIColor clearColor].CGColor;
     
-    [[self layer] addSublayer:blueLines];
+    if([self scale].x < .5){
+        lines.lineWidth = .5;
+    }
+
+    [[self layer] addSublayer:lines];
 
     CAShapeLayer* lineCapsLayer = [CAShapeLayer layer];
     lineCapsLayer.path = [[self pathCaps] CGPath];
@@ -109,6 +113,12 @@
         // since the PDF may be much taller/wider than our screen
         CGContextScaleCTM(context, size.width / pageSize.width, size.height / pageSize.height);
         CGContextTranslateCTM(context, -scaledScreen.origin.x, -scaledScreen.origin.y);
+
+        UIBezierPath* path = [self path];
+        
+        if(size.width / pageSize.width < .5){
+            path.lineWidth = .5;
+        }
         
         [[UIColor blackColor] setStroke];
         [[self path] stroke];

@@ -461,6 +461,7 @@
 		C53FCEDD1E94A64C00AA4BEC /* MMMusicTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDC1E94A64C00AA4BEC /* MMMusicTemplateView.m */; };
 		C53FCEE01E94AA1100AA4BEC /* MMCmGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */; };
 		C53FCEE31E94ABCE00AA4BEC /* MMInGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */; };
+		C53FCEE61E94AEDD00AA4BEC /* MMCmDotsTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE51E94AEDD00AA4BEC /* MMCmDotsTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1530,6 +1531,8 @@
 		C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCmGridTemplateView.m; sourceTree = "<group>"; };
 		C53FCEE11E94ABCE00AA4BEC /* MMInGridTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMInGridTemplateView.h; sourceTree = "<group>"; };
 		C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInGridTemplateView.m; sourceTree = "<group>"; };
+		C53FCEE41E94AEDD00AA4BEC /* MMCmDotsTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCmDotsTemplateView.h; sourceTree = "<group>"; };
+		C53FCEE51E94AEDD00AA4BEC /* MMCmDotsTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCmDotsTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3974,6 +3977,8 @@
 				C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */,
 				C53FCEE11E94ABCE00AA4BEC /* MMInGridTemplateView.h */,
 				C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */,
+				C53FCEE41E94AEDD00AA4BEC /* MMCmDotsTemplateView.h */,
+				C53FCEE51E94AEDD00AA4BEC /* MMCmDotsTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -4813,6 +4818,7 @@
 				66E100F619EC4B67006E7C15 /* MMCameraButton.m in Sources */,
 				C5F1B2991D9B01BB00E0E9A8 /* MixpanelWatchOS.m in Sources */,
 				664F4139159063F8006F8B09 /* MMPlusIcon.m in Sources */,
+				C53FCEE61E94AEDD00AA4BEC /* MMCmDotsTemplateView.m in Sources */,
 				664F413D1590661F006F8B09 /* MMRightArrow.m in Sources */,
 				664F414015906628006F8B09 /* MMLeftArrow.m in Sources */,
 				660116FB19ABBA7E0065C1B4 /* MMCloudKitFetchFriendsState.m in Sources */,
