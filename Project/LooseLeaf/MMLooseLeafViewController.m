@@ -1019,7 +1019,7 @@
     NSArray* arr = @[];
     if ([self isShowingCollapsedView:[currentStackView uuid]] || willPossiblyShowCollapsedView) {
 
-        CGFloat bottomY = allStacksScrollView.contentOffset.y;
+        CGFloat bottomY = MAX(0, allStacksScrollView.contentOffset.y);
         if(currentStackView){
             bottomY = [self targetYForFrameForStackInCollapsedList:[currentStackView uuid]];
             bottomY = [self idealYForYOffset:bottomY];
@@ -1028,12 +1028,15 @@
         for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
             CGFloat y = [self targetYForFrameForStackInCollapsedList:[aStackView uuid]];
             CGFloat topY = bottomY + CGRectGetHeight([allStacksScrollView bounds]);
+            topY = MIN(topY, allStacksScrollView.contentSize.height);
+            bottomY = MAX(0, topY - CGRectGetHeight([allStacksScrollView bounds]));
+            
             if(y < topY && y + [self stackRowHeight] > bottomY){
                 // only add stacks that will be visible in our scrolled area
                 arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
             }
         }
-
+        
         if (willPossiblyShowCollapsedView) {
             // only don't load the page sidebar into cache
             // if we're already in collapsed view. still load
