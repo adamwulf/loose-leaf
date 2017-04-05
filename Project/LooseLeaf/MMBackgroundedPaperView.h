@@ -7,6 +7,7 @@
 //
 
 #import "MMUndoablePaperView.h"
+#import "MMBackgroundStyleContainerViewDelegate.h"
 
 typedef enum : NSInteger {
     ExportRotationBackgroundDefault = 0,
@@ -15,9 +16,17 @@ typedef enum : NSInteger {
     ExportRotationLandscapeRight
 } ExportRotation;
 
-@interface MMBackgroundedPaperView : MMUndoablePaperView
+@class MMPaperTemplateView;
+
+@interface MMBackgroundedPaperView : MMUndoablePaperView<MMBackgroundStyleContainerViewDelegate>
+
++(NSString*) defaultBackgroundClass;
++(void) setDefaultBackgroundClass:(NSString*)background;
+
 
 @property (nonatomic, assign) ExportRotation idealExportRotation;
+@property (nonatomic, strong) MMPaperTemplateView* ruledOrGridBackgroundView;
+@property (nonatomic, readonly) BOOL hasBackgroundAsset;
 
 - (UIImage*)pageBackgroundTexture;
 

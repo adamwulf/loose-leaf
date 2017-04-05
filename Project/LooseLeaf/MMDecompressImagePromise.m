@@ -44,25 +44,26 @@ NSOperationQueue* decompressImageQueue;
                 // this isn't that important since you just want UIImage to decompress the image data before switching back to main thread
                 MMDecompressImagePromise* strongContextSelf = weakSelf;
                 if (strongContextSelf) {
-                    @synchronized(strongContextSelf) {
-                        if (strongContextSelf) {
-                            if (strongContextSelf.image) {
-                                UIGraphicsBeginImageContext(CGSizeMake(1, 1));
-                                [strongContextSelf.image drawAtPoint:CGPointZero];
-                                UIGraphicsEndImageContext();
-                            }
-                            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                                @autoreleasepool {
-                                    @synchronized(strongContextSelf) {
-                                        if (strongContextSelf && strongContextSelf.image) {
-                                            strongContextSelf.isDecompressed = YES;
-                                            [strongContextSelf.delegate didDecompressImage:strongContextSelf];
-                                        }
-                                    }
-                                }
-                            });
-                        }
+                    UIImage* imgToDecompress = strongContextSelf.image;
+                    if (imgToDecompress) {
+                        UIGraphicsBeginImageContext(CGSizeMake(1, 1));
+                        [imgToDecompress drawAtPoint:CGPointZero];
+                        UIGraphicsEndImageContext();
                     }
+                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                        @autoreleasepool {
+                            BOOL shouldNotify = NO;
+                            @synchronized(strongContextSelf) {
+                                if (strongContextSelf && strongContextSelf.image) {
+                                    strongContextSelf.isDecompressed = YES;
+                                    shouldNotify = YES;
+                                }
+                            }
+                            if(shouldNotify){
+                                [strongContextSelf.delegate didDecompressImage:strongContextSelf];
+                            }
+                        }
+                    });
                 }
             }
         }];

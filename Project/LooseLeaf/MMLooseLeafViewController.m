@@ -55,12 +55,13 @@
 #import "MMShareStackSidebarContainerView.h"
 #import "MMStopWatch.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-
+#import "MMBackgroundStyleContainerView.h"
+#import "MMBackgroundStyleContainerViewDelegate.h"
 #import "MMPDFAssetGroup.h"
 #import "MMDisplayAsset.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate,MMBackgroundStyleContainerViewDelegate>
 
 @end
 
@@ -75,6 +76,9 @@
     // image picker sidebar
     MMImageSidebarContainerView* importImageSidebar;
 
+    // page background sidebar
+    MMBackgroundStyleContainerView* backgroundStyleSidebar;
+    
     // share sidebar
     MMShareSidebarContainerView* sharePageSidebar;
 
@@ -149,7 +153,6 @@
         [MMPageCacheManager sharedInstance].delegate = self;
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
-        [[MMRotationManager sharedInstance] setDelegate:self];
 
 
         // Do any additional setup after loading the view, typically from a nib.
@@ -285,6 +288,13 @@
         [importImageSidebar hide:NO onComplete:nil];
         [self.view addSubview:importImageSidebar];
 
+        // page background sidebar
+        backgroundStyleSidebar = [[MMBackgroundStyleContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView backgroundStyleButtonFrame] animateFromLeft:YES];
+        backgroundStyleSidebar.delegate = self;
+        backgroundStyleSidebar.bgDelegate = self;
+        [backgroundStyleSidebar hide:NO onComplete:nil];
+        [self.view addSubview:backgroundStyleSidebar];
+        
         // Share sidebar
         sharePageSidebar = [[MMShareSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView shareButtonFrame] animateFromLeft:YES];
         sharePageSidebar.delegate = self;
@@ -368,6 +378,7 @@
                                                  selector:@selector(keyboardWillChangeFrame:)
                                                      name:UIKeyboardWillChangeFrameNotification
                                                    object:nil];
+        [[MMRotationManager sharedInstance] setDelegate:self];
 
         // Debug
 
@@ -507,6 +518,10 @@
 
 - (MMImageSidebarContainerView*)importImageSidebar {
     return importImageSidebar;
+}
+
+-(MMBackgroundStyleContainerView*) backgroundStyleSidebar{
+    return backgroundStyleSidebar;
 }
 
 - (MMShareSidebarContainerView*)sharePageSidebar {
@@ -1148,7 +1163,6 @@
 
 #pragma mark - MMRotationManagerDelegate
 
-
 - (void)willRotateInterfaceFrom:(UIInterfaceOrientation)fromOrient to:(UIInterfaceOrientation)toOrient {
     [currentStackView willRotateInterfaceFrom:fromOrient to:toOrient];
 }
@@ -1190,7 +1204,8 @@
 - (void)sidebarCloseButtonWasTapped:(MMFullScreenSidebarContainingView*)sidebar {
     if (sidebar == bezelScrapContainer ||
         sidebar == importImageSidebar ||
-        sidebar == sharePageSidebar) {
+        sidebar == sharePageSidebar ||
+        sidebar == backgroundStyleSidebar) {
         [currentStackView sidebarCloseButtonWasTapped:sidebar];
     }
 }
@@ -1198,7 +1213,8 @@
 - (void)sidebarWillShow:(MMFullScreenSidebarContainingView*)sidebar {
     if (sidebar == bezelScrapContainer ||
         sidebar == importImageSidebar ||
-        sidebar == sharePageSidebar) {
+        sidebar == sharePageSidebar ||
+        sidebar == backgroundStyleSidebar) {
         [currentStackView sidebarWillShow:sidebar];
     }
 }
@@ -1206,7 +1222,8 @@
 - (void)sidebarWillHide:(MMFullScreenSidebarContainingView*)sidebar {
     if (sidebar == bezelScrapContainer ||
         sidebar == importImageSidebar ||
-        sidebar == sharePageSidebar) {
+        sidebar == sharePageSidebar ||
+        sidebar == backgroundStyleSidebar) {
         [currentStackView sidebarWillHide:sidebar];
     }
 }
@@ -1735,6 +1752,17 @@
     } else {
         [currentStackView exportStackToPDF:completionBlock withProgress:progressBlock];
     }
+}
+
+#pragma mark - MMBackgroundStyleContainerViewDelegate
+
+-(NSString*) currentBackgroundStyleType{
+    return [currentStackView currentBackgroundStyleType];
+}
+
+-(void) setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle{
+    [MMBackgroundedPaperView setDefaultBackgroundClass:currentBackgroundStyle];    
+    [currentStackView setCurrentBackgroundStyleType:currentBackgroundStyle];
 }
 
 #pragma mark - Tmp Files

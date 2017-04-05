@@ -1307,4 +1307,19 @@
     exportTopPageOf(allPages);
 }
 
+#pragma mark - MMBackgroundStyleContainerViewDelegate
+
+-(NSString*) currentBackgroundStyleType{
+    return [[[self visibleStackHolder] peekSubview] currentBackgroundStyleType];
+}
+
+-(void) setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle{
+    if([[[self visibleStackHolder] peekSubview] hasBackgroundAsset]){
+        [self addPageButtonTapped:nil];
+    }else{
+        [[[self visibleStackHolder] peekSubview] setCurrentBackgroundStyleType:currentBackgroundStyle];
+    }
+}
+
+
 @end

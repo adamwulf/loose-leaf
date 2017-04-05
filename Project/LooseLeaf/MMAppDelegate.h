@@ -23,4 +23,8 @@
 
 @property (strong, nonatomic) MMLooseLeafViewController* viewController;
 
+
++ (NSString*)email;
++ (void)setEmail:(NSString*)email;
+
 @end

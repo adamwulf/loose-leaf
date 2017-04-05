@@ -11,6 +11,8 @@
 
 @interface NSFileManager (DirectoryOptimizations)
 
++ (NSString*)cachesPath;
+
 + (NSString*)documentsPath;
 
 - (void)preCacheDirectoryListingAt:(NSString*)directoryToScan;

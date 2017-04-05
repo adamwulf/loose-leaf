@@ -108,6 +108,8 @@
 
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
+        [backgroundStyleButton addTarget:self action:@selector(backgroundStyleButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        
         deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds andDarkBorder:YES];
         [self addSubview:deleteScrapSidebar.deleteSidebarBackground];
 
@@ -824,6 +826,17 @@
 
 #pragma mark - Sharing
 
+-(void)backgroundStyleButtonTapped:(UIButton*)_button {
+    if ([self isActivelyGesturing]) {
+        // export not allowed while gesturing
+        return;
+    }
+    
+    [self cancelAllGestures];
+    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [self setButtonsVisible:NO withDuration:0.15];
+    [self.stackDelegate.backgroundStyleSidebar show:YES];
+}
 
 - (void)shareButtonTapped:(UIButton*)_button {
     if ([self isActivelyGesturing]) {
@@ -836,7 +849,6 @@
     [self setButtonsVisible:NO withDuration:0.15];
     [self.stackDelegate.sharePageSidebar show:YES];
 }
-
 
 #pragma mark - MMPencilAndPaletteViewDelegate
 
@@ -1987,7 +1999,7 @@
 // MMEditablePaperStackView calls this method to check
 // if the sidebar buttons should take priority over anything else
 - (BOOL)shouldPrioritizeSidebarButtonsForTaps {
-    return ![self.stackDelegate.importImageSidebar isVisible] && ![self.stackDelegate.sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
+    return ![self.stackDelegate.backgroundStyleSidebar isVisible] && ![self.stackDelegate.importImageSidebar isVisible] && ![self.stackDelegate.sharePageSidebar isVisible] && [super shouldPrioritizeSidebarButtonsForTaps];
 }
 
 #pragma mark - Check for Active Gestures

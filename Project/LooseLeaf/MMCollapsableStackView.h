@@ -9,9 +9,9 @@
 #import "MMTutorialStackView.h"
 #import "MMCollapsableStackViewDelegate.h"
 #import "MMColoredTextField.h"
+#import "MMBackgroundStyleContainerViewDelegate.h"
 
-
-@interface MMCollapsableStackView : MMTutorialStackView
+@interface MMCollapsableStackView : MMTutorialStackView<MMBackgroundStyleContainerViewDelegate>
 
 + (CGRect)shareStackButtonFrame;
 
