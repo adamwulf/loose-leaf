@@ -462,6 +462,7 @@
 		C53FCEE01E94AA1100AA4BEC /* MMCmGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEDF1E94AA1100AA4BEC /* MMCmGridTemplateView.m */; };
 		C53FCEE31E94ABCE00AA4BEC /* MMInGridTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */; };
 		C53FCEE61E94AEDD00AA4BEC /* MMCmDotsTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE51E94AEDD00AA4BEC /* MMCmDotsTemplateView.m */; };
+		C53FCEE91E94B3FF00AA4BEC /* MMHandwritingTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEE81E94B3FF00AA4BEC /* MMHandwritingTemplateView.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
@@ -1533,6 +1534,8 @@
 		C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMInGridTemplateView.m; sourceTree = "<group>"; };
 		C53FCEE41E94AEDD00AA4BEC /* MMCmDotsTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCmDotsTemplateView.h; sourceTree = "<group>"; };
 		C53FCEE51E94AEDD00AA4BEC /* MMCmDotsTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCmDotsTemplateView.m; sourceTree = "<group>"; };
+		C53FCEE71E94B3FF00AA4BEC /* MMHandwritingTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMHandwritingTemplateView.h; sourceTree = "<group>"; };
+		C53FCEE81E94B3FF00AA4BEC /* MMHandwritingTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMHandwritingTemplateView.m; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3979,6 +3982,8 @@
 				C53FCEE21E94ABCE00AA4BEC /* MMInGridTemplateView.m */,
 				C53FCEE41E94AEDD00AA4BEC /* MMCmDotsTemplateView.h */,
 				C53FCEE51E94AEDD00AA4BEC /* MMCmDotsTemplateView.m */,
+				C53FCEE71E94B3FF00AA4BEC /* MMHandwritingTemplateView.h */,
+				C53FCEE81E94B3FF00AA4BEC /* MMHandwritingTemplateView.m */,
 			);
 			name = Backgrounds;
 			sourceTree = "<group>";
@@ -5040,6 +5045,7 @@
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */,
 				66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */,
+				C53FCEE91E94B3FF00AA4BEC /* MMHandwritingTemplateView.m in Sources */,
 				6695B6F01751CC170069E61F /* Pen.m in Sources */,
 				C5EFA5A01D9E13FB00BBE8CD /* MMPageBubbleButton.m in Sources */,
 				66942DD017C84356001E0150 /* MMUntouchableView.m in Sources */,
