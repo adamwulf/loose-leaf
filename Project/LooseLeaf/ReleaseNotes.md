@@ -1,8 +1,14 @@
 # New in 3.0.2!
 
-1. Choose page rotation when exporting
+1. Choose page template
 
-2. Bug fixes and performance improvements
+[page-template.mp4]
+
+2. Choose page rotation when exporting
+
+[page-rotation.png]
+
+3. Bug fixes and performance improvements
 
 # New in 3.0.0!
 1. Organize your pages into lists
