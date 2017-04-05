@@ -1,10 +1,10 @@
 # New in 3.0.2!
 
-1. Choose page template
+1. Choose page templates!
 
 [page-template.mp4]
 
-2. Choose page rotation when exporting
+2. Choose page rotation when exporting!
 
 [page-rotation.png]
 
