@@ -7,13 +7,32 @@
 //
 
 #import "MMUndoablePaperView.h"
+#import "MMBackgroundStyleContainerViewDelegate.h"
+
+typedef enum : NSInteger {
+    ExportRotationBackgroundDefault = 0,
+    ExportRotationLandscapeLeft,
+    ExportRotationPortrait,
+    ExportRotationLandscapeRight
+} ExportRotation;
+
+@class MMPaperTemplateView;
+
+@interface MMBackgroundedPaperView : MMUndoablePaperView<MMBackgroundStyleContainerViewDelegate>
+
++(NSString*) defaultBackgroundClass;
++(void) setDefaultBackgroundClass:(NSString*)background;
 
 
-@interface MMBackgroundedPaperView : MMUndoablePaperView
+@property (nonatomic, assign) ExportRotation idealExportRotation;
+@property (nonatomic, strong) MMPaperTemplateView* ruledOrGridBackgroundView;
+@property (nonatomic, readonly) BOOL hasBackgroundAsset;
 
 - (UIImage*)pageBackgroundTexture;
 
 - (NSString*)backgroundTexturePath;
+
+-(ExportRotation) idealExportRotation;
 
 // saves the file at the input URL as the background's original
 // asset file. This is useful for a background that is set as

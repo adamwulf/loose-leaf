@@ -11,11 +11,13 @@
 #import "Constants.h"
 #import "UIColor+Shadow.h"
 #import "Mixpanel.h"
+#import "MMAppDelegate.h"
+#import "MMEmailInputField.h"
 
 #define kFeedbackPlaceholderText @"Any feedback is very much appreciated!"
 
 
-@interface MMFeedbackView () <UITextViewDelegate>
+@interface MMFeedbackView () <UITextViewDelegate, UITextFieldDelegate>
 
 @end
 
@@ -37,6 +39,11 @@
     UIButton* sendButton;
 
     UIView* thanksView;
+    
+    UILabel* emailPrompt;
+    MMEmailInputField* emailInput;
+    UILabel* validateInput;
+    UILabel* validateInputRed;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -66,13 +73,42 @@
         feedbackPromptLabel.textAlignment = NSTextAlignmentCenter;
         feedbackPromptLabel.text = @"What would make Loose Leaf better?";
 
-        CGRect feedbackFrame = CGRectMake(100, 190, 420, 220);
+        CGRect feedbackFrame = CGRectMake(100, 190, 420, 200);
         feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
         [feedbackTextView setDelegate:self];
         [[feedbackTextView layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
         [[feedbackTextView layer] setBorderWidth:1];
         [feedbackTextView setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
 
+        validateInput = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
+        validateInput.text = @"Please enter a valid email address.";
+        validateInput.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
+        validateInput.textAlignment = NSTextAlignmentCenter;
+        validateInput.hidden = YES;
+        
+        validateInputRed = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
+        validateInputRed.text = @"Please enter a valid email address.";
+        validateInputRed.textColor = [UIColor redColor];
+        validateInputRed.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
+        validateInputRed.textAlignment = NSTextAlignmentCenter;
+        validateInputRed.hidden = YES;
+        
+        // form
+        emailInput = [[MMEmailInputField alloc] initWithFrame:CGRectMake(0, 200, 320, 30)];
+        emailInput.placeholder = @"optional";
+        emailInput.text = [MMAppDelegate email];
+        emailInput.delegate = self;
+
+        emailPrompt = [[UILabel alloc] init];
+        emailPrompt.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
+        emailPrompt.text = @"Your Email";
+        [emailPrompt sizeToFit];
+
+        emailInput.center = CGPointMake(CGRectGetMaxX([feedbackTextView frame]) - CGRectGetWidth([emailInput bounds]) / 2, CGRectGetMaxY(feedbackFrame) + 30);
+        validateInput.center = CGPointMake(CGRectGetWidth([feedbackForm bounds]) / 2, emailInput.center.y + 30);
+        validateInputRed.center = validateInput.center;
+        emailPrompt.center = CGPointMake(CGRectGetWidth([emailPrompt bounds]) / 2 + CGRectGetMinX([feedbackTextView frame]), emailInput.center.y);
+        
         closeAnywayButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         [[closeAnywayButton layer] setBorderColor:[[[UIColor blueShadowColor] colorWithAlphaComponent:1] CGColor]];
         [[closeAnywayButton layer] setBorderWidth:1];
@@ -94,13 +130,17 @@
         [[sendButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [sendButton addTarget:self action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
 
-        CGFloat yOffset = CGRectGetHeight([[self maskedScrollContainer] bounds]) - 120;
+        CGFloat yOffset = CGRectGetHeight([[self maskedScrollContainer] bounds]) - 100;
         closeAnywayButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) - CGRectGetWidth([closeAnywayButton bounds]) - 60) / 2, yOffset);
         sendButton.center = CGPointMake((CGRectGetWidth([[self maskedScrollContainer] bounds]) + CGRectGetWidth([sendButton bounds]) + 60) / 2, yOffset);
 
         [feedbackForm addSubview:logoImageView];
         [feedbackForm addSubview:feedbackPromptLabel];
         [feedbackForm addSubview:feedbackTextView];
+        [feedbackForm addSubview:emailPrompt];
+        [feedbackForm addSubview:emailInput];
+        [feedbackForm addSubview:validateInput];
+        [feedbackForm addSubview:validateInputRed];
         [feedbackForm addSubview:closeAnywayButton];
         [feedbackForm addSubview:sendButton];
         feedbackForm.alpha = 1;
@@ -142,6 +182,7 @@
     NSValue* endFrame = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardFrame = [endFrame CGRectValue];
     CGRect idealFeedbackFrameInWindow = [[self maskedScrollContainer] convertRect:idealFeedbackTextViewFrame toView:nil];
+    CGFloat emailOffset = 0;
 
     if (CGRectIntersectsRect(idealFeedbackFrameInWindow, keyboardFrame)) {
         logoImageView.frame = CGRectOffset(idealLogoImageViewFrame, 0, -20);
@@ -149,6 +190,7 @@
         feedbackTextView.frame = CGRectOffset(CGRectResizeBy(idealFeedbackTextViewFrame, 0, -118), 0, -40);
         closeAnywayButton.frame = CGRectOffset(idealCloseButtonFrame, 0, -178);
         sendButton.frame = CGRectOffset(idealSendButtonFrame, 0, -178);
+        emailOffset = -4;
     } else {
         logoImageView.frame = idealLogoImageViewFrame;
         feedbackPromptLabel.frame = idealFeedbackLabelFrame;
@@ -156,27 +198,65 @@
         closeAnywayButton.frame = idealCloseButtonFrame;
         sendButton.frame = idealSendButtonFrame;
     }
+
+    CGRect feedbackFrame = [feedbackTextView frame];
+    emailInput.center = CGPointMake(CGRectGetMaxX([feedbackTextView frame]) - CGRectGetWidth([emailInput bounds]) / 2, CGRectGetMaxY(feedbackFrame) + 30 + emailOffset);
+    validateInput.center = CGPointMake(CGRectGetWidth([self.maskedScrollContainer bounds]) / 2, emailInput.center.y + 30 + emailOffset);
+    validateInputRed.center = validateInput.center;
+    emailPrompt.center = CGPointMake(CGRectGetWidth([emailPrompt bounds]) / 2 + CGRectGetMinX([feedbackTextView frame]), emailInput.center.y);
 }
 
 #pragma mark - Feedback
 
 - (void)sendFeedback:(UIButton*)button {
-    NSString* feedbackText = feedbackTextView.text ?: @"";
+    if([self validateAndSaveEmailAddressField]){
+        NSString* feedbackText = feedbackTextView.text ?: @"";
+        NSString* email = [emailInput text];
 
-    if (![feedbackText isEqualToString:kFeedbackPlaceholderText]) {
-        [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                          kMPUpgradeFeedbackReply: feedbackText }];
+        if([email length] > 0){
+            [MMAppDelegate setEmail:email];
+        }
+        
+        if (![feedbackText isEqualToString:kFeedbackPlaceholderText]) {
+            
+            NSArray<NSString*>* feedbacks = @[];
+            
+            while ([feedbackText length]) {
+                if([feedbackText length] > 255){
+                    feedbacks = [feedbacks arrayByAddingObject:[feedbackText substringToIndex:255]];
+                    feedbackText = [feedbackText substringFromIndex:255];
+                }else{
+                    feedbacks = [feedbacks arrayByAddingObject:feedbackText];
+                    feedbackText = @"";
+                }
+            }
+            
+            // track longer strings into the event as well
+            NSMutableDictionary* properties = [@{ kMPUpgradeFeedbackResult: @"Neutral",
+                                                 kMPEmailAddressField : [MMAppDelegate email] ?: @"none" } mutableCopy];
+            
+            for (int i=0; i<[feedbacks count]; i++) {
+                NSString* feedback = feedbacks[i];
+                NSString* key = kMPUpgradeFeedbackReply;
+                if(i > 0){
+                    key = [NSString stringWithFormat:@"%@ %d", kMPUpgradeFeedbackReply, i+1];
+                }
+                properties[key] = feedback;
+            }
+            
+            [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:properties];
+        }
+        
+        [feedbackTextView resignFirstResponder];
+        
+        [UIView animateWithDuration:.3 animations:^{
+            thanksView.alpha = 1;
+        } completion:^(BOOL finished) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [[self delegate] didTapToCloseRoundedSquareView:self];
+            });
+        }];
     }
-
-    [feedbackTextView resignFirstResponder];
-
-    [UIView animateWithDuration:.3 animations:^{
-        thanksView.alpha = 1;
-    } completion:^(BOOL finished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[self delegate] didTapToCloseRoundedSquareView:self];
-        });
-    }];
 }
 
 - (void)closeFeedbackForm:(UIButton*)button {
@@ -188,7 +268,8 @@
 
     if (![feedbackText isEqualToString:kFeedbackPlaceholderText]){
         [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Neutral",
-                                                                          kMPUpgradeFeedbackReply: feedbackText }];
+                                                                          kMPUpgradeFeedbackReply: feedbackText,
+                                                                          kMPEmailAddressField : [MMAppDelegate email] ?: @"none" }];
     }
 }
 
@@ -268,6 +349,103 @@
         textView.textColor = [UIColor lightGrayColor]; //optional
     }
     [textView resignFirstResponder];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)bounceEmailInput {
+    [UIView animateWithDuration:1.0 animations:^{
+        validateInputRed.alpha = 0;
+    }];
+    
+    emailInput.layer.borderWidth = 1;
+    emailInput.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    CGColorRef originalColor = emailInput.layer.borderColor;
+    CGFloat originalWidth = emailInput.layer.borderWidth;
+    
+    CABasicAnimation* color = [CABasicAnimation animationWithKeyPath:@"borderColor"];
+    // animate from red to blue border ...
+    color.fromValue = (id)[UIColor redColor].CGColor;
+    color.toValue = (__bridge id)originalColor;
+    
+    CABasicAnimation* width = [CABasicAnimation animationWithKeyPath:@"borderWidth"];
+    // animate from 2pt to 4pt wide border ...
+    width.fromValue = @3;
+    width.toValue = @(originalWidth);
+    
+    CAAnimationGroup* both = [CAAnimationGroup animation];
+    // animate both as a group
+    both.duration = .75;
+    both.animations = @[color, width];
+    both.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+    both.removedOnCompletion = YES;
+    
+    [emailInput.layer addAnimation:both forKey:@"color and width"];
+}
+
+
+// email validation from:
+// http://stackoverflow.com/questions/9305373/validating-the-email-address-in-uitextfield
+- (NSString*)validateInput {
+    NSError* error = nil;
+    NSDataDetector* detector =
+    [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:&error];
+    
+    __block NSString* matchedEmail = nil;
+    NSString* string = emailInput.text;
+    [detector enumerateMatchesInString:string
+                               options:kNilOptions
+                                 range:NSMakeRange(0, [string length])
+                            usingBlock:^(NSTextCheckingResult* result,
+                                         NSMatchingFlags flags, BOOL* stop) {
+                                NSUInteger loc = [result.URL.absoluteString rangeOfString:@"mailto:"].location;
+                                if (loc != NSNotFound) {
+                                    matchedEmail = [result.URL.absoluteString substringFromIndex:[@"mailto:" length]];
+                                }
+                            }];
+    
+    validateInput.hidden = (matchedEmail != nil);
+    validateInputRed.hidden = (matchedEmail != nil);
+    validateInputRed.alpha = 1;
+    if (!matchedEmail) {
+        [self bounceEmailInput];
+    }
+    return matchedEmail;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField*)textField {
+    return [self validateAndSaveEmailAddressField];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    if([textField.text length]){
+        [self validateInput];
+    }else{
+        validateInput.hidden = YES;
+        validateInputRed.hidden = YES;
+    }
+}
+
+- (BOOL)validateAndSaveEmailAddressField {
+    if(emailInput.text.length == 0){
+        // empty email is allowed
+        [emailInput resignFirstResponder];
+        return YES;
+    } else {
+        NSString* validEmail = [self validateInput];
+        
+        if (validEmail) {
+            // valid email is allowed
+            [MMAppDelegate setEmail:validEmail];
+            [emailInput resignFirstResponder];
+            
+            [self sendFeedback:nil];
+            
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

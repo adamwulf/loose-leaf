@@ -52,6 +52,7 @@
     MMPencilAndPaletteView* pencilTool;
     MMPencilEraserButton* eraserButton;
     MMShareButton* shareButton;
+    MMPaperButton* backgroundStyleButton;
     MMTextButton* settingsButton;
 
     MMUndoRedoButton* undoButton;
@@ -70,6 +71,7 @@
 }
 
 + (CGRect)insertImageButtonFrame;
++ (CGRect)backgroundStyleButtonFrame;
 + (CGRect)shareButtonFrame;
 
 @property (nonatomic, readonly) MMImageButton* insertImageButton;

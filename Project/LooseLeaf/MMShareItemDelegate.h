@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CloudKit/CloudKit.h>
 #import "MMAvatarButton.h"
+#import "MMBackgroundedPaperView.h"
 
 @class MMAbstractShareItem;
 
@@ -35,6 +36,8 @@
 @end
 
 @protocol MMShareSidebarDelegate <MMShareDelegate>
+
+@property (nonatomic, assign) ExportRotation idealExportRotation;
 
 - (void)exportVisiblePageToImage:(void (^)(NSURL* urlToImage))completionBlock;
 

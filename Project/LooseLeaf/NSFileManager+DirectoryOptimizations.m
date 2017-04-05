@@ -78,6 +78,14 @@ static NSMutableSet* pathCacheDictionary;
 
 
 static NSArray* userDocumentsPaths;
+static NSArray* userCachesPaths;
+
++ (NSString*)cachesPath {
+    if (!userCachesPaths) {
+        userCachesPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    }
+    return [userCachesPaths objectAtIndex:0];
+}
 
 + (NSString*)documentsPath {
     if (!userDocumentsPaths) {
