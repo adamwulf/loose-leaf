@@ -24,7 +24,7 @@
 
 - (BOOL)isShowingListView;
 
-- (BOOL)isShowingCollapsedView;
+- (BOOL)isShowingCollapsedView:(NSString*)stackUUID;
 
 - (NSInteger)countAllPages;
 

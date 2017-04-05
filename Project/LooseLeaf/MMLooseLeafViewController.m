@@ -834,7 +834,7 @@
 }
 
 - (void)isPossiblyDeletingStack:(NSString*)stackUUID withPendingProbability:(CGFloat)probability {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = NO;
         [deleteSidebar showSidebarWithPercent:probability withTargetView:stackViewsByUUID[stackUUID]];
 
@@ -866,7 +866,7 @@
 }
 
 - (void)isAskingToDeleteStack:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* stackView = stackViewsByUUID[stackUUID];
         [[MMAllStacksManager sharedInstance] deleteStack:stackUUID];
@@ -884,7 +884,7 @@
 }
 
 - (void)isNotGoingToDeleteStack:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = YES;
         [deleteSidebar showSidebarWithPercent:0 withTargetView:stackViewsByUUID[stackUUID]];
     }
@@ -895,13 +895,13 @@
 }
 
 - (void)isBeginningToEditName:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = NO;
     }
 }
 
 - (void)didFinishEditingName:(NSString*)stackUUID {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:stackUUID]) {
         allStacksScrollView.scrollEnabled = YES;
     }
 }
@@ -1013,7 +1013,7 @@
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
     NSArray* arr = @[];
-    if ([self isShowingCollapsedView] || willPossiblyShowCollapsedView) {
+    if ([self isShowingCollapsedView:[currentStackView uuid]] || willPossiblyShowCollapsedView) {
         for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
             arr = [arr arrayByAddingObjectsFromArray:[aStackView findPagesInVisibleRowsOfListView]];
         }
@@ -1048,8 +1048,10 @@
     return [currentStackView isShowingListView] && !isShowingCollapsedView;
 }
 
-- (BOOL)isShowingCollapsedView {
-    return isShowingCollapsedView;
+// return YES if the input stack is in collapsed mode
+// NO otherwise.
+- (BOOL)isShowingCollapsedView:(NSString*)stackUUID {
+    return isShowingCollapsedView || (!currentStackView || ![[currentStackView uuid] isEqualToString:stackUUID]);
 }
 
 - (NSInteger)countAllPages {
