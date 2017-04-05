@@ -13,11 +13,11 @@
 #import "Constants.h"
 #import "UIView+Debug.h"
 #import <JotUI/JotUI.h>
-#import "MMRuledBackgroundView.h"
-#import "MMEmptyBackgroundView.h"
+#import "MMRuledTemplateView.h"
+#import "MMEmptyTemplateView.h"
 #import "Constants.h"
 #import "MMBackgroundedPaperView.h"
-#import "MMTodoListPaperTemplateView.h"
+#import "MMTodoListTemplateView.h"
 
 #define kNumberOfButtonColumns 2
 
@@ -40,9 +40,9 @@
 
         // add page types to buttonView
         backgroundStyles = [NSArray array];
-        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyBackgroundView class]];
-        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledBackgroundView class]];
-        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMTodoListPaperTemplateView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMEmptyTemplateView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMRuledTemplateView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMTodoListTemplateView class]];
 
         int buttonIndex = 0;
         CGFloat buttonWidth = [self buttonWidth];

@@ -1,5 +1,5 @@
 //
-//  MMRuledBackgroundView.h
+//  MMRuledTemplateView.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 3/30/17.
@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MMPaperTemplateView.h"
 
-@interface MMRuledBackgroundView : MMPaperTemplateView
+@interface MMRuledTemplateView : MMPaperTemplateView
 
 @end

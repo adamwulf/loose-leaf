@@ -10,7 +10,7 @@
 #import "MMScrapViewState.h"
 #import "MMScrapBackgroundView.h"
 #import "NSFileManager+DirectoryOptimizations.h"
-#import "MMEmptyBackgroundView.h"
+#import "MMEmptyTemplateView.h"
 
 @implementation MMPaperTemplateView
 
@@ -23,12 +23,12 @@
 #endif
 
 +(Class) backgroundClassForString:(NSString*)currentBackgroundStyle{
-    Class backgroundClass = [MMEmptyBackgroundView class];
+    Class backgroundClass = [MMEmptyTemplateView class];
     
     if([currentBackgroundStyle length]){
         backgroundClass = NSClassFromString(currentBackgroundStyle);
         if(![backgroundClass isSubclassOfClass:[MMPaperTemplateView class]]){
-            backgroundClass = [MMEmptyBackgroundView class];
+            backgroundClass = [MMEmptyTemplateView class];
         }
     }
     

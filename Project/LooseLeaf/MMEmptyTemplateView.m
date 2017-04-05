@@ -1,14 +1,14 @@
 //
-//  MMEmptyBackgroundView.m
+//  MMEmptyTemplateView.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 4/3/17.
 //  Copyright © 2017 Milestone Made, LLC. All rights reserved.
 //
 
-#import "MMEmptyBackgroundView.h"
+#import "MMEmptyTemplateView.h"
 
-@implementation MMEmptyBackgroundView
+@implementation MMEmptyTemplateView
 
 -(void) drawInContext:(CGContextRef)context forSize:(CGSize)size{
     // noop

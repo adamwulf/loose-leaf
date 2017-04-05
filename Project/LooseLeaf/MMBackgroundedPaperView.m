@@ -16,8 +16,8 @@
 #import "UIDevice+PPI.h"
 #import "MMPDF.h"
 #import "MMImmutableScrapsOnPaperState.h"
-#import "MMRuledBackgroundView.h"
-#import "MMEmptyBackgroundView.h"
+#import "MMRuledTemplateView.h"
+#import "MMEmptyTemplateView.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import "UIView+MPHelpers.h"
 #import "MMUndoRedoPageBackgroundItem.h"
@@ -45,7 +45,7 @@
     NSString* ret = [[NSUserDefaults standardUserDefaults] stringForKey:kDefaultPaperBackgroundStyle];
     
     if(!ret || !NSClassFromString(ret)){
-        ret = NSStringFromClass([MMEmptyBackgroundView class]);
+        ret = NSStringFromClass([MMEmptyTemplateView class]);
     }
     
     return ret;
