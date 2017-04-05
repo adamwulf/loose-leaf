@@ -1,4 +1,4 @@
-# New in 3.0.2!
+# New in 3.1.0!
 
 1. Choose page templates!
 
