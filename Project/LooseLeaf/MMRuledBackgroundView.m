@@ -60,29 +60,33 @@
 
 -(UIBezierPath*) pathForBlueLines{
     
-    CGFloat verticalSpacing = [UIDevice ppc] * .71 / [[UIScreen mainScreen] scale] * [self scale].y;
-    CGFloat verticalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale] * [self scale].y;
+    CGFloat verticalSpacing = [UIDevice ppc] * .71 / [[UIScreen mainScreen] scale];
+    CGFloat verticalMargin = [UIDevice ppi] * 1.5 / [[UIScreen mainScreen] scale];
     
     UIBezierPath* path = [UIBezierPath bezierPath];
     CGFloat y = verticalMargin;
-    while (y < pageSize.height) {
+    while (y < originalSize.height) {
         [path moveToPoint:CGPointMake(0, y)];
-        [path addLineToPoint:CGPointMake(pageSize.width, y)];
+        [path addLineToPoint:CGPointMake(originalSize.width, y)];
         y += verticalSpacing;
     }
+    
+    [path applyTransform:CGAffineTransformMakeScale([self scale].x, [self scale].y)];
     
     return path;
 }
 
 -(UIBezierPath*) pathForRedLines{
-    CGFloat horizontalSpacing = [UIDevice ppc] * 3.2 / [[UIScreen mainScreen] scale] * [self scale].x;
+    CGFloat horizontalSpacing = [UIDevice ppc] * 3.2 / [[UIScreen mainScreen] scale];
     
     UIBezierPath* path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake(horizontalSpacing, 0)];
-    [path addLineToPoint:CGPointMake(horizontalSpacing, pageSize.height)];
+    [path addLineToPoint:CGPointMake(horizontalSpacing, originalSize.height)];
     [path moveToPoint:CGPointMake(horizontalSpacing + 2, 0)];
-    [path addLineToPoint:CGPointMake(horizontalSpacing + 2, pageSize.height)];
+    [path addLineToPoint:CGPointMake(horizontalSpacing + 2, originalSize.height)];
 
+    [path applyTransform:CGAffineTransformMakeScale([self scale].x, [self scale].y)];
+    
     return path;
 }
 
