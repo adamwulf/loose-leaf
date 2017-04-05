@@ -46,7 +46,7 @@
     redLines.backgroundColor = [UIColor clearColor].CGColor;
     redLines.strokeColor = [self lightRed].CGColor;
     redLines.fillColor = [UIColor clearColor].CGColor;
-    redLines.lineDashPattern = @[@8, @6];
+    redLines.lineDashPattern = @[@(8 * [self scale].x), @(6 * [self scale].x)];
     redLines.lineDashPhase = 0;
     
     [[self layer] addSublayer:redLines];
@@ -91,7 +91,7 @@
     CGFloat singleLineSpacing = [UIDevice ppi] * 1 / [[UIScreen mainScreen] scale];
     
     UIBezierPath* path = [UIBezierPath bezierPath];
-    CGFloat outsideBorderPattern[] = {8, 6};
+    CGFloat outsideBorderPattern[] = {8 * [self scale].x, 6 * [self scale].x};
     [path setLineDash:outsideBorderPattern count:2 phase:0];
     CGFloat y = verticalMargin;
     while (y < originalSize.height) {
