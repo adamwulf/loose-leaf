@@ -24,6 +24,7 @@
 #import "MMInGridTemplateView.h"
 #import "MMCmDotsTemplateView.h"
 #import "MMHandwritingTemplateView.h"
+#import "MMWeekTemplateView.h"
 
 #define kNumberOfButtonColumns 2
 
@@ -55,6 +56,7 @@
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMInGridTemplateView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMCmDotsTemplateView class]];
         backgroundStyles = [backgroundStyles arrayByAddingObject:[MMHandwritingTemplateView class]];
+        backgroundStyles = [backgroundStyles arrayByAddingObject:[MMWeekTemplateView class]];
 
         int buttonIndex = 0;
         CGFloat buttonWidth = [self buttonWidth];
