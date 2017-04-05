@@ -37,12 +37,20 @@
 @synthesize insertImageButton;
 @synthesize shareButton;
 
++(CGRect) addPageButtonFrame{
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
+
 + (CGRect)insertImageButtonFrame {
     return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
 }
 
-+ (CGRect)shareButtonFrame {
++ (CGRect)backgroundStyleButtonFrame {
     return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2 + 60, kWidthOfSidebarButton, kWidthOfSidebarButton);
+}
+
++ (CGRect)shareButtonFrame {
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2 + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
 }
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
@@ -75,11 +83,15 @@
         //
         // sidebar buttons
         // ================================================================================
-        addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        addPageSidebarButton = [[MMPlusButton alloc] initWithFrame:[MMEditablePaperStackView addPageButtonFrame]];
         addPageSidebarButton.delegate = self;
         [addPageSidebarButton addTarget:self action:@selector(addPageButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:addPageSidebarButton extendFrame:NO];
 
+        backgroundStyleButton = [[MMPaperButton alloc] initWithFrame:[MMEditablePaperStackView backgroundStyleButtonFrame]];
+        backgroundStyleButton.delegate = self;
+        [self.toolbar addButton:backgroundStyleButton extendFrame:NO];
+        
         shareButton = [[MMShareButton alloc] initWithFrame:[MMEditablePaperStackView shareButtonFrame]];
         shareButton.delegate = self;
         [self.toolbar addButton:shareButton extendFrame:NO];
@@ -90,7 +102,6 @@
         settingsButton.delegate = self;
         [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
         //        [self.toolbar addButton:settingsButton extendFrame:NO];
-
 
         pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         [self.toolbar addPencilTool:pencilTool];
@@ -249,7 +260,7 @@ static UIWebView* pdfWebView;
 }
 
 - (int)fullByteSize {
-    return [super fullByteSize] + addPageSidebarButton.fullByteSize + shareButton.fullByteSize + settingsButton.fullByteSize + pencilTool.fullByteSize + eraserButton.fullByteSize + scissorButton.fullByteSize + insertImageButton.fullByteSize + handButton.fullByteSize + rulerButton.fullByteSize + undoButton.fullByteSize + redoButton.fullByteSize + rulerView.fullByteSize;
+    return [super fullByteSize] + addPageSidebarButton.fullByteSize + shareButton.fullByteSize + backgroundStyleButton.fullByteSize + settingsButton.fullByteSize + pencilTool.fullByteSize + eraserButton.fullByteSize + scissorButton.fullByteSize + insertImageButton.fullByteSize + handButton.fullByteSize + rulerButton.fullByteSize + undoButton.fullByteSize + redoButton.fullByteSize + rulerView.fullByteSize;
 }
 
 #pragma mark - Gesture Helpers
@@ -469,6 +480,7 @@ static UIWebView* pdfWebView;
         pencilTool.transform = rotationTransform;
         eraserButton.transform = rotationTransform;
         shareButton.transform = rotationTransform;
+        backgroundStyleButton.transform = rotationTransform;
         undoButton.transform = rotationTransform;
         redoButton.transform = rotationTransform;
         rulerButton.transform = rotationTransform;
@@ -480,6 +492,7 @@ static UIWebView* pdfWebView;
         scissorButton.rotation = rotationValue;
         pencilTool.rotation = rotationValue;
         eraserButton.rotation = rotationValue;
+        shareButton.rotation = rotationValue;
         shareButton.rotation = rotationValue;
         undoButton.rotation = rotationValue;
         redoButton.rotation = rotationValue;

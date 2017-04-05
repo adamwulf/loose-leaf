@@ -16,8 +16,12 @@
 #import "UIDevice+PPI.h"
 #import "MMPDF.h"
 #import "MMImmutableScrapsOnPaperState.h"
+#import "MMRuledTemplateView.h"
+#import "MMEmptyTemplateView.h"
 #import <CoreGraphics/CoreGraphics.h>
-
+#import "UIView+MPHelpers.h"
+#import "MMUndoRedoPageBackgroundItem.h"
+#import "Mixpanel.h"
 
 @interface MMBackgroundedPaperView () <MMGenericBackgroundViewDelegate>
 
@@ -37,12 +41,53 @@
 
 @synthesize idealExportRotation = _idealExportRotation;
 
++(NSString*) defaultBackgroundClass{
+    NSString* ret = [[NSUserDefaults standardUserDefaults] stringForKey:kDefaultPaperBackgroundStyle];
+    
+    if(!ret || !NSClassFromString(ret)){
+        ret = NSStringFromClass([MMEmptyTemplateView class]);
+    }
+    
+    return ret;
+}
+
++(void) setDefaultBackgroundClass:(NSString*)background{
+    if(background){
+        NSString* paperStyleEventName = [NSString stringWithFormat:@"%@ %@", kMPPreferredPaper, background];
+        [[[Mixpanel sharedInstance] people] set:kMPPreferredPaper to:background];
+        [[[Mixpanel sharedInstance] people] increment:paperStyleEventName by:@(1)];
+        [[Mixpanel sharedInstance] track:paperStyleEventName];
+        [[NSUserDefaults standardUserDefaults] setObject:background forKey:kDefaultPaperBackgroundStyle];
+    }
+}
+
 -(instancetype) initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]){
         _usesCorrectBackgroundRotation = YES;
+        
+        NSString* backgroundStyle = [[NSUserDefaults standardUserDefaults] stringForKey:kDefaultPaperBackgroundStyle];
+        Class backgroundClass = [MMPaperTemplateView backgroundClassForString:backgroundStyle];
+        
+        self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:@{}];
     }
     
     return self;
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    _ruledOrGridBackgroundView.transform = CGAffineTransformMakeScale(self.scale, self.scale);
+}
+
+-(void) setRuledOrGridBackgroundView:(MMPaperTemplateView *)ruledOrGridBackgroundView{
+    if(_ruledOrGridBackgroundView != ruledOrGridBackgroundView){
+        [_ruledOrGridBackgroundView removeFromSuperview];
+        _ruledOrGridBackgroundView = ruledOrGridBackgroundView;
+        if(_ruledOrGridBackgroundView){
+            [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+        }
+        [self saveAdditionalBackgroundProperties:YES];
+    }
 }
 
 -(void) setDelegate:(NSObject<MMScrapViewOwnershipDelegate,MMPaperViewDelegate> *)_delegate{
@@ -71,6 +116,10 @@
         img.imageOrientation == UIImageOrientationUpMirrored;
 }
 
+-(BOOL) hasBackgroundAsset{
+    return paperBackgroundView.image || [[NSFileManager defaultManager] fileExistsAtPath:[self backgroundTexturePath]] || [[NSFileManager defaultManager] fileExistsAtPath:[[self backgroundAssetURL] path]];
+}
+
 - (UIImage*)pageBackgroundTexture {
     return paperBackgroundView.image;
 }
@@ -85,11 +134,18 @@
 }
 
 -(void) saveAdditionalBackgroundProperties:(BOOL)forceSave{
-    if(forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture)){
+    if(self.delegate && (forceSave || ([self isStateLoaded] && !isLoadingBackgroundTexture))){
+        NSDictionary* backgroundProperties = _ruledOrGridBackgroundView ? [_ruledOrGridBackgroundView properties] : @{};
+        
         NSDictionary* bgProps = @{ @"usesCorrectBackgroundRotation" : @([self usesCorrectBackgroundRotation]),
                                    @"idealExportRotation" : @(_idealExportRotation),
-                                   @"defaultExportRotation" : @(_defaultExportRotation) };
+                                   @"defaultExportRotation" : @(_defaultExportRotation),
+                                   @"ruledOrGridBackgroundProps" : backgroundProperties};
         [bgProps writeToFile:[self backgroundInfoPlist] atomically:YES];
+
+        if(_ruledOrGridBackgroundView && forceSave){
+            [_ruledOrGridBackgroundView saveDefaultThumbToPath:[self scrappedThumbnailPath] forSize:[self thumbnailSize]];
+        }
     }
 }
 
@@ -108,6 +164,9 @@
         paperBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];
         paperBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         paperBackgroundView.contentMode = UIViewContentModeScaleAspectFill;
+        if(_ruledOrGridBackgroundView){
+            [self setRuledOrGridBackgroundView:nil];
+        }
         [self.contentView insertSubview:paperBackgroundView atIndex:0];
         paperBackgroundView.hidden = self.drawableView.hidden;
     }
@@ -242,6 +301,22 @@
         _defaultExportRotation = [bgInfo[@"defaultExportRotation"] integerValue];
         _idealExportRotation = MIN(ExportRotationLandscapeRight, MAX(ExportRotationBackgroundDefault, _idealExportRotation));
         
+        if(!_ruledOrGridBackgroundView){
+            // if we've already loaded it, don't reload
+            NSString* bgClassName = bgInfo[@"ruledOrGridBackgroundProps"][@"class"];
+            if([bgClassName length]){
+                Class bgClass = [MMPaperTemplateView backgroundClassForString:bgClassName];
+                if(bgClass){
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if(!_ruledOrGridBackgroundView){
+                            _ruledOrGridBackgroundView = [MMPaperTemplateView viewForFrame:self.originalUnscaledBounds andProperties:bgInfo[@"ruledOrGridBackgroundProps"]];
+                            [self.contentView insertSubview:_ruledOrGridBackgroundView atIndex:0];
+                        }
+                    });
+                }
+            }
+        }
+        
         if (![self pageBackgroundTexture]) {
             CGSize backgroundSize = CGSizeZero;
             
@@ -327,6 +402,12 @@
         [paperBackgroundView.image drawInRect:scaledScreen];
 
         UIGraphicsPopContext();
+    }else if(_ruledOrGridBackgroundView){
+        UIGraphicsPushContext(context);
+
+        [_ruledOrGridBackgroundView drawInContext:context forSize:thumbSize];
+        
+        UIGraphicsPopContext();
     }
 }
 
@@ -345,10 +426,12 @@
 - (void)newlyCutScrapFromPaperView:(MMScrapView*)addedScrap {
     if (self.pageBackgroundTexture) {
         MMGenericBackgroundView* pageBackground = [[MMGenericBackgroundView alloc] initWithImage:self.pageBackgroundTexture andDelegate:self];
-        pageBackground.bounds = self.bounds;
+        pageBackground.bounds = self.originalUnscaledBounds;
         [pageBackground aspectFillBackgroundImageIntoView];
 
         [addedScrap setBackgroundView:[pageBackground stampBackgroundFor:[addedScrap state]]];
+    }else if(_ruledOrGridBackgroundView){
+        [addedScrap setBackgroundView:[_ruledOrGridBackgroundView stampBackgroundFor:[addedScrap state]]];
     }
 }
 
@@ -363,7 +446,7 @@
 }
 
 - (CGPoint)currentCenterOfBackgroundForGenericBackground:(MMGenericBackgroundView*)backgroundView {
-    return CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    return CGPointMake(CGRectGetMidX(self.originalUnscaledBounds), CGRectGetMidY(self.originalUnscaledBounds));
 }
 
 #pragma mark - Export to PDF
@@ -503,6 +586,7 @@
     // now we know our target rotation, so let's export:
     
     if ([[self.drawableView state] isStateLoaded]) {
+        
         MMImmutableScrapsOnPaperState* immutableScrapState = [scrapsOnPaperState immutableStateForPath:nil];
         [self.drawableView exportToImageOnComplete:^(UIImage* image) {
             NSInteger targetRotation = fullRotation;
@@ -568,6 +652,8 @@
                         CGRect rectForImage = CGSizeFill(backgroundSize, finalExportBounds.size);
                         [backgroundImage drawInRect:rectForImage];
                     });
+                } else if(_ruledOrGridBackgroundView){
+                    [_ruledOrGridBackgroundView drawInContext:context forSize:finalExportBounds.size];
                 }
                 
                 if(backgroundSize.width > backgroundSize.height){
@@ -627,6 +713,30 @@
     
     if (completionBlock)
         completionBlock(nil);
+}
+
+#pragma mark - MMBackgroundStyleContainerViewDelegate
+
+-(NSString*)currentBackgroundStyleType{
+    return _ruledOrGridBackgroundView ? NSStringFromClass([_ruledOrGridBackgroundView class]) : nil;
+}
+
+-(void) setCurrentBackgroundStyleType:(NSString *)currentBackgroundStyle{
+    Class backgroundClass = [MMPaperTemplateView backgroundClassForString:currentBackgroundStyle];
+    
+    if(backgroundClass && ![[self ruledOrGridBackgroundView] isKindOfClass:backgroundClass]){
+        NSDictionary* originalProps = [self.ruledOrGridBackgroundView properties];
+        
+        self.ruledOrGridBackgroundView = [[backgroundClass alloc] initWithFrame:self.originalUnscaledBounds andProperties:@{}];
+
+        NSDictionary* updatedProps = [self.ruledOrGridBackgroundView properties];
+
+        [self.undoRedoManager addUndoItem:[MMUndoRedoPageBackgroundItem itemForPage:self andOriginalBackground:originalProps andUpdatedBackground:updatedProps]];
+
+        [self forgetLastThumbnailSaveHash];
+        
+        [self saveToDisk:nil];
+    }
 }
 
 @end

@@ -1327,6 +1327,9 @@
     [self loadCachedPreviewAndDecompressImmediately:NO];
 }
 
+-(void) forgetLastThumbnailSaveHash{
+    lastSavedScrapStateHashForGeneratedThumbnail = 0;
+}
 
 /**
  * load any scrap previews, if applicable.
