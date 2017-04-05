@@ -1,6 +1,6 @@
 # New in 3.1.0!
 
-1. Choose page templates!
+1. New page templates!
 
 [page-template.mp4]
 
