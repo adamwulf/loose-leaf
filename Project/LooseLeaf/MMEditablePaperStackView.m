@@ -42,14 +42,7 @@
 }
 
 + (CGRect)insertImageButtonFrame {
-    CGFloat startOfPencil = kStartOfSidebar;
-    CGRect addButtonFrame = [MMEditablePaperStackView addPageButtonFrame];
-    
-    if(startOfPencil < CGRectGetMinY(addButtonFrame) + 60 * 5){
-        startOfPencil = CGRectGetMinY(addButtonFrame) + 60 * 5;
-    }
-
-    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, startOfPencil + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
+    return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 3, kWidthOfSidebarButton, kWidthOfSidebarButton);
 }
 
 + (CGRect)backgroundStyleButtonFrame {
@@ -110,22 +103,15 @@
         [settingsButton addTarget:self action:@selector(toggleMemoryView:) forControlEvents:UIControlEventTouchUpInside];
         //        [self.toolbar addButton:settingsButton extendFrame:NO];
 
-
-        CGFloat startOfPencil = kStartOfSidebar;
-        
-        if(startOfPencil < CGRectGetMinY(addPageSidebarButton.frame) + 60 * 5){
-            startOfPencil = CGRectGetMinY(addPageSidebarButton.frame) + 60 * 5;
-        }
-        
-        pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, startOfPencil, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
+        pencilTool = [[MMPencilAndPaletteView alloc] initWithButtonFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar, kWidthOfSidebarButton, kWidthOfSidebarButton) andScreenSize:self.bounds.size];
         [self.toolbar addPencilTool:pencilTool];
 
-        eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, startOfPencil + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
+        eraserButton = [[MMPencilEraserButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         eraserButton.delegate = self;
         [eraserButton addTarget:self action:@selector(eraserTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:eraserButton extendFrame:NO];
 
-        CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, startOfPencil + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        CGRect scissorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
         scissorButton = [[MMScissorButton alloc] initWithFrame:scissorButtonFrame];
         scissorButton.delegate = self;
         [scissorButton addTarget:self action:@selector(scissorTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -135,13 +121,13 @@
         insertImageButton.delegate = self;
         [self.toolbar addButton:insertImageButton extendFrame:NO];
 
-        CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, startOfPencil + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        CGRect handButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 5.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         handButton = [[MMHandButton alloc] initWithFrame:handButtonFrame];
         handButton.delegate = self;
         [handButton addTarget:self action:@selector(handTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:handButton extendFrame:NO];
 
-        CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, startOfPencil + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        CGRect rulerButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 6.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
         rulerButton = [[MMRulerButton alloc] initWithFrame:rulerButtonFrame];
         rulerButton.delegate = self;
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];

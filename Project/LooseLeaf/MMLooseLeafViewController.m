@@ -153,7 +153,6 @@
         [MMPageCacheManager sharedInstance].delegate = self;
         [MMInboxManager sharedInstance].delegate = self;
         [MMCloudKitManager sharedManager].delegate = self;
-        [[MMRotationManager sharedInstance] setDelegate:self];
 
 
         // Do any additional setup after loading the view, typically from a nib.
@@ -379,6 +378,7 @@
                                                  selector:@selector(keyboardWillChangeFrame:)
                                                      name:UIKeyboardWillChangeFrameNotification
                                                    object:nil];
+        [[MMRotationManager sharedInstance] setDelegate:self];
 
         // Debug
 

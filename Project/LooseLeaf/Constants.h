@@ -120,7 +120,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kGutterWidthToDragPages 500
 #define kFingerWidth 40
 #define kFilteringFactor 0.2
-#define kStartOfSidebar 290
+#define kStartOfSidebar 310
 #define kWidthOfSidebarButton 60.0
 #define kWidthOfSidebarButtonBuffer 10
 #define kWidthOfSidebar 80
