@@ -56,7 +56,7 @@
         NSString* paperStyleEventName = [NSString stringWithFormat:@"%@ %@", kMPPreferredPaper, background];
         [[[Mixpanel sharedInstance] people] set:kMPPreferredPaper to:background];
         [[[Mixpanel sharedInstance] people] increment:paperStyleEventName by:@(1)];
-        [[Mixpanel sharedInstance] track:paperStyleEventName];
+        [[Mixpanel sharedInstance] track:kMPPreferredPaper properties:@{ @"Style" : background }];
         [[NSUserDefaults standardUserDefaults] setObject:background forKey:kDefaultPaperBackgroundStyle];
     }
 }
