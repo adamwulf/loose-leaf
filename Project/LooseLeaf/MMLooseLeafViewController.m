@@ -1314,6 +1314,8 @@
 - (void)showReleaseNotesIfNeeded {
     NSString* version = [UIApplication bundleShortVersionString];
 
+    version = @"3.1.0";
+    
     if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
         [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
