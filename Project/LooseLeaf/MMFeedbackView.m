@@ -440,8 +440,6 @@
             [MMAppDelegate setEmail:validEmail];
             [emailInput resignFirstResponder];
             
-            [self sendFeedback:nil];
-            
             return YES;
         }
     }
