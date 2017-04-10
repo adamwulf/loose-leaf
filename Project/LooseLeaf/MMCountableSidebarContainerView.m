@@ -134,6 +134,11 @@
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
+    if(!view){
+        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Error": [[inStream streamError] description] }];
+        return;
+    }
+    
     [viewsInSidebar addObject:view];
 
     // exit the scrap to the bezel!
