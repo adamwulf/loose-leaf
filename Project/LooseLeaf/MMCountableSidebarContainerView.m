@@ -136,7 +136,7 @@
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
     if(!view){
-        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Error": [[inStream streamError] description] }];
+        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1765) }];
         return;
     }
     
