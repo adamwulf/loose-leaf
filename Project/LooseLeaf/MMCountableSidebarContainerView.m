@@ -10,6 +10,7 @@
 #import "MMSidebarButtonTapGestureRecognizer.h"
 #import "MMCountableSidebarButton.h"
 #import "Constants.h"
+#import "Mixpanel.h"
 
 #define kAnimationDuration 0.3
 
@@ -134,6 +135,11 @@
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
+    if(!view){
+        [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1765) }];
+        return;
+    }
+    
     [viewsInSidebar addObject:view];
 
     // exit the scrap to the bezel!
