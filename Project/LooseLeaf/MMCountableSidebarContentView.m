@@ -64,11 +64,11 @@ typedef struct RowOfViewsInSidebar {
         [deleteCountLabel setTextColor:[UIColor whiteColor]];
         [deleteCountLabel setFont:[UIFont systemFontOfSize:24]];
         [deleteCountLabel setTextAlignment:NSTextAlignmentCenter];
-        [deleteCountLabel setText:@"15 scraps have been deleted."];
+        [deleteCountLabel setText:NSLocalizedString(@"%ld scraps have been deleted.", @"%ld scraps have been deleted.")];
 
         UIButton* undoDeleteButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds) * 4 / 5, 50)];
         [undoDeleteButton addTarget:self action:@selector(undoDeleteAllScraps:) forControlEvents:UIControlEventTouchUpInside];
-        [undoDeleteButton setTitle:@"Undo" forState:UIControlStateNormal];
+        [undoDeleteButton setTitle:NSLocalizedString(@"Undo", @"Undo") forState:UIControlStateNormal];
         [undoDeleteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [undoDeleteButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.5]] forState:UIControlStateNormal];
         [undoDeleteButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.7]] forState:UIControlStateHighlighted];
@@ -152,7 +152,7 @@ typedef struct RowOfViewsInSidebar {
     UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Delete All Scraps" message:@"Do you want to delete all scraps from the sidebar?" preferredStyle:UIAlertControllerStyleAlert];
     [alert addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction* _Nonnull action) {
         deleteCountLabel.frame = CGRectFromSize(CGSizeMake(CGRectGetWidth(self.bounds) * 4 / 5, 100));
-        [deleteCountLabel setText:[NSString stringWithFormat:@"%ld scraps have been deleted.", (unsigned long)[self.delegate.viewsInSidebar count]]];
+        [deleteCountLabel setText:[NSString stringWithFormat:NSLocalizedString(@"%ld scraps have been deleted.", @"%ld scraps have been deleted."), (unsigned long)[self.delegate.viewsInSidebar count]]];
         [deleteCountLabel sizeToFit];
         deleteCountLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetWidth(self.bounds) / 2 - 60);
 

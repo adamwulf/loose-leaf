@@ -65,7 +65,7 @@
                                                                   self.bounds.size.width - 60, 100)];
         cloudKitLabel.backgroundColor = [UIColor clearColor];
         cloudKitLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        cloudKitLabel.text = @"Tap the key to login and share pages with iCloud";
+        cloudKitLabel.text = NSLocalizedString(@"Tap the key to login and share pages with iCloud", @"Tap the key to login and share pages with iCloud");
         cloudKitLabel.textColor = [UIColor whiteColor];
         cloudKitLabel.textAlignment = NSTextAlignmentCenter;
         cloudKitLabel.numberOfLines = 0;

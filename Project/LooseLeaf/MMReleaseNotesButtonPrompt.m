@@ -22,7 +22,7 @@
         promptLabel = [[UILabel alloc] initWithFrame:CGRectWithHeight(frame, 60)];
         promptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
         promptLabel.textAlignment = NSTextAlignmentCenter;
-        promptLabel.text = @"Are you enjoying Loose Leaf?";
+        promptLabel.text = NSLocalizedString(@"Are you enjoying Loose Leaf?", @"Are you enjoying Loose Leaf?");
 
         confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 160, 50)];
         confirmButton.backgroundColor = [[UIColor blueShadowColor] colorWithAlphaComponent:1];
@@ -30,7 +30,7 @@
         [confirmButton setClipsToBounds:YES];
         [confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [confirmButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:.7] forState:UIControlStateNormal];
-        [confirmButton setTitle:@"Definitely!" forState:UIControlStateNormal];
+        [confirmButton setTitle:NSLocalizedString(@"Definitely!", @"Definitely!") forState:UIControlStateNormal];
         [[confirmButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [confirmButton addTarget:self action:@selector(isEnjoying:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -40,7 +40,7 @@
         [denyButton setClipsToBounds:YES];
         [denyButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [denyButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:.7] forState:UIControlStateNormal];
-        [denyButton setTitle:@"Not so much" forState:UIControlStateNormal];
+        [denyButton setTitle:NSLocalizedString(@"Not so much", @"Not so much") forState:UIControlStateNormal];
         [[denyButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [denyButton addTarget:self action:@selector(notEnjoying:) forControlEvents:UIControlEventTouchUpInside];
 
