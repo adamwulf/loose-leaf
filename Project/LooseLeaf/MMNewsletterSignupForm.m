@@ -178,7 +178,7 @@
                             } else {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     //Update UI to show success
-                                    [twitterFollowButton setTitle:[NSLocalizedString(@"Followed!", @"Followed!") stringByAppendingString:@" 🎉"] forState:UIControlStateNormal];
+                                    [twitterFollowButton setTitle:NSLocalizedString(@"Followed! 🎉", @"Followed! 🎉") forState:UIControlStateNormal];
                                     [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
                                     [twitterFollowButton setUserInteractionEnabled:NO];
                                 });
