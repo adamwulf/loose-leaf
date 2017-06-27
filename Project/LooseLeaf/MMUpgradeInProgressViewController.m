@@ -44,7 +44,7 @@
     [self.view addSubview:progressBar];
 
     upgradingLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    upgradingLabel.text = @"Upgrading...";
+    upgradingLabel.text = NSLocalizedString(@"Upgrading...", @"Upgrading...");
     [upgradingLabel sizeToFit];
 
     p.y += (CGRectGetHeight(spinner.bounds) + CGRectGetHeight(upgradingLabel.bounds)) / 2 + 2;
@@ -61,7 +61,7 @@
 
     if (progress >= 1.0) {
         [progressBar setHidden:YES];
-        upgradingLabel.text = @"Upgrade Complete.";
+        upgradingLabel.text = NSLocalizedString(@"Upgrade Complete.", @"Upgrade Complete.");
 
         CGPoint location = upgradingLabel.center;
         [upgradingLabel sizeToFit];

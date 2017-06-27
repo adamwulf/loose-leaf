@@ -98,7 +98,7 @@
         importOperationQueue.name = @"importOperationQueue";
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
-        collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
+        collapseNoticeMessage.text = NSLocalizedString(@"Pull Down to Collapse Pages", @"Pull Down to Collapse Pages");
         [collapseNoticeMessage sizeToFit];
         collapseNoticeMessage.center = CGPointTranslate(collapseNoticeArrow.center, CGRectGetMidX(collapseNoticeMessage.bounds) + 40, 0);
         [self addSubview:collapseNoticeMessage];
@@ -233,7 +233,7 @@
 
 - (void)refreshNameFromStackManager {
     stackNameField.text = self.stackManager.name;
-    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
+    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:NSLocalizedString(@"There are no pages in %@", @"There are no pages in %@"), stackNameField.text];
 }
 
 #pragma mark - Actions
@@ -321,7 +321,7 @@
         emptyStackRowPlaceholder.alpha = 0;
         importingPDFListButton.alpha = 1;
 
-        [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)1, (long)pdfDoc.pdf.pageCount]];
+        [importingPDFListButton setPrompt:[NSString stringWithFormat:NSLocalizedString(@"Importing PDF Page %ld / %ld", @"Importing PDF Page %ld / %ld"), (long)1, (long)pdfDoc.pdf.pageCount]];
 
         NSIndexSet* pageSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [pdfDoc pageCount])];
         MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
@@ -386,7 +386,7 @@
         __block NSInteger totalImportedPages = 0;
         void (^updateImportProgressLabel)() = ^{
             totalImportedPages++;
-            [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)totalImportedPages, (long)pdfDoc.pdf.pageCount]];
+            [importingPDFListButton setPrompt:[NSString stringWithFormat:NSLocalizedString(@"Importing PDF Page %ld / %ld", @"Importing PDF Page %ld / %ld"), (long)totalImportedPages, (long)pdfDoc.pdf.pageCount]];
         };
 
 
@@ -647,12 +647,17 @@
         [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
             aPage.layer.zPosition = [pagesToAlignIntoRow count] - idx;
         }];
+        
+        NSArray<MMPaperView*>* visiblePagesOnScreen = [[[MMPageCacheManager sharedInstance] delegate] findPagesInVisibleRowsOfListView];
+
         //
         // immediately hide all of the pages that we won't be animating
         for (MMEditablePaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
             if ([pagesToAlignIntoRow containsObject:aPage]) {
                 // we'll animate these in step 2
-                [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
+                if([self superview] && [visiblePagesOnScreen containsObject:aPage]){
+                    [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
+                }
             } else {
                 // we already have the last visible page, we're going to
                 // hide all other pages during the animation, then re-show
@@ -1166,7 +1171,7 @@
 - (void)textFieldDidEndEditing:(UITextField*)textField {
     cachedStackNameFieldFrame = CGRectZero;
     self.stackManager.name = textField.text;
-    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
+    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:NSLocalizedString(@"There are no pages in %@", @"There are no pages in %@"), stackNameField.text];
 
     if ([self isShowingListView]) {
         self.scrollEnabled = YES;

@@ -54,31 +54,31 @@
 
         stayLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
         stayLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 80);
-        stayLbl.text = @"Stay";
+        stayLbl.text = NSLocalizedString(@"Stay", @"/Stay/ in the loop");
         stayLbl.font = [UIFont fontWithName:@"Lato-Bold" size:36];
         [self addSubview:stayLbl];
 
         inTheLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
         inTheLbl.center = CGPointMake(self.bounds.size.width / 2 - 45, 110);
-        inTheLbl.text = @"in the";
+        inTheLbl.text = NSLocalizedString(@"in the", @"Stay /in the/");
         inTheLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:20];
         [self addSubview:inTheLbl];
 
         pitchLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
-        pitchLbl.text = @"Tips, features, and offers to get the most out of Loose Leaf.";
+        pitchLbl.text = NSLocalizedString(@"Tips, features, and offers to get the most out of Loose Leaf.", @"Tips, features, and offers to get the most out of Loose Leaf.");
         pitchLbl.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
         pitchLbl.textAlignment = NSTextAlignmentCenter;
         [self addSubview:pitchLbl];
 
         validateInput = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
-        validateInput.text = @"Please enter a valid email address.";
+        validateInput.text = NSLocalizedString(@"Please enter a valid email address.", @"Please enter a valid email address.");
         validateInput.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
         validateInput.textAlignment = NSTextAlignmentCenter;
         validateInput.hidden = YES;
         [self addSubview:validateInput];
 
         validateInputRed = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
-        validateInputRed.text = @"Please enter a valid email address.";
+        validateInputRed.text = NSLocalizedString(@"Please enter a valid email address.", @"Please enter a valid email address.");
         validateInputRed.textColor = [UIColor redColor];
         validateInputRed.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
         validateInputRed.textAlignment = NSTextAlignmentCenter;
@@ -91,12 +91,12 @@
         [self addSubview:emailInput];
 
         signUpButton = [[MMRoundedButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        [signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+        [signUpButton setTitle:NSLocalizedString(@"Sign Up", @"Sign Up") forState:UIControlStateNormal];
         [signUpButton addTarget:self action:@selector(didTapSubmitButton) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:signUpButton];
 
         noThanksButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
+        [noThanksButton setTitle:NSLocalizedString(@"No Thanks", @"No Thanks") forState:UIControlStateNormal];
         [noThanksButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
         [noThanksButton sizeToFit];
         [noThanksButton addTarget:self action:@selector(noThanksButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -107,7 +107,7 @@
         [self addSubview:noThanksButton];
 
         twitterFollowButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [twitterFollowButton setTitle:@"Follow @getlooseleaf" forState:UIControlStateNormal];
+        [twitterFollowButton setTitle:NSLocalizedString(@"Follow @getlooseleaf", @"Follow @getlooseleaf") forState:UIControlStateNormal];
         [twitterFollowButton sizeToFit];
         [twitterFollowButton setBounds:CGRectResizeBy([twitterFollowButton bounds], 80, 10)];
         [twitterFollowButton addTarget:self action:@selector(followOnTwitter:) forControlEvents:UIControlEventTouchUpInside];
@@ -124,7 +124,7 @@
         thanksPanel.font = [UIFont fontWithName:@"Lato-Semibold" size:24];
         thanksPanel.textAlignment = NSTextAlignmentCenter;
         thanksPanel.alpha = 0;
-        thanksPanel.text = @"Thanks!";
+        thanksPanel.text = NSLocalizedString(@"Thanks!", @"Thanks!");
         [self addSubview:thanksPanel];
 
         [self didRotateToIdealOrientation:[[MMRotationManager sharedInstance] currentInterfaceOrientation] animated:NO];
@@ -169,16 +169,16 @@
                             if (error) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     //Update UI to show follow request failed
-                                    [twitterFollowButton setTitle:@"Error: could not follow" forState:UIControlStateNormal];
+                                    [twitterFollowButton setTitle:NSLocalizedString(@"Error: could not follow", @"Error: could not follow") forState:UIControlStateNormal];
                                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                                        [twitterFollowButton setTitle:@"Follow @getlooseleaf" forState:UIControlStateNormal];
+                                        [twitterFollowButton setTitle:NSLocalizedString(@"Follow @getlooseleaf", @"Follow @getlooseleaf") forState:UIControlStateNormal];
                                         [twitterFollowButton setUserInteractionEnabled:YES];
                                     });
                                 });
                             } else {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     //Update UI to show success
-                                    [twitterFollowButton setTitle:@"Followed! 🎉" forState:UIControlStateNormal];
+                                    [twitterFollowButton setTitle:NSLocalizedString(@"Followed! 🎉", @"Followed! 🎉") forState:UIControlStateNormal];
                                     [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
                                     [twitterFollowButton setUserInteractionEnabled:NO];
                                 });
@@ -188,14 +188,14 @@
                 }
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [twitterFollowButton setTitle:@"No twitter accounts configured" forState:UIControlStateNormal];
+                    [twitterFollowButton setTitle:NSLocalizedString(@"No twitter accounts configured", @"No twitter accounts configured") forState:UIControlStateNormal];
                     [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
                     [twitterFollowButton setUserInteractionEnabled:NO];
                 });
             }
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [twitterFollowButton setTitle:@"No twitter accounts available" forState:UIControlStateNormal];
+                [twitterFollowButton setTitle:NSLocalizedString(@"No twitter accounts available", @"No twitter accounts available") forState:UIControlStateNormal];
                 [twitterFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
                 [twitterFollowButton setUserInteractionEnabled:NO];
             });

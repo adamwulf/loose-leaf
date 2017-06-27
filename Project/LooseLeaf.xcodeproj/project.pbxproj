@@ -689,6 +689,7 @@
 		C5F1B3041D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3031D9B38D000E0E9A8 /* MMCountableSidebarContainerView.m */; };
 		C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B3061D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m */; };
 		C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */; };
+		C5FE13471E9F330F0086E541 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5FE13491E9F330F0086E541 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1912,6 +1913,7 @@
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
 		C5F4BE881C2676F900FFB640 /* bottom-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons.png"; sourceTree = "<group>"; };
 		C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C5FE13481E9F330F0086E541 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3417,6 +3419,7 @@
 				C5C298F31D7BF2B0009AE6BE /* ReleaseNotes.md */,
 				C53BA3931E1327F500EB0C64 /* AppIds.plist */,
 				C53BA3911E1327E300EB0C64 /* AppIds-Template.plist */,
+				C5FE13491E9F330F0086E541 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -4364,6 +4367,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 66DCFBB91581BCF000B4918C /* Build configuration list for PBXNativeTarget "LooseLeaf" */;
 			buildPhases = (
+				C5FE13581E9F35B50086E541 /* Localize */,
 				C53BA3951E13297000EB0C64 /* Generate Auth Constants */,
 				66684B3C182DA0D3005A27B4 /* Generate Licenses in Settings Bundle */,
 				66DCFB821581BCEF00B4918C /* Sources */,
@@ -4622,6 +4626,7 @@
 				C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
+				C5FE13471E9F330F0086E541 /* Localizable.strings in Resources */,
 				66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */,
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
 				C5F1B2931D9B01BB00E0E9A8 /* MPLogo@2x.png in Resources */,
@@ -4748,6 +4753,20 @@
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/LooseLeaf\"\n./generateInfoPlist.sh \"${BUILT_PRODUCTS_DIR}\"";
 			showEnvVarsInLog = 0;
+		};
+		C5FE13581E9F35B50086E541 /* Localize */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Localize;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "find . -name \\*.m | xargs genstrings -o LooseLeaf/en.lproj/";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -5220,6 +5239,14 @@
 				66CAF81A1A1EA98F0033E07B /* da */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C5FE13491E9F330F0086E541 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C5FE13481E9F330F0086E541 /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

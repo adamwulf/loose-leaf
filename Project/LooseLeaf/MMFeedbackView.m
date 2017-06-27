@@ -71,7 +71,7 @@
         feedbackPromptLabel = [[UILabel alloc] initWithFrame:promptFr];
         feedbackPromptLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
         feedbackPromptLabel.textAlignment = NSTextAlignmentCenter;
-        feedbackPromptLabel.text = @"What would make Loose Leaf better?";
+        feedbackPromptLabel.text = NSLocalizedString(@"What would make Loose Leaf better?", @"What would make Loose Leaf better?");
 
         CGRect feedbackFrame = CGRectMake(100, 190, 420, 200);
         feedbackTextView = [[UITextView alloc] initWithFrame:feedbackFrame];
@@ -81,13 +81,13 @@
         [feedbackTextView setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
 
         validateInput = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
-        validateInput.text = @"Please enter a valid email address.";
+        validateInput.text = NSLocalizedString(@"Please enter a valid email address.", @"Please enter a valid email address.");
         validateInput.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
         validateInput.textAlignment = NSTextAlignmentCenter;
         validateInput.hidden = YES;
         
         validateInputRed = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 460, 40)];
-        validateInputRed.text = @"Please enter a valid email address.";
+        validateInputRed.text = NSLocalizedString(@"Please enter a valid email address.", @"Please enter a valid email address.");
         validateInputRed.textColor = [UIColor redColor];
         validateInputRed.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
         validateInputRed.textAlignment = NSTextAlignmentCenter;
@@ -101,7 +101,7 @@
 
         emailPrompt = [[UILabel alloc] init];
         emailPrompt.font = [UIFont fontWithName:@"Lato-Semibold" size:16];
-        emailPrompt.text = @"Your Email";
+        emailPrompt.text = NSLocalizedString(@"Your Email", @"Your Email");
         [emailPrompt sizeToFit];
 
         emailInput.center = CGPointMake(CGRectGetMaxX([feedbackTextView frame]) - CGRectGetWidth([emailInput bounds]) / 2, CGRectGetMaxY(feedbackFrame) + 30);
@@ -116,7 +116,7 @@
         [closeAnywayButton setClipsToBounds:YES];
         [closeAnywayButton setTitleColor:[[UIColor blueShadowColor] colorWithAlphaComponent:1] forState:UIControlStateNormal];
         [closeAnywayButton setTitleColor:[UIColor blueShadowColor] forState:UIControlStateNormal];
-        [closeAnywayButton setTitle:@"No Feedback" forState:UIControlStateNormal];
+        [closeAnywayButton setTitle:NSLocalizedString(@"No Feedback", @"No Feedback") forState:UIControlStateNormal];
         [[closeAnywayButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [closeAnywayButton addTarget:self action:@selector(closeFeedbackForm:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -126,7 +126,7 @@
         [sendButton setClipsToBounds:YES];
         [sendButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [sendButton setTitleColor:[[UIColor whiteColor] colorWithAlphaComponent:.7] forState:UIControlStateNormal];
-        [sendButton setTitle:@"Send Feedback" forState:UIControlStateNormal];
+        [sendButton setTitle:NSLocalizedString(@"Send Feedback", @"Send Feedback") forState:UIControlStateNormal];
         [[sendButton titleLabel] setFont:[UIFont fontWithName:@"Lato-Semibold" size:16]];
         [sendButton addTarget:self action:@selector(sendFeedback:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -160,7 +160,7 @@
         UILabel* thanksLabel = [[UILabel alloc] initWithFrame:[thanksView bounds]];
         thanksLabel.font = [UIFont fontWithName:@"Lato-Bold" size:24];
         thanksLabel.textAlignment = NSTextAlignmentCenter;
-        thanksLabel.text = @"Thanks for your feedback!\n😄";
+        thanksLabel.text = [NSString stringWithFormat:@"%@\n😄", NSLocalizedString(@"Thanks for your feedback!", @"Thanks for your feedback!")];
         thanksLabel.numberOfLines = 0;
 
         [thanksView addSubview:thanksLabel];
