@@ -164,7 +164,7 @@ static const void* const kInboxAssetQueueIdentifier = &kInboxAssetQueueIdentifie
 - (void)generatePageThumbnailCache {
     dispatch_async([MMInboxItem assetQueue], ^{
         @autoreleasepool {
-            for (int pageNumber = 0; pageNumber < [self pageCount]; pageNumber++) {
+            for (int pageNumber = 0; pageNumber < [self pageCount] && pageNumber < 30; pageNumber++) {
                 if (![[NSFileManager defaultManager] fileExistsAtPath:[self pathForPage:pageNumber forMaxDim:kThumbnailMaxDim]]) {
                     [self imageForPage:pageNumber forMaxDim:kThumbnailMaxDim];
                 }

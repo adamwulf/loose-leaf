@@ -35,6 +35,7 @@ dispatch_queue_t importThumbnailQueue;
     NSString* thumbnailPath;
     UIBezierPath* boundsPath;
 
+    BOOL hasAddedRulerGesture;
     BOOL isWaitingToNotifyDelegateOfStylusEnd;
     NSTimeInterval stylusDidDrawTimestamp;
 }
@@ -68,8 +69,6 @@ dispatch_queue_t importThumbnailQueue;
         // these fail
         [rulerGesture requireGestureRecognizerToFail:longPress];
         //        [rulerGesture requireGestureRecognizerToFail:tap];
-        [self addGestureRecognizer:rulerGesture];
-
 
         // initialize our state manager
         paperState = [[JotViewStateProxy alloc] initWithDelegate:self];
@@ -130,11 +129,20 @@ dispatch_queue_t importThumbnailQueue;
     @throw kAbstractMethodException;
 }
 
+-(void)initializeGesturesIfNeeded{
+    [super initializeGesturesIfNeeded];
+    if(!hasAddedRulerGesture && [NSThread isMainThread]){
+        hasAddedRulerGesture = YES;
+        [self addGestureRecognizer:rulerGesture];
+    }
+}
+
 - (void)setEditable:(BOOL)isEditable {
     if (isEditable && !drawableView) {
         DebugLog(@"setting editable w/o canvas");
     }
     if (isEditable) {
+        [self initializeGesturesIfNeeded];
         drawableView.userInteractionEnabled = YES;
     } else {
         drawableView.userInteractionEnabled = NO;
@@ -144,7 +152,6 @@ dispatch_queue_t importThumbnailQueue;
 - (BOOL)isEditable {
     return drawableView.userInteractionEnabled;
 }
-
 
 - (void)generateDebugView:(BOOL)create {
     CheckMainThread;
@@ -233,6 +240,7 @@ dispatch_queue_t importThumbnailQueue;
 }
 
 - (void)loadStateAsynchronously:(BOOL)async withSize:(CGSize)pagePtSize andScale:(CGFloat)scale andContext:(JotGLContext*)context {
+    [self initializeGesturesIfNeeded];
     if ([paperState isStateLoaded]) {
         [self didLoadState:paperState];
         return;
