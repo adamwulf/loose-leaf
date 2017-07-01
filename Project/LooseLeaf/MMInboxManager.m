@@ -39,7 +39,9 @@ static MMInboxManager* _instance = nil;
 
 - (id)init {
     if (self = [super init]) {
-        [self loadContents];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self loadContents];
+        });
     }
     return self;
 }

@@ -939,10 +939,13 @@
     return aStackView;
 }
 
+- (CGFloat)targetYForFrameForStackAtIndex:(NSInteger)stackIndex {
+    return stackIndex * [self stackRowHeight];
+}
+
 - (CGFloat)targetYForFrameForStackInCollapsedList:(NSString*)stackUUID {
-    CGFloat stackRowHeight = [self stackRowHeight];
     NSInteger stackIndex = [[[MMAllStacksManager sharedInstance] stackIDs] indexOfObject:stackUUID];
-    return stackIndex * stackRowHeight;
+    return [self targetYForFrameForStackAtIndex:stackIndex];
 }
 
 - (NSInteger)targetIndexForYInCollapsedList:(CGFloat)targetY {
@@ -952,8 +955,9 @@
 
 - (void)initializeAllStackViewsExcept:(NSString*)stackUUIDToSkipHeight viewMode:(NSString*)viewMode {
     CGFloat stackRowHeight = [self stackRowHeight];
-    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
-        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
+    for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
+        NSString* stackUUID = allStackIds[stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
             if ([viewMode isEqualToString:kViewModeCollapsed]) {
@@ -966,7 +970,7 @@
         }
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
             CGRect fr = CGRectWithHeight(aStackView.bounds, stackRowHeight);
-            fr.origin.y = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
+            fr.origin.y = [self targetYForFrameForStackAtIndex:stackIndex];
             aStackView.frame = fr;
             if (![allStacksScrollView.subviews containsObject:aStackView]) {
                 [allStacksScrollView addSubview:aStackView];
@@ -1017,16 +1021,20 @@
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
     NSArray* arr = @[];
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
     if ([self isShowingCollapsedView:[currentStackView uuid]] || willPossiblyShowCollapsedView) {
 
         CGFloat bottomY = MAX(0, allStacksScrollView.contentOffset.y);
         if(currentStackView){
-            bottomY = [self targetYForFrameForStackInCollapsedList:[currentStackView uuid]];
+            NSInteger indexForCurrentStack = [allStackIds indexOfObject:[currentStackView uuid]];
+            bottomY = [self targetYForFrameForStackAtIndex:indexForCurrentStack];
             bottomY = [self idealYForYOffset:bottomY];
         }
         
-        for (MMCollapsableStackView* aStackView in [stackViewsByUUID allValues]) {
-            CGFloat y = [self targetYForFrameForStackInCollapsedList:[aStackView uuid]];
+        for (NSString* stackUUID in allStackIds) {
+            MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
+            NSInteger stackIndex = [allStackIds indexOfObject:stackUUID];
+            CGFloat y = [self targetYForFrameForStackAtIndex:stackIndex];
             CGFloat topY = bottomY + CGRectGetHeight([allStacksScrollView bounds]);
             topY = MIN(topY, allStacksScrollView.contentSize.height);
             bottomY = MAX(0, topY - CGRectGetHeight([allStacksScrollView bounds]));
@@ -1566,6 +1574,7 @@
 
         [[MMAllStacksManager sharedInstance] moveStack:heldStackView.uuid toIndex:updatedStackIndex];
 
+        __block NSInteger stackIndex = 0;
         BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
             if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
                 MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
@@ -1573,7 +1582,8 @@
                     return accum;
                 }
 
-                CGFloat targetY = [self targetYForFrameForStackInCollapsedList:aStackView.uuid];
+                CGFloat targetY = [self targetYForFrameForStackAtIndex:stackIndex];
+                stackIndex += 1;
 
                 return roundf(aStackView.frame.origin.y) != roundf(targetY) || accum;
             } else {
@@ -1671,17 +1681,26 @@
 }
 
 - (void)updateStackNameColorsAnimated:(BOOL)animated {
-    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
-        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
+    for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
+        NSString* stackUUID = allStackIds[stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
 
-        CGPoint p = [aStackView convertPoint:CGRectGetMidPoint([aStackView rectForColorConsideration]) toView:rotatingBackgroundView];
-        UIColor* color1 = [rotatingBackgroundView colorFromPoint:p];
-        UIColor* color2 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, -CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
-        UIColor* color3 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
-        UIColor* original = [[color1 blendWithColor:color2 withPercent:.5] blendWithColor:color3 withPercent:.3];
-
-        [aStackView setNameColor:original animated:animated];
+        CGFloat topY = [self targetYForFrameForStackAtIndex:stackIndex];
+        CGFloat bottomY = topY + [self stackRowHeight];
+        
+        if(bottomY >= [allStacksScrollView contentOffset].y && topY <= [allStacksScrollView contentOffset].y + CGRectGetHeight([allStacksScrollView bounds])){
+            CGPoint p = [aStackView convertPoint:CGRectGetMidPoint([aStackView rectForColorConsideration]) toView:rotatingBackgroundView];
+            UIColor* color1 = [rotatingBackgroundView colorFromPoint:p];
+            UIColor* color2 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, -CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
+            UIColor* color3 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
+            UIColor* original = [[color1 blendWithColor:color2 withPercent:.5] blendWithColor:color3 withPercent:.3];
+            
+            [aStackView setNameColor:original animated:animated];
+            [aStackView setHidden:NO];
+        }else{
+            [aStackView setHidden:YES];
+        }
     }
 }
 

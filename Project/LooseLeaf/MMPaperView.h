@@ -51,6 +51,7 @@
 @property (nonatomic, readonly) NSInteger columnInListView;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid;
+-(void) initializeGesturesIfNeeded NS_REQUIRES_SUPER;
 
 - (BOOL)willExitToBezel:(MMBezelDirection)bezelDirection;
 - (void)cancelAllGestures;

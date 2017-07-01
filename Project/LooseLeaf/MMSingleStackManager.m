@@ -154,15 +154,21 @@
     }
 
     BOOL (^pageExists)(NSString*) = ^BOOL(NSString* pageUUID) {
-        BOOL existsInStack = [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] reduceToBool:^BOOL(MMPaperView* page, NSUInteger index, BOOL accum) {
-            return [page.uuid isEqualToString:pageUUID] || accum;
+        __block BOOL existsInStack = NO;
+        [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] enumerateObjectsUsingBlock:^(MMPaperView* page, NSUInteger idx, BOOL * _Nonnull stop) {
+            existsInStack = existsInStack || [page.uuid isEqualToString:pageUUID];
+            *stop = existsInStack;
         }];
-        BOOL existsInMeta = [pagesMetaToIgnore reduceToBool:^BOOL(NSDictionary* obj, NSUInteger index, BOOL accum) {
-            BOOL matchesStack = [obj[@"stackUUID"] isEqualToString:self.uuid];
-            BOOL matchesPage = [obj[@"uuid"] isEqualToString:pageUUID];
-            return (matchesStack && matchesPage) || accum;
-        }];
-        return existsInStack || existsInMeta;
+        
+        if(!existsInStack){
+            existsInStack = [pagesMetaToIgnore reduceToBool:^BOOL(NSDictionary* obj, NSUInteger index, BOOL accum) {
+                BOOL matchesStack = [obj[@"stackUUID"] isEqualToString:self.uuid];
+                BOOL matchesPage = [obj[@"uuid"] isEqualToString:pageUUID];
+                return (matchesStack && matchesPage) || accum;
+            }];
+        }
+        
+        return existsInStack;
     };
 
     NSString* stackPath = [[MMAllStacksManager sharedInstance] stackDirectoryPathForUUID:self.uuid];
@@ -171,6 +177,8 @@
     [[NSFileManager defaultManager] enumerateDirectory:pagePath withBlock:^(NSURL* item, NSUInteger totalItemCount) {
         NSString* pageUUID = [[item path] lastPathComponent];
         if (!pageExists(pageUUID)) {
+            DebugLog(@"found orphan page: %@", pageUUID);
+            pageExists(pageUUID);
             // found orphan page, restore it to the stack
             MMPaperView* page = [[MMExportablePaperView alloc] initWithFrame:bounds andUUID:pageUUID];
             [hiddenPages insertObject:page atIndex:0];
@@ -183,7 +191,7 @@
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfDuplicatePages by:@(hasFoundDuplicate)];
     }
 
-    if (!plist[@"name"]) {
+    if (!plist[@"properties"][@"name"] || hasFoundDuplicate) {
         [self saveStacksToDisk];
     }
 
