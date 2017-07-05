@@ -280,7 +280,7 @@
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
 
         // Load the stack
-        [self initializeAllStackViewsExcept:nil viewMode:viewModeForLaunch];
+        [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
 
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView insertImageButtonFrame] animateFromLeft:YES];
