@@ -279,8 +279,9 @@
         MMCountBubbleButton* countPagesButton = [[MMCountBubbleButton alloc] initWithFrame:CGRectMake(rightBezelSide, midPointY - 60, 80, 80)];
         bezelPagesContainer = [[MMPagesInBezelContainerView alloc] initWithFrame:frame andCountButton:countPagesButton];
 
-        // Load the stack
-        [self initializeAllStackViewsExcept:nil viewMode:kViewModeCollapsed];
+        // Load the stacks. Build all of them, but only initialize non-current stack.
+        // the current stack will be aligned after the sidebars
+        [self initializeAllStackViewsExcept:nil viewMode:kViewModeList];
 
         // Image import sidebar
         importImageSidebar = [[MMImageSidebarContainerView alloc] initWithFrame:self.view.bounds forReferenceButtonFrame:[MMEditablePaperStackView insertImageButtonFrame] animateFromLeft:YES];
@@ -1689,7 +1690,7 @@
         CGFloat topY = [self targetYForFrameForStackAtIndex:stackIndex];
         CGFloat bottomY = topY + [self stackRowHeight];
         
-        if(bottomY >= [allStacksScrollView contentOffset].y && topY <= [allStacksScrollView contentOffset].y + CGRectGetHeight([allStacksScrollView bounds])){
+        if(currentStackView == aStackView || (bottomY >= [allStacksScrollView contentOffset].y && topY <= [allStacksScrollView contentOffset].y + CGRectGetHeight([allStacksScrollView bounds]))){
             CGPoint p = [aStackView convertPoint:CGRectGetMidPoint([aStackView rectForColorConsideration]) toView:rotatingBackgroundView];
             UIColor* color1 = [rotatingBackgroundView colorFromPoint:p];
             UIColor* color2 = [rotatingBackgroundView colorFromPoint:CGPointTranslate(p, -CGRectGetWidth([aStackView rectForColorConsideration]) / 2, 0)];
