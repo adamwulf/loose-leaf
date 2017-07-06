@@ -961,11 +961,11 @@
         NSString* stackUUID = allStackIds[stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
         if (![stackUUIDToSkipHeight isEqualToString:aStackView.uuid]) {
-            if ([viewMode isEqualToString:kViewModeCollapsed]) {
+            if ([viewMode isEqualToString:kViewModeCollapsed] && ![[aStackView currentViewMode] isEqualToString:kViewModeCollapsed]) {
                 [aStackView organizePagesIntoSingleRowAnimated:NO];
-            } else if ([viewMode isEqualToString:kViewModeList]) {
+            } else if ([viewMode isEqualToString:kViewModeList] && ![[aStackView currentViewMode] isEqualToString:kViewModeList]) {
                 [aStackView immediatelyTransitionToListView];
-            } else {
+            } else if([viewMode isEqualToString:kViewModePage] && ![[aStackView currentViewMode] isEqualToString:kViewModePage]){
                 [aStackView immediatelyTransitionToPageViewAnimated:NO];
             }
         }
