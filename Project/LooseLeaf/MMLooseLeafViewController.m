@@ -1564,39 +1564,7 @@
             [gesture setEnabled:YES];
         }
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
-        // moving
-        CGPoint translation = CGPointMake(mostRecentLocationOfMoveGestureInView.x - originalGestureLocationInView.x, mostRecentLocationOfMoveGestureInView.y - originalGestureLocationInView.y);
-        CGPoint translatedCenter = originalCenterOfHeldStackInView;
-        translatedCenter.y += translation.y;
-        heldStackView.center = translatedCenter;
-
-        CGPoint locInScroll = [self.view convertPoint:translatedCenter toView:allStacksScrollView];
-        NSInteger updatedStackIndex = [self targetIndexForYInCollapsedList:locInScroll.y];
-
-        [[MMAllStacksManager sharedInstance] moveStack:heldStackView.uuid toIndex:updatedStackIndex];
-
-        __block NSInteger stackIndex = 0;
-        BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
-            if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
-                MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
-                if (aStackView == heldStackView) {
-                    return accum;
-                }
-
-                CGFloat targetY = [self targetYForFrameForStackAtIndex:stackIndex];
-                stackIndex += 1;
-
-                return roundf(aStackView.frame.origin.y) != roundf(targetY) || accum;
-            } else {
-                return accum;
-            }
-        }];
-
-        if (shouldAnimate) {
-            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                [self initializeAllStackViewsExcept:heldStackView.uuid viewMode:kViewModeCollapsed];
-            } completion:nil];
-        }
+        [self updateIndexOfHeldStackDuringGestureAndScroll];
     } else if ([gesture state] == UIGestureRecognizerStateEnded ||
                [gesture state] == UIGestureRecognizerStateCancelled ||
                [gesture state] == UIGestureRecognizerStateFailed) {
@@ -1622,6 +1590,43 @@
     }
 }
 
+-(void) updateIndexOfHeldStackDuringGestureAndScroll{
+    if ([longPressGesture state] == UIGestureRecognizerStateChanged || [panGesture state] == UIGestureRecognizerStateChanged) {
+        // moving
+        CGPoint translation = CGPointMake(mostRecentLocationOfMoveGestureInView.x - originalGestureLocationInView.x, mostRecentLocationOfMoveGestureInView.y - originalGestureLocationInView.y);
+        CGPoint translatedCenter = originalCenterOfHeldStackInView;
+        translatedCenter.y += translation.y;
+        heldStackView.center = translatedCenter;
+        
+        CGPoint locInScroll = [self.view convertPoint:translatedCenter toView:allStacksScrollView];
+        NSInteger updatedStackIndex = [self targetIndexForYInCollapsedList:locInScroll.y];
+        
+        [[MMAllStacksManager sharedInstance] moveStack:heldStackView.uuid toIndex:updatedStackIndex];
+        
+        __block NSInteger stackIndex = 0;
+        BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
+            if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
+                MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
+                if (aStackView == heldStackView) {
+                    return accum;
+                }
+                
+                CGFloat targetY = [self targetYForFrameForStackAtIndex:stackIndex];
+                stackIndex += 1;
+                
+                return roundf(aStackView.frame.origin.y) != roundf(targetY) || accum;
+            } else {
+                return accum;
+            }
+        }];
+        
+        if (shouldAnimate) {
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                [self initializeAllStackViewsExcept:heldStackView.uuid viewMode:kViewModeCollapsed];
+            } completion:nil];
+        }
+    }
+}
 
 - (void)updateScrollOffsetDuringDrag {
     /**
@@ -1715,6 +1720,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     [self updateStackNameColorsAnimated:NO];
+    [self updateIndexOfHeldStackDuringGestureAndScroll];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
