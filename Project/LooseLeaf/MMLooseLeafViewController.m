@@ -732,6 +732,7 @@
         listViewFeedbackButton.alpha = 0;
         addNewStackButton.alpha = 0;
 
+        [self updateOtherStackVisibilityForCurrentStack:NO];
         [self checkToShowListCollapseTutorial];
     };
 
@@ -778,6 +779,7 @@
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
+        [self updateOtherStackVisibilityForCurrentStack:YES];
         [aStackView organizePagesIntoSingleRowAnimated:animated];
 
         CGRect fr = [aStackView convertRect:[aStackView bounds] toView:allStacksScrollView];
@@ -1032,9 +1034,9 @@
             bottomY = [self idealYForYOffset:bottomY];
         }
         
-        for (NSString* stackUUID in allStackIds) {
+        for (NSInteger stackIndex=0; stackIndex < [allStackIds count]; stackIndex ++) {
+            NSString* stackUUID = allStackIds[stackIndex];
             MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
-            NSInteger stackIndex = [allStackIds indexOfObject:stackUUID];
             CGFloat y = [self targetYForFrameForStackAtIndex:stackIndex];
             CGFloat topY = bottomY + CGRectGetHeight([allStacksScrollView bounds]);
             topY = MIN(topY, allStacksScrollView.contentSize.height);
@@ -1566,39 +1568,7 @@
             [gesture setEnabled:YES];
         }
     } else if ([gesture state] == UIGestureRecognizerStateChanged) {
-        // moving
-        CGPoint translation = CGPointMake(mostRecentLocationOfMoveGestureInView.x - originalGestureLocationInView.x, mostRecentLocationOfMoveGestureInView.y - originalGestureLocationInView.y);
-        CGPoint translatedCenter = originalCenterOfHeldStackInView;
-        translatedCenter.y += translation.y;
-        heldStackView.center = translatedCenter;
-
-        CGPoint locInScroll = [self.view convertPoint:translatedCenter toView:allStacksScrollView];
-        NSInteger updatedStackIndex = [self targetIndexForYInCollapsedList:locInScroll.y];
-
-        [[MMAllStacksManager sharedInstance] moveStack:heldStackView.uuid toIndex:updatedStackIndex];
-
-        __block NSInteger stackIndex = 0;
-        BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
-            if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
-                MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
-                if (aStackView == heldStackView) {
-                    return accum;
-                }
-
-                CGFloat targetY = [self targetYForFrameForStackAtIndex:stackIndex];
-                stackIndex += 1;
-
-                return roundf(aStackView.frame.origin.y) != roundf(targetY) || accum;
-            } else {
-                return accum;
-            }
-        }];
-
-        if (shouldAnimate) {
-            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-                [self initializeAllStackViewsExcept:heldStackView.uuid viewMode:kViewModeCollapsed];
-            } completion:nil];
-        }
+        [self updateIndexOfHeldStackDuringGestureAndScroll];
     } else if ([gesture state] == UIGestureRecognizerStateEnded ||
                [gesture state] == UIGestureRecognizerStateCancelled ||
                [gesture state] == UIGestureRecognizerStateFailed) {
@@ -1624,6 +1594,43 @@
     }
 }
 
+-(void) updateIndexOfHeldStackDuringGestureAndScroll{
+    if ([longPressGesture state] == UIGestureRecognizerStateChanged || [panGesture state] == UIGestureRecognizerStateChanged) {
+        // moving
+        CGPoint translation = CGPointMake(mostRecentLocationOfMoveGestureInView.x - originalGestureLocationInView.x, mostRecentLocationOfMoveGestureInView.y - originalGestureLocationInView.y);
+        CGPoint translatedCenter = originalCenterOfHeldStackInView;
+        translatedCenter.y += translation.y;
+        heldStackView.center = translatedCenter;
+        
+        CGPoint locInScroll = [self.view convertPoint:translatedCenter toView:allStacksScrollView];
+        NSInteger updatedStackIndex = [self targetIndexForYInCollapsedList:locInScroll.y];
+        
+        [[MMAllStacksManager sharedInstance] moveStack:heldStackView.uuid toIndex:updatedStackIndex];
+        
+        __block NSInteger stackIndex = 0;
+        BOOL shouldAnimate = [allStacksScrollView.subviews reduceToBool:^BOOL(__kindof UIView* obj, NSUInteger index, BOOL accum) {
+            if ([obj isKindOfClass:[MMCollapsableStackView class]]) {
+                MMCollapsableStackView* aStackView = (MMCollapsableStackView*)obj;
+                if (aStackView == heldStackView) {
+                    return accum;
+                }
+                
+                CGFloat targetY = [self targetYForFrameForStackAtIndex:stackIndex];
+                stackIndex += 1;
+                
+                return roundf(aStackView.frame.origin.y) != roundf(targetY) || accum;
+            } else {
+                return accum;
+            }
+        }];
+        
+        if (shouldAnimate) {
+            [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                [self initializeAllStackViewsExcept:heldStackView.uuid viewMode:kViewModeCollapsed];
+            } completion:nil];
+        }
+    }
+}
 
 - (void)updateScrollOffsetDuringDrag {
     /**
@@ -1683,6 +1690,23 @@
     }
 }
 
+- (void)updateOtherStackVisibilityForCurrentStack:(BOOL)allShouldBeVisible {
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
+    for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
+        NSString* stackUUID = allStackIds[stackIndex];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+        
+        CGFloat topY = [self targetYForFrameForStackAtIndex:stackIndex];
+        CGFloat bottomY = topY + [self stackRowHeight];
+        
+        if(allShouldBeVisible || currentStackView == aStackView || (bottomY >= [allStacksScrollView contentOffset].y && topY <= [allStacksScrollView contentOffset].y + CGRectGetHeight([allStacksScrollView bounds]))){
+            [aStackView setHidden:NO];
+        }else{
+            [aStackView setHidden:YES];
+        }
+    }
+}
+
 - (void)updateStackNameColorsAnimated:(BOOL)animated {
     NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
     for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
@@ -1700,9 +1724,6 @@
             UIColor* original = [[color1 blendWithColor:color2 withPercent:.5] blendWithColor:color3 withPercent:.3];
             
             [aStackView setNameColor:original animated:animated];
-            [aStackView setHidden:NO];
-        }else{
-            [aStackView setHidden:YES];
         }
     }
 }
@@ -1710,6 +1731,7 @@
 #pragma mark - MMRotatingBackgroundViewDelegate
 
 - (void)rotatingBackgroundViewDidUpdate:(MMRotatingBackgroundView*)backgroundView {
+    [self updateOtherStackVisibilityForCurrentStack:YES];
     [self updateStackNameColorsAnimated:isViewVisible];
 }
 
@@ -1717,12 +1739,14 @@
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
     [self updateStackNameColorsAnimated:NO];
+    [self updateIndexOfHeldStackDuringGestureAndScroll];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
 
 - (void)enableAllSmoothBorders:(BOOL)enable {
-    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
-        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
+    for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
+        NSString* stackUUID = allStackIds[stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
         NSArray* pages = [aStackView pagesToAlignForRowView];
         for (MMEditablePaperView* page in pages) {
