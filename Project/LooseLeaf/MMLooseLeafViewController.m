@@ -732,6 +732,7 @@
         listViewFeedbackButton.alpha = 0;
         addNewStackButton.alpha = 0;
 
+        [self updateOtherStackVisibilityForCurrentStack:NO];
         [self checkToShowListCollapseTutorial];
     };
 
@@ -778,6 +779,7 @@
         allStacksScrollView.scrollEnabled = YES;
         MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
 
+        [self updateOtherStackVisibilityForCurrentStack:YES];
         [aStackView organizePagesIntoSingleRowAnimated:animated];
 
         CGRect fr = [aStackView convertRect:[aStackView bounds] toView:allStacksScrollView];
@@ -1032,9 +1034,9 @@
             bottomY = [self idealYForYOffset:bottomY];
         }
         
-        for (NSString* stackUUID in allStackIds) {
+        for (NSInteger stackIndex=0; stackIndex < [allStackIds count]; stackIndex ++) {
+            NSString* stackUUID = allStackIds[stackIndex];
             MMCollapsableStackView* aStackView = stackViewsByUUID[stackUUID];
-            NSInteger stackIndex = [allStackIds indexOfObject:stackUUID];
             CGFloat y = [self targetYForFrameForStackAtIndex:stackIndex];
             CGFloat topY = bottomY + CGRectGetHeight([allStacksScrollView bounds]);
             topY = MIN(topY, allStacksScrollView.contentSize.height);
@@ -1686,6 +1688,23 @@
     }
 }
 
+- (void)updateOtherStackVisibilityForCurrentStack:(BOOL)allShouldBeVisible {
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
+    for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
+        NSString* stackUUID = allStackIds[stackIndex];
+        MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
+        
+        CGFloat topY = [self targetYForFrameForStackAtIndex:stackIndex];
+        CGFloat bottomY = topY + [self stackRowHeight];
+        
+        if(allShouldBeVisible || currentStackView == aStackView || (bottomY >= [allStacksScrollView contentOffset].y && topY <= [allStacksScrollView contentOffset].y + CGRectGetHeight([allStacksScrollView bounds]))){
+            [aStackView setHidden:NO];
+        }else{
+            [aStackView setHidden:YES];
+        }
+    }
+}
+
 - (void)updateStackNameColorsAnimated:(BOOL)animated {
     NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
     for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
@@ -1703,9 +1722,6 @@
             UIColor* original = [[color1 blendWithColor:color2 withPercent:.5] blendWithColor:color3 withPercent:.3];
             
             [aStackView setNameColor:original animated:animated];
-            [aStackView setHidden:NO];
-        }else{
-            [aStackView setHidden:YES];
         }
     }
 }
@@ -1713,6 +1729,7 @@
 #pragma mark - MMRotatingBackgroundViewDelegate
 
 - (void)rotatingBackgroundViewDidUpdate:(MMRotatingBackgroundView*)backgroundView {
+    [self updateOtherStackVisibilityForCurrentStack:YES];
     [self updateStackNameColorsAnimated:isViewVisible];
 }
 
@@ -1725,8 +1742,9 @@
 }
 
 - (void)enableAllSmoothBorders:(BOOL)enable {
-    for (NSInteger stackIndex = 0; stackIndex < [[[MMAllStacksManager sharedInstance] stackIDs] count]; stackIndex++) {
-        NSString* stackUUID = [[MMAllStacksManager sharedInstance] stackIDs][stackIndex];
+    NSArray* allStackIds = [[MMAllStacksManager sharedInstance] stackIDs];
+    for (NSInteger stackIndex = 0; stackIndex < [allStackIds count]; stackIndex++) {
+        NSString* stackUUID = allStackIds[stackIndex];
         MMCollapsableStackView* aStackView = [self stackForUUID:stackUUID];
         NSArray* pages = [aStackView pagesToAlignForRowView];
         for (MMEditablePaperView* page in pages) {
