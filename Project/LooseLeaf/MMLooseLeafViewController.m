@@ -18,7 +18,6 @@
 #import "MMDeletePageSidebarController.h"
 #import "MMPhotoManager.h"
 #import "MMCollapsableStackView.h"
-#import "MMCloudKitImportExportView.h"
 #import "MMCollapsableStackViewDelegate.h"
 #import "MMTextButton.h"
 #import "MMAllStacksManager.h"
@@ -61,7 +60,7 @@
 #import "MMDisplayAsset.h"
 
 
-@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMCloudKitManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate,MMBackgroundStyleContainerViewDelegate>
+@interface MMLooseLeafViewController () <MMCollapsableStackViewDelegate, MMPageCacheManagerDelegate, MMInboxManagerDelegate, MMGestureTouchOwnershipDelegate, MMRotationManagerDelegate, MMImageSidebarContainerViewDelegate, MMShareSidebarDelegate, MMScrapSidebarContainerViewDelegate, MMPagesSidebarContainerViewDelegate, MMListAddPageButtonDelegate, UIScrollViewDelegate, MMRotatingBackgroundViewDelegate, MMShareStackSidebarDelegate,MMBackgroundStyleContainerViewDelegate>
 
 @end
 
@@ -69,7 +68,6 @@
 @implementation MMLooseLeafViewController {
     MMMemoryManager* memoryManager;
     MMDeletePageSidebarController* deleteSidebar;
-    MMCloudKitImportExportView* cloudKitExportView;
 
     MMRotatingBackgroundView* rotatingBackgroundView;
 
@@ -152,7 +150,6 @@
 
         [MMPageCacheManager sharedInstance].delegate = self;
         [MMInboxManager sharedInstance].delegate = self;
-        [MMCloudKitManager sharedManager].delegate = self;
 
 
         // Do any additional setup after loading the view, typically from a nib.
@@ -207,15 +204,6 @@
         [allStacksScrollView addSubview:addNewStackButton];
         [allStacksScrollView addSubview:listViewTutorialButton];
         [allStacksScrollView addSubview:listViewFeedbackButton];
-
-
-        // export icons will show here, below the sidebars but over the stacks
-        cloudKitExportView = [[MMCloudKitImportExportView alloc] initWithFrame:self.view.bounds];
-        [self.view addSubview:cloudKitExportView];
-        // an extra view to help with animations
-        MMUntouchableView* exportAnimationHelperView = [[MMUntouchableView alloc] initWithFrame:self.view.bounds];
-        cloudKitExportView.animationHelperView = exportAnimationHelperView;
-        [self.view addSubview:exportAnimationHelperView];
 
         [self.view addSubview:deleteSidebar.deleteSidebarForeground];
 
@@ -533,18 +521,6 @@
     return shareStackSidebar;
 }
 
-- (void)didExportPage:(MMPaperView*)page toZipLocation:(NSString*)fileLocationOnDisk {
-    [cloudKitExportView didExportPage:page toZipLocation:fileLocationOnDisk];
-}
-
-- (void)didFailToExportPage:(MMPaperView*)page {
-    [cloudKitExportView didFailToExportPage:page];
-}
-
-- (void)isExportingPage:(MMPaperView*)page withPercentage:(CGFloat)percentComplete toZipLocation:(NSString*)fileLocationOnDisk {
-    [cloudKitExportView isExportingPage:page withPercentage:percentComplete toZipLocation:fileLocationOnDisk];
-}
-
 - (BOOL)isShowingAnyModal {
     return [self isShowingTutorial] || [self isShowingReleaseNotes] || [self isShowingFeedbackForm];
 }
@@ -722,7 +698,6 @@
     void (^completionStep)(BOOL) = ^(BOOL completed) {
         [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 
-        cloudKitExportView.stackView = currentStackView;
         [[MMTouchVelocityGestureRecognizer sharedInstance] setStackView:currentStackView];
         [[MMPageCacheManager sharedInstance] didChangeToTopPage:[[aStackView visibleStackHolder] peekSubview]];
 
@@ -1165,20 +1140,6 @@
     [currentStackView failedToProcessIncomingURL:url fromApp:sourceApplication];
 }
 
-#pragma mark - MMCloudKitManagerDelegate
-
-- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState {
-    [sharePageSidebar cloudKitDidChangeState:currentState];
-}
-
-- (void)didFetchMessage:(SPRMessage*)message {
-    [cloudKitExportView didFetchMessage:message];
-}
-
-- (void)didResetBadgeCountTo:(NSUInteger)badgeNumber {
-    [cloudKitExportView didResetBadgeCountTo:badgeNumber];
-}
-
 #pragma mark - MMGestureTouchOwnershipDelegate
 
 - (void)ownershipOfTouches:(NSSet*)touches isGesture:(UIGestureRecognizer*)gesture {
@@ -1314,7 +1275,6 @@
 }
 
 - (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button {
-    [cloudKitExportView didShareTopPageToUser:userId fromButton:button];
     [sharePageSidebar hide:YES onComplete:nil];
 
     [currentStackView didShare:shareItem toUser:userId fromButton:button];
