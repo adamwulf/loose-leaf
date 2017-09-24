@@ -8,7 +8,6 @@
 
 #import "MMFullScreenSidebarContainingView.h"
 #import "MMShareItemDelegate.h"
-#import "MMCloudKitManagerDelegate.h"
 #import "MMVector.h"
 
 
@@ -17,9 +16,5 @@
 @property (weak) NSObject<MMShareSidebarDelegate>* shareDelegate;
 
 - (void)updateInterfaceTo:(UIInterfaceOrientation)orientation;
-
-#pragma mark - Cloud Kit
-
-- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState;
 
 @end

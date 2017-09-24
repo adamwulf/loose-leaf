@@ -8,7 +8,6 @@
 
 #import "MMShareSidebarContainerView.h"
 #import "MMImageViewButton.h"
-#import "MMCloudKitShareItem.h"
 #import "MMEmailShareItem.h"
 #import "MMTextShareItem.h"
 #import "MMTwitterShareItem.h"
@@ -42,8 +41,6 @@
     UIView* buttonView;
     MMShareOptionsView* activeOptionsView;
     NSMutableArray<MMAbstractShareItem*>* shareItems;
-
-    MMCloudKitShareItem* cloudKitShareItem;
 
     UIButton* exportAsImageButton;
     UIButton* exportAsPDFButton;
@@ -126,10 +123,7 @@
         //        landscapeRightButton = [[NSUserDefaults standardUserDefaults] boolForKey:kExportAsPDFPreferenceDefault];
         [slidingSidebarView addSubview:landscapeRightButton];
         
-        cloudKitShareItem = [[MMCloudKitShareItem alloc] init];
-
         shareItems = [NSMutableArray array];
-        [shareItems addObject:cloudKitShareItem];
         [shareItems addObject:[[MMEmailShareItem alloc] init]];
         [shareItems addObject:[[MMTextShareItem alloc] init]];
         [shareItems addObject:[[MMPhotoAlbumShareItem alloc] init]];
@@ -448,13 +442,6 @@
 - (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button {
     [shareDelegate didShare:shareItem toUser:userId fromButton:button];
 }
-
-#pragma mark - Cloud Kit State
-
-- (void)cloudKitDidChangeState:(MMCloudKitBaseState*)currentState {
-    [cloudKitShareItem cloudKitDidChangeState:currentState];
-}
-
 
 #pragma mark - Dealloc
 
