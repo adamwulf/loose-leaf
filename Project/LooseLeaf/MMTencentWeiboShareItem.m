@@ -89,7 +89,7 @@
 }
 
 - (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
-    return [mimeType hasPrefix:@"image"] && [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTencentWeibo] != nil;
+    return [mimeType hasPrefix:@"image"] && [SLComposeViewController isAvailableForServiceType:SLServiceTypeTencentWeibo];
 }
 
 #pragma mark - Notification

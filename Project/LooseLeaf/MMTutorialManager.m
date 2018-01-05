@@ -208,11 +208,6 @@ static MMTutorialManager* _instance = nil;
             @"id": @"share-export",
             @"title": NSLocalizedString(@"Export Your Pages to Anywhere", @"Export Your Pages to Anywhere"),
             @"video": @"share-tutorials-export.png"
-        },
-        @{
-            @"id": @"share-cloudkit",
-            @"title": NSLocalizedString(@"Send a page to a friend with CloudKit", @"Send a page to a friend with CloudKit"),
-            @"video": @"share-tutorials-cloudkit.png"
         }
     ];
 }

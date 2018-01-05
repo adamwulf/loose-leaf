@@ -91,7 +91,7 @@
 }
 
 - (BOOL)isAtAllPossibleForMimeType:(NSString*)mimeType {
-    return [mimeType hasPrefix:@"image"] && [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook] != nil;
+    return [mimeType hasPrefix:@"image"];
 }
 
 #pragma mark - Notification

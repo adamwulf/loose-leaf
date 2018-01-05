@@ -1,4 +1,4 @@
-﻿/* %ld scraps have been deleted. */
+/* %ld scraps have been deleted. */
 "%ld scraps have been deleted." = "%ld scraps have been deleted.";
 
 /* Are you enjoying Loose Leaf? */
@@ -94,9 +94,6 @@
 /* Pull Down to Collapse Pages */
 "Pull Down to Collapse Pages" = "Pull Down to Collapse Pages";
 
-/* Send a page to a friend with CloudKit */
-"Send a page to a friend with CloudKit" = "Send a page to a friend with CloudKit";
-
 /* Send Feedback */
 "Send Feedback" = "Send Feedback";
 
@@ -114,9 +111,6 @@
 
 /* /Stay/ in the loop */
 "Stay" = "Stay";
-
-/* Tap the key to login and share pages with iCloud */
-"Tap the key to login and share pages with iCloud" = "Tap the key to login and share pages with iCloud";
 
 /* Thanks for your feedback! */
 "Thanks for your feedback!" = "Thanks for your feedback!";

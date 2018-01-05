@@ -75,6 +75,12 @@
       "idiom" : "ipad",
       "filename" : "Loose-Leaf_83.5@2x.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "1024x1024",
+      "idiom" : "ios-marketing",
+      "filename" : "Loose-Leaf_1024.png",
+      "scale" : "1x"
     }
   ],
   "info" : {

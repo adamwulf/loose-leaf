@@ -8,9 +8,6 @@
       location = "group:Submodules/MMMarkdown/MMMarkdown.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Submodules/cloudkit-manager/SimpleCloudKitManager/SimpleCloudKitManager.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:Submodules/MMStretchGestureRecognizers/ShapeShifter.xcodeproj">
    </FileRef>
    <FileRef

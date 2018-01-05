@@ -647,12 +647,17 @@
         [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
             aPage.layer.zPosition = [pagesToAlignIntoRow count] - idx;
         }];
+        
+        NSArray<MMPaperView*>* visiblePagesOnScreen = [[[MMPageCacheManager sharedInstance] delegate] findPagesInVisibleRowsOfListView];
+
         //
         // immediately hide all of the pages that we won't be animating
         for (MMEditablePaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
             if ([pagesToAlignIntoRow containsObject:aPage]) {
                 // we'll animate these in step 2
-                [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
+                if([self superview] && [visiblePagesOnScreen containsObject:aPage]){
+                    [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
+                }
             } else {
                 // we already have the last visible page, we're going to
                 // hide all other pages during the animation, then re-show
