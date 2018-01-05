@@ -1,0 +1,147 @@
+
+/*%ld scraps have been deleted.*/
+"%ld scraps have been deleted." = "%ld ritagli sono stati eliminati";
+
+/*Are you enjoying Loose Leaf?*/
+"Are you enjoying Loose Leaf?" = "Ti piace Loose Leaf?";
+
+/*Cancel*/
+"Cancel" = "Annulla";
+
+/*Definitely!*/
+"Definitely!" = "Certo!";
+
+/*Delete a Page*/
+"Delete a Page" = "Elimina una pagina";
+
+/*Delete Your Notes*/
+"Delete Your Notes" = "Elimina i tuoi appunti";
+
+/*Draw and Erase*/
+"Draw and Erase" = "Disegna e cancella";
+
+/*Duplicate a Page*/
+"Duplicate a Page" = "Duplica una pagina";
+
+/*Error: could not follow*/
+"Error: could not follow" = "Errore: impossibile seguire";
+
+/*Export Your Notes*/
+"Export Your Notes" = "Esporta i tuoi appunti";
+
+/*Export Your Pages*/
+"Export Your Pages" = "Esporta le tue pagine";
+
+/*Export Your Pages to Anywhere*/
+"Export Your Pages to Anywhere" = "Esporta le tue pagine ovunque";
+
+/*Exporting all pages...*/
+"Exporting all pages..." = "Esportando tutte le pagine...";
+
+/*Exporting all pages...
+ %ld of %ld pages*/
+"Exporting all pages...\n %ld of %ld pages" = "Esportando tutte le pagine...\n%1$ld di %2$ld pagine";
+
+/*Follow @getlooseleaf*/
+"Follow @getlooseleaf" = "Segui @getlooseleaf";
+
+/*Import and Crop Your Photos*/
+"Import and Crop Your Photos" = "Importa e ritaglia le tue foto";
+
+/*Import Full PDFs*/
+"Import Full PDFs" = "Importa PDF completi";
+
+/*Importing PDF Page %ld / %ld*/
+"Importing PDF Page %ld / %ld" = "Importando PDF, pagina %1$ld / %2$ld";
+"in the" = "nel";
+
+/*Move Between Pages*/
+"Move Between Pages" = "Sposta tra le pagine";
+
+/*Move Scraps Between Pages*/
+"Move Scraps Between Pages" = "Sposta i ritagli tra le pagine";
+
+/*No Feedback*/
+"No Feedback" = "Nessun Feedback";
+
+/*No Thanks*/
+"No Thanks" = "No grazie";
+
+/*No twitter accounts available*/
+"No twitter accounts available" = "Nessun account Twitter disponibile";
+
+/*No twitter accounts configured*/
+"No twitter accounts configured" = "Nessun account Twitter configurato";
+
+/*Not so much*/
+"Not so much" = "Non molto";
+
+/*Organize Your pages*/
+"Organize Your pages" = "Organizza le tue pagine";
+
+/*Organize Your Pages*/
+"Organize Your Pages" = "Organizza le tue pagine";
+
+/*Pinch to See Your Pages*/
+"Pinch to See Your Pages" = "Pizzica per vedere le tue pagine";
+
+/*Please enter a valid email address.*/
+"Please enter a valid email address." = "Per favore, inserisci un indirizzo email valido";
+
+/*Pull Down to Collapse Pages*/
+"Pull Down to Collapse Pages" = "Trascina in basso per impilare le pagine";
+
+/*Send a page to a friend with CloudKit*/
+"Send a page to a friend with CloudKit" = "Invia una pagina a un amico con CloudKit";
+
+/*Send Feedback*/
+"Send Feedback" = "Invia Feedback";
+
+/*Shake a Scrap to Reorder*/
+"Shake a Scrap to Reorder" = "Scuoti un ritaglio per riordinare";
+
+/*Share to Your Social Networks*/
+"Share to Your Social Networks" = "Condividi sui tuoi Social Networks";
+
+/*Share Your Pages with Your Contacts*/
+"Share Your Pages with Your Contacts" = "Condividi le tue pagine con i tuoi contatti";
+
+/*Sign Up*/
+"Sign Up" = "Registrati";
+
+/*/Stay/ in the loop*/
+"Stay" = "Rimani";
+
+/*Tap the key to login and share pages with iCloud*/
+"Tap the key to login and share pages with iCloud" = "Tocca la chiave per accedere e condividere pagine con iCloud";
+
+/*Thanks for your feedback!*/
+"Thanks for your feedback!" = "Grazie per il Feedback!";
+
+/*Thanks!*/
+"Thanks!" = "Grazie!";
+
+/*There are no pages in %@*/
+"There are no pages in %@" = "Non ci sono pagine in %@";
+
+/*Tips, features, and offers to get the most out of Loose Leaf.*/
+"Tips, features, and offers to get the most out of Loose Leaf." = "Consigli, funzionalità e offerte per ottenere il massimo da Loose Leaf";
+
+/*Undo*/
+"Undo" = "Annulla";
+
+/*Upgrade Complete.*/
+"Upgrade Complete." = "Aggiornamento completato";
+
+/*Upgrading...*/
+"Upgrading..." = "Aggiorno...";
+
+/*What would make Loose Leaf better?*/
+"What would make Loose Leaf better?" = "Come si potrebbe migliorare Loose Leaf?";
+
+/*Your Email*/
+"Your Email" = "La tua email";
+
+/*Followed! 🎉*/
+"Followed! 🎉" = "Seguito! 🎉";
+
