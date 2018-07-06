@@ -23,13 +23,13 @@
  * that a new touch is about to be processed. we should
  * reset all of our counters/etc to base values
  */
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [super willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+    [super willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     velocity = 0;
     return YES;
 }
 
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)_shortStrokeEnding {
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)_shortStrokeEnding inJotView:(JotView *)jotView{
     shortStrokeEnding = _shortStrokeEnding;
 }
 
@@ -40,7 +40,7 @@
  * we'll use pressure data to determine width if we can, otherwise
  * we'll fall back to use velocity data
  */
-- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     if (self.shouldUseVelocity) {
         //
         // velocity is reversed from the pen, this eraser
@@ -68,12 +68,12 @@
 }
 
 
-- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     return nil; // nil means erase
 }
 
 
-- (void)didEndStrokeWithTouch:(JotTouch*)touch {
+- (void)didEndStrokeWithTouch:(JotTouch*)touch inJotView:(JotView *)jotView{
     //    DebugLog(@"ERASER velocity: %f", velocity);
 }
 

@@ -25,6 +25,7 @@
     __strong UIColor* color;
 }
 
+@property (nonatomic, assign) BOOL shouldMirror;
 @property (nonatomic, assign) CGFloat minSize;
 @property (nonatomic, assign) CGFloat maxSize;
 @property (nonatomic, assign) CGFloat minAlpha;

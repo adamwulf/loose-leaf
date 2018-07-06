@@ -133,6 +133,11 @@
         [rulerButton addTarget:self action:@selector(rulerTapped:) forControlEvents:UIControlEventTouchUpInside];
         [self.toolbar addButton:rulerButton extendFrame:NO];
 
+        CGRect mirrorButtonFrame = CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, kStartOfSidebar + 60 * 7.5, kWidthOfSidebarButton, kWidthOfSidebarButton);
+        mirrorButton = [[MMMirrorButton alloc] initWithFrame:mirrorButtonFrame];
+        mirrorButton.delegate = self;
+        [mirrorButton addTarget:self action:@selector(mirrorButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [self.toolbar addButton:mirrorButton extendFrame:NO];
 
         undoButton = [[MMUndoRedoButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, self.frame.size.height - kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton) / 2 - 2 * 60, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         undoButton.delegate = self;
@@ -421,6 +426,15 @@ static UIWebView* pdfWebView;
     [[visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
+}
+
+-(void) mirrorButtonTapped:(UIButton*)_button{
+    pen.shouldMirror = !pen.shouldMirror;
+    marker.shouldMirror = pen.shouldMirror;
+    highlighter.shouldMirror = pen.shouldMirror;
+    eraser.shouldMirror = pen.shouldMirror;
+    
+    mirrorButton.showMirror = pen.shouldMirror;
 }
 
 
@@ -817,7 +831,7 @@ static UIWebView* pdfWebView;
 
 #pragma mark - JotViewDelegate
 
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     // dont start a new stroke if one already exists
     if ([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0) {
         //        DebugLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
@@ -840,20 +854,20 @@ static UIWebView* pdfWebView;
     if ([rulerView rulerIsVisible]) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfRulerUses by:@(1)];
     }
-    return [[self activePen] willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    return [[self activePen] willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     [rulerView willMoveStrokeAt:[touch locationInView:rulerView]];
-    [[self activePen] willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    [[self activePen] willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding {
-    [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding];
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding inJotView:(JotView *)jotView{
+    [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding inJotView:jotView];
 }
 
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [[self activePen] didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+    [[self activePen] didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     if ([self activePen] == pen) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPenUses by:@(1)];
     } else if ([self activePen] == eraser) {
@@ -861,16 +875,16 @@ static UIWebView* pdfWebView;
     }
 }
 
-- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [[self activePen] willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+    [[self activePen] willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [[self activePen] didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+    [[self activePen] didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    return [[self activePen] colorForCoalescedTouch:coalescedTouch fromTouch:touch];
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+    return [[self activePen] colorForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
 - (JotBrushTexture*)textureForStroke {
@@ -885,21 +899,21 @@ static UIWebView* pdfWebView;
     return [[self activePen] supportsRotation];
 }
 
-- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     //
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [[self activePen] widthForCoalescedTouch:coalescedTouch fromTouch:touch];
+    return [[self activePen] widthForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    return [[self activePen] smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch];
+- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+    return [[self activePen] smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement {
-    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElements:elements toStroke:stroke fromPreviousElement:previousElement] fromPreviousElement:previousElement];
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement inJotView:(JotView *)jotView{
+    MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElements:elements toStroke:stroke fromPreviousElement:previousElement inJotView:jotView] fromPreviousElement:previousElement];
 
     if (adjustments.didAdjust) {
         numberOfRulerGesturesWithoutStroke = 0;

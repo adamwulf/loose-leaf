@@ -555,6 +555,7 @@
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
 		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
+		C5E1268C20EEFD52002F7CEC /* MMMirrorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */; };
 		C5E654FD1DCBEF6700521894 /* MMConfirmDeleteStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */; };
 		C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */; };
 		C5EC1C331DC1841100C65DB3 /* release-notes-feedback-feature.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */; };
@@ -1639,6 +1640,8 @@
 		C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
 		C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackButton.h; sourceTree = "<group>"; };
 		C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackButton.m; sourceTree = "<group>"; };
+		C5E1268A20EEFD52002F7CEC /* MMMirrorButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMMirrorButton.h; sourceTree = "<group>"; };
+		C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMMirrorButton.m; sourceTree = "<group>"; };
 		C5E654FB1DCBEF6700521894 /* MMConfirmDeleteStackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMConfirmDeleteStackButton.h; sourceTree = "<group>"; };
 		C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMConfirmDeleteStackButton.m; sourceTree = "<group>"; };
 		C5EC1C2F1DC1817800C65DB3 /* MMLoopingVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopingVideoView.h; sourceTree = "<group>"; };
@@ -3517,6 +3520,8 @@
 				66BE6CA119D67BC100A5F650 /* MMPolaroidView.m */,
 				667AA41D19E33342006549EE /* MMPolaroidsView.h */,
 				667AA41E19E33342006549EE /* MMPolaroidsView.m */,
+				C5E1268A20EEFD52002F7CEC /* MMMirrorButton.h */,
+				C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */,
 			);
 			name = "Tool Sidebar";
 			sourceTree = "<group>";
@@ -4630,6 +4635,7 @@
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				C55B4DCB1DDE8222001DC9E4 /* MMEmptyStackButton.m in Sources */,
 				C5F1B2B51D9B01BB00E0E9A8 /* MPNetwork.m in Sources */,
+				C5E1268C20EEFD52002F7CEC /* MMMirrorButton.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
 				C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */,
 				C5F1B2A01D9B01BB00E0E9A8 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,

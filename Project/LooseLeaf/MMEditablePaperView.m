@@ -434,7 +434,7 @@ static int count = 0;
     self.panGesture.enabled = YES;
 }
 
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     if (touch.type != UITouchTypeStylus && isWaitingToNotifyDelegateOfStylusEnd) {
         // if our delegate thinks the stylus is down, then we shouldn't allow non-stylus writing.
@@ -449,7 +449,7 @@ static int count = 0;
         }
     }
 
-    if ([delegate willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch]) {
+    if ([delegate willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView]) {
         if (touch.type == UITouchTypeStylus) {
             // disable gestures while writing with the stylus
             if (!isWaitingToNotifyDelegateOfStylusEnd) {
@@ -466,16 +466,16 @@ static int count = 0;
     return NO;
 }
 
-- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [delegate willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
+    [delegate willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding {
-    [delegate willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding];
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding inJotView:(JotView*)jotView{
+    [delegate willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding inJotView:jotView];
 }
 
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [delegate didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
+    [delegate didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     [self saveToDisk:nil];
 
     if (touch.type == UITouchTypeStylus) {
@@ -502,12 +502,12 @@ static int count = 0;
     }
 }
 
-- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [delegate willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
+    [delegate willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [delegate didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
+    [delegate didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 
     if (touch.type == UITouchTypeStylus) {
         isWaitingToNotifyDelegateOfStylusEnd = YES;
@@ -527,24 +527,24 @@ static int count = 0;
     return [delegate supportsRotation];
 }
 
-- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    return [delegate colorForCoalescedTouch:coalescedTouch fromTouch:touch];
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
+    return [delegate colorForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
     //
     // this lets them write smaller text / detail when zoomed in
-    return [delegate widthForCoalescedTouch:coalescedTouch fromTouch:touch] / self.scale;
+    return [delegate widthForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView] / self.scale;
 }
 
-- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    return [delegate smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch];
+- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView{
+    return [delegate smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement {
-    NSArray* modifiedElements = [self.delegate willAddElements:elements toStroke:stroke fromPreviousElement:previousElement];
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement inJotView:(JotView*)jotView{
+    NSArray* modifiedElements = [self.delegate willAddElements:elements toStroke:stroke fromPreviousElement:previousElement inJotView:jotView];
 
     NSMutableArray* croppedElements = [NSMutableArray array];
     for (AbstractBezierPathElement* element in modifiedElements) {
