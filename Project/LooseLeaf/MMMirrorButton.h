@@ -8,8 +8,17 @@
 
 #import "MMSidebarButton.h"
 
+typedef enum : NSInteger {
+    MirrorModeNone = 0,
+    MirrorModeVertical,
+    MirrorModeHorizontal
+} MirrorMode;
+
+
 @interface MMMirrorButton : MMSidebarButton
 
-@property (nonatomic, assign) BOOL showMirror;
+@property (nonatomic, assign) MirrorMode mirrorMode;
+
+-(void) cycleMirrorMode;
 
 @end

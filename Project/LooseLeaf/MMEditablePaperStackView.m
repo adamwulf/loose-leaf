@@ -21,6 +21,7 @@
 #import "MMPDFButton.h"
 #import <mach/mach_time.h> // for mach_absolute_time() and friends
 #import <SafariServices/SafariServices.h>
+#import <JotUI/AbstractBezierPathElement-Protected.h>
 
 
 @implementation MMEditablePaperStackView {
@@ -429,12 +430,7 @@ static UIWebView* pdfWebView;
 }
 
 -(void) mirrorButtonTapped:(UIButton*)_button{
-    pen.shouldMirror = !pen.shouldMirror;
-    marker.shouldMirror = pen.shouldMirror;
-    highlighter.shouldMirror = pen.shouldMirror;
-    eraser.shouldMirror = pen.shouldMirror;
-    
-    mirrorButton.showMirror = pen.shouldMirror;
+    [mirrorButton cycleMirrorMode];
 }
 
 
@@ -918,8 +914,48 @@ static UIWebView* pdfWebView;
     if (adjustments.didAdjust) {
         numberOfRulerGesturesWithoutStroke = 0;
     }
+    
+    NSMutableArray* mutElements = [adjustments.elements mutableCopy];
+    
+    if([mirrorButton mirrorMode] != MirrorModeNone){
+        CGPoint (^flipPoint)(CGPoint p, CGFloat width, CGFloat height);
+        
+        if([mirrorButton mirrorMode] == MirrorModeVertical){
+            flipPoint = ^(CGPoint p, CGFloat width, CGFloat height){
+                p = CGPointTranslate(p, -(width / 2), 0);
+                p.x = -p.x;
+                return CGPointTranslate(p, (width / 2), 0);
+            };
+        }else{
+            flipPoint = ^(CGPoint p, CGFloat width, CGFloat height){
+                p = CGPointTranslate(p, 0, -(height / 2));
+                p.y = -p.y;
+                return CGPointTranslate(p, 0, (height / 2));
+            };
+        }
+        
+        for(AbstractBezierPathElement *ele in elements){
+            if([ele isKindOfClass:[CurveToPathElement class]]){
+                CurveToPathElement *curve = (CurveToPathElement*)ele;
+                CGFloat width = CGRectGetWidth([jotView bounds]);
+                CGFloat height = CGRectGetHeight([jotView bounds]);
+                CGPoint start = flipPoint([curve startPoint], width, height);
+                CGPoint curveTo = flipPoint([curve curveTo], width, height);
+                CGPoint ctrl1 = flipPoint([curve ctrl1], width, height);
+                CGPoint ctrl2 = flipPoint([curve ctrl2], width, height);
+                
+                CurveToPathElement *mirrored = [CurveToPathElement elementWithStart:start andCurveTo:curveTo andControl1:ctrl1 andControl2:ctrl2];
+                mirrored.color = curve.color;
+                mirrored.width = curve.width;
+                mirrored.stepWidth = curve.stepWidth;
+                mirrored.rotation = previousElement.rotation;
+                
+                [mutElements addObject:mirrored];
+            }
+        }
+    }
 
-    return adjustments.elements;
+    return mutElements;
 }
 
 #pragma mark - PolygonToolDelegate

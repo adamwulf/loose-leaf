@@ -9,7 +9,6 @@
 #import "Pen.h"
 #import "Constants.h"
 #import <JotUI/JotUI.h>
-#import <JotUI/AbstractBezierPathElement-Protected.h>
 #import "MMTouchVelocityGestureRecognizer.h"
 
 #define VELOCITY_CLAMP_MIN 20
@@ -226,37 +225,7 @@
 }
 
 - (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement inJotView:(JotView *)jotView{
-    
-    NSMutableArray *mutElements = [elements mutableCopy];
-    
-    CGPoint (^flipPoint)(CGPoint p, CGFloat aroundX) = ^(CGPoint p, CGFloat aroundX){
-        p = CGPointTranslate(p, -(aroundX / 2), 0);
-        p.x = -p.x;
-        return CGPointTranslate(p, (aroundX / 2), 0);
-    };
-    
-    if([self shouldMirror]){
-        for(AbstractBezierPathElement *ele in elements){
-            if([ele isKindOfClass:[CurveToPathElement class]]){
-                CurveToPathElement *curve = (CurveToPathElement*)ele;
-                CGFloat width = CGRectGetWidth([jotView bounds]);
-                CGPoint start = flipPoint([curve startPoint], width);
-                CGPoint curveTo = flipPoint([curve curveTo], width);
-                CGPoint ctrl1 = flipPoint([curve ctrl1], width);
-                CGPoint ctrl2 = flipPoint([curve ctrl2], width);
-                
-                CurveToPathElement *mirrored = [CurveToPathElement elementWithStart:start andCurveTo:curveTo andControl1:ctrl1 andControl2:ctrl2];
-                mirrored.color = curve.color;
-                mirrored.width = curve.width;
-                mirrored.stepWidth = curve.stepWidth;
-                mirrored.rotation = previousElement.rotation;
-                
-                [mutElements addObject:mirrored];
-            }
-        }
-    }
-    
-    return mutElements;
+    return elements;
 }
 
 @end

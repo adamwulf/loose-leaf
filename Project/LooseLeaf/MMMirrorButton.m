@@ -23,8 +23,24 @@
     return self;
 }
 
--(void) setShowMirror:(BOOL)showMirror{
-    _showMirror = showMirror;
+-(void) setShowMirror:(MirrorMode)mirrorMode{
+    _mirrorMode = mirrorMode;
+    
+    [self setNeedsDisplay];
+}
+
+-(void)cycleMirrorMode{
+    switch ([self mirrorMode]) {
+        case MirrorModeNone:
+            [self setMirrorMode:MirrorModeVertical];
+            break;
+        case MirrorModeVertical:
+            [self setMirrorMode:MirrorModeHorizontal];
+            break;
+        case MirrorModeHorizontal:
+            [self setMirrorMode:MirrorModeNone];
+            break;
+    }
     
     [self setNeedsDisplay];
 }
@@ -58,14 +74,24 @@
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
     
-    CGPoint p1 = CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame) + 0.5);
-    CGPoint p2 = CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame) - 0.5);
-    
-    if([self showMirror]){
+    if([self mirrorMode] != MirrorModeNone){
         UIBezierPath* linePath = [UIBezierPath bezierPath];
-        [linePath moveToPoint:p1];
-        [linePath addLineToPoint:p2];
-        [linePath setLineWidth:1.5];
+
+        if([self mirrorMode] == MirrorModeVertical){
+            CGPoint p1 = CGPointMake(CGRectGetMidX(frame), CGRectGetMinY(frame) + 0.5);
+            CGPoint p2 = CGPointMake(CGRectGetMidX(frame), CGRectGetMaxY(frame) - 0.5);
+            
+            [linePath moveToPoint:p1];
+            [linePath addLineToPoint:p2];
+            [linePath setLineWidth:1.5];
+        }else if([self mirrorMode] == MirrorModeHorizontal){
+            CGPoint p1 = CGPointMake(CGRectGetMinX(frame), CGRectGetMidY(frame) + 0.5);
+            CGPoint p2 = CGPointMake(CGRectGetMaxX(frame), CGRectGetMidY(frame) - 0.5);
+            
+            [linePath moveToPoint:p1];
+            [linePath addLineToPoint:p2];
+            [linePath setLineWidth:1.5];
+        }
         
         // erase the lines
         CGContextSetBlendMode(context, kCGBlendModeClear);
