@@ -197,6 +197,7 @@
         [self addSubview:rulerView];
 
         mirrorView = [[MMMirrorLineView alloc] initWithFrame:self.bounds];
+        [mirrorView setAlpha:0];
         [self addSubview:mirrorView];
     }
     return self;
