@@ -19,6 +19,7 @@
 #import "UIView+SubviewStacks.h"
 #import "Mixpanel.h"
 #import "MMPDFButton.h"
+#import "MMMirrorLineView.h"
 #import <mach/mach_time.h> // for mach_absolute_time() and friends
 #import <SafariServices/SafariServices.h>
 #import <JotUI/AbstractBezierPathElement-Protected.h>
@@ -33,12 +34,14 @@
     // this way we can bounce the hand button, they're
     // probably trying to use hands.
     NSInteger numberOfRulerGesturesWithoutStroke;
+
+    MMMirrorLineView* mirrorView;
 }
 
 @synthesize insertImageButton;
 @synthesize shareButton;
 
-+(CGRect) addPageButtonFrame{
++ (CGRect)addPageButtonFrame {
     return CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, (kWidthOfSidebar - kWidthOfSidebarButton) / 2, kWidthOfSidebarButton, kWidthOfSidebarButton);
 }
 
@@ -92,7 +95,7 @@
         backgroundStyleButton = [[MMPaperButton alloc] initWithFrame:[MMEditablePaperStackView backgroundStyleButtonFrame]];
         backgroundStyleButton.delegate = self;
         [self.toolbar addButton:backgroundStyleButton extendFrame:NO];
-        
+
         shareButton = [[MMShareButton alloc] initWithFrame:[MMEditablePaperStackView shareButtonFrame]];
         shareButton.delegate = self;
         [self.toolbar addButton:shareButton extendFrame:NO];
@@ -192,6 +195,9 @@
 
         rulerView = [[MMRulerView alloc] initWithFrame:self.bounds];
         [self addSubview:rulerView];
+
+        mirrorView = [[MMMirrorLineView alloc] initWithFrame:self.bounds];
+        [self addSubview:mirrorView];
     }
     return self;
 }
@@ -203,7 +209,7 @@ static UIWebView* pdfWebView;
         [pdfWebView removeFromSuperview];
         pdfWebView = nil;
     }
-    [[[self visibleStackHolder] peekSubview] exportVisiblePageToPDF:^(NSURL *urlToPDF) {
+    [[[self visibleStackHolder] peekSubview] exportVisiblePageToPDF:^(NSURL* urlToPDF) {
         if (urlToPDF) {
             pdfWebView = [[UIWebView alloc] initWithFrame:CGRectMake(100, 100, 600, 600)];
             [[pdfWebView layer] setBorderColor:[[UIColor redColor] CGColor]];
@@ -214,10 +220,10 @@ static UIWebView* pdfWebView;
 
             NSURLRequest* request = [NSURLRequest requestWithURL:urlToPDF];
             [pdfWebView loadRequest:request];
-            
+
             [self addSubview:pdfWebView];
         }
-        
+
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [pdfWebView removeFromSuperview];
             pdfWebView = nil;
@@ -429,8 +435,12 @@ static UIWebView* pdfWebView;
     rulerButton.selected = YES;
 }
 
--(void) mirrorButtonTapped:(UIButton*)_button{
+- (void)mirrorButtonTapped:(UIButton*)_button {
     [mirrorButton cycleMirrorMode];
+    [mirrorView setMirrorMode:[mirrorButton mirrorMode]];
+    [[self stackManager] setMirrorMode:[mirrorButton mirrorMode]];
+
+    [self saveStacksToDisk];
 }
 
 
@@ -577,7 +587,19 @@ static UIWebView* pdfWebView;
         [scissor cancelPolygonForTouch:touch];
     }
 
+    [UIView animateWithDuration:.2 animations:^{
+        mirrorView.alpha = 0;
+    }];
+
     return [super isBeginning:beginning toPanAndScalePage:page fromFrame:fromFrame toFrame:toFrame withTouches:touches];
+}
+
+- (void)finishedPanningAndScalingPage:(MMPaperView*)page intoBezel:(MMBezelDirection)direction fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame {
+    [super finishedPanningAndScalingPage:page intoBezel:direction fromFrame:fromFrame toFrame:toFrame];
+
+    [UIView animateWithDuration:.2 animations:^{
+        mirrorView.alpha = 1;
+    }];
 }
 
 - (void)didDrawStrokeOfCm:(CGFloat)distanceInCentimeters {
@@ -609,11 +631,13 @@ static UIWebView* pdfWebView;
     [super isBeginningToScaleReallySmall:page];
     [[MMPageCacheManager sharedInstance] updateVisiblePageImageCache];
 }
+
 - (void)finishedScalingReallySmall:(MMPaperView*)page animated:(BOOL)animated {
     [super finishedScalingReallySmall:page animated:animated];
     [self saveStacksToDisk];
     [rulerView setHidden:YES];
 }
+
 - (void)cancelledScalingReallySmall:(MMPaperView*)page {
     [self setButtonsVisible:YES animated:YES];
     [super cancelledScalingReallySmall:page];
@@ -640,6 +664,10 @@ static UIWebView* pdfWebView;
         [editablePage setEditable:NO];
         [editablePage updateThumbnailVisibility];
     }
+
+    [UIView animateWithDuration:.2 animations:^{
+        mirrorView.alpha = 1;
+    }];
 }
 
 #pragma mark = Saving and Editing
@@ -818,6 +846,9 @@ static UIWebView* pdfWebView;
         for (MMPaperView* page in [[pages objectForKey:@"hiddenPages"] reverseObjectEnumerator]) {
             [self addPaperToBottomOfHiddenStack:page];
         }
+
+        [mirrorButton setMirrorMode:[self.stackManager mirrorMode]];
+        [mirrorView setMirrorMode:[self.stackManager mirrorMode]];
     }
 }
 
@@ -827,7 +858,7 @@ static UIWebView* pdfWebView;
 
 #pragma mark - JotViewDelegate
 
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     // dont start a new stroke if one already exists
     if ([[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count] > 0) {
         //        DebugLog(@"stroke already exists: %d", (int) [[[MMDrawingTouchGestureRecognizer sharedInstance] validTouches] count]);
@@ -853,16 +884,16 @@ static UIWebView* pdfWebView;
     return [[self activePen] willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     [rulerView willMoveStrokeAt:[touch locationInView:rulerView]];
     [[self activePen] willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding inJotView:(JotView *)jotView{
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding inJotView:(JotView*)jotView {
     [[self activePen] willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding inJotView:jotView];
 }
 
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     [[self activePen] didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     if ([self activePen] == pen) {
         [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPenUses by:@(1)];
@@ -871,15 +902,15 @@ static UIWebView* pdfWebView;
     }
 }
 
-- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     [[self activePen] willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     [[self activePen] didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     return [[self activePen] colorForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
@@ -895,7 +926,7 @@ static UIWebView* pdfWebView;
     return [[self activePen] supportsRotation];
 }
 
-- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     //
     // we divide by scale so that when the user is zoomed in,
     // their pen is always writing at the same visible scale
@@ -904,52 +935,52 @@ static UIWebView* pdfWebView;
     return [[self activePen] widthForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
+- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     return [[self activePen] smoothnessForCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement inJotView:(JotView *)jotView{
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement inJotView:(JotView*)jotView {
     MMRulerAdjustment* adjustments = [rulerView adjustElementsToStroke:[[self activePen] willAddElements:elements toStroke:stroke fromPreviousElement:previousElement inJotView:jotView] fromPreviousElement:previousElement];
 
     if (adjustments.didAdjust) {
         numberOfRulerGesturesWithoutStroke = 0;
     }
-    
+
     NSMutableArray* mutElements = [adjustments.elements mutableCopy];
-    
-    if([mirrorButton mirrorMode] != MirrorModeNone){
+
+    if ([mirrorButton mirrorMode] != MirrorModeNone) {
         CGPoint (^flipPoint)(CGPoint p, CGFloat width, CGFloat height);
-        
-        if([mirrorButton mirrorMode] == MirrorModeVertical){
-            flipPoint = ^(CGPoint p, CGFloat width, CGFloat height){
+
+        if ([mirrorButton mirrorMode] == MirrorModeVertical) {
+            flipPoint = ^(CGPoint p, CGFloat width, CGFloat height) {
                 p = CGPointTranslate(p, -(width / 2), 0);
                 p.x = -p.x;
                 return CGPointTranslate(p, (width / 2), 0);
             };
-        }else{
-            flipPoint = ^(CGPoint p, CGFloat width, CGFloat height){
+        } else {
+            flipPoint = ^(CGPoint p, CGFloat width, CGFloat height) {
                 p = CGPointTranslate(p, 0, -(height / 2));
                 p.y = -p.y;
                 return CGPointTranslate(p, 0, (height / 2));
             };
         }
-        
-        for(AbstractBezierPathElement *ele in elements){
-            if([ele isKindOfClass:[CurveToPathElement class]]){
-                CurveToPathElement *curve = (CurveToPathElement*)ele;
+
+        for (AbstractBezierPathElement* ele in elements) {
+            if ([ele isKindOfClass:[CurveToPathElement class]]) {
+                CurveToPathElement* curve = (CurveToPathElement*)ele;
                 CGFloat width = CGRectGetWidth([jotView bounds]);
                 CGFloat height = CGRectGetHeight([jotView bounds]);
                 CGPoint start = flipPoint([curve startPoint], width, height);
                 CGPoint curveTo = flipPoint([curve curveTo], width, height);
                 CGPoint ctrl1 = flipPoint([curve ctrl1], width, height);
                 CGPoint ctrl2 = flipPoint([curve ctrl2], width, height);
-                
-                CurveToPathElement *mirrored = [CurveToPathElement elementWithStart:start andCurveTo:curveTo andControl1:ctrl1 andControl2:ctrl2];
+
+                CurveToPathElement* mirrored = [CurveToPathElement elementWithStart:start andCurveTo:curveTo andControl1:ctrl1 andControl2:ctrl2];
                 mirrored.color = curve.color;
                 mirrored.width = curve.width;
                 mirrored.stepWidth = curve.stepWidth;
                 mirrored.rotation = previousElement.rotation;
-                
+
                 [mutElements addObject:mirrored];
             }
         }

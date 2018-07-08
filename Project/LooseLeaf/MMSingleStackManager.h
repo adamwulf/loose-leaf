@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MMPaperStackView.h"
+#import "MMMirrorButton.h"
 
 
 @interface MMSingleStackManager : NSObject {
@@ -20,6 +21,7 @@
 
 @property (nonatomic, readonly) NSString* uuid;
 @property (nonatomic, strong) NSString* name;
+@property (nonatomic, assign) MirrorMode mirrorMode;
 @property (nonatomic, readonly) NSString* visiblePlistPath;
 @property (nonatomic, readonly) NSString* hiddenPlistPath;
 

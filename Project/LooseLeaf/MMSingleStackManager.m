@@ -100,7 +100,9 @@
 
             [[MMAllStacksManager sharedInstance] updateCachedPages:allPagesToWrite forStackUUID:uuid];
 
-            [@{ @"name": self.name } writeToFile:[self propertiesPlistPath] atomically:YES];
+            [@{ @"name": self.name,
+                @"mirrorMode": @(self.mirrorMode) } writeToFile:[self propertiesPlistPath]
+                                                     atomically:YES];
             [visiblePagesToWrite writeToFile:[self visiblePlistPath] atomically:YES];
             [hiddenPagesToWrite writeToFile:[self hiddenPlistPath] atomically:YES];
         }]];
@@ -120,6 +122,7 @@
     [[MMAllStacksManager sharedInstance] updateCachedPages:allPagesToWrite forStackUUID:uuid];
 
     _name = plist[@"properties"][@"name"];
+    _mirrorMode = [plist[@"properties"][@"mirrorMode"] integerValue];
 
     //    DebugLog(@"starting up with %d visible and %d hidden", (int)[visiblePagesToCreate count], (int)[hiddenPagesToCreate count]);
 
@@ -155,19 +158,19 @@
 
     BOOL (^pageExists)(NSString*) = ^BOOL(NSString* pageUUID) {
         __block BOOL existsInStack = NO;
-        [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] enumerateObjectsUsingBlock:^(MMPaperView* page, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[visiblePages arrayByAddingObjectsFromArray:hiddenPages] enumerateObjectsUsingBlock:^(MMPaperView* page, NSUInteger idx, BOOL* _Nonnull stop) {
             existsInStack = existsInStack || [page.uuid isEqualToString:pageUUID];
             *stop = existsInStack;
         }];
-        
-        if(!existsInStack){
+
+        if (!existsInStack) {
             existsInStack = [pagesMetaToIgnore reduceToBool:^BOOL(NSDictionary* obj, NSUInteger index, BOOL accum) {
                 BOOL matchesStack = [obj[@"stackUUID"] isEqualToString:self.uuid];
                 BOOL matchesPage = [obj[@"uuid"] isEqualToString:pageUUID];
                 return (matchesStack && matchesPage) || accum;
             }];
         }
-        
+
         return existsInStack;
     };
 
@@ -263,35 +266,35 @@
 }
 
 + (NSArray<NSString*>*)defaultStackNames {
-    return @[NSLocalizedString(@"My Notes",@"My Notes"),
-             NSLocalizedString(@"A Few Quick Notes",@"A Few Quick Notes"),
-             NSLocalizedString(@"My Notebook",@"My Notebook"),
-             NSLocalizedString(@"Ideas and Sketches",@"Ideas and Sketches"),
-             NSLocalizedString(@"Brainstorm Session",@"Brainstorm Session"),
-             NSLocalizedString(@"Top Secret Ideas",@"Top Secret Ideas"),
-             NSLocalizedString(@"My Plan to Take Over the World",@"My Plan to Take Over the World"),
-             NSLocalizedString(@"Quick Thoughts and Notes",@"Quick Thoughts and Notes"),
-             NSLocalizedString(@"The Next Big Thing",@"The Next Big Thing"),
-             NSLocalizedString(@"Project Notes",@"Project Notes"),
-             NSLocalizedString(@"Project Specs",@"Project Specs"),
-             NSLocalizedString(@"Meeting Minutes",@"Meeting Minutes"),
-             NSLocalizedString(@"Fun Ideas",@"Fun Ideas"),
-             NSLocalizedString(@"The Best Laid Plans",@"The Best Laid Plans"),
-             NSLocalizedString(@"Daily Journal",@"Daily Journal"),
-             NSLocalizedString(@"Lists of Lists",@"Lists of Lists"),
-             NSLocalizedString(@"Chess Championship Strategies",@"Chess Championship Strategies"),
-             NSLocalizedString(@"Math Championship Strategies",@"Math Championship Strategies"),
-             NSLocalizedString(@"Spaceship Design",@"Spaceship Design"),
-             NSLocalizedString(@"Moonbase Design",@"Moonbase Design"),
-             NSLocalizedString(@"Mars Mission Directive",@"Mars Mission Directive"),
-             NSLocalizedString(@"Orbital Mechanics Calculations",@"Orbital Mechanics Calculations"),
-             NSLocalizedString(@"Space Station Repair Guide",@"Space Station Repair Guide"),
-             NSLocalizedString(@"Spaceship Registration Log",@"Spaceship Registration Log"),
-             NSLocalizedString(@"Pluto is a Planet Thesis",@"Pluto is a Planet Thesis"),
-             NSLocalizedString(@"Autobiography: Chapter 1",@"Autobiography: Chapter 1"),
-             NSLocalizedString(@"Robot Construction Plans",@"Robot Construction Plans"),
-             NSLocalizedString(@"Robot Overlord Negotiations",@"Robot Overlord Negotiations"),
-             NSLocalizedString(@"Autonomous Robot Design Plans",@"Autonomous Robot Design Plans")];
+    return @[NSLocalizedString(@"My Notes", @"My Notes"),
+             NSLocalizedString(@"A Few Quick Notes", @"A Few Quick Notes"),
+             NSLocalizedString(@"My Notebook", @"My Notebook"),
+             NSLocalizedString(@"Ideas and Sketches", @"Ideas and Sketches"),
+             NSLocalizedString(@"Brainstorm Session", @"Brainstorm Session"),
+             NSLocalizedString(@"Top Secret Ideas", @"Top Secret Ideas"),
+             NSLocalizedString(@"My Plan to Take Over the World", @"My Plan to Take Over the World"),
+             NSLocalizedString(@"Quick Thoughts and Notes", @"Quick Thoughts and Notes"),
+             NSLocalizedString(@"The Next Big Thing", @"The Next Big Thing"),
+             NSLocalizedString(@"Project Notes", @"Project Notes"),
+             NSLocalizedString(@"Project Specs", @"Project Specs"),
+             NSLocalizedString(@"Meeting Minutes", @"Meeting Minutes"),
+             NSLocalizedString(@"Fun Ideas", @"Fun Ideas"),
+             NSLocalizedString(@"The Best Laid Plans", @"The Best Laid Plans"),
+             NSLocalizedString(@"Daily Journal", @"Daily Journal"),
+             NSLocalizedString(@"Lists of Lists", @"Lists of Lists"),
+             NSLocalizedString(@"Chess Championship Strategies", @"Chess Championship Strategies"),
+             NSLocalizedString(@"Math Championship Strategies", @"Math Championship Strategies"),
+             NSLocalizedString(@"Spaceship Design", @"Spaceship Design"),
+             NSLocalizedString(@"Moonbase Design", @"Moonbase Design"),
+             NSLocalizedString(@"Mars Mission Directive", @"Mars Mission Directive"),
+             NSLocalizedString(@"Orbital Mechanics Calculations", @"Orbital Mechanics Calculations"),
+             NSLocalizedString(@"Space Station Repair Guide", @"Space Station Repair Guide"),
+             NSLocalizedString(@"Spaceship Registration Log", @"Spaceship Registration Log"),
+             NSLocalizedString(@"Pluto is a Planet Thesis", @"Pluto is a Planet Thesis"),
+             NSLocalizedString(@"Autobiography: Chapter 1", @"Autobiography: Chapter 1"),
+             NSLocalizedString(@"Robot Construction Plans", @"Robot Construction Plans"),
+             NSLocalizedString(@"Robot Overlord Negotiations", @"Robot Overlord Negotiations"),
+             NSLocalizedString(@"Autonomous Robot Design Plans", @"Autonomous Robot Design Plans")];
 }
 
 @end
