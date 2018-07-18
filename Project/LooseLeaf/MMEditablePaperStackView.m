@@ -980,7 +980,13 @@ static UIWebView* pdfWebView;
                 mirrored.color = curve.color;
                 mirrored.width = curve.width;
                 mirrored.stepWidth = curve.stepWidth;
-                mirrored.rotation = previousElement.rotation;
+                mirrored.rotation = curve.rotation;
+                mirrored.previousWidth = curve.previousWidth;
+                mirrored.previousColor = curve.previousColor;
+                mirrored.previousExtraLengthWithoutDot = curve.previousExtraLengthWithoutDot;
+                mirrored.previousRotation = curve.previousRotation;
+                mirrored.renderVersion = curve.renderVersion;
+                mirrored.bakedPreviousElementProps = YES;
 
                 [mutElements addObject:mirrored];
             }
