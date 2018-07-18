@@ -21,6 +21,7 @@
 #import "MMShareButton.h"
 #import "MMMapButton.h"
 #import "MMRulerButton.h"
+#import "MMMirrorButton.h"
 #import "MMHandButton.h"
 #import "MMScissorButton.h"
 #import "MMAdonitButton.h"
@@ -58,6 +59,7 @@
     MMUndoRedoButton* undoButton;
     MMUndoRedoButton* redoButton;
 
+    MMMirrorButton* mirrorButton;
     MMRulerButton* rulerButton;
     MMHandButton* handButton;
 

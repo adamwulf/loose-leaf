@@ -45,7 +45,6 @@
 
 @implementation MMScrappedPaperView {
     NSString* scrapIDsPath;
-    MMDecompressImagePromise* scrappedImgViewImage;
     // track if we should have our thumbnail loaded
     // this will help us since we use lots of threads
     // during thumbnail loading.
@@ -139,7 +138,9 @@
             // scrap state isn't loaded, so show
             // our thumbnail
             //            DebugLog(@"page %@ wants editing, doens't have scraps, showing scrap thumb", self.uuid);
-            [self setThumbnailTo:scrappedImgViewImage.image];
+            if ([scrappedImgViewImage isDecompressed]) {
+                [self setThumbnailTo:scrappedImgViewImage.image];
+            }
             scrapsOnPaperState.scrapContainerView.hidden = YES;
             drawableView.hidden = YES;
             shapeBuilderView.hidden = YES;
@@ -164,7 +165,9 @@
     } else {
         //        DebugLog(@"default thumb for %@, SHOWING thumb", self.uuid);
         //        DebugLog(@"page %@ isn't editing, scraps are saved, showing scrapped thumb", self.uuid);
-        [self setThumbnailTo:scrappedImgViewImage.image];
+        if ([scrappedImgViewImage isDecompressed]) {
+            [self setThumbnailTo:scrappedImgViewImage.image];
+        }
         scrapsOnPaperState.scrapContainerView.hidden = YES;
         drawableView.hidden = YES;
         shapeBuilderView.hidden = YES;
@@ -392,14 +395,14 @@
 
 #pragma mark - JotViewDelegate
 
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     for (MMScrapView* scrap in [self.scrapsOnPaper reverseObjectEnumerator]) {
         [scrap addUndoLevelAndFinishStroke];
     }
-    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     // when a stroke ends, our drawableview has its undo-state
     // set by removing its current stroke. to match, we need to
     // end all the strokes of our scraps, and then undo them, to
@@ -412,7 +415,7 @@
         [scrap addUndoLevelAndFinishStroke];
         [scrap.state.drawableView undoAndForget];
     }
-    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
 
@@ -425,8 +428,8 @@
     }
 }
 
-- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)_previousElement {
-    NSArray* strokeElementsToDraw = [super willAddElements:elements toStroke:stroke fromPreviousElement:_previousElement];
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)_previousElement inJotView:(JotView*)jotView {
+    NSArray* strokeElementsToDraw = [super willAddElements:elements toStroke:stroke fromPreviousElement:_previousElement inJotView:jotView];
 
     // track the segment test/reset count
     // when splitting the stroke
@@ -1327,7 +1330,7 @@
     [self loadCachedPreviewAndDecompressImmediately:NO];
 }
 
--(void) forgetLastThumbnailSaveHash{
+- (void)forgetLastThumbnailSaveHash {
     lastSavedScrapStateHashForGeneratedThumbnail = 0;
 }
 

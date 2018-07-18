@@ -15,6 +15,7 @@
 
 
 @implementation MMPaperView {
+    BOOL hasAddedGestures;
     CGRect originalUnscaledBounds;
     //    UILabel* lbl;
 }
@@ -61,7 +62,6 @@
         longPress = [[MMObjectSelectLongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.numberOfTouchesRequired = 2;
         longPress.allowableMovement = 20;
-        [self addGestureRecognizer:longPress];
         //
         // allow the user to select an object by tapping on the page
         // with two fingers
@@ -85,9 +85,18 @@
         // these fail
         [panGesture requireGestureRecognizerToFail:longPress];
         //        [panGesture requireGestureRecognizerToFail:tap];
-        [self addGestureRecognizer:panGesture];
     }
     return self;
+}
+
+- (void)initializeGesturesIfNeeded {
+    // gestures are expensive to add for some reason, so delay
+    // adding them until absolutely necessary
+    if (!hasAddedGestures && [NSThread isMainThread]) {
+        hasAddedGestures = YES;
+        [self addGestureRecognizer:longPress];
+        [self addGestureRecognizer:panGesture];
+    }
 }
 
 - (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {

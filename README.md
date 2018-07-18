@@ -50,7 +50,9 @@ That's it for configuration - now you can build the app and run it on your iPad!
 
 ## Get Involved
 
-Some great places to get involved and help make JotUI better for everyone:
+Help translate Loose Leaf into your language! Join the project and start translating here: [https://poeditor.com/join/project/UBaYwL0YTh](https://poeditor.com/join/project/UBaYwL0YTh)
+
+Some great places to get involved and help make Loose Leaf better for everyone:
 
 - [Feature #279](https://github.com/adamwulf/loose-leaf/issues/279), [#696](https://github.com/adamwulf/loose-leaf/issues/696), and [#697](https://github.com/adamwulf/loose-leaf/issues/697) - Add additional share options - destinations like Dropbox, Droplr, and Evernote would be nice additions
 - [Feature #1576](https://github.com/adamwulf/loose-leaf/issues/1576) Update the ruler tool to act similar to Apple's Notes app and toggle to stay on the page

@@ -193,14 +193,14 @@
     [self.undoRedoManager addUndoItem:[MMUndoRedoStrokeItem itemForPage:self]];
 }
 
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
+    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     [self addStandardStrokeUndoItem];
     [self debugPrintUndoStatus];
 }
 
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
+    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     // no undo change needed
     [self debugPrintUndoStatus];
 }

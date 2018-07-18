@@ -14,6 +14,13 @@
 NSOperationQueue* decompressImageQueue;
 
 
+@interface MMDecompressImagePromise ()
+
+@property (nonatomic) UIImage* image;
+
+@end
+
+
 @implementation MMDecompressImagePromise {
     MMBlockOperation* decompressBlock;
     BOOL isDecompressed;
@@ -46,8 +53,9 @@ NSOperationQueue* decompressImageQueue;
                 if (strongContextSelf) {
                     UIImage* imgToDecompress = strongContextSelf.image;
                     if (imgToDecompress) {
-                        UIGraphicsBeginImageContext(CGSizeMake(1, 1));
+                        UIGraphicsBeginImageContext(CGSizeMake(imgToDecompress.size.width, imgToDecompress.size.height));
                         [imgToDecompress drawAtPoint:CGPointZero];
+                        strongContextSelf.image = UIGraphicsGetImageFromCurrentImageContext();
                         UIGraphicsEndImageContext();
                     }
                     dispatch_async(dispatch_get_main_queue(), ^(void) {
@@ -59,7 +67,7 @@ NSOperationQueue* decompressImageQueue;
                                     shouldNotify = YES;
                                 }
                             }
-                            if(shouldNotify){
+                            if (shouldNotify) {
                                 [strongContextSelf.delegate didDecompressImage:strongContextSelf];
                             }
                         }

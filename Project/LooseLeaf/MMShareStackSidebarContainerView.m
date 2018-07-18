@@ -74,13 +74,13 @@
         [exportingLabel setTextColor:[UIColor whiteColor]];
         [exportingLabel setFont:[UIFont systemFontOfSize:24]];
         [exportingLabel setTextAlignment:NSTextAlignmentCenter];
-        [exportingLabel setText:@"Exporting all pages..."];
+        [exportingLabel setText:NSLocalizedString(@"Exporting all pages...", @"Exporting all pages...")];
         [exportingView addSubview:exportingLabel];
 
 
         UIButton* cancelExportButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(exportViewFrame) * 4 / 5, 50)];
         [cancelExportButton addTarget:self action:@selector(cancelStackExport:) forControlEvents:UIControlEventTouchUpInside];
-        [cancelExportButton setTitle:@"Cancel" forState:UIControlStateNormal];
+        [cancelExportButton setTitle:NSLocalizedString(@"Cancel", @"Cancel") forState:UIControlStateNormal];
         [cancelExportButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [cancelExportButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.5]] forState:UIControlStateNormal];
         [cancelExportButton setBackgroundImage:[UIImage imageFromColor:[UIColor colorWithWhite:1 alpha:.7]] forState:UIControlStateHighlighted];
@@ -148,7 +148,7 @@
         });
     } withProgress:^BOOL(NSInteger pageSoFar, NSInteger totalPages) {
         CheckMainThread;
-        [exportingLabel setText:[NSString stringWithFormat:@"Exporting all pages...\n %ld of %ld pages", (long)pageSoFar, (long)totalPages]];
+        [exportingLabel setText:[NSString stringWithFormat:NSLocalizedString(@"Exporting all pages...\n %ld of %ld pages", @"Exporting all pages...\n %ld of %ld pages"), (long)pageSoFar, (long)totalPages]];
         // cancel the export if we're hidden
         return ![self isVisible];
     }];
@@ -231,7 +231,7 @@
     tutorialButton.hidden = NO;
     [super show:animated];
 
-    [exportingLabel setText:@"Exporting all pages..."];
+    [exportingLabel setText:NSLocalizedString(@"Exporting all pages...", @"Exporting all pages...")];
 
     [self setExportType:nil];
 }

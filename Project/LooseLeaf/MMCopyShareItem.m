@@ -112,7 +112,7 @@
             [path moveToPoint:start];
             [path addLineToPoint:corner];
             [path addLineToPoint:end];
-            [self animateCompletionText:@"Page copied to clipboard" withImage:[UIImage imageNamed:@"clipboard-icon"]];
+            [self animateCompletionText:NSLocalizedString(@"Page copied to clipboard", @"Page copied to clipboard") withImage:[UIImage imageNamed:@"clipboard-icon"]];
         } else {
             CGFloat size = 14;
             CGPoint start = CGPointMake(31, 31);

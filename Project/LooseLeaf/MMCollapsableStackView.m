@@ -71,6 +71,11 @@
 
     MMPDF* pdfToDecrypt;
     void (^finishDecryptingPDFBlock)();
+
+    BOOL _isActivelyDraggingScrollView;
+    MMColoredTextField* stackNameField;
+
+    CGRect cachedStackNameFieldFrame;
 }
 
 @dynamic stackDelegate;
@@ -95,7 +100,7 @@
         importOperationQueue.name = @"importOperationQueue";
 
         collapseNoticeMessage = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.bounds) - 80, -50, CGRectGetWidth(self.bounds) / 2 + 40, 20)];
-        collapseNoticeMessage.text = @"Pull Down to Collapse Pages";
+        collapseNoticeMessage.text = NSLocalizedString(@"Pull Down to Collapse Pages", @"Pull Down to Collapse Pages");
         [collapseNoticeMessage sizeToFit];
         collapseNoticeMessage.center = CGPointTranslate(collapseNoticeArrow.center, CGRectGetMidX(collapseNoticeMessage.bounds) + 40, 0);
         [self addSubview:collapseNoticeMessage];
@@ -214,9 +219,11 @@
 }
 
 - (CGRect)rectForColorConsideration {
-    CGRect targetRect = [stackNameField frame];
-    targetRect.size = [stackNameField sizeThatFits:targetRect.size];
-    return targetRect;
+    if (CGRectEqualToRect(CGRectZero, cachedStackNameFieldFrame)) {
+        cachedStackNameFieldFrame = [stackNameField frame];
+        cachedStackNameFieldFrame.size = [stackNameField sizeThatFits:cachedStackNameFieldFrame.size];
+    }
+    return cachedStackNameFieldFrame;
 }
 
 - (void)setNameColor:(UIColor*)color animated:(BOOL)animated {
@@ -225,11 +232,11 @@
 
 - (void)setCurrentViewMode:(NSString*)currentViewMode {
     [super setCurrentViewMode:currentViewMode];
-    deleteGesture.enabled = [self isShowingCollapsedView];
+    deleteGesture.enabled = [self isShowingCollapsedView:[self uuid]];
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
-    if ([self.stackDelegate isShowingCollapsedView]) {
+    if ([self.stackDelegate isShowingCollapsedView:[self uuid]]) {
         // if we're collapsed, then we want to show the same pages
         // that would appear in our row view
         return [self pagesToAlignForRowView];
@@ -267,7 +274,7 @@
 
 - (void)refreshNameFromStackManager {
     stackNameField.text = self.stackManager.name;
-    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
+    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:NSLocalizedString(@"There are no pages in %@", @"There are no pages in %@"), stackNameField.text];
 }
 
 #pragma mark - Actions
@@ -275,7 +282,7 @@
 - (void)ensureAtLeastPagesInStack:(NSInteger)numberOfPages {
     [self ensureAtLeast:3 pagesInStack:self.visibleStackHolder];
 
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:[self uuid]]) {
         [self organizePagesIntoSingleRowAnimated:NO];
 
         for (MMPaperView* page in [[self visibleStackHolder] subviews]) {
@@ -346,9 +353,10 @@
 }
 
 - (void)importAllPagesFromPDFInboxItem:(MMPDFInboxItem*)pdfDoc fromSourceApplication:(NSString*)sourceApplication onComplete:(void (^)(BOOL success))completionBlock {
-    if ([self isShowingCollapsedView]) {
+    if ([self isShowingCollapsedView:[self uuid]]) {
         if ([pdfDoc.pdf.title length]) {
             self.stackManager.name = pdfDoc.pdf.title;
+            cachedStackNameFieldFrame = CGRectZero;
             [self refreshNameFromStackManager];
         }
 
@@ -358,7 +366,7 @@
         emptyStackRowPlaceholder.alpha = 0;
         importingPDFListButton.alpha = 1;
 
-        [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)1, (long)pdfDoc.pdf.pageCount]];
+        [importingPDFListButton setPrompt:[NSString stringWithFormat:NSLocalizedString(@"Importing PDF Page %ld / %ld", @"Importing PDF Page %ld / %ld"), (long)1, (long)pdfDoc.pdf.pageCount]];
 
         NSIndexSet* pageSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [pdfDoc pageCount])];
         MMPDFAssetGroup* pdfAlbum = [[MMPDFAssetGroup alloc] initWithInboxItem:pdfDoc];
@@ -423,7 +431,7 @@
         __block NSInteger totalImportedPages = 0;
         void (^updateImportProgressLabel)() = ^{
             totalImportedPages++;
-            [importingPDFListButton setPrompt:[NSString stringWithFormat:@"Importing PDF Page %ld / %ld", (long)totalImportedPages, (long)pdfDoc.pdf.pageCount]];
+            [importingPDFListButton setPrompt:[NSString stringWithFormat:NSLocalizedString(@"Importing PDF Page %ld / %ld", @"Importing PDF Page %ld / %ld"), (long)totalImportedPages, (long)pdfDoc.pdf.pageCount]];
         };
 
 
@@ -481,12 +489,12 @@
                 MMDisplayAsset* asset = displayAssets[index];
                 MMBackgroundedPaperView* page = pages[index];
                 NSURL* assetURL = [asset fullResolutionURL];
-                
+
                 CGSize size = [asset fullResolutionSize];
-                
+
                 UIImage* thumbImageToImport = [asset aspectThumbnailWithMaxPixelSize:CGSizeMaxDim(thumbSize)];
-                
-                if(size.width > size.height){
+
+                if (size.width > size.height) {
                     // it's a landscape page, so we need to rotate the thumbnail
                     // to match the actual page content
                     thumbImageToImport = [thumbImageToImport rotateClockwise:YES];
@@ -513,7 +521,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView*)scrollView {
-    if ([scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
+    if (_isActivelyDraggingScrollView && [scrollView isDragging] && (scrollView.contentOffset.y < -50)) {
         [[self stackDelegate] mightAskToCollapseStack:[self uuid]];
     }
 
@@ -526,7 +534,7 @@
 
     CGFloat updatedAlpha = y / 100.0;
 
-    if (updatedAlpha >= 1.0 && collapseNoticeArrow.alpha < 1.0) {
+    if (_isActivelyDraggingScrollView && updatedAlpha >= 1.0 && collapseNoticeArrow.alpha < 1.0) {
         [collapseNoticeArrow bounce];
     }
 
@@ -538,7 +546,13 @@
     [super scrollViewDidScroll:scrollView];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView*)scrollView {
+    _isActivelyDraggingScrollView = YES;
+}
+
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
+    _isActivelyDraggingScrollView = NO;
+
     if (scrollView.contentOffset.y < -100) {
         // Need to turn off bouncing so that the bounce animation from releasing the over-scroll
         // doesn't occur. otherwise it interferes with the row animation.
@@ -678,12 +692,17 @@
         [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
             aPage.layer.zPosition = [pagesToAlignIntoRow count] - idx;
         }];
+
+        NSArray<MMPaperView*>* visiblePagesOnScreen = [[[MMPageCacheManager sharedInstance] delegate] findPagesInVisibleRowsOfListView];
+
         //
         // immediately hide all of the pages that we won't be animating
         for (MMEditablePaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
             if ([pagesToAlignIntoRow containsObject:aPage]) {
                 // we'll animate these in step 2
-                [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
+                if ([self superview] && [visiblePagesOnScreen containsObject:aPage]) {
+                    [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
+                }
             } else {
                 // we already have the last visible page, we're going to
                 // hide all other pages during the animation, then re-show
@@ -1202,8 +1221,9 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField*)textField {
+    cachedStackNameFieldFrame = CGRectZero;
     self.stackManager.name = textField.text;
-    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:@"There are no pages in %@", stackNameField.text];
+    emptyStackRowPlaceholder.prompt = [NSString stringWithFormat:NSLocalizedString(@"There are no pages in %@", @"There are no pages in %@"), stackNameField.text];
 
     if ([self isShowingListView]) {
         self.scrollEnabled = YES;
@@ -1361,14 +1381,14 @@
 
 #pragma mark - MMBackgroundStyleContainerViewDelegate
 
--(NSString*) currentBackgroundStyleType{
+- (NSString*)currentBackgroundStyleType {
     return [[[self visibleStackHolder] peekSubview] currentBackgroundStyleType];
 }
 
--(void) setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle{
-    if([[[self visibleStackHolder] peekSubview] hasBackgroundAsset]){
+- (void)setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle {
+    if ([[[self visibleStackHolder] peekSubview] hasBackgroundAsset]) {
         [self addPageButtonTapped:nil];
-    }else{
+    } else {
         [[[self visibleStackHolder] peekSubview] setCurrentBackgroundStyleType:currentBackgroundStyle];
     }
 }
@@ -1391,6 +1411,12 @@
     if (![self isPerfectlyAlignedIntoRow]) {
         [super deleteInboxItemTappedDown:note];
     }
+}
+
+#pragma mark - MMPageCacheManagerDelegate
+
+- (BOOL)isShowingCollapsedView:(NSString*)uuid {
+    return [super isShowingCollapsedView:uuid] || [self.stackDelegate isShowingCollapsedView:uuid];
 }
 
 @end

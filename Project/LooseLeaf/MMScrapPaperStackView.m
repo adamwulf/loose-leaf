@@ -27,9 +27,6 @@
 #import "Mixpanel.h"
 #import "MMTrashManager.h"
 #import "MMShareSidebarContainerView.h"
-#import "MMCloudKitImportExportView.h"
-#import "MMCloudKitManager.h"
-#import "MMCloudKitFetchFriendsState.h"
 #import "MMPhotoManager.h"
 #import "NSArray+Extras.h"
 #import "MMStatTracker.h"
@@ -72,7 +69,6 @@
 }
 
 @synthesize silhouette;
-@synthesize cloudKitExportView;
 
 - (id)initWithFrame:(CGRect)frame andUUID:(NSString*)_uuid {
     if (frame.size.width > frame.size.height) {
@@ -113,7 +109,7 @@
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         [backgroundStyleButton addTarget:self action:@selector(backgroundStyleButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        
+
         deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds andDarkBorder:YES];
         [self addSubview:deleteScrapSidebar.deleteSidebarBackground];
 
@@ -428,8 +424,6 @@
 }
 
 - (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)inAssetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock {
-
-
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
     __block NSURL* assetURL = inAssetURL;
@@ -447,28 +441,28 @@
         CGContextRef context = UIGraphicsGetCurrentContext();
 
         CGSize imgSize = [imageToImport size];
-        
-        if(imageToImport && imgSize.width > imgSize.height){
+
+        if (imageToImport && imgSize.width > imgSize.height) {
             // if the PDF is landscape, then we need to rotate our
             // canvas so that the landscape PDF is drawn on our
             // vertical canvas properly.
             CGFloat theta = 90.0 * M_PI / 180.0;
-            
+
             CGContextTranslateCTM(context, thumbSize.width / 2, thumbSize.height / 2);
             CGContextRotateCTM(context, theta);
             CGContextTranslateCTM(context, -thumbSize.height / 2, -thumbSize.width / 2);
-            
+
             thumbSize = CGSizeSwap(thumbSize);
         }
-        
+
         CGRect rectForImage = CGSizeFill(imgSize, thumbSize);
         [imageToImport drawInRect:rectForImage];
 
         UIImage* thumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
 
         UIGraphicsEndImageContext();
-        
-        
+
+
         [MMExportablePaperView writeThumbnailImagesToDisk:thumbnailImage thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
         if (!assetURL) {
             NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
@@ -643,7 +637,7 @@
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
 
     CGSize fullScaleSize = CGSizeScale(scrapBacking.size, 1 / [[UIScreen mainScreen] scale]);
-    
+
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
     CGFloat ratio = buttonSize.width / fullScaleSize.width;
@@ -651,29 +645,29 @@
 
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = buttonSize;
-    
-    UIImageOrientation (^rotateOrientationLeft)(UIImageOrientation) = ^(UIImageOrientation initialOrientation){
-        if(initialOrientation == UIImageOrientationUp || initialOrientation == UIImageOrientationUpMirrored){
+
+    UIImageOrientation (^rotateOrientationLeft)(UIImageOrientation) = ^(UIImageOrientation initialOrientation) {
+        if (initialOrientation == UIImageOrientationUp || initialOrientation == UIImageOrientationUpMirrored) {
             return UIImageOrientationLeft;
-        }else if(initialOrientation == UIImageOrientationLeft || initialOrientation == UIImageOrientationLeftMirrored){
+        } else if (initialOrientation == UIImageOrientationLeft || initialOrientation == UIImageOrientationLeftMirrored) {
             return UIImageOrientationDown;
-        }else if(initialOrientation == UIImageOrientationDown || initialOrientation == UIImageOrientationDownMirrored){
+        } else if (initialOrientation == UIImageOrientationDown || initialOrientation == UIImageOrientationDownMirrored) {
             return UIImageOrientationRight;
-        }else if(initialOrientation == UIImageOrientationRight || initialOrientation == UIImageOrientationRightMirrored){
+        } else if (initialOrientation == UIImageOrientationRight || initialOrientation == UIImageOrientationRightMirrored) {
             return UIImageOrientationUp;
         }
-        
+
         return UIImageOrientationUp;
     };
 
-    if(fullScaleSize.width > fullScaleSize.height){
+    if (fullScaleSize.width > fullScaleSize.height) {
         fullScaleSize = CGSizeSwap(fullScaleSize);
         scrapRect.size = CGSizeSwap(scrapRect.size);
         rotation += M_PI / 2.0;
         scrapBacking = [UIImage imageWithCGImage:scrapBacking.CGImage scale:scrapBacking.scale orientation:rotateOrientationLeft(scrapBacking.imageOrientation)];
     }
-    
-    
+
+
     UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
 
     //
@@ -867,12 +861,12 @@
 
 #pragma mark - Sharing
 
--(void)backgroundStyleButtonTapped:(UIButton*)_button {
+- (void)backgroundStyleButtonTapped:(UIButton*)_button {
     if ([self isActivelyGesturing]) {
         // export not allowed while gesturing
         return;
     }
-    
+
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
@@ -2103,11 +2097,11 @@
 
 #pragma mark - MMShareSidebarDelegate
 
--(ExportRotation)idealExportRotation{
+- (ExportRotation)idealExportRotation {
     return [[visibleStackHolder peekSubview] idealExportRotation];
 }
 
--(void) setIdealExportRotation:(ExportRotation)idealExportRotation{
+- (void)setIdealExportRotation:(ExportRotation)idealExportRotation {
     [[visibleStackHolder peekSubview] setIdealExportRotation:idealExportRotation];
 }
 
@@ -2166,9 +2160,9 @@
 
 #pragma mark - JotViewDelegate
 
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     // dont start a new stroke if one already exists
-    BOOL ret = [super willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    BOOL ret = [super willBeginStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
     if (ret) {
         if (!scissorButton.selected) {
             [silhouette startDrawingAtTouch:touch immediately:NO];
@@ -2177,37 +2171,37 @@
     return ret;
 }
 
-- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch];
     if (currentStroke) {
         if (!scissorButton.selected) {
             [silhouette continueDrawingAtTouch:touch];
         }
     }
-    [super willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    [super willMoveStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding {
-    [super willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding];
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding inJotView:(JotView*)jotView {
+    [super willEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch shortStrokeEnding:shortStrokeEnding inJotView:jotView];
 }
 
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     if (!scissorButton.selected) {
         [silhouette endDrawingAtTouch:touch];
     }
-    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch];
+    [super didEndStrokeWithCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     JotStroke* currentStroke = [[JotStrokeManager sharedInstance] getStrokeForTouchHash:touch];
     if (currentStroke) {
         [silhouette endDrawingAtTouch:touch];
     }
-    [super willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+    [super willCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
-    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch];
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
+    [super didCancelStroke:stroke withCoalescedTouch:coalescedTouch fromTouch:touch inJotView:jotView];
 }
 
 

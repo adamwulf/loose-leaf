@@ -67,13 +67,26 @@
     [super drawRect:rect];
 }
 
+static NSMutableDictionary<UIColor*, UIImage*>* _cachedTrashIcons;
+
 + (UIImage*)trashIconWithColor:(UIColor*)color {
-    UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
-    CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -8, 0);
-    [MMTrashButton drawTrashCanInRect:CGRectMake(0, 0, 40, 40) withColor:color withBackground:halfGreyFill];
-    UIImage* trashImg = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _cachedTrashIcons = [NSMutableDictionary dictionary];
+    });
+
+    UIImage* trashImg = _cachedTrashIcons[color];
+
+    if (!trashImg) {
+        UIColor* halfGreyFill = [UIColor colorWithRed:0.84 green:0.84 blue:0.84 alpha:0.5];
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(30, 40), NO, 0);
+        CGContextTranslateCTM(UIGraphicsGetCurrentContext(), -8, 0);
+        [MMTrashButton drawTrashCanInRect:CGRectMake(0, 0, 40, 40) withColor:color withBackground:halfGreyFill];
+        UIImage* trashImg = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        _cachedTrashIcons[color] = trashImg;
+    }
+
     return trashImg;
 }
 

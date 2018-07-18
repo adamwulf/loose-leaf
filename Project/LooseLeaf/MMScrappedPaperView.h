@@ -16,11 +16,16 @@
 #import "MMVector.h"
 #import <MessageUI/MFMailComposeViewController.h>
 
+@class MMDecompressImagePromise;
+
 /**
  * the purpose of this subclass is to encompass all of the
  * scrap functionality for a page
  */
 @interface MMScrappedPaperView : MMEditablePaperView <MMPanAndPinchScrapGestureRecognizerDelegate, MMScrapsOnPaperStateDelegate, MMDecompressImagePromiseDelegate> {
+    MMDecompressImagePromise* scrappedImgViewImage;
+
+
     MMScrapsOnPaperState* scrapsOnPaperState;
     UIImageView* cachedImgView;
 
@@ -84,6 +89,6 @@
 
 - (void)newlyCutScrapFromPaperView:(MMScrapView*)scrap;
 
--(void) forgetLastThumbnailSaveHash;
+- (void)forgetLastThumbnailSaveHash;
 
 @end

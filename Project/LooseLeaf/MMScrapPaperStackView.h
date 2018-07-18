@@ -13,7 +13,6 @@
 #import "MMShareItemDelegate.h"
 #import "MMExportablePaperView.h"
 #import "MMScrapViewOwnershipDelegate.h"
-#import "MMCloudKitImportExportView.h"
 #import "MMShadowHandView.h"
 
 
@@ -21,7 +20,6 @@
     __weak MMShadowHandView* silhouette;
 }
 
-@property (nonatomic, weak) MMCloudKitImportExportView* cloudKitExportView;
 @property (nonatomic, weak) MMShadowHandView* silhouette;
 
 - (void)willResignActive;

@@ -1961,7 +1961,7 @@
     return [currentViewMode isEqualToString:kViewModeList];
 }
 
-- (BOOL)isShowingCollapsedView {
+- (BOOL)isShowingCollapsedView:(NSString*)uuid {
     return [currentViewMode isEqualToString:kViewModeCollapsed];
 }
 

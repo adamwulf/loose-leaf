@@ -16,7 +16,7 @@
 }
 
 @property (nonatomic, weak) NSObject<MMDecompressImagePromiseDelegate>* delegate;
-@property (nonatomic) UIImage* image;
+@property (nonatomic, readonly) UIImage* image;
 @property (readonly) BOOL isDecompressed;
 
 - (instancetype)init NS_UNAVAILABLE;

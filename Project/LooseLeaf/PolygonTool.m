@@ -23,7 +23,7 @@
     return self;
 }
 
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     if (![polygonTouches count]) {
         [delegate beginShapeWithTouch:touch withTool:self];
         // return that we _do not_ want the JotView to draw
@@ -36,7 +36,7 @@
  * a notification that the input is moving to the
  * next touch
  */
-- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     if ([polygonTouches containsObject:touch]) {
         [delegate continueShapeWithTouch:coalescedTouch withTool:self];
     }
@@ -46,7 +46,7 @@
  * a notification that the input will end the
  * stroke
  */
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding {
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)shortStrokeEnding inJotView:(JotView*)jotView {
     if ([polygonTouches containsObject:touch]) {
         [delegate finishShapeWithTouch:coalescedTouch withTool:self];
         [polygonTouches removeObject:touch];
@@ -56,7 +56,7 @@
 /**
  * the stroke for the input touch will been cancelled.
  */
-- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView*)jotView {
     if ([polygonTouches containsObject:touch]) {
         [delegate cancelShapeWithTouch:touch withTool:self];
         [polygonTouches removeObject:touch];
