@@ -966,7 +966,7 @@ static UIWebView* pdfWebView;
             };
         }
 
-        for (AbstractBezierPathElement* ele in elements) {
+        for (AbstractBezierPathElement* ele in adjustments.elements) {
             if ([ele isKindOfClass:[CurveToPathElement class]]) {
                 CurveToPathElement* curve = (CurveToPathElement*)ele;
                 CGFloat width = CGRectGetWidth([jotView bounds]);
