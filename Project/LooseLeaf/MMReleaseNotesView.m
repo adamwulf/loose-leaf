@@ -11,6 +11,7 @@
 #import "Constants.h"
 #import "UIColor+Shadow.h"
 #import "MMLoopingVideoView.h"
+#import "MMFeedbackManager.h"
 #import "Mixpanel.h"
 #import <StoreKit/StoreKit.h>
 
@@ -306,6 +307,7 @@
     if ([feedbackText isEqualToString:kFeedbackPlaceholderText]) {
         [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad" }];
     } else {
+        [[MMFeedbackManager sharedInstance] sendFeedback:feedbackText];
         [[Mixpanel sharedInstance] track:kMPUpgradeFeedback properties:@{ kMPUpgradeFeedbackResult: @"Sad",
                                                                           kMPUpgradeFeedbackReply: feedbackText }];
     }

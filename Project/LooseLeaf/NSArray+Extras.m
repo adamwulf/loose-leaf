@@ -19,6 +19,15 @@
     return [NSArray arrayWithArray:outArray];
 }
 
+- (NSArray*)arrayByRemovingFirstObject {
+    NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
+    if ([ret count]) {
+        [ret removeObjectAtIndex:0];
+    }
+    return ret;
+}
+
+
 - (NSArray*)arrayByRemovingObject:(id)obj {
     NSMutableArray* ret = [NSMutableArray arrayWithArray:self];
     [ret removeObject:obj];
