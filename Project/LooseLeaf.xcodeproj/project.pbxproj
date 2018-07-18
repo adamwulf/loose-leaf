@@ -558,6 +558,7 @@
 		C5E1268C20EEFD52002F7CEC /* MMMirrorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */; };
 		C5E127BB20F1C861002F7CEC /* MMMirrorLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E127BA20F1C861002F7CEC /* MMMirrorLineView.m */; };
 		C5E654FD1DCBEF6700521894 /* MMConfirmDeleteStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */; };
+		C5E7B4C620FECBE100A4D94C /* new-user-7-mirror.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5E7B4C520FECBE100A4D94C /* new-user-7-mirror.mp4 */; };
 		C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */; };
 		C5EC1C331DC1841100C65DB3 /* release-notes-feedback-feature.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */; };
 		C5EFA5A01D9E13FB00BBE8CD /* MMPageBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */; };
@@ -1647,6 +1648,7 @@
 		C5E127BA20F1C861002F7CEC /* MMMirrorLineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMMirrorLineView.m; sourceTree = "<group>"; };
 		C5E654FB1DCBEF6700521894 /* MMConfirmDeleteStackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMConfirmDeleteStackButton.h; sourceTree = "<group>"; };
 		C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMConfirmDeleteStackButton.m; sourceTree = "<group>"; };
+		C5E7B4C520FECBE100A4D94C /* new-user-7-mirror.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "new-user-7-mirror.mp4"; sourceTree = "<group>"; };
 		C5EC1C2F1DC1817800C65DB3 /* MMLoopingVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopingVideoView.h; sourceTree = "<group>"; };
 		C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopingVideoView.m; sourceTree = "<group>"; };
 		C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "release-notes-feedback-feature.png"; sourceTree = "<group>"; };
@@ -3744,6 +3746,7 @@
 		C53FCEF51E94C6B300AA4BEC /* release-notes */ = {
 			isa = PBXGroup;
 			children = (
+				C5E7B4C520FECBE100A4D94C /* new-user-7-mirror.mp4 */,
 				C53FCEF61E94C6CD00AA4BEC /* page-rotation.png */,
 				C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */,
 			);
@@ -4309,6 +4312,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5E7B4C620FECBE100A4D94C /* new-user-7-mirror.mp4 in Resources */,
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
 				C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */,
 				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
