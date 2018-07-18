@@ -13,6 +13,8 @@
 
 - (NSArray*)reversedArray;
 
+- (NSArray*)arrayByRemovingFirstObject;
+
 - (NSArray*)arrayByRemovingObject:(id)obj;
 
 - (NSArray*)arrayByRemovingObjectsInArray:(NSArray*)arr;

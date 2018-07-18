@@ -638,6 +638,7 @@
 		C5D74A2E20FEF844004F5781 /* MPWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D749CD20FEF843004F5781 /* MPWebSocket.m */; };
 		C5D74A2F20FEF844004F5781 /* MPCATransform3DToNSDictionaryValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D749CF20FEF843004F5781 /* MPCATransform3DToNSDictionaryValueTransformer.m */; };
 		C5D74A3020FEF844004F5781 /* snapshot_config.json in Resources */ = {isa = PBXBuildFile; fileRef = C5D749D120FEF843004F5781 /* snapshot_config.json */; };
+		C5D74A3420FF1196004F5781 /* MMFeedbackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D74A3320FF1196004F5781 /* MMFeedbackManager.m */; };
 		C5D987C01E89D799000EA722 /* draw-tools.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5D987BF1E89D799000EA722 /* draw-tools.mp4 */; };
 		C5DA29921D7C013A00D868EC /* MMMarkdown.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29781D7C013A00D868EC /* MMMarkdown.m */; };
 		C5DA29931D7C013A00D868EC /* MMDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA297C1D7C013A00D868EC /* MMDocument.m */; };
@@ -1789,6 +1790,8 @@
 		C5D749CF20FEF843004F5781 /* MPCATransform3DToNSDictionaryValueTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCATransform3DToNSDictionaryValueTransformer.m; sourceTree = "<group>"; };
 		C5D749D020FEF843004F5781 /* MPSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSwizzle.h; sourceTree = "<group>"; };
 		C5D749D120FEF843004F5781 /* snapshot_config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = snapshot_config.json; sourceTree = "<group>"; };
+		C5D74A3220FF1196004F5781 /* MMFeedbackManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMFeedbackManager.h; sourceTree = "<group>"; };
+		C5D74A3320FF1196004F5781 /* MMFeedbackManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackManager.m; sourceTree = "<group>"; };
 		C5D987BF1E89D799000EA722 /* draw-tools.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "draw-tools.mp4"; sourceTree = "<group>"; };
 		C5DA29771D7C013A00D868EC /* MMMarkdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMMarkdown.h; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.h; sourceTree = "<group>"; };
 		C5DA29781D7C013A00D868EC /* MMMarkdown.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMMarkdown.m; path = ../../Submodules/MMMarkdown/Source/MMMarkdown.m; sourceTree = "<group>"; };
@@ -2783,6 +2786,7 @@
 		6693295715958A890033E557 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				C5D74A3120FF1182004F5781 /* Feedback Manager */,
 				C576C5391CE1824E00A8F342 /* PDFs */,
 				66DA827C1ABE18BE00E3314A /* Tutorial Manager */,
 				6610D0821AA8F4920019C2FB /* Display Asset */,
@@ -4101,6 +4105,15 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		C5D74A3120FF1182004F5781 /* Feedback Manager */ = {
+			isa = PBXGroup;
+			children = (
+				C5D74A3220FF1196004F5781 /* MMFeedbackManager.h */,
+				C5D74A3320FF1196004F5781 /* MMFeedbackManager.m */,
+			);
+			name = "Feedback Manager";
+			sourceTree = "<group>";
+		};
 		C5DA295C1D7C012500D868EC /* MMMarkdown */ = {
 			isa = PBXGroup;
 			children = (
@@ -4812,6 +4825,7 @@
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				C53FCED71E94A09300AA4BEC /* MMTodoListTemplateView.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
+				C5D74A3420FF1196004F5781 /* MMFeedbackManager.m in Sources */,
 				C5D74A1320FEF844004F5781 /* MPUIEdgeInsetsToNSDictionaryValueTransformer.m in Sources */,
 				6693296A1595A87E0033E557 /* MMMapButton.m in Sources */,
 				C50C0D731C3CE80A00DFC079 /* MMHighlighterButton.m in Sources */,
