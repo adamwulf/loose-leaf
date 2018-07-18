@@ -1290,9 +1290,9 @@
         return;
     }
 
-#ifdef DEBUG
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
-#endif
+    //#ifdef DEBUG
+    //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+    //#endif
 
     if (version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]) {
         NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:@"ReleaseNotes" withExtension:@"md"];
