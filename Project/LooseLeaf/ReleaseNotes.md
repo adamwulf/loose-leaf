@@ -1,3 +1,11 @@
+# New in 3.2.0!
+
+1. Mirror Mode!
+
+[new-user-7-mirror.mp4]
+
+2. Bug fixes and performance improvements
+
 # New in 3.1.0!
 
 1. New page templates!

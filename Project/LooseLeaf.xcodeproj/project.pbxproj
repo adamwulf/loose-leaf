@@ -555,7 +555,10 @@
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
 		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
+		C5E1268C20EEFD52002F7CEC /* MMMirrorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */; };
+		C5E127BB20F1C861002F7CEC /* MMMirrorLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E127BA20F1C861002F7CEC /* MMMirrorLineView.m */; };
 		C5E654FD1DCBEF6700521894 /* MMConfirmDeleteStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */; };
+		C5E7B4C620FECBE100A4D94C /* new-user-7-mirror.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5E7B4C520FECBE100A4D94C /* new-user-7-mirror.mp4 */; };
 		C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */; };
 		C5EC1C331DC1841100C65DB3 /* release-notes-feedback-feature.png in Resources */ = {isa = PBXBuildFile; fileRef = C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */; };
 		C5EFA5A01D9E13FB00BBE8CD /* MMPageBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EFA59F1D9E13FB00BBE8CD /* MMPageBubbleButton.m */; };
@@ -1639,8 +1642,13 @@
 		C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackView.m; sourceTree = "<group>"; };
 		C5E02A871D99C9FA001F6ED6 /* MMFeedbackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackButton.h; sourceTree = "<group>"; };
 		C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackButton.m; sourceTree = "<group>"; };
+		C5E1268A20EEFD52002F7CEC /* MMMirrorButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMMirrorButton.h; sourceTree = "<group>"; };
+		C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMMirrorButton.m; sourceTree = "<group>"; };
+		C5E127B920F1C861002F7CEC /* MMMirrorLineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMMirrorLineView.h; sourceTree = "<group>"; };
+		C5E127BA20F1C861002F7CEC /* MMMirrorLineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMMirrorLineView.m; sourceTree = "<group>"; };
 		C5E654FB1DCBEF6700521894 /* MMConfirmDeleteStackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMConfirmDeleteStackButton.h; sourceTree = "<group>"; };
 		C5E654FC1DCBEF6700521894 /* MMConfirmDeleteStackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMConfirmDeleteStackButton.m; sourceTree = "<group>"; };
+		C5E7B4C520FECBE100A4D94C /* new-user-7-mirror.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "new-user-7-mirror.mp4"; sourceTree = "<group>"; };
 		C5EC1C2F1DC1817800C65DB3 /* MMLoopingVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMLoopingVideoView.h; sourceTree = "<group>"; };
 		C5EC1C301DC1817800C65DB3 /* MMLoopingVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLoopingVideoView.m; sourceTree = "<group>"; };
 		C5EC1C321DC1841100C65DB3 /* release-notes-feedback-feature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "release-notes-feedback-feature.png"; sourceTree = "<group>"; };
@@ -1828,7 +1836,7 @@
 		C5F4BE861C2676F400FFB640 /* top-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-buttons.png"; sourceTree = "<group>"; };
 		C5F4BE881C2676F900FFB640 /* bottom-buttons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bottom-buttons.png"; sourceTree = "<group>"; };
 		C5FB70A11C16AF1F00D553B2 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		C5FE13481E9F330F0086E541 /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C5FE13481E9F330F0086E541 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3302,6 +3310,7 @@
 		66DCFBBF1581C7F400B4918C /* MMPaperStack */ = {
 			isa = PBXGroup;
 			children = (
+				C5E127B820F1C84D002F7CEC /* Mirror */,
 				C53AFA7E1DE3EF300054553D /* Arrow View */,
 				C5C13E121D9107FF0047B3EF /* Clone Page */,
 				C569F42E1CD0709800C19BB0 /* Named Stack */,
@@ -3517,6 +3526,8 @@
 				66BE6CA119D67BC100A5F650 /* MMPolaroidView.m */,
 				667AA41D19E33342006549EE /* MMPolaroidsView.h */,
 				667AA41E19E33342006549EE /* MMPolaroidsView.m */,
+				C5E1268A20EEFD52002F7CEC /* MMMirrorButton.h */,
+				C5E1268B20EEFD52002F7CEC /* MMMirrorButton.m */,
 			);
 			name = "Tool Sidebar";
 			sourceTree = "<group>";
@@ -3735,6 +3746,7 @@
 		C53FCEF51E94C6B300AA4BEC /* release-notes */ = {
 			isa = PBXGroup;
 			children = (
+				C5E7B4C520FECBE100A4D94C /* new-user-7-mirror.mp4 */,
 				C53FCEF61E94C6CD00AA4BEC /* page-rotation.png */,
 				C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */,
 			);
@@ -3929,6 +3941,15 @@
 				C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */,
 			);
 			name = FeedbackView;
+			sourceTree = "<group>";
+		};
+		C5E127B820F1C84D002F7CEC /* Mirror */ = {
+			isa = PBXGroup;
+			children = (
+				C5E127B920F1C861002F7CEC /* MMMirrorLineView.h */,
+				C5E127BA20F1C861002F7CEC /* MMMirrorLineView.m */,
+			);
+			name = Mirror;
 			sourceTree = "<group>";
 		};
 		C5EFA5991D9C9A6B00BBE8CD /* Sidebars */ = {
@@ -4292,6 +4313,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5E7B4C620FECBE100A4D94C /* new-user-7-mirror.mp4 in Resources */,
 				C5C298E41D7B9633009AE6BE /* colorlesspoint.vsh in Resources */,
 				C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */,
 				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
@@ -4631,6 +4653,7 @@
 				66B75DB81877D93000EF0A48 /* UIBezierPath+PathElement.m in Sources */,
 				C55B4DCB1DDE8222001DC9E4 /* MMEmptyStackButton.m in Sources */,
 				C5F1B2B51D9B01BB00E0E9A8 /* MPNetwork.m in Sources */,
+				C5E1268C20EEFD52002F7CEC /* MMMirrorButton.m in Sources */,
 				661885D118F9ABD70016A333 /* MMFlipCameraButton.m in Sources */,
 				C5F1B3071D9B3AEB00E0E9A8 /* MMCountableSidebarContentView.m in Sources */,
 				C5F1B2A01D9B01BB00E0E9A8 /* MPABTestDesignerDeviceInfoRequestMessage.m in Sources */,
@@ -4768,6 +4791,7 @@
 				C5F1B2C61D9B01BB00E0E9A8 /* MPSurvey.m in Sources */,
 				C5F1B29A1D9B01BB00E0E9A8 /* MPAbstractABTestDesignerMessage.m in Sources */,
 				C5DA29941D7C013A00D868EC /* MMElement.m in Sources */,
+				C5E127BB20F1C861002F7CEC /* MMMirrorLineView.m in Sources */,
 				66BD6E9F15941B7B00D4544C /* MMShareButton.m in Sources */,
 				6688D01F1A9BE5500084CA06 /* MMStopWatch.m in Sources */,
 				C5F1B2B61D9B01BB00E0E9A8 /* MPNotification.m in Sources */,

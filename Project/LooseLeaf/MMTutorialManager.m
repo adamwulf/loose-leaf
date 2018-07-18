@@ -130,6 +130,11 @@ static MMTutorialManager* _instance = nil;
             @"video": @"shake-to-reorder.mov"
         },
         @{
+            @"id": @"app-intro-mirror",
+            @"title": NSLocalizedString(@"Mirror Your Drawing", @"Mirror Your Drawing"),
+            @"video": @"new-user-7-mirror.mp4"
+        },
+        @{
             @"id": @"app-intro-export",
             @"title": NSLocalizedString(@"Export Your Pages", @"Export Your Pages"),
             @"video": @"export-to-facebook.mov"

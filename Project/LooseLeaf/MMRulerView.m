@@ -814,6 +814,7 @@ static NSDate* lastRender;
                 newElement.width = element.width;
                 newElement.stepWidth = element.stepWidth;
                 newElement.rotation = element.rotation;
+                [newElement validateDataGivenPreviousElement:([output count] ? [output lastObject] : previousElement)];
                 [output addObject:newElement];
             }
         }];

@@ -75,7 +75,7 @@
  * that a new touch is about to be processed. we should
  * reset all of our counters/etc to base values
  */
-- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (BOOL)willBeginStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     shortStrokeEnding = NO;
     velocity = 1;
     return YES;
@@ -86,11 +86,11 @@
  * alpha/width info for this touch. let's update
  * our velocity model and state info for this new touch
  */
-- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willMoveStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     velocity = [[MMTouchVelocityGestureRecognizer sharedInstance] normalizedVelocityForTouch:touch];
 }
 
-- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)_shortStrokeEnding {
+- (void)willEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch shortStrokeEnding:(BOOL)_shortStrokeEnding inJotView:(JotView *)jotView{
     shortStrokeEnding = _shortStrokeEnding;
 }
 
@@ -98,18 +98,18 @@
  * user is finished with a stroke. for our purposes
  * we don't need to do anything
  */
-- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)didEndStrokeWithCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     // noop
 }
 
-- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)willCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     // noop
 }
 
 /**
  * the user cancelled the touch
  */
-- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (void)didCancelStroke:(JotStroke*)stroke withCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     // noop
 }
 
@@ -121,7 +121,7 @@
  * but for our demo adjusting only the alpha
  * is the look we're going for.
  */
-- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (UIColor*)colorForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     if (coalescedTouch.type == UITouchTypeStylus) {
         CGFloat segmentAlpha = (maxAlpha + minAlpha) / 2.0;
         segmentAlpha *= coalescedTouch.force;
@@ -160,7 +160,7 @@
  * we'll use pressure data to determine width if we can, otherwise
  * we'll fall back to use velocity data
  */
-- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (CGFloat)widthForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     if (coalescedTouch.type == UITouchTypeStylus) {
         CGFloat width = (maxSize + minSize) / 2.0;
         width *= coalescedTouch.force;
@@ -211,7 +211,7 @@
  * > 1 is loopy
  * < 0 is knotty
  */
-- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch {
+- (CGFloat)smoothnessForCoalescedTouch:(UITouch*)coalescedTouch fromTouch:(UITouch*)touch inJotView:(JotView *)jotView{
     return 0.75;
 }
 
@@ -220,11 +220,11 @@
  * important for this pen. just return 0
  * and don't have any rotation
  */
-- (CGFloat)rotationForSegment:(AbstractBezierPathElement*)segment fromPreviousSegment:(AbstractBezierPathElement*)previousSegment {
+- (CGFloat)rotationForSegment:(AbstractBezierPathElement*)segment fromPreviousSegment:(AbstractBezierPathElement*)previousSegment inJotView:(JotView *)jotView{
     return 0;
 }
 
-- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement {
+- (NSArray*)willAddElements:(NSArray*)elements toStroke:(JotStroke*)stroke fromPreviousElement:(AbstractBezierPathElement*)previousElement inJotView:(JotView *)jotView{
     return elements;
 }
 

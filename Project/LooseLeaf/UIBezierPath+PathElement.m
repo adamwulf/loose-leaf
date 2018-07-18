@@ -145,6 +145,17 @@
                 newElement.width /= scale;
                 newElement.stepWidth = stepWidth;
                 newElement.rotation = rotation;
+
+                if ([convertedElements count]) {
+                    [newElement validateDataGivenPreviousElement:[convertedElements lastObject]];
+                } else {
+                    [newElement setPreviousColor:fromColor];
+                    [newElement setPreviousWidth:fromWidth];
+                    [newElement setPreviousRotation:newElement.rotation];
+                    [newElement setPreviousExtraLengthWithoutDot:0];
+                    [newElement setBakedPreviousElementProps:YES];
+                }
+
                 [convertedElements addObject:newElement];
             }
         }];
