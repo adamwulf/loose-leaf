@@ -49,22 +49,28 @@ static inline float interpolate(CGFloat a, CGFloat b, CGFloat fraction) {
 #define i(x) interpolate(x##1, x##2, fraction)
 
     //iOS5 +
+    if ([UIColor instancesRespondToSelector:@selector(getRed:green:blue:alpha:)]) {
+        //RGB
+        if ([self getRed:&a1 green:&b1 blue:&c1 alpha:&d1] && [endColor getRed:&a2 green:&b2 blue:&c2 alpha:&d2]) {
+            return [UIColor colorWithRed:i(a) green:i(b) blue:i(c) alpha:i(d)];
+        }
+    }
+
+    if ([UIColor instancesRespondToSelector:@selector(getHue:saturation:brightness:alpha:)]) {
+        //HSB
+        if ([self getHue:&a1 saturation:&b1 brightness:&c1 alpha:&d1] && [endColor getHue:&a2 saturation:&b2 brightness:&c2 alpha:&d2]) {
+            return [UIColor colorWithHue:i(a) saturation:i(b) brightness:i(c) alpha:i(d)];
+        }
+    }
+
     if ([UIColor instancesRespondToSelector:@selector(getWhite:alpha:)]) {
         //white
         if ([self getWhite:&a1 alpha:&b1] && [endColor getWhite:&a2 alpha:&b2]) {
             return [UIColor colorWithWhite:i(a) alpha:i(b)];
         }
+    }
 
-        //RGB
-        if ([self getRed:&a1 green:&b1 blue:&c1 alpha:&d1] && [endColor getRed:&a2 green:&b2 blue:&c2 alpha:&d2]) {
-            return [UIColor colorWithRed:i(a) green:i(b) blue:i(c) alpha:i(d)];
-        }
-
-        //HSB
-        if ([self getHue:&a1 saturation:&b1 brightness:&c1 alpha:&d1] && [endColor getHue:&a2 saturation:&b2 brightness:&c2 alpha:&d2]) {
-            return [UIColor colorWithHue:i(a) saturation:i(b) brightness:i(c) alpha:i(d)];
-        }
-    } else if (self.CGColor && endColor.CGColor) {
+    if (self.CGColor && endColor.CGColor) {
         //use the underlying CGColorRef
 
         NSInteger componentCount = CGColorGetNumberOfComponents(self.CGColor);
