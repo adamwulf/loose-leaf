@@ -1,5 +1,5 @@
 //
-//  MMSinglePhotoCollectionViewCell.m
+//  MMDisplayAssetCell.m
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/18/14.

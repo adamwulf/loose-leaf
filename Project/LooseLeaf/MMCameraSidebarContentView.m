@@ -210,7 +210,7 @@
     }
 }
 
-#pragma mark - MMSinglePhotoCollectionViewCellDelegate
+#pragma mark - MMDisplayAssetCellDelegate
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView {
     lastCameraRollOffset = photoListScrollView.contentOffset;

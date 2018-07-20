@@ -1233,7 +1233,7 @@
 		66C3CBE01A29046200D7EE42 /* MMRulerAdjustment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerAdjustment.m; sourceTree = "<group>"; };
 		66C4734D19CB999000505BC0 /* MMAssetListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAssetListLayout.h; sourceTree = "<group>"; };
 		66C4734E19CB999000505BC0 /* MMAssetListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAssetListLayout.m; sourceTree = "<group>"; };
-		66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSinglePhotoCollectionViewCellDelegate.h; sourceTree = "<group>"; };
+		66C4735019CBD7C600505BC0 /* MMDisplayAssetCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetCellDelegate.h; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66CA1A8B185E77F50013505A /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		66CAF8101A1EA9530033E07B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2706,7 +2706,7 @@
 				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
 				6677C58E1AAB777200B2E46C /* CameraSection */,
 				66381F5A19CB965D0014796F /* PhotosSection */,
-				66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */,
+				66C4735019CBD7C600505BC0 /* MMDisplayAssetCellDelegate.h */,
 				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
 				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,

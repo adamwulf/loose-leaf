@@ -164,7 +164,7 @@
 
         // shape button
         shapeButton = [[MMShapesButton alloc] initWithFrame:CGRectMake(CGRectGetMinX(buttonBounds), CGRectGetMaxY(buttonBounds) - kWidthOfSidebarButton, kWidthOfSidebarButton, kWidthOfSidebarButton)];
-        [shapeButton addTarget:self action:@selector(inboxButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [shapeButton addTarget:self action:@selector(shapesButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         shapeButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         shapeButton.shadowInset = -1;
         [slidingSidebarView addSubview:shapeButton];
@@ -204,6 +204,9 @@
     if (!inboxListContentView.hidden) {
         [inboxListContentView show:animated];
     }
+    if (!shapeContentView.hidden) {
+        [shapeContentView show:animated];
+    }
     [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
 
@@ -214,6 +217,7 @@
         [faceListContentView hide:animated];
         [eventListContentView hide:animated];
         [inboxListContentView hide:animated];
+        [shapeContentView hide:animated];
 
         if (onComplete) {
             onComplete(finished);
@@ -248,6 +252,7 @@
     iPhotoFacesButton.selected = NO;
     cameraAlbumButton.selected = NO;
     inboxButton.selected = NO;
+    shapeButton.selected = NO;
     button.selected = YES;
 }
 
@@ -276,6 +281,11 @@
     [self highlightButton:button];
 }
 
+- (void)shapesButtonTapped:(MMSidebarButton*)button {
+    [self switchToListView:shapeContentView];
+    [self highlightButton:button];
+}
+
 - (void)showPDF:(MMInboxItem*)pdf {
     [self switchToListView:inboxListContentView];
     [inboxListContentView switchToPDFView:pdf];
@@ -296,6 +306,7 @@
             [faceListContentView doneLoadingPhotoAlbums];
             [eventListContentView doneLoadingPhotoAlbums];
             [inboxListContentView doneLoadingPhotoAlbums];
+            [shapeContentView doneLoadingPhotoAlbums];
         }
     });
 }
@@ -345,6 +356,8 @@
         [eventListContentView updatePhotoRotation:animated];
     } else if (!inboxListContentView.hidden) {
         [inboxListContentView updatePhotoRotation:animated];
+    } else if (!shapeContentView.hidden) {
+        [shapeContentView updatePhotoRotation:animated];
     }
 
     void (^animations)() = ^{
@@ -363,6 +376,9 @@
 
         inboxButton.rotation = [self sidebarButtonRotation];
         inboxButton.transform = rotationTransform;
+
+        shapeButton.rotation = [self sidebarButtonRotation];
+        shapeButton.transform = rotationTransform;
 
         importAsPageButton.transform = rotationTransform;
         importAsScrapButton.transform = rotationTransform;
@@ -387,6 +403,7 @@
         [faceListContentView killMemory];
         [eventListContentView killMemory];
         [inboxListContentView killMemory];
+        [shapeContentView killMemory];
     }
 }
 

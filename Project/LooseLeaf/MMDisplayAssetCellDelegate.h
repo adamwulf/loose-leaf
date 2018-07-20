@@ -1,5 +1,5 @@
 //
-//  MMSinglePhotoCollectionViewCellDelegate.h
+//  MMDisplayAssetCellDelegate.h
 //  LooseLeaf
 //
 //  Created by Adam Wulf on 9/18/14.
@@ -10,7 +10,7 @@
 #import "MMDisplayAsset.h"
 #include "MMBufferedImageView.h"
 
-@protocol MMSinglePhotoCollectionViewCellDelegate <NSObject>
+@protocol MMDisplayAssetCellDelegate <NSObject>
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(UIView*)cameraView;
 
