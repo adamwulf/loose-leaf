@@ -43,4 +43,8 @@
     return kPhotoImportMaxDim;
 }
 
+- (UIBezierPath*)fullResolutionPath {
+    return nil;
+}
+
 @end

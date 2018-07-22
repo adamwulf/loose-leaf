@@ -25,4 +25,6 @@
 
 - (CGFloat)preferredImportMaxDim;
 
+- (UIBezierPath*)fullResolutionPath;
+
 @end

@@ -408,6 +408,10 @@
 		C53AFA811DE3EF4C0054553D /* MMArrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53AFA801DE3EF4C0054553D /* MMArrowView.m */; };
 		C53CFC60210036C20037E1B5 /* MMShapeSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */; };
 		C53CFC6321003B560037E1B5 /* MMShapesButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CFC6221003B560037E1B5 /* MMShapesButton.m */; };
+		C53DCEC021042943009A848A /* MMShapeAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEBF21042943009A848A /* MMShapeAsset.m */; };
+		C53DCEC421042BC5009A848A /* MMShapeAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */; };
+		C53DCEC72104300B009A848A /* MMShapeAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEC62104300B009A848A /* MMShapeAssetCell.m */; };
+		C53DCECA21043069009A848A /* MMPhotoAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEC921043069009A848A /* MMPhotoAssetCell.m */; };
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
@@ -1415,6 +1419,14 @@
 		C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeSidebarContentView.m; sourceTree = "<group>"; };
 		C53CFC6121003B560037E1B5 /* MMShapesButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapesButton.h; sourceTree = "<group>"; };
 		C53CFC6221003B560037E1B5 /* MMShapesButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapesButton.m; sourceTree = "<group>"; };
+		C53DCEBE21042943009A848A /* MMShapeAsset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeAsset.h; sourceTree = "<group>"; };
+		C53DCEBF21042943009A848A /* MMShapeAsset.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeAsset.m; sourceTree = "<group>"; };
+		C53DCEC221042BC5009A848A /* MMShapeAssetGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeAssetGroup.h; sourceTree = "<group>"; };
+		C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeAssetGroup.m; sourceTree = "<group>"; };
+		C53DCEC52104300B009A848A /* MMShapeAssetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeAssetCell.h; sourceTree = "<group>"; };
+		C53DCEC62104300B009A848A /* MMShapeAssetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeAssetCell.m; sourceTree = "<group>"; };
+		C53DCEC821043069009A848A /* MMPhotoAssetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoAssetCell.h; sourceTree = "<group>"; };
+		C53DCEC921043069009A848A /* MMPhotoAssetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMPhotoAssetCell.m; sourceTree = "<group>"; };
 		C53F63541CDA871D00091EF1 /* UIImage+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
 		C53F63551CDA871D00091EF1 /* UIImage+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
 		C53F63561CDA871D00091EF1 /* UIImage+FXBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FXBlur.h"; sourceTree = "<group>"; };
@@ -1988,6 +2000,7 @@
 				663326C71AB09B81003915E6 /* InboxImage */,
 				6610D0871AA8F4C20019C2FB /* PDFs */,
 				6610D0861AA8F4B70019C2FB /* Photos */,
+				C53DCEC12104294E009A848A /* Shapes */,
 				66ACECD919D4BF83000EA792 /* DefaultAlbum */,
 			);
 			name = "Display Asset";
@@ -2246,8 +2259,8 @@
 			children = (
 				66D6E2361AB74C0D00510CA3 /* MMPhotosListLayout.h */,
 				66D6E2371AB74C0D00510CA3 /* MMPhotosListLayout.m */,
-				66381F5B19CB96730014796F /* MMDisplayAssetCell.h */,
-				66381F5C19CB96730014796F /* MMDisplayAssetCell.m */,
+				C53DCEC821043069009A848A /* MMPhotoAssetCell.h */,
+				C53DCEC921043069009A848A /* MMPhotoAssetCell.m */,
 			);
 			name = PhotosSection;
 			sourceTree = "<group>";
@@ -2691,6 +2704,8 @@
 		667D98B2192FBEDF00625879 /* Content Views */ = {
 			isa = PBXGroup;
 			children = (
+				66381F5B19CB96730014796F /* MMDisplayAssetCell.h */,
+				66381F5C19CB96730014796F /* MMDisplayAssetCell.m */,
 				C53CFC5D210036920037E1B5 /* Shapes */,
 				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				667D98B4192FBF0C00625879 /* Inbox Content */,
@@ -3611,6 +3626,19 @@
 			children = (
 				C53CFC5E210036C20037E1B5 /* MMShapeSidebarContentView.h */,
 				C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */,
+				C53DCEC52104300B009A848A /* MMShapeAssetCell.h */,
+				C53DCEC62104300B009A848A /* MMShapeAssetCell.m */,
+			);
+			name = Shapes;
+			sourceTree = "<group>";
+		};
+		C53DCEC12104294E009A848A /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				C53DCEBE21042943009A848A /* MMShapeAsset.h */,
+				C53DCEBF21042943009A848A /* MMShapeAsset.m */,
+				C53DCEC221042BC5009A848A /* MMShapeAssetGroup.h */,
+				C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */,
 			);
 			name = Shapes;
 			sourceTree = "<group>";
@@ -4834,6 +4862,7 @@
 				C5D749FA20FEF844004F5781 /* MPConnectIntegrations.m in Sources */,
 				C5D749D420FEF844004F5781 /* UIViewController+AutomaticTracks.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
+				C53DCECA21043069009A848A /* MMPhotoAssetCell.m in Sources */,
 				6630F4C91AA4FBF8004F2FDC /* MMPDFPageAsset.m in Sources */,
 				C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */,
 				66343C671AC085D600801962 /* MMNewsletterSignupHandler.m in Sources */,
@@ -4982,6 +5011,7 @@
 				C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
+				C53DCEC72104300B009A848A /* MMShapeAssetCell.m in Sources */,
 				C53CFC6321003B560037E1B5 /* MMShapesButton.m in Sources */,
 				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,
 				66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */,
@@ -5006,6 +5036,7 @@
 				C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				C5D74A1C20FEF844004F5781 /* MPTakeoverNotification.m in Sources */,
+				C53DCEC021042943009A848A /* MMShapeAsset.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				C5D74A1A20FEF844004F5781 /* MPNotification.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
@@ -5013,6 +5044,7 @@
 				C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */,
 				C5D749E020FEF844004F5781 /* MPNSNumberToCGFloatValueTransformer.m in Sources */,
 				C5A8E1AD1DC308BF00CD608F /* MMCollapsableStackView.m in Sources */,
+				C53DCEC421042BC5009A848A /* MMShapeAssetGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

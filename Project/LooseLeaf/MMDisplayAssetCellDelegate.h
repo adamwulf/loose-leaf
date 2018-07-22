@@ -8,14 +8,13 @@
 
 #include <UIKit/UIKit.h>
 #import "MMDisplayAsset.h"
-#include "MMBufferedImageView.h"
+
+@class MMBufferedImageView;
 
 @protocol MMDisplayAssetCellDelegate <NSObject>
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(UIView*)cameraView;
 
-- (void)assetWasTapped:(MMDisplayAsset*)photo
-              fromView:(MMBufferedImageView*)bufferedImage
-          withRotation:(CGFloat)rotation;
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(MMBufferedImageView*)tappedView withRotation:(CGFloat)rotation;
 
 @end

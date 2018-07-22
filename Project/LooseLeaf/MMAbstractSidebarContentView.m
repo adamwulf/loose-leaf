@@ -11,13 +11,14 @@
 #import "MMAlbumRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
-#import "MMDisplayAssetCell.h"
+#import "MMPhotoAssetCell.h"
 #import "MMPhotosPermissionCell.h"
 #import "MMEmptyCollectionViewCell.h"
 #import "MMDisplayAssetGroupCell.h"
 #import "MMAssetGroupListLayout.h"
 #import "MMAssetListLayout.h"
 #import "MMRotationManager.h"
+#import "MMPhotoAssetCell.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
@@ -51,7 +52,7 @@
         photoListScrollView.alpha = 0;
         photoListScrollView.backgroundColor = [UIColor clearColor];
 
-        [photoListScrollView registerClass:[MMDisplayAssetCell class] forCellWithReuseIdentifier:@"MMDisplayAssetCell"];
+        [photoListScrollView registerClass:[MMPhotoAssetCell class] forCellWithReuseIdentifier:@"MMPhotoAssetCell"];
         [photoListScrollView registerClass:[MMPhotosPermissionCell class] forCellWithReuseIdentifier:@"MMPhotosPermissionCell"];
 
         currentAlbum = nil;
@@ -280,8 +281,8 @@
         return albumCell;
     } else {
         if ([self hasPermission]) {
-            MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
-            [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+            MMPhotoAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotoAssetCell" forIndexPath:indexPath];
+            [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row];
             photoCell.delegate = self;
             return photoCell;
         } else {

@@ -13,9 +13,13 @@
 
 @interface MMDisplayAssetCell : UICollectionViewCell
 
+@property (nonatomic, assign, readonly) NSInteger index;
+@property (nonatomic, readonly) MMDisplayAssetGroup* album;
 @property (nonatomic, weak) NSObject<MMDisplayAssetCellDelegate>* delegate;
 @property (nonatomic, assign) CGFloat rotation;
 
-- (void)loadPhotoFromAlbum:(MMDisplayAssetGroup*)album atIndex:(NSInteger)photoIndex forVisibleIndex:(NSInteger)visibleIndex;
+- (void)loadPhotoFromAlbum:(MMDisplayAssetGroup*)album atIndex:(NSInteger)photoIndex;
+
+- (void)assetUpdated:(NSNotification*)note NS_REQUIRES_SUPER;
 
 @end

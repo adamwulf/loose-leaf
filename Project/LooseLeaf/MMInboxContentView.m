@@ -16,7 +16,6 @@
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
 #import "MMAlbumGroupListLayout.h"
-#import "MMDisplayAssetCell.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
 

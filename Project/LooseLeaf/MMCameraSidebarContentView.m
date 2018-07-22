@@ -15,7 +15,7 @@
 #import "CaptureSessionManager.h"
 #import "MMRotationManager.h"
 #import "MMCameraCollectionViewCell.h"
-#import "MMDisplayAssetCell.h"
+#import "MMPhotoAssetCell.h"
 #import "MMCameraListLayout.h"
 #import "UIView+Debug.h"
 #import "MMAlbumGroupListLayout.h"
@@ -192,8 +192,8 @@
         }
     }
     if ([self hasPermission]) {
-        MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
-        [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+        MMPhotoAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotoAssetCell" forIndexPath:indexPath];
+        [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row];
         photoCell.delegate = self;
         return photoCell;
     } else {
@@ -217,9 +217,7 @@
     [super pictureTakeWithCamera:img fromView:cameraView];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset
-              fromView:(MMBufferedImageView*)bufferedImage
-          withRotation:(CGFloat)rotation {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(MMBufferedImageView*)bufferedImage withRotation:(CGFloat)rotation {
     lastCameraRollOffset = photoListScrollView.contentOffset;
     [super assetWasTapped:asset fromView:bufferedImage withRotation:rotation];
 }
