@@ -20,6 +20,4 @@
 
 - (void)loadPhotoFromAlbum:(MMDisplayAssetGroup*)album atIndex:(NSInteger)photoIndex;
 
-- (void)assetUpdated:(NSNotification*)note NS_REQUIRES_SUPER;
-
 @end

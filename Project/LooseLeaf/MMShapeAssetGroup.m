@@ -35,10 +35,10 @@ static MMShapeAssetGroup* _instance = nil;
     if (self = [super init]) {
         NSMutableArray<MMShapeAsset*>* shapes = [NSMutableArray array];
 
-        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 400, 300)] withName:@"Rectangle"]];
-        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 400, 400)] withName:@"Square"]];
-        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 400, 400)] withName:@"Circle"]];
-        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 400, 300) cornerRadius:20] withName:@"RoundedRect"]];
+        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 500, 375)] withName:@"Rectangle"]];
+        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 500, 500)] withName:@"Square"]];
+        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 500, 500)] withName:@"Circle"]];
+        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 500, 375) cornerRadius:80] withName:@"RoundedRect"]];
 
         _shapes = shapes;
     }

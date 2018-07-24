@@ -7,17 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MMDisplayAsset.h"
 
 
-@interface MMBufferedImageView : UIView
+@interface MMBufferedImageView : UIView <MMDisplayAssetCoordinator>
 
 @property (nonatomic, assign) CGFloat rotation;
 @property (nonatomic, strong) UIImage* image;
-
-- (CGSize)visibleImageSize;
-
-- (CGPoint)visibleImageOrigin;
-
-- (void)setPreferredAspectRatioForEmptyImage:(CGSize)size;
 
 @end

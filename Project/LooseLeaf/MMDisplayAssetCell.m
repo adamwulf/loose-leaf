@@ -23,10 +23,4 @@
     _index = photoIndex;
 }
 
-#pragma mark - Notification
-
-- (void)assetUpdated:(NSNotification*)note {
-    // noop
-}
-
 @end

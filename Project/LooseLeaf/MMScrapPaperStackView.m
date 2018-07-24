@@ -106,7 +106,7 @@
         [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
         [backgroundStyleButton addTarget:self action:@selector(backgroundStyleButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-        
+
         deleteScrapSidebar = [[MMDeletePageSidebarController alloc] initWithFrame:self.bounds andDarkBorder:YES];
         [self addSubview:deleteScrapSidebar.deleteSidebarBackground];
 
@@ -384,8 +384,6 @@
 }
 
 - (void)importImageAsNewPage:(UIImage*)imageToImport withAssetURL:(NSURL*)inAssetURL fromContainer:(NSString*)containerDescription referringApp:(NSString*)sourceApplication onComplete:(void (^)(MMExportablePaperView*))completionBlock {
-
-
     MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
     page.delegate = self;
     __block NSURL* assetURL = inAssetURL;
@@ -403,28 +401,28 @@
         CGContextRef context = UIGraphicsGetCurrentContext();
 
         CGSize imgSize = [imageToImport size];
-        
-        if(imageToImport && imgSize.width > imgSize.height){
+
+        if (imageToImport && imgSize.width > imgSize.height) {
             // if the PDF is landscape, then we need to rotate our
             // canvas so that the landscape PDF is drawn on our
             // vertical canvas properly.
             CGFloat theta = 90.0 * M_PI / 180.0;
-            
+
             CGContextTranslateCTM(context, thumbSize.width / 2, thumbSize.height / 2);
             CGContextRotateCTM(context, theta);
             CGContextTranslateCTM(context, -thumbSize.height / 2, -thumbSize.width / 2);
-            
+
             thumbSize = CGSizeSwap(thumbSize);
         }
-        
+
         CGRect rectForImage = CGSizeFill(imgSize, thumbSize);
         [imageToImport drawInRect:rectForImage];
 
         UIImage* thumbnailImage = UIGraphicsGetImageFromCurrentImageContext();
 
         UIGraphicsEndImageContext();
-        
-        
+
+
         [MMExportablePaperView writeThumbnailImagesToDisk:thumbnailImage thumbnailPath:[page thumbnailPath] scrappedThumbnailPath:[page scrappedThumbnailPath]];
         if (!assetURL) {
             NSString* tmpImagePath = [[NSTemporaryDirectory() stringByAppendingString:[[NSUUID UUID] UUIDString]] stringByAppendingPathExtension:@"png"];
@@ -566,7 +564,7 @@
         }];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(MMBufferedImageView*)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
     CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
@@ -597,9 +595,10 @@
     }
 
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
+    CGSize scrapBackingSize = [asset fullResolutionSize];
 
-    CGSize fullScaleSize = CGSizeScale(scrapBacking.size, 1 / [[UIScreen mainScreen] scale]);
-    
+    CGSize fullScaleSize = CGSizeScale(scrapBackingSize, 1 / [[UIScreen mainScreen] scale]);
+
     // force the rect path that we're building to
     // match the aspect ratio of the input photo
     CGFloat ratio = buttonSize.width / fullScaleSize.width;
@@ -607,30 +606,38 @@
 
     scrapRect.origin = [self convertPoint:[bufferedImage visibleImageOrigin] fromView:bufferedImage];
     scrapRect.size = buttonSize;
-    
-    UIImageOrientation (^rotateOrientationLeft)(UIImageOrientation) = ^(UIImageOrientation initialOrientation){
-        if(initialOrientation == UIImageOrientationUp || initialOrientation == UIImageOrientationUpMirrored){
+
+    UIImageOrientation (^rotateOrientationLeft)(UIImageOrientation) = ^(UIImageOrientation initialOrientation) {
+        if (initialOrientation == UIImageOrientationUp || initialOrientation == UIImageOrientationUpMirrored) {
             return UIImageOrientationLeft;
-        }else if(initialOrientation == UIImageOrientationLeft || initialOrientation == UIImageOrientationLeftMirrored){
+        } else if (initialOrientation == UIImageOrientationLeft || initialOrientation == UIImageOrientationLeftMirrored) {
             return UIImageOrientationDown;
-        }else if(initialOrientation == UIImageOrientationDown || initialOrientation == UIImageOrientationDownMirrored){
+        } else if (initialOrientation == UIImageOrientationDown || initialOrientation == UIImageOrientationDownMirrored) {
             return UIImageOrientationRight;
-        }else if(initialOrientation == UIImageOrientationRight || initialOrientation == UIImageOrientationRightMirrored){
+        } else if (initialOrientation == UIImageOrientationRight || initialOrientation == UIImageOrientationRightMirrored) {
             return UIImageOrientationUp;
         }
-        
+
         return UIImageOrientationUp;
     };
 
-    if(fullScaleSize.width > fullScaleSize.height){
+    if (scrapBacking && fullScaleSize.width > fullScaleSize.height) {
         fullScaleSize = CGSizeSwap(fullScaleSize);
         scrapRect.size = CGSizeSwap(scrapRect.size);
         rotation += M_PI / 2.0;
         scrapBacking = [UIImage imageWithCGImage:scrapBacking.CGImage scale:scrapBacking.scale orientation:rotateOrientationLeft(scrapBacking.imageOrientation)];
     }
-    
-    
-    UIBezierPath* path = [UIBezierPath bezierPathWithRect:scrapRect];
+
+
+    UIBezierPath* path;
+
+    if (scrapBacking) {
+        path = [UIBezierPath bezierPathWithRect:scrapRect];
+    } else {
+        path = [asset fullResolutionPath];
+        [path applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
+        [path applyTransform:CGAffineTransformMakeTranslation(scrapRect.origin.x, scrapRect.origin.y)];
+    }
 
     //
     // to exactly align the scrap with a rotation,
@@ -661,7 +668,7 @@
         // so that the border of the image exceeds the
         // path of the scrap. this'll give us a nice smooth
         // edge from the mask of the CAShapeLayer
-        CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBacking.size.width + 2.0 / scrapBacking.size.width; // extra pixel
+        CGFloat scaleUpOfImage = fullScaleScrapSize.width / scrapBackingSize.width + 2.0 / scrapBackingSize.width; // extra pixel
 
         // add the background, and scale it so it fills the scrap
         MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
@@ -692,12 +699,15 @@
 
         // bounce by 20px (10 on each side)
         CGFloat bounceScale = 20 / MAX(targetSizeAfterBounce.width, targetSizeAfterBounce.height);
+        CGPoint targetCenter = [visibleStackHolder peekSubview].center;
+        targetCenter.x += (RandomMod(time(NULL), 20) - 10);
+        targetCenter.y += (RandomMod(time(NULL), 20) - 10);
 
         [UIView animateWithDuration:.2
             delay:.1
             options:UIViewAnimationOptionCurveEaseInOut
             animations:^{
-                scrap.center = [visibleStackHolder peekSubview].center;
+                scrap.center = targetCenter;
                 [scrap setScale:(targetScale + bounceScale) andRotation:scrap.rotation + RandomPhotoRotation(rand())];
             }
             completion:^(BOOL finished) {
@@ -823,12 +833,12 @@
 
 #pragma mark - Sharing
 
--(void)backgroundStyleButtonTapped:(UIButton*)_button {
+- (void)backgroundStyleButtonTapped:(UIButton*)_button {
     if ([self isActivelyGesturing]) {
         // export not allowed while gesturing
         return;
     }
-    
+
     [self cancelAllGestures];
     [[visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
@@ -2011,11 +2021,11 @@
 
 #pragma mark - MMShareSidebarDelegate
 
--(ExportRotation)idealExportRotation{
+- (ExportRotation)idealExportRotation {
     return [[visibleStackHolder peekSubview] idealExportRotation];
 }
 
--(void) setIdealExportRotation:(ExportRotation)idealExportRotation{
+- (void)setIdealExportRotation:(ExportRotation)idealExportRotation {
     [[visibleStackHolder peekSubview] setIdealExportRotation:idealExportRotation];
 }
 

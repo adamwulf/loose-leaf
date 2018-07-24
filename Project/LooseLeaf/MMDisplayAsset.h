@@ -8,6 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol MMDisplayAssetCoordinator
+
+- (CGSize)visibleImageSize;
+
+- (CGPoint)visibleImageOrigin;
+
+- (void)setPreferredAspectRatioForEmptyImage:(CGSize)size;
+
+
+@end
+
 
 @interface MMDisplayAsset : NSObject
 

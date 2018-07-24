@@ -509,6 +509,7 @@
 		C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A161CDB1B4A00508F1D /* bg51.jpg */; };
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C59B5B022106D1D30049C323 /* MMShapeOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */; };
 		C5A02B8D1E8D947700D43EC7 /* MMRuledTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A02B8C1E8D947700D43EC7 /* MMRuledTemplateView.m */; };
 		C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */; };
 		C5A5C4911DFE5A1E00FD2555 /* MMImportingPDFListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */; };
@@ -1567,6 +1568,8 @@
 		C58E6A161CDB1B4A00508F1D /* bg51.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg51.jpg; sourceTree = "<group>"; };
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C59B5B002106D1D30049C323 /* MMShapeOutlineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeOutlineView.h; sourceTree = "<group>"; };
+		C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeOutlineView.m; sourceTree = "<group>"; };
 		C5A02B8B1E8D947700D43EC7 /* MMRuledTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRuledTemplateView.h; sourceTree = "<group>"; };
 		C5A02B8C1E8D947700D43EC7 /* MMRuledTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRuledTemplateView.m; sourceTree = "<group>"; };
 		C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareStackSidebarContainerView.h; sourceTree = "<group>"; };
@@ -2617,6 +2620,8 @@
 				666E255018F887FF00C17295 /* Camera */,
 				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
 				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
+				C59B5B002106D1D30049C323 /* MMShapeOutlineView.h */,
+				C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */,
 			);
 			name = "Helper Views";
 			sourceTree = "<group>";
@@ -5000,6 +5005,7 @@
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
 				C5D74A1020FEF844004F5781 /* MPNotificationViewController.m in Sources */,
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
+				C59B5B022106D1D30049C323 /* MMShapeOutlineView.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
 				C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */,

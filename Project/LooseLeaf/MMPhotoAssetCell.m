@@ -40,8 +40,6 @@
 #pragma mark - Notification
 
 - (void)assetUpdated:(NSNotification*)note {
-    [super assetUpdated:note];
-
     // called when the underlying asset is updated.
     // this may or may not ever be called depending
     // on the asset (PDFs in particular use

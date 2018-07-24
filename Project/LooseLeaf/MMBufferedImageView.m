@@ -11,18 +11,15 @@
 
 @implementation MMBufferedImageView {
     UIImage* image;
-    CGFloat targetSize;
     CALayer* layer;
     CALayer* whiteBorderLayer;
     CGFloat rotation;
-    
+
     CGImageRef layerContents;
 }
 
 @synthesize image;
 @synthesize rotation;
-
-CGFloat buffer = 2;
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -30,7 +27,6 @@ CGFloat buffer = 2;
         self.backgroundColor = [UIColor clearColor];
         self.opaque = NO;
         self.clearsContextBeforeDrawing = YES;
-        targetSize = self.bounds.size.height - 2 * buffer;
 
         // black outer border
         layer = [[CALayer alloc] init];
@@ -97,7 +93,7 @@ CGFloat buffer = 2;
 }
 
 - (void)updateLayerContentsWith:(CGImageRef)imageRef {
-    if(layerContents){
+    if (layerContents) {
         CFRelease(layerContents);
         layerContents = NULL;
     }
@@ -128,6 +124,5 @@ CGFloat buffer = 2;
 - (void)dealloc {
     [self updateLayerContentsWith:nil];
 }
-
 
 @end

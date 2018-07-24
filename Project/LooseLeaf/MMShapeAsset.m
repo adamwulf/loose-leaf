@@ -52,7 +52,7 @@
 }
 
 - (UIBezierPath*)fullResolutionPath {
-    return _path;
+    return [_path copy];
 }
 
 @end
