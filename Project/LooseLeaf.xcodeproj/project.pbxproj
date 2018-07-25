@@ -432,6 +432,7 @@
 		C53FCEF91E94C6CD00AA4BEC /* page-template.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
+		C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = C54AED572108393A007B75FB /* MMButtonBoxView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
 		C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19C1D7C0BDD00259558 /* logo@2x.png */; };
 		C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC19F1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m */; };
@@ -1471,6 +1472,8 @@
 		C543284C1DCC3397008CCB8A /* MMDebugStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugStackView.h; sourceTree = "<group>"; };
 		C543284D1DCC3397008CCB8A /* MMDebugStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugStackView.m; sourceTree = "<group>"; };
 		C543284F1DCC4A02008CCB8A /* MMFullWidthListButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFullWidthListButtonDelegate.h; sourceTree = "<group>"; };
+		C54AED562108393A007B75FB /* MMButtonBoxView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMButtonBoxView.h; sourceTree = "<group>"; };
+		C54AED572108393A007B75FB /* MMButtonBoxView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMButtonBoxView.m; sourceTree = "<group>"; };
 		C55AC19A1D7C0AB100259558 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		C55AC19C1D7C0BDD00259558 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		C55AC19E1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesButtonPrompt.h; sourceTree = "<group>"; };
@@ -3033,6 +3036,8 @@
 			children = (
 				66AC8D7718E7506A00A65036 /* MMImageSidebarContainerView.h */,
 				66AC8D7818E7506A00A65036 /* MMImageSidebarContainerView.m */,
+				C54AED562108393A007B75FB /* MMButtonBoxView.h */,
+				C54AED572108393A007B75FB /* MMButtonBoxView.m */,
 				66F4518018EC5AD000A57C95 /* MMImageSidebarContainerViewDelegate.h */,
 				666E254218F60DD100C17295 /* Helper Views */,
 				669B765E18EB47EA0041DAE7 /* Album Row Views */,
@@ -5002,6 +5007,7 @@
 				C5D749FB20FEF844004F5781 /* MPObjectIdentityProvider.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
 				C5A02B8D1E8D947700D43EC7 /* MMRuledTemplateView.m in Sources */,
+				C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
 				C5D74A1020FEF844004F5781 /* MPNotificationViewController.m in Sources */,
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
