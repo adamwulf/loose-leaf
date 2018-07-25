@@ -605,6 +605,13 @@ static UIWebView* pdfWebView;
 
 - (void)didDrawStrokeOfCm:(CGFloat)distanceInCentimeters {
     @autoreleasepool {
+        if ([mirrorButton mirrorMode] != MirrorModeNone) {
+            // if we're mirrored, then half our distance
+            // so we're measuring how much the /user/ drew,
+            // not how long the final stroke was on the page.
+            distanceInCentimeters /= 2;
+        }
+
         if ([self activePen] == pen || [self activePen] == marker || [self activePen] == highlighter) {
             [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
         } else if ([self activePen] == eraser) {
