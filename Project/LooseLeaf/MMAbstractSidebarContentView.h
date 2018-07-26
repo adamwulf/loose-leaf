@@ -28,7 +28,8 @@
 
 @property (nonatomic, weak) MMImageSidebarContainerView* delegate;
 @property (nonatomic, readonly) BOOL isShowing;
-@property (readonly) CGFloat rowHeight;
+@property (nonatomic, readonly) CGFloat rowHeight;
+@property (nonatomic, assign) CGFloat maskYOffset;
 
 - (void)reset:(BOOL)animated;
 

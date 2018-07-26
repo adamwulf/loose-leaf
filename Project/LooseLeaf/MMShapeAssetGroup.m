@@ -40,6 +40,10 @@ static MMShapeAssetGroup* _instance = nil;
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 500, 500)] withName:@"Circle"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 500, 375) cornerRadius:80] withName:@"RoundedRect"]];
 
+        [shapes addObjectsFromArray:[shapes copy]];
+        [shapes addObjectsFromArray:[shapes copy]];
+        [shapes addObjectsFromArray:[shapes copy]];
+
         _shapes = shapes;
     }
     return self;

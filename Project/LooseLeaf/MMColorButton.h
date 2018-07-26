@@ -14,6 +14,9 @@
 @property (nonatomic) UIColor* color;
 @property (nonatomic) CGRect originalFrame;
 
+- (id)init NS_UNAVAILABLE;
+- (id)initWithFrame:(CGRect)frame NS_UNAVAILABLE;
+- (id)initWithCoder:(NSCoder*)aDecoder NS_UNAVAILABLE;
 - (id)initWithColor:(UIColor*)color andFrame:(CGRect)frame;
 
 @end

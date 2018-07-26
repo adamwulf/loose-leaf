@@ -11,4 +11,6 @@
 
 @interface MMDarkSidebarButton : MMSidebarButton
 
++ (UIColor*)borderColor;
+
 @end

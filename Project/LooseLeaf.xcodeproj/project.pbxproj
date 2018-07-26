@@ -406,6 +406,7 @@
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
 		C528168721097978005956F9 /* ios-settings-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C528168521097978005956F9 /* ios-settings-icon@2x.png */; };
 		C528168821097978005956F9 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C528168621097978005956F9 /* ios-settings-icon.png */; };
+		C528168B210986A8005956F9 /* UIColor+LooseLeaf.m in Sources */ = {isa = PBXBuildFile; fileRef = C528168A210986A8005956F9 /* UIColor+LooseLeaf.m */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
 		C53AFA811DE3EF4C0054553D /* MMArrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53AFA801DE3EF4C0054553D /* MMArrowView.m */; };
 		C53CFC60210036C20037E1B5 /* MMShapeSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */; };
@@ -1406,6 +1407,8 @@
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
 		C528168521097978005956F9 /* ios-settings-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon@2x.png"; sourceTree = "<group>"; };
 		C528168621097978005956F9 /* ios-settings-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon.png"; sourceTree = "<group>"; };
+		C5281689210986A8005956F9 /* UIColor+LooseLeaf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+LooseLeaf.h"; sourceTree = "<group>"; };
+		C528168A210986A8005956F9 /* UIColor+LooseLeaf.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+LooseLeaf.m"; sourceTree = "<group>"; };
 		C53726961EA0982D0067AFAC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53726971EA0982E0067AFAC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C53726981EA0982F0067AFAC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1972,6 +1975,8 @@
 				C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */,
 				C575591A1DD6D31500670875 /* UIColor+MMAdditions.h */,
 				C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */,
+				C5281689210986A8005956F9 /* UIColor+LooseLeaf.h */,
+				C528168A210986A8005956F9 /* UIColor+LooseLeaf.m */,
 				C50490961E748A9500533119 /* UIImage+MMRotation.h */,
 				C50490971E748A9500533119 /* UIImage+MMRotation.m */,
 			);
@@ -5017,6 +5022,7 @@
 				C5A02B8D1E8D947700D43EC7 /* MMRuledTemplateView.m in Sources */,
 				C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
+				C528168B210986A8005956F9 /* UIColor+LooseLeaf.m in Sources */,
 				C5D74A1020FEF844004F5781 /* MPNotificationViewController.m in Sources */,
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
 				C59B5B022106D1D30049C323 /* MMShapeOutlineView.m in Sources */,

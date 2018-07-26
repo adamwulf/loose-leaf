@@ -61,27 +61,6 @@
 
         [self addSubview:albumListScrollView];
         [self addSubview:photoListScrollView];
-
-        NSObject* transparent = (NSObject*)[[UIColor colorWithWhite:0 alpha:0] CGColor];
-        NSObject* opaque = (NSObject*)[[UIColor colorWithWhite:0 alpha:1] CGColor];
-
-        CALayer* maskLayer = [CALayer layer];
-        maskLayer.frame = CGRectMake(self.bounds.origin.x - 100, 0, self.bounds.size.width + 200, self.bounds.size.height);
-
-        CAGradientLayer* gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = CGRectMake(maskLayer.bounds.origin.x, 0,
-                                         maskLayer.bounds.size.width, self.bounds.size.height);
-
-        gradientLayer.colors = [NSArray arrayWithObjects:transparent, opaque, nil];
-
-        CGFloat fadePercentage = kTopBottomMargin / self.bounds.size.height;
-        // Set percentage of scrollview that fades at top & bottom
-        gradientLayer.locations = [NSArray arrayWithObjects:
-                                               [NSNumber numberWithFloat:0],
-                                               [NSNumber numberWithFloat:fadePercentage], nil];
-
-        [maskLayer addSublayer:gradientLayer];
-        self.layer.mask = maskLayer;
     }
     return self;
 }
@@ -153,6 +132,42 @@
         lastPhotoScrollOffset = CGPointZero;
         lastAlbumScrollOffset = CGPointZero;
     }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    NSObject* transparent = (NSObject*)[[UIColor colorWithWhite:0 alpha:0] CGColor];
+    NSObject* opaque = (NSObject*)[[UIColor colorWithWhite:0 alpha:1] CGColor];
+
+    BOOL needsTopBuffer = CGRectGetMinY(photoListScrollView.frame) != 0;
+    CGFloat collectionHeight = CGRectGetHeight(photoListScrollView.frame);
+    CALayer* maskLayer = [CALayer layer];
+    maskLayer.frame = [self bounds];
+
+    CGFloat topGradient1 = (CGRectGetMinY(photoListScrollView.frame) - 5) / CGRectGetHeight(self.frame);
+    CGFloat topGradient2 = (CGRectGetMinY(photoListScrollView.frame)) / CGRectGetHeight(self.frame);
+    CGFloat fadePercentage = kTopBottomMargin / collectionHeight;
+    CAGradientLayer* gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = [self bounds];
+
+    // Set percentage of scrollview that fades at top & bottom
+    if (needsTopBuffer) {
+        gradientLayer.colors = [NSArray arrayWithObjects:opaque, transparent, opaque, nil];
+        gradientLayer.locations = [NSArray arrayWithObjects:
+                                               [NSNumber numberWithFloat:topGradient1],
+                                               [NSNumber numberWithFloat:topGradient2],
+                                               [NSNumber numberWithFloat:topGradient2 + fadePercentage], nil];
+    } else {
+        gradientLayer.colors = [NSArray arrayWithObjects:transparent, opaque, nil];
+        gradientLayer.locations = [NSArray arrayWithObjects:
+                                               [NSNumber numberWithFloat:topGradient2],
+                                               [NSNumber numberWithFloat:topGradient2 + fadePercentage], nil];
+    }
+
+    [maskLayer addSublayer:gradientLayer];
+
+    self.layer.mask = maskLayer;
 }
 
 #pragma mark - MMPhotoManagerDelegate

@@ -11,16 +11,17 @@
 
 @implementation MMDarkSidebarButton
 
++ (UIColor*)borderColor {
+    return [UIColor colorWithRed:0.16 green:0.16 blue:0.16 alpha:0.45];
+}
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.borderColor = [MMDarkSidebarButton borderColor];
     }
     return self;
-}
-
-- (UIColor*)borderColor {
-    return [UIColor colorWithRed:0.16 green:0.16 blue:0.16 alpha:0.45];
 }
 
 
