@@ -12,6 +12,32 @@
 
 @implementation MMButtonBoxView
 
+- (instancetype)init {
+    if (self = [super init]) {
+        [self finishButtonBoxInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder*)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self finishButtonBoxInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self finishButtonBoxInit];
+    }
+    return self;
+}
+
+- (void)finishButtonBoxInit {
+    _buttonSize = CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton);
+    _buttonMargin = 0;
+}
+
 #pragma mark - Properties
 
 - (void)setButtons:(NSArray<UIButton*>*)buttons {
@@ -37,10 +63,13 @@
 #pragma mark - UIView
 
 - (CGSize)intrinsicContentSize {
-    if (_columns) {
-        NSUInteger rows = [[self buttons] count] / _columns + 1;
+    NSUInteger targetColumnCount = _columns ?: [[self buttons] count];
 
-        return CGSizeMake(kWidthOfSidebarButton * _columns, kWidthOfSidebarButton * rows);
+    if (targetColumnCount) {
+        NSUInteger rows = ceil([[self buttons] count] / (double)targetColumnCount);
+
+        return CGSizeMake(_buttonSize.width * targetColumnCount + _buttonMargin * (targetColumnCount - 1),
+                          _buttonSize.height * rows + _buttonMargin * (targetColumnCount - 1));
     }
 
     return CGSizeZero;
@@ -63,17 +92,21 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    NSUInteger rows = [[self buttons] count] / _columns + 1;
+    NSUInteger targetColumnCount = _columns ?: [[self buttons] count];
+    NSUInteger rows = ceil([[self buttons] count] / (double)targetColumnCount);
 
     for (NSUInteger row = 0; row < rows; row++) {
-        for (NSUInteger col = 0; col < _columns; col++) {
-            NSUInteger buttonIndex = row * _columns + col;
+        for (NSUInteger col = 0; col < targetColumnCount; col++) {
+            NSUInteger buttonIndex = row * targetColumnCount + col;
 
             if (buttonIndex >= [[self buttons] count]) {
                 return;
             }
 
-            CGRect frame = CGRectMake(col * kWidthOfSidebarButton, row * kWidthOfSidebarButton, kWidthOfSidebarButton, kWidthOfSidebarButton);
+            CGRect frame = CGRectMake(col * (_buttonSize.width + _buttonMargin),
+                                      row * (_buttonSize.height + _buttonMargin),
+                                      _buttonSize.width,
+                                      _buttonSize.height);
 
             [[[self buttons] objectAtIndex:buttonIndex] setFrame:frame];
         }

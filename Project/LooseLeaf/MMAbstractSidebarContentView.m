@@ -41,6 +41,7 @@
         // Initialization code
         currentRowForAlbum = [NSMutableDictionary dictionary];
         albumListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self albumsLayout]];
+        albumListScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         albumListScrollView.dataSource = self;
         albumListScrollView.delegate = self;
         albumListScrollView.backgroundColor = [UIColor clearColor];
@@ -48,6 +49,7 @@
         [albumListScrollView registerClass:[MMDisplayAssetGroupCell class] forCellWithReuseIdentifier:@"MMDisplayAssetGroup"];
 
         photoListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self photosLayout]];
+        photoListScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         photoListScrollView.dataSource = self;
         photoListScrollView.alpha = 0;
         photoListScrollView.backgroundColor = [UIColor clearColor];
@@ -59,7 +61,6 @@
 
         [self addSubview:albumListScrollView];
         [self addSubview:photoListScrollView];
-
 
         NSObject* transparent = (NSObject*)[[UIColor colorWithWhite:0 alpha:0] CGColor];
         NSObject* opaque = (NSObject*)[[UIColor colorWithWhite:0 alpha:1] CGColor];

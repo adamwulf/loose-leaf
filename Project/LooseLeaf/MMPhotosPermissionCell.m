@@ -110,6 +110,7 @@
     } else {
         settingsStep2Image = @"ios7-settings-camera";
     }
+    line.hidden = YES;
     settingsCamera.image = [UIImage imageNamed:settingsStep2Image];
 }
 

@@ -404,6 +404,8 @@
 		C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB041E0B426F0006F58A /* import-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
+		C528168721097978005956F9 /* ios-settings-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C528168521097978005956F9 /* ios-settings-icon@2x.png */; };
+		C528168821097978005956F9 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C528168621097978005956F9 /* ios-settings-icon.png */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
 		C53AFA811DE3EF4C0054553D /* MMArrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53AFA801DE3EF4C0054553D /* MMArrowView.m */; };
 		C53CFC60210036C20037E1B5 /* MMShapeSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */; };
@@ -1402,6 +1404,8 @@
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
+		C528168521097978005956F9 /* ios-settings-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon@2x.png"; sourceTree = "<group>"; };
+		C528168621097978005956F9 /* ios-settings-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon.png"; sourceTree = "<group>"; };
 		C53726961EA0982D0067AFAC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53726971EA0982E0067AFAC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C53726981EA0982F0067AFAC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2682,6 +2686,8 @@
 		667AA41C19E31ED5006549EE /* Permission Images */ = {
 			isa = PBXGroup;
 			children = (
+				C528168621097978005956F9 /* ios-settings-icon.png */,
+				C528168521097978005956F9 /* ios-settings-icon@2x.png */,
 				66E2240C19D645BD000FCA96 /* ios8-settings-photos.png */,
 				66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */,
 				66E2241019D6463F000FCA96 /* ios7-settings-photos.png */,
@@ -4332,6 +4338,7 @@
 				C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */,
 				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
+				C528168721097978005956F9 /* ios-settings-icon@2x.png in Resources */,
 				C55AC19B1D7C0AB100259558 /* logo.png in Resources */,
 				C5C298E61D7B9633009AE6BE /* quad.vsh in Resources */,
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
@@ -4455,6 +4462,7 @@
 				C58E6A4C1CDB1B4A00508F1D /* bg47.jpg in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
+				C528168821097978005956F9 /* ios-settings-icon.png in Resources */,
 				C58E6A321CDB1B4A00508F1D /* bg21.jpg in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				C58E6A4A1CDB1B4A00508F1D /* bg45.jpg in Resources */,

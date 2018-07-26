@@ -268,13 +268,11 @@
 // an area 1*kBounceWidth margin inside of that for content.
 - (CGRect)contentBounds {
     CGRect contentBounds = self.bounds;
-    contentBounds.size.width -= 2 * kBounceWidth;
-    contentBounds.size.width -= CGRectGetWidth(referenceButtonFrame);
     if (directionIsFromLeft) {
+        contentBounds.size.width -= 2 * kBounceWidth;
+        contentBounds.size.width -= CGRectGetWidth(referenceButtonFrame);
         return contentBounds;
     } else {
-        contentBounds.origin.x += 2 * kBounceWidth;
-        contentBounds.origin.x += CGRectGetWidth(referenceButtonFrame);
         return contentBounds;
     }
 }

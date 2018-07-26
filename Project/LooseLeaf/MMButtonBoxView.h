@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSArray<UIButton*>* buttons;
 @property (nonatomic, assign) NSUInteger columns;
+@property (nonatomic, assign) CGSize buttonSize;
+@property (nonatomic, assign) CGFloat buttonMargin;
 
 @end
 

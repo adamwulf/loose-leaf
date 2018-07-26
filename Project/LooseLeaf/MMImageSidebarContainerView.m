@@ -61,19 +61,26 @@
         //////////////////////////////////////////
         // buttons
 
-        importAsPageButton = [[UIButton alloc] initWithFrame:CGRectMake((CGRectGetWidth(contentBounds) - 2 * kHeightOfImportTypeButton - 10) / 2, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        importAsPageButton = [[UIButton alloc] initWithFrame:CGRectFromSize(CGSizeMake(kHeightOfImportTypeButton, kHeightOfImportTypeButton))];
         [importAsPageButton setBackgroundImage:[UIImage imageNamed:@"importAsPage"] forState:UIControlStateNormal];
         [importAsPageButton setBackgroundImage:[UIImage imageNamed:@"importAsPageHighlighted"] forState:UIControlStateSelected];
         [importAsPageButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
         importAsPageButton.selected = [[NSUserDefaults standardUserDefaults] boolForKey:kImportAsPagePreferenceDefault];
-        [slidingSidebarView addSubview:importAsPageButton];
 
-        importAsScrapButton = [[UIButton alloc] initWithFrame:CGRectMake((CGRectGetWidth(contentBounds) - 2 * kHeightOfImportTypeButton - 10) / 2 + 10 + kHeightOfImportTypeButton, 10, kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        importAsScrapButton = [[UIButton alloc] initWithFrame:CGRectFromSize(CGSizeMake(kHeightOfImportTypeButton, kHeightOfImportTypeButton))];
         [importAsScrapButton setBackgroundImage:[UIImage imageNamed:@"importAsScrap"] forState:UIControlStateNormal];
         [importAsScrapButton setBackgroundImage:[UIImage imageNamed:@"importAsScrapHighlighted"] forState:UIControlStateSelected];
         [importAsScrapButton addTarget:self action:@selector(setImportType:) forControlEvents:UIControlEventTouchUpInside];
         importAsScrapButton.selected = ![[NSUserDefaults standardUserDefaults] boolForKey:kImportAsPagePreferenceDefault];
-        [slidingSidebarView addSubview:importAsScrapButton];
+
+        MMButtonBoxView* importButtonBox = [[MMButtonBoxView alloc] init];
+        [importButtonBox setButtons:@[importAsPageButton, importAsScrapButton]];
+        [importButtonBox setButtonSize:CGSizeMake(kHeightOfImportTypeButton, kHeightOfImportTypeButton)];
+        [importButtonBox setButtonMargin:kWidthOfSidebarButtonBuffer];
+        [importButtonBox sizeToFit];
+        [importButtonBox setTranslatesAutoresizingMaskIntoConstraints:NO];
+
+        [slidingSidebarView addSubview:importButtonBox];
 
         // camera
         cameraAlbumButton = [[MMCameraButton alloc] initWithFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))];
@@ -117,56 +124,67 @@
         [buttonBox setButtons:@[cameraAlbumButton, iPhotoAlbumButton, iPhotoFacesButton, iPhotoEventsButton, inboxButton, shapeButton]];
         [buttonBox setColumns:5];
         [buttonBox sizeToFit];
+        [buttonBox setTranslatesAutoresizingMaskIntoConstraints:NO];
         [slidingSidebarView addSubview:buttonBox];
 
-        ////////////////////////////////////////////
-        // Content
+        [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:importButtonBox attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:slidingSidebarView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-26]];
+        [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:buttonBox attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:slidingSidebarView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:-26]];
 
-        CGRect buttonBoxFr = [buttonBox bounds];
-        buttonBoxFr.origin.x = (CGRectGetWidth(contentBounds) - CGRectGetWidth(buttonBoxFr)) / 2 + 10;
-        buttonBoxFr.origin.y = kHeightOfImportTypeButton + 10;
+        [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:importButtonBox attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:slidingSidebarView attribute:NSLayoutAttributeTop multiplier:1.0 constant:10]];
+        [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:buttonBox attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:importButtonBox attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
 
-        [buttonBox setFrame:buttonBoxFr];
-
-        contentBounds.origin.y = CGRectGetMaxY(buttonBoxFr);
-        contentBounds.size.height -= CGRectGetMaxY(buttonBoxFr);
-
-        // Initialization code
         //////////////////////////////////////////
         // content
 
+        void (^setupConstraintsForContentView)(UIView*) = ^(UIView* contentView) {
+            CGFloat width = CGRectGetWidth(contentBounds);
+
+            [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:buttonBox attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+            [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:width]];
+            [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:slidingSidebarView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
+            [slidingSidebarView addConstraint:[NSLayoutConstraint constraintWithItem:contentView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:slidingSidebarView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+        };
+
         cameraListContentView = [[MMCameraSidebarContentView alloc] initWithFrame:contentBounds];
+        [cameraListContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         cameraListContentView.delegate = self;
         [slidingSidebarView addSubview:cameraListContentView];
 
         albumListContentView = [[MMAlbumSidebarContentView alloc] initWithFrame:contentBounds];
+        [albumListContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         albumListContentView.delegate = self;
         [slidingSidebarView addSubview:albumListContentView];
         albumListContentView.hidden = YES;
 
         faceListContentView = [[MMFaceSidebarContentView alloc] initWithFrame:contentBounds];
+        [faceListContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         faceListContentView.delegate = self;
         [slidingSidebarView addSubview:faceListContentView];
         faceListContentView.hidden = YES;
 
         eventListContentView = [[MMEventSidebarContentView alloc] initWithFrame:contentBounds];
+        [eventListContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         eventListContentView.delegate = self;
         [slidingSidebarView addSubview:eventListContentView];
         eventListContentView.hidden = YES;
 
         inboxListContentView = [[MMInboxContentView alloc] initWithFrame:contentBounds];
+        [inboxListContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         inboxListContentView.delegate = self;
         [slidingSidebarView addSubview:inboxListContentView];
         inboxListContentView.hidden = YES;
 
         shapeContentView = [[MMShapeSidebarContentView alloc] initWithFrame:contentBounds];
+        [shapeContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
         shapeContentView.delegate = self;
         [slidingSidebarView addSubview:shapeContentView];
         shapeContentView.hidden = YES;
 
-        allListContentViews = [NSArray arrayWithObjects:cameraListContentView,
-                                                        albumListContentView, faceListContentView, eventListContentView,
-                                                        inboxListContentView, shapeContentView, nil];
+        allListContentViews = [NSArray arrayWithObjects:cameraListContentView, albumListContentView, faceListContentView, eventListContentView, inboxListContentView, shapeContentView, nil];
+
+        for (UIView* contentView in allListContentViews) {
+            setupConstraintsForContentView(contentView);
+        }
 
         [self highlightButton:cameraAlbumButton];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(killMemory) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
