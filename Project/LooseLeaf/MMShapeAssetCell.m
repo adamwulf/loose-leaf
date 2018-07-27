@@ -28,12 +28,20 @@
     return self;
 }
 
+- (void)setBackgroundColor:(UIColor*)backgroundColor {
+    [_shapeView setBackgroundColor:backgroundColor];
+}
+
+- (UIColor*)backgroundColor {
+    return [_shapeView backgroundColor];
+}
+
 #pragma mark - Gesture
 
 - (void)tapped:(id)gesture {
     [[self album] loadPhotosAtIndexes:[[NSIndexSet alloc] initWithIndex:[self index]] usingBlock:^(MMDisplayAsset* result, NSUInteger _index, BOOL* stop) {
         if (result) {
-            [[self delegate] assetWasTapped:result fromView:_shapeView withRotation:_shapeView.rotation];
+            [[self delegate] assetWasTapped:result fromView:_shapeView withBackgroundColor:_shapeView.backgroundColor withRotation:_shapeView.rotation];
         }
     }];
 }

@@ -25,6 +25,7 @@
 #import "MMColorButton.h"
 #import "MMDarkSidebarButton.h"
 #import "UIColor+LooseLeaf.h"
+#import "NSArray+MapReduce.h"
 
 
 @interface MMShapeSidebarContentView (Protected)
@@ -147,6 +148,7 @@
 - (IBAction)colorButtonTapped:(MMColorButton*)button {
     [colorButtons enumerateObjectsUsingBlock:^(MMColorButton* _Nonnull colorButton, NSUInteger idx, BOOL* _Nonnull stop) {
         [colorButton setSelected:colorButton == button];
+        [photoListScrollView reloadData];
     }];
 }
 
@@ -159,18 +161,22 @@
 #pragma mark - UICollectionViewDataSource
 
 - (UICollectionViewCell*)collectionView:(UICollectionView*)collectionView cellForItemAtIndexPath:(NSIndexPath*)indexPath {
-    MMDisplayAssetCell* shapeCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMShapeAssetCell" forIndexPath:indexPath];
+    MMShapeAssetCell* shapeCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMShapeAssetCell" forIndexPath:indexPath];
     [shapeCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row];
     shapeCell.delegate = self;
+    shapeCell.backgroundColor = [colorButtons reduce:^id(MMColorButton* obj, NSUInteger index, id accum) {
+        return [obj isSelected] ? [obj color] : accum;
+    }];
+
     return shapeCell;
 }
 
 #pragma mark - MMDisplayAssetCellDelegate
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withRotation:(CGFloat)rotation {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation {
     lastCameraRollOffset = photoListScrollView.contentOffset;
 
-    [super assetWasTapped:asset fromView:bufferedImage withRotation:rotation];
+    [super assetWasTapped:asset fromView:bufferedImage withBackgroundColor:color withRotation:rotation];
 }
 
 @end

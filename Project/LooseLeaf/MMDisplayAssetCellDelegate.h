@@ -15,6 +15,6 @@
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(UIView*)cameraView;
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)tappedView withRotation:(CGFloat)rotation;
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)tappedView withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation;
 
 @end

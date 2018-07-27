@@ -1233,8 +1233,8 @@
     [currentStackView pictureTakeWithCamera:img fromView:cameraView andRequestsImportAsPage:asPage];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
-    [currentStackView assetWasTapped:photo fromView:assetView withRotation:rotation fromContainer:containerDescription andRequestsImportAsPage:asPage];
+- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
+    [currentStackView assetWasTapped:photo fromView:assetView withBackgroundColor:color withRotation:rotation fromContainer:containerDescription andRequestsImportAsPage:asPage];
 }
 
 #pragma mark - MMShareSidebarDelegate

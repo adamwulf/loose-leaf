@@ -16,6 +16,6 @@
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage;
 
-- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage;
+- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage;
 
 @end

@@ -19,6 +19,7 @@
 #import "UIView+Debug.h"
 #import "UIView+Animations.h"
 #import <JotUI/AbstractBezierPathElement-Protected.h>
+#import <JotUI/UIColor+JotHelper.h>
 #import <PerformanceBezier/PerformanceBezier.h>
 #import <ClippingBezier/ClippingBezier.h>
 
@@ -121,13 +122,13 @@
         backgroundColorLayer.masksToBounds = YES;
         backgroundColorLayer.frame = self.layer.bounds;
 
-        CALayer* whiteLayer = [CALayer layer];
-        whiteLayer.backgroundColor = [UIColor whiteColor].CGColor;
-        whiteLayer.mask = backgroundColorLayer;
-        whiteLayer.frame = self.layer.bounds;
+        //        CALayer* whiteLayer = [CALayer layer];
+        //        whiteLayer.backgroundColor = [UIColor whiteColor].CGColor;
+        //        whiteLayer.mask = backgroundColorLayer;
+        //        whiteLayer.frame = self.layer.bounds;
 
 
-        [self.layer addSublayer:whiteLayer];
+        [self.layer addSublayer:backgroundColorLayer];
 
 
         // only the path contents are opaque, but outside the path needs to be transparent
@@ -232,6 +233,14 @@
     backgroundColorLayer.fillColor = backgroundColor.CGColor;
 }
 
+- (UIColor*)backgroundColor {
+    if (backgroundColorLayer.fillColor) {
+        return [UIColor colorWithCGColor:backgroundColorLayer.fillColor];
+    }
+
+    return [UIColor whiteColor];
+}
+
 /**
  * scraps will show the shadow move ever so slightly as the device is turned
  */
@@ -322,6 +331,7 @@
     [properties setObject:[NSNumber numberWithFloat:self.center.y] forKey:@"center.y"];
     [properties setObject:[NSNumber numberWithFloat:self.rotation] forKey:@"rotation"];
     [properties setObject:[NSNumber numberWithFloat:self.scale] forKey:@"scale"];
+    [properties setObject:[self.backgroundColor asDictionary] forKey:@"backgroundColor"];
     if (self.superview) {
         NSUInteger index = [self.superview.subviews indexOfObject:self];
         [properties setObject:[NSNumber numberWithUnsignedInteger:index] forKey:@"subviewIndex"];
@@ -340,6 +350,13 @@
     self.center = CGPointMake([[properties objectForKey:@"center.x"] floatValue], [[properties objectForKey:@"center.y"] floatValue]);
     self.rotation = [[properties objectForKey:@"rotation"] floatValue];
     self.scale = [[properties objectForKey:@"scale"] floatValue];
+
+    if (properties[@"backgroundColor"]) {
+        self.backgroundColor = [UIColor colorWithDictionary:properties[@"backgroundColor"]];
+    } else {
+        self.backgroundColor = [UIColor whiteColor];
+    }
+
     [UIView setAnchorPoint:currentAnchor forView:self];
 }
 

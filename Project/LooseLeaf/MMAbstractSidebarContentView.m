@@ -316,9 +316,9 @@
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withRotation:(CGFloat)rotation {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation {
     MMAssetListLayout* layout = (MMAssetListLayout*)photoListScrollView.collectionViewLayout;
-    [delegate assetWasTapped:asset fromView:assetView withRotation:(rotation + layout.rotation) fromContainer:self];
+    [delegate assetWasTapped:asset fromView:assetView withBackgroundColor:color withRotation:(rotation + layout.rotation) fromContainer:self];
 }
 
 

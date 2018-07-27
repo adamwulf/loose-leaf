@@ -564,7 +564,7 @@
         }];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage {
     CheckMainThread;
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfImports by:@(1)];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPhotoImports by:@(1)];
@@ -659,6 +659,7 @@
     void (^blockToAddScrapToPage)() = ^{
         MMScrapView* scrap = [topPage addScrapWithPath:path andRotation:rotation andScale:startingScale];
         [scrapContainer addSubview:scrap];
+        [scrap setBackgroundColor:color ?: [UIColor whiteColor]];
 
         CGSize fullScaleScrapSize = scrapRect.size;
         fullScaleScrapSize.width /= startingScale;

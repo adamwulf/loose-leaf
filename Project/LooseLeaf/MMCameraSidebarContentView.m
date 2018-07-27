@@ -217,9 +217,9 @@
     [super pictureTakeWithCamera:img fromView:cameraView];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withRotation:(CGFloat)rotation {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation {
     lastCameraRollOffset = photoListScrollView.contentOffset;
-    [super assetWasTapped:asset fromView:bufferedImage withRotation:rotation];
+    [super assetWasTapped:asset fromView:bufferedImage withBackgroundColor:(UIColor*)color withRotation:rotation];
 }
 
 @end

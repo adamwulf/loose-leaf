@@ -37,6 +37,14 @@
     self.transform = CGAffineTransformMakeRotation(_rotation);
 }
 
+- (void)setBackgroundColor:(UIColor*)backgroundColor {
+    [_layer setFillColor:[backgroundColor CGColor]];
+}
+
+- (UIColor*)backgroundColor {
+    return [UIColor colorWithCGColor:[_layer fillColor]];
+}
+
 - (void)setShape:(UIBezierPath*)shape {
     _shape = shape;
 
