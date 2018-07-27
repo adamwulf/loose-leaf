@@ -122,12 +122,6 @@
         backgroundColorLayer.masksToBounds = YES;
         backgroundColorLayer.frame = self.layer.bounds;
 
-        //        CALayer* whiteLayer = [CALayer layer];
-        //        whiteLayer.backgroundColor = [UIColor whiteColor].CGColor;
-        //        whiteLayer.mask = backgroundColorLayer;
-        //        whiteLayer.frame = self.layer.bounds;
-
-
         [self.layer addSublayer:backgroundColorLayer];
 
 
