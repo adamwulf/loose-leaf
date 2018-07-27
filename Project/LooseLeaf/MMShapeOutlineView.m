@@ -38,7 +38,10 @@
 }
 
 - (void)setBackgroundColor:(UIColor*)backgroundColor {
+    [CATransaction begin]; // prevent CALayer animation
+    [CATransaction setDisableActions:YES];
     [_layer setFillColor:[backgroundColor CGColor]];
+    [CATransaction commit];
 }
 
 - (UIColor*)backgroundColor {

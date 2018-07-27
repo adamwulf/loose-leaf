@@ -459,6 +459,7 @@
 		C57559291DD6ED9700670875 /* UIView+NRTextTransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = C57559261DD6ED9700670875 /* UIView+NRTextTransitions.m */; };
 		C576C53C1CE1825A00A8F342 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = C576C53B1CE1825A00A8F342 /* MMPDF.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
+		C58A2D72210AE44B0078D1F8 /* UIBezierPath+MMShapes.m in Sources */ = {isa = PBXBuildFile; fileRef = C58A2D71210AE44B0078D1F8 /* UIBezierPath+MMShapes.m */; };
 		C58E6A1D1CDB1B4A00508F1D /* bg00.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E31CDB1B4A00508F1D /* bg00.jpg */; };
 		C58E6A1E1CDB1B4A00508F1D /* bg01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E41CDB1B4A00508F1D /* bg01.jpg */; };
 		C58E6A1F1CDB1B4A00508F1D /* bg02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E51CDB1B4A00508F1D /* bg02.jpg */; };
@@ -1524,6 +1525,8 @@
 		C576C53B1CE1825A00A8F342 /* MMPDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDF.m; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
 		C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonToolbarView.m; sourceTree = "<group>"; };
+		C58A2D70210AE44B0078D1F8 /* UIBezierPath+MMShapes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+MMShapes.h"; sourceTree = "<group>"; };
+		C58A2D71210AE44B0078D1F8 /* UIBezierPath+MMShapes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+MMShapes.m"; sourceTree = "<group>"; };
 		C58E69E31CDB1B4A00508F1D /* bg00.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg00.jpg; sourceTree = "<group>"; };
 		C58E69E41CDB1B4A00508F1D /* bg01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg01.jpg; sourceTree = "<group>"; };
 		C58E69E51CDB1B4A00508F1D /* bg02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg02.jpg; sourceTree = "<group>"; };
@@ -3660,6 +3663,8 @@
 				C53DCEBF21042943009A848A /* MMShapeAsset.m */,
 				C53DCEC221042BC5009A848A /* MMShapeAssetGroup.h */,
 				C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */,
+				C58A2D70210AE44B0078D1F8 /* UIBezierPath+MMShapes.h */,
+				C58A2D71210AE44B0078D1F8 /* UIBezierPath+MMShapes.m */,
 			);
 			name = Shapes;
 			sourceTree = "<group>";
@@ -5015,6 +5020,7 @@
 				C5D749FD20FEF844004F5781 /* MPTweak.m in Sources */,
 				66ACECDF19D4C122000EA792 /* NSArray+IndexSetAdditions.m in Sources */,
 				6610D0981AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m in Sources */,
+				C58A2D72210AE44B0078D1F8 /* UIBezierPath+MMShapes.m in Sources */,
 				C5D74A0320FEF844004F5781 /* MPSequenceGenerator.m in Sources */,
 				66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */,
 				C5D749FB20FEF844004F5781 /* MPObjectIdentityProvider.m in Sources */,
