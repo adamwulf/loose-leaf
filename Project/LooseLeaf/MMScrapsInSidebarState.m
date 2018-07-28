@@ -77,15 +77,16 @@
 
                     NSAssert(paperStateForScrap, @"must have paperStateForScrap");
 
+                    NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
+                    [scrapPropsWithState addObject:props];
+
                     dispatch_group_enter(serviceGroup);
                     [paperStateForScrap runBlockWhenLoaded:^{
                         MMScrapView* scrapFromPaperState = [paperStateForScrap scrapForUUID:scrapUUID];
 
                         if (scrapFromPaperState) {
                             //                        DebugLog(@"sidebar found scrap from page %@", scrapFromPaperState.uuid);
-                            NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                             [props setObject:scrapFromPaperState forKey:@"scrap"];
-                            [scrapPropsWithState addObject:props];
                         } else {
                             // couldn't find already built scrap, so load a state and
                             // we'll build a scrap
@@ -95,9 +96,7 @@
                                     state = [[MMScrapViewState alloc] initWithUUID:scrapUUID andPaperState:paperStateForScrap];
                                 }];
                                 if (state) {
-                                    NSMutableDictionary* props = [NSMutableDictionary dictionaryWithDictionary:scrapProperties];
                                     [props setObject:state forKey:@"state"];
-                                    [scrapPropsWithState addObject:props];
                                 } else {
                                     DebugLog(@"couldn't find state for %@", scrapUUID);
                                 }
@@ -112,6 +111,11 @@
 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                     dispatch_group_wait(serviceGroup, DISPATCH_TIME_FOREVER);
+
+                    // only allow properties for scraps that have a collection state
+                    [scrapPropsWithState filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id _Nullable evaluatedObject, NSDictionary<NSString*, id>* _Nullable bindings) {
+                        return evaluatedObject[@"state"] != nil;
+                    }]];
 
                     [NSThread performBlockOnMainThread:^{
                         for (NSDictionary* scrapProperties in scrapPropsWithState) {
