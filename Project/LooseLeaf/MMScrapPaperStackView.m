@@ -1967,6 +1967,7 @@
 
         clonedScrap = [page.scrapsOnPaperState addScrapWithPath:[scrap.bezierPath copy] andRotation:scrap.rotation andScale:1.0];
         clonedScrap.scale = scrap.scale;
+        clonedScrap.backgroundColor = scrap.backgroundColor;
 
         @synchronized(scrapContainer) {
             // make sure scraps are in the same coordinate space
