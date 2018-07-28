@@ -194,6 +194,10 @@
     }
 }
 
+- (void)runBlockWhenLoaded:(void (^)())block {
+    block();
+}
+
 - (MMImmutableScrapsInSidebarState*)immutableStateForPath:(NSString*)scrapIDsPath {
     CheckMainThread;
     if ([self isStateLoaded]) {

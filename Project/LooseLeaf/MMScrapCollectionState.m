@@ -15,6 +15,7 @@
 
 
 @implementation MMScrapCollectionState {
+    NSOperationQueue* opQueue;
     NSMutableArray<NSBlockOperation*>* blocksToRunAfterLoad;
 }
 
@@ -47,6 +48,7 @@ static const void* const kImportExportStateQueueIdentifier = &kImportExportState
         // initialize our target state
         targetLoadedState = MMScrapCollectionStateTargetUnloaded;
         blocksToRunAfterLoad = [NSMutableArray array];
+        opQueue = [[NSOperationQueue alloc] init];
     }
     return self;
 }
@@ -107,7 +109,7 @@ static const void* const kImportExportStateQueueIdentifier = &kImportExportState
         if (!isLoading) {
             @synchronized(blocksToRunAfterLoad) {
                 for (NSBlockOperation* operation in blocksToRunAfterLoad) {
-                    [operation start];
+                    [opQueue addOperation:operation];
                 }
                 [blocksToRunAfterLoad removeAllObjects];
             }
@@ -117,8 +119,17 @@ static const void* const kImportExportStateQueueIdentifier = &kImportExportState
 
 - (void)runBlockWhenLoaded:(void (^)())block {
     if ([self isLoading]) {
+        BOOL runImmediately = NO;
         @synchronized(blocksToRunAfterLoad) {
-            [blocksToRunAfterLoad addObject:[NSBlockOperation blockOperationWithBlock:block]];
+            if (![self isLoading]) {
+                runImmediately = YES;
+            } else {
+                [blocksToRunAfterLoad addObject:[NSBlockOperation blockOperationWithBlock:block]];
+            }
+        }
+
+        if (runImmediately) {
+            block();
         }
     } else {
         block();
