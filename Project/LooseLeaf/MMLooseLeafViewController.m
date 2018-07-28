@@ -328,10 +328,6 @@
 
         // refresh button visibility after adding all our sidebars
 
-        [currentStackView setButtonsVisible:[currentStackView buttonsVisible] animated:NO];
-        [currentStackView immediatelyRelayoutIfInListMode];
-        // TODO: above two lines might never run b/c currentStackView is always nil?
-
         MMCollapsableStackView* initialStackView = nil;
 
         if (currentStackForLaunch) {
@@ -1423,7 +1419,18 @@
 }
 
 - (MMScrappedPaperView*)pageForUUID:(NSString*)uuid {
-    return [currentStackView pageForUUID:uuid];
+    __block MMScrappedPaperView* page = [currentStackView pageForUUID:uuid];
+
+    if (!page) {
+        [[stackViewsByUUID allValues] enumerateObjectsUsingBlock:^(id _Nonnull obj, NSUInteger idx, BOOL* _Nonnull stop) {
+            // already checked currentStackView
+            page = [obj pageForUUID:uuid];
+
+            *stop = page != nil;
+        }];
+    }
+
+    return page;
 }
 
 #pragma mark - MMListAddPageButtonDelegate

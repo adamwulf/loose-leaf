@@ -14,11 +14,14 @@
 #import "MMImmutableScrapCollectionState.h"
 
 
-@implementation MMScrapCollectionState
+@implementation MMScrapCollectionState {
+    NSMutableArray<NSBlockOperation*>* blocksToRunAfterLoad;
+}
 
 @synthesize allLoadedScraps;
 @synthesize lastSavedUndoHash;
 @synthesize isForgetful;
+@synthesize isLoading;
 
 static dispatch_queue_t importExportStateQueue;
 
@@ -43,6 +46,7 @@ static const void* const kImportExportStateQueueIdentifier = &kImportExportState
         allLoadedScraps = [NSMutableArray array];
         // initialize our target state
         targetLoadedState = MMScrapCollectionStateTargetUnloaded;
+        blocksToRunAfterLoad = [NSMutableArray array];
     }
     return self;
 }
@@ -93,6 +97,31 @@ static const void* const kImportExportStateQueueIdentifier = &kImportExportState
 - (BOOL)isStateLoaded {
     @synchronized(self) {
         return isLoaded;
+    }
+}
+
+- (void)setIsLoading:(BOOL)_isLoading {
+    if (isLoading != _isLoading) {
+        isLoading = _isLoading;
+
+        if (!isLoading) {
+            @synchronized(blocksToRunAfterLoad) {
+                for (NSBlockOperation* operation in blocksToRunAfterLoad) {
+                    [operation start];
+                }
+                [blocksToRunAfterLoad removeAllObjects];
+            }
+        }
+    }
+}
+
+- (void)runBlockWhenLoaded:(void (^)())block {
+    if ([self isLoading]) {
+        @synchronized(blocksToRunAfterLoad) {
+            [blocksToRunAfterLoad addObject:[NSBlockOperation blockOperationWithBlock:block]];
+        }
+    } else {
+        block();
     }
 }
 

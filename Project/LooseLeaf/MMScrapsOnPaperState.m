@@ -80,9 +80,9 @@
         __block NSArray* scrapProps;
         __block NSArray* scrapIDsOnPage;
         __block CGSize scrapStatePageSize;
-        BOOL wasAlreadyLoading = isLoading;
+        BOOL wasAlreadyLoading = [self isLoading];
         @synchronized(self) {
-            isLoading = YES;
+            [self setIsLoading:YES];
             if (makeEditable) {
                 targetLoadedState = MMScrapCollectionStateTargetLoadedEditable;
             } else if (targetLoadedState == MMScrapCollectionStateTargetUnloaded) {
@@ -136,7 +136,7 @@
                 if (hasBailedOnLoadingBecauseOfMismatchedTargetState) {
                     DebugLog(@"MMScrapsOnPaperState main thread bailing early");
                     isLoaded = NO;
-                    isLoading = NO;
+                    [self setIsLoading:NO];
                     return;
                 }
                 // load all the states async
@@ -149,7 +149,7 @@
                             if (targetLoadedState == MMScrapCollectionStateTargetUnloaded) {
                                 hasBailedOnLoadingBecauseOfMismatchedTargetState = YES;
                                 isLoaded = NO;
-                                isLoading = NO;
+                                [self setIsLoading:NO];
                                 return;
                             }
                         }
@@ -274,7 +274,7 @@
                 }
                 @synchronized(self) {
                     isLoaded = YES;
-                    isLoading = NO;
+                    [self setIsLoading:NO];
                     MMImmutableScrapCollectionState* immutableState = [self immutableStateForPath:nil];
                     expectedUndoHash = [immutableState undoHash];
                     if (!adjustForScaleWasNeededAfterAll) {
@@ -481,7 +481,7 @@
         [scrapContainerView addSubview:scrap];
     }
     [scrap setShouldShowShadow:self.delegate.isEditable];
-    if (isLoaded || isLoading) {
+    if (isLoaded || [self isLoading]) {
         [scrap loadScrapStateAsynchronously:YES];
     } else {
         [scrap unloadState];
@@ -504,7 +504,7 @@
 }
 
 - (void)scrapVisibilityWasUpdated:(MMScrapView*)scrap {
-    if ([self isStateLoaded] && !isLoading && !isUnloading) {
+    if ([self isStateLoaded] && ![self isLoading] && !isUnloading) {
         // something changed w/ scrap visibility
         // we only care if we're fully loaded, not if
         // we're loading or unloading.
