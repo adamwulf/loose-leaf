@@ -249,8 +249,8 @@
                                                                                     @"scrapState.scrapsOnPaperState": scrap.state.scrapsOnPaperState ? @(YES) : @(NO),
                                                                                     @"scrapState.scrapsOnPaperState.delegate": scrap.state.scrapsOnPaperState.delegate ? @(YES) : @(NO) }];
 
-                [allPropertiesForScraps insertObject:props atIndex:0];
-                [allLoadedScraps insertObject:scrap atIndex:0];
+                [allPropertiesForScraps addObject:props];
+                [allLoadedScraps addObject:scrap];
                 hasEditsToSave = YES;
             } else {
                 [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1523),
