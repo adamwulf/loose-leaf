@@ -326,6 +326,7 @@
     [properties setObject:[NSNumber numberWithFloat:self.rotation] forKey:@"rotation"];
     [properties setObject:[NSNumber numberWithFloat:self.scale] forKey:@"scale"];
     [properties setObject:[self.backgroundColor asDictionary] forKey:@"backgroundColor"];
+
     if (self.superview) {
         NSUInteger index = [self.superview.subviews indexOfObject:self];
         [properties setObject:[NSNumber numberWithUnsignedInteger:index] forKey:@"subviewIndex"];
