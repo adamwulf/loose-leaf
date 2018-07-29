@@ -41,12 +41,12 @@ static MMShapeAssetGroup* _instance = nil;
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath arrowPath] withName:@"Arrow"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath heartPath] withName:@"Heart"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, 500, 375) cornerRadius:80] withName:@"RoundedRect"]];
-
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath pentagonPath] withName:@"Pentagon"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath trianglePath] withName:@"Triangle"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath hexagonPath] withName:@"Hexagon"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath octagonPath] withName:@"Octagon"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath rombusPath] withName:@"Rombus"]];
+        [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath housePath] withName:@"House"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath starPath] withName:@"Star"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath star2Path] withName:@"Star2"]];
         [shapes addObject:[[MMShapeAsset alloc] initWithPath:[UIBezierPath star3Path] withName:@"Star3"]];

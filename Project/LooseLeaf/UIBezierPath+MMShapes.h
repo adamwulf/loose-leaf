@@ -55,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIBezierPath*)arrowPath;
 
++ (UIBezierPath*)housePath;
+
 @end
 
 NS_ASSUME_NONNULL_END

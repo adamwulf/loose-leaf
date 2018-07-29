@@ -323,4 +323,19 @@
     return arrowPath;
 }
 
++ (UIBezierPath*)housePath {
+    UIBezierPath* housePath = [UIBezierPath bezierPath];
+    [housePath moveToPoint:CGPointMake(200, 0)];
+    [housePath addCurveToPoint:CGPointMake(400, 235.5) controlPoint1:CGPointMake(200, 0) controlPoint2:CGPointMake(400, 235.5)];
+    [housePath addLineToPoint:CGPointMake(340, 235.5)];
+    [housePath addCurveToPoint:CGPointMake(340, 465) controlPoint1:CGPointMake(340, 295.24) controlPoint2:CGPointMake(340, 465)];
+    [housePath addLineToPoint:CGPointMake(60, 465)];
+    [housePath addCurveToPoint:CGPointMake(60, 235.5) controlPoint1:CGPointMake(60, 465) controlPoint2:CGPointMake(60, 295.24)];
+    [housePath addLineToPoint:CGPointMake(0, 235.5)];
+    [housePath addLineToPoint:CGPointMake(200, 0)];
+    [housePath addLineToPoint:CGPointMake(200, 0)];
+    [housePath closePath];
+    return housePath;
+}
+
 @end
