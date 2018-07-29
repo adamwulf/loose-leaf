@@ -595,7 +595,7 @@
     }
 
     UIImage* scrapBacking = [asset aspectThumbnailWithMaxPixelSize:maxDim];
-    CGSize scrapBackingSize = [asset fullResolutionSize];
+    CGSize scrapBackingSize = [asset resolutionSizeWithMaxDim:maxDim];
 
     CGSize fullScaleSize = CGSizeScale(scrapBackingSize, 1 / [[UIScreen mainScreen] scale]);
 
@@ -624,6 +624,7 @@
     if (scrapBacking && fullScaleSize.width > fullScaleSize.height) {
         fullScaleSize = CGSizeSwap(fullScaleSize);
         scrapRect.size = CGSizeSwap(scrapRect.size);
+        scrapBackingSize = CGSizeSwap(scrapBackingSize);
         rotation += M_PI / 2.0;
         scrapBacking = [UIImage imageWithCGImage:scrapBacking.CGImage scale:scrapBacking.scale orientation:rotateOrientationLeft(scrapBacking.imageOrientation)];
     }

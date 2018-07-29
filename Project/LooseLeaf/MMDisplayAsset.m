@@ -35,6 +35,16 @@
     @throw kAbstractMethodException;
 }
 
+- (CGSize)resolutionSizeWithMaxDim:(NSInteger)maxDim {
+    CGSize currSize = self.fullResolutionSize;
+    CGFloat ratio = currSize.width / currSize.height;
+    if (ratio > 1) {
+        return CGSizeMake(maxDim, floor(maxDim / ratio));
+    } else {
+        return CGSizeMake(floor(ratio * maxDim), maxDim);
+    }
+}
+
 - (CGFloat)defaultRotation {
     return 0;
 }

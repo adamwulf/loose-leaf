@@ -30,6 +30,8 @@
 
 - (NSURL*)fullResolutionURL;
 
+- (CGSize)resolutionSizeWithMaxDim:(NSInteger)maxDim;
+
 - (CGSize)fullResolutionSize;
 
 - (CGFloat)defaultRotation;
