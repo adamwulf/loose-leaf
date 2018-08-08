@@ -12,6 +12,7 @@
 #import "MMEventSidebarContentView.h"
 #import "MMCameraSidebarContentView.h"
 #import "MMShapeSidebarContentView.h"
+#import "MMEmojiSidebarContentView.h"
 #import "MMInboxContentView.h"
 #import "MMButtonBoxView.h"
 #import "MMPhotoManager.h"
@@ -35,6 +36,7 @@
     MMEventSidebarContentView* eventListContentView;
     MMInboxContentView* inboxListContentView;
     MMShapeSidebarContentView* shapeContentView;
+    MMEmojiSidebarContentView* emojiContentView;
 
     NSArray* allListContentViews;
 
@@ -44,6 +46,7 @@
     MMPalmTreeButton* iPhotoEventsButton;
     MMInboxButton* inboxButton;
     MMShapesButton* shapeButton;
+    MMShapesButton* emojiButton;
 
     UIButton* importAsPageButton;
     UIButton* importAsScrapButton;
@@ -119,9 +122,15 @@
         shapeButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         shapeButton.shadowInset = -1;
 
+        // shape button
+        emojiButton = [[MMShapesButton alloc] initWithFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))];
+        [emojiButton addTarget:self action:@selector(emojiButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        emojiButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
+        emojiButton.shadowInset = -1;
+
         MMButtonBoxView* buttonBox = [[MMButtonBoxView alloc] init];
 
-        [buttonBox setButtons:@[cameraAlbumButton, iPhotoAlbumButton, iPhotoFacesButton, iPhotoEventsButton, inboxButton, shapeButton]];
+        [buttonBox setButtons:@[cameraAlbumButton, iPhotoAlbumButton, iPhotoFacesButton, iPhotoEventsButton, inboxButton, shapeButton, emojiButton]];
         [buttonBox setColumns:5];
         [buttonBox sizeToFit];
         [buttonBox setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -180,7 +189,13 @@
         [slidingSidebarView addSubview:shapeContentView];
         shapeContentView.hidden = YES;
 
-        allListContentViews = [NSArray arrayWithObjects:cameraListContentView, albumListContentView, faceListContentView, eventListContentView, inboxListContentView, shapeContentView, nil];
+        emojiContentView = [[MMEmojiSidebarContentView alloc] initWithFrame:contentBounds];
+        [emojiContentView setTranslatesAutoresizingMaskIntoConstraints:NO];
+        emojiContentView.delegate = self;
+        [slidingSidebarView addSubview:emojiContentView];
+        emojiContentView.hidden = YES;
+
+        allListContentViews = [NSArray arrayWithObjects:cameraListContentView, albumListContentView, faceListContentView, eventListContentView, inboxListContentView, shapeContentView, emojiContentView, nil];
 
         for (UIView* contentView in allListContentViews) {
             setupConstraintsForContentView(contentView);
@@ -224,6 +239,9 @@
     if (!shapeContentView.hidden) {
         [shapeContentView show:animated];
     }
+    if (!emojiContentView.hidden) {
+        [emojiContentView show:animated];
+    }
     [self updateInterfaceTo:[[MMRotationManager sharedInstance] lastBestOrientation] animated:NO];
 }
 
@@ -235,6 +253,7 @@
         [eventListContentView hide:animated];
         [inboxListContentView hide:animated];
         [shapeContentView hide:animated];
+        [emojiContentView hide:animated];
 
         if (onComplete) {
             onComplete(finished);
@@ -270,6 +289,7 @@
     cameraAlbumButton.selected = NO;
     inboxButton.selected = NO;
     shapeButton.selected = NO;
+    emojiButton.selected = NO;
     button.selected = YES;
 }
 
@@ -303,6 +323,11 @@
     [self highlightButton:button];
 }
 
+- (void)emojiButtonTapped:(MMSidebarButton*)button {
+    [self switchToListView:emojiContentView];
+    [self highlightButton:button];
+}
+
 - (void)showPDF:(MMInboxItem*)pdf {
     [self switchToListView:inboxListContentView];
     [inboxListContentView switchToPDFView:pdf];
@@ -324,6 +349,7 @@
             [eventListContentView doneLoadingPhotoAlbums];
             [inboxListContentView doneLoadingPhotoAlbums];
             [shapeContentView doneLoadingPhotoAlbums];
+            [emojiContentView doneLoadingPhotoAlbums];
         }
     });
 }
@@ -375,6 +401,8 @@
         [inboxListContentView updatePhotoRotation:animated];
     } else if (!shapeContentView.hidden) {
         [shapeContentView updatePhotoRotation:animated];
+    } else if (!emojiContentView.hidden) {
+        [emojiContentView updatePhotoRotation:animated];
     }
 
     void (^animations)() = ^{
@@ -396,6 +424,9 @@
 
         shapeButton.rotation = [self sidebarButtonRotation];
         shapeButton.transform = rotationTransform;
+
+        emojiButton.rotation = [self sidebarButtonRotation];
+        emojiButton.transform = rotationTransform;
 
         importAsPageButton.transform = rotationTransform;
         importAsScrapButton.transform = rotationTransform;
@@ -421,6 +452,7 @@
         [eventListContentView killMemory];
         [inboxListContentView killMemory];
         [shapeContentView killMemory];
+        [emojiContentView killMemory];
     }
 }
 
