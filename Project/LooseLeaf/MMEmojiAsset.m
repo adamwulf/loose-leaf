@@ -25,56 +25,7 @@
         _emoji = emoji;
         _emojiName = emojiName;
         _path = [UIBezierPath bezierPathWithOvalInRect:CGRectFromSize([self fullResolutionSize])];
-
-        UIGraphicsBeginImageContextWithOptions([self fullResolutionSize], YES, 0);
-
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        // glyph path is inverted, so flip vertically
-        CGAffineTransform flipY = CGAffineTransformMakeScale(1, -1);
-        // glyph path may be offset on the x coord, and by the height (because it's flipped)
-        CGAffineTransform translate = CGAffineTransformMakeTranslation(0, -[self fullResolutionSize].height);
-
-        CGContextConcatCTM(context, flipY);
-        CGContextConcatCTM(context, translate);
-
-        UIFont* font = [UIFont systemFontOfSize:148];
-        CGRect boundingRect = [self boundingRectForString:_emoji withFont:font];
-        CGFloat descender = (CGRectGetHeight(boundingRect) - CGRectGetWidth(boundingRect)) / 2.0;
-        descender += CGRectGetMinX(boundingRect);
-
-        CGFloat scale = [self fullResolutionSize].width / CGRectGetWidth(boundingRect);
-        CGContextConcatCTM(context, CGAffineTransformMakeScale(scale, scale));
-        CGContextConcatCTM(context, CGAffineTransformMakeTranslation(0, descender));
-
-        CFStringRef string = (__bridge CFStringRef)_emoji;
-        CTFontRef fontref = CTFontCreateWithName((CFStringRef)[font fontName], [font pointSize], NULL);
-
-        // Initialize the string, font, and context
-
-        CFStringRef keys[] = {kCTFontAttributeName};
-        CFTypeRef values[] = {fontref};
-
-        CFDictionaryRef attributes =
-            CFDictionaryCreate(kCFAllocatorDefault, (const void**)&keys,
-                               (const void**)&values, sizeof(keys) / sizeof(keys[0]),
-                               &kCFTypeDictionaryKeyCallBacks,
-                               &kCFTypeDictionaryValueCallBacks);
-
-        CFAttributedStringRef attrString =
-            CFAttributedStringCreate(kCFAllocatorDefault, string, attributes);
-        CFRelease(string);
-        CFRelease(attributes);
-
-        CTLineRef line = CTLineCreateWithAttributedString(attrString);
-
-        // Set text position and draw the line into the graphics context
-        CGContextSetTextPosition(context, 0.0, 0.0);
-        CTLineDraw(line, context);
-        CFRelease(line);
-
-
-        _thumb = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
+        _thumb = [self aspectThumbnailWithMaxPixelSize:256];
     }
 
     return self;
@@ -85,11 +36,61 @@
 }
 
 - (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim {
-    return _thumb;
-}
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(maxDim, maxDim), YES, 1.0);
 
-- (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim andRatio:(CGFloat)ratio {
-    return _thumb;
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextSetFillColorWithColor(context, [[UIColor whiteColor] CGColor]);
+    CGContextFillRect(context, CGRectMake(0, 0, maxDim, maxDim));
+
+    // glyph path is inverted, so flip vertically
+    CGAffineTransform flipY = CGAffineTransformMakeScale(1, -1);
+    // glyph path may be offset on the x coord, and by the height (because it's flipped)
+    CGAffineTransform translate = CGAffineTransformMakeTranslation(0, -maxDim);
+
+    CGContextConcatCTM(context, flipY);
+    CGContextConcatCTM(context, translate);
+
+    UIFont* font = [UIFont fontWithName:@"AppleColorEmoji" size:1000];
+    CGRect boundingRect = [self boundingRectForString:_emoji withFont:font];
+    CGFloat descender = (CGRectGetHeight(boundingRect) - CGRectGetWidth(boundingRect)) / 2.0;
+    descender += CGRectGetMinX(boundingRect);
+
+    CGFloat scale = maxDim / CGRectGetWidth(boundingRect);
+    CGContextConcatCTM(context, CGAffineTransformMakeScale(scale, scale));
+    CGContextConcatCTM(context, CGAffineTransformMakeTranslation(0, descender));
+
+    CFStringRef string = (__bridge CFStringRef)_emoji;
+    CTFontRef fontref = CTFontCreateWithName((CFStringRef)[font fontName], [font pointSize], NULL);
+
+    // Initialize the string, font, and context
+
+    CFStringRef keys[] = {kCTFontAttributeName};
+    CFTypeRef values[] = {fontref};
+
+    CFDictionaryRef attributes =
+        CFDictionaryCreate(kCFAllocatorDefault, (const void**)&keys,
+                           (const void**)&values, sizeof(keys) / sizeof(keys[0]),
+                           &kCFTypeDictionaryKeyCallBacks,
+                           &kCFTypeDictionaryValueCallBacks);
+
+    CFAttributedStringRef attrString =
+        CFAttributedStringCreate(kCFAllocatorDefault, string, attributes);
+    CFRelease(string);
+    CFRelease(attributes);
+
+    CTLineRef line = CTLineCreateWithAttributedString(attrString);
+
+    // Set text position and draw the line into the graphics context
+    CGContextSetTextPosition(context, 0.0, 0.0);
+    CTLineDraw(line, context);
+    CFRelease(line);
+
+
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return image;
 }
 
 - (NSURL*)fullResolutionURL {

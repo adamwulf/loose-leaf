@@ -632,7 +632,7 @@
 
     UIBezierPath* path;
 
-    if (scrapBacking) {
+    if (![asset fullResolutionPath]) {
         path = [UIBezierPath bezierPathWithRect:scrapRect];
     } else {
         path = [asset fullResolutionPath];
