@@ -37,7 +37,10 @@ static MMEmojiAssetGroup* _instance = nil;
                     [[MMEmojiAsset alloc] initWithEmoji:@"😂" withName:@"joy"],
                     [[MMEmojiAsset alloc] initWithEmoji:@"🤣" withName:@"rofl"],
                     [[MMEmojiAsset alloc] initWithEmoji:@"😍" withName:@"hearteyes"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😉" withName:@"wink"]];
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😉" withName:@"wink"],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🖖" withName:@"spock"],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🙏" withName:@"pray"],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🤟" withName:@"iloveyou"]];
     }
     return self;
 }

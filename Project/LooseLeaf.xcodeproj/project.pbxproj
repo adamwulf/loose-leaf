@@ -530,6 +530,7 @@
 		C5BFD9F2211A91E80060D4C0 /* MMEmojiAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9F1211A91E80060D4C0 /* MMEmojiAssetGroup.m */; };
 		C5BFD9F6211A94DB0060D4C0 /* MMEmojiSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9F5211A94DB0060D4C0 /* MMEmojiSidebarContentView.m */; };
 		C5BFD9F9211A94EE0060D4C0 /* MMEmojiAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9F8211A94EE0060D4C0 /* MMEmojiAssetCell.m */; };
+		C5BFD9FC211A975A0060D4C0 /* MMEmojiOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9FB211A975A0060D4C0 /* MMEmojiOutlineView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
 		C5C13E171D91FC5A0047B3EF /* list-view-clone-page.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
@@ -1613,6 +1614,8 @@
 		C5BFD9F5211A94DB0060D4C0 /* MMEmojiSidebarContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiSidebarContentView.m; sourceTree = "<group>"; };
 		C5BFD9F7211A94EE0060D4C0 /* MMEmojiAssetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiAssetCell.h; sourceTree = "<group>"; };
 		C5BFD9F8211A94EE0060D4C0 /* MMEmojiAssetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiAssetCell.m; sourceTree = "<group>"; };
+		C5BFD9FA211A975A0060D4C0 /* MMEmojiOutlineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiOutlineView.h; sourceTree = "<group>"; };
+		C5BFD9FB211A975A0060D4C0 /* MMEmojiOutlineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiOutlineView.m; sourceTree = "<group>"; };
 		C5C13E131D9108100047B3EF /* MMPageCloner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageCloner.h; sourceTree = "<group>"; };
 		C5C13E141D9108100047B3EF /* MMPageCloner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageCloner.m; sourceTree = "<group>"; };
 		C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "list-view-clone-page.mp4"; sourceTree = "<group>"; };
@@ -2650,6 +2653,8 @@
 				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
 				C59B5B002106D1D30049C323 /* MMShapeOutlineView.h */,
 				C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */,
+				C5BFD9FA211A975A0060D4C0 /* MMEmojiOutlineView.h */,
+				C5BFD9FB211A975A0060D4C0 /* MMEmojiOutlineView.m */,
 			);
 			name = "Helper Views";
 			sourceTree = "<group>";
@@ -4734,6 +4739,7 @@
 				6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */,
 				C5D74A2620FEF844004F5781 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,
 				C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */,
+				C5BFD9FC211A975A0060D4C0 /* MMEmojiOutlineView.m in Sources */,
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
 				6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */,
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
