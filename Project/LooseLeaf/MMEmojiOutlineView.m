@@ -22,6 +22,7 @@
         self.clearsContextBeforeDrawing = YES;
 
         CGRect imageViewBounds = CGRectInset(self.bounds, 10, 10);
+        imageViewBounds.size.height = imageViewBounds.size.width; // make sure it's square
         _imageView = [[UIImageView alloc] initWithFrame:imageViewBounds];
         _imageView.contentMode = UIViewContentModeScaleAspectFit;
         [self addSubview:_imageView];
@@ -43,29 +44,22 @@
     self.transform = CGAffineTransformMakeRotation(_rotation);
 }
 
-- (void)setBackgroundColor:(UIColor*)backgroundColor {
-    //    [CATransaction begin]; // prevent CALayer animation
-    //    [CATransaction setDisableActions:YES];
-    //    [_mask setFillColor:[backgroundColor CGColor]];
-    //    [CATransaction commit];
-}
-
 - (UIColor*)backgroundColor {
     return [UIColor colorWithCGColor:[_mask fillColor]];
 }
 
-- (void)setShape:(UIBezierPath*)shape {
+- (void)setShape:(MMEmojiAsset*)shape {
     _shape = shape;
 
     [CATransaction begin]; // prevent CALayer animation
     [CATransaction setDisableActions:YES];
 
     if (shape) {
-        [self setPreferredAspectRatioForEmptyImage:shape.bounds.size];
+        [self setPreferredAspectRatioForEmptyImage:shape.fullResolutionSize];
     }
 
-    UIBezierPath* path = [shape copy];
-    CGFloat scale = [self pathScaleForPreferredSize:shape.bounds.size];
+    UIBezierPath* path = [[shape fullResolutionPath] copy];
+    CGFloat scale = [self pathScaleForPreferredSize:shape.fullResolutionSize];
 
     [path applyTransform:CGAffineTransformMakeScale(scale, scale)];
 
@@ -84,6 +78,7 @@
 
 - (CGFloat)pathScaleForPreferredSize:(CGSize)preferredSize {
     CGRect fr = CGRectInset(self.bounds, 10, 10);
+    fr.size.height = fr.size.width;
 
     return MIN(fr.size.width / preferredSize.width, fr.size.height / preferredSize.height);
 }
@@ -93,6 +88,7 @@
     [CATransaction setDisableActions:YES];
 
     CGRect fr = CGRectInset(self.bounds, 10, 10);
+    fr.size.height = fr.size.width;
     CGSize scaledImageSize = preferredSize;
 
     CGFloat maxImageDim = MAX(scaledImageSize.width, scaledImageSize.height);

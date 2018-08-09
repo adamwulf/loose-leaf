@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MMDisplayAsset.h"
+#import "MMEmojiAsset.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MMEmojiOutlineView : UIView <MMDisplayAssetCoordinator>
 
 @property (nonatomic, assign) CGFloat rotation;
-@property (nonatomic, copy) UIBezierPath* shape;
+@property (nonatomic, copy) MMEmojiAsset* shape;
 @property (nonatomic, strong) UIImage* image;
 
 @end

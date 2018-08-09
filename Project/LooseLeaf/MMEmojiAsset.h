@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MMEmojiAsset : MMDisplayAsset
 
-- (instancetype)initWithEmoji:(NSString*)emoji withName:(NSString*)emojiName;
+- (instancetype)initWithEmoji:(NSString*)emoji andPath:(UIBezierPath*)path andName:(NSString*)emojiName andSize:(CGSize)size;
 
 @end
 

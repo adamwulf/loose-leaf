@@ -630,12 +630,15 @@
     }
 
 
+    UIBezierPath* originalPath;
     UIBezierPath* path;
 
     if (![asset fullResolutionPath]) {
         path = [UIBezierPath bezierPathWithRect:scrapRect];
+        originalPath = [UIBezierPath bezierPathWithRect:CGRectFromSize(fullScaleSize)];
     } else {
         path = [asset fullResolutionPath];
+        originalPath = [path copy];
         [path applyTransform:CGAffineTransformMakeScale(ratio, ratio)];
         [path applyTransform:CGAffineTransformMakeTranslation(scrapRect.origin.x, scrapRect.origin.y)];
     }
@@ -675,6 +678,14 @@
         // add the background, and scale it so it fills the scrap
         MMScrapBackgroundView* backgroundView = [[MMScrapBackgroundView alloc] initWithImage:scrapBacking forScrapState:scrap.state];
         backgroundView.backgroundScale = scaleUpOfImage;
+        // the background is offset from the center of the scrap,
+        // so adjust its offset to account for the distance
+        // from the top left of the scrap to the center of the scrap
+        CGPoint bgCenter = CGPointMake(fullScaleScrapSize.width * scaleUpOfImage, fullScaleScrapSize.height * scaleUpOfImage);
+        CGPoint scrapCenter = CGRectGetMidPoint(originalPath.bounds);
+        CGPoint trueOffset = CGPointMake(scrapCenter.x - bgCenter.x, scrapCenter.y - bgCenter.y);
+        trueOffset = CGPointScale(trueOffset, -1);
+        backgroundView.backgroundOffset = trueOffset;
         [scrap setBackgroundView:backgroundView];
 
         // move the scrap so that it covers the image that was just tapped.

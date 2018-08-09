@@ -16,15 +16,17 @@
     NSString* _emoji;
     UIBezierPath* _path;
     NSString* _emojiName;
+    CGSize _size;
 
     UIImage* _thumb;
 }
 
-- (instancetype)initWithEmoji:(NSString*)emoji withName:(NSString*)emojiName {
+- (instancetype)initWithEmoji:(NSString*)emoji andPath:(UIBezierPath*)path andName:(NSString*)emojiName andSize:(CGSize)size {
     if (self = [super init]) {
         _emoji = emoji;
         _emojiName = emojiName;
-        _path = [UIBezierPath bezierPathWithOvalInRect:CGRectFromSize([self fullResolutionSize])];
+        _path = path;
+        _size = size;
         _thumb = [self aspectThumbnailWithMaxPixelSize:256];
     }
 
@@ -51,7 +53,7 @@
     CGContextConcatCTM(context, flipY);
     CGContextConcatCTM(context, translate);
 
-    UIFont* font = [UIFont fontWithName:@"AppleColorEmoji" size:1000];
+    UIFont* font = [UIFont fontWithName:@"AppleColorEmoji" size:400];
     CGRect boundingRect = [self boundingRectForString:_emoji withFont:font];
     CGFloat descender = (CGRectGetHeight(boundingRect) - CGRectGetWidth(boundingRect)) / 2.0;
     descender += CGRectGetMinX(boundingRect);
@@ -98,7 +100,7 @@
 }
 
 - (CGSize)fullResolutionSize {
-    return CGSizeMake(500, 500);
+    return _size;
 }
 
 - (CGFloat)defaultRotation {
@@ -106,7 +108,8 @@
 }
 
 - (CGFloat)preferredImportMaxDim {
-    return 500;
+    CGSize s = [self fullResolutionSize];
+    return MAX(s.width, s.height);
 }
 
 - (UIBezierPath*)fullResolutionPath {

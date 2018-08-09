@@ -8,6 +8,7 @@
 
 #import "MMEmojiAssetGroup.h"
 #import "MMEmojiAsset.h"
+#import "UIBezierPath+MMEmoji.h"
 
 
 @implementation MMEmojiAssetGroup {
@@ -33,14 +34,14 @@ static MMEmojiAssetGroup* _instance = nil;
     if (_instance)
         return _instance;
     if (self = [super init]) {
-        _emojis = @[[[MMEmojiAsset alloc] initWithEmoji:@"😀" withName:@"grin"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😂" withName:@"joy"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"🤣" withName:@"rofl"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😍" withName:@"hearteyes"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😉" withName:@"wink"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"🖖" withName:@"spock"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"🙏" withName:@"pray"],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"🤟" withName:@"iloveyou"]];
+        _emojis = @[[[MMEmojiAsset alloc] initWithEmoji:@"😀" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"grin" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😂" andPath:[UIBezierPath emojiJoyPathForSize:CGSizeMake(500, 500)] andName:@"joy" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🤣" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"rofl" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😍" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"hearteyes" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😉" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"wink" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🖖" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"spock" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🙏" andPath:[UIBezierPath emojiPrayPathForSize:CGSizeMake(500, 500)] andName:@"pray" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🤟" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"iloveyou" andSize:CGSizeMake(500, 500)]];
     }
     return self;
 }

@@ -433,6 +433,7 @@
 		C53FCEEF1E94BE0E00AA4BEC /* MMMonthTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */; };
 		C53FCEF81E94C6CD00AA4BEC /* page-rotation.png in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF61E94C6CD00AA4BEC /* page-rotation.png */; };
 		C53FCEF91E94C6CD00AA4BEC /* page-template.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */; };
+		C54168D3211BD01A0060C48D /* UIBezierPath+MMEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C54168D2211BD01A0060C48D /* UIBezierPath+MMEmoji.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = C54AED572108393A007B75FB /* MMButtonBoxView.m */; };
@@ -1477,6 +1478,8 @@
 		C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMonthTemplateView.m; sourceTree = "<group>"; };
 		C53FCEF61E94C6CD00AA4BEC /* page-rotation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "page-rotation.png"; sourceTree = "<group>"; };
 		C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-template.mp4"; sourceTree = "<group>"; };
+		C54168D1211BD01A0060C48D /* UIBezierPath+MMEmoji.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+MMEmoji.h"; sourceTree = "<group>"; };
+		C54168D2211BD01A0060C48D /* UIBezierPath+MMEmoji.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+MMEmoji.m"; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -3901,6 +3904,8 @@
 		C5BFD9EC211A91B10060D4C0 /* Emoji */ = {
 			isa = PBXGroup;
 			children = (
+				C54168D1211BD01A0060C48D /* UIBezierPath+MMEmoji.h */,
+				C54168D2211BD01A0060C48D /* UIBezierPath+MMEmoji.m */,
 				C5BFD9ED211A91CB0060D4C0 /* MMEmojiAsset.h */,
 				C5BFD9EE211A91CB0060D4C0 /* MMEmojiAsset.m */,
 				C5BFD9F0211A91E80060D4C0 /* MMEmojiAssetGroup.h */,
@@ -5114,6 +5119,7 @@
 				C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				C5D74A1C20FEF844004F5781 /* MPTakeoverNotification.m in Sources */,
+				C54168D3211BD01A0060C48D /* UIBezierPath+MMEmoji.m in Sources */,
 				C53DCEC021042943009A848A /* MMShapeAsset.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				C5D74A1A20FEF844004F5781 /* MPNotification.m in Sources */,
