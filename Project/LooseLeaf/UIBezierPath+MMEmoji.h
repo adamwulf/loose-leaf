@@ -19,6 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIBezierPath*)emojiPrayPathForSize:(CGSize)size;
 
++ (UIBezierPath*)emojiRoflPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiBlowingKissPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiStarStruckPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiThinkingPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiZipperPathForSize:(CGSize)size;
+
 @end
 
 NS_ASSUME_NONNULL_END

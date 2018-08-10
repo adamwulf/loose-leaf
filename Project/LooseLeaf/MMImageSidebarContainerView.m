@@ -21,6 +21,7 @@
 #import "MMPalmTreeButton.h"
 #import "MMInboxButton.h"
 #import "MMShapesButton.h"
+#import "MMEmojiButton.h"
 #import "MMRotationManager.h"
 #import "Constants.h"
 #import "MMCameraButton.h"
@@ -46,7 +47,7 @@
     MMPalmTreeButton* iPhotoEventsButton;
     MMInboxButton* inboxButton;
     MMShapesButton* shapeButton;
-    MMShapesButton* emojiButton;
+    MMEmojiButton* emojiButton;
 
     UIButton* importAsPageButton;
     UIButton* importAsScrapButton;
@@ -123,7 +124,7 @@
         shapeButton.shadowInset = -1;
 
         // shape button
-        emojiButton = [[MMShapesButton alloc] initWithFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))];
+        emojiButton = [[MMEmojiButton alloc] initWithFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))];
         [emojiButton addTarget:self action:@selector(emojiButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
         emojiButton.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
         emojiButton.shadowInset = -1;

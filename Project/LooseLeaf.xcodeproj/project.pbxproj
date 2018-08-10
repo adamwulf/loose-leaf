@@ -654,6 +654,7 @@
 		C5DA29971D7C013A00D868EC /* MMParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29841D7C013A00D868EC /* MMParser.m */; };
 		C5DA29981D7C013A00D868EC /* MMScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29861D7C013A00D868EC /* MMScanner.m */; };
 		C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29881D7C013A00D868EC /* MMSpanParser.m */; };
+		C5DF7CDC211D48A000882A98 /* MMEmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */; };
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
 		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
@@ -1839,6 +1840,8 @@
 		C5DA29861D7C013A00D868EC /* MMScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMScanner.m; path = ../../Submodules/MMMarkdown/Source/MMScanner.m; sourceTree = "<group>"; };
 		C5DA29871D7C013A00D868EC /* MMSpanParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMSpanParser.h; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.h; sourceTree = "<group>"; };
 		C5DA29881D7C013A00D868EC /* MMSpanParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMSpanParser.m; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.m; sourceTree = "<group>"; };
+		C5DF7CDA211D48A000882A98 /* MMEmojiButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiButton.h; sourceTree = "<group>"; };
+		C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiButton.m; sourceTree = "<group>"; };
 		C5E02A7F1D99BD25001F6ED6 /* MMTutorialStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialStackViewDelegate.h; sourceTree = "<group>"; };
 		C5E02A811D99BDF5001F6ED6 /* MMFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackViewController.h; sourceTree = "<group>"; };
 		C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackViewController.m; sourceTree = "<group>"; };
@@ -3406,6 +3409,8 @@
 				6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */,
 				C53CFC6121003B560037E1B5 /* MMShapesButton.h */,
 				C53CFC6221003B560037E1B5 /* MMShapesButton.m */,
+				C5DF7CDA211D48A000882A98 /* MMEmojiButton.h */,
+				C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */,
 				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
 				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 				66E100F419EC4B67006E7C15 /* MMCameraButton.h */,
@@ -4864,6 +4869,7 @@
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,
+				C5DF7CDC211D48A000882A98 /* MMEmojiButton.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				C53FCED71E94A09300AA4BEC /* MMTodoListTemplateView.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
