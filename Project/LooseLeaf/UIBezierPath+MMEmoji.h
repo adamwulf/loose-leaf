@@ -35,6 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIBezierPath*)emojiSquintToungePathForSize:(CGSize)size;
 
++ (UIBezierPath*)emojiCryPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiZanyPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiSneezePathForSize:(CGSize)size;
+
 @end
 
 NS_ASSUME_NONNULL_END
