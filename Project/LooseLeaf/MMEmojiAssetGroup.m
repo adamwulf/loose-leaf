@@ -48,9 +48,9 @@ static MMEmojiAssetGroup* _instance = nil;
                     [[MMEmojiAsset alloc] initWithEmoji:@"🤩" andPath:[UIBezierPath emojiStarStruckPathForSize:CGSizeMake(500, 500)] andName:@"starstruck" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"🤔" andPath:[UIBezierPath emojiThinkingPathForSize:CGSizeMake(500, 500)] andName:@"thinking" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"🤐" andPath:[UIBezierPath emojiZipperPathForSize:CGSizeMake(500, 500)] andName:@"zipper" andSize:CGSizeMake(500, 500)],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😴" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"sleeping" andSize:CGSizeMake(500, 500)],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😅" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"grinsweat" andSize:CGSizeMake(500, 500)],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"😝" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"squinttounge" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😴" andPath:[UIBezierPath emojiSleepingPathForSize:CGSizeMake(500, 500)] andName:@"sleeping" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😅" andPath:[UIBezierPath emojiGrinSweatPathForSize:CGSizeMake(500, 500)] andName:@"grinsweat" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"😝" andPath:[UIBezierPath emojiSquintToungePathForSize:CGSizeMake(500, 500)] andName:@"squinttounge" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"😕" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"confused" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"😢" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"cry" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"😠" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"angry" andSize:CGSizeMake(500, 500)],
@@ -58,7 +58,9 @@ static MMEmojiAssetGroup* _instance = nil;
                     [[MMEmojiAsset alloc] initWithEmoji:@"🤪" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"zany" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"🖖" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"spock" andSize:CGSizeMake(500, 500)],
                     [[MMEmojiAsset alloc] initWithEmoji:@"🙏" andPath:[UIBezierPath emojiPrayPathForSize:CGSizeMake(500, 500)] andName:@"pray" andSize:CGSizeMake(500, 500)],
-                    [[MMEmojiAsset alloc] initWithEmoji:@"🤟" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"iloveyou" andSize:CGSizeMake(500, 500)]];
+                    [[MMEmojiAsset alloc] initWithEmoji:@"🤟" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"iloveyou" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"👍" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"thumbsup" andSize:CGSizeMake(500, 500)],
+                    [[MMEmojiAsset alloc] initWithEmoji:@"👉" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"pointer" andSize:CGSizeMake(500, 500)]];
     }
     return self;
 }

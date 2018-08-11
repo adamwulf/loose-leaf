@@ -29,6 +29,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIBezierPath*)emojiZipperPathForSize:(CGSize)size;
 
++ (UIBezierPath*)emojiSleepingPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiGrinSweatPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiSquintToungePathForSize:(CGSize)size;
+
 @end
 
 NS_ASSUME_NONNULL_END
