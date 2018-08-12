@@ -41,6 +41,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIBezierPath*)emojiSneezePathForSize:(CGSize)size;
 
++ (UIBezierPath*)emojiSpockPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiILoveYouPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiThumbsUpPathForSize:(CGSize)size;
+
++ (UIBezierPath*)emojiPointerPathForSize:(CGSize)size;
+
 @end
 
 NS_ASSUME_NONNULL_END
