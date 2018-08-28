@@ -82,7 +82,7 @@ static MMEmojiAssetGroup* _instance = nil;
             //            [[MMEmojiAsset alloc] initWithEmoji:@"🤞" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"crossedfingers" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"✌️" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"peace" andSize:CGSizeMake(500, 500)],
             [[MMEmojiAsset alloc] initWithEmoji:@"👍" andPath:[UIBezierPath emojiThumbsUpPathForSize:CGSizeMake(500, 500)] andName:@"thumbsup" andSize:CGSizeMake(500, 500)],
-            //            [[MMEmojiAsset alloc] initWithEmoji:@"👉" andPath:[UIBezierPath emojiPointerPathForSize:CGSizeMake(500, 500)] andName:@"pointer" andSize:CGSizeMake(500, 500)],
+            [[MMEmojiAsset alloc] initWithEmoji:@"👉" andPath:[UIBezierPath emojiPointerPathForSize:CGSizeMake(500, 500)] andName:@"pointer" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"🤠" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"cowboy" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"💁‍♀️" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"womantippinghand" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"🤷" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"personshrugging" andSize:CGSizeMake(500, 500)],
