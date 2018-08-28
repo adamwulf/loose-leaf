@@ -74,7 +74,7 @@ static MMEmojiAssetGroup* _instance = nil;
             [[MMEmojiAsset alloc] initWithEmoji:@"🙏" andPath:[UIBezierPath emojiPrayPathForSize:CGSizeMake(500, 500)] andName:@"pray" andSize:CGSizeMake(500, 500)],
             [[MMEmojiAsset alloc] initWithEmoji:@"🖖" andPath:[UIBezierPath emojiSpockPathForSize:CGSizeMake(500, 500)] andName:@"spock" andSize:CGSizeMake(500, 500)],
             [[MMEmojiAsset alloc] initWithEmoji:@"🤟" andPath:[UIBezierPath emojiILoveYouPathForSize:CGSizeMake(500, 500)] andName:@"iloveyou" andSize:CGSizeMake(500, 500)],
-            //            [[MMEmojiAsset alloc] initWithEmoji:@"🙌" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"raisinghands" andSize:CGSizeMake(500, 500)],
+            [[MMEmojiAsset alloc] initWithEmoji:@"🙌" andPath:[UIBezierPath emojiRaisingHandsPathForSize:CGSizeMake(500, 500)] andName:@"raisinghands" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"👏" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"clappinghands" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"👋" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"wavinghand" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"👊" andPath:[UIBezierPath emojiFacePathForSize:CGSizeMake(500, 500)] andName:@"oncomingfist" andSize:CGSizeMake(500, 500)],

@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIBezierPath*)emojiPointerPathForSize:(CGSize)size;
 
++ (UIBezierPath*)emojiRaisingHandsPathForSize:(CGSize)size;
+
 + (UIBezierPath*)emojiCatFacePathForSize:(CGSize)size;
 
 + (UIBezierPath*)emojiCatCryFacePathForSize:(CGSize)size;
