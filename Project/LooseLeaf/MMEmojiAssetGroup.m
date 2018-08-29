@@ -64,7 +64,7 @@ static MMEmojiAssetGroup* _instance = nil;
             [[MMEmojiAsset alloc] initWithEmoji:@"😹" andPath:[UIBezierPath emojiCatJoyPathForSize:CGSizeMake(500, 500)] andName:@"joycat" andSize:CGSizeMake(500, 500)],
             [[MMEmojiAsset alloc] initWithEmoji:@"😻" andPath:[UIBezierPath emojiCatFacePathForSize:CGSizeMake(500, 500)] andName:@"lovecat" andSize:CGSizeMake(500, 500)],
             [[MMEmojiAsset alloc] initWithEmoji:@"😿" andPath:[UIBezierPath emojiCatCryFacePathForSize:CGSizeMake(500, 500)] andName:@"crycat" andSize:CGSizeMake(500, 500)],
-            //            [[MMEmojiAsset alloc] initWithEmoji:@"👶" andPath:[UIBezierPath emojiZanyPathForSize:CGSizeMake(500, 500)] andName:@"baby" andSize:CGSizeMake(500, 500)],
+            [[MMEmojiAsset alloc] initWithEmoji:@"👶" andPath:[UIBezierPath emojiBabyFacePathForSize:CGSizeMake(500, 500)] andName:@"baby" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"👦" andPath:[UIBezierPath emojiZanyPathForSize:CGSizeMake(500, 500)] andName:@"boy" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"👧" andPath:[UIBezierPath emojiZanyPathForSize:CGSizeMake(500, 500)] andName:@"girl" andSize:CGSizeMake(500, 500)],
             //            [[MMEmojiAsset alloc] initWithEmoji:@"👨" andPath:[UIBezierPath emojiZanyPathForSize:CGSizeMake(500, 500)] andName:@"man" andSize:CGSizeMake(500, 500)],
