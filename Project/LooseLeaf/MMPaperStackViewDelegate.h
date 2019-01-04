@@ -14,7 +14,7 @@
 
 @class MMPaperStackView;
 
-@protocol MMPaperStackViewDelegate <NSObject>
+@protocol MMPaperStackViewDelegate
 
 - (void)animatingToPageView;
 

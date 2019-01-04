@@ -56,7 +56,7 @@
     [album loadPhotosAtIndexes:assetsToLoad usingBlock:^(MMDisplayAsset* result, NSUInteger index, BOOL* stop) {
         if ([result isKindOfClass:[MMEmojiAsset class]]) {
             [_emojiView setPreferredAspectRatioForEmptyImage:result.fullResolutionSize];
-            _emojiView.shape = result;
+            _emojiView.shape = (MMEmojiAsset*)result;
             _emojiView.image = [(MMEmojiAsset*)result aspectRatioThumbnail];
             _emojiView.rotation = RandomPhotoRotation(photoIndex) + [result defaultRotation];
         }

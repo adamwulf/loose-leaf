@@ -61,7 +61,6 @@
     // fill background with gradient
     CGContextSaveGState(context);
     [ovalPath addClip];
-    CGRect ovalBounds = CGPathGetPathBoundingBox(ovalPath.CGPath);
     [barelyWhite setFill];
     [[UIBezierPath bezierPathWithRect:CGRectInfinite] fill];
     CGContextRestoreGState(context);
