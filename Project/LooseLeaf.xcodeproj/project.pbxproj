@@ -197,14 +197,6 @@
 		666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */; };
 		666E255918F89B1B00C17295 /* MMBorderedCamView.m in Sources */ = {isa = PBXBuildFile; fileRef = 666E255818F89B1B00C17295 /* MMBorderedCamView.m */; };
 		66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = 66728714159515FC0018571A /* MMEditablePaperStackView.m */; };
-		6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */; };
-		6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE119C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png */; };
-		6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE319C3A6190076009F /* iCloudDrive.png */; };
-		6672EFE619C3A61E0076009F /* iCloudDrive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE519C3A61E0076009F /* iCloudDrive@2x.png */; };
-		6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE719C3A7190076009F /* CloudKitLookUp.png */; };
-		6672EFEA19C3A71E0076009F /* CloudKitLookUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFE919C3A71E0076009F /* CloudKitLookUp@2x.png */; };
-		6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFEB19C3AAC40076009F /* CloudKitPermissionSwitch.png */; };
-		6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */; };
 		6677C5911AAB778E00B2E46C /* MMCameraListLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */; };
 		6677C5951AAB9A7000B2E46C /* MMDeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6677C5941AAB9A7000B2E46C /* MMDeleteButton.m */; };
 		667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 667AA41E19E33342006549EE /* MMPolaroidsView.m */; };
@@ -378,10 +370,6 @@
 		66EDE47819B1039000A5623B /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66EDE47719B1039000A5623B /* ZipArchive.framework */; };
 		66F4B4B7178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */; };
-		66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AA19C393DE00C1F696 /* ios-settings-icon.png */; };
-		66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */; };
-		66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968B219C3947700C1F696 /* iCloudSettings.png */; };
-		66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 66F968B419C3947B00C1F696 /* iCloudSettings@2x.png */; };
 		66FC2E8E1836F9E500DC2786 /* basegfxbezierclip.license in Resources */ = {isa = PBXBuildFile; fileRef = 66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */; };
 		66FD31EA1AE035DA00EDD1D5 /* MMUnknownObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31E91AE035DA00EDD1D5 /* MMUnknownObject.m */; };
 		66FD31ED1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 66FD31EC1AE0442400EDD1D5 /* MMLargeTutorialSidebarButton.m */; };
@@ -416,8 +404,17 @@
 		C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C50DBB041E0B426F0006F58A /* import-stack.mp4 */; };
 		C518C86F1C8412C800F1895C /* Highlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = C518C86E1C8412C800F1895C /* Highlighter.m */; };
 		C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */ = {isa = PBXBuildFile; fileRef = C51F68721C3B7DC2003C046F /* GPUImage.license */; };
+		C528168721097978005956F9 /* ios-settings-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C528168521097978005956F9 /* ios-settings-icon@2x.png */; };
+		C528168821097978005956F9 /* ios-settings-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C528168621097978005956F9 /* ios-settings-icon.png */; };
+		C528168B210986A8005956F9 /* UIColor+LooseLeaf.m in Sources */ = {isa = PBXBuildFile; fileRef = C528168A210986A8005956F9 /* UIColor+LooseLeaf.m */; };
 		C53902821DB84917004C5281 /* MMPagesSidebarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53902811DB84917004C5281 /* MMPagesSidebarButton.m */; };
 		C53AFA811DE3EF4C0054553D /* MMArrowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53AFA801DE3EF4C0054553D /* MMArrowView.m */; };
+		C53CFC60210036C20037E1B5 /* MMShapeSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */; };
+		C53CFC6321003B560037E1B5 /* MMShapesButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C53CFC6221003B560037E1B5 /* MMShapesButton.m */; };
+		C53DCEC021042943009A848A /* MMShapeAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEBF21042943009A848A /* MMShapeAsset.m */; };
+		C53DCEC421042BC5009A848A /* MMShapeAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */; };
+		C53DCEC72104300B009A848A /* MMShapeAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEC62104300B009A848A /* MMShapeAssetCell.m */; };
+		C53DCECA21043069009A848A /* MMPhotoAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C53DCEC921043069009A848A /* MMPhotoAssetCell.m */; };
 		C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63551CDA871D00091EF1 /* UIImage+Blur.m */; };
 		C53F63591CDA871D00091EF1 /* UIImage+FXBlur.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F63571CDA871D00091EF1 /* UIImage+FXBlur.m */; };
 		C53F635D1CDA87F700091EF1 /* MMRotatingBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53F635C1CDA87F700091EF1 /* MMRotatingBackgroundView.m */; };
@@ -436,8 +433,10 @@
 		C53FCEEF1E94BE0E00AA4BEC /* MMMonthTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */; };
 		C53FCEF81E94C6CD00AA4BEC /* page-rotation.png in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF61E94C6CD00AA4BEC /* page-rotation.png */; };
 		C53FCEF91E94C6CD00AA4BEC /* page-template.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */; };
+		C54168D3211BD01A0060C48D /* UIBezierPath+MMEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C54168D2211BD01A0060C48D /* UIBezierPath+MMEmoji.m */; };
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
+		C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = C54AED572108393A007B75FB /* MMButtonBoxView.m */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
 		C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19C1D7C0BDD00259558 /* logo@2x.png */; };
 		C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC19F1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m */; };
@@ -461,6 +460,7 @@
 		C57559291DD6ED9700670875 /* UIView+NRTextTransitions.m in Sources */ = {isa = PBXBuildFile; fileRef = C57559261DD6ED9700670875 /* UIView+NRTextTransitions.m */; };
 		C576C53C1CE1825A00A8F342 /* MMPDF.m in Sources */ = {isa = PBXBuildFile; fileRef = C576C53B1CE1825A00A8F342 /* MMPDF.m */; };
 		C5860E161C14CA3D00CD079B /* MMButtonToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */; };
+		C58A2D72210AE44B0078D1F8 /* UIBezierPath+MMShapes.m in Sources */ = {isa = PBXBuildFile; fileRef = C58A2D71210AE44B0078D1F8 /* UIBezierPath+MMShapes.m */; };
 		C58E6A1D1CDB1B4A00508F1D /* bg00.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E31CDB1B4A00508F1D /* bg00.jpg */; };
 		C58E6A1E1CDB1B4A00508F1D /* bg01.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E41CDB1B4A00508F1D /* bg01.jpg */; };
 		C58E6A1F1CDB1B4A00508F1D /* bg02.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E69E51CDB1B4A00508F1D /* bg02.jpg */; };
@@ -515,6 +515,7 @@
 		C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A161CDB1B4A00508F1D /* bg51.jpg */; };
 		C58E6A511CDB1B4A00508F1D /* bg52.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C58E6A171CDB1B4A00508F1D /* bg52.jpg */; };
 		C599D5701DB6AE6F009035F3 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		C59B5B022106D1D30049C323 /* MMShapeOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */; };
 		C5A02B8D1E8D947700D43EC7 /* MMRuledTemplateView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A02B8C1E8D947700D43EC7 /* MMRuledTemplateView.m */; };
 		C5A5C48E1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C48D1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.m */; };
 		C5A5C4911DFE5A1E00FD2555 /* MMImportingPDFListButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5A5C4901DFE5A1E00FD2555 /* MMImportingPDFListButton.m */; };
@@ -526,6 +527,11 @@
 		C5A8E1B71DC3441800CD608F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A8E1B61DC3441800CD608F /* Social.framework */; };
 		C5B905CD1CEACE3B002943BF /* MMGenericBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B905CC1CEACE3B002943BF /* MMGenericBackgroundView.m */; };
 		C5BAF6821D99FC3A00A86496 /* MMClonePaperStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */; };
+		C5BFD9EF211A91CB0060D4C0 /* MMEmojiAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9EE211A91CB0060D4C0 /* MMEmojiAsset.m */; };
+		C5BFD9F2211A91E80060D4C0 /* MMEmojiAssetGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9F1211A91E80060D4C0 /* MMEmojiAssetGroup.m */; };
+		C5BFD9F6211A94DB0060D4C0 /* MMEmojiSidebarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9F5211A94DB0060D4C0 /* MMEmojiSidebarContentView.m */; };
+		C5BFD9F9211A94EE0060D4C0 /* MMEmojiAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9F8211A94EE0060D4C0 /* MMEmojiAssetCell.m */; };
+		C5BFD9FC211A975A0060D4C0 /* MMEmojiOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5BFD9FB211A975A0060D4C0 /* MMEmojiOutlineView.m */; };
 		C5C13E151D9108100047B3EF /* MMPageCloner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C13E141D9108100047B3EF /* MMPageCloner.m */; };
 		C5C13E171D91FC5A0047B3EF /* list-view-clone-page.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */; };
 		C5C1E7D41C23E3E30081CA6D /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5C1E7D31C23E3E30081CA6D /* FBSDKCoreKit.framework */; };
@@ -648,6 +654,7 @@
 		C5DA29971D7C013A00D868EC /* MMParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29841D7C013A00D868EC /* MMParser.m */; };
 		C5DA29981D7C013A00D868EC /* MMScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29861D7C013A00D868EC /* MMScanner.m */; };
 		C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29881D7C013A00D868EC /* MMSpanParser.m */; };
+		C5DF7CDC211D48A000882A98 /* MMEmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */; };
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
 		C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A881D99C9FA001F6ED6 /* MMFeedbackButton.m */; };
@@ -1005,14 +1012,6 @@
 		666F09B8185E64B20074CE6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		66728713159515FC0018571A /* MMEditablePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMEditablePaperStackView.h; sourceTree = "<group>"; };
 		66728714159515FC0018571A /* MMEditablePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMEditablePaperStackView.m; sourceTree = "<group>"; };
-		6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iCloudSettingsLoggedIn.png; sourceTree = "<group>"; };
-		6672EFE119C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iCloudSettingsLoggedIn@2x.png"; sourceTree = "<group>"; };
-		6672EFE319C3A6190076009F /* iCloudDrive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iCloudDrive.png; sourceTree = "<group>"; };
-		6672EFE519C3A61E0076009F /* iCloudDrive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iCloudDrive@2x.png"; sourceTree = "<group>"; };
-		6672EFE719C3A7190076009F /* CloudKitLookUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloudKitLookUp.png; sourceTree = "<group>"; };
-		6672EFE919C3A71E0076009F /* CloudKitLookUp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloudKitLookUp@2x.png"; sourceTree = "<group>"; };
-		6672EFEB19C3AAC40076009F /* CloudKitPermissionSwitch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloudKitPermissionSwitch.png; sourceTree = "<group>"; };
-		6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "CloudKitPermissionSwitch@2x.png"; sourceTree = "<group>"; };
 		6677C58F1AAB778E00B2E46C /* MMCameraListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCameraListLayout.h; sourceTree = "<group>"; };
 		6677C5901AAB778E00B2E46C /* MMCameraListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCameraListLayout.m; sourceTree = "<group>"; };
 		6677C5931AAB9A7000B2E46C /* MMDeleteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDeleteButton.h; sourceTree = "<group>"; };
@@ -1251,7 +1250,7 @@
 		66C3CBE01A29046200D7EE42 /* MMRulerAdjustment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRulerAdjustment.m; sourceTree = "<group>"; };
 		66C4734D19CB999000505BC0 /* MMAssetListLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAssetListLayout.h; sourceTree = "<group>"; };
 		66C4734E19CB999000505BC0 /* MMAssetListLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAssetListLayout.m; sourceTree = "<group>"; };
-		66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMSinglePhotoCollectionViewCellDelegate.h; sourceTree = "<group>"; };
+		66C4735019CBD7C600505BC0 /* MMDisplayAssetCellDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMDisplayAssetCellDelegate.h; sourceTree = "<group>"; };
 		66C47DA5158EF03200E2CD0C /* MMPaperViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperViewDelegate.h; sourceTree = "<group>"; };
 		66CA1A8B185E77F50013505A /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		66CAF8101A1EA9530033E07B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -1359,10 +1358,6 @@
 		66F4B4B6178B411E00815E55 /* MMLongPressFromListViewGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMLongPressFromListViewGestureRecognizer.m; sourceTree = "<group>"; };
 		66F4FB2117D8FE600086E21C /* MMCountBubbleButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCountBubbleButton.h; sourceTree = "<group>"; };
 		66F4FB2217D8FE600086E21C /* MMCountBubbleButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMCountBubbleButton.m; sourceTree = "<group>"; };
-		66F968AA19C393DE00C1F696 /* ios-settings-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon.png"; sourceTree = "<group>"; };
-		66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon@2x.png"; sourceTree = "<group>"; };
-		66F968B219C3947700C1F696 /* iCloudSettings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iCloudSettings.png; sourceTree = "<group>"; };
-		66F968B419C3947B00C1F696 /* iCloudSettings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iCloudSettings@2x.png"; sourceTree = "<group>"; };
 		66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = basegfxbezierclip.license; sourceTree = "<group>"; };
 		66FC3BB61ABA631B00F2DE37 /* silly-face.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = "silly-face.mov"; sourceTree = "<group>"; };
 		66FD31E81AE035DA00EDD1D5 /* MMUnknownObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMUnknownObject.h; sourceTree = "<group>"; };
@@ -1418,6 +1413,10 @@
 		C518C86E1C8412C800F1895C /* Highlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Highlighter.m; sourceTree = "<group>"; };
 		C51C695F1C89766100C77AC7 /* MMPaperStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPaperStackViewDelegate.h; sourceTree = "<group>"; };
 		C51F68721C3B7DC2003C046F /* GPUImage.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GPUImage.license; sourceTree = "<group>"; };
+		C528168521097978005956F9 /* ios-settings-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon@2x.png"; sourceTree = "<group>"; };
+		C528168621097978005956F9 /* ios-settings-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ios-settings-icon.png"; sourceTree = "<group>"; };
+		C5281689210986A8005956F9 /* UIColor+LooseLeaf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIColor+LooseLeaf.h"; sourceTree = "<group>"; };
+		C528168A210986A8005956F9 /* UIColor+LooseLeaf.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIColor+LooseLeaf.m"; sourceTree = "<group>"; };
 		C53726961EA0982D0067AFAC /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53726971EA0982E0067AFAC /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C53726981EA0982F0067AFAC /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1433,6 +1432,18 @@
 		C53AFA801DE3EF4C0054553D /* MMArrowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMArrowView.m; sourceTree = "<group>"; };
 		C53BA3911E1327E300EB0C64 /* AppIds-Template.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AppIds-Template.plist"; sourceTree = "<group>"; };
 		C53BA3931E1327F500EB0C64 /* AppIds.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AppIds.plist; sourceTree = "<group>"; };
+		C53CFC5E210036C20037E1B5 /* MMShapeSidebarContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeSidebarContentView.h; sourceTree = "<group>"; };
+		C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeSidebarContentView.m; sourceTree = "<group>"; };
+		C53CFC6121003B560037E1B5 /* MMShapesButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapesButton.h; sourceTree = "<group>"; };
+		C53CFC6221003B560037E1B5 /* MMShapesButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapesButton.m; sourceTree = "<group>"; };
+		C53DCEBE21042943009A848A /* MMShapeAsset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeAsset.h; sourceTree = "<group>"; };
+		C53DCEBF21042943009A848A /* MMShapeAsset.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeAsset.m; sourceTree = "<group>"; };
+		C53DCEC221042BC5009A848A /* MMShapeAssetGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeAssetGroup.h; sourceTree = "<group>"; };
+		C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeAssetGroup.m; sourceTree = "<group>"; };
+		C53DCEC52104300B009A848A /* MMShapeAssetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeAssetCell.h; sourceTree = "<group>"; };
+		C53DCEC62104300B009A848A /* MMShapeAssetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeAssetCell.m; sourceTree = "<group>"; };
+		C53DCEC821043069009A848A /* MMPhotoAssetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPhotoAssetCell.h; sourceTree = "<group>"; };
+		C53DCEC921043069009A848A /* MMPhotoAssetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMPhotoAssetCell.m; sourceTree = "<group>"; };
 		C53F63541CDA871D00091EF1 /* UIImage+Blur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Blur.h"; sourceTree = "<group>"; };
 		C53F63551CDA871D00091EF1 /* UIImage+Blur.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Blur.m"; sourceTree = "<group>"; };
 		C53F63561CDA871D00091EF1 /* UIImage+FXBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FXBlur.h"; sourceTree = "<group>"; };
@@ -1468,6 +1479,8 @@
 		C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMMonthTemplateView.m; sourceTree = "<group>"; };
 		C53FCEF61E94C6CD00AA4BEC /* page-rotation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "page-rotation.png"; sourceTree = "<group>"; };
 		C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "page-template.mp4"; sourceTree = "<group>"; };
+		C54168D1211BD01A0060C48D /* UIBezierPath+MMEmoji.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+MMEmoji.h"; sourceTree = "<group>"; };
+		C54168D2211BD01A0060C48D /* UIBezierPath+MMEmoji.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+MMEmoji.m"; sourceTree = "<group>"; };
 		C5419ED71E0E0C6100183265 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C542AA241D812E140024FAD9 /* highlighter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlighter.png; sourceTree = "<group>"; };
 		C542AA261D81AC8A0024FAD9 /* MMCollapsableStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMCollapsableStackView.h; sourceTree = "<group>"; };
@@ -1476,6 +1489,8 @@
 		C543284C1DCC3397008CCB8A /* MMDebugStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMDebugStackView.h; sourceTree = "<group>"; };
 		C543284D1DCC3397008CCB8A /* MMDebugStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMDebugStackView.m; sourceTree = "<group>"; };
 		C543284F1DCC4A02008CCB8A /* MMFullWidthListButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFullWidthListButtonDelegate.h; sourceTree = "<group>"; };
+		C54AED562108393A007B75FB /* MMButtonBoxView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMButtonBoxView.h; sourceTree = "<group>"; };
+		C54AED572108393A007B75FB /* MMButtonBoxView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMButtonBoxView.m; sourceTree = "<group>"; };
 		C55AC19A1D7C0AB100259558 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		C55AC19C1D7C0BDD00259558 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		C55AC19E1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesButtonPrompt.h; sourceTree = "<group>"; };
@@ -1519,6 +1534,8 @@
 		C576C53B1CE1825A00A8F342 /* MMPDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPDF.m; sourceTree = "<group>"; };
 		C5860E141C14CA3D00CD079B /* MMButtonToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMButtonToolbarView.h; sourceTree = "<group>"; };
 		C5860E151C14CA3D00CD079B /* MMButtonToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMButtonToolbarView.m; sourceTree = "<group>"; };
+		C58A2D70210AE44B0078D1F8 /* UIBezierPath+MMShapes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+MMShapes.h"; sourceTree = "<group>"; };
+		C58A2D71210AE44B0078D1F8 /* UIBezierPath+MMShapes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+MMShapes.m"; sourceTree = "<group>"; };
 		C58E69E31CDB1B4A00508F1D /* bg00.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg00.jpg; sourceTree = "<group>"; };
 		C58E69E41CDB1B4A00508F1D /* bg01.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg01.jpg; sourceTree = "<group>"; };
 		C58E69E51CDB1B4A00508F1D /* bg02.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg02.jpg; sourceTree = "<group>"; };
@@ -1573,6 +1590,8 @@
 		C58E6A161CDB1B4A00508F1D /* bg51.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg51.jpg; sourceTree = "<group>"; };
 		C58E6A171CDB1B4A00508F1D /* bg52.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg52.jpg; sourceTree = "<group>"; };
 		C599D57F1DB6DCB5009035F3 /* MMPagesSidebarContainerViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPagesSidebarContainerViewDelegate.h; sourceTree = "<group>"; };
+		C59B5B002106D1D30049C323 /* MMShapeOutlineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMShapeOutlineView.h; sourceTree = "<group>"; };
+		C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMShapeOutlineView.m; sourceTree = "<group>"; };
 		C5A02B8B1E8D947700D43EC7 /* MMRuledTemplateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMRuledTemplateView.h; sourceTree = "<group>"; };
 		C5A02B8C1E8D947700D43EC7 /* MMRuledTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMRuledTemplateView.m; sourceTree = "<group>"; };
 		C5A5C48C1DFCF2D700FD2555 /* MMShareStackSidebarContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMShareStackSidebarContainerView.h; sourceTree = "<group>"; };
@@ -1591,6 +1610,16 @@
 		C5B905CE1CEADB75002943BF /* MMGenericBackgroundViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMGenericBackgroundViewDelegate.h; sourceTree = "<group>"; };
 		C5BAF6801D99FC3A00A86496 /* MMClonePaperStackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMClonePaperStackView.h; sourceTree = "<group>"; };
 		C5BAF6811D99FC3A00A86496 /* MMClonePaperStackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMClonePaperStackView.m; sourceTree = "<group>"; };
+		C5BFD9ED211A91CB0060D4C0 /* MMEmojiAsset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiAsset.h; sourceTree = "<group>"; };
+		C5BFD9EE211A91CB0060D4C0 /* MMEmojiAsset.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiAsset.m; sourceTree = "<group>"; };
+		C5BFD9F0211A91E80060D4C0 /* MMEmojiAssetGroup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiAssetGroup.h; sourceTree = "<group>"; };
+		C5BFD9F1211A91E80060D4C0 /* MMEmojiAssetGroup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiAssetGroup.m; sourceTree = "<group>"; };
+		C5BFD9F4211A94DB0060D4C0 /* MMEmojiSidebarContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiSidebarContentView.h; sourceTree = "<group>"; };
+		C5BFD9F5211A94DB0060D4C0 /* MMEmojiSidebarContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiSidebarContentView.m; sourceTree = "<group>"; };
+		C5BFD9F7211A94EE0060D4C0 /* MMEmojiAssetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiAssetCell.h; sourceTree = "<group>"; };
+		C5BFD9F8211A94EE0060D4C0 /* MMEmojiAssetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiAssetCell.m; sourceTree = "<group>"; };
+		C5BFD9FA211A975A0060D4C0 /* MMEmojiOutlineView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiOutlineView.h; sourceTree = "<group>"; };
+		C5BFD9FB211A975A0060D4C0 /* MMEmojiOutlineView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiOutlineView.m; sourceTree = "<group>"; };
 		C5C13E131D9108100047B3EF /* MMPageCloner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMPageCloner.h; sourceTree = "<group>"; };
 		C5C13E141D9108100047B3EF /* MMPageCloner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMPageCloner.m; sourceTree = "<group>"; };
 		C5C13E161D91FC4A0047B3EF /* list-view-clone-page.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "list-view-clone-page.mp4"; sourceTree = "<group>"; };
@@ -1811,6 +1840,8 @@
 		C5DA29861D7C013A00D868EC /* MMScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMScanner.m; path = ../../Submodules/MMMarkdown/Source/MMScanner.m; sourceTree = "<group>"; };
 		C5DA29871D7C013A00D868EC /* MMSpanParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMSpanParser.h; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.h; sourceTree = "<group>"; };
 		C5DA29881D7C013A00D868EC /* MMSpanParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMSpanParser.m; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.m; sourceTree = "<group>"; };
+		C5DF7CDA211D48A000882A98 /* MMEmojiButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiButton.h; sourceTree = "<group>"; };
+		C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiButton.m; sourceTree = "<group>"; };
 		C5E02A7F1D99BD25001F6ED6 /* MMTutorialStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialStackViewDelegate.h; sourceTree = "<group>"; };
 		C5E02A811D99BDF5001F6ED6 /* MMFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFeedbackViewController.h; sourceTree = "<group>"; };
 		C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMFeedbackViewController.m; sourceTree = "<group>"; };
@@ -1968,6 +1999,8 @@
 				C57559151DD6B65E00670875 /* UIScreen+MMSizing.m */,
 				C575591A1DD6D31500670875 /* UIColor+MMAdditions.h */,
 				C575591B1DD6D31500670875 /* UIColor+MMAdditions.m */,
+				C5281689210986A8005956F9 /* UIColor+LooseLeaf.h */,
+				C528168A210986A8005956F9 /* UIColor+LooseLeaf.m */,
 				C50490961E748A9500533119 /* UIImage+MMRotation.h */,
 				C50490971E748A9500533119 /* UIImage+MMRotation.m */,
 			);
@@ -2006,6 +2039,8 @@
 				663326C71AB09B81003915E6 /* InboxImage */,
 				6610D0871AA8F4C20019C2FB /* PDFs */,
 				6610D0861AA8F4B70019C2FB /* Photos */,
+				C5BFD9EC211A91B10060D4C0 /* Emoji */,
+				C53DCEC12104294E009A848A /* Shapes */,
 				66ACECD919D4BF83000EA792 /* DefaultAlbum */,
 			);
 			name = "Display Asset";
@@ -2264,8 +2299,8 @@
 			children = (
 				66D6E2361AB74C0D00510CA3 /* MMPhotosListLayout.h */,
 				66D6E2371AB74C0D00510CA3 /* MMPhotosListLayout.m */,
-				66381F5B19CB96730014796F /* MMDisplayAssetCell.h */,
-				66381F5C19CB96730014796F /* MMDisplayAssetCell.m */,
+				C53DCEC821043069009A848A /* MMPhotoAssetCell.h */,
+				C53DCEC921043069009A848A /* MMPhotoAssetCell.m */,
 			);
 			name = PhotosSection;
 			sourceTree = "<group>";
@@ -2448,7 +2483,6 @@
 		6652450419956FC800C36609 /* Share Items */ = {
 			isa = PBXGroup;
 			children = (
-				66A7AF1A19A53ACD00E0AA29 /* CloudKit */,
 				66EDE42119AE754400A5623B /* Items */,
 			);
 			name = "Share Items";
@@ -2623,6 +2657,10 @@
 				666E255018F887FF00C17295 /* Camera */,
 				66AC8D9018E8A90900A65036 /* MMBufferedImageView.h */,
 				66AC8D9118E8A90900A65036 /* MMBufferedImageView.m */,
+				C59B5B002106D1D30049C323 /* MMShapeOutlineView.h */,
+				C59B5B012106D1D30049C323 /* MMShapeOutlineView.m */,
+				C5BFD9FA211A975A0060D4C0 /* MMEmojiOutlineView.h */,
+				C5BFD9FB211A975A0060D4C0 /* MMEmojiOutlineView.m */,
 			);
 			name = "Helper Views";
 			sourceTree = "<group>";
@@ -2680,6 +2718,8 @@
 		667AA41C19E31ED5006549EE /* Permission Images */ = {
 			isa = PBXGroup;
 			children = (
+				C528168621097978005956F9 /* ios-settings-icon.png */,
+				C528168521097978005956F9 /* ios-settings-icon@2x.png */,
 				66E2240C19D645BD000FCA96 /* ios8-settings-photos.png */,
 				66E2240E19D645C0000FCA96 /* ios8-settings-photos@2x.png */,
 				66E2241019D6463F000FCA96 /* ios7-settings-photos.png */,
@@ -2710,6 +2750,10 @@
 		667D98B2192FBEDF00625879 /* Content Views */ = {
 			isa = PBXGroup;
 			children = (
+				66381F5B19CB96730014796F /* MMDisplayAssetCell.h */,
+				66381F5C19CB96730014796F /* MMDisplayAssetCell.m */,
+				C5BFD9F3211A94BE0060D4C0 /* Emojis */,
+				C53CFC5D210036920037E1B5 /* Shapes */,
 				666E254618F613B900C17295 /* AbstractPhotoAlbumList */,
 				667D98B4192FBF0C00625879 /* Inbox Content */,
 				667D98B3192FBEEF00625879 /* Photo Library */,
@@ -2724,7 +2768,7 @@
 				6630F4CC1AA532CF004F2FDC /* AlbumsSection */,
 				6677C58E1AAB777200B2E46C /* CameraSection */,
 				66381F5A19CB965D0014796F /* PhotosSection */,
-				66C4735019CBD7C600505BC0 /* MMSinglePhotoCollectionViewCellDelegate.h */,
+				66C4735019CBD7C600505BC0 /* MMDisplayAssetCellDelegate.h */,
 				666E254D18F72BCF00C17295 /* MMCameraSidebarContentView.h */,
 				666E254E18F72BCF00C17295 /* MMCameraSidebarContentView.m */,
 				666E254318F60F3E00C17295 /* MMAlbumSidebarContentView.h */,
@@ -3026,20 +3070,13 @@
 			name = Abstract;
 			sourceTree = "<group>";
 		};
-		66A7AF1A19A53ACD00E0AA29 /* CloudKit */ = {
-			isa = PBXGroup;
-			children = (
-				66F968AE19C393F000C1F696 /* CloudKit Help Views */,
-				66FA039C19BFAA5C00AF0DC4 /* SpinningKeyView */,
-			);
-			name = CloudKit;
-			sourceTree = "<group>";
-		};
 		66AC8D7618E7504D00A65036 /* Import Sidebar */ = {
 			isa = PBXGroup;
 			children = (
 				66AC8D7718E7506A00A65036 /* MMImageSidebarContainerView.h */,
 				66AC8D7818E7506A00A65036 /* MMImageSidebarContainerView.m */,
+				C54AED562108393A007B75FB /* MMButtonBoxView.h */,
+				C54AED572108393A007B75FB /* MMButtonBoxView.m */,
 				66F4518018EC5AD000A57C95 /* MMImageSidebarContainerViewDelegate.h */,
 				666E254218F60DD100C17295 /* Helper Views */,
 				669B765E18EB47EA0041DAE7 /* Album Row Views */,
@@ -3370,6 +3407,10 @@
 			children = (
 				6610D08B1AA8FAFA0019C2FB /* MMInboxButton.h */,
 				6610D08C1AA8FAFA0019C2FB /* MMInboxButton.m */,
+				C53CFC6121003B560037E1B5 /* MMShapesButton.h */,
+				C53CFC6221003B560037E1B5 /* MMShapesButton.m */,
+				C5DF7CDA211D48A000882A98 /* MMEmojiButton.h */,
+				C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */,
 				666E253F18F5E43600C17295 /* MMPalmTreeButton.h */,
 				666E254018F5E43600C17295 /* MMPalmTreeButton.m */,
 				66E100F419EC4B67006E7C15 /* MMCameraButton.h */,
@@ -3441,13 +3482,6 @@
 				66EDA7AB17CBD8580067BA63 /* MMPanAndPinchScrapGestureRecognizerDelegate.h */,
 			);
 			name = Scraps;
-			sourceTree = "<group>";
-		};
-		66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CloudKit Import Sidebar";
 			sourceTree = "<group>";
 		};
 		66EDE42119AE754400A5623B /* Items */ = {
@@ -3566,32 +3600,6 @@
 			name = "List View";
 			sourceTree = "<group>";
 		};
-		66F968AE19C393F000C1F696 /* CloudKit Help Views */ = {
-			isa = PBXGroup;
-			children = (
-				66F968B219C3947700C1F696 /* iCloudSettings.png */,
-				66F968B419C3947B00C1F696 /* iCloudSettings@2x.png */,
-				6672EFDF19C3A51A0076009F /* iCloudSettingsLoggedIn.png */,
-				6672EFE119C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png */,
-				66F968AA19C393DE00C1F696 /* ios-settings-icon.png */,
-				66F968AC19C393E300C1F696 /* ios-settings-icon@2x.png */,
-				6672EFE319C3A6190076009F /* iCloudDrive.png */,
-				6672EFE519C3A61E0076009F /* iCloudDrive@2x.png */,
-				6672EFE719C3A7190076009F /* CloudKitLookUp.png */,
-				6672EFE919C3A71E0076009F /* CloudKitLookUp@2x.png */,
-				6672EFED19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png */,
-				6672EFEB19C3AAC40076009F /* CloudKitPermissionSwitch.png */,
-			);
-			name = "CloudKit Help Views";
-			sourceTree = "<group>";
-		};
-		66FA039C19BFAA5C00AF0DC4 /* SpinningKeyView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = SpinningKeyView;
-			sourceTree = "<group>";
-		};
 		66FD31E71AE035AF00EDD1D5 /* Archiving Help */ = {
 			isa = PBXGroup;
 			children = (
@@ -3662,6 +3670,30 @@
 				C53AFA801DE3EF4C0054553D /* MMArrowView.m */,
 			);
 			name = "Arrow View";
+			sourceTree = "<group>";
+		};
+		C53CFC5D210036920037E1B5 /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				C53CFC5E210036C20037E1B5 /* MMShapeSidebarContentView.h */,
+				C53CFC5F210036C20037E1B5 /* MMShapeSidebarContentView.m */,
+				C53DCEC52104300B009A848A /* MMShapeAssetCell.h */,
+				C53DCEC62104300B009A848A /* MMShapeAssetCell.m */,
+			);
+			name = Shapes;
+			sourceTree = "<group>";
+		};
+		C53DCEC12104294E009A848A /* Shapes */ = {
+			isa = PBXGroup;
+			children = (
+				C53DCEBE21042943009A848A /* MMShapeAsset.h */,
+				C53DCEBF21042943009A848A /* MMShapeAsset.m */,
+				C53DCEC221042BC5009A848A /* MMShapeAssetGroup.h */,
+				C53DCEC321042BC5009A848A /* MMShapeAssetGroup.m */,
+				C58A2D70210AE44B0078D1F8 /* UIBezierPath+MMShapes.h */,
+				C58A2D71210AE44B0078D1F8 /* UIBezierPath+MMShapes.m */,
+			);
+			name = Shapes;
 			sourceTree = "<group>";
 		};
 		C53F633D1CDA85E900091EF1 /* backgrounds */ = {
@@ -3872,6 +3904,30 @@
 				C53FCEEE1E94BE0E00AA4BEC /* MMMonthTemplateView.m */,
 			);
 			name = Backgrounds;
+			sourceTree = "<group>";
+		};
+		C5BFD9EC211A91B10060D4C0 /* Emoji */ = {
+			isa = PBXGroup;
+			children = (
+				C54168D1211BD01A0060C48D /* UIBezierPath+MMEmoji.h */,
+				C54168D2211BD01A0060C48D /* UIBezierPath+MMEmoji.m */,
+				C5BFD9ED211A91CB0060D4C0 /* MMEmojiAsset.h */,
+				C5BFD9EE211A91CB0060D4C0 /* MMEmojiAsset.m */,
+				C5BFD9F0211A91E80060D4C0 /* MMEmojiAssetGroup.h */,
+				C5BFD9F1211A91E80060D4C0 /* MMEmojiAssetGroup.m */,
+			);
+			name = Emoji;
+			sourceTree = "<group>";
+		};
+		C5BFD9F3211A94BE0060D4C0 /* Emojis */ = {
+			isa = PBXGroup;
+			children = (
+				C5BFD9F4211A94DB0060D4C0 /* MMEmojiSidebarContentView.h */,
+				C5BFD9F5211A94DB0060D4C0 /* MMEmojiSidebarContentView.m */,
+				C5BFD9F7211A94EE0060D4C0 /* MMEmojiAssetCell.h */,
+				C5BFD9F8211A94EE0060D4C0 /* MMEmojiAssetCell.m */,
+			);
+			name = Emojis;
 			sourceTree = "<group>";
 		};
 		C5C13E121D9107FF0047B3EF /* Clone Page */ = {
@@ -4166,7 +4222,6 @@
 				C5F1B3011D9B387000E0E9A8 /* Countable Sidebar */,
 				66CE120417D3B6A400882275 /* Scrap Sidebar */,
 				C5F1B2E31D9B0C6900E0E9A8 /* Page Sidebar */,
-				66EDE41A19AE6D9D00A5623B /* CloudKit Import Sidebar */,
 				66B42FBD19955A2C005D8214 /* Share Page Sidebar */,
 				C5A5C48B1DFCF2AF00FD2555 /* Share Stack Sidebar */,
 				66AC8D7618E7504D00A65036 /* Import Sidebar */,
@@ -4345,6 +4400,7 @@
 				C50DBAFD1E0B2A090006F58A /* collapse-stack.mp4 in Resources */,
 				C5C45A1E1DC154B200C50EA7 /* page-sidebar.mp4 in Resources */,
 				C5C298E51D7B9633009AE6BE /* coloredpoint.vsh in Resources */,
+				C528168721097978005956F9 /* ios-settings-icon@2x.png in Resources */,
 				C55AC19B1D7C0AB100259558 /* logo.png in Resources */,
 				C5C298E61D7B9633009AE6BE /* quad.vsh in Resources */,
 				C5C298E71D7B9633009AE6BE /* quad.fsh in Resources */,
@@ -4381,13 +4437,11 @@
 				66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */,
 				C58E6A2C1CDB1B4A00508F1D /* bg15.jpg in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
-				6672EFE219C3A51F0076009F /* iCloudSettingsLoggedIn@2x.png in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
 				C53FCEF81E94C6CD00AA4BEC /* page-rotation.png in Resources */,
 				66E2241119D6463F000FCA96 /* ios7-settings-photos.png in Resources */,
 				C58E6A3C1CDB1B4A00508F1D /* bg31.jpg in Resources */,
 				C58E6A3D1CDB1B4A00508F1D /* bg32.jpg in Resources */,
-				6672EFEC19C3AAC40076009F /* CloudKitPermissionSwitch.png in Resources */,
 				66CC2A961AEAEA9F00C6A3F9 /* share-tutorials-export.png in Resources */,
 				663326BE1AAFE81E003915E6 /* photos-icon@2x.png in Resources */,
 				C5D749EB20FEF844004F5781 /* MPArrowLeft@2x.png in Resources */,
@@ -4401,13 +4455,11 @@
 				66CC2A971AEAEA9F00C6A3F9 /* share-tutorials-social.png in Resources */,
 				C58E6A411CDB1B4A00508F1D /* bg36.jpg in Resources */,
 				6650DD1918F48D7500ADF591 /* camera.png in Resources */,
-				6672EFE019C3A51A0076009F /* iCloudSettingsLoggedIn.png in Resources */,
 				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
 				C58E6A391CDB1B4A00508F1D /* bg28.jpg in Resources */,
 				C58E6A231CDB1B4A00508F1D /* bg06.jpg in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				C542AA251D812E140024FAD9 /* highlighter.png in Resources */,
-				6672EFEE19C3AAC90076009F /* CloudKitPermissionSwitch@2x.png in Resources */,
 				667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */,
 				665F7F5D1AE08D2B00635D56 /* export-to-facebook.mov in Resources */,
 				C5D74A0120FEF844004F5781 /* MPTakeoverNotificationViewController~iphonelandscape.xib in Resources */,
@@ -4433,10 +4485,8 @@
 				C5D749EC20FEF844004F5781 /* MPCloseButton.png in Resources */,
 				C53FCEF91E94C6CD00AA4BEC /* page-template.mp4 in Resources */,
 				66E2240219D633E1000FCA96 /* ios8-settings-camera.png in Resources */,
-				66F968B319C3947700C1F696 /* iCloudSettings.png in Resources */,
 				666425C418CBC61200A306C1 /* opencv.license in Resources */,
 				C50DBB031E0B355E0006F58A /* reorder-stack.mp4 in Resources */,
-				6672EFE419C3A6190076009F /* iCloudDrive.png in Resources */,
 				C50DBB011E0B338B0006F58A /* export-stack.mp4 in Resources */,
 				C58E6A501CDB1B4A00508F1D /* bg51.jpg in Resources */,
 				C58E6A3E1CDB1B4A00508F1D /* bg33.jpg in Resources */,
@@ -4444,7 +4494,6 @@
 				6650DD0F18F46D5100ADF591 /* Images.xcassets in Resources */,
 				665245001995673900C36609 /* email@2x.png in Resources */,
 				66684B3B182D9624005A27B4 /* AGG.license in Resources */,
-				6672EFE819C3A7190076009F /* CloudKitLookUp.png in Resources */,
 				C58E6A261CDB1B4A00508F1D /* bg09.jpg in Resources */,
 				C50DBB051E0B426F0006F58A /* import-stack.mp4 in Resources */,
 				C5D74A3020FEF844004F5781 /* snapshot_config.json in Resources */,
@@ -4475,10 +4524,10 @@
 				C58E6A4C1CDB1B4A00508F1D /* bg47.jpg in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
+				C528168821097978005956F9 /* ios-settings-icon.png in Resources */,
 				C58E6A321CDB1B4A00508F1D /* bg21.jpg in Resources */,
 				667D98AA192D010900625879 /* Loose-Leaf_76.png in Resources */,
 				C58E6A4A1CDB1B4A00508F1D /* bg45.jpg in Resources */,
-				66F968B519C3947B00C1F696 /* iCloudSettings@2x.png in Resources */,
 				C5FB70A21C16AF1F00D553B2 /* LaunchScreen.storyboard in Resources */,
 				66CC2A9B1AEB05C300C6A3F9 /* shake-to-reorder.mov in Resources */,
 				C5D74A0A20FEF844004F5781 /* MPTakeoverNotificationViewController~ipad.xib in Resources */,
@@ -4487,7 +4536,6 @@
 				666E253418F5DDFD00C17295 /* clearphotoalbum@2x.png in Resources */,
 				C58E6A431CDB1B4A00508F1D /* bg38.jpg in Resources */,
 				6650DD1F18F48E4200ADF591 /* twitter@2x.png in Resources */,
-				6672EFEA19C3A71E0076009F /* CloudKitLookUp@2x.png in Resources */,
 				665245141995844D00C36609 /* twitterLarge.png in Resources */,
 				C58E6A4F1CDB1B4A00508F1D /* bg50.jpg in Resources */,
 				C58E6A331CDB1B4A00508F1D /* bg22.jpg in Resources */,
@@ -4496,8 +4544,6 @@
 				665244FF1995673900C36609 /* email.png in Resources */,
 				C5D987C01E89D799000EA722 /* draw-tools.mp4 in Resources */,
 				C5D749E420FEF844004F5781 /* MPArrowLeft.png in Resources */,
-				66F968AB19C393DE00C1F696 /* ios-settings-icon.png in Resources */,
-				6672EFE619C3A61E0076009F /* iCloudDrive@2x.png in Resources */,
 				C5D749E820FEF844004F5781 /* MPArrowRight@2x.png in Resources */,
 				C5C298F91D7BFB63009AE6BE /* MMMarkdown.license in Resources */,
 				C58E6A3B1CDB1B4A00508F1D /* bg30.jpg in Resources */,
@@ -4512,7 +4558,6 @@
 				C5D749E920FEF844004F5781 /* placeholder-image.png in Resources */,
 				666E253C18F5E15F00C17295 /* clearcamera@2x.png in Resources */,
 				C5FE13471E9F330F0086E541 /* Localizable.strings in Resources */,
-				66F968AD19C393E300C1F696 /* ios-settings-icon@2x.png in Resources */,
 				C5D749EF20FEF844004F5781 /* MPCheckmark.png in Resources */,
 				66A02F9C19A1DBE90013EFAE /* Eppz.license in Resources */,
 				C5D74A2520FEF844004F5781 /* MPTakeoverNotificationViewController~iphoneportrait.xib in Resources */,
@@ -4705,6 +4750,7 @@
 				6699714D17DA5EDB00E81467 /* MMCountableSidebarButton.m in Sources */,
 				C5D74A2620FEF844004F5781 /* MPABTestDesignerDeviceInfoResponseMessage.m in Sources */,
 				C569F4371CD070DE00C19BB0 /* MMBezelStackHolderView.m in Sources */,
+				C5BFD9FC211A975A0060D4C0 /* MMEmojiOutlineView.m in Sources */,
 				666E254F18F72BCF00C17295 /* MMCameraSidebarContentView.m in Sources */,
 				6652457D1996ECF900C36609 /* MMOpenInAppShareItem.m in Sources */,
 				66F4FB2317D8FE600086E21C /* MMCountBubbleButton.m in Sources */,
@@ -4767,6 +4813,7 @@
 				6652452D1996CE3000C36609 /* MMImgurShareItem.m in Sources */,
 				6634856019DA2E5F00B5CF2D /* MMDeletePageSidebarController.m in Sources */,
 				6667480617C0166100D5C390 /* MMShapeBuilderView.m in Sources */,
+				C5BFD9F2211A91E80060D4C0 /* MMEmojiAssetGroup.m in Sources */,
 				666E254C18F618B000C17295 /* MMEventSidebarContentView.m in Sources */,
 				66EDE42719AE765000A5623B /* MMAvatarButton.m in Sources */,
 				C5D74A0820FEF844004F5781 /* MPApplicationStateSerializer.m in Sources */,
@@ -4823,6 +4870,7 @@
 				66728715159515FD0018571A /* MMEditablePaperStackView.m in Sources */,
 				6635BEA0197599A600DFCBBA /* MMUndoRedoAddScrapFromBezelItem.m in Sources */,
 				662EFF2D199EBC140086C106 /* MMWindow.m in Sources */,
+				C5DF7CDC211D48A000882A98 /* MMEmojiButton.m in Sources */,
 				6693295A15958A950033E557 /* MMShadowManager.m in Sources */,
 				C53FCED71E94A09300AA4BEC /* MMTodoListTemplateView.m in Sources */,
 				66932965159593C00033E557 /* MMRotationManager.m in Sources */,
@@ -4874,6 +4922,7 @@
 				C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */,
 				66423DD019425AA7000A3709 /* MMCachedPreviewManager.m in Sources */,
 				C53FCEDA1E94A3A800AA4BEC /* MMBoxNotesTemplateView.m in Sources */,
+				C5BFD9F9211A94EE0060D4C0 /* MMEmojiAssetCell.m in Sources */,
 				66A08E71196B242F00476F99 /* MMUndoRedoMoveScrapItem.m in Sources */,
 				C5F1B2ED1D9B0D6100E0E9A8 /* MMSidebarButtonTapGestureRecognizer.m in Sources */,
 				66EC2FEF19DD11E0008F2BB6 /* MMJotViewNilState.m in Sources */,
@@ -4897,6 +4946,7 @@
 				C5D749FA20FEF844004F5781 /* MPConnectIntegrations.m in Sources */,
 				C5D749D420FEF844004F5781 /* UIViewController+AutomaticTracks.m in Sources */,
 				6612C88B1964C401003A9575 /* MMUndoRedoBlockItem.m in Sources */,
+				C53DCECA21043069009A848A /* MMPhotoAssetCell.m in Sources */,
 				6630F4C91AA4FBF8004F2FDC /* MMPDFPageAsset.m in Sources */,
 				C5EC1C311DC1817800C65DB3 /* MMLoopingVideoView.m in Sources */,
 				66343C671AC085D600801962 /* MMNewsletterSignupHandler.m in Sources */,
@@ -4945,6 +4995,7 @@
 				C5D749F720FEF844004F5781 /* MPCGSizeToNSDictionaryValueTransformer.m in Sources */,
 				C53F97C31E9329C100A1233E /* MMPaperTemplateView.m in Sources */,
 				665ACB831AF84BCA00A53FCA /* NSString+Contains.m in Sources */,
+				C5BFD9EF211A91CB0060D4C0 /* MMEmojiAsset.m in Sources */,
 				661708E61981B434006A73EF /* FXBlurView.m in Sources */,
 				C5D749F520FEF844004F5781 /* NSInvocation+MPHelpers.m in Sources */,
 				C5D749F320FEF844004F5781 /* MPDesignerEventBindingResponseMesssage.m in Sources */,
@@ -4963,6 +5014,7 @@
 				C504E71D1CFFF21100914A0E /* MMJotViewStateUpgrader.m in Sources */,
 				C5D74A1420FEF844004F5781 /* MPAbstractABTestDesignerMessage.m in Sources */,
 				66AC8D7918E7506A00A65036 /* MMImageSidebarContainerView.m in Sources */,
+				C5BFD9F6211A94DB0060D4C0 /* MMEmojiSidebarContentView.m in Sources */,
 				663326CA1AB09BA7003915E6 /* MMInboxImageAlbum.m in Sources */,
 				665245631996DAB800C36609 /* AFHTTPRequestOperationManager.m in Sources */,
 				66AC8D8018E88BCC00A65036 /* MMPhotoManager.m in Sources */,
@@ -4988,6 +5040,7 @@
 				C5D74A1220FEF844004F5781 /* MPABTestDesignerClearRequestMessage.m in Sources */,
 				663C1897175A89EF00706A05 /* MMRulerButton.m in Sources */,
 				6651083C178F249C00A7A7DD /* MMVector.m in Sources */,
+				C53CFC60210036C20037E1B5 /* MMShapeSidebarContentView.m in Sources */,
 				C5DA29951D7C013A00D868EC /* MMGenerator.m in Sources */,
 				C5D749F220FEF844004F5781 /* NSNotificationCenter+AutomaticTracks.m in Sources */,
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
@@ -5025,14 +5078,18 @@
 				C5D749FD20FEF844004F5781 /* MPTweak.m in Sources */,
 				66ACECDF19D4C122000EA792 /* NSArray+IndexSetAdditions.m in Sources */,
 				6610D0981AAA70E90019C2FB /* MMContinuousSwipeGestureRecognizer.m in Sources */,
+				C58A2D72210AE44B0078D1F8 /* UIBezierPath+MMShapes.m in Sources */,
 				C5D74A0320FEF844004F5781 /* MPSequenceGenerator.m in Sources */,
 				66D6E2381AB74C0D00510CA3 /* MMPhotosListLayout.m in Sources */,
 				C5D749FB20FEF844004F5781 /* MPObjectIdentityProvider.m in Sources */,
 				66524517199587A700C36609 /* MMFacebookShareItem.m in Sources */,
 				C5A02B8D1E8D947700D43EC7 /* MMRuledTemplateView.m in Sources */,
+				C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */,
 				6693C94618E4BCD90054FF41 /* MMSlidingSidebarView.m in Sources */,
+				C528168B210986A8005956F9 /* UIColor+LooseLeaf.m in Sources */,
 				C5D74A1020FEF844004F5781 /* MPNotificationViewController.m in Sources */,
 				66BEC00019BE55C30032D30C /* MMInviteUserButton.m in Sources */,
+				C59B5B022106D1D30049C323 /* MMShapeOutlineView.m in Sources */,
 				66CE120017D2772400882275 /* MMScrapBorderView.m in Sources */,
 				663523E519A7E32000A26B88 /* MMShareOptionsView.m in Sources */,
 				C53F63581CDA871D00091EF1 /* UIImage+Blur.m in Sources */,
@@ -5044,6 +5101,8 @@
 				C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */,
 				66C0C9D0178386B8009491B3 /* MMLikeButton.m in Sources */,
 				66C0C9D81783EEEB009491B3 /* MMAdonitButton.m in Sources */,
+				C53DCEC72104300B009A848A /* MMShapeAssetCell.m in Sources */,
+				C53CFC6321003B560037E1B5 /* MMShapesButton.m in Sources */,
 				666E253018F5D9F100C17295 /* MMFaceButton.m in Sources */,
 				66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */,
 				C50C0D701C3CE7A600DFC079 /* MMPenButton.m in Sources */,
@@ -5067,6 +5126,8 @@
 				C50DBAFA1E0B207B0006F58A /* MMCollapseButton.m in Sources */,
 				667AA41F19E33342006549EE /* MMPolaroidsView.m in Sources */,
 				C5D74A1C20FEF844004F5781 /* MPTakeoverNotification.m in Sources */,
+				C54168D3211BD01A0060C48D /* UIBezierPath+MMEmoji.m in Sources */,
+				C53DCEC021042943009A848A /* MMShapeAsset.m in Sources */,
 				6612C8851964C0E3003A9575 /* MMPageUndoRedoManager.m in Sources */,
 				C5D74A1A20FEF844004F5781 /* MPNotification.m in Sources */,
 				66A471C617C7E06B00C2A5B6 /* MMScrapView.m in Sources */,
@@ -5074,6 +5135,7 @@
 				C504E6EA1CFAA84E00914A0E /* UIColor+RHInterpolationAdditions.m in Sources */,
 				C5D749E020FEF844004F5781 /* MPNSNumberToCGFloatValueTransformer.m in Sources */,
 				C5A8E1AD1DC308BF00CD608F /* MMCollapsableStackView.m in Sources */,
+				C53DCEC421042BC5009A848A /* MMShapeAssetGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

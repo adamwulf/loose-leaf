@@ -25,16 +25,6 @@
     return self;
 }
 
-- (CGSize)sizeForMaxDim:(NSInteger)maxDim {
-    CGSize currSize = self.fullResolutionSize;
-    CGFloat ratio = currSize.width / currSize.height;
-    if (ratio > 1) {
-        return CGSizeMake(maxDim, maxDim / ratio);
-    } else {
-        return CGSizeMake(ratio * maxDim, maxDim);
-    }
-}
-
 - (UIImage*)aspectRatioThumbnail {
     if (!thumb) {
         thumb = [self aspectThumbnailWithMaxPixelSize:100];
@@ -43,7 +33,7 @@
 }
 
 - (UIImage*)aspectThumbnailWithMaxPixelSize:(int)maxDim {
-    return [[JotDiskAssetManager imageWithContentsOfFile:pathToPhoto] resizedImage:[self sizeForMaxDim:maxDim] interpolationQuality:kCGInterpolationMedium];
+    return [[JotDiskAssetManager imageWithContentsOfFile:pathToPhoto] resizedImage:[self resolutionSizeWithMaxDim:maxDim] interpolationQuality:kCGInterpolationMedium];
 }
 
 - (NSURL*)fullResolutionURL {

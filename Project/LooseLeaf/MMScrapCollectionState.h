@@ -21,7 +21,6 @@ typedef enum {
 @interface MMScrapCollectionState : NSObject {
     // loading state
     BOOL isLoaded;
-    BOOL isLoading;
     BOOL isUnloading;
     // scraps
     NSMutableArray* allLoadedScraps;
@@ -49,7 +48,9 @@ typedef enum {
 @property (readonly) NSUInteger lastSavedUndoHash;
 @property (readonly) NSUInteger countOfAllLoadedScraps;
 @property (nonatomic, assign) BOOL isForgetful;
+@property (nonatomic, assign) BOOL isLoading;
 
+- (void)runBlockWhenLoaded:(void (^)())block;
 
 #pragma mark - Manage Scraps
 

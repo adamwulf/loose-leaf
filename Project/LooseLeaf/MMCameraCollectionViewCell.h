@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MMCamViewDelegate.h"
-#import "MMSinglePhotoCollectionViewCellDelegate.h"
+#import "MMDisplayAssetCellDelegate.h"
 
 
 @interface MMCameraCollectionViewCell : UICollectionViewCell <MMCamViewDelegate>
 
-@property (nonatomic, weak) NSObject<MMSinglePhotoCollectionViewCellDelegate>* delegate;
+@property (nonatomic, weak) NSObject<MMDisplayAssetCellDelegate>* delegate;
 
 - (void)updatePhotoRotation:(BOOL)animated;
 

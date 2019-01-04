@@ -19,10 +19,7 @@
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView;
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset
-              fromView:(MMBufferedImageView*)bufferedImage
-          withRotation:(CGFloat)rotation
-         fromContainer:(MMAbstractSidebarContentView*)container;
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation fromContainer:(MMAbstractSidebarContentView*)container;
 
 - (void)updateInterfaceTo:(UIInterfaceOrientation)orientation;
 

@@ -8,6 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol MMDisplayAssetCoordinator
+
+- (CGSize)visibleImageSize;
+
+- (CGPoint)visibleImageOrigin;
+
+- (void)setPreferredAspectRatioForEmptyImage:(CGSize)size;
+
+
+@end
+
 
 @interface MMDisplayAsset : NSObject
 
@@ -19,10 +30,14 @@
 
 - (NSURL*)fullResolutionURL;
 
+- (CGSize)resolutionSizeWithMaxDim:(NSInteger)maxDim;
+
 - (CGSize)fullResolutionSize;
 
 - (CGFloat)defaultRotation;
 
 - (CGFloat)preferredImportMaxDim;
+
+- (UIBezierPath*)fullResolutionPath;
 
 @end

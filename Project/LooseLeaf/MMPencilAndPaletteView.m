@@ -15,6 +15,7 @@
 #import "MMPenButton.h"
 #import "MMMarkerButton.h"
 #import "MMHighlighterButton.h"
+#import "UIColor+LooseLeaf.h"
 
 
 @implementation MMPencilAndPaletteView {
@@ -97,25 +98,25 @@
 
         blueColorHolder = [self newButtonHolderWithPencilLoc:pencilLocInContentHolder];
         [self addSubview:blueColorHolder];
-        blueButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"3C7BFF"] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton, pencilLocInContentHolder.y + kWidthOfSidebarButton, originalFrame.size.width, originalFrame.size.height)];
+        blueButton = [[MMColorButton alloc] initWithColor:[UIColor blueInkColor] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton, pencilLocInContentHolder.y + kWidthOfSidebarButton, originalFrame.size.width, originalFrame.size.height)];
         [blueButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [blueColorHolder addSubview:blueButton];
 
         redColorHolder = [self newButtonHolderWithPencilLoc:pencilLocInContentHolder];
         [self addSubview:redColorHolder];
-        redButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"E8373E"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
+        redButton = [[MMColorButton alloc] initWithColor:[UIColor redInkColor] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y, originalFrame.size.width, originalFrame.size.height)];
         [redButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [redColorHolder addSubview:redButton];
 
         yellowColorHolder = [self newButtonHolderWithPencilLoc:pencilLocInContentHolder];
         [self addSubview:yellowColorHolder];
-        yellowButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"FFE230"] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y + kWidthOfSidebarButton, originalFrame.size.width, originalFrame.size.height)];
+        yellowButton = [[MMColorButton alloc] initWithColor:[UIColor yellowInkColor] andFrame:CGRectMake(pencilLocInContentHolder.x - 2 * kWidthOfSidebarButton, pencilLocInContentHolder.y + kWidthOfSidebarButton, originalFrame.size.width, originalFrame.size.height)];
         [yellowButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [yellowColorHolder addSubview:yellowButton];
 
         greenColorHolder = [self newButtonHolderWithPencilLoc:pencilLocInContentHolder];
         [self addSubview:greenColorHolder];
-        greenButton = [[MMColorButton alloc] initWithColor:[AVHexColor colorWithHexString:@"5EF52E"] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton, pencilLocInContentHolder.y + 2 * kWidthOfSidebarButton, originalFrame.size.width, originalFrame.size.height)];
+        greenButton = [[MMColorButton alloc] initWithColor:[UIColor greenInkColor] andFrame:CGRectMake(pencilLocInContentHolder.x - kWidthOfSidebarButton, pencilLocInContentHolder.y + 2 * kWidthOfSidebarButton, originalFrame.size.width, originalFrame.size.height)];
         [greenButton addTarget:self action:@selector(colorTapped:) forControlEvents:UIControlEventTouchUpInside];
         [greenColorHolder addSubview:greenButton];
 
@@ -200,7 +201,7 @@
     pencilButton.delegate = delegate;
     markerButton.delegate = delegate;
     highlighterButton.delegate = delegate;
-    [self.delegate didChangeColorTo:activeButton.selectedColor];
+    [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -214,23 +215,36 @@
     if (activeButton != highlighterButton) {
         [highlighterButton setSelected:NO];
     }
+
+    if (selected) {
+        [self updateSelectedColorAndBounce:NO];
+    } else {
+        blackButton.selected = NO;
+        redButton.selected = NO;
+        blueButton.selected = NO;
+        yellowButton.selected = NO;
+        greenButton.selected = NO;
+    }
 }
 
 - (BOOL)selected {
-    return activeButton.selected;
+    return pencilButton.selected || markerButton.selected || highlighterButton.selected;
 }
 
 - (void)setActiveButton:(MMPaletteButton*)button {
     activeButton = button;
-    [self setSelected:YES];
     if (activeButton == pencilButton) {
+        [self updateSelectedColorAndBounce:YES];
         [self.delegate pencilTapped:button];
     } else if (activeButton == markerButton) {
+        [self updateSelectedColorAndBounce:YES];
         [self.delegate markerTapped:button];
     } else if (activeButton == highlighterButton) {
+        [self updateSelectedColorAndBounce:YES];
         [self.delegate highlighterTapped:button];
     }
-    [self.delegate didChangeColorTo:activeButton.selectedColor];
+    [self setSelected:YES];
+    [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
 
     if (!isShowingColorOptions) {
         CGPoint originalCenter = CGPointMake(CGRectGetMidX(originalFrame), CGRectGetMidY(originalFrame));
@@ -248,57 +262,54 @@
     }
 }
 
+- (void)toggleShowingColors {
+    if ([self isShowingColors]) {
+        [self hideColors];
+        [self.delegate colorMenuToggled];
+    } else {
+        [self showColors];
+        [self.delegate colorMenuToggled];
+    }
+}
+
+- (void)changeColorTo:(UIColor*)color {
+    activeButton.selectedColor = color;
+
+    [self updateSelectedColorAndBounce:YES];
+}
 
 #pragma mark - Events
 
 - (void)highlighterTapped:(UIButton*)button {
     if (highlighterButton.selected) {
-        if ([self isShowingColors]) {
-            [self hideColors];
-            [self.delegate colorMenuToggled];
-        } else {
-            [self showColors];
-            [self.delegate colorMenuToggled];
-        }
+        [self toggleShowingColors];
     } else {
         activeButton = highlighterButton;
-        [self.delegate highlighterTapped:button];
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
+        [self.delegate highlighterTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
     }
 }
 
 - (void)pencilTapped:(UIButton*)button {
     if (pencilButton.selected) {
-        if ([self isShowingColors]) {
-            [self hideColors];
-            [self.delegate colorMenuToggled];
-        } else {
-            [self showColors];
-            [self.delegate colorMenuToggled];
-        }
+        [self toggleShowingColors];
     } else {
         activeButton = pencilButton;
-        [self.delegate pencilTapped:button];
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
+        [self.delegate pencilTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
     }
 }
 
 - (void)markerTapped:(UIButton*)button {
     if (markerButton.selected) {
-        if ([self isShowingColors]) {
-            [self hideColors];
-            [self.delegate colorMenuToggled];
-        } else {
-            [self showColors];
-            [self.delegate colorMenuToggled];
-        }
+        [self toggleShowingColors];
     } else {
         activeButton = markerButton;
-        [self.delegate markerTapped:button];
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
+        [self.delegate markerTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
     }
 }
 
@@ -456,7 +467,7 @@
 
         activeButton.selectedColor = button.color;
 
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:YES];
 
         if (activeButton == markerButton) {
             [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:kMarkerColor];

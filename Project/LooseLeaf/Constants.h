@@ -35,6 +35,7 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define CGSizeSwap(size) CGSizeMake((size).height, (size).width)
 #define CGPointSwap(point) CGPointMake((point).y, (point).x)
 #define CGRectSquare(size) CGRectMake(0, 0, size, size)
+#define CGPointScale(point, scale) CGPointMake(point.x*(scale), point.y*(scale))
 #define CGSizeScale(size, scale) CGSizeMake(size.width*(scale), size.height*(scale))
 #define CGRectScale(rect, scale) CGRectMake(rect.origin.x*(scale), rect.origin.y*(scale), rect.size.width*(scale), rect.size.height*(scale))
 #define CGRectSwap(rect) CGRectMake((rect).origin.y, (rect).origin.x, (rect).size.height, (rect).size.width)

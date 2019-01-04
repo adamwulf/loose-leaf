@@ -28,14 +28,10 @@
 
 @interface MMPaperStackView : UIScrollView <MMPaperViewDelegate, MMGestureTouchOwnershipDelegate> {
    @protected
-    MMBezelInGestureRecognizer* fromRightBezelGesture;
-    MMBezelInGestureRecognizer* fromLeftBezelGesture;
+    MMBezelInGestureRecognizer* _fromRightBezelGesture;
+    MMBezelInGestureRecognizer* _fromLeftBezelGesture;
 
-    UIView* visibleStackHolder;
-    UIView* hiddenStackHolder;
-    UIView* bezelStackHolder;
-
-    NSMutableSet* setOfPagesBeingPanned;
+    NSMutableSet* _setOfPagesBeingPanned;
 }
 
 @property (nonatomic, readonly) NSString* uuid;

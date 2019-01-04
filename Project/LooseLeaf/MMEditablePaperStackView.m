@@ -25,6 +25,11 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 
+@interface MMEditablePaperStackView () <UIPencilInteractionDelegate>
+
+@end
+
+
 @implementation MMEditablePaperStackView {
     MMMemoryProfileView* memoryView;
 
@@ -158,12 +163,12 @@
         MMTextButton* imageExportButton = [[MMTextButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, self.frame.size.height - 5 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton) / 2, kWidthOfSidebarButton, kWidthOfSidebarButton) andFont:[UIFont systemFontOfSize:12] andLetter:@"PNG" andXOffset:0 andYOffset:0];
         imageExportButton.delegate = self;
         [imageExportButton addTarget:self action:@selector(exportAsImage:) forControlEvents:UIControlEventTouchUpInside];
-        [self.toolbar addButton:imageExportButton extendFrame:NO];
+        //        [self.toolbar addButton:imageExportButton extendFrame:NO];
 
         MMPDFButton* pdfExportButton = [[MMPDFButton alloc] initWithFrame:CGRectMake((kWidthOfSidebar - kWidthOfSidebarButton) / 2, self.frame.size.height - 4 * kWidthOfSidebarButton - (kWidthOfSidebar - kWidthOfSidebarButton) / 2, kWidthOfSidebarButton, kWidthOfSidebarButton)];
         pdfExportButton.delegate = self;
         [pdfExportButton addTarget:self action:@selector(exportAsPDF:) forControlEvents:UIControlEventTouchUpInside];
-        [self.toolbar addButton:pdfExportButton extendFrame:NO];
+//        [self.toolbar addButton:pdfExportButton extendFrame:NO];
 #endif
 
         //
@@ -199,6 +204,14 @@
         mirrorView = [[MMMirrorLineView alloc] initWithFrame:self.bounds];
         [mirrorView setAlpha:0];
         [self addSubview:mirrorView];
+
+
+        if (@available(iOS 12.1, *)) {
+            UIPencilInteraction* pencilInteraction = [[UIPencilInteraction alloc] init];
+            pencilInteraction.delegate = self;
+
+            [self addInteraction:pencilInteraction];
+        }
     }
     return self;
 }
@@ -315,6 +328,8 @@ static UIWebView* pdfWebView;
 #pragma mark - MMPencilAndPaletteViewDelegate
 
 - (void)highlighterTapped:(UIButton*)button {
+    [self willSwitchToTool:highlighter withColor:highlighter.color];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
@@ -323,9 +338,13 @@ static UIWebView* pdfWebView;
     scissorButton.selected = NO;
     [[NSUserDefaults standardUserDefaults] setObject:kBrushHighlighter forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self didSwitchToTool:highlighter withColor:highlighter.color];
 }
 
 - (void)pencilTapped:(UIButton*)_button {
+    [self willSwitchToTool:pen withColor:pen.color];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
@@ -334,9 +353,13 @@ static UIWebView* pdfWebView;
     scissorButton.selected = NO;
     [[NSUserDefaults standardUserDefaults] setObject:kBrushPencil forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self didSwitchToTool:pencilTool withColor:pen.color];
 }
 
 - (void)markerTapped:(UIButton*)_button {
+    [self willSwitchToTool:marker withColor:marker.color];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
@@ -345,19 +368,29 @@ static UIWebView* pdfWebView;
     scissorButton.selected = NO;
     [[NSUserDefaults standardUserDefaults] setObject:kBrushMarker forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self didSwitchToTool:marker withColor:marker.color];
 }
 
 - (void)colorMenuToggled {
     // noop
 }
 
-- (void)didChangeColorTo:(UIColor*)color {
+- (void)didChangeColorTo:(UIColor*)color fromUserInteraction:(BOOL)userInteraction {
+    if (userInteraction) {
+        [self willSwitchToTool:[self currentTool] withColor:color];
+    }
+
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     highlighter.color = color;
     pen.color = color;
     marker.color = color;
     if (!pencilTool.selected) {
         [self markerTapped:nil];
+    }
+
+    if (userInteraction) {
+        [self didSwitchToTool:[self currentTool] withColor:color];
     }
 }
 
@@ -367,7 +400,7 @@ static UIWebView* pdfWebView;
     if (![self isActivelyGesturing]) {
         // only allow undo/redo when no other gestures
         // are active
-        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        MMUndoablePaperView* obj = [self.visibleStackHolder peekSubview];
         [obj.undoRedoManager undo];
         [obj saveToDisk:nil];
     }
@@ -377,32 +410,39 @@ static UIWebView* pdfWebView;
     if (![self isActivelyGesturing]) {
         // only allow undo/redo when no other gestures
         // are active
-        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        MMUndoablePaperView* obj = [self.visibleStackHolder peekSubview];
         [obj.undoRedoManager redo];
         [obj saveToDisk:nil];
     }
 }
 
 - (void)eraserTapped:(UIButton*)_button {
+    [self willSwitchToTool:eraser withColor:nil];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = YES;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
+
+    [self didSwitchToTool:eraser withColor:nil];
 }
 
 - (void)scissorTapped:(UIButton*)_button {
+    [self willSwitchToTool:scissor withColor:nil];
+
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = YES;
+
+    [self didSwitchToTool:scissor withColor:nil];
 }
 
-
 - (void)handTapped:(UIButton*)_button {
-    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [[self.visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = YES;
     rulerButton.selected = NO;
 }
@@ -431,7 +471,7 @@ static UIWebView* pdfWebView;
     if (!rulerButton.selected) {
         numberOfRulerGesturesWithoutStroke = 0;
     }
-    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [[self.visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
 }
@@ -454,10 +494,10 @@ static UIWebView* pdfWebView;
 - (void)addPageButtonTapped:(UIButton*)_button {
     [super addPageButtonTapped:_button];
 
-    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:self.hiddenStackHolder.bounds];
     page.delegate = self;
-    [hiddenStackHolder pushSubview:page];
-    [[visibleStackHolder peekSubview] enableAllGestures];
+    [self.hiddenStackHolder pushSubview:page];
+    [[self.visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
@@ -525,7 +565,7 @@ static UIWebView* pdfWebView;
 
 - (void)didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel {
     [NSThread performBlockOnMainThread:^{
-        [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
+        [[self.visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
     }];
 }
 
@@ -556,7 +596,7 @@ static UIWebView* pdfWebView;
         }
     }
     [super isBezelingInLeftWithGesture:bezelGesture];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture {
@@ -571,7 +611,7 @@ static UIWebView* pdfWebView;
         }
     }
     [super isBezelingInRightWithGesture:bezelGesture];
-    [[bezelStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.bezelStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 #pragma mark - MMPaperViewDelegate
@@ -605,6 +645,13 @@ static UIWebView* pdfWebView;
 
 - (void)didDrawStrokeOfCm:(CGFloat)distanceInCentimeters {
     @autoreleasepool {
+        if ([mirrorButton mirrorMode] != MirrorModeNone) {
+            // if we're mirrored, then half our distance
+            // so we're measuring how much the /user/ drew,
+            // not how long the final stroke was on the page.
+            distanceInCentimeters /= 2;
+        }
+
         if ([self activePen] == pen || [self activePen] == marker || [self activePen] == highlighter) {
             [[[Mixpanel sharedInstance] people] increment:kMPDistanceDrawn by:@(distanceInCentimeters / 100.0)];
         } else if ([self activePen] == eraser) {
@@ -622,7 +669,7 @@ static UIWebView* pdfWebView;
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:NO];
         //        DebugLog(@"page %@ isn't editable", pageToSave.uuid);
-        [[visibleStackHolder peekSubview] saveToDisk:nil];
+        [[self.visibleStackHolder peekSubview] saveToDisk:nil];
     } else {
         DebugLog(@"would save, but can't b/c its readonly page");
     }
@@ -691,10 +738,10 @@ static UIWebView* pdfWebView;
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        if ([fromLeftBezelGesture isActivelyBezeling]) {
-            [self didChangeTopPageTo:[bezelStackHolder peekSubview]];
+        if ([_fromLeftBezelGesture isActivelyBezeling]) {
+            [self didChangeTopPageTo:[self.bezelStackHolder peekSubview]];
         } else {
-            [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
+            [self didChangeTopPageTo:[self.visibleStackHolder peekSubview]];
         }
     }
 }
@@ -749,13 +796,13 @@ static UIWebView* pdfWebView;
     if ([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
         [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]) {
         // only notify of our own gestures
-        if ([fromLeftBezelGesture isActivelyBezeling] && [bezelStackHolder.subviews count]) {
-            [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        if ([_fromLeftBezelGesture isActivelyBezeling] && [self.bezelStackHolder.subviews count]) {
+            [[self.bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         } else {
-            if ([fromLeftBezelGesture isActivelyBezeling]) {
+            if ([_fromLeftBezelGesture isActivelyBezeling]) {
                 DebugLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
             }
-            [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+            [[self.visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }
     }
     [[MMDrawingTouchGestureRecognizer sharedInstance] ownershipOfTouches:touches isGesture:gesture];
@@ -769,15 +816,15 @@ static UIWebView* pdfWebView;
 #pragma mark - MMPageCacheManagerDelegate: Page Loading and Unloading
 
 - (BOOL)isPageInVisibleStack:(MMPaperView*)page {
-    return [visibleStackHolder containsSubview:page];
+    return [self.visibleStackHolder containsSubview:page];
 }
 
 - (NSArray*)pagesInCurrentBezelGesture {
-    return bezelStackHolder.subviews;
+    return self.bezelStackHolder.subviews;
 }
 
 - (MMPaperView*)getPageBelow:(MMPaperView*)page {
-    return [visibleStackHolder getPageBelow:page];
+    return [self.visibleStackHolder getPageBelow:page];
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
@@ -854,7 +901,7 @@ static UIWebView* pdfWebView;
 }
 
 - (BOOL)hasPages {
-    return [visibleStackHolder.subviews count] > 0;
+    return [self.visibleStackHolder.subviews count] > 0;
 }
 
 #pragma mark - JotViewDelegate
@@ -868,13 +915,13 @@ static UIWebView* pdfWebView;
     if ([MMPageCacheManager sharedInstance].drawableView.state.currentStroke) {
         return NO;
     }
-    for (MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]) {
+    for (MMScrapView* scrap in [[self.visibleStackHolder peekSubview] scrapsOnPaper]) {
         if (scrap.state.drawableView.state.currentStroke) {
             return NO;
         }
     }
-    if (fromRightBezelGesture.subState == UIGestureRecognizerStateBegan ||
-        fromRightBezelGesture.subState == UIGestureRecognizerStateChanged) {
+    if (_fromRightBezelGesture.subState == UIGestureRecognizerStateBegan ||
+        _fromRightBezelGesture.subState == UIGestureRecognizerStateChanged) {
         // don't allow new strokes during bezel
         return NO;
     }
@@ -1001,7 +1048,7 @@ static UIWebView* pdfWebView;
 - (void)beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page beginScissorAtPoint:adjustedPoint];
 }
@@ -1012,7 +1059,7 @@ static UIWebView* pdfWebView;
     if (didAdjust) {
         numberOfRulerGesturesWithoutStroke = 0;
     }
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     if (![page continueScissorAtPoint:adjustedPoint]) {
         [scissor cancelPolygonForTouch:touch];
@@ -1021,14 +1068,14 @@ static UIWebView* pdfWebView;
 
 - (void)finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page finishScissorAtPoint:adjustedPoint];
 }
 
 - (void)cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page cancelScissorAtPoint:adjustedPoint];
 }
@@ -1044,7 +1091,7 @@ static UIWebView* pdfWebView;
 #pragma mark - List View Enable / Disable Helper Methods
 
 - (void)immediatelyTransitionToListView {
-    for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+    for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
         aPage.hidden = NO;
     }
 
@@ -1058,7 +1105,7 @@ static UIWebView* pdfWebView;
     [super beginUITransitionFromPageView];
     [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
     [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)beginUITransitionFromListView {
@@ -1069,13 +1116,13 @@ static UIWebView* pdfWebView;
 - (void)finishUITransitionToListView {
     [super finishUITransitionToListView];
     [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)finishUITransitionToPageView {
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:YES];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)disableAllGesturesForPageView {
@@ -1108,6 +1155,105 @@ static UIWebView* pdfWebView;
 
 - (BOOL)isActivelyGesturing {
     return [super isActivelyGesturing] || [[MMDrawingTouchGestureRecognizer sharedInstance] isDrawing];
+}
+
+#pragma mark - UIPencilInteractionDelegate
+
+- (UIColor*)currentColor {
+    if (pencilTool.pencilButton.selected) {
+        return pen.color;
+    } else if (pencilTool.highlighterButton.selected) {
+        return highlighter.color;
+    } else if (pencilTool.markerButton.selected) {
+        return marker.color;
+    } else if (scissorButton.selected) {
+        return nil;
+    } else if (eraserButton.selected) {
+        return nil;
+    } else {
+        return nil;
+    }
+}
+
+- (NSObject*)currentTool {
+    if (pencilTool.selected && pencilTool.pencilButton.selected) {
+        return pen;
+    } else if (pencilTool.selected && pencilTool.highlighterButton.selected) {
+        return highlighter;
+    } else if (pencilTool.selected && pencilTool.markerButton.selected) {
+        return marker;
+    } else if (scissorButton.selected) {
+        return scissor;
+    } else if (eraserButton.selected) {
+        return eraser;
+    } else {
+        return eraser;
+    }
+}
+
+- (void)willSwitchToTool:(NSObject*)tool withColor:(UIColor*)color {
+    NSObject* fromTool = [self currentTool];
+    UIColor* fromColor = [self currentColor];
+
+    if (tool && ![fromTool isEqual:tool]) {
+        _previousTool = fromTool;
+    } else if (tool && [fromTool isEqual:tool]) {
+        if (color && ![fromColor isEqual:color]) {
+            _previousTool = fromColor;
+        }
+    }
+}
+
+- (void)didSwitchToTool:(NSObject*)tool withColor:(UIColor*)color {
+}
+
+- (void)restorePreviousTool {
+    NSObject* switchingToTool = _previousTool;
+
+    if (switchingToTool == nil) {
+        if ([self currentTool] == eraser) {
+            switchingToTool = pen;
+        } else {
+            switchingToTool = eraser;
+        }
+    }
+
+    if ([switchingToTool isKindOfClass:[UIColor class]]) {
+        // switch colors
+        [pencilTool changeColorTo:(UIColor*)switchingToTool];
+        [self didChangeColorTo:(UIColor*)switchingToTool fromUserInteraction:YES];
+    } else {
+        // switch back to a different tool
+        if (switchingToTool == pen) {
+            [pencilTool setActiveButton:pencilTool.pencilButton];
+        } else if (switchingToTool == marker) {
+            [pencilTool setActiveButton:pencilTool.markerButton];
+        } else if (switchingToTool == highlighter) {
+            [pencilTool setActiveButton:pencilTool.highlighterButton];
+        } else if (switchingToTool == eraser) {
+            [self eraserTapped:nil];
+        } else if (switchingToTool == scissor) {
+            [self scissorTapped:nil];
+        }
+    }
+}
+
+- (void)pencilInteractionDidTap:(UIPencilInteraction*)interaction API_AVAILABLE(ios(12.1)) {
+    if (!interaction.enabled) {
+        return;
+    }
+
+    if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionSwitchEraser) {
+        if (eraserButton.selected) {
+            [self restorePreviousTool];
+        } else {
+            [self eraserTapped:nil];
+        }
+    } else if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionSwitchPrevious) {
+        [self restorePreviousTool];
+    } else if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionShowColorPalette) {
+        [pencilTool toggleShowingColors];
+    }
 }
 
 @end

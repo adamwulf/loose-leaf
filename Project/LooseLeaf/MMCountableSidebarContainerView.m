@@ -135,11 +135,11 @@
 }
 
 - (void)addViewToCountableSidebar:(UIView<MMUUIDView>*)view animated:(BOOL)animated {
-    if(!view){
+    if (!view) {
         [[Mixpanel sharedInstance] track:kMPEventCrashAverted properties:@{ @"Issue #": @(1765) }];
         return;
     }
-    
+
     [viewsInSidebar addObject:view];
 
     // exit the scrap to the bezel!
@@ -356,7 +356,7 @@
     UIView<MMUUIDView>* scrap = bubble.view;
     CGPoint positionOnScreenToScaleTo = [self.bubbleDelegate positionOnScreenToScaleViewTo:scrap fromCountableSidebar:self];
     CGFloat scaleOnScreenToScaleTo = [self.bubbleDelegate scaleOnScreenToScaleViewTo:scrap givenOriginalScale:bubble.originalViewScale fromCountableSidebar:self];
-    NSMutableDictionary* mproperties = [NSMutableDictionary dictionary];
+    NSMutableDictionary* mproperties = [[scrap propertiesDictionary] mutableCopy];
     [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.x] forKey:@"center.x"];
     [mproperties setObject:[NSNumber numberWithFloat:positionOnScreenToScaleTo.y] forKey:@"center.y"];
     [mproperties setObject:[NSNumber numberWithFloat:scaleOnScreenToScaleTo] forKey:@"scale"];

@@ -10,7 +10,7 @@
 #import "MMSlidingSidebarContainerViewDelegate.h"
 #import "MMPhotoManagerDelegate.h"
 #import "MMAlbumRowViewDelegate.h"
-#import "MMSinglePhotoCollectionViewCellDelegate.h"
+#import "MMDisplayAssetCellDelegate.h"
 #import "MMDisplayAssetGroup.h"
 
 #define kTopBottomMargin 20
@@ -18,7 +18,7 @@
 @class MMImageSidebarContainerView;
 
 
-@interface MMAbstractSidebarContentView : UIView <UICollectionViewDataSource, MMSinglePhotoCollectionViewCellDelegate, MMPhotoManagerDelegate, UICollectionViewDelegate> {
+@interface MMAbstractSidebarContentView : UIView <UICollectionViewDataSource, MMDisplayAssetCellDelegate, MMPhotoManagerDelegate, UICollectionViewDelegate> {
     MMDisplayAssetGroup* currentAlbum;
     UICollectionView* albumListScrollView;
     UICollectionView* photoListScrollView;
@@ -28,7 +28,8 @@
 
 @property (nonatomic, weak) MMImageSidebarContainerView* delegate;
 @property (nonatomic, readonly) BOOL isShowing;
-@property (readonly) CGFloat rowHeight;
+@property (nonatomic, readonly) CGFloat rowHeight;
+@property (nonatomic, assign) CGFloat maskYOffset;
 
 - (void)reset:(BOOL)animated;
 

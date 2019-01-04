@@ -16,7 +16,6 @@
 #import "MMInboxImageAlbum.h"
 #import "MMInboxAssetGroupCell.h"
 #import "MMAlbumGroupListLayout.h"
-#import "MMDisplayAssetCell.h"
 #import "NSArray+Extras.h"
 #import "Constants.h"
 
@@ -269,7 +268,7 @@
 
             NSIndexSet* pageSet = [NSIndexSet indexSetWithIndex:0];
             [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset* result, NSUInteger index, BOOL* stop) {
-                [self assetWasTapped:result fromView:cell.firstImageView withRotation:0];
+                [self assetWasTapped:result fromView:cell.firstImageView withBackgroundColor:nil withRotation:0];
             }];
         } else {
             MMInboxAssetGroupCell* cell = [self visibleCellAtIndexPath:indexPath];

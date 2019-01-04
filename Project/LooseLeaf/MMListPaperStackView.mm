@@ -151,7 +151,7 @@
 #pragma mark - Add Button in List View
 
 - (CGRect)frameForAddPageButton {
-    NSInteger numberOfPages = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count];
+    NSInteger numberOfPages = [self.visibleStackHolder.subviews count] + [self.hiddenStackHolder.subviews count];
     NSInteger maxRow = numberOfPages / kNumberOfColumnsInListView;
     CGRect ret = CGRectMake(0, 0, [MMListPaperStackView columnWidth], [MMListPaperStackView rowHeight]);
 
@@ -255,7 +255,7 @@
 
         [self beginUITransitionFromPageView];
         [self finishedScalingReallySmall:page animated:NO];
-        hiddenStackHolder.frame = visibleStackHolder.frame;
+        self.hiddenStackHolder.frame = self.visibleStackHolder.frame;
     }
 }
 
@@ -267,14 +267,14 @@
     // clear our cache of frame locations
     mapOfFinalFramesForPagesBeingZoomed->clear();
     // ok, now we can get offset
-    initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[visibleStackHolder peekSubview]];
+    initialScrollOffsetFromTransitionToListView = [self offsetNeededToShowPage:[self.visibleStackHolder peekSubview]];
     // from offset/height, we know which views will be visible
     pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
     // bezeling in from right is no longer allowed
-    [fromRightBezelGesture setEnabled:NO];
-    [fromLeftBezelGesture setEnabled:NO];
-    [hiddenStackHolder setClipsToBounds:NO];
-    [visibleStackHolder setClipsToBounds:NO];
+    [_fromRightBezelGesture setEnabled:NO];
+    [_fromLeftBezelGesture setEnabled:NO];
+    [self.hiddenStackHolder setClipsToBounds:NO];
+    [self.visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [twoFingerTapGesture setEnabled:NO];
@@ -286,7 +286,7 @@
     // of all the pages in the visible stack
     //
     // first check the pagse in the visible stack
-    for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
+    for (MMPaperView* aPage in [self.visibleStackHolder.subviews reverseObjectEnumerator]) {
         // all these if statements are a bit wonky,
         // but the gist is that we need to only save
         // interesting frames, and ignore any that match
@@ -294,21 +294,21 @@
         //
         // also make sure to disable gestures for all but the top
         // page
-        if (!CGRectEqualToRect(aPage.frame, visibleStackHolder.bounds)) {
+        if (!CGRectEqualToRect(aPage.frame, self.visibleStackHolder.bounds)) {
             [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
         }
-        if (aPage != [visibleStackHolder peekSubview]) {
+        if (aPage != [self.visibleStackHolder peekSubview]) {
             [aPage disableAllGestures];
         }
-        if (CGRectEqualToRect(aPage.frame, visibleStackHolder.bounds)) {
+        if (CGRectEqualToRect(aPage.frame, self.visibleStackHolder.bounds)) {
             break;
         }
     }
     for (MMPaperView* aPage in pagesThatWillBeVisibleAfterTransitionToListView) {
-        if (!CGRectEqualToRect(aPage.frame, hiddenStackHolder.bounds)) {
+        if (!CGRectEqualToRect(aPage.frame, self.hiddenStackHolder.bounds)) {
             [setOfInitialFramesForPagesBeingZoomed setObject:[NSValue valueWithCGRect:aPage.frame] forKey:aPage.uuid];
         }
-        if (aPage != [visibleStackHolder peekSubview]) {
+        if (aPage != [self.visibleStackHolder peekSubview]) {
             [aPage disableAllGestures];
         }
     }
@@ -319,7 +319,7 @@
  * and is starting from the List view
  */
 - (void)beginUITransitionFromListView {
-    if (!tapGesture.enabled && !fromRightBezelGesture.enabled && !hiddenStackHolder.clipsToBounds && !visibleStackHolder.clipsToBounds) {
+    if (!tapGesture.enabled && !_fromRightBezelGesture.enabled && !self.hiddenStackHolder.clipsToBounds && !self.visibleStackHolder.clipsToBounds) {
         // already began transition
         return;
     }
@@ -330,10 +330,10 @@
     // from offset/height, we know which views will be visible
     pagesThatWillBeVisibleAfterTransitionToListView = [self findPagesInVisibleRowsOfListViewGivenOffset:initialScrollOffsetFromTransitionToListView];
     // bezeling in from right is no longer allowed
-    [fromRightBezelGesture setEnabled:NO];
-    [fromLeftBezelGesture setEnabled:NO];
-    [hiddenStackHolder setClipsToBounds:NO];
-    [visibleStackHolder setClipsToBounds:NO];
+    [_fromRightBezelGesture setEnabled:NO];
+    [_fromLeftBezelGesture setEnabled:NO];
+    [self.hiddenStackHolder setClipsToBounds:NO];
+    [self.visibleStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [twoFingerTapGesture setEnabled:NO];
@@ -346,7 +346,7 @@
     [UIView animateWithDuration:.3 animations:^{
         [self moveAddButtonToBottom];
     }];
-    [visibleStackHolder.superview insertSubview:visibleStackHolder aboveSubview:hiddenStackHolder];
+    [self.visibleStackHolder.superview insertSubview:self.visibleStackHolder aboveSubview:self.hiddenStackHolder];
     [self.stackDelegate willChangeToPageView:self.uuid];
 }
 
@@ -359,10 +359,10 @@
         [self setCurrentViewMode:kViewModeList];
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-    [fromRightBezelGesture setEnabled:NO];
-    [fromLeftBezelGesture setEnabled:NO];
-    [visibleStackHolder setClipsToBounds:NO];
-    [hiddenStackHolder setClipsToBounds:NO];
+    [_fromRightBezelGesture setEnabled:NO];
+    [_fromLeftBezelGesture setEnabled:NO];
+    [self.visibleStackHolder setClipsToBounds:NO];
+    [self.hiddenStackHolder setClipsToBounds:NO];
     [self setScrollEnabled:YES];
     [tapGesture setEnabled:YES];
     [twoFingerTapGesture setEnabled:YES];
@@ -388,24 +388,24 @@
     @synchronized(self) {
         [self setCurrentViewMode:kViewModePage];
     }
-    for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
-        if (aPage != [visibleStackHolder peekSubview]) {
+    for (MMPaperView* aPage in [self.visibleStackHolder.subviews reverseObjectEnumerator]) {
+        if (aPage != [self.visibleStackHolder peekSubview]) {
             [aPage enableAllGestures];
         }
-        aPage.frame = visibleStackHolder.bounds;
+        aPage.frame = self.visibleStackHolder.bounds;
     }
     [setOfInitialFramesForPagesBeingZoomed removeAllObjects];
-    [fromRightBezelGesture setEnabled:YES];
-    [fromLeftBezelGesture setEnabled:YES];
-    [visibleStackHolder setClipsToBounds:YES];
-    [hiddenStackHolder setClipsToBounds:YES];
+    [_fromRightBezelGesture setEnabled:YES];
+    [_fromLeftBezelGesture setEnabled:YES];
+    [self.visibleStackHolder setClipsToBounds:YES];
+    [self.hiddenStackHolder setClipsToBounds:YES];
     [self setScrollEnabled:NO];
     [tapGesture setEnabled:NO];
     [twoFingerTapGesture setEnabled:NO];
     [pinchGesture setEnabled:NO];
     [longPressGesture setEnabled:NO];
     pagesThatWillBeVisibleAfterTransitionToListView = nil;
-    [visibleStackHolder.superview insertSubview:visibleStackHolder belowSubview:hiddenStackHolder];
+    [self.visibleStackHolder.superview insertSubview:self.visibleStackHolder belowSubview:self.hiddenStackHolder];
     [self moveAddButtonToBottom];
     [self didChangeTopPage];
 }
@@ -422,13 +422,13 @@
 #pragma mark - MMPaperViewDelegate
 
 - (void)didStartToWriteWithStylus {
-    fromRightBezelGesture.enabled = NO;
-    fromLeftBezelGesture.enabled = NO;
+    _fromRightBezelGesture.enabled = NO;
+    _fromLeftBezelGesture.enabled = NO;
 }
 
 - (void)didEndWritingWithStylus {
-    fromRightBezelGesture.enabled = YES;
-    fromLeftBezelGesture.enabled = YES;
+    _fromRightBezelGesture.enabled = YES;
+    _fromLeftBezelGesture.enabled = YES;
 }
 
 /**
@@ -443,7 +443,7 @@
  * transition animation
  */
 - (CGRect)isBeginning:(BOOL)beginning toPanAndScalePage:(MMPaperView*)page fromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame withTouches:(NSArray*)touches {
-    if ([visibleStackHolder peekSubview].scale < kMinPageZoom && [visibleStackHolder peekSubview] == page) {
+    if ([self.visibleStackHolder peekSubview].scale < kMinPageZoom && [self.visibleStackHolder peekSubview] == page) {
         // make sure we're the top page being panned,
         // and that we're zooming into list view
 
@@ -456,7 +456,7 @@
         // once the zoom is below kMinPageZoom and still above kZoomToListPageZoom,
         // then we need to adjust the frames of all the pages so that they zoom
         // into their list view frames correctly
-        if ([bezelStackHolder.subviews count]) {
+        if ([self.bezelStackHolder.subviews count]) {
             // bezelStackHolder still has pages being animated, so hold off on any list animations for now
             //
             // while we wait for the bezel to empty, we'll just return the toFrame
@@ -470,15 +470,15 @@
         // move all the top two rows of pages to their resting place as well
         //
         // how close are we to list view? 1 is not close at all, 0 is list view
-        CGFloat percentageToTrustToFrame = [visibleStackHolder peekSubview].scale / kMinPageZoom;
+        CGFloat percentageToTrustToFrame = [self.visibleStackHolder peekSubview].scale / kMinPageZoom;
 
         //
         // start to move the hidden frame to overlap the visible frame
         CGFloat percentageToMoveHiddenFrame = percentageToTrustToFrame;
         percentageToMoveHiddenFrame += .06;
 
-        CGFloat amountToMoveHiddenFrame = visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * visibleStackHolder.frame.size.width;
-        CGFloat amountToMoveHiddenFrameFromCachedPosition = visibleStackHolder.frame.size.width - percentageToTrustToFrame * visibleStackHolder.frame.size.width;
+        CGFloat amountToMoveHiddenFrame = self.visibleStackHolder.frame.size.width - percentageToMoveHiddenFrame * self.visibleStackHolder.frame.size.width;
+        CGFloat amountToMoveHiddenFrameFromCachedPosition = self.visibleStackHolder.frame.size.width - percentageToTrustToFrame * self.visibleStackHolder.frame.size.width;
 
         //
         // ok, move all the soon to be visible pages into their
@@ -486,14 +486,14 @@
         CGFloat transitionDelay = 0;
         for (MMPaperView* aPage in [pagesThatWillBeVisibleAfterTransitionToListView reverseObjectEnumerator]) {
             if (aPage != page) {
-                if (aPage == [hiddenStackHolder peekSubview]) {
+                if (aPage == [self.hiddenStackHolder peekSubview]) {
                     // reset the transition delay so that the hidden pages
                     // begin to show at the same time, regardless of how many
                     // visible pages might be showing.
                     transitionDelay = 0;
                 }
 
-                CGRect oldFrame = hiddenStackHolder.bounds;
+                CGRect oldFrame = self.hiddenStackHolder.bounds;
                 NSValue* possibleCachedOriginalLocation = [setOfInitialFramesForPagesBeingZoomed objectForKey:aPage.uuid];
                 if (possibleCachedOriginalLocation) {
                     // https://github.com/adamwulf/loose-leaf/issues/18
@@ -538,8 +538,8 @@
         // the frame is not adjusted after we animate the page to
         // it's resting place
         //        DebugLog(@"scale: %f", [visibleStackHolder peekSubview].scale);
-        if ([visibleStackHolder peekSubview].scale < kZoomToListPageZoom) {
-            [[visibleStackHolder peekSubview] cancelAllGestures];
+        if ([self.visibleStackHolder peekSubview].scale < kZoomToListPageZoom) {
+            [[self.visibleStackHolder peekSubview] cancelAllGestures];
             return fromFrame;
         }
         return [self framePositionDuringTransitionForPage:page originalFrame:toFrame withTrust:percentageToTrustToFrame];
@@ -560,14 +560,14 @@
     // the user is also panning other pages, we need to
     // cancel them because only the top page's gesture
     // is allowed at this small scale
-    if (page && [[setOfPagesBeingPanned setByRemovingObject:page] count]) {
+    if (page && [[_setOfPagesBeingPanned setByRemovingObject:page] count]) {
         //
         // we're panning the top most page, and it's scale
         // is less than the minimum allowed.
         //
         // this means we need to cancel all other gestures
         // and start zooming views out
-        NSSet* setOfAllPannedPagesExceptTopVisible = [setOfPagesBeingPanned setByRemovingObject:[visibleStackHolder peekSubview]];
+        NSSet* setOfAllPannedPagesExceptTopVisible = [_setOfPagesBeingPanned setByRemovingObject:[self.visibleStackHolder peekSubview]];
         for (MMPaperView* page in setOfAllPannedPagesExceptTopVisible) {
             [page cancelAllGestures];
         }
@@ -576,7 +576,7 @@
     // the bezelStackHolder may have subviews from a gesture
     // so empty that stack to the hidden stack before
     // we can continue scaling out
-    if ([bezelStackHolder.subviews count]) {
+    if ([self.bezelStackHolder.subviews count]) {
         //
         // https://github.com/adamwulf/loose-leaf/issues/24
         // check to see if we have pages in the bezel or not.
@@ -628,7 +628,7 @@
     // clean up gesture state
     //    DebugLog(@"removing1 %p", page);
     if (page) {
-        [setOfPagesBeingPanned removeObject:page];
+        [_setOfPagesBeingPanned removeObject:page];
     }
 
     CGFloat duration = 0.3;
@@ -647,7 +647,7 @@
         //
         // find visible stack pages that we can
         // move immediately
-        for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews reverseObjectEnumerator]) {
             if ([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]) {
                 // we'll animate these in step 2
                 [pagesThatNeedAnimating addObject:aPage];
@@ -672,7 +672,7 @@
         //
         // find hidden stack pages that we can
         // move immediately
-        for (MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]) {
+        for (MMPaperView* aPage in [self.hiddenStackHolder.subviews reverseObjectEnumerator]) {
             if ([pagesThatWillBeVisibleAfterTransitionToListView containsObject:aPage]) {
                 // we'll animate these in step 2
                 [pagesThatNeedAnimating addObject:aPage];
@@ -724,7 +724,7 @@
                 aPage.frame = [self framePositionDuringTransitionForPage:aPage originalFrame:aPage.frame withTrust:0.0];
             }
         }
-        hiddenStackHolder.frame = visibleStackHolder.frame;
+        self.hiddenStackHolder.frame = self.visibleStackHolder.frame;
         [self subclassDuringTransitionToListView];
     };
 
@@ -736,7 +736,7 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that the scrollview works.
-        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             CGRect newFrame = [self frameForListViewForPage:aPage];
             if (!CGRectEqualToRect(newFrame, aPage.frame)) {
                 aPage.frame = newFrame;
@@ -801,37 +801,37 @@
     [super cancelledScalingReallySmall:page];
     //
     // clean up gesture state
-    [setOfPagesBeingPanned removeObject:page];
+    [_setOfPagesBeingPanned removeObject:page];
 
     if (![page isBeingPannedAndZoomed]) {
-        [self animatePageToFullScreen:[visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished) {
-            [self realignPagesInVisibleStackExcept:[visibleStackHolder peekSubview] animated:NO];
+        [self animatePageToFullScreen:[self.visibleStackHolder peekSubview] withDelay:0 withBounce:YES onComplete:^(BOOL finished) {
+            [self realignPagesInVisibleStackExcept:[self.visibleStackHolder peekSubview] animated:NO];
         }];
         [UIView animateWithDuration:0.1 delay:0 options:(UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationCurveLinear) animations:^{
-            CGRect fr = visibleStackHolder.frame;
+            CGRect fr = self.visibleStackHolder.frame;
             fr.origin.x = fr.size.width;
             fr.origin.x += 10;
-            hiddenStackHolder.frame = fr;
+            self.hiddenStackHolder.frame = fr;
             //
             // reset hidden stack pages
-            for (MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]) {
-                if (CGRectEqualToRect(aPage.frame, hiddenStackHolder.bounds)) {
+            for (MMPaperView* aPage in [self.hiddenStackHolder.subviews reverseObjectEnumerator]) {
+                if (CGRectEqualToRect(aPage.frame, self.hiddenStackHolder.bounds)) {
                     break;
                 } else {
-                    aPage.frame = hiddenStackHolder.bounds;
+                    aPage.frame = self.hiddenStackHolder.bounds;
                 }
             }
         } completion:nil];
     } else {
-        for (MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]) {
-            if (CGRectEqualToRect(aPage.frame, hiddenStackHolder.bounds)) {
+        for (MMPaperView* aPage in [self.hiddenStackHolder.subviews reverseObjectEnumerator]) {
+            if (CGRectEqualToRect(aPage.frame, self.hiddenStackHolder.bounds)) {
                 break;
             } else {
-                aPage.frame = hiddenStackHolder.bounds;
+                aPage.frame = self.hiddenStackHolder.bounds;
             }
         }
-        for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
-            if (aPage != [visibleStackHolder peekSubview]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews reverseObjectEnumerator]) {
+            if (aPage != [self.visibleStackHolder peekSubview]) {
                 // turn gestures back on.
                 // these were turned off in beginUITransitionFromPageView
                 // which is called from isBeginningToScaleReallySmall
@@ -859,11 +859,11 @@
  * it sits in the combined visible/hidden stack
  */
 - (NSInteger)indexOfPageInCompleteStack:(MMPaperView*)page {
-    NSUInteger indexOfPageInVisible = [visibleStackHolder.subviews indexOfObject:page];
+    NSUInteger indexOfPageInVisible = [self.visibleStackHolder.subviews indexOfObject:page];
     if (indexOfPageInVisible != NSNotFound) {
         return indexOfPageInVisible;
     } else {
-        return [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - [hiddenStackHolder.subviews indexOfObject:page] - 1;
+        return [self.visibleStackHolder.subviews count] + [self.hiddenStackHolder.subviews count] - [self.hiddenStackHolder.subviews indexOfObject:page] - 1;
     }
 }
 
@@ -871,7 +871,7 @@
  * return true if the input page is in the visible stack
  */
 - (BOOL)isInVisibleStack:(MMPaperView*)page {
-    return [visibleStackHolder.subviews indexOfObject:page] != NSNotFound;
+    return [self.visibleStackHolder.subviews indexOfObject:page] != NSNotFound;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -900,7 +900,7 @@
         CGPoint locationOfTap = [_tapGesture locationInView:self];
 
         MMPaperView* thePageThatWasTapped = nil;
-        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             CGRect frameOfPage = [self frameForListViewForPage:aPage];
             if (CGRectContainsPoint(frameOfPage, locationOfTap)) {
                 thePageThatWasTapped = aPage;
@@ -920,9 +920,9 @@
 #pragma mark - MMLongPressFromListViewGestureRecognizer - MMPanAndPinchFromListViewGestureRecognizer
 
 - (void)deletePage:(MMExportablePaperView*)page {
-    MMPaperView* nextTopPage = [visibleStackHolder getPageBelow:page];
+    MMPaperView* nextTopPage = [self.visibleStackHolder getPageBelow:page];
     if (!nextTopPage) {
-        nextTopPage = [hiddenStackHolder peekSubview];
+        nextTopPage = [self.hiddenStackHolder peekSubview];
     }
     if (!nextTopPage) {
         DebugLog(@"hrmph. out of pages...");
@@ -1046,7 +1046,7 @@
  * the visible or hidden stacks
  */
 - (MMPaperView*)pageForPointInList:(CGPoint)point {
-    for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+    for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
         CGRect frameOfPage = [self convertRect:aPage.frame fromView:aPage.superview];
         // we have to expand the frame, because we want to count pages even if
         // just their shadow is visible
@@ -1123,8 +1123,8 @@
         // transitioning into page view
         // now realign with fresh frame checking.
         if (!isAnimatingTowardPageView) {
-            NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
-            [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
+            NSMutableSet* allOtherPages = [NSMutableSet setWithArray:self.visibleStackHolder.subviews];
+            [allOtherPages addObjectsFromArray:self.hiddenStackHolder.subviews];
             [allOtherPages removeObjectsInSet:pagesBeingAnimatedDuringDeleteGesture];
             // find the pages to align
             [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
@@ -1198,16 +1198,16 @@
 
                 // collect all the pages that are visible +
                 // need to be adjusted away from our held page
-                NSInteger numVisible = [visibleStackHolder.subviews count];
+                NSInteger numVisible = [self.visibleStackHolder.subviews count];
                 for (NSInteger i = numVisible - 1; i >= 0 && i > numVisible - 12; i--) {
-                    MMExportablePaperView* pageToMove = [visibleStackHolder.subviews objectAtIndex:i];
+                    MMExportablePaperView* pageToMove = [self.visibleStackHolder.subviews objectAtIndex:i];
                     if (pageToMove != pageBeingDragged) {
                         [pagesToMove addObject:pageToMove];
                     }
                 }
-                NSInteger numHidden = [hiddenStackHolder.subviews count];
+                NSInteger numHidden = [self.hiddenStackHolder.subviews count];
                 for (NSInteger i = numHidden - 1; i >= 0 && i > numHidden - 12; i--) {
-                    MMExportablePaperView* pageToMove = [hiddenStackHolder.subviews objectAtIndex:i];
+                    MMExportablePaperView* pageToMove = [self.hiddenStackHolder.subviews objectAtIndex:i];
                     if (pageToMove != pageBeingDragged) {
                         [pagesToMove addObject:pageToMove];
                     }
@@ -1390,10 +1390,10 @@
     [self ensurePageIsAtTopOfVisibleStack:thePage];
     // that index is now the top of the visible stack
 
-    if (newIndex > [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - 1) {
+    if (newIndex > [self.visibleStackHolder.subviews count] + [self.hiddenStackHolder.subviews count] - 1) {
         // if the page is dragged beyond the bounds
         // of the stacks, then put it at the very end
-        newIndex = [visibleStackHolder.subviews count] + [hiddenStackHolder.subviews count] - 1;
+        newIndex = [self.visibleStackHolder.subviews count] + [self.hiddenStackHolder.subviews count] - 1;
     }
     //
     // here, we know that the aPage is at the top of the visible stack,
@@ -1404,19 +1404,19 @@
     //
     // then we'll animate all the pages we just moved
     NSMutableSet* pagesToAnimate = [NSMutableSet set];
-    while ([visibleStackHolder.subviews count] - 1 != newIndex) {
+    while ([self.visibleStackHolder.subviews count] - 1 != newIndex) {
         if (currentIndex > newIndex) {
             // i'm moving lower into the visible stack
             // so i need to pop views off the visible stack
             // and onto the hidden stack
-            [hiddenStackHolder pushSubview:[visibleStackHolder getPageBelow:thePage]];
-            [pagesToAnimate addObject:[hiddenStackHolder peekSubview]];
-            [self clearFrameCacheForPage:[hiddenStackHolder peekSubview]];
+            [self.hiddenStackHolder pushSubview:[self.visibleStackHolder getPageBelow:thePage]];
+            [pagesToAnimate addObject:[self.hiddenStackHolder peekSubview]];
+            [self clearFrameCacheForPage:[self.hiddenStackHolder peekSubview]];
         } else if (currentIndex < newIndex) {
             // iterate through the hidden stack
-            [pagesToAnimate addObject:[hiddenStackHolder peekSubview]];
-            [self clearFrameCacheForPage:[hiddenStackHolder peekSubview]];
-            [visibleStackHolder insertPage:[hiddenStackHolder peekSubview] belowPage:thePage];
+            [pagesToAnimate addObject:[self.hiddenStackHolder peekSubview]];
+            [self clearFrameCacheForPage:[self.hiddenStackHolder peekSubview]];
+            [self.visibleStackHolder insertPage:[self.hiddenStackHolder peekSubview] belowPage:thePage];
         }
     }
 
@@ -1458,7 +1458,7 @@
  * from the number of both visible and hidden pages
  */
 - (CGFloat)contentHeightForAllPages {
-    NSInteger numberOfPages = [hiddenStackHolder.subviews count] + [visibleStackHolder.subviews count];
+    NSInteger numberOfPages = [self.hiddenStackHolder.subviews count] + [self.visibleStackHolder.subviews count];
     CGFloat numberOfRows = ceilf(numberOfPages / (CGFloat)kNumberOfColumnsInListView);
     if (numberOfPages % kNumberOfColumnsInListView == 0) {
         // need to add a row for the add button
@@ -1486,12 +1486,12 @@
         // the top visible page will be at most w/in the top
         // two rows
 
-        MMPaperView* aPage = [visibleStackHolder peekSubview];
+        MMPaperView* aPage = [self.visibleStackHolder peekSubview];
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
         CGRect rectOfVisibleScroll = CGRectMake(eventualOffsetOfListView.x, eventualOffsetOfListView.y, [UIScreen screenWidth], [UIScreen screenHeight]);
         if (aPage) {
             [pagesThatWouldBeVisible addObject:aPage];
-            while ((aPage = [visibleStackHolder getPageBelow:aPage])) {
+            while ((aPage = [self.visibleStackHolder getPageBelow:aPage])) {
                 CGRect frameOfPage = [self frameForListViewForPage:aPage];
                 // we have to expand the frame, because we want to count pages even if
                 // just their shadow is visible
@@ -1505,13 +1505,13 @@
             }
         }
 
-        aPage = [hiddenStackHolder peekSubview];
+        aPage = [self.hiddenStackHolder peekSubview];
         if (aPage) {
             //
             // only care about the hidden stack if there's anything
             // actually in the stack
             [pagesThatWouldBeVisible insertObject:aPage atIndex:0];
-            while ((aPage = [hiddenStackHolder getPageBelow:aPage])) {
+            while ((aPage = [self.hiddenStackHolder getPageBelow:aPage])) {
                 CGRect frameOfPage = [self frameForListViewForPage:aPage];
                 // we have to expand the frame, because we want to count pages even if
                 // just their shadow is visible
@@ -1536,11 +1536,11 @@
         NSMutableArray* pagesThatWouldBeVisible = [NSMutableArray array];
 
         NSArray* arraysOfSubviews[2];
-        arraysOfSubviews[0] = visibleStackHolder.subviews;
-        arraysOfSubviews[1] = hiddenStackHolder.subviews;
+        arraysOfSubviews[0] = self.visibleStackHolder.subviews;
+        arraysOfSubviews[1] = self.hiddenStackHolder.subviews;
         int countOfSubviews[2]; // can't be NSUInteger, or -1 < count will be false
-        countOfSubviews[0] = (int)[visibleStackHolder.subviews count];
-        countOfSubviews[1] = (int)[hiddenStackHolder.subviews count];
+        countOfSubviews[0] = (int)[self.visibleStackHolder.subviews count];
+        countOfSubviews[1] = (int)[self.hiddenStackHolder.subviews count];
         int arrayIndex = 1;
 
         int startRow = floor(selfContentOffsetY) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]);
@@ -1612,21 +1612,21 @@
     //
     // now we need to make sure that page is on the top
     // of the visible stack
-    if ([visibleStackHolder peekSubview] != aPage) {
+    if ([self.visibleStackHolder peekSubview] != aPage) {
         [self willChangeTopPageTo:aPage];
         if ([self isInVisibleStack:aPage]) {
             // the page is in teh visible stack, so pop pages
             // onto the hidden stack so that this page is the
             // top visible page
-            while ([visibleStackHolder peekSubview] != aPage) {
-                [hiddenStackHolder pushSubview:[visibleStackHolder peekSubview]];
+            while ([self.visibleStackHolder peekSubview] != aPage) {
+                [self.hiddenStackHolder pushSubview:[self.visibleStackHolder peekSubview]];
             }
         } else {
             // the page is in the hidden stack, so pop pages
             // onto the visible stack so that this page is the
             // top visible page
-            while ([visibleStackHolder peekSubview] != aPage) {
-                [visibleStackHolder pushSubview:[hiddenStackHolder peekSubview]];
+            while ([self.visibleStackHolder peekSubview] != aPage) {
+                [self.visibleStackHolder pushSubview:[self.hiddenStackHolder peekSubview]];
             }
         }
         [self didChangeTopPage];
@@ -1670,7 +1670,7 @@
 }
 
 - (BOOL)shouldPopPageFromVisibleStack:(MMPaperView*)page withFrame:(CGRect)frame {
-    if ([visibleStackHolder peekSubview].scale < kMinPageZoom) {
+    if ([self.visibleStackHolder peekSubview].scale < kMinPageZoom) {
         return NO;
     }
     return [super shouldPopPageFromVisibleStack:page withFrame:frame];
@@ -1726,12 +1726,12 @@
     [self.stackDelegate willChangeToPageView:self.uuid];
 
     // load the state for the top page in the visible stack
-    if (![[visibleStackHolder peekSubview] isStateLoaded]) {
-        [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[visibleStackHolder peekSubview]];
-        [[visibleStackHolder peekSubview] loadStateAsynchronously:YES
-                                                         withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
-                                                         andScale:[MMPageCacheManager sharedInstance].drawableView.scale
-                                                       andContext:[MMPageCacheManager sharedInstance].drawableView.context];
+    if (![[self.visibleStackHolder peekSubview] isStateLoaded]) {
+        [[MMPageCacheManager sharedInstance] willChangeTopPageTo:[self.visibleStackHolder peekSubview]];
+        [[self.visibleStackHolder peekSubview] loadStateAsynchronously:YES
+                                                              withSize:[MMPageCacheManager sharedInstance].drawableView.pagePtSize
+                                                              andScale:[MMPageCacheManager sharedInstance].drawableView.scale
+                                                            andContext:[MMPageCacheManager sharedInstance].drawableView.context];
     }
 
     __block NSMutableSet* pagesThatNeedAnimating = [NSMutableSet set];
@@ -1747,7 +1747,7 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that we can set the scrollview offset to zero and turn off scrolling
-        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             if (self.contentOffset.y > 0) {
                 CGRect newFrame = aPage.frame;
                 newFrame.origin.y -= self.contentOffset.y;
@@ -1781,16 +1781,16 @@
                 theAnimation.duration = duration;
                 theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
                 theAnimation.fromValue = (id)aPage.contentView.layer.shadowPath;
-                CGSize toSize = visibleStackHolder.bounds.size;
-                if (aPage == [visibleStackHolder peekSubview]) {
-                    toSize = [MMShadowedView expandBounds:visibleStackHolder.bounds].size;
+                CGSize toSize = self.visibleStackHolder.bounds.size;
+                if (aPage == [self.visibleStackHolder peekSubview]) {
+                    toSize = [MMShadowedView expandBounds:self.visibleStackHolder.bounds].size;
                 }
                 theAnimation.toValue = (id)[[MMShadowManager sharedInstance] getShadowForSize:toSize];
                 [aPage.contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             }
         }
 
-        [visibleStackHolder.superview insertSubview:hiddenStackHolder belowSubview:visibleStackHolder];
+        [self.visibleStackHolder.superview insertSubview:self.hiddenStackHolder belowSubview:self.visibleStackHolder];
         addPageButtonInListView.frame = [self frameForAddPageButton];
         [self moveAddButtonToBottom];
     };
@@ -1803,18 +1803,18 @@
         // animate all visible stack pages that will be in the
         // visible frame to the correct place
         for (MMPaperView* aPage in pagesThatNeedAnimating) {
-            if (aPage == [visibleStackHolder peekSubview]) {
-                aPage.frame = [MMPaperView expandFrame:visibleStackHolder.bounds];
+            if (aPage == [self.visibleStackHolder peekSubview]) {
+                aPage.frame = [MMPaperView expandFrame:self.visibleStackHolder.bounds];
             } else if ([self isInVisibleStack:aPage]) {
-                aPage.frame = visibleStackHolder.bounds;
+                aPage.frame = self.visibleStackHolder.bounds;
             } else {
-                aPage.frame = hiddenStackHolder.bounds;
+                aPage.frame = self.hiddenStackHolder.bounds;
             }
         }
-        CGRect newHiddenFrame = visibleStackHolder.frame;
+        CGRect newHiddenFrame = self.visibleStackHolder.frame;
         newHiddenFrame.origin.x += [UIScreen screenWidth];
         newHiddenFrame.origin.x += 10;
-        hiddenStackHolder.frame = newHiddenFrame;
+        self.hiddenStackHolder.frame = newHiddenFrame;
         addPageButtonInListView.alpha = 0;
         [self.stackDelegate animatingToPageView];
     };
@@ -1828,22 +1828,22 @@
     //
     // also, turn off gestures
     void (^step3)(BOOL finished) = ^(BOOL finished) {
-        [self finishedScalingBackToPageView:[visibleStackHolder peekSubview]];
+        [self finishedScalingBackToPageView:[self.visibleStackHolder peekSubview]];
         void (^lastBounceAnimationBlock)() = ^(void) {
-            [visibleStackHolder peekSubview].frame = self.bounds;
+            [self.visibleStackHolder peekSubview].frame = self.bounds;
         };
 
         void (^bounceCompleteBlock)(BOOL) = ^(BOOL finished) {
             //
             // find visible stack pages that we can
             // move immediately
-            for (MMPaperView* aPage in [visibleStackHolder.subviews reverseObjectEnumerator]) {
-                aPage.frame = visibleStackHolder.bounds;
+            for (MMPaperView* aPage in [self.visibleStackHolder.subviews reverseObjectEnumerator]) {
+                aPage.frame = self.visibleStackHolder.bounds;
                 [aPage enableAllGestures];
                 aPage.scale = 1;
             }
-            for (MMPaperView* aPage in [hiddenStackHolder.subviews reverseObjectEnumerator]) {
-                aPage.frame = hiddenStackHolder.bounds;
+            for (MMPaperView* aPage in [self.hiddenStackHolder.subviews reverseObjectEnumerator]) {
+                aPage.frame = self.hiddenStackHolder.bounds;
                 aPage.scale = 1;
             }
             isAnimatingTowardPageView = NO;
@@ -1856,9 +1856,9 @@
             CABasicAnimation* theAnimation = [CABasicAnimation animationWithKeyPath:@"shadowPath"];
             theAnimation.duration = 0.15;
             theAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            theAnimation.fromValue = (id)[visibleStackHolder peekSubview].contentView.layer.shadowPath;
+            theAnimation.fromValue = (id)[self.visibleStackHolder peekSubview].contentView.layer.shadowPath;
             theAnimation.toValue = (id)[[MMShadowManager sharedInstance] getShadowForSize:self.bounds.size];
-            [[visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
+            [[self.visibleStackHolder peekSubview].contentView.layer addAnimation:theAnimation forKey:@"animateShadowPath"];
             [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionCurveEaseIn
                              animations:lastBounceAnimationBlock
                              completion:bounceCompleteBlock];
@@ -1897,7 +1897,7 @@
         MMPaperView* thePageToAddAfter = nil;
         CGFloat closestDistance = CGFLOAT_MAX;
         CGPoint pointToAimFor = CGPointMake(self.center.x + self.contentOffset.x, self.center.y + self.contentOffset.y);
-        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             CGFloat distanceFromPage = DistanceBetweenTwoPoints(pointToAimFor, [self convertPoint:aPage.center fromView:aPage.superview]);
             if (closestDistance > distanceFromPage) {
                 thePageToAddAfter = aPage;
@@ -1960,7 +1960,7 @@
 }
 
 - (NSInteger)countAllPages {
-    return [visibleStackHolder.subviews count] + [bezelStackHolder.subviews count] + [hiddenStackHolder.subviews count];
+    return [self.visibleStackHolder.subviews count] + [self.bezelStackHolder.subviews count] + [self.hiddenStackHolder.subviews count];
 }
 
 #pragma mark - Check for Active Gestures
@@ -1980,7 +1980,7 @@
             MMPaperView* thePageToAddAfter = nil;
             CGFloat closestDistance = CGFLOAT_MAX;
             CGPoint pointToAimFor = CGPointMake(self.center.x + self.contentOffset.x, self.center.y + self.contentOffset.y);
-            for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+            for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
                 CGFloat distanceFromPage = DistanceBetweenTwoPoints(pointToAimFor, [self convertPoint:aPage.center fromView:aPage.superview]);
                 if (closestDistance > distanceFromPage) {
                     thePageToAddAfter = aPage;

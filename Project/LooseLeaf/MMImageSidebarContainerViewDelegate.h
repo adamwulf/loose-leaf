@@ -10,13 +10,12 @@
 #import "MMSlidingSidebarContainerViewDelegate.h"
 #import "MMDisplayAsset.h"
 
-@class MMBufferedImageView;
 @class MMBorderedCamView;
 
 @protocol MMImageSidebarContainerViewDelegate <MMSlidingSidebarContainerViewDelegate>
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView andRequestsImportAsPage:(BOOL)asPage;
 
-- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(MMBufferedImageView*)bufferedImage withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage;
+- (void)assetWasTapped:(MMDisplayAsset*)photo fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation fromContainer:(NSString*)containerDescription andRequestsImportAsPage:(BOOL)asPage;
 
 @end

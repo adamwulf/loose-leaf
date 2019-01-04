@@ -11,13 +11,14 @@
 #import "MMAlbumRowView.h"
 #import "MMBufferedImageView.h"
 #import "MMImageSidebarContainerView.h"
-#import "MMDisplayAssetCell.h"
+#import "MMPhotoAssetCell.h"
 #import "MMPhotosPermissionCell.h"
 #import "MMEmptyCollectionViewCell.h"
 #import "MMDisplayAssetGroupCell.h"
 #import "MMAssetGroupListLayout.h"
 #import "MMAssetListLayout.h"
 #import "MMRotationManager.h"
+#import "MMPhotoAssetCell.h"
 #import "Constants.h"
 #import "NSThread+BlockAdditions.h"
 #import "NSArray+Map.h"
@@ -40,6 +41,7 @@
         // Initialization code
         currentRowForAlbum = [NSMutableDictionary dictionary];
         albumListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self albumsLayout]];
+        albumListScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         albumListScrollView.dataSource = self;
         albumListScrollView.delegate = self;
         albumListScrollView.backgroundColor = [UIColor clearColor];
@@ -47,39 +49,18 @@
         [albumListScrollView registerClass:[MMDisplayAssetGroupCell class] forCellWithReuseIdentifier:@"MMDisplayAssetGroup"];
 
         photoListScrollView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[self photosLayout]];
+        photoListScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         photoListScrollView.dataSource = self;
         photoListScrollView.alpha = 0;
         photoListScrollView.backgroundColor = [UIColor clearColor];
 
-        [photoListScrollView registerClass:[MMDisplayAssetCell class] forCellWithReuseIdentifier:@"MMDisplayAssetCell"];
+        [photoListScrollView registerClass:[MMPhotoAssetCell class] forCellWithReuseIdentifier:@"MMPhotoAssetCell"];
         [photoListScrollView registerClass:[MMPhotosPermissionCell class] forCellWithReuseIdentifier:@"MMPhotosPermissionCell"];
 
         currentAlbum = nil;
 
         [self addSubview:albumListScrollView];
         [self addSubview:photoListScrollView];
-
-
-        NSObject* transparent = (NSObject*)[[UIColor colorWithWhite:0 alpha:0] CGColor];
-        NSObject* opaque = (NSObject*)[[UIColor colorWithWhite:0 alpha:1] CGColor];
-
-        CALayer* maskLayer = [CALayer layer];
-        maskLayer.frame = CGRectMake(self.bounds.origin.x - 100, 0, self.bounds.size.width + 200, self.bounds.size.height);
-
-        CAGradientLayer* gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = CGRectMake(maskLayer.bounds.origin.x, 0,
-                                         maskLayer.bounds.size.width, self.bounds.size.height);
-
-        gradientLayer.colors = [NSArray arrayWithObjects:transparent, opaque, nil];
-
-        CGFloat fadePercentage = kTopBottomMargin / self.bounds.size.height;
-        // Set percentage of scrollview that fades at top & bottom
-        gradientLayer.locations = [NSArray arrayWithObjects:
-                                               [NSNumber numberWithFloat:0],
-                                               [NSNumber numberWithFloat:fadePercentage], nil];
-
-        [maskLayer addSublayer:gradientLayer];
-        self.layer.mask = maskLayer;
     }
     return self;
 }
@@ -151,6 +132,42 @@
         lastPhotoScrollOffset = CGPointZero;
         lastAlbumScrollOffset = CGPointZero;
     }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    NSObject* transparent = (NSObject*)[[UIColor colorWithWhite:0 alpha:0] CGColor];
+    NSObject* opaque = (NSObject*)[[UIColor colorWithWhite:0 alpha:1] CGColor];
+
+    BOOL needsTopBuffer = CGRectGetMinY(photoListScrollView.frame) != 0;
+    CGFloat collectionHeight = CGRectGetHeight(photoListScrollView.frame);
+    CALayer* maskLayer = [CALayer layer];
+    maskLayer.frame = [self bounds];
+
+    CGFloat topGradient1 = (CGRectGetMinY(photoListScrollView.frame) - 5) / CGRectGetHeight(self.frame);
+    CGFloat topGradient2 = (CGRectGetMinY(photoListScrollView.frame)) / CGRectGetHeight(self.frame);
+    CGFloat fadePercentage = kTopBottomMargin / collectionHeight;
+    CAGradientLayer* gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = [self bounds];
+
+    // Set percentage of scrollview that fades at top & bottom
+    if (needsTopBuffer) {
+        gradientLayer.colors = [NSArray arrayWithObjects:opaque, transparent, opaque, nil];
+        gradientLayer.locations = [NSArray arrayWithObjects:
+                                               [NSNumber numberWithFloat:topGradient1],
+                                               [NSNumber numberWithFloat:topGradient2],
+                                               [NSNumber numberWithFloat:topGradient2 + fadePercentage], nil];
+    } else {
+        gradientLayer.colors = [NSArray arrayWithObjects:transparent, opaque, nil];
+        gradientLayer.locations = [NSArray arrayWithObjects:
+                                               [NSNumber numberWithFloat:topGradient2],
+                                               [NSNumber numberWithFloat:topGradient2 + fadePercentage], nil];
+    }
+
+    [maskLayer addSublayer:gradientLayer];
+
+    self.layer.mask = maskLayer;
 }
 
 #pragma mark - MMPhotoManagerDelegate
@@ -280,8 +297,8 @@
         return albumCell;
     } else {
         if ([self hasPermission]) {
-            MMDisplayAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMDisplayAssetCell" forIndexPath:indexPath];
-            [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row forVisibleIndex:indexPath.row];
+            MMPhotoAssetCell* photoCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMPhotoAssetCell" forIndexPath:indexPath];
+            [photoCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row];
             photoCell.delegate = self;
             return photoCell;
         } else {
@@ -293,17 +310,15 @@
     }
 }
 
-#pragma mark - MMSinglePhotoCollectionViewCellDelegate
+#pragma mark - MMDisplayAssetCellDelegate
 
 - (void)pictureTakeWithCamera:(UIImage*)img fromView:(MMBorderedCamView*)cameraView {
     [delegate pictureTakeWithCamera:img fromView:cameraView];
 }
 
-- (void)assetWasTapped:(MMDisplayAsset*)asset
-              fromView:(MMBufferedImageView*)bufferedImage
-          withRotation:(CGFloat)rotation {
+- (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)assetView withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation {
     MMAssetListLayout* layout = (MMAssetListLayout*)photoListScrollView.collectionViewLayout;
-    [delegate assetWasTapped:asset fromView:bufferedImage withRotation:(rotation + layout.rotation) fromContainer:self];
+    [delegate assetWasTapped:asset fromView:assetView withBackgroundColor:color withRotation:(rotation + layout.rotation) fromContainer:self];
 }
 
 
@@ -326,6 +341,5 @@
         }];
     }
 }
-
 
 @end

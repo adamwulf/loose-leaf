@@ -25,4 +25,8 @@
 
 - (void)setActiveButton:(MMPaletteButton*)button;
 
+- (void)changeColorTo:(UIColor*)color;
+
+- (void)toggleShowingColors;
+
 @end

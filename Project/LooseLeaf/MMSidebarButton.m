@@ -29,6 +29,7 @@
         self.adjustsImageWhenDisabled = NO;
         self.adjustsImageWhenHighlighted = NO;
         self.shadowInset = 0;
+        self.borderColor = [UIColor colorWithRed:0.26 green:0.26 blue:0.26 alpha:0.35];
     }
     return self;
 }
@@ -45,10 +46,6 @@
         [super setEnabled:enabled];
         [self setNeedsDisplay];
     }
-}
-
-- (UIColor*)borderColor {
-    return [UIColor colorWithRed:0.26 green:0.26 blue:0.26 alpha:0.35];
 }
 
 - (UIColor*)backgroundColor {
