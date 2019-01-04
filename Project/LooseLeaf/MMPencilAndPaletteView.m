@@ -201,7 +201,7 @@
     pencilButton.delegate = delegate;
     markerButton.delegate = delegate;
     highlighterButton.delegate = delegate;
-    [self.delegate didChangeColorTo:activeButton.selectedColor];
+    [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -215,23 +215,36 @@
     if (activeButton != highlighterButton) {
         [highlighterButton setSelected:NO];
     }
+
+    if (selected) {
+        [self updateSelectedColorAndBounce:NO];
+    } else {
+        blackButton.selected = NO;
+        redButton.selected = NO;
+        blueButton.selected = NO;
+        yellowButton.selected = NO;
+        greenButton.selected = NO;
+    }
 }
 
 - (BOOL)selected {
-    return activeButton.selected;
+    return pencilButton.selected || markerButton.selected || highlighterButton.selected;
 }
 
 - (void)setActiveButton:(MMPaletteButton*)button {
     activeButton = button;
-    [self setSelected:YES];
     if (activeButton == pencilButton) {
+        [self updateSelectedColorAndBounce:YES];
         [self.delegate pencilTapped:button];
     } else if (activeButton == markerButton) {
+        [self updateSelectedColorAndBounce:YES];
         [self.delegate markerTapped:button];
     } else if (activeButton == highlighterButton) {
+        [self updateSelectedColorAndBounce:YES];
         [self.delegate highlighterTapped:button];
     }
-    [self.delegate didChangeColorTo:activeButton.selectedColor];
+    [self setSelected:YES];
+    [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
 
     if (!isShowingColorOptions) {
         CGPoint originalCenter = CGPointMake(CGRectGetMidX(originalFrame), CGRectGetMidY(originalFrame));
@@ -259,6 +272,12 @@
     }
 }
 
+- (void)changeColorTo:(UIColor*)color {
+    activeButton.selectedColor = color;
+
+    [self updateSelectedColorAndBounce:YES];
+}
+
 #pragma mark - Events
 
 - (void)highlighterTapped:(UIButton*)button {
@@ -266,9 +285,9 @@
         [self toggleShowingColors];
     } else {
         activeButton = highlighterButton;
-        [self.delegate highlighterTapped:button];
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
+        [self.delegate highlighterTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
     }
 }
 
@@ -277,9 +296,9 @@
         [self toggleShowingColors];
     } else {
         activeButton = pencilButton;
-        [self.delegate pencilTapped:button];
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
+        [self.delegate pencilTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
     }
 }
 
@@ -288,9 +307,9 @@
         [self toggleShowingColors];
     } else {
         activeButton = markerButton;
-        [self.delegate markerTapped:button];
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
         [self updateSelectedColorAndBounce:YES];
+        [self.delegate markerTapped:button];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:NO];
     }
 }
 
@@ -448,7 +467,7 @@
 
         activeButton.selectedColor = button.color;
 
-        [self.delegate didChangeColorTo:activeButton.selectedColor];
+        [self.delegate didChangeColorTo:activeButton.selectedColor fromUserInteraction:YES];
 
         if (activeButton == markerButton) {
             [[NSUserDefaults standardUserDefaults] setObject:@([allColors indexOfObject:activeButton.selectedColor]) forKey:kMarkerColor];

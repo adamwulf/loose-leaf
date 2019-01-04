@@ -17,7 +17,7 @@
 
 - (void)markerTapped:(UIButton*)button;
 
-- (void)didChangeColorTo:(UIColor*)color;
+- (void)didChangeColorTo:(UIColor*)color fromUserInteraction:(BOOL)userInteraction;
 
 - (void)colorMenuToggled;
 

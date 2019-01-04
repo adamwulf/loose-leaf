@@ -70,6 +70,8 @@
     MMScissorTool* scissor;
 
     MMRulerView* rulerView;
+
+    NSObject* _previousTool;
 }
 
 + (CGRect)insertImageButtonFrame;

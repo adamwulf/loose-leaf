@@ -328,6 +328,8 @@ static UIWebView* pdfWebView;
 #pragma mark - MMPencilAndPaletteViewDelegate
 
 - (void)highlighterTapped:(UIButton*)button {
+    [self willSwitchToTool:highlighter withColor:highlighter.color];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
@@ -336,9 +338,13 @@ static UIWebView* pdfWebView;
     scissorButton.selected = NO;
     [[NSUserDefaults standardUserDefaults] setObject:kBrushHighlighter forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self didSwitchToTool:highlighter withColor:highlighter.color];
 }
 
 - (void)pencilTapped:(UIButton*)_button {
+    [self willSwitchToTool:pen withColor:pen.color];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
@@ -347,9 +353,13 @@ static UIWebView* pdfWebView;
     scissorButton.selected = NO;
     [[NSUserDefaults standardUserDefaults] setObject:kBrushPencil forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self didSwitchToTool:pencilTool withColor:pen.color];
 }
 
 - (void)markerTapped:(UIButton*)_button {
+    [self willSwitchToTool:marker withColor:marker.color];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
@@ -358,19 +368,29 @@ static UIWebView* pdfWebView;
     scissorButton.selected = NO;
     [[NSUserDefaults standardUserDefaults] setObject:kBrushMarker forKey:kSelectedBrush];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [self didSwitchToTool:marker withColor:marker.color];
 }
 
 - (void)colorMenuToggled {
     // noop
 }
 
-- (void)didChangeColorTo:(UIColor*)color {
+- (void)didChangeColorTo:(UIColor*)color fromUserInteraction:(BOOL)userInteraction {
+    if (userInteraction) {
+        [self willSwitchToTool:[self currentTool] withColor:color];
+    }
+
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     highlighter.color = color;
     pen.color = color;
     marker.color = color;
     if (!pencilTool.selected) {
         [self markerTapped:nil];
+    }
+
+    if (userInteraction) {
+        [self didSwitchToTool:[self currentTool] withColor:color];
     }
 }
 
@@ -397,22 +417,29 @@ static UIWebView* pdfWebView;
 }
 
 - (void)eraserTapped:(UIButton*)_button {
+    [self willSwitchToTool:eraser withColor:nil];
+
     [scissor cancelAllTouches];
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = YES;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = NO;
+
+    [self didSwitchToTool:eraser withColor:nil];
 }
 
 - (void)scissorTapped:(UIButton*)_button {
+    [self willSwitchToTool:scissor withColor:nil];
+
     [[JotStrokeManager sharedInstance] cancelAllStrokes];
     eraserButton.selected = NO;
     pencilTool.selected = NO;
     insertImageButton.selected = NO;
     scissorButton.selected = YES;
-}
 
+    [self didSwitchToTool:scissor withColor:nil];
+}
 
 - (void)handTapped:(UIButton*)_button {
     [[self.visibleStackHolder peekSubview] cancelAllGestures];
@@ -1132,13 +1159,98 @@ static UIWebView* pdfWebView;
 
 #pragma mark - UIPencilInteractionDelegate
 
+- (UIColor*)currentColor {
+    if (pencilTool.pencilButton.selected) {
+        return pen.color;
+    } else if (pencilTool.highlighterButton.selected) {
+        return highlighter.color;
+    } else if (pencilTool.markerButton.selected) {
+        return marker.color;
+    } else if (scissorButton.selected) {
+        return nil;
+    } else if (eraserButton.selected) {
+        return nil;
+    } else {
+        return nil;
+    }
+}
+
+- (NSObject*)currentTool {
+    if (pencilTool.selected && pencilTool.pencilButton.selected) {
+        return pen;
+    } else if (pencilTool.selected && pencilTool.highlighterButton.selected) {
+        return highlighter;
+    } else if (pencilTool.selected && pencilTool.markerButton.selected) {
+        return marker;
+    } else if (scissorButton.selected) {
+        return scissor;
+    } else if (eraserButton.selected) {
+        return eraser;
+    } else {
+        return eraser;
+    }
+}
+
+- (void)willSwitchToTool:(NSObject*)tool withColor:(UIColor*)color {
+    NSObject* fromTool = [self currentTool];
+    UIColor* fromColor = [self currentColor];
+
+    if (tool && ![fromTool isEqual:tool]) {
+        _previousTool = fromTool;
+    } else if (tool && [fromTool isEqual:tool]) {
+        if (color && ![fromColor isEqual:color]) {
+            _previousTool = fromColor;
+        }
+    }
+}
+
+- (void)didSwitchToTool:(NSObject*)tool withColor:(UIColor*)color {
+}
+
+- (void)restorePreviousTool {
+    NSObject* switchingToTool = _previousTool;
+
+    if (switchingToTool == nil) {
+        if ([self currentTool] == eraser) {
+            switchingToTool = pen;
+        } else {
+            switchingToTool = eraser;
+        }
+    }
+
+    if ([switchingToTool isKindOfClass:[UIColor class]]) {
+        // switch colors
+        [pencilTool changeColorTo:(UIColor*)switchingToTool];
+        [self didChangeColorTo:(UIColor*)switchingToTool fromUserInteraction:YES];
+    } else {
+        // switch back to a different tool
+        if (switchingToTool == pen) {
+            [pencilTool setActiveButton:pencilTool.pencilButton];
+        } else if (switchingToTool == marker) {
+            [pencilTool setActiveButton:pencilTool.markerButton];
+        } else if (switchingToTool == highlighter) {
+            [pencilTool setActiveButton:pencilTool.highlighterButton];
+        } else if (switchingToTool == eraser) {
+            [self eraserTapped:nil];
+        } else if (switchingToTool == scissor) {
+            [self scissorTapped:nil];
+        }
+    }
+}
+
 - (void)pencilInteractionDidTap:(UIPencilInteraction*)interaction API_AVAILABLE(ios(12.1)) {
     if (!interaction.enabled) {
         return;
     }
 
     if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionSwitchEraser) {
+        if (eraserButton.selected) {
+            [self restorePreviousTool];
+        } else {
+            [self eraserTapped:nil];
+        }
     } else if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionSwitchPrevious) {
+        [self restorePreviousTool];
     } else if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionShowColorPalette) {
         [pencilTool toggleShowingColors];
     }

@@ -892,8 +892,8 @@
     [self anySidebarButtonTapped:nil];
 }
 
-- (void)didChangeColorTo:(UIColor*)color {
-    [super didChangeColorTo:color];
+- (void)didChangeColorTo:(UIColor*)color fromUserInteraction:(BOOL)userInteraction {
+    [super didChangeColorTo:color fromUserInteraction:userInteraction];
     [self anySidebarButtonTapped:nil];
 }
 
