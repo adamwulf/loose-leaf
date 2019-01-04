@@ -249,18 +249,21 @@
     }
 }
 
+- (void)toggleShowingColors {
+    if ([self isShowingColors]) {
+        [self hideColors];
+        [self.delegate colorMenuToggled];
+    } else {
+        [self showColors];
+        [self.delegate colorMenuToggled];
+    }
+}
 
 #pragma mark - Events
 
 - (void)highlighterTapped:(UIButton*)button {
     if (highlighterButton.selected) {
-        if ([self isShowingColors]) {
-            [self hideColors];
-            [self.delegate colorMenuToggled];
-        } else {
-            [self showColors];
-            [self.delegate colorMenuToggled];
-        }
+        [self toggleShowingColors];
     } else {
         activeButton = highlighterButton;
         [self.delegate highlighterTapped:button];
@@ -271,13 +274,7 @@
 
 - (void)pencilTapped:(UIButton*)button {
     if (pencilButton.selected) {
-        if ([self isShowingColors]) {
-            [self hideColors];
-            [self.delegate colorMenuToggled];
-        } else {
-            [self showColors];
-            [self.delegate colorMenuToggled];
-        }
+        [self toggleShowingColors];
     } else {
         activeButton = pencilButton;
         [self.delegate pencilTapped:button];
@@ -288,13 +285,7 @@
 
 - (void)markerTapped:(UIButton*)button {
     if (markerButton.selected) {
-        if ([self isShowingColors]) {
-            [self hideColors];
-            [self.delegate colorMenuToggled];
-        } else {
-            [self showColors];
-            [self.delegate colorMenuToggled];
-        }
+        [self toggleShowingColors];
     } else {
         activeButton = markerButton;
         [self.delegate markerTapped:button];

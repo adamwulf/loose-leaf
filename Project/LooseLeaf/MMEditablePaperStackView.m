@@ -25,6 +25,11 @@
 #import <JotUI/AbstractBezierPathElement-Protected.h>
 
 
+@interface MMEditablePaperStackView () <UIPencilInteractionDelegate>
+
+@end
+
+
 @implementation MMEditablePaperStackView {
     MMMemoryProfileView* memoryView;
 
@@ -199,6 +204,14 @@
         mirrorView = [[MMMirrorLineView alloc] initWithFrame:self.bounds];
         [mirrorView setAlpha:0];
         [self addSubview:mirrorView];
+
+
+        if (@available(iOS 12.1, *)) {
+            UIPencilInteraction* pencilInteraction = [[UIPencilInteraction alloc] init];
+            pencilInteraction.delegate = self;
+
+            [self addInteraction:pencilInteraction];
+        }
     }
     return self;
 }
@@ -1115,6 +1128,20 @@ static UIWebView* pdfWebView;
 
 - (BOOL)isActivelyGesturing {
     return [super isActivelyGesturing] || [[MMDrawingTouchGestureRecognizer sharedInstance] isDrawing];
+}
+
+#pragma mark - UIPencilInteractionDelegate
+
+- (void)pencilInteractionDidTap:(UIPencilInteraction*)interaction API_AVAILABLE(ios(12.1)) {
+    if (!interaction.enabled) {
+        return;
+    }
+
+    if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionSwitchEraser) {
+    } else if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionSwitchPrevious) {
+    } else if (UIPencilInteraction.preferredTapAction == UIPencilPreferredActionShowColorPalette) {
+        [pencilTool toggleShowingColors];
+    }
 }
 
 @end

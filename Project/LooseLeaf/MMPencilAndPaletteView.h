@@ -25,4 +25,6 @@
 
 - (void)setActiveButton:(MMPaletteButton*)button;
 
+- (void)toggleShowingColors;
+
 @end
