@@ -37,7 +37,6 @@
 
 @implementation MMEmojiSidebarContentView {
     CGPoint lastCameraRollOffset;
-    NSArray<MMColorButton*>* colorButtons;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -59,19 +58,7 @@
         [line setTranslatesAutoresizingMaskIntoConstraints:NO];
         line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
 
-        MMButtonBoxView* colorButtonBox = [[MMButtonBoxView alloc] init];
-        colorButtons = @[[[MMColorButton alloc] initWithColor:[UIColor whiteColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor blueInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor redInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor yellowInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor greenInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))]];
-
-        [colorButtonBox setTranslatesAutoresizingMaskIntoConstraints:NO];
-        [colorButtonBox setButtons:colorButtons];
-        [colorButtonBox sizeToFit];
-
         [self addSubview:line];
-        [self addSubview:colorButtonBox];
         [self addSubview:photoListScrollView];
 
         [self addConstraint:[NSLayoutConstraint constraintWithItem:line attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeWidth multiplier:.8 constant:0]];
@@ -79,20 +66,10 @@
         [self addConstraint:[NSLayoutConstraint constraintWithItem:line attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:14]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:line attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:.8 constant:10]];
 
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:colorButtonBox attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:14]];
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:colorButtonBox attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:line attribute:NSLayoutAttributeBottom multiplier:.8 constant:10]];
-
         [self addConstraint:[NSLayoutConstraint constraintWithItem:photoListScrollView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:photoListScrollView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeRight multiplier:1.0 constant:0]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:photoListScrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:photoListScrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:colorButtonBox attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0]];
-
-        [[colorButtons firstObject] setSelected:YES];
-        [colorButtons enumerateObjectsUsingBlock:^(MMColorButton* _Nonnull colorButton, NSUInteger idx, BOOL* _Nonnull stop) {
-            [colorButton addTarget:self action:@selector(colorButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [colorButton setShadowColor:[[UIColor whiteColor] colorWithAlphaComponent:.5]];
-            [colorButton setBorderColor:[MMDarkSidebarButton borderColor]];
-        }];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:photoListScrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:line attribute:NSLayoutAttributeBottom multiplier:.8 constant:10]];
     }
     return self;
 }
@@ -143,15 +120,6 @@
     return @"No Emojis";
 }
 
-#pragma mark - Actions
-
-- (IBAction)colorButtonTapped:(MMColorButton*)button {
-    [colorButtons enumerateObjectsUsingBlock:^(MMColorButton* _Nonnull colorButton, NSUInteger idx, BOOL* _Nonnull stop) {
-        [colorButton setSelected:colorButton == button];
-        [photoListScrollView reloadData];
-    }];
-}
-
 #pragma mark - Description
 
 - (NSString*)description {
@@ -164,9 +132,7 @@
     MMEmojiAssetCell* shapeCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MMEmojiAssetCell" forIndexPath:indexPath];
     [shapeCell loadPhotoFromAlbum:currentAlbum atIndex:indexPath.row];
     shapeCell.delegate = self;
-    shapeCell.backgroundColor = [colorButtons reduce:^id(MMColorButton* obj, NSUInteger index, id accum) {
-        return [obj isSelected] ? [obj color] : accum;
-    }];
+    shapeCell.backgroundColor = [UIColor whiteColor];
 
     return shapeCell;
 }
@@ -176,7 +142,7 @@
 - (void)assetWasTapped:(MMDisplayAsset*)asset fromView:(UIView<MMDisplayAssetCoordinator>*)bufferedImage withBackgroundColor:(UIColor*)color withRotation:(CGFloat)rotation {
     lastCameraRollOffset = photoListScrollView.contentOffset;
 
-    [super assetWasTapped:asset fromView:bufferedImage withBackgroundColor:color withRotation:rotation];
+    [super assetWasTapped:asset fromView:bufferedImage withBackgroundColor:[UIColor whiteColor] withRotation:rotation];
 }
 
 @end
