@@ -69,10 +69,10 @@
 
     MMPDF* pdfToDecrypt;
     void (^finishDecryptingPDFBlock)();
-    
+
     BOOL _isActivelyDraggingScrollView;
     MMColoredTextField* stackNameField;
-    
+
     CGRect cachedStackNameFieldFrame;
 }
 
@@ -178,7 +178,7 @@
 }
 
 - (CGRect)rectForColorConsideration {
-    if(CGRectEqualToRect(CGRectZero, cachedStackNameFieldFrame)){
+    if (CGRectEqualToRect(CGRectZero, cachedStackNameFieldFrame)) {
         cachedStackNameFieldFrame = [stackNameField frame];
         cachedStackNameFieldFrame.size = [stackNameField sizeThatFits:cachedStackNameFieldFrame.size];
     }
@@ -282,7 +282,7 @@
 
 - (void)shareStackButtonTapped:(UIButton*)_button {
     [self cancelAllGestures];
-    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [[self.visibleStackHolder peekSubview] cancelAllGestures];
     [self setButtonsVisible:NO withDuration:0.15];
     [self.stackDelegate didAskToExportStack:self.uuid];
     [self.stackDelegate.shareStackSidebar setReferenceButtonFrame:[_button convertRect:_button.bounds toView:nil]];
@@ -330,7 +330,7 @@
         @autoreleasepool {
             [pdfAlbum loadPhotosAtIndexes:pageSet usingBlock:^(MMDisplayAsset* asset, NSUInteger index, BOOL* stop) {
                 [displayAssets addObject:asset];
-                MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+                MMExportablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:self.hiddenStackHolder.bounds];
                 [pages addObject:page];
                 page.delegate = self;
             }];
@@ -345,7 +345,7 @@
                 return;
             }
 
-            NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+            NSArray<MMExportablePaperView*>* allPages = [[self.visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[self.hiddenStackHolder subviews] reversedArray]];
             [self organizePagesIntoSingleRowAnimated:NO];
 
             [UIView animateWithDuration:.2 animations:^{
@@ -426,7 +426,7 @@
             });
         }];
 
-        CGSize thumbSize = hiddenStackHolder.bounds.size;
+        CGSize thumbSize = self.hiddenStackHolder.bounds.size;
         thumbSize.width = floorf(thumbSize.width / 2);
         thumbSize.height = floorf(thumbSize.height / 2);
 
@@ -444,12 +444,12 @@
                 MMDisplayAsset* asset = displayAssets[index];
                 MMBackgroundedPaperView* page = pages[index];
                 NSURL* assetURL = [asset fullResolutionURL];
-                
+
                 CGSize size = [asset fullResolutionSize];
-                
+
                 UIImage* thumbImageToImport = [asset aspectThumbnailWithMaxPixelSize:CGSizeMaxDim(thumbSize)];
-                
-                if(size.width > size.height){
+
+                if (size.width > size.height) {
                     // it's a landscape page, so we need to rotate the thumbnail
                     // to match the actual page content
                     thumbImageToImport = [thumbImageToImport rotateClockwise:YES];
@@ -501,13 +501,13 @@
     [super scrollViewDidScroll:scrollView];
 }
 
--(void) scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+- (void)scrollViewWillBeginDragging:(UIScrollView*)scrollView {
     _isActivelyDraggingScrollView = YES;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate {
     _isActivelyDraggingScrollView = NO;
-    
+
     if (scrollView.contentOffset.y < -100) {
         // Need to turn off bouncing so that the bounce animation from releasing the over-scroll
         // doesn't occur. otherwise it interferes with the row animation.
@@ -537,15 +537,15 @@
 
 - (NSArray*)pagesToAlignForRowView {
     NSMutableArray* pagesToAlignIntoRow = [NSMutableArray array];
-    if ([[visibleStackHolder subviews] count] < kMaxPageCountForRow) {
-        [pagesToAlignIntoRow addObjectsFromArray:[visibleStackHolder subviews]];
-    } else if ([[visibleStackHolder subviews] count]) {
-        [pagesToAlignIntoRow addObjectsFromArray:[[visibleStackHolder subviews] subarrayWithRange:NSMakeRange(0, kMaxPageCountForRow)]];
+    if ([[self.visibleStackHolder subviews] count] < kMaxPageCountForRow) {
+        [pagesToAlignIntoRow addObjectsFromArray:[self.visibleStackHolder subviews]];
+    } else if ([[self.visibleStackHolder subviews] count]) {
+        [pagesToAlignIntoRow addObjectsFromArray:[[self.visibleStackHolder subviews] subarrayWithRange:NSMakeRange(0, kMaxPageCountForRow)]];
     }
-    if ([[hiddenStackHolder subviews] count] < kMaxPageCountForRow - [pagesToAlignIntoRow count]) {
-        [pagesToAlignIntoRow addObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
-    } else if ([[visibleStackHolder subviews] count]) {
-        [pagesToAlignIntoRow addObjectsFromArray:[[[hiddenStackHolder subviews] reversedArray] subarrayWithRange:NSMakeRange(0, kMaxPageCountForRow - [pagesToAlignIntoRow count])]];
+    if ([[self.hiddenStackHolder subviews] count] < kMaxPageCountForRow - [pagesToAlignIntoRow count]) {
+        [pagesToAlignIntoRow addObjectsFromArray:[[self.hiddenStackHolder subviews] reversedArray]];
+    } else if ([[self.visibleStackHolder subviews] count]) {
+        [pagesToAlignIntoRow addObjectsFromArray:[[[self.hiddenStackHolder subviews] reversedArray] subarrayWithRange:NSMakeRange(0, kMaxPageCountForRow - [pagesToAlignIntoRow count])]];
     }
     return pagesToAlignIntoRow;
 }
@@ -642,20 +642,20 @@
         // Move the visible stack above the hidden stack. During list/page views, we want
         // the pages from the hidden stack to be visible above the pages in the visible stack,
         // but for the collapsed row we want the hidden pages to be lined up behind the top most page.
-        visibleStackHolder.layer.zPosition = 1;
+        self.visibleStackHolder.layer.zPosition = 1;
 
         [pagesToAlignIntoRow enumerateObjectsUsingBlock:^(MMPaperView* _Nonnull aPage, NSUInteger idx, BOOL* _Nonnull stop) {
             aPage.layer.zPosition = [pagesToAlignIntoRow count] - idx;
         }];
-        
+
         NSArray<MMPaperView*>* visiblePagesOnScreen = [[[MMPageCacheManager sharedInstance] delegate] findPagesInVisibleRowsOfListView];
 
         //
         // immediately hide all of the pages that we won't be animating
-        for (MMEditablePaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMEditablePaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             if ([pagesToAlignIntoRow containsObject:aPage]) {
                 // we'll animate these in step 2
-                if([self superview] && [visiblePagesOnScreen containsObject:aPage]){
+                if ([self superview] && [visiblePagesOnScreen containsObject:aPage]) {
                     [[MMPageCacheManager sharedInstance] loadPageThumbnailToCache:aPage];
                 }
             } else {
@@ -692,7 +692,7 @@
             aPage.frame = [self targetFrameInRowForPage:aPage givenAllPages:pagesToAlignIntoRow];
             aPage.transform = CGAffineTransformMakeRotation(RandomCollapsedPageRotation([[aPage uuid] hash]));
         }
-        hiddenStackHolder.frame = visibleStackHolder.frame;
+        self.hiddenStackHolder.frame = self.visibleStackHolder.frame;
         listViewTutorialButton.alpha = 0;
         listViewFeedbackButton.alpha = 0;
         addPageButtonInListView.alpha = 0;
@@ -774,7 +774,7 @@
         expandButton.hidden = YES;
         //
         // immediately hide all of the pages that we won't be animating
-        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             // unhide all pages that were hidden from being collapsed into a single row
             aPage.hidden = NO;
             if (![pagesToAnimateIntoRow containsObject:aPage]) {
@@ -799,7 +799,7 @@
             aPage.transform = CGAffineTransformIdentity;
             aPage.frame = [self frameForListViewForPage:aPage];
         }
-        hiddenStackHolder.frame = visibleStackHolder.frame;
+        self.hiddenStackHolder.frame = self.visibleStackHolder.frame;
         // fade in the add/tutorial buttons
         listViewTutorialButton.alpha = 1;
         listViewFeedbackButton.alpha = 1;
@@ -822,7 +822,7 @@
         // this means we need to keep the pages visually in the same place,
         // but adjust their frames and the content size/offset so
         // that the scrollview works.
-        for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+        for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
             // gestures aren't allowed in row view
             [aPage disableAllGestures];
             aPage.layer.zPosition = 0;
@@ -836,7 +836,7 @@
 
         // in list and page mode, the hidden stack pages should show above
         // the visible stack pages
-        visibleStackHolder.layer.zPosition = 0;
+        self.visibleStackHolder.layer.zPosition = 0;
 
         // now that we're back into list mode, we need to re-enable scrolling + bounce
         [self setBounces:YES];
@@ -1221,7 +1221,7 @@
 
     NSMutableArray* allPagePDFs = [NSMutableArray array];
 
-    NSArray<MMExportablePaperView*>* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[hiddenStackHolder subviews] reversedArray]];
+    NSArray<MMExportablePaperView*>* allPages = [[self.visibleStackHolder subviews] arrayByAddingObjectsFromArray:[[self.hiddenStackHolder subviews] reversedArray]];
 
     __block void (^exportTopPageOf)(NSArray<MMExportablePaperView*>* pages);
     exportTopPageOf = ^(NSArray<MMExportablePaperView*>* pages) {
@@ -1329,14 +1329,14 @@
 
 #pragma mark - MMBackgroundStyleContainerViewDelegate
 
--(NSString*) currentBackgroundStyleType{
+- (NSString*)currentBackgroundStyleType {
     return [[[self visibleStackHolder] peekSubview] currentBackgroundStyleType];
 }
 
--(void) setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle{
-    if([[[self visibleStackHolder] peekSubview] hasBackgroundAsset]){
+- (void)setCurrentBackgroundStyleType:(NSString*)currentBackgroundStyle {
+    if ([[[self visibleStackHolder] peekSubview] hasBackgroundAsset]) {
         [self addPageButtonTapped:nil];
-    }else{
+    } else {
         [[[self visibleStackHolder] peekSubview] setCurrentBackgroundStyleType:currentBackgroundStyle];
     }
 }

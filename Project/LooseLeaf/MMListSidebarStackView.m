@@ -47,7 +47,7 @@
 
 - (void)immediatelyRelayoutIfInListMode {
     if (!self.isShowingPageView) {
-        NSArray* allPages = [[visibleStackHolder subviews] arrayByAddingObjectsFromArray:[hiddenStackHolder subviews]];
+        NSArray* allPages = [[self.visibleStackHolder subviews] arrayByAddingObjectsFromArray:[self.hiddenStackHolder subviews]];
         [self realignPagesInListView:[NSSet setWithArray:allPages] animated:NO forceRecalculateAll:YES];
     }
 }
@@ -93,7 +93,7 @@
         [self addPage:page belowPage:nearbyPage];
         [page disableAllGestures];
     } else {
-        [hiddenStackHolder addSubviewToBottomOfStack:page];
+        [self.hiddenStackHolder addSubviewToBottomOfStack:page];
     }
     // need to set the delegate, otherwise it's only reset in the nearbyPage case above.
     // this delegate also determines the stack UUID for the page's paths
@@ -107,8 +107,8 @@
     [self realignPagesInListView:[NSSet setWithArray:currentlyVisiblePages] animated:YES forceRecalculateAll:YES];
 
     // immediately move non-visible pages to their new location
-    NSMutableSet* allOtherPages = [NSMutableSet setWithArray:visibleStackHolder.subviews];
-    [allOtherPages addObjectsFromArray:hiddenStackHolder.subviews];
+    NSMutableSet* allOtherPages = [NSMutableSet setWithArray:self.visibleStackHolder.subviews];
+    [allOtherPages addObjectsFromArray:self.hiddenStackHolder.subviews];
     [allOtherPages removeObjectsInArray:currentlyVisiblePages];
     [allOtherPages removeObject:page];
     [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
@@ -122,13 +122,13 @@
     // the list of pages that are currently visible
 
     NSArray* arraysOfSubviews[2];
-    arraysOfSubviews[0] = visibleStackHolder.subviews;
-    arraysOfSubviews[1] = hiddenStackHolder.subviews;
+    arraysOfSubviews[0] = self.visibleStackHolder.subviews;
+    arraysOfSubviews[1] = self.hiddenStackHolder.subviews;
     int countOfSubviews[2]; // can't be NSUInteger, or -1 < count will be false
-    countOfSubviews[0] = (int)[visibleStackHolder.subviews count];
-    countOfSubviews[1] = (int)[hiddenStackHolder.subviews count];
+    countOfSubviews[0] = (int)[self.visibleStackHolder.subviews count];
+    countOfSubviews[1] = (int)[self.hiddenStackHolder.subviews count];
 
-    NSArray* allPages = [visibleStackHolder.subviews arrayByAddingObjectsFromArray:[hiddenStackHolder.subviews reversedArray]];
+    NSArray* allPages = [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:[self.hiddenStackHolder.subviews reversedArray]];
 
     NSInteger startRow = floor(offsetOfListView.y) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView rowHeight]);
     NSInteger startCol = floor(offsetOfListView.x) / ([MMListPaperStackView bufferWidth] + [MMListPaperStackView columnWidth]);

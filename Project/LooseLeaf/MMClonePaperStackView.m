@@ -99,10 +99,10 @@
             pageToInsertAfter = gesture.pinchedPage;
         }
 
-        if ([visibleStackHolder containsSubview:pageToInsertAfter]) {
-            [visibleStackHolder insertPage:page abovePage:pageToInsertAfter];
-        } else if ([hiddenStackHolder containsSubview:pageToInsertAfter]) {
-            [hiddenStackHolder insertPage:page abovePage:pageToInsertAfter];
+        if ([self.visibleStackHolder containsSubview:pageToInsertAfter]) {
+            [self.visibleStackHolder insertPage:page abovePage:pageToInsertAfter];
+        } else if ([self.hiddenStackHolder containsSubview:pageToInsertAfter]) {
+            [self.hiddenStackHolder insertPage:page abovePage:pageToInsertAfter];
         }
 
         [[Mixpanel sharedInstance] track:kMPEventClonePage];

@@ -367,7 +367,7 @@ static UIWebView* pdfWebView;
     if (![self isActivelyGesturing]) {
         // only allow undo/redo when no other gestures
         // are active
-        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        MMUndoablePaperView* obj = [self.visibleStackHolder peekSubview];
         [obj.undoRedoManager undo];
         [obj saveToDisk:nil];
     }
@@ -377,7 +377,7 @@ static UIWebView* pdfWebView;
     if (![self isActivelyGesturing]) {
         // only allow undo/redo when no other gestures
         // are active
-        MMUndoablePaperView* obj = [visibleStackHolder peekSubview];
+        MMUndoablePaperView* obj = [self.visibleStackHolder peekSubview];
         [obj.undoRedoManager redo];
         [obj saveToDisk:nil];
     }
@@ -402,7 +402,7 @@ static UIWebView* pdfWebView;
 
 
 - (void)handTapped:(UIButton*)_button {
-    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [[self.visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = YES;
     rulerButton.selected = NO;
 }
@@ -431,7 +431,7 @@ static UIWebView* pdfWebView;
     if (!rulerButton.selected) {
         numberOfRulerGesturesWithoutStroke = 0;
     }
-    [[visibleStackHolder peekSubview] cancelAllGestures];
+    [[self.visibleStackHolder peekSubview] cancelAllGestures];
     handButton.selected = NO;
     rulerButton.selected = YES;
 }
@@ -454,10 +454,10 @@ static UIWebView* pdfWebView;
 - (void)addPageButtonTapped:(UIButton*)_button {
     [super addPageButtonTapped:_button];
 
-    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:hiddenStackHolder.bounds];
+    MMEditablePaperView* page = [[MMExportablePaperView alloc] initWithFrame:self.hiddenStackHolder.bounds];
     page.delegate = self;
-    [hiddenStackHolder pushSubview:page];
-    [[visibleStackHolder peekSubview] enableAllGestures];
+    [self.hiddenStackHolder pushSubview:page];
+    [[self.visibleStackHolder peekSubview] enableAllGestures];
     [self popTopPageOfHiddenStack];
     [[[Mixpanel sharedInstance] people] increment:kMPNumberOfPages by:@(1)];
     [[[Mixpanel sharedInstance] people] set:@{ kMPHasAddedPage: @(YES) }];
@@ -525,7 +525,7 @@ static UIWebView* pdfWebView;
 
 - (void)didUpdateAccelerometerWithRawReading:(MMVector*)currentRawReading andX:(CGFloat)xAccel andY:(CGFloat)yAccel andZ:(CGFloat)zAccel {
     [NSThread performBlockOnMainThread:^{
-        [[visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
+        [[self.visibleStackHolder peekSubview] didUpdateAccelerometerWithRawReading:currentRawReading];
     }];
 }
 
@@ -556,7 +556,7 @@ static UIWebView* pdfWebView;
         }
     }
     [super isBezelingInLeftWithGesture:bezelGesture];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)isBezelingInRightWithGesture:(MMBezelInGestureRecognizer*)bezelGesture {
@@ -571,7 +571,7 @@ static UIWebView* pdfWebView;
         }
     }
     [super isBezelingInRightWithGesture:bezelGesture];
-    [[bezelStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.bezelStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 #pragma mark - MMPaperViewDelegate
@@ -629,7 +629,7 @@ static UIWebView* pdfWebView;
         __block MMEditablePaperView* pageToSave = (MMEditablePaperView*)page;
         [pageToSave setEditable:NO];
         //        DebugLog(@"page %@ isn't editable", pageToSave.uuid);
-        [[visibleStackHolder peekSubview] saveToDisk:nil];
+        [[self.visibleStackHolder peekSubview] saveToDisk:nil];
     } else {
         DebugLog(@"would save, but can't b/c its readonly page");
     }
@@ -698,10 +698,10 @@ static UIWebView* pdfWebView;
         // top page should actually be the top visible page isn't necessarily
         // true. instead, i should ask the PageCacheManager to recheck
         // if it can hand the currently top page the drawable view.
-        if ([fromLeftBezelGesture isActivelyBezeling]) {
-            [self didChangeTopPageTo:[bezelStackHolder peekSubview]];
+        if ([_fromLeftBezelGesture isActivelyBezeling]) {
+            [self didChangeTopPageTo:[self.bezelStackHolder peekSubview]];
         } else {
-            [self didChangeTopPageTo:[visibleStackHolder peekSubview]];
+            [self didChangeTopPageTo:[self.visibleStackHolder peekSubview]];
         }
     }
 }
@@ -756,13 +756,13 @@ static UIWebView* pdfWebView;
     if ([gesture isKindOfClass:[MMDrawingTouchGestureRecognizer class]] ||
         [gesture isKindOfClass:[MMBezelInGestureRecognizer class]]) {
         // only notify of our own gestures
-        if ([fromLeftBezelGesture isActivelyBezeling] && [bezelStackHolder.subviews count]) {
-            [[bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+        if ([_fromLeftBezelGesture isActivelyBezeling] && [self.bezelStackHolder.subviews count]) {
+            [[self.bezelStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         } else {
-            if ([fromLeftBezelGesture isActivelyBezeling]) {
+            if ([_fromLeftBezelGesture isActivelyBezeling]) {
                 DebugLog(@"notifying of ownership during left bezel, but nothing in bezel holder");
             }
-            [[visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
+            [[self.visibleStackHolder peekSubview] ownershipOfTouches:touches isGesture:gesture];
         }
     }
     [[MMDrawingTouchGestureRecognizer sharedInstance] ownershipOfTouches:touches isGesture:gesture];
@@ -776,15 +776,15 @@ static UIWebView* pdfWebView;
 #pragma mark - MMPageCacheManagerDelegate: Page Loading and Unloading
 
 - (BOOL)isPageInVisibleStack:(MMPaperView*)page {
-    return [visibleStackHolder containsSubview:page];
+    return [self.visibleStackHolder containsSubview:page];
 }
 
 - (NSArray*)pagesInCurrentBezelGesture {
-    return bezelStackHolder.subviews;
+    return self.bezelStackHolder.subviews;
 }
 
 - (MMPaperView*)getPageBelow:(MMPaperView*)page {
-    return [visibleStackHolder getPageBelow:page];
+    return [self.visibleStackHolder getPageBelow:page];
 }
 
 - (NSArray*)findPagesInVisibleRowsOfListView {
@@ -861,7 +861,7 @@ static UIWebView* pdfWebView;
 }
 
 - (BOOL)hasPages {
-    return [visibleStackHolder.subviews count] > 0;
+    return [self.visibleStackHolder.subviews count] > 0;
 }
 
 #pragma mark - JotViewDelegate
@@ -875,13 +875,13 @@ static UIWebView* pdfWebView;
     if ([MMPageCacheManager sharedInstance].drawableView.state.currentStroke) {
         return NO;
     }
-    for (MMScrapView* scrap in [[visibleStackHolder peekSubview] scrapsOnPaper]) {
+    for (MMScrapView* scrap in [[self.visibleStackHolder peekSubview] scrapsOnPaper]) {
         if (scrap.state.drawableView.state.currentStroke) {
             return NO;
         }
     }
-    if (fromRightBezelGesture.subState == UIGestureRecognizerStateBegan ||
-        fromRightBezelGesture.subState == UIGestureRecognizerStateChanged) {
+    if (_fromRightBezelGesture.subState == UIGestureRecognizerStateBegan ||
+        _fromRightBezelGesture.subState == UIGestureRecognizerStateChanged) {
         // don't allow new strokes during bezel
         return NO;
     }
@@ -1008,7 +1008,7 @@ static UIWebView* pdfWebView;
 - (void)beginShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     [rulerView willBeginStrokeAt:[touch locationInView:rulerView]];
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page beginScissorAtPoint:adjustedPoint];
 }
@@ -1019,7 +1019,7 @@ static UIWebView* pdfWebView;
     if (didAdjust) {
         numberOfRulerGesturesWithoutStroke = 0;
     }
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     if (![page continueScissorAtPoint:adjustedPoint]) {
         [scissor cancelPolygonForTouch:touch];
@@ -1028,14 +1028,14 @@ static UIWebView* pdfWebView;
 
 - (void)finishShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page finishScissorAtPoint:adjustedPoint];
 }
 
 - (void)cancelShapeWithTouch:(UITouch*)touch withTool:(PolygonTool*)tool {
     CGPoint adjusted = [rulerView adjustPoint:[touch locationInView:rulerView] andDidAdjust:NULL];
-    MMScrappedPaperView* page = [visibleStackHolder peekSubview];
+    MMScrappedPaperView* page = [self.visibleStackHolder peekSubview];
     CGPoint adjustedPoint = [page convertPoint:adjusted fromView:rulerView];
     [page cancelScissorAtPoint:adjustedPoint];
 }
@@ -1051,7 +1051,7 @@ static UIWebView* pdfWebView;
 #pragma mark - List View Enable / Disable Helper Methods
 
 - (void)immediatelyTransitionToListView {
-    for (MMPaperView* aPage in [visibleStackHolder.subviews arrayByAddingObjectsFromArray:hiddenStackHolder.subviews]) {
+    for (MMPaperView* aPage in [self.visibleStackHolder.subviews arrayByAddingObjectsFromArray:self.hiddenStackHolder.subviews]) {
         aPage.hidden = NO;
     }
 
@@ -1065,7 +1065,7 @@ static UIWebView* pdfWebView;
     [super beginUITransitionFromPageView];
     [[[MMPageCacheManager sharedInstance] currentEditablePage] cancelCurrentStrokeIfAny];
     [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)beginUITransitionFromListView {
@@ -1076,13 +1076,13 @@ static UIWebView* pdfWebView;
 - (void)finishUITransitionToListView {
     [super finishUITransitionToListView];
     [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:NO];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)finishUITransitionToPageView {
     [super finishUITransitionToPageView];
     [[MMDrawingTouchGestureRecognizer sharedInstance] setEnabled:YES];
-    [[visibleStackHolder peekSubview] updateThumbnailVisibility];
+    [[self.visibleStackHolder peekSubview] updateThumbnailVisibility];
 }
 
 - (void)disableAllGesturesForPageView {
