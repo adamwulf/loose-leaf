@@ -25,6 +25,7 @@
 #import "MMColorButton.h"
 #import "MMDarkSidebarButton.h"
 #import "UIColor+LooseLeaf.h"
+#import "UIColor+MMAdditions.h"
 #import "NSArray+MapReduce.h"
 
 
@@ -59,12 +60,17 @@
         [line setTranslatesAutoresizingMaskIntoConstraints:NO];
         line.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:.5];
 
+        NSArray<UIColor*>* buttonColors = @[[UIColor whiteColor],
+                                            [[UIColor blueInkColor] blendWithColor:[UIColor colorWithWhite:.9 alpha:1] withPercent:.5],
+                                            [[UIColor redInkColor] blendWithColor:[UIColor colorWithWhite:.95 alpha:1] withPercent:.5],
+                                            [[UIColor yellowInkColor] blendWithColor:[UIColor whiteColor] withPercent:.5],
+                                            [[UIColor greenInkColor] blendWithColor:[UIColor whiteColor] withPercent:.5]];
+
         MMButtonBoxView* colorButtonBox = [[MMButtonBoxView alloc] init];
-        colorButtons = @[[[MMColorButton alloc] initWithColor:[UIColor whiteColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor blueInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor redInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor yellowInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))],
-                         [[MMColorButton alloc] initWithColor:[UIColor greenInkColor] andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))]];
+
+        colorButtons = [buttonColors map:^id(UIColor* color, NSUInteger index) {
+            return [[MMColorButton alloc] initWithColor:color andFrame:CGRectFromSize(CGSizeMake(kWidthOfSidebarButton, kWidthOfSidebarButton))];
+        }];
 
         [colorButtonBox setTranslatesAutoresizingMaskIntoConstraints:NO];
         [colorButtonBox setButtons:colorButtons];
