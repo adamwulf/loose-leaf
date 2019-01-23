@@ -1,10 +1,10 @@
 # New in 3.3.0!
 
-1. Emojis!
+1. Add Emojis to your pages!
 
 [new-user-emojis.png]
 
-2. Shapes!
+2. Add Shapes to your pages!
 
 [new-user-shapes.png]
 
