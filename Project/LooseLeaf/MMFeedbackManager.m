@@ -91,8 +91,7 @@ static MMFeedbackManager* _instance = nil;
     }
 
     if ([existingFeedback count]) {
-        dispatch_queue_t lowQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
-        dispatch_async(lowQueue, ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [_lock lock];
 
             NSArray<NSString*>* feedbackAndEmail = [existingFeedback firstObject];

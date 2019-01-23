@@ -1,3 +1,14 @@
+# New in 3.3.0!
+
+1. Emojis!
+
+[new-user-emojis.png]
+
+2. Shapes!
+
+[new-user-shapes.png]
+
+
 # New in 3.2.0!
 
 1. Mirror Mode!

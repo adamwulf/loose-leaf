@@ -654,6 +654,8 @@
 		C5DA29971D7C013A00D868EC /* MMParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29841D7C013A00D868EC /* MMParser.m */; };
 		C5DA29981D7C013A00D868EC /* MMScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29861D7C013A00D868EC /* MMScanner.m */; };
 		C5DA29991D7C013A00D868EC /* MMSpanParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DA29881D7C013A00D868EC /* MMSpanParser.m */; };
+		C5DA2CED21F7EAB000213682 /* new-user-shapes.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DA2CEC21F7EAB000213682 /* new-user-shapes.png */; };
+		C5DA2CEF21F7EAB400213682 /* new-user-emojis.png in Resources */ = {isa = PBXBuildFile; fileRef = C5DA2CEE21F7EAB300213682 /* new-user-emojis.png */; };
 		C5DF7CDC211D48A000882A98 /* MMEmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */; };
 		C5E02A831D99BDF5001F6ED6 /* MMFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A821D99BDF5001F6ED6 /* MMFeedbackViewController.m */; };
 		C5E02A861D99C007001F6ED6 /* MMFeedbackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C5E02A851D99C007001F6ED6 /* MMFeedbackView.m */; };
@@ -1840,6 +1842,8 @@
 		C5DA29861D7C013A00D868EC /* MMScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMScanner.m; path = ../../Submodules/MMMarkdown/Source/MMScanner.m; sourceTree = "<group>"; };
 		C5DA29871D7C013A00D868EC /* MMSpanParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMSpanParser.h; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.h; sourceTree = "<group>"; };
 		C5DA29881D7C013A00D868EC /* MMSpanParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMSpanParser.m; path = ../../Submodules/MMMarkdown/Source/MMSpanParser.m; sourceTree = "<group>"; };
+		C5DA2CEC21F7EAB000213682 /* new-user-shapes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-user-shapes.png"; sourceTree = "<group>"; };
+		C5DA2CEE21F7EAB300213682 /* new-user-emojis.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-user-emojis.png"; sourceTree = "<group>"; };
 		C5DF7CDA211D48A000882A98 /* MMEmojiButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMEmojiButton.h; sourceTree = "<group>"; };
 		C5DF7CDB211D48A000882A98 /* MMEmojiButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMEmojiButton.m; sourceTree = "<group>"; };
 		C5E02A7F1D99BD25001F6ED6 /* MMTutorialStackViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTutorialStackViewDelegate.h; sourceTree = "<group>"; };
@@ -2567,6 +2571,8 @@
 		665F7F5E1AE096B400635D56 /* app-intro */ = {
 			isa = PBXGroup;
 			children = (
+				C5DA2CEE21F7EAB300213682 /* new-user-emojis.png */,
+				C5DA2CEC21F7EAB000213682 /* new-user-shapes.png */,
 				6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */,
 				C5D987BF1E89D799000EA722 /* draw-tools.mp4 */,
 				66468E551B75D1C600DD90B0 /* pinch-to-list.mp4 */,
@@ -4458,6 +4464,7 @@
 				66E2240619D637AD000FCA96 /* ios7-settings-camera.png in Resources */,
 				C58E6A391CDB1B4A00508F1D /* bg28.jpg in Resources */,
 				C58E6A231CDB1B4A00508F1D /* bg06.jpg in Resources */,
+				C5DA2CED21F7EAB000213682 /* new-user-shapes.png in Resources */,
 				666E253218F5DDF100C17295 /* clearphotoalbum.png in Resources */,
 				C542AA251D812E140024FAD9 /* highlighter.png in Resources */,
 				667EF0C719A54F2100B1A38D /* icloud-share.png in Resources */,
@@ -4552,6 +4559,7 @@
 				C58E6A301CDB1B4A00508F1D /* bg19.jpg in Resources */,
 				C58E6A2F1CDB1B4A00508F1D /* bg18.jpg in Resources */,
 				C5D749E620FEF844004F5781 /* MPLogo.png in Resources */,
+				C5DA2CEF21F7EAB400213682 /* new-user-emojis.png in Resources */,
 				6652450D199576E800C36609 /* text@2x.png in Resources */,
 				C51F68731C3B7DC2003C046F /* GPUImage.license in Resources */,
 				6650DD2118F48F7F00ADF591 /* facebook.png in Resources */,

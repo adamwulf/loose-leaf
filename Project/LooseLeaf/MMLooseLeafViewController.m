@@ -1280,17 +1280,17 @@
 - (void)showReleaseNotesIfNeeded {
     NSString* version = [UIApplication bundleShortVersionString];
 
-    version = @"3.1.0";
-    
+    version = @"3.3.0";
+
     if ([self isShowingAnyModal]) {
         // tutorial is already showing, just return
         [[NSUserDefaults standardUserDefaults] setObject:version forKey:kLastOpenedVersion];
         return;
     }
 
-    //#ifdef DEBUG
-    //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
-    //#endif
+#ifdef DEBUG
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastOpenedVersion];
+#endif
 
     if (version && ![[[NSUserDefaults standardUserDefaults] stringForKey:kLastOpenedVersion] isEqualToString:version]) {
         NSURL* releaseNotesFile = [[NSBundle mainBundle] URLForResource:@"ReleaseNotes" withExtension:@"md"];
