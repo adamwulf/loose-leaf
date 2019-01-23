@@ -8,6 +8,7 @@
 
 [new-user-shapes.png]
 
+3. Support for new Apple Pencil gestures!
 
 # New in 3.2.0!
 
