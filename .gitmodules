@@ -13,9 +13,6 @@
 [submodule "Submodules/vectorboolean"]
 	path = Submodules/vectorboolean
 	url = git@github.com:adamwulf/vectorboolean.git
-[submodule "Submodules/mixpanel"]
-	path = Submodules/mixpanel
-	url = git@github.com:mixpanel/mixpanel-iphone.git
 [submodule "Submodules/sskeychain"]
 	path = Submodules/sskeychain
 	url = git@github.com:adamwulf/sskeychain.git
@@ -46,3 +43,6 @@
 [submodule "Submodules/spacecommander"]
 	path = Submodules/spacecommander
 	url = git@github.com:square/spacecommander.git
+[submodule "Submodules/mixpanel"]
+	path = Submodules/mixpanel
+	url = git@github.com:kloned/mixpanel-578cfe1
