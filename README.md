@@ -32,7 +32,7 @@ More gesture videos available on the <a href='http://getlooseleaf.com'>Loose Lea
 First, clone the Loose Leaf repository and initialize all submodules:
 
 ```
-git clone git@github.com:adamwulf/loose-leaf.git
+git clone -b temp_mixpanel_fix git@github.com:adamwulf/loose-leaf.git
 cd loose-leaf
 git submodule update --recursive --init
 ```
