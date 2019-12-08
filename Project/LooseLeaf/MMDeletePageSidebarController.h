@@ -27,6 +27,6 @@
 // sidebar at its current location
 - (BOOL)shouldDelete:(UIView*)pageMightDelete;
 
-- (void)deleteView:(UIView*)pageToDelete;
+- (void)deleteView:(UIView*)pageToDelete onComplete:(void (^)(BOOL didDelete))onComplete;
 
 @end

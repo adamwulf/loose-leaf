@@ -188,21 +188,47 @@ static CGFloat (^clampPercent)(CGFloat);
     return trashIcon.alpha > .25;
 }
 
-- (void)deleteView:(UIView*)pageToDelete {
+- (void)deleteView:(UIView*)pageToDelete onComplete:(void (^)(BOOL didDelete))onComplete {
     DebugLog(@"deleting view... %p", pageToDelete);
 
-    CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
-    [deleteSidebarForeground addSubview:pageToDelete];
-    pageToDelete.center = center;
+    void (^finishDeletingPage)(void) = ^{
+        CGPoint center = [deleteSidebarForeground convertPoint:pageToDelete.center fromView:pageToDelete.superview];
+        [deleteSidebarForeground addSubview:pageToDelete];
+        pageToDelete.center = center;
 
-    [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        pageToDelete.center = CGPointMake(-100 - pageToDelete.bounds.size.width / 2, pageToDelete.center.y);
-    } completion:^(BOOL finished) {
-        [pageToDelete removeFromSuperview];
-        if (self.deleteCompleteBlock) {
-            self.deleteCompleteBlock(pageToDelete);
+        [UIView animateWithDuration:.3 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            pageToDelete.center = CGPointMake(-100 - pageToDelete.bounds.size.width / 2, pageToDelete.center.y);
+        } completion:^(BOOL finished) {
+            [pageToDelete removeFromSuperview];
+            if (self.deleteCompleteBlock) {
+                self.deleteCompleteBlock(pageToDelete);
+            }
+
+            if (onComplete) {
+                onComplete(YES);
+            }
+        }];
+    };
+
+    if (!onComplete) {
+        finishDeletingPage();
+    } else {
+        UIAlertController* alertController = [UIAlertController alertControllerWithTitle:@"Delete?" message:@"Are you sure you want to delete this page?" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction* _Nonnull action) {
+            finishDeletingPage();
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction* _Nonnull action) {
+            onComplete(NO);
+        }]];
+
+        UIViewController* topController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+
+        while (topController.presentedViewController) {
+            topController = topController.presentedViewController;
         }
-    }];
+
+        [topController presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
 - (void)closeSidebarAnimated {
