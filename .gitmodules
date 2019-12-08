@@ -15,7 +15,7 @@
 	url = git@github.com:adamwulf/vectorboolean.git
 [submodule "Submodules/mixpanel"]
 	path = Submodules/mixpanel
-	url = git@github.com:mixpanel/mixpanel-iphone.git
+	url = git@github.com:adamwulf/mixpanel-iphone.git
 [submodule "Submodules/sskeychain"]
 	path = Submodules/sskeychain
 	url = git@github.com:adamwulf/sskeychain.git

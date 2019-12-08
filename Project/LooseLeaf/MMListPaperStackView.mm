@@ -36,6 +36,7 @@
     MMDeletePageSidebarController* deleteSidebar;
     NSMutableSet* pagesBeingAnimatedDuringDeleteGesture;
     BOOL isAnimatingTowardPageView;
+    MMPaperView* pageBeingDeleted;
 }
 
 @synthesize toolbar;
@@ -919,7 +920,7 @@
 
 #pragma mark - MMLongPressFromListViewGestureRecognizer - MMPanAndPinchFromListViewGestureRecognizer
 
-- (void)deletePage:(MMExportablePaperView*)page {
+- (void)deletePage:(MMExportablePaperView*)page onComplete:(void (^)(void))onComplete {
     MMPaperView* nextTopPage = [self.visibleStackHolder getPageBelow:page];
     if (!nextTopPage) {
         nextTopPage = [self.hiddenStackHolder peekSubview];
@@ -927,13 +928,25 @@
     if (!nextTopPage) {
         DebugLog(@"hrmph. out of pages...");
     }
-    [deleteSidebar deleteView:page];
-    [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
-    [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
-    [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
-    [self saveStacksToDisk];
+    pageBeingDeleted = page;
 
-    [[[Mixpanel sharedInstance] people] set:@{ kMPHasDeletedPage: @(YES) }];
+    [deleteSidebar deleteView:page onComplete:^(BOOL didDelete) {
+        pageBeingDeleted = nil;
+        if (didDelete) {
+            [[MMPageCacheManager sharedInstance] willChangeTopPageTo:nextTopPage];
+            [self ensurePageIsAtTopOfVisibleStack:nextTopPage];
+            [[MMPageCacheManager sharedInstance] didChangeToTopPage:nextTopPage];
+            [self saveStacksToDisk];
+
+            [[[Mixpanel sharedInstance] people] set:@{ kMPHasDeletedPage: @(YES) }];
+        } else {
+            [self realignPagesInListView:[NSSet setWithObject:page] animated:YES forceRecalculateAll:YES];
+        }
+
+        if (onComplete) {
+            onComplete();
+        }
+    }];
 }
 
 - (void)didPickUpAPageInListView:(MMLongPressFromListViewGestureRecognizer*)gesture {
@@ -976,7 +989,17 @@
         // first, calculate if the page was dropped
         // inside of the delete sidebar or not
         if ([deleteSidebar shouldDelete:pageBeingDragged]) {
-            [self deletePage:pageBeingDragged];
+            [self deletePage:pageBeingDragged onComplete:^{
+                [self finishUITransitionToListView];
+
+                [deleteSidebar closeSidebarAnimated];
+                // if the page was deleted, then we'll need to recalculate all the frames
+                // clear our cache of frame locations
+                mapOfFinalFramesForPagesBeingZoomed->clear();
+
+                [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES forceRecalculateAll:NO];
+                [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
+            }];
             didDelete = YES;
         }
 
@@ -987,6 +1010,7 @@
         // go to page/list view
         // based on how the gesture ended
         [self setScrollEnabled:YES];
+
         if (!didDelete) {
             MMPanAndPinchFromListViewGestureRecognizer* panGesture = nil;
             if ([gesture isKindOfClass:[MMPanAndPinchFromListViewGestureRecognizer class]]) {
@@ -1012,8 +1036,6 @@
                                  completion:nil];
                 [self finishUITransitionToListView];
             }
-        } else {
-            [self finishUITransitionToListView];
         }
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
         [self updatePageFrameForGestureHelper:gesture];
@@ -1109,13 +1131,10 @@
         // if we're not dragging the page, then don't update the display link
         displayLink.paused = YES;
 
-        [deleteSidebar closeSidebarAnimated];
-        // if the page was deleted, then we'll need to recalculate all the frames
-        // clear our cache of frame locations
-        mapOfFinalFramesForPagesBeingZoomed->clear();
-
-        [self realignPagesInListView:pagesBeingAnimatedDuringDeleteGesture animated:YES forceRecalculateAll:NO];
-        [pagesBeingAnimatedDuringDeleteGesture removeAllObjects];
+        if (!pageBeingDeleted) {
+            [self finishUITransitionToListView];
+            [deleteSidebar closeSidebarAnimated];
+        }
 
         // the user might've pinched us up
         // into page view, so don't realign
@@ -1126,6 +1145,11 @@
             NSMutableSet* allOtherPages = [NSMutableSet setWithArray:self.visibleStackHolder.subviews];
             [allOtherPages addObjectsFromArray:self.hiddenStackHolder.subviews];
             [allOtherPages removeObjectsInSet:pagesBeingAnimatedDuringDeleteGesture];
+
+            if (pageBeingDeleted) {
+                [allOtherPages removeObject:pageBeingDeleted];
+            }
+
             // find the pages to align
             [self realignPagesInListView:allOtherPages animated:NO forceRecalculateAll:NO];
             addPageButtonInListView.frame = [self frameForAddPageButton];

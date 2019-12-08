@@ -29,9 +29,12 @@
         _size = size;
         _thumb = [self aspectThumbnailWithMaxPixelSize:256];
 
+#ifdef DEBUG
+        // write emojis to a downloads folder so we can confirm they're drawing correctly
         [UIImagePNGRepresentation([self aspectThumbnailWithMaxPixelSize:500])
             writeToFile:[NSString stringWithFormat:@"/Users/adamwulf/Downloads/%@.png", _emojiName]
              atomically:YES];
+#endif
     }
 
     return self;

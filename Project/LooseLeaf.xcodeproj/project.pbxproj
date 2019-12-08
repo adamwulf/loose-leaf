@@ -446,6 +446,8 @@
 		C55B4DCB1DDE8222001DC9E4 /* MMEmptyStackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C55B4DCA1DDE8222001DC9E4 /* MMEmptyStackButton.m */; };
 		C55B80BB1DD7B88600321F01 /* ColorFromPointImageView.license in Resources */ = {isa = PBXBuildFile; fileRef = C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */; };
 		C55EC3ED1C8C09F40042D11C /* MMAllStacksManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */; };
+		C5657BA9234854B600A44437 /* BundledPhotos in Resources */ = {isa = PBXBuildFile; fileRef = C5657BA8234854B600A44437 /* BundledPhotos */; };
+		C5657BAB2348559800A44437 /* Unsplash.license in Resources */ = {isa = PBXBuildFile; fileRef = C5657BAA2348559800A44437 /* Unsplash.license */; };
 		C56883AB1D6D2B3500709FD8 /* MMTrashButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */; };
 		C569F4311CD070C400C19BB0 /* MMVisibleStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4301CD070C400C19BB0 /* MMVisibleStackHolderView.m */; };
 		C569F4341CD070CF00C19BB0 /* MMHiddenStackHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = C569F4331CD070CF00C19BB0 /* MMHiddenStackHolderView.m */; };
@@ -1510,6 +1512,8 @@
 		C55B80BA1DD7B88600321F01 /* ColorFromPointImageView.license */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ColorFromPointImageView.license; sourceTree = "<group>"; };
 		C55EC3EB1C8C09F40042D11C /* MMAllStacksManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAllStacksManager.h; sourceTree = "<group>"; };
 		C55EC3EC1C8C09F40042D11C /* MMAllStacksManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAllStacksManager.m; sourceTree = "<group>"; };
+		C5657BA8234854B600A44437 /* BundledPhotos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = BundledPhotos; path = ../../BundledPhotos; sourceTree = "<group>"; };
+		C5657BAA2348559800A44437 /* Unsplash.license */ = {isa = PBXFileReference; lastKnownFileType = text; path = Unsplash.license; sourceTree = "<group>"; };
 		C56883A91D6D2B3500709FD8 /* MMTrashButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMTrashButton.h; sourceTree = "<group>"; };
 		C56883AA1D6D2B3500709FD8 /* MMTrashButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMTrashButton.m; sourceTree = "<group>"; };
 		C569F42F1CD070C400C19BB0 /* MMVisibleStackHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMVisibleStackHolderView.h; sourceTree = "<group>"; };
@@ -2647,6 +2651,7 @@
 				66684B49182DAEBC005A27B4 /* UIImageRoundedCorner.license */,
 				66FC2E8D1836F9E500DC2786 /* basegfxbezierclip.license */,
 				666425C318CBC61200A306C1 /* opencv.license */,
+				C5657BAA2348559800A44437 /* Unsplash.license */,
 				667D98C3192FDB4300625879 /* UIImagePDF.license */,
 				665245261996AA7B00C36609 /* FXBlurView.license */,
 				66A02F9B19A1DBE90013EFAE /* Eppz.license */,
@@ -3346,6 +3351,7 @@
 				6627DFAB1901D82300592EEF /* LooseLeaf.entitlements */,
 				6650DD0E18F46D5100ADF591 /* Images.xcassets */,
 				C5419ED71E0E0C6100183265 /* README.md */,
+				C5657BA8234854B600A44437 /* BundledPhotos */,
 				66DCFB921581BCEF00B4918C /* LooseLeaf-Info.plist */,
 				667D98A9192D010900625879 /* Loose-Leaf_76.png */,
 				66DCFB931581BCEF00B4918C /* InfoPlist.strings */,
@@ -4377,6 +4383,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				fr,
 				"zh-Hans",
@@ -4537,6 +4544,7 @@
 				C58E6A4C1CDB1B4A00508F1D /* bg47.jpg in Resources */,
 				66437C55199FDF55003389F0 /* airsharing@2x.png in Resources */,
 				66E2240F19D645C0000FCA96 /* ios8-settings-photos@2x.png in Resources */,
+				C5657BAB2348559800A44437 /* Unsplash.license in Resources */,
 				C528168821097978005956F9 /* ios-settings-icon.png in Resources */,
 				C58E6A321CDB1B4A00508F1D /* bg21.jpg in Resources */,
 				C5DA2CF221F7EC4400213682 /* new-user-shapes.png in Resources */,
@@ -4601,6 +4609,7 @@
 				662809011A9BB97500CA3F9A /* white-arrow.png in Resources */,
 				C58E6A361CDB1B4A00508F1D /* bg25.jpg in Resources */,
 				6652450B199576E400C36609 /* text.png in Resources */,
+				C5657BA9234854B600A44437 /* BundledPhotos in Resources */,
 				66684B44182DAC9B005A27B4 /* CurveFit.license in Resources */,
 				C57559271DD6ED9700670875 /* NRTextTransitions.license in Resources */,
 				66684B31182D887E005A27B4 /* Settings.bundle in Resources */,
