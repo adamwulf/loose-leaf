@@ -140,14 +140,15 @@
         }
     }
 
-
     CGPoint center = CGPointMake(CGRectGetMidX(button.drawableFrame), CGRectGetMidY(button.drawableFrame));
 
     CGFloat radius = ceilf(button.drawableFrame.size.width / 2);
     CAShapeLayer* circle;
-    if ([button.layer.sublayers count]) {
+    if ([button.layer.sublayers count] && [[button.layer.sublayers firstObject] isKindOfClass:[CAShapeLayer class]]) {
         circle = (CAShapeLayer*)[button.layer.sublayers firstObject];
-    } else {
+    }
+
+    if (!circle) {
         circle = [CAShapeLayer layer];
         circle.path = [UIBezierPath bezierPathWithArcCenter:center radius:radius startAngle:2 * M_PI * 0 - M_PI_2 endAngle:2 * M_PI * 1 - M_PI_2 clockwise:YES].CGPath;
         circle.fillColor = [UIColor clearColor].CGColor;
