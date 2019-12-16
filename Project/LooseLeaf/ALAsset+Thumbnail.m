@@ -92,16 +92,22 @@ static void releaseAssetCallback(void* info) {
         .releaseInfo = releaseAssetCallback,
     };
 
+    CGImageRef imageRef = NULL;
     CGDataProviderRef provider = CGDataProviderCreateDirect((void*)CFBridgingRetain(rep), [rep size], &callbacks);
-    CGImageSourceRef source = CGImageSourceCreateWithDataProvider(provider, NULL);
 
-    CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(source, 0, (__bridge CFDictionaryRef) @{
-        (NSString*)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
-        (NSString*)kCGImageSourceThumbnailMaxPixelSize: [NSNumber numberWithInt:size],
-        (NSString*)kCGImageSourceCreateThumbnailWithTransform: @YES,
-    });
-    CFRelease(source);
-    CFRelease(provider);
+    if (provider) {
+        CGImageSourceRef source = CGImageSourceCreateWithDataProvider(provider, NULL);
+
+        if (source) {
+            imageRef = CGImageSourceCreateThumbnailAtIndex(source, 0, (__bridge CFDictionaryRef) @{
+                (NSString*)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+                (NSString*)kCGImageSourceThumbnailMaxPixelSize: [NSNumber numberWithInt:size],
+                (NSString*)kCGImageSourceCreateThumbnailWithTransform: @YES,
+            });
+            CFRelease(source);
+        }
+        CGDataProviderRelease(provider);
+    }
 
     if (!imageRef) {
         return nil;
@@ -109,7 +115,7 @@ static void releaseAssetCallback(void* info) {
 
     UIImage* toReturn = [UIImage imageWithCGImage:imageRef];
 
-    CFRelease(imageRef);
+    CGImageRelease(imageRef);
 
     return toReturn;
 }
