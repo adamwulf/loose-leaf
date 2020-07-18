@@ -295,10 +295,6 @@
 
 #pragma mark - MMShareItemDelegate
 
-- (NSDictionary*)cloudKitSenderInfo {
-    return shareDelegate.cloudKitSenderInfo;
-}
-
 - (void)mayShare:(MMAbstractShareItem*)shareItem {
     // close out all of our sharing options views,
     // if any
@@ -327,10 +323,6 @@
 
 - (void)didShare:(MMAbstractShareItem*)shareItem {
     [shareDelegate didShare:shareItem];
-}
-
-- (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button {
-    [shareDelegate didShare:shareItem toUser:userId fromButton:button];
 }
 
 #pragma mark - Dealloc

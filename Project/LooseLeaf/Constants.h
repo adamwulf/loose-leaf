@@ -97,9 +97,6 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kBounceWidth 10.0
 
 
-// CloudKit Import
-#define kCloudKitMaxVisibleImports 5
-
 // Ruler
 #define kWidthOfRuler 70
 #define kRulerPinchBuffer 40
@@ -174,7 +171,6 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPShareStatusUnavailable @"Unavailable"
 #define kMPShareStatusUnknown @"Unknown"
 
-#define kMPShareStatusCloudKit @"Share Status: CloudKit"
 #define kMPShareStatusFacebook @"Share Status: Facebook"
 #define kMPShareStatusTwitter @"Share Status: Twitter"
 #define kMPShareStatusEmail @"Share Status: Email"
@@ -205,11 +201,9 @@ static inline CGRect _CGSizeAspectFillFit(CGSize sizeToScale, CGSize sizeToFill,
 #define kMPNumberOfScissorUses @"Number of Scissor Uses"
 #define kMPNumberOfRulerUses @"Number of Ruler Uses"
 #define kMPNumberOfImports @"Number of Imports"
-#define kMPNumberOfCloudKitImports @"Number of CloudKit Imports" // import page sent via cloudkit
 #define kMPNumberOfPhotoImports @"Number of Photo Imports" // import existing photo
 #define kMPNumberOfPhotosTaken @"Number of Photos Taken" // take new photo with camera
 #define kMPNumberOfExports @"Number of Exports"
-#define kMPNumberOfCloudKitExports @"Number of CloudKit Exports"
 #define kMPNumberOfOpenInExports @"Number of Open In Exports"
 #define kMPNumberOfSocialExports @"Number of Social Media Exports"
 #define kMPHasZoomedToList @"Has Zoomed Out to List"

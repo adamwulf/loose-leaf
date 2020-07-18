@@ -2051,10 +2051,6 @@
     [[self.visibleStackHolder peekSubview] exportVisiblePageToPDF:completionBlock];
 }
 
-- (NSDictionary*)cloudKitSenderInfo {
-    return [[self.visibleStackHolder peekSubview] cloudKitSenderInfo];
-}
-
 - (void)mayShare:(MMAbstractShareItem*)shareItem {
     // noop
 }
@@ -2064,10 +2060,6 @@
 }
 
 - (void)didShare:(MMAbstractShareItem*)shareItem {
-    // noop
-}
-
-- (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)avatarButton {
     // noop
 }
 

@@ -11,7 +11,6 @@
 
 @interface MMExportablePaperView : MMBackgroundedPaperView
 
-@property (nonatomic, readonly) NSDictionary* cloudKitSenderInfo;
 @property (nonatomic, readonly) BOOL isCurrentlySaving;
 @property (nonatomic, strong) void (^didUnloadState)();
 
