@@ -437,6 +437,7 @@
 		C542AA251D812E140024FAD9 /* highlighter.png in Resources */ = {isa = PBXBuildFile; fileRef = C542AA241D812E140024FAD9 /* highlighter.png */; };
 		C543284E1DCC3397008CCB8A /* MMDebugStackView.m in Sources */ = {isa = PBXBuildFile; fileRef = C543284D1DCC3397008CCB8A /* MMDebugStackView.m */; };
 		C54AED582108393A007B75FB /* MMButtonBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = C54AED572108393A007B75FB /* MMButtonBoxView.m */; };
+		C54D2C1D24C3A69800D25840 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C54D2C1C24C3A69800D25840 /* GoogleService-Info.plist */; };
 		C55AC19B1D7C0AB100259558 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19A1D7C0AB100259558 /* logo.png */; };
 		C55AC19D1D7C0BDD00259558 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C55AC19C1D7C0BDD00259558 /* logo@2x.png */; };
 		C55AC1A01D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m in Sources */ = {isa = PBXBuildFile; fileRef = C55AC19F1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.m */; };
@@ -1493,6 +1494,7 @@
 		C543284F1DCC4A02008CCB8A /* MMFullWidthListButtonDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMFullWidthListButtonDelegate.h; sourceTree = "<group>"; };
 		C54AED562108393A007B75FB /* MMButtonBoxView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMButtonBoxView.h; sourceTree = "<group>"; };
 		C54AED572108393A007B75FB /* MMButtonBoxView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMButtonBoxView.m; sourceTree = "<group>"; };
+		C54D2C1C24C3A69800D25840 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C55AC19A1D7C0AB100259558 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		C55AC19C1D7C0BDD00259558 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		C55AC19E1D7D4D9D00259558 /* MMReleaseNotesButtonPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMReleaseNotesButtonPrompt.h; sourceTree = "<group>"; };
@@ -3322,6 +3324,7 @@
 		66DCFB911581BCEF00B4918C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C54D2C1B24C3A68A00D25840 /* Firebase */,
 				C5D7492520FEF843004F5781 /* Mixpanel */,
 				6650DD1018F4842E00ADF591 /* Icon Images */,
 				C5DA295C1D7C012500D868EC /* MMMarkdown */,
@@ -3800,6 +3803,14 @@
 				C53FCEF71E94C6CD00AA4BEC /* page-template.mp4 */,
 			);
 			name = "release-notes";
+			sourceTree = "<group>";
+		};
+		C54D2C1B24C3A68A00D25840 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				C54D2C1C24C3A69800D25840 /* GoogleService-Info.plist */,
+			);
+			name = Firebase;
 			sourceTree = "<group>";
 		};
 		C56883A81D6D2B1A00709FD8 /* Bezel */ = {
@@ -4441,6 +4452,7 @@
 				C5EC1C331DC1841100C65DB3 /* release-notes-feedback-feature.png in Resources */,
 				66684B3E182DA177005A27B4 /* GPC.license in Resources */,
 				66CC2A951AEAEA9F00C6A3F9 /* share-tutorials-contacts.png in Resources */,
+				C54D2C1D24C3A69800D25840 /* GoogleService-Info.plist in Resources */,
 				C58E6A2C1CDB1B4A00508F1D /* bg15.jpg in Resources */,
 				66684B48182DAD05005A27B4 /* 2Geom.license in Resources */,
 				6652451919958C2500C36609 /* sinaWeibo.png in Resources */,
