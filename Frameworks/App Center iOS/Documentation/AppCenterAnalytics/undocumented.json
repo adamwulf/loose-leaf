@@ -1,0 +1,75 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSAbstractLog.h",
+      "line": 9,
+      "symbol": "MSAbstractLog",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSAnalyticsAuthenticationProvider.h",
+      "line": 26,
+      "symbol": "MSAnalyticsAuthenticationProvider",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSAnalyticsAuthenticationProviderDelegate.h",
+      "line": 13,
+      "symbol": "MSAnalyticsAuthenticationProviderDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSAnalyticsTransmissionTarget.h",
+      "line": 14,
+      "symbol": "MSAnalyticsTransmissionTarget",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSConstants+Flags.h",
+      "line": 9,
+      "symbol": "MSFlags",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSConstants+Flags.h",
+      "line": 9,
+      "symbol": "MSFlags",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSEventLog.h",
+      "line": 9,
+      "symbol": "MSEventLog",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSLogWithNameAndProperties.h",
+      "line": 8,
+      "symbol": "MSLogWithNameAndProperties",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSLogWithProperties.h",
+      "line": 11,
+      "symbol": "MSLogWithProperties",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterAnalytics.framework/Headers/MSPropertyConfigurator.h",
+      "line": 8,
+      "symbol": "MSPropertyConfigurator",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/runner/runners/2.171.1/work/1/s/AppCenterAnalytics"
+}

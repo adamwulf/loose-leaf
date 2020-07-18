@@ -20,7 +20,7 @@
 	<string>Your Twitter Key</string>
 	<key>TwitterSecret</key>
 	<string>Your Twitter Secret</string>
-	<key>FabricKey</key>
-	<string>Your Fabric API Key</string>
+	<key>AppCenter</key>
+	<string>Your AppCenter API Key</string>
 </dict>
 </plist>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MSEnable Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/objc/Protocol/MSEnable" class="dashAnchor"></a>
+    <a title="MSEnable Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">AppCenter Docs</a> (28% documented)</p>
+        <p class="header-right"><a href="https://github.com/microsoft/appcenter-sdk-apple"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fdocs.microsoft.com%2Fappcenter%2Fsdk%2Fios%2Fdocsets%2FAppCenter.xml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">AppCenter Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        MSEnable Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MSCustomProperties.html">MSCustomProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MSServiceAbstract.html">MSServiceAbstract</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)MSWrapperLogger">MSWrapperLogger</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enumerations.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSHTTPCodesNo">MSHTTPCodesNo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSInitializationPriority">MSInitializationPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MSLogLevel.html">MSLogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSPriority">MSPriority</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/MSChannelGroupProtocol.html">MSChannelGroupProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSChannelProtocol.html">MSChannelProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSEnable.html">MSEnable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSService.html">MSService</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>MSEnable</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">MSEnable</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span></code></pre>
+
+                </div>
+              </div>
+            <p>Protocol to define an instance that can be enabled/disabled.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSEnable(im)setEnabled:andDeleteDataOnDisabled:"></a>
+                    <a name="//apple_ref/objc/Method/-setEnabled:andDeleteDataOnDisabled:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSEnable(im)setEnabled:andDeleteDataOnDisabled:">-setEnabled:andDeleteDataOnDisabled:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Enable/disable this instance and delete data on disabled state.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setEnabled</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">isEnabled</span> <span class="nf">andDeleteDataOnDisabled</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">deleteData</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setEnabled</span><span class="p">(</span><span class="n">_</span> <span class="nv">isEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="n">andDeleteDataOnDisabled</span> <span class="nv">deleteData</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isEnabled</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A boolean value set to YES to enable the instance or NO to disable it.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>deleteData</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A boolean value set to YES to delete data or NO to keep it.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSEnable.h#L22">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="http://www.microsoft.com" target="_blank" rel="external">Microsoft Corp</a>. All rights reserved. (Last updated: 2020-07-01)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

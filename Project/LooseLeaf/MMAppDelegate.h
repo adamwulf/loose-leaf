@@ -7,14 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import <TwitterKit/TwitterKit.h>
 
 @class MMLooseLeafViewController, MMPresentationWindow;
 
 
-@interface MMAppDelegate : UIResponder <UIApplicationDelegate, CrashlyticsDelegate>
+@interface MMAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (readonly) BOOL isActive;
 @property (strong, nonatomic) UIWindow* window;

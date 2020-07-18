@@ -7,7 +7,6 @@
 //
 
 #import "MMCountableSidebarButton.h"
-#import <Crashlytics/Crashlytics.h>
 
 
 @implementation MMCountableSidebarButton
@@ -44,7 +43,6 @@
 
     CGRect fr = self.frame;
     fr.size = [[self class] sizeOfRowForView:view forWidth:self.bounds.size.width];
-    CLS_LOG(@"updating scrap button frame from: %.2f %.2f %.2f %.2f to %.2f %.2f %.2f %.2f", self.frame.origin.x, self.frame.origin.y, self.frame.size.width, self.frame.size.height, fr.origin.x, fr.origin.y, fr.size.width, fr.size.height);
     self.frame = fr;
 
     // remove anything in our button

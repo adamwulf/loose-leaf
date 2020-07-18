@@ -37,7 +37,7 @@ cd loose-leaf
 git submodule update --recursive --init
 ```
 
-Next, you'll need to add your own client ids and secrets for Fabric, Twitter, Facebook, Pinterest, Imgur, and Mixpanel. All of these are stored in a file called AppIds.plist. To get this file setup, copy from the template file:
+Next, you'll need to add your own client ids and secrets for MS App Center, Twitter, Facebook, Pinterest, Imgur, and Mixpanel. All of these are stored in a file called AppIds.plist. To get this file setup, copy from the template file:
 
 ```
 cp Project/LooseLeaf/AppIds-Template.plist Project/LooseLeaf/AppIds.plist

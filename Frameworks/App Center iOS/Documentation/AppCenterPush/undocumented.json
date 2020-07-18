@@ -1,0 +1,19 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterPush.framework/Headers/MSPushDelegate.h",
+      "line": 9,
+      "symbol": "MSPushDelegate",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenterPush.framework/Headers/MSPushNotification.h",
+      "line": 6,
+      "symbol": "MSPushNotification",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/runner/runners/2.171.1/work/1/s/AppCenterPush"
+}

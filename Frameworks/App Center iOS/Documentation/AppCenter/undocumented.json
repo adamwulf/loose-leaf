@@ -1,0 +1,775 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAbstractLog.h",
+      "line": 9,
+      "symbol": "MSAbstractLog",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenter.h",
+      "line": 14,
+      "symbol": "MSAppCenter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 15,
+      "symbol": "kMSACErrorDomain",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 20,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 23,
+      "symbol": "kMSACLogInvalidContainerErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 24,
+      "symbol": "kMSACCanceledErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 25,
+      "symbol": "kMSACDisabledErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 30,
+      "symbol": "",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 33,
+      "symbol": "kMSACConnectionHttpErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 34,
+      "symbol": "kMSACConnectionPausedErrorDesc",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSAppCenterErrors.h",
+      "line": 37,
+      "symbol": "kMSACConnectionHttpCodeErrorKey",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 47,
+      "symbol": "MSLogMessageProvider",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 48,
+      "symbol": "MSLogHandler",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.typedef",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 55,
+      "symbol": "MSPriority.MSPriorityBackground",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 55,
+      "symbol": "MSPriority.MSPriorityDefault",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 55,
+      "symbol": "MSPriority.MSPriorityHigh",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 56,
+      "symbol": "kMSPriorityCount",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.constant",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 65,
+      "symbol": "MSInitializationPriority.MSInitializationPriorityDefault",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 66,
+      "symbol": "MSInitializationPriority.MSInitializationPriorityHigh",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 67,
+      "symbol": "MSInitializationPriority.MSInitializationPriorityMax",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 76,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo0XXInvalidUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 79,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo1XXInformationalUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 80,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo100Continue",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 81,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo101SwitchingProtocols",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 82,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo102Processing",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 85,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo2XXSuccessUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 86,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo200OK",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 87,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo201Created",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 88,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo202Accepted",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 89,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo203NonAuthoritativeInformation",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 90,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo204NoContent",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 91,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo205ResetContent",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 92,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo206PartialContent",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 93,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo207MultiStatus",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 94,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo208AlreadyReported",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 95,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo209IMUsed",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 98,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo3XXSuccessUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 99,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo300MultipleChoices",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 100,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo301MovedPermanently",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 101,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo302Found",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 102,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo303SeeOther",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 103,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo304NotModified",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 104,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo305UseProxy",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 105,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo306SwitchProxy",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 106,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo307TemporaryRedirect",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 107,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo308PermanentRedirect",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 110,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo4XXSuccessUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 111,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo400BadRequest",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 112,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo401Unauthorised",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 113,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo402PaymentRequired",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 114,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo403Forbidden",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 115,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo404NotFound",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 116,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo405MethodNotAllowed",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 117,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo406NotAcceptable",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 118,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo407ProxyAuthenticationRequired",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 119,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo408RequestTimeout",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 120,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo409Conflict",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 121,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo410Gone",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 122,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo411LengthRequired",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 123,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo412PreconditionFailed",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 124,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo413RequestEntityTooLarge",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 125,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo414RequestURITooLong",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 126,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo415UnsupportedMediaType",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 127,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo416RequestedRangeNotSatisfiable",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 128,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo417ExpectationFailed",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 129,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo418IamATeapot",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 130,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo419AuthenticationTimeout",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 131,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo420MethodFailureSpringFramework",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 132,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo420EnhanceYourCalmTwitter",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 133,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo422UnprocessableEntity",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 134,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo423Locked",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 135,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo424FailedDependency",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 136,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo424MethodFailureWebDaw",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 137,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo425UnorderedCollection",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 138,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo426UpgradeRequired",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 139,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo428PreconditionRequired",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 140,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo429TooManyRequests",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 141,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo431RequestHeaderFieldsTooLarge",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 142,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo444NoResponseNginx",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 143,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo449RetryWithMicrosoft",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 144,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo450BlockedByWindowsParentalControls",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 145,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo451RedirectMicrosoft",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 146,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo451UnavailableForLegalReasons",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 147,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo494RequestHeaderTooLargeNginx",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 148,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo495CertErrorNginx",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 149,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo496NoCertNginx",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 150,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo497HTTPToHTTPSNginx",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 151,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo499ClientClosedRequestNginx",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 154,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo5XXSuccessUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 155,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo500InternalServerError",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 156,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo501NotImplemented",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 157,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo502BadGateway",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 158,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo503ServiceUnavailable",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 159,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo504GatewayTimeout",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 160,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo505HTTPVersionNotSupported",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 161,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo506VariantAlsoNegotiates",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 162,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo507InsufficientStorage",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 163,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo508LoopDetected",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 164,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo509BandwidthLimitExceeded",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 165,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo510NotExtended",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 166,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo511NetworkAuthenticationRequired",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 167,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo522ConnectionTimedOut",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 168,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo598NetworkReadTimeoutErrorUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSConstants.h",
+      "line": 169,
+      "symbol": "MSHTTPCodesNo.MSHTTPCodesNo599NetworkConnectTimeoutErrorUnknown",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.enumcase",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSDevice.h",
+      "line": 11,
+      "symbol": "MSDevice",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSLog.h",
+      "line": 11,
+      "symbol": "MSLog",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSLogWithProperties.h",
+      "line": 11,
+      "symbol": "MSLogWithProperties",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSLogger.h",
+      "line": 35,
+      "symbol": "MSLogger",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSWrapperLogger.h",
+      "line": 14,
+      "symbol": "MSWrapperLogger.+MSWrapperLog:tag:level:",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/runners/2.171.1/work/1/s/AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSWrapperSdk.h",
+      "line": 9,
+      "symbol": "MSWrapperSdk",
+      "symbol_kind": "sourcekitten.source.lang.objc.decl.class",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/runner/runners/2.171.1/work/1/s/AppCenter"
+}
