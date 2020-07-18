@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MSAnalytics Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/objc/Class/MSAnalytics" class="dashAnchor"></a>
+    <a title="MSAnalytics Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">AppCenterAnalytics Docs</a> (67% documented)</p>
+        <p class="header-right"><a href="https://github.com/microsoft/appcenter-sdk-apple"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fdocs.microsoft.com%2Fappcenter%2Fsdk%2Fios%2Fdocsets%2FAppCenterAnalytics.xml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">AppCenterAnalytics Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        MSAnalytics Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MSAnalytics.html">MSAnalytics</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MSEventProperties.html">MSEventProperties</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enumerations.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/MSAnalyticsAuthenticationType.html">MSAnalyticsAuthenticationType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Type Definitions.html">Type Definitions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Type%20Definitions.html#/c:MSAnalyticsAuthenticationProviderDelegate.h@T@MSAnalyticsAuthenticationProviderCompletionBlock">MSAnalyticsAuthenticationProviderCompletionBlock</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>MSAnalytics</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight objective_c"><code><span class="k">@interface</span> <span class="nc">MSAnalytics</span> <span class="p">:</span> <span class="nc">MSServiceAbstract</span></code></pre>
+
+                </div>
+              </div>
+            <p>App Center analytics service.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)trackEvent:"></a>
+                    <a name="//apple_ref/objc/Method/+trackEvent:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)trackEvent:">+trackEvent:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Track an event.</p>
+
+<p>@discussion Validation rules apply depending on the configured secret.</p>
+
+<p>For App Center, the name cannot be longer than 256 and is truncated otherwise.</p>
+
+<p>For One Collector, the name needs to match the <code>[a-zA-Z0-9]((\.(?!(\.|$)))|[_a-zA-Z0-9]){3,99}</code> regular expression.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">trackEvent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventName</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">_</span> <span class="nv">eventName</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>eventName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event name. Cannot be <code>nil</code> or empty.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)trackEvent:withProperties:"></a>
+                    <a name="//apple_ref/objc/Method/+trackEvent:withProperties:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)trackEvent:withProperties:">+trackEvent:withProperties:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Track a custom event with optional string properties.</p>
+
+<p>@discussion Additional validation rules apply depending on the configured secret.</p>
+
+<p>For App Center:</p>
+
+<ul>
+<li><p>The event name cannot be longer than 256 and is truncated otherwise.</p></li>
+<li><p>The property names cannot be empty.</p></li>
+<li><p>The property names and values are limited to 125 characters each (truncated).</p></li>
+<li><p>The number of properties per event is limited to 20 (truncated).</p></li>
+</ul>
+
+<p>For One Collector:</p>
+
+<ul>
+<li><p>The event name needs to match the <code>[a-zA-Z0-9]((\.(?!(\.|$)))|[_a-zA-Z0-9]){3,99}</code> regular expression.</p></li>
+<li><p>The <code>baseData</code> and <code>baseDataType</code> properties are reserved and thus discarded.</p></li>
+<li><p>The full event size when encoded as a JSON string cannot be larger than 1.9MB.</p></li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">trackEvent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventName</span>
+    <span class="nf">withProperties</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">properties</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">_</span> <span class="nv">eventName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">withProperties</span> <span class="nv">properties</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>eventName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event name. Cannot be <code>nil</code> or empty.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>properties</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Dictionary of properties. Keys and values must not be <code>nil</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)trackEvent:withProperties:flags:"></a>
+                    <a name="//apple_ref/objc/Method/+trackEvent:withProperties:flags:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)trackEvent:withProperties:flags:">+trackEvent:withProperties:flags:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Track a custom event with optional string properties.</p>
+
+<p>@discussion Additional validation rules apply depending on the configured secret.</p>
+
+<p>For App Center:</p>
+
+<ul>
+<li><p>The event name cannot be longer than 256 and is truncated otherwise.</p></li>
+<li><p>The property names cannot be empty.</p></li>
+<li><p>The property names and values are limited to 125 characters each (truncated).</p></li>
+<li><p>The number of properties per event is limited to 20 (truncated).</p></li>
+</ul>
+
+<p>For One Collector:</p>
+
+<ul>
+<li><p>The event name needs to match the <code>[a-zA-Z0-9]((\.(?!(\.|$)))|[_a-zA-Z0-9]){3,99}</code> regular expression.</p></li>
+<li><p>The <code>baseData</code> and <code>baseDataType</code> properties are reserved and thus discarded.</p></li>
+<li><p>The full event size when encoded as a JSON string cannot be larger than 1.9MB.</p></li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">trackEvent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventName</span>
+    <span class="nf">withProperties</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">NSDictionary</span><span class="o">&lt;</span><span class="n">NSString</span> <span class="o">*</span><span class="p">,</span> <span class="n">NSString</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">properties</span>
+             <span class="nf">flags</span><span class="p">:(</span><span class="n">MSFlags</span><span class="p">)</span><span class="nv">flags</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">_</span> <span class="nv">eventName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">withProperties</span> <span class="nv">properties</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?,</span> <span class="nv">flags</span><span class="p">:</span> <span class="kt">MSFlags</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>eventName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event name. Cannot be <code>nil</code> or empty.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>properties</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Dictionary of properties. Keys and values must not be <code>nil</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>flags</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional flags. Events tracked with the MSFlagsCritical flag will take precedence over all other events in
+storage. An event tracked with this option will only be dropped if storage must make room for a newer event that is also marked with the
+MSFlagsCritical flag.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)trackEvent:withTypedProperties:"></a>
+                    <a name="//apple_ref/objc/Method/+trackEvent:withTypedProperties:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)trackEvent:withTypedProperties:">+trackEvent:withTypedProperties:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Track a custom event with name and optional typed properties.</p>
+
+<p>@discussion The following validation rules are applied:</p>
+
+<p>The name cannot be null or empty.</p>
+
+<p>The property names or values cannot be null.</p>
+
+<p>Double values must be finite (NaN or Infinite values are discarded).</p>
+
+<p>Additional validation rules apply depending on the configured secret.</p>
+
+<p>For App Center:</p>
+
+<ul>
+<li><p>The event name cannot be longer than 256 and is truncated otherwise.</p></li>
+<li><p>The property names cannot be empty.</p></li>
+<li><p>The property names and values are limited to 125 characters each (truncated).</p></li>
+<li><p>The number of properties per event is limited to 20 (truncated).</p></li>
+</ul>
+
+<p>For One Collector:</p>
+
+<ul>
+<li><p>The event name needs to match the <code>[a-zA-Z0-9]((\.(?!(\.|$)))|[_a-zA-Z0-9]){3,99}</code> regular expression.</p></li>
+<li><p>The <code>baseData</code> and <code>baseDataType</code> properties are reserved and thus discarded.</p></li>
+<li><p>The full event size when encoded as a JSON string cannot be larger than 1.9MB.</p></li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">trackEvent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventName</span>
+    <span class="nf">withTypedProperties</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/MSEventProperties.html">MSEventProperties</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">properties</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">_</span> <span class="nv">eventName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">withProperties</span> <span class="nv">properties</span><span class="p">:</span> <span class="kt"><a href="../Classes/MSEventProperties.html">MSEventProperties</a></span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>eventName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event name.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>properties</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Typed properties.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)trackEvent:withTypedProperties:flags:"></a>
+                    <a name="//apple_ref/objc/Method/+trackEvent:withTypedProperties:flags:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)trackEvent:withTypedProperties:flags:">+trackEvent:withTypedProperties:flags:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Track a custom event with name and optional typed properties.</p>
+
+<p>@discussion The following validation rules are applied:</p>
+
+<p>The name cannot be null or empty.</p>
+
+<p>The property names or values cannot be null.</p>
+
+<p>Double values must be finite (NaN or Infinite values are discarded).</p>
+
+<p>Additional validation rules apply depending on the configured secret.</p>
+
+<p>For App Center:</p>
+
+<ul>
+<li><p>The event name cannot be longer than 256 and is truncated otherwise.</p></li>
+<li><p>The property names cannot be empty.</p></li>
+<li><p>The property names and values are limited to 125 characters each (truncated).</p></li>
+<li><p>The number of properties per event is limited to 20 (truncated).</p></li>
+</ul>
+
+<p>For One Collector:</p>
+
+<ul>
+<li><p>The event name needs to match the <code>[a-zA-Z0-9]((\.(?!(\.|$)))|[_a-zA-Z0-9]){3,99}</code> regular expression.</p></li>
+<li><p>The <code>baseData</code> and <code>baseDataType</code> properties are reserved and thus discarded.</p></li>
+<li><p>The full event size when encoded as a JSON string cannot be larger than 1.9MB.</p></li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">trackEvent</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventName</span>
+    <span class="nf">withTypedProperties</span><span class="p">:(</span><span class="n">nullable</span> <span class="n"><a href="../Classes/MSEventProperties.html">MSEventProperties</a></span> <span class="o">*</span><span class="p">)</span><span class="nv">properties</span>
+                  <span class="nf">flags</span><span class="p">:(</span><span class="n">MSFlags</span><span class="p">)</span><span class="nv">flags</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">trackEvent</span><span class="p">(</span><span class="n">_</span> <span class="nv">eventName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">withProperties</span> <span class="nv">properties</span><span class="p">:</span> <span class="kt"><a href="../Classes/MSEventProperties.html">MSEventProperties</a></span><span class="p">?,</span> <span class="nv">flags</span><span class="p">:</span> <span class="kt">MSFlags</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>eventName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Event name.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>properties</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Typed properties.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>flags</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional flags. Events tracked with the MSFlagsCritical flag will take precedence over all other events in
+storage. An event tracked with this option will only be dropped if storage must make room for a newer event that is also marked with the
+MSFlagsCritical flag.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)pause"></a>
+                    <a name="//apple_ref/objc/Method/+pause" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)pause">+pause</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Pause transmission of Analytics logs. While paused, Analytics logs are saved to disk.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    resume
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pause</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">pause</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)resume"></a>
+                    <a name="//apple_ref/objc/Method/+resume" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)resume">+resume</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resume transmission of Analytics logs. Any Analytics logs that accumulated on disk while paused are sent to the
+ server.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    pause
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">resume</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">resume</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)transmissionTargetForToken:"></a>
+                    <a name="//apple_ref/objc/Method/+transmissionTargetForToken:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)transmissionTargetForToken:">+transmissionTargetForToken:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Get a transmission target.</p>
+
+<p>@returns The transmission target object.</p>
+
+<p>@discussion This method does not need to be annotated with
+ NS_SWIFT_NAME(transmissionTarget(forToken:)) as this is a static method that
+ doesn&rsquo;t get translated like a setter in Swift.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    MSAnalyticsTransmissionTarget for comparison.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">MSAnalyticsTransmissionTarget</span> <span class="o">*</span><span class="p">)</span><span class="nf">transmissionTargetForToken</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">token</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">transmissionTarget</span><span class="p">(</span><span class="n">forToken</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MSAnalyticsTransmissionTarget</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>token</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The token of the transmission target to retrieve.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(cs)MSAnalytics(cm)setTransmissionInterval:"></a>
+                    <a name="//apple_ref/objc/Method/+setTransmissionInterval:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(cs)MSAnalytics(cm)setTransmissionInterval:">+setTransmissionInterval:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the send time interval for non-critical logs.
+ Must be between 3 seconds and 86400 seconds (1 day).
+ Must be called before Analytics service start.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setTransmissionInterval</span><span class="p">:(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nv">interval</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">class</span> <span class="kd">func</span> <span class="nf">setTransmissionInterval</span><span class="p">(</span><span class="n">_</span> <span class="nv">interval</span><span class="p">:</span> <span class="kt">UInt</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>interval</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The flush interval for logs.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="http://www.microsoft.com" target="_blank" rel="external">Microsoft Corp</a>. All rights reserved. (Last updated: 2020-07-01)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

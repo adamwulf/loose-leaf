@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MSChannelProtocol Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/objc/Protocol/MSChannelProtocol" class="dashAnchor"></a>
+    <a title="MSChannelProtocol Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">AppCenter Docs</a> (28% documented)</p>
+        <p class="header-right"><a href="https://github.com/microsoft/appcenter-sdk-apple"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fdocs.microsoft.com%2Fappcenter%2Fsdk%2Fios%2Fdocsets%2FAppCenter.xml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">AppCenter Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        MSChannelProtocol Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MSCustomProperties.html">MSCustomProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MSServiceAbstract.html">MSServiceAbstract</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)MSWrapperLogger">MSWrapperLogger</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enumerations.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSHTTPCodesNo">MSHTTPCodesNo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSInitializationPriority">MSInitializationPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MSLogLevel.html">MSLogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSPriority">MSPriority</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/MSChannelGroupProtocol.html">MSChannelGroupProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSChannelProtocol.html">MSChannelProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSEnable.html">MSEnable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSService.html">MSService</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>MSChannelProtocol</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">MSChannelProtocol</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="p">,</span> <span class="n"><a href="../Protocols/MSEnable.html">MSEnable</a></span><span class="o">&gt;</span></code></pre>
+
+                </div>
+              </div>
+            <p><code>MSChannelProtocol</code> contains the essential operations of a channel. Channels are broadly responsible for enqueuing logs to be sent to the
+backend and/or stored on disk.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelProtocol(im)addDelegate:"></a>
+                    <a name="//apple_ref/objc/Method/-addDelegate:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelProtocol(im)addDelegate:">-addDelegate:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Add delegate.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">addDelegate</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">MSChannelDelegate</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">delegate</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>delegate.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelProtocol.h#L26">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelProtocol(im)removeDelegate:"></a>
+                    <a name="//apple_ref/objc/Method/-removeDelegate:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelProtocol(im)removeDelegate:">-removeDelegate:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Remove delegate.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">removeDelegate</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">MSChannelDelegate</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">delegate</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>delegate.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelProtocol.h#L33">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelProtocol(im)pauseWithIdentifyingObject:"></a>
+                    <a name="//apple_ref/objc/Method/-pauseWithIdentifyingObject:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelProtocol(im)pauseWithIdentifyingObject:">-pauseWithIdentifyingObject:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Pause operations, logs will be stored but not sent.</p>
+
+<p>@discussion A paused channel doesn&rsquo;t forward logs to the ingestion. The identifying object used to pause the channel can be any unique
+ object. The same identifying object must be used to call resume. For simplicity if the caller is the one owning the channel then <code>self</code>
+ can be used as identifying object.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    resumeWithIdentifyingObject:
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">pauseWithIdentifyingObject</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">identifyingObject</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">pause</span><span class="p">(</span><span class="n">withIdentifying</span> <span class="nv">identifyingObject</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>identifyingObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Object used to identify the pause request.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelProtocol.h#L46">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelProtocol(im)resumeWithIdentifyingObject:"></a>
+                    <a name="//apple_ref/objc/Method/-resumeWithIdentifyingObject:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelProtocol(im)resumeWithIdentifyingObject:">-resumeWithIdentifyingObject:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Resume operations, logs can be sent again.</p>
+
+<p>@discussion The channel only resume when all the outstanding identifying objects have been resumed.</p>
+<div class="aside aside-see">
+    <p class="aside-title">See</p>
+    pauseWithIdentifyingObject:
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">resumeWithIdentifyingObject</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">identifyingObject</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">resume</span><span class="p">(</span><span class="n">withIdentifying</span> <span class="nv">identifyingObject</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>identifyingObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Object used to passed to the pause method.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelProtocol.h#L57">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="http://www.microsoft.com" target="_blank" rel="external">Microsoft Corp</a>. All rights reserved. (Last updated: 2020-07-01)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

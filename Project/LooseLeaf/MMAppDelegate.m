@@ -23,9 +23,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
 #import "MMAllStacksManager.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-#import <TwitterKit/TwitterKit.h>
+@import AppCenter;
+@import AppCenterAnalytics;
+@import AppCenterCrashes;
 
 
 @implementation MMAppDelegate {
@@ -52,14 +52,25 @@ static BOOL isFirstLaunch = NO;
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
-    
+
     NSString* email = [[NSUserDefaults standardUserDefaults] stringForKey:kPendingEmailToSubscribe];
-    
+
     if (email) {
         // make sure its in keychain too
         [MMAppDelegate setEmail:email];
     }
 
+    NSURL* appIdsURL = [[NSBundle mainBundle] URLForResource:@"AppIds" withExtension:@"plist"];
+    NSDictionary* appIds = [[NSDictionary alloc] initWithContentsOfURL:appIdsURL];
+
+    [MSAppCenter start:[appIds objectForKey:@"AppCenter"] withServices:@[
+        [MSAnalytics class],
+        [MSCrashes class]
+    ]];
+
+    if ([MSCrashes hasCrashedInLastSession]) {
+        [self crashlyticsDidCrashDuringPreviousExecution];
+    }
 
     // support old archives
     [NSKeyedUnarchiver setClass:[MMUnknownObject class] forClassName:@"MMCloudKitTutorialImportCoordinator"];
@@ -78,14 +89,10 @@ static BOOL isFirstLaunch = NO;
         [[NSUserDefaults standardUserDefaults] setObject:str forKey:kMixpanelUUID];
         [[NSUserDefaults standardUserDefaults] synchronize];
     });
-    
+
     [[Mixpanel sharedInstance] registerSuperProperties:[NSDictionary dictionaryWithObjectsAndKeys:@([[UIScreen mainScreen] scale]), kMPScreenScale,
-                                                        [UIDevice modelName], kMPiPadModel,
-                                                        [MMAppDelegate userID], kMPID, nil]];
-    
-    [[Crashlytics sharedInstance] setDelegate:self];
-    [[Twitter sharedInstance] startWithConsumerKey:@"your_key" consumerSecret:@"your_secret"];
-    [Fabric with:@[CrashlyticsKit, [Twitter class]]];
+                                                                                                  [UIDevice modelName], kMPiPadModel,
+                                                                                                  [MMAppDelegate userID], kMPID, nil]];
 
     [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
@@ -210,7 +217,7 @@ static BOOL isFirstLaunch = NO;
     return YES;
 }
 
-- (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(nonnull void (^)(void))completionHandler{
+- (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(nonnull void (^)(void))completionHandler {
     DebugLog(@"handleEventsForBackgroundURLSession");
 }
 
@@ -285,11 +292,11 @@ static BOOL isFirstLaunch = NO;
 
 + (NSString*)email {
     NSString* email = [[NSUserDefaults standardUserDefaults] stringForKey:kMPEmailAddressField];
-    
-    if(!email){
+
+    if (!email) {
         email = [[NSUserDefaults standardUserDefaults] stringForKey:kPendingEmailToSubscribe];
     }
-    
+
     return email;
 }
 
@@ -354,7 +361,7 @@ static BOOL isFirstLaunch = NO;
 
 #pragma mark - Crashlytics reporting
 
-- (void)crashlytics:(Crashlytics*)crashlytics didDetectCrashDuringPreviousExecution:(id<CLSCrashReport>)crash {
+- (void)crashlyticsDidCrashDuringPreviousExecution {
     didRecieveReportFromCrashlytics = YES;
 
     DebugLog(@"Did Track Crash from Exception");
@@ -374,22 +381,6 @@ static BOOL isFirstLaunch = NO;
         [crashProperties setObject:@([UIDevice majorVersion]) forKey:@"OSVersion"];
     if ([UIDevice buildVersion])
         [crashProperties setObject:[UIDevice buildVersion] forKey:@"OSBuildVersion"];
-
-    // set crash specific values
-    if (crash.customKeys)
-        [crashProperties addEntriesFromDictionary:crash.customKeys];
-    if (crash.identifier)
-        [crashProperties setObject:crash.identifier forKey:@"identifier"];
-    if (crash.bundleVersion)
-        [crashProperties setObject:crash.bundleVersion forKey:@"bundleVersion"];
-    if (crash.bundleShortVersionString)
-        [crashProperties setObject:crash.bundleShortVersionString forKey:@"bundleShortVersionString"];
-    if (crash.crashedOnDate)
-        [crashProperties setObject:crash.crashedOnDate forKey:@"crashedOnDate"];
-    if (crash.OSVersion)
-        [crashProperties setObject:crash.OSVersion forKey:@"OSVersion"];
-    if (crash.OSBuildVersion)
-        [crashProperties setObject:crash.OSBuildVersion forKey:@"OSBuildVersion"];
 
     NSMutableDictionary* mappedCrashProperties = [NSMutableDictionary dictionary];
     [crashProperties enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL* stop) {

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MSChannelGroupProtocol Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/objc/Protocol/MSChannelGroupProtocol" class="dashAnchor"></a>
+    <a title="MSChannelGroupProtocol Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">AppCenter Docs</a> (28% documented)</p>
+        <p class="header-right"><a href="https://github.com/microsoft/appcenter-sdk-apple"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fdocs.microsoft.com%2Fappcenter%2Fsdk%2Fios%2Fdocsets%2FAppCenter.xml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">AppCenter Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        MSChannelGroupProtocol Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/MSCustomProperties.html">MSCustomProperties</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/MSServiceAbstract.html">MSServiceAbstract</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/c:objc(cs)MSWrapperLogger">MSWrapperLogger</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enumerations.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSHTTPCodesNo">MSHTTPCodesNo</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSInitializationPriority">MSInitializationPriority</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/MSLogLevel.html">MSLogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums.html#/c:@E@MSPriority">MSPriority</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/MSChannelGroupProtocol.html">MSChannelGroupProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSChannelProtocol.html">MSChannelProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSEnable.html">MSEnable</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/MSService.html">MSService</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>MSChannelGroupProtocol</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight objective_c"><code><span class="k">@protocol</span> <span class="nc">MSChannelGroupProtocol</span> <span class="o">&lt;</span><span class="n"><a href="../Protocols/MSChannelProtocol.html">MSChannelProtocol</a></span><span class="o">&gt;</span></code></pre>
+
+                </div>
+              </div>
+            <p><code>MSChannelGroupProtocol</code> represents a kind of channel that contains constituent MSChannelUnit objects. When an operation from the
+<code><a href="../Protocols/MSChannelProtocol.html">MSChannelProtocol</a></code> is performed on the group, that operation should be propagated to its constituent MSChannelUnit objects.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelGroupProtocol(im)addChannelUnitWithConfiguration:"></a>
+                    <a name="//apple_ref/objc/Method/-addChannelUnitWithConfiguration:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelGroupProtocol(im)addChannelUnitWithConfiguration:">-addChannelUnitWithConfiguration:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize a channel unit with the given configuration.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">MSChannelUnitProtocol</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">addChannelUnitWithConfiguration</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">MSChannelUnitConfiguration</span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>channel configuration.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The added <code>MSChannelUnitProtocol</code>. Use this object to enqueue logs.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelGroupProtocol.h#L31">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelGroupProtocol(im)addChannelUnitWithConfiguration:withIngestion:"></a>
+                    <a name="//apple_ref/objc/Method/-addChannelUnitWithConfiguration:withIngestion:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelGroupProtocol(im)addChannelUnitWithConfiguration:withIngestion:">-addChannelUnitWithConfiguration:withIngestion:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initialize a channel unit with the given configuration.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nonnull</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">MSChannelUnitProtocol</span><span class="o">&gt;</span><span class="p">)</span>
+    <span class="nf">addChannelUnitWithConfiguration</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">nonnull</span> <span class="n">MSChannelUnitConfiguration</span> <span class="o">*</span><span class="p">)</span><span class="nv">configuration</span>
+                      <span class="nf">withIngestion</span><span class="p">:(</span><span class="n">nullable</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">MSIngestionProtocol</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">ingestion</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>channel configuration.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ingestion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The alternative ingestion object</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>The added <code>MSChannelUnitProtocol</code>. Use this object to enqueue logs.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelGroupProtocol.h#L41-L42">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelGroupProtocol(im)setLogUrl:"></a>
+                    <a name="//apple_ref/objc/Method/-setLogUrl:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelGroupProtocol(im)setLogUrl:">-setLogUrl:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Change the base URL (schema + authority + port only) used to communicate with the backend.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setLogUrl</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">logUrl</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setLogUrl</span><span class="p">(</span><span class="n">_</span> <span class="nv">logUrl</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>logUrl</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>base URL to use for backend communication.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelGroupProtocol.h#L49">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelGroupProtocol(im)setAppSecret:"></a>
+                    <a name="//apple_ref/objc/Method/-setAppSecret:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelGroupProtocol(im)setAppSecret:">-setAppSecret:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the app secret.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setAppSecret</span><span class="p">:(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">appSecret</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setAppSecret</span><span class="p">(</span><span class="n">_</span> <span class="nv">appSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>appSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The app secret.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelGroupProtocol.h#L56">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelGroupProtocol(im)setMaxStorageSize:completionHandler:"></a>
+                    <a name="//apple_ref/objc/Method/-setMaxStorageSize:completionHandler:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelGroupProtocol(im)setMaxStorageSize:completionHandler:">-setMaxStorageSize:completionHandler:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the maximum size of the internal storage. This method must be called before App Center is started.</p>
+
+<p>@discussion The default maximum database size is 10485760 bytes (10 MiB).</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setMaxStorageSize</span><span class="p">:(</span><span class="kt">long</span><span class="p">)</span><span class="nv">sizeInBytes</span>
+        <span class="nf">completionHandler</span><span class="p">:(</span><span class="n">nullable</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="n">BOOL</span><span class="p">))</span><span class="nv">completionHandler</span><span class="p">;</span></code></pre>
+
+                        </div>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">setMaxStorageSize</span><span class="p">(</span><span class="n">_</span> <span class="nv">sizeInBytes</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sizeInBytes</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Maximum size of the internal storage in bytes. This will be rounded up to the nearest multiple of a SQLite page size
+(default is 4096 bytes). Values below 24576 bytes (24 KiB) will be ignored.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completionHandler</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Callback that is invoked when the database size has been set. The <code>BOOL</code> parameter is <code>YES</code> if changing the size
+is successful, and <code>NO</code> otherwise.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelGroupProtocol.h#L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:objc(pl)MSChannelGroupProtocol(im)channelUnitForGroupId:"></a>
+                    <a name="//apple_ref/objc/Method/-channelUnitForGroupId:" class="dashAnchor"></a>
+                    <a class="token" href="#/c:objc(pl)MSChannelGroupProtocol(im)channelUnitForGroupId:">-channelUnitForGroupId:</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return a channel unit instance for the given groupId.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Objective-C</p>
+                          <pre class="highlight objective_c"><code><span class="k">-</span> <span class="p">(</span><span class="n">nullable</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">MSChannelUnitProtocol</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">channelUnitForGroupId</span><span class="p">:</span>
+    <span class="p">(</span><span class="n">nonnull</span> <span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">groupId</span><span class="p">;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The group ID for a channel unit.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A channel unit instance or <code>nil</code>.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/microsoft/appcenter-sdk-apple//../AppCenter-SDK-Apple/iOS/AppCenter.framework/Headers/MSChannelGroupProtocol.h#L77">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2020 <a class="link" href="http://www.microsoft.com" target="_blank" rel="external">Microsoft Corp</a>. All rights reserved. (Last updated: 2020-07-01)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
