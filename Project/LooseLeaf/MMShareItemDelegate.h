@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CloudKit/CloudKit.h>
 #import "MMAvatarButton.h"
 #import "MMBackgroundedPaperView.h"
 
@@ -15,15 +14,11 @@
 
 @protocol MMShareDelegate <NSObject>
 
-- (NSDictionary*)cloudKitSenderInfo;
-
 - (void)didShare:(MMAbstractShareItem*)shareItem;
 
 - (void)mayShare:(MMAbstractShareItem*)shareItem;
 
 - (void)wontShare:(MMAbstractShareItem*)shareItem;
-
-- (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button;
 
 @end
 

@@ -24,10 +24,8 @@
     BOOL waitingForExport;
     BOOL waitingForSave;
     BOOL waitingForUnload;
-    NSDictionary* cloudKitSenderInfo;
 }
 
-@synthesize cloudKitSenderInfo;
 @synthesize isCurrentlySaving;
 
 - (void)moveAssetsFrom:(id<MMPaperViewDelegate>)previousDelegate {
@@ -159,23 +157,6 @@
         }
     }
     [super loadStateAsynchronously:async withSize:pagePixelSize andScale:scale andContext:context];
-
-    if (cloudKitSenderInfo) {
-        // already loaded
-        return;
-    }
-
-    dispatch_block_t block = ^{
-        @autoreleasepool {
-            cloudKitSenderInfo = [NSKeyedUnarchiver unarchiveObjectWithFile:[[self pagesPath] stringByAppendingPathComponent:@"sender.plist"]];
-        }
-    };
-
-    if (async) {
-        dispatch_async([self serialBackgroundQueue], block);
-    } else {
-        block();
-    }
 }
 
 - (void)unloadState {
@@ -188,14 +169,6 @@
         waitingForUnload = NO;
     }
     [super unloadState];
-
-    dispatch_block_t block = ^{
-        @autoreleasepool {
-            cloudKitSenderInfo = nil;
-        }
-    };
-
-    dispatch_async([self serialBackgroundQueue], block);
 }
 
 

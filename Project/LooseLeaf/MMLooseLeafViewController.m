@@ -235,16 +235,13 @@
                                                        kMPNumberOfRulerUses: @(0),
                                                        kMPNumberOfImports: @(0),
                                                        kMPNumberOfPhotoImports: @(0),
-                                                       kMPNumberOfCloudKitImports: @(0),
                                                        kMPNumberOfPhotosTaken: @(0),
                                                        kMPNumberOfExports: @(0),
-                                                       kMPNumberOfCloudKitExports: @(0),
                                                        kMPDurationAppOpen: @(0.0),
                                                        kMPNumberOfCrashes: @(0),
                                                        kMPDistanceDrawn: @(0.0),
                                                        kMPDistanceErased: @(0.0),
                                                        kMPNumberOfClippingExceptions: @(0.0),
-                                                       kMPShareStatusCloudKit: kMPShareStatusUnknown,
                                                        kMPShareStatusFacebook: kMPShareStatusUnknown,
                                                        kMPShareStatusTwitter: kMPShareStatusUnknown,
                                                        kMPShareStatusEmail: kMPShareStatusUnknown,
@@ -1251,10 +1248,6 @@
     [currentStackView exportVisiblePageToPDF:completionBlock];
 }
 
-- (NSDictionary*)cloudKitSenderInfo {
-    return [currentStackView cloudKitSenderInfo];
-}
-
 - (void)didShare:(MMAbstractShareItem*)shareItem {
     [sharePageSidebar hide:YES onComplete:nil];
     [shareStackSidebar hide:YES onComplete:nil];
@@ -1267,12 +1260,6 @@
 
 - (void)wontShare:(MMAbstractShareItem*)shareItem {
     [currentStackView wontShare:shareItem];
-}
-
-- (void)didShare:(MMAbstractShareItem*)shareItem toUser:(CKRecordID*)userId fromButton:(MMAvatarButton*)button {
-    [sharePageSidebar hide:YES onComplete:nil];
-
-    [currentStackView didShare:shareItem toUser:userId fromButton:button];
 }
 
 #pragma mark - Release Notes
