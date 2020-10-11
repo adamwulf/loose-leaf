@@ -33,6 +33,7 @@
 		1F2CF00725332CDE00FA12C4 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CEF6525332CDD00FA12C4 /* DDAbstractDatabaseLogger.m */; };
 		1F2CF00825332CDE00FA12C4 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CEF6625332CDD00FA12C4 /* DDFileLogger.m */; };
 		1F2CF00925332CDE00FA12C4 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CEF6925332CDD00FA12C4 /* GCDAsyncSocket.m */; };
+		1F2CF01E253333FA00FA12C4 /* MMPaperRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F2CF01D253333FA00FA12C4 /* MMPaperRequest.m */; };
 		6600BAA71B6DE4F400D8B2DB /* new-user-intro.png in Resources */ = {isa = PBXBuildFile; fileRef = 6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */; };
 		66052A0317FA170600A94531 /* MMImmutableScrapsOnPaperState.m in Sources */ = {isa = PBXBuildFile; fileRef = 66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */; };
 		66066747193A7C1400C985E9 /* UIImage+Memory.m in Sources */ = {isa = PBXBuildFile; fileRef = 66066746193A7C1400C985E9 /* UIImage+Memory.m */; };
@@ -753,6 +754,8 @@
 		1F2CEF6725332CDD00FA12C4 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
 		1F2CEF6925332CDD00FA12C4 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		1F2CEF6B25332CDD00FA12C4 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		1F2CF01C253333FA00FA12C4 /* MMPaperRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MMPaperRequest.h; sourceTree = "<group>"; };
+		1F2CF01D253333FA00FA12C4 /* MMPaperRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MMPaperRequest.m; sourceTree = "<group>"; };
 		6600BAA61B6DE4F400D8B2DB /* new-user-intro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new-user-intro.png"; sourceTree = "<group>"; };
 		66052A0117FA170600A94531 /* MMImmutableScrapsOnPaperState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMImmutableScrapsOnPaperState.h; sourceTree = "<group>"; };
 		66052A0217FA170600A94531 /* MMImmutableScrapsOnPaperState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMImmutableScrapsOnPaperState.m; sourceTree = "<group>"; };
@@ -2573,6 +2576,8 @@
 				662370D91A9E90B200B62F69 /* MMBackgroundedPaperView.m */,
 				66EDE42B19AFE27300A5623B /* MMExportablePaperView.h */,
 				66EDE42C19AFE27300A5623B /* MMExportablePaperView.m */,
+				1F2CF01C253333FA00FA12C4 /* MMPaperRequest.h */,
+				1F2CF01D253333FA00FA12C4 /* MMPaperRequest.m */,
 			);
 			name = MMPaperView;
 			sourceTree = "<group>";
@@ -5263,6 +5268,7 @@
 				66B21A56175AFCA70049F1AF /* MMHandButton.m in Sources */,
 				C5E02A891D99C9FA001F6ED6 /* MMFeedbackButton.m in Sources */,
 				C5D749F420FEF844004F5781 /* MPNSAttributedStringToNSDictionaryValueTransformer.m in Sources */,
+				1F2CF01E253333FA00FA12C4 /* MMPaperRequest.m in Sources */,
 				66B21A6C175E4A5A0049F1AF /* MMSingleStackManager.m in Sources */,
 				669115A81AE8811C00C4FC89 /* MMLoopView.m in Sources */,
 				C5D749D320FEF844004F5781 /* MPUIImageToNSDictionaryValueTransformer.m in Sources */,
