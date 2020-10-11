@@ -4549,7 +4549,7 @@
 				ORGANIZATIONNAME = "Milestone Made, LLC";
 				TargetAttributes = {
 					66DCFB851581BCEF00B4918C = {
-						DevelopmentTeam = BGF3GH32LP;
+						DevelopmentTeam = MU27A4SCKC;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -5524,7 +5524,7 @@
 					"-ObjC++",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yihchun.looseleaf;
+				PRODUCT_BUNDLE_IDENTIFIER = com.milestonemade.looseleaf;
 				PRODUCT_NAME = LooseLeaf;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
@@ -5553,7 +5553,7 @@
 					"-ObjC++",
 					"-lstdc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yihchun.looseleaf;
+				PRODUCT_BUNDLE_IDENTIFIER = com.milestonemade.looseleaf;
 				PRODUCT_NAME = LooseLeaf;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
