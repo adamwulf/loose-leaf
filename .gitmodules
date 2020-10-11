@@ -46,3 +46,6 @@
 [submodule "Submodules/spacecommander"]
 	path = Submodules/spacecommander
 	url = git@github.com:square/spacecommander.git
+[submodule "Submodules/CocoaHTTPServer"]
+	path = Submodules/CocoaHTTPServer
+	url = https://github.com/robbiehanson/CocoaHTTPServer.git

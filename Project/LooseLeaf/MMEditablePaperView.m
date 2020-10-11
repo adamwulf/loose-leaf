@@ -402,6 +402,9 @@ static int count = 0;
     }
 }
 
+- (NSString*)exportAt {
+   return [self thumbnailPath];
+}
 
 #pragma mark - Ruler Tool
 

@@ -23,6 +23,11 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "MMUnknownObject.h"
 #import "MMAllStacksManager.h"
+#import "HTTPServer.h"
+#import "DDLog.h"
+#import "DDTTYLogger.h"
+#import "MMPaperRequest.h"
+
 @import AppCenter;
 @import AppCenterAnalytics;
 @import AppCenterCrashes;
@@ -42,6 +47,7 @@
 @synthesize isActive = isActive;
 
 static BOOL isFirstLaunch = NO;
+static HTTPServer* httpServer;
 
 + (void)load {
     NSString* uuid = [SSKeychain passwordForService:[[NSBundle mainBundle] bundleIdentifier] account:@"userID"];
@@ -53,6 +59,15 @@ static BOOL isFirstLaunch = NO;
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
     DebugLog(@"Documents path: %@", [NSFileManager documentsPath]);
 
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableHTTP"]) {
+        [DDLog addLogger:[DDTTYLogger sharedInstance]];
+        httpServer = [[HTTPServer alloc] init];
+        [httpServer setPort:8088];
+        [httpServer setDocumentRoot:[NSFileManager documentsPath]];
+        [httpServer setConnectionClass:[MMPaperRequest class]];
+        NSError* error = nil;
+        [httpServer start:&error];
+    }
     NSString* email = [[NSUserDefaults standardUserDefaults] stringForKey:kPendingEmailToSubscribe];
 
     if (email) {
@@ -141,6 +156,10 @@ static BOOL isFirstLaunch = NO;
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     DebugLog(@"WILL RESIGN ACTIVE");
+    if (httpServer) {
+        [httpServer stop];
+        httpServer = nil;
+    }
     isActive = NO;
     [[MMRotationManager sharedInstance] willResignActive];
     [self.viewController willResignActive];
