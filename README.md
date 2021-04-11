@@ -1,6 +1,8 @@
 ## Overview
 
-Loose Leaf is a notes app for iPad created by [Adam Wulf](http://welcome.totheinter.net). Learn more and see demo videos at [https://getlooseleaf.com](https://getlooseleaf.com). Support this project and [download the app on the App Store](https://itunes.apple.com/us/app/loose-leaf/id625659452?mt=8&uo=4&at=10lNUI).
+Loose Leaf is a notes app for iPad created by [Adam Wulf](https://adamwulf.me). Learn more and see demo videos at [https://getlooseleaf.com](https://getlooseleaf.com). Support this project and [download the app on the App Store](https://itunes.apple.com/us/app/loose-leaf/id625659452?mt=8&uo=4&at=10lNUI).
+
+Enjoy the app? Buy me a coffee ☕️ and [become a sponsor](https://github.com/sponsors/adamwulf)!
 
 ## Unique Gestures
 
