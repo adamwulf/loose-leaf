@@ -99,3 +99,4 @@ The Loose Leaf app and sample code are provided under the MIT License. Attributi
 ## Support This Project
 - Download [Loose Leaf](https://itunes.apple.com/us/app/loose-leaf/id625659452?mt=8&uo=4&at=10lNUI)
 - Follow [@adamwulf](http://twitter.com/adamwulf)
+- Become a [Github Sponsor](https://github.com/sponsors/adamwulf)
