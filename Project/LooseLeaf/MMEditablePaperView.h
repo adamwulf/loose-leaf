@@ -57,6 +57,7 @@
 - (void)setEditable:(BOOL)isEditable;
 - (BOOL)isEditable;
 - (void)cancelCurrentStrokeIfAny;
+- (NSString*)exportAt;
 
 // abstract
 - (void)saveToDisk:(void (^)(BOOL didSaveEdits))onComplete;
