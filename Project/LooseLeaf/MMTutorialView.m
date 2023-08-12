@@ -220,7 +220,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView*)_scrollView {
     NSInteger idx = scrollView.contentOffset.x / scrollView.bounds.size.width;
     idx = MIN([scrollView.subviews count] - 1, MAX(0, idx));
-    
+
     MMVideoLoopView* visible = [scrollView.subviews objectAtIndex:idx];
     if (![visible isBuffered]) {
         // a different view was animating, but we just
@@ -309,6 +309,8 @@
         // add width for the newsletter signup
         scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + scrollView.bounds.size.width, scrollView.contentSize.height);
     }
+
+    // Add additional screen for link to Muse app
 
     MMLoopView* firstTutorialView = scrollView.subviews.firstObject;
 
