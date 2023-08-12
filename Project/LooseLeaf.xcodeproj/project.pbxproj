@@ -5267,6 +5267,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
+				CURRENT_PROJECT_VERSION = 3515;
 				DEVELOPMENT_TEAM = MU27A4SCKC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5283,7 +5284,10 @@
 					"DEBUGUSERDEFAULTS=0",
 				);
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Loose Leaf";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MARKETING_VERSION = 3.3.5;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC++",
@@ -5302,6 +5306,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = LooseLeaf/LooseLeaf.entitlements;
+				CURRENT_PROJECT_VERSION = 3515;
 				DEVELOPMENT_TEAM = MU27A4SCKC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5313,7 +5318,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LooseLeaf/LooseLeaf-Prefix.pch";
 				INFOPLIST_FILE = "LooseLeaf/LooseLeaf-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Loose Leaf";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MARKETING_VERSION = 3.3.5;
 				OTHER_LDFLAGS = (
 					"-ObjC++",
 					"-lstdc++",
